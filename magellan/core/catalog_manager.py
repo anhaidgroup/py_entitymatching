@@ -31,6 +31,7 @@ def get_property(df, name):
         raise AttributeError('Input dataframe cannot be null')
 
     if not catalog.is_dfinfo_present(df):
+        logger.error('Dataframe information is not present in the catalog')
         raise KeyError('Dataframe information is not present in the catalog')
 
     if not catalog.is_property_present_for_df(df, name):

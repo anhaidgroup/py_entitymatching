@@ -4,32 +4,49 @@ import os
 from collections import OrderedDict
 
 import pandas as pd
+import six
 
 import magellan.core.catalog_manager as cm
 
 logger = logging.getLogger(__name__)
 
 
-def read_csv(file_path, **kwargs):
+def read_csv_metadata(file_path, **kwargs):
     """
     Read contents from the given file name along with metadata, if
     metadata is set to true.
     The file name is typically with .csv extension. Metadata is
-    expected to be  with the same file name but with .metadata
+        expected to be  with the same file name but with .metadata
     extension.
+
     Args:
         file_path (str): csv file path
         kwargs (dict): key value arguments to pandas read_csv
+
     Returns:
         result (pandas dataframe)
+
+    Raises:
+        AssertionError : If the input file path is not of type string
+
     Examples:
     >>> import magellan as mg
-    >>> A = mg.read_csv('A.csv')
+    >>> A = mg.read_csv_metadata('A.csv')
     # if A.metadata_ is present along with A.csv, the metadata information
     # will be updated for A
     >>> A.get_key()
     """
 
+
+    # input type validations
+    if not isinstance(file_path, six.string_types):
+        logger.error('Input file path is not of type string')
+        raise AssertionError('Input file path is not of type string')
+
+    # check if the CSV file exists
+    if not os.path.exists(file_path):
+        logger.error('File does not exist at path %s' % file_path)
+        raise AssertionError('File does not exist at path %s' % file_path)
 
     # update metadata from file (if present)
     if _is_metadata_file_present(file_path):
@@ -37,13 +54,14 @@ def read_csv(file_path, **kwargs):
         file_name += '.metadata'
         metadata, num_lines = _get_metadata_from_file(file_name)
     else:
+        logger.warning('Metadata file is not present in the given path; proceeding to read the csv file.')
         metadata = {}
 
     # update metadata from kwargs
     metadata, kwargs = _update_metadata_for_read_cmd(metadata, **kwargs)
     _check_metadata_for_read_cmd(metadata)
-    df = pd.read_csv(file_path, **kwargs)
     key = metadata.pop('key', None)
+    df = pd.read_csv(file_path, **kwargs)
     if key is not None:
         cm.set_key(df, key)
     for k, v in metadata.iteritems():
@@ -51,7 +69,7 @@ def read_csv(file_path, **kwargs):
     return df
 
 
-def to_csv(df, file_path, **kwargs):
+def to_csv_metadata(df, file_path, **kwargs):
     """
     Write csv file along with metadata
     Args:
@@ -63,25 +81,52 @@ def to_csv(df, file_path, **kwargs):
         status (bool). Returns True if the file was written successfully
     Examples:
         >>> import magellan as mg
-        >>> A = mg.read_csv('A.csv')
-        >>> mg.to_csv(A, 'updated.csv')
+        >>> A = mg.read_csv_metadata('A.csv')
+        >>> mg.to_csv_metadata(A, 'updated.csv')
     """
 
+    if not isinstance(df, pd.DataFrame):
+        logging.error('Input object is not of type pandas dataframe')
+        raise AssertionError('Input object is not of type pandas dataframe')
+
+    # input type validations
+    if not isinstance(file_path, six.string_types):
+        logger.error('Input file path is not of type string')
+        raise AssertionError('Input file path is not of type string')
+
+
+
     index = kwargs.pop('index', None)
+
     if index is None:
         kwargs['index'] = False
-
-
 
     file_name, file_ext = os.path.splitext(file_path)
     metadata_filename = file_name + '.metadata'
 
-    # write metadata
+    can_write, file_exists = _check_file_path(file_path)
+    if can_write:
+        if file_exists:
+            logger.warning('File already exists at %s; Overwriting it' % file_path)
+            df.to_csv(file_path, **kwargs)
+        else:
+            df.to_csv(file_path, **kwargs)
+    else:
+        logger.error('Cannot write in the file path %s; Exiting' % file_path)
+        raise AssertionError('Cannot write in the file path %s' % file_path)
 
-    _write_metadata(df, metadata_filename)
+    # try to write metadata
+    can_write, file_exists = _check_file_path(metadata_filename)
+    if can_write:
+        if file_exists:
+            logger.warning('Metadata file already exists at %s. Overwriting it' % metadata_filename)
+            _write_metadata(df, metadata_filename)
+        else:
+            _write_metadata(df, metadata_filename)
+    else:
+        logger.warning('Cannot write metadata at the file path %s. Skip writing metadata file' % metadata_filename)
 
-    # write dataftame
-    return df.to_csv(file_path, **kwargs)
+    return True
 
 
 def _write_metadata(df, file_path):
@@ -105,7 +150,7 @@ def _write_metadata(df, file_path):
     # write properties to disk
     if len(d) > 0:
         for k, v in d.iteritems():
-            if isinstance(v, basestring) is False:
+            if isinstance(v, six.string_types) is False:
                 metadata_dict[k] = 'POINTER'
             else:
                 metadata_dict[k] = v
@@ -129,7 +174,7 @@ def _is_metadata_file_present(file_path):
     """
     file_name, file_ext = os.path.splitext(file_path)
     file_name += '.metadata'
-    return os.path.isfile(file_name)
+    return os.path.exists(file_name)
 
 
 def _get_metadata_from_file(file_path):
@@ -181,7 +226,7 @@ def _update_metadata_for_read_cmd(metadata, **kwargs):
             if value is not None:
                 metadata[k] = value
             else:
-                logger.warning('%s key had a value in file but input arg is set to None')
+                logger.warning('%s key had a value in file but input arg is set to None' %k)
                 v = metadata.pop(k)  # remove the key-value pair
 
     # Add the properties from key-value arguments
@@ -192,7 +237,7 @@ def _update_metadata_for_read_cmd(metadata, **kwargs):
             if value is not None:
                 metadata[k] = value
             else:
-                logging.getLogger(__name__).warning('%s key had a value in file but input arg is set to None')
+                logger.warning('%s key had a value in file but input arg is set to None' %k)
                 v = metadata.pop(k)  # remove the key-value pair
     return metadata, kwargs
 
@@ -216,13 +261,30 @@ def _check_metadata_for_read_cmd(metadata):
     i = v.intersection(k)
     if len(i) > 0:
         if len(i) is not len(table_props):
+            logger.error('Dataframe requires all valid ltable, rtable, fk_ltable, '
+                                 'fk_rtable parameters set')
             raise AssertionError('Dataframe requires all valid ltable, rtable, fk_ltable, '
                                  'fk_rtable parameters set')
 
         if isinstance(metadata['ltable'], pd.DataFrame) is False:
+            logger.error('The parameter ltable must be set to valid Dataframe')
             raise AssertionError('The parameter ltable must be set to valid Dataframe')
 
         if isinstance(metadata['rtable'], pd.DataFrame) is False:
+            logger.error('The parameter rtable must be set to valid Dataframe')
             raise AssertionError('The parameter rtable must be set to valid Dataframe')
 
     return True
+
+
+
+def _check_file_path(file_path):
+    # returns a tuple can_write, file_exists
+    if os.path.exists(file_path):
+        # the file is there
+        return True, True
+    elif os.access(os.path.dirname(file_path), os.W_OK):
+        return True, False
+        # the file does not exists but write privileges are given
+    else:
+        return False, False

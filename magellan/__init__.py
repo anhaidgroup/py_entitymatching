@@ -15,7 +15,7 @@ from magellan.core.catalog_manager import get_key, set_key
 #
 # # io related methods
 #
-from magellan.io.parsers import read_csv, to_csv
+from magellan.io.parsers import read_csv_metadata, to_csv_metadata
 from magellan.io.pickles import load_object, load_table, save_object, save_table
 #
 #

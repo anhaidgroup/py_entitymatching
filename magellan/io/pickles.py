@@ -1,14 +1,20 @@
 # coding=utf-8
 from collections import OrderedDict
+import logging
 import os
-import pickle
-import cloud
 
-from magellan.io.parsers import _is_metadata_file_present
+import cloud.serialization.cloudpickle
+import pandas as pd
+import pickle
+import six
+
+from magellan.io.parsers import _is_metadata_file_present, _check_file_path
 import magellan.core.catalog_manager as cm
 
-def save_object(obj, file_path):
+logger = logging.getLogger(__name__)
 
+
+def save_object(obj, file_path):
     """
     Save Magellan objects
     Args:
@@ -17,9 +23,25 @@ def save_object(obj, file_path):
     Returns:
         status (bool). Returns True if the command executes successfully
     """
+    if not isinstance(file_path, six.string_types):
+        logger.error('Input file path is not of type string')
+        raise AssertionError('Input file path is not of type string')
 
-    with open(file_path, 'w') as f:
-        cloud.serialization.cloudpickle.dump(obj, f)
+    can_write, file_exists = _check_file_path(file_path)
+
+    if can_write:
+        if file_exists:
+            logger.warning('File already exists at %s; Overwriting it' % file_path)
+            with open(file_path, 'w') as f:
+                cloud.serialization.cloudpickle.dump(obj, f)
+        else:
+            with open(file_path, 'w') as f:
+                cloud.serialization.cloudpickle.dump(obj, f)
+
+    else:
+        logger.error('Cannot write in the file path %s; Exiting' % file_path)
+        raise AssertionError('Cannot write in the file path %s' % file_path)
+
     return True
 
 
@@ -31,10 +53,18 @@ def load_object(file_path):
     Returns:
         result (python object). Typically magellan objects such as blockers, matchers, triggers, etc
     """
+    if not isinstance(file_path, six.string_types):
+        logger.error('Input file path is not of type string')
+        raise AssertionError('Input file path is not of type string')
+
+    # check if the file exists
+    if not os.path.exists(file_path):
+        logger.error('File does not exist at path %s' % file_path)
+        raise AssertionError('File does not exist at path %s' % file_path)
+
     with open(file_path, 'r') as f:
         result = pickle.load(f)
     return result
-
 
 
 def save_table(df, file_path):
@@ -46,13 +76,34 @@ def save_table(df, file_path):
     Returns:
         status (bool). Returns True if the command executes successfully
     """
+    if not isinstance(df, pd.DataFrame):
+        logging.error('Input object is not of type pandas dataframe')
+        raise AssertionError('Input object is not of type pandas dataframe')
+
+    # input type validations
+    if not isinstance(file_path, six.string_types):
+        logger.error('Input file path is not of type string')
+        raise AssertionError('Input file path is not of type string')
 
     file_name, file_ext = os.path.splitext(file_path)
     metadata_filename = file_name + '.metadata'
 
+    can_write, file_exists = _check_file_path(file_path)
+
+    if can_write:
+        if file_exists:
+            logger.warning('File already exists at %s; Overwriting it' % file_path)
+            with open(file_path, 'w') as f:
+                cloud.serialization.cloudpickle.dump(df, f)
+        else:
+            with open(file_path, 'w') as f:
+                cloud.serialization.cloudpickle.dump(df, f)
+
+    else:
+        logger.error('Cannot write in the file path %s; Exiting' % file_path)
+        raise AssertionError('Cannot write in the file path %s' % file_path)
 
     metadata_dict = OrderedDict()
-
     # get all the properties for the input data frame
     if cm.is_dfinfo_present(df) is True:
         d = cm.get_all_properties(df)
@@ -63,12 +114,20 @@ def save_table(df, file_path):
             if isinstance(v, basestring) is True:
                 metadata_dict[k] = v
 
-    with open(file_path, 'w') as f:
-        cloud.serialization.cloudpickle.dump(df, f)
-
-    # write metadata contents
-    with open(metadata_filename, 'w') as f:
-        cloud.serialization.cloudpickle.dump(metadata_dict, f)
+    # try to save metadata
+    can_write, file_exists = _check_file_path(metadata_filename)
+    if can_write:
+        if file_exists:
+            logger.warning('Metadata file already exists at %s. Overwriting it' % metadata_filename)
+            # write metadata contents
+            with open(metadata_filename, 'w') as f:
+                cloud.serialization.cloudpickle.dump(metadata_dict, f)
+        else:
+            # write metadata contents
+            with open(metadata_filename, 'w') as f:
+                cloud.serialization.cloudpickle.dump(metadata_dict, f)
+    else:
+        logger.warning('Cannot write metadata at the file path %s. Skip writing metadata file' % metadata_filename)
 
     return True
 
@@ -81,15 +140,15 @@ def load_table(file_path):
     Returns:
         Loaded dataframe (pandas dataframe). Returns the dataframe loaded from the file.
     """
-
     # load data frame from file path
-    df = pickle.load(file_path)
+    # # input validations are done in load_object
+    df = load_object(file_path)
 
     # load metadata from file path
     if _is_metadata_file_present(file_path):
         file_name, file_ext = os.path.splitext(file_path)
         metadata_filename = file_name + '.metadata'
-        metadata_dict = pickle.load(metadata_filename)
+        metadata_dict = load_object(metadata_filename)
         # update metadata in the catalog
         for key, value in metadata_dict.iteritems():
             if key is 'key':

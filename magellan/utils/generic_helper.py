@@ -13,7 +13,7 @@ import magellan.core.catalog_manager as cm
 
 
 from magellan.utils import install_path
-from magellan.io.parsers import read_csv
+from magellan.io.parsers import read_csv_metadata
 
 logger = logging.getLogger(__name__)
 
@@ -41,7 +41,7 @@ def load_dataset(file_name, key=None, **kwargs):
     if file_name == 'table_A' or file_name == 'table_B':
         if key is None:
             key = 'ID'
-    table = read_csv(p, key=key, **kwargs)
+    table = read_csv_metadata(p, key=key, **kwargs)
     return table
 
 
@@ -120,3 +120,5 @@ def create_proj_dataframe(df, key, key_vals, attrs, col_names):
     df.reset_index(drop=True, inplace=True)
     df.columns = col_names
     return df
+
+
