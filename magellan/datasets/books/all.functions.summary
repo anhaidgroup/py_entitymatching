@@ -1,0 +1,6 @@
+name,description,class_name
+JACCARD,"Good for strings with multiple words. Will remove special characters from the string before computing.","com.walmart.productgenome.matching.models.rules.functions.Jaccard"
+EXACT_MATCH,"Checks whether two strings exactly match or not.","com.walmart.productgenome.matching.models.rules.functions.ExactMatch"
+JARO_SIMILARITY,"Good for short strings.","com.walmart.productgenome.matching.models.rules.functions.JaroSimilarityFunction"
+OVERLAP_SIMILARITY,"Good for checking containment of the shorter string in longer string.","com.walmart.productgenome.matching.models.rules.functions.OverlapSimilarityFunction"
+SMITH_WATERMAN_GOTOH_SIMILARITY,"Good for checking approximate containment of the shorter string in the longer.","com.walmart.productgenome.matching.models.rules.functions.SmithWatermanGotohSimilarityFunction"

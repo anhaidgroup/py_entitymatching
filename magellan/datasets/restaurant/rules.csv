@@ -1,0 +1,8 @@
+rule_name,rule_string
+name_jac,"name_jac,GREATER_THAN_EQUALS,0.9"
+name_addr_jac,"name_jac,GREATER_THAN_EQUALS,0.7 AND addr_jac,GREATER_THAN_EQUALS,0.2"
+name_addr_jac_1,"name_jac,GREATER_THAN_EQUALS,0.5 AND addr_jac,GREATER_THAN_EQUALS,0.7"
+name_addr_jac_2,"name_jac,GREATER_THAN_EQUALS,0.4 AND addr_jac,GREATER_THAN_EQUALS,0.6"
+name_addr_overlap,"name_overlap,GREATER_THAN_EQUALS,0.7 AND addr_overlap,GREATER_THAN_EQUALS,0.55"
+name_addr_overlap_1,"name_overlap,GREATER_THAN_EQUALS,0.3 AND addr_overlap,GREATER_THAN_EQUALS,1.0"
+name_addr_overlap_2,"name_overlap,GREATER_THAN_EQUALS,1.0 AND addr_overlap,GREATER_THAN_EQUALS,0.4"

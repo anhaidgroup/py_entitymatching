@@ -1,0 +1,6 @@
+name,description,class_name
+JACCARD,"Normalised Jaccard Similarity","com.walmart.productgenome.matching.models.rules.functions.Jaccard"
+TRIGRAM,"Normalised Trigram Similarity","com.walmart.productgenome.matching.models.rules.functions.Trigram"
+LEVENSHTEIN,"Normalised Levenshtein Similarity","com.walmart.productgenome.matching.models.rules.functions.LevenshteinSimilarity"
+EXACT_MATCH,"checks whether two strings exactly match or not","com.walmart.productgenome.matching.models.rules.functions.ExactMatch"
+MONGE_ELKAN,"Normalised Monge-Elkan Similarity","com.walmart.productgenome.matching.models.rules.functions.MongeElkanSimilarity"

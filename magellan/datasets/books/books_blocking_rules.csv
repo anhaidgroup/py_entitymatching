@@ -1,0 +1,3 @@
+feature_name,comparison,threshold
+publisher_qg3,LESS_THAN,0.3 & isbn_lev,LESS_THAN,0.8
+title_qg3,LESS_THAN,0.1

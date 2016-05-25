@@ -1,0 +1,11 @@
+name,function,attribute1,attribute2
+author_jac,JACCARD,author,author
+pubYear_nad,NORM_ABS_DIFF,pubYear,pubYear
+numAuthors_nad,NORM_ABS_DIFF,numAuthors,numAuthors
+pages_nad,NORM_ABS_DIFF,pages,pages
+volume_nad,NORM_ABS_DIFF,volume,volume
+pubYear_jac,JACCARD,pubYear,pubYear
+title_me,MONGE_ELKAN,title,title
+title_trigram,TRIGRAM,title,title
+pages_jac,JACCARD,pages,pages
+year_exact,EXACT_MATCH,pubYear,pubYear

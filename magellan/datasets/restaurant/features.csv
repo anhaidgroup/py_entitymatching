@@ -1,0 +1,8 @@
+name,function,attribute1,attribute2
+name_jac,JACCARD,name,name
+name_lev,LEVENSHTEIN,name,name
+name_overlap,OVERLAP_SIMILARITY,name,name
+addr_lev,LEVENSHTEIN,addr,addr
+addr_jac,JACCARD,addr,addr
+addr_overlap,OVERLAP_SIMILARITY,addr,addr
+type_jac,JACCARD,type,type

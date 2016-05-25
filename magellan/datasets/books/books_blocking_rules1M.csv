@@ -1,0 +1,6 @@
+feature_name,comparison,threshold
+isbn_exact,LESS_THAN,0.5
+pubYear_lev,EQUALS,NaN
+pubYear_lev,GREATER_THAN_EQUALS,0.5
+author_qg3,LESS_THAN,0.83
+title_qg3,LESS_THAN,0.76
