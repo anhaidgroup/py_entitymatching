@@ -1,19 +1,38 @@
 # coding=utf-8
 import logging
-import pandas as pd
 import numpy as np
+import pandas as pd
+import six
 
 
 logger = logging.getLogger(__name__)
 
 
 def check_attrs_present(table, attrs):
+
+    if not isinstance(table, pd.DataFrame):
+        logger.error('Input object is not of type pandas data frame')
+        raise AssertionError('Input object is not of type pandas data frame')
+
+    if attrs is None:
+        logger.warning('Input attr. list is null')
+        return False
+
     if isinstance(attrs, list) is False:
         attrs = [attrs]
     status = are_all_attrs_in_df(table, attrs, verbose=True)
     return status
 
 def are_all_attrs_in_df(df, col_names, verbose=False):
+
+    if not isinstance(df, pd.DataFrame):
+        logger.error('Input object is not of type pandas data frame')
+        raise AssertionError('Input object is not of type pandas data frame')
+
+    if col_names is None:
+        logger.warning('Input col_names is null')
+        return False
+
     df_columns_names = list(df.columns)
     for c in col_names:
         if c not in df_columns_names:
@@ -41,6 +60,14 @@ def is_attr_unique(df, attr):
         This is an internal helper function
 
     """
+    if not isinstance(df, pd.DataFrame):
+        logger.error('Input object is not of type pandas data frame')
+        raise AssertionError('Input object is not of type pandas data frame')
+
+    if not isinstance(attr, six.string_types):
+        logger.error('Input attr. is not of type string')
+        raise AssertionError('Input attr. is not of type string')
+
     uniq_flag = len(np.unique(df[attr])) == len(df)
     if not uniq_flag:
         return False
@@ -63,6 +90,14 @@ def does_contain_missing_vals(df, attr):
         This is an internal helper function
 
     """
+    if not isinstance(df, pd.DataFrame):
+        logger.error('Input object is not of type pandas data frame')
+        raise AssertionError('Input object is not of type pandas data frame')
+
+    if not isinstance(attr, six.string_types):
+        logger.error('Input attr. is not of type string')
+        raise AssertionError('Input attr. is not of type string')
+
     nan_flag = sum(df[attr].isnull()) == 0
     if not nan_flag:
         return False
@@ -82,6 +117,14 @@ def is_key_attribute(df, attr, verbose=False):
          returns False
 
     """
+    if not isinstance(df, pd.DataFrame):
+        logger.error('Input object is not of type pandas data frame')
+        raise AssertionError('Input object is not of type pandas data frame')
+
+    if not isinstance(attr, six.string_types):
+        logger.error('Input attr. is not of type string')
+        raise AssertionError('Input attr. is not of type string')
+
     # check if the length is > 0
     if len(df) > 0:
         # check for uniqueness
@@ -115,11 +158,28 @@ def check_fk_constraint(df_foreign, attr_foreign, df_base, attr_base):
     Notes:
         This is an internal helper function
     """
-    if isinstance(attr_base, basestring) is False:
-        return False
+    if not isinstance(df_foreign, pd.DataFrame):
+        logger.error('Input object (df_foreign) is not of type pandas data frame')
+        raise AssertionError('Input object is not of type pandas data frame')
+
+    if not isinstance(attr_foreign, six.string_types):
+        logger.error('Input attr (attr_foreign) is not of type string')
+        raise AssertionError('Input attr (attr_foreign) is not of type string')
+
+
+    if not isinstance(df_base, pd.DataFrame):
+        logger.error('Input object (df_base) is not of type pandas data frame')
+        raise AssertionError('Input object (df_base) is not of type pandas data frame')
+
+    if not isinstance(attr_base, six.string_types):
+        logger.error('Input attr (attr_base) is not of type string')
+        raise AssertionError('Input attr (attr_base) is not of type string')
+
     if check_attrs_present(df_base, attr_base) is False:
         return False
+
     t = df_base[df_base[attr_base].isin(pd.unique(df_foreign[attr_foreign]))]
+
     return is_key_attribute(t, attr_base)
 
 
@@ -137,23 +197,37 @@ def does_contain_rows(df):
         This is an internal helper function
 
     """
+    if not isinstance(df, pd.DataFrame):
+        logger.error('Input object is not of type pandas data frame')
+        raise AssertionError('Input object is not of type pandas data frame')
+
     return len(df) > 0
 
 
-def get_name_for_key(columns):
-    k = '_id'
+def get_name_for_key(columns, key_val='_id'):
+    k = key_val
     i = 0
+
     # try attribute name of the form "_id", "_id0", "_id1", ... and
     # return the first available name
+
     while True:
         if k not in columns:
             break
         else:
-            k = '_id' + str(i)
+            k = key_val + str(i)
         i += 1
     return k
 
 
 def add_key_column(table, key):
+    if not isinstance(table, pd.DataFrame):
+        logger.error('Input object is not of type pandas data frame')
+        raise AssertionError('Input object is not of type pandas data frame')
+
+    if not isinstance(key, six.string_types):
+        logger.error('Input key is not of type string.')
+        raise AssertionError('Input object is not of type string')
+
     table.insert(0, key, range(0, len(table)))
     return table

@@ -13,7 +13,19 @@ logger = logging.getLogger(__name__)
 
 
 def get_features(ltable, rtable, l_attr_types, r_attr_types, attr_corres, tok_funcs, sim_funcs):
+
+    if not isinstance(ltable, pd.DataFrame):
+        logger.error('Input ltable is not of type pandas dataframe')
+        raise AssertionError('Input ltable is not of type pandas dataframe')
+
+    if not isinstance(rtable, pd.DataFrame):
+        logger.error('Input rtable is not of type pandas dataframe')
+        raise AssertionError('Input rtable is not of type pandas dataframe')
+
+
+
     if check_table_order(ltable, rtable, l_attr_types, r_attr_types, attr_corres) == False:
+        logger.error('Table order is different than what is mentioned in l/r attr_types and attr_corres')
         raise AssertionError('Table order is different than what is mentioned in l/r attr_types and attr_corres')
 
     # initialize output feature dictionary list
@@ -37,7 +49,6 @@ def get_features(ltable, rtable, l_attr_types, r_attr_types, attr_corres, tok_fu
         fn_objs = conv_func_objs(feats, ac, tok_funcs, sim_funcs)
         feat_dict_list.append(fn_objs)
 
-
     df = pd.DataFrame(flatten_list(feat_dict_list))
     df = df[['feature_name', 'left_attribute', 'right_attribute', 'left_attr_tokenizer', 'right_attr_tokenizer',
              'simfunction', 'function', 'function_source']]
@@ -45,6 +56,14 @@ def get_features(ltable, rtable, l_attr_types, r_attr_types, attr_corres, tok_fu
 
 
 def get_features_for_blocking(A, B):
+    if not isinstance(A, pd.DataFrame):
+        logger.error('Input table A is not of type pandas dataframe')
+        raise AssertionError('Input table A is not of type pandas dataframe')
+
+    if not isinstance(B, pd.DataFrame):
+        logger.error('Input table B is not of type pandas dataframe')
+        raise AssertionError('Input table B is not of type pandas dataframe')
+
     sim_funcs = get_sim_funs_for_blocking()
     tok_funcs = get_tokenizers_for_blocking()
     t_A = get_attr_types(A)
@@ -62,6 +81,14 @@ def get_features_for_blocking(A, B):
 
 
 def get_features_for_matching(A, B):
+    if not isinstance(A, pd.DataFrame):
+        logger.error('Input table A is not of type pandas dataframe')
+        raise AssertionError('Input table A is not of type pandas dataframe')
+
+    if not isinstance(B, pd.DataFrame):
+        logger.error('Input table B is not of type pandas dataframe')
+        raise AssertionError('Input table B is not of type pandas dataframe')
+
     sim_funcs = get_sim_funs_for_matching()
     tok_funcs = get_tokenizers_for_matching()
     t_A = get_attr_types(A)
@@ -78,11 +105,17 @@ def get_features_for_matching(A, B):
     return feat_table
 
 
-
-
-
 # check whether the order of tables matches with what is mentioned in  l_attr_types, r_attr_type and attr_corres
 def check_table_order(ltable, rtable, l_attr_types, r_attr_types, attr_corres):
+
+    if not isinstance(ltable, pd.DataFrame):
+        logger.error('Input ltable is not of type pandas dataframe')
+        raise AssertionError('Input ltable is not of type pandas dataframe')
+
+    if not isinstance(rtable, pd.DataFrame):
+        logger.error('Input rtable is not of type pandas dataframe')
+        raise AssertionError('Input rtable is not of type pandas dataframe')
+
     # get the ids
     l_id = id(ltable)
     r_id = id(rtable)
@@ -106,9 +139,6 @@ def check_table_order(ltable, rtable, l_attr_types, r_attr_types, attr_corres):
     if r_id != id(attr_corres['rtable']):
         logger.error('rtable is not the same as table mentioned in attr correspondence')
         return False
-
-
-
 
 
 # get look up table to generate features
@@ -166,6 +196,9 @@ def get_features_for_type(t):
         raise TypeError('Unknown type')
     return rec_fns
 
+# get types
+def get_magellan_str_types():
+    return ['str_eq_1w', 'str_bt_1w_5w', 'str_bt_5w_10w', 'str_gt_10w', 'numeric','boolean']
 
 # convert features from look up table to function objects
 def conv_func_objs(feats, attrs, tok_funcs, sim_funcs):
@@ -299,65 +332,3 @@ def conv_fn_str_to_obj(fn_tup, tok, sim_funcs):
 
 def flatten_list(inp_list):
     return [item for sublist in inp_list for item in sublist]
-
-    # # get features for a lay user
-    # def get_features_for_blocking(A, B):
-    #     """
-    #     Get features with minimal input
-    #     Parameters
-    #     ----------
-    #     A, B : MTable,
-    #         Input tables
-    #     Returns
-    #     -------
-    #     feature_table : pandas DataFrame
-    #         Consists of following columns
-    #         * feature_name  - string, feature name
-    #         * left_attribute - string, attribute name
-    #         * right_attribute - string, attribute name
-    #         * left_attr_tokenizer - string, tokenizer name
-    #         * right_attr_tokenizer - string, tokenizer name
-    #         * simfunction - string, sumilarity function name
-    #         * function - function object
-    #         * function_source - string, containing source code
-    #     Notes
-    #     -----
-    #     The function also exports the important variables to global name space so if a user want to examine they can do
-    #     so.
-    #     """
-    #     sim = mg.get_sim_funs()
-    #     tok = mg.get_single_arg_tokenizers()
-    #     t_A = mg.get_attr_types(A)
-    #     t_B = mg.get_attr_types(B)
-    #     attr_corres = mg.get_attr_corres(A, B)
-    #     feat_table = get_features(A, B, t_A, t_B, attr_corres, tok, sim)
-    #
-    #     # export important variables to global name space
-    #     #_m_current_tokenizers, _m_current_sim_funs, _m_current_attr_types_ltable, _m_current_attr_types_rtable_m_current_corres
-    #     mg._block_t = tok
-    #     mg._block_s = sim
-    #     mg._atypes1 = t_A
-    #     mg._atypes2 = t_B
-    #     mg._block_c = attr_corres
-    #     return feat_table
-    #
-    #
-    #
-    # # get features for a lay user
-    # def get_features_for_matching(A, B):
-    #
-    #     sim = mg.get_sim_funs()
-    #     tok = mg.get_single_arg_tokenizers()
-    #     t_A = mg.get_attr_types(A)
-    #     t_B = mg.get_attr_types(B)
-    #     attr_corres = mg.get_attr_corres(A, B)
-    #     feat_table = get_features(A, B, t_A, t_B, attr_corres, tok, sim)
-    #
-    #     # export important variables to global name space
-    #     #_m_current_tokenizers, _m_current_sim_funs, _m_current_attr_types_ltable, _m_current_attr_types_rtable_m_current_corres
-    #     mg._match_t = tok
-    #     mg._match_s = sim
-    #     mg._atypes1 = t_A
-    #     mg._atypes2 = t_B
-    #     mg._match_c = attr_corres
-    #     return feat_table

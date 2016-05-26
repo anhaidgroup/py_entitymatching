@@ -13,15 +13,6 @@ logger = logging.getLogger(__name__)
 
 
 def combine_blocker_outputs_via_union(blocker_output_list, l_prefix='ltable_', r_prefix='rtable_', verbose=False):
-    # Steps
-    # 1. check the ltables and rtables are the same
-    # 2. check all the fk names are the same
-    # 3. warn if the foreign keys did not have the given prefix
-    # 4. combine only the ids
-    # 5. construct the output table
-    # 6. update the catalog
-    # 7. return the output table
-
     _validate_lr_tables(blocker_output_list)
 
     ltable, rtable = cm.get_property(blocker_output_list[0], 'ltable'), \
@@ -73,26 +64,33 @@ def combine_blocker_outputs_via_union(blocker_output_list, l_prefix='ltable_', r
     # return candidate set
     return candset
 
+
 def _validate_lr_tables(blocker_output_list):
+    # validate blocker output list
+    idx = 0
+    for c in blocker_output_list:
+        if not isinstance(c, pd.DataFrame):
+            logger.error('Input object at index %s is not a data frame' % str(c))
+            raise AssertionError('Input object at index %s is not a data frame' % str(c))
+
     # get ids of all ltables from blocker output list
-    id_l = [id(cm.get_property(c, 'ltable')) for c in blocker_output_list]
+    id_l = [id(cm.get_ltable(c)) for c in blocker_output_list]
     # convert to set
     id_l = set(id_l)
     # check its length is 1 == all the ltables are same
     assert len(id_l) is 1, 'Candidate set list contains different left tables'
 
     # check foreign key values are same
-    id_fk_l = [cm.get_property(c, 'fk_ltable') for c in blocker_output_list]
+    id_fk_l = [cm.get_fk_ltable(c) for c in blocker_output_list]
     # convert to set
     id_fk_l = set(id_fk_l)
     assert len(id_fk_l) is 1, 'Candidate set list contains different foreign key for ltables'
 
-
-    id_r = [id(cm.get_property(c, 'rtable')) for c in blocker_output_list]
+    id_r = [id(cm.get_rtable(c)) for c in blocker_output_list]
     id_r = set(id_r)
     assert len(id_r) is 1, 'Candidate set list contains different right tables'
 
-    id_fk_r = [cm.get_property(c, 'fk_rtable') for c in blocker_output_list]
+    id_fk_r = [cm.get_fk_rtable(c) for c in blocker_output_list]
     # convert to set
     id_fk_r = set(id_fk_r)
     assert len(id_fk_r) is 1, 'Candidate set list contains different foreign key for rtables'
@@ -107,6 +105,7 @@ def _lr_cols(col_set, l_output_prefix, r_output_prefix):
     col_r = [x for x in col_r if x is not None]
 
     return col_l, col_r
+
 
 def _get_col(s, p):
     if s.startswith(p):

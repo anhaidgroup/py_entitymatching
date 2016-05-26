@@ -5,17 +5,31 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 def get_attr_types(table):
+    if not isinstance(table, pd.DataFrame):
+        logger.error('Input table is not of type pandas dataframe')
+        raise AssertionError('Input table is not of type pandas dataframe')
+
     type_list = [get_type(table[col]) for col in table.columns]
     d = dict(zip(table.columns, type_list))
     d['_table'] = table
     return d
 
+
 def get_attr_corres(table_a, table_b):
+    if not isinstance(table_a, pd.DataFrame):
+        logger.error('Input table_a is not of type pandas dataframe')
+        raise AssertionError('Input table_a is not of type pandas dataframe')
+
+    if not isinstance(table_b, pd.DataFrame):
+        logger.error('Input table_b is not of type pandas dataframe')
+        raise AssertionError('Input table_b is not of type pandas dataframe')
+
     ret_list = []
     for c in table_a.columns:
         if c in table_b.columns:
-            ret_list.append((c,c))
+            ret_list.append((c, c))
     d = dict()
     d['corres'] = ret_list
     d['ltable'] = table_a
@@ -23,8 +37,8 @@ def get_attr_corres(table_a, table_b):
     return d
 
 
+# Given a pandas series (i.e column in pandas dataframe) obtain its type
 
-# Given a pandas series (i.e column in MTable) obtain its type
 def get_type(col):
     if not isinstance(col, pd.Series):
         raise ValueError('Input is not of type pandas series')
@@ -34,17 +48,22 @@ def get_type(col):
     type_list = list(set(col.map(type).tolist()))
 
     if len(type_list) == 0:
-        logging.getLogger(__name__).warning('Column %s does not seem to qualify as any atomic type. '
-                                            'It may contain all NaNs. Currently, setting its type to '
-                                            'be numeric.We recommend the users to manually update '
-                                            'the returned types or features later. \n' % col.name)
+        logger.warning('Column %s does not seem to qualify as any atomic type. '
+                       'It may contain all NaNs. Currently, setting its type to '
+                       'be numeric.We recommend the users to manually update '
+                       'the returned types or features later. \n' % col.name)
         return 'numeric'
 
     if len(type_list) > 1:
+        logger.error('Column %s qualifies to be more than one type (%s). \n'
+                        'Please explicitly set the column type like this:\n'
+                        'A["address"] = A["address"].astype(str) \n'
+                        'Similarly use int, float, boolean types.' % (col.name, ', '.join(type_list)))
+
         raise TypeError('Column %s qualifies to be more than one type (%s). \n'
                         'Please explicitly set the column type like this:\n'
                         'A["address"] = A["address"].astype(str) \n'
-                        'Similarly use int, float, boolean types.' %(col.name, ', '.join(type_list)))
+                        'Similarly use int, float, boolean types.' % (col.name, ', '.join(type_list)))
     else:
         t = type_list[0]
         if t == bool:
@@ -63,6 +82,7 @@ def get_type(col):
                 return "str_gt_10w"
         else:
             return "numeric"
+
 
 # Get the length of list, handling NaN
 def len_handle_nan(v):

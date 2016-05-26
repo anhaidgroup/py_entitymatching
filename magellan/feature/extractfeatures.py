@@ -11,15 +11,30 @@ logger = logging.getLogger(__name__)
 
 
 def extract_feature_vecs(candset, attrs_before=None, feature_table=None, attrs_after=None, verbose=True):
+
+    if not isinstance(candset, pd.DataFrame):
+        logger.error('Input cand.set is not of type dataframe')
+        raise AssertionError('Input cand.set is not of type dataframe')
+
     # validate input parameters
     if attrs_before != None:
-        assert check_attrs_present(candset, attrs_before), 'The attributes mentioned in attrs_before is not present ' \
-                                                           'in the input table'
-    if attrs_after != None:
-        assert check_attrs_present(candset, attrs_after), 'The attributes mentioned in attrs_after is not present ' \
-                                                          'in the input table'
+        if not check_attrs_present(candset, attrs_before):
+            logger.error('The attributes mentioned in attrs_before is not present ' \
+                                                           'in the input table')
+            raise AssertionError('The attributes mentioned in attrs_before is not present ' \
+                                                           'in the input table')
 
-    assert feature_table is not None, 'Feature table cannot be None'
+    if attrs_after != None:
+        if not check_attrs_present(candset, attrs_after):
+            logger.error('The attributes mentioned in attrs_after is not present ' \
+                                                           'in the input table')
+            raise AssertionError('The attributes mentioned in attrs_after is not present ' \
+                                                           'in the input table')
+
+
+    if not feature_table is None:
+        logger.error('Feature table cannot be null')
+        raise AssertionError('The feature table cannot be null')
 
 
     log_info(logger, 'Required metadata: cand.set key, fk ltable, fk rtable, '
@@ -82,13 +97,6 @@ def extract_feature_vecs(candset, attrs_before=None, feature_table=None, attrs_a
     cm.copy_properties(candset, table)
 
     return table
-
-
-
-
-
-
-
 
 
 def apply_feat_fns(tuple1, tuple2, feat_dict):

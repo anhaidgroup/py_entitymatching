@@ -1,10 +1,23 @@
 import logging
 
 import pandas as pd
+import six
 
 logger = logging.getLogger(__name__)
 
+
 def get_feature_fn(feat_str, tok, sim):
+    if not isinstance(feat_str, six.string_types):
+        logger.error('Input feature string is not of type string')
+        raise AssertionError('Input feature string is not of type string')
+
+    if not isinstance(tok, dict):
+        logger.error('Input tok is not of type dict')
+        raise AssertionError('Input tok. is not of type dict')
+
+    if not isinstance(sim, dict):
+        logger.error('Input sim is not of type dict')
+        raise AssertionError('Input sim. is not of type dict')
     temp = {}
     # update sim
     if sim:
@@ -20,8 +33,21 @@ def get_feature_fn(feat_str, tok, sim):
     d['function_source'] = fn
     return d
 
+
 # parse input feature string
 def parse_feat_str(str, tok, sim):
+    if not isinstance(str, six.string_types):
+        logger.error('Input feature string is not of type string')
+        raise AssertionError('Input feature string is not of type string')
+
+    if not isinstance(tok, dict):
+        logger.error('Input tok is not of type dict')
+        raise AssertionError('Input tok. is not of type dict')
+
+    if not isinstance(sim, dict):
+        logger.error('Input sim is not of type dict')
+        raise AssertionError('Input sim. is not of type dict')
+
     from pyparsing import Word, alphas, alphanums, Literal, ParseException
 
     # initialization
@@ -34,10 +60,10 @@ def parse_feat_str(str, tok, sim):
 
     # parse string
     # define structures for each type
-    attr_name = Word(alphanums + "_" + "." + "[" +"]" +'"' +"'")
-    tok_fn = Word(alphanums+"_") + "(" + attr_name + ")"
-    wo_tok = Word(alphanums+"_") + "(" + attr_name + "," + attr_name + ")"
-    wi_tok = Word(alphanums+"_") + "(" + tok_fn + "," + tok_fn + ")"
+    attr_name = Word(alphanums + "_" + "." + "[" + "]" + '"' + "'")
+    tok_fn = Word(alphanums + "_") + "(" + attr_name + ")"
+    wo_tok = Word(alphanums + "_") + "(" + attr_name + "," + attr_name + ")"
+    wi_tok = Word(alphanums + "_") + "(" + tok_fn + "," + tok_fn + ")"
     feat = wi_tok | wo_tok
     try:
         f = feat.parseString(str)
@@ -56,12 +82,12 @@ def parse_feat_str(str, tok, sim):
         lt = [val for val in f if val.startswith('ltuple[')]
         if len(lt) is 1:
             lt = lt[0]
-            left_attribute = lt[7:len(lt)-1].strip('"').strip("'")
+            left_attribute = lt[7:len(lt) - 1].strip('"').strip("'")
         # get right_attribute
         rt = [val for val in f if val.startswith('rtuple[')]
         if len(rt) is 1:
             rt = rt[0]
-            right_attribute = rt[7:len(rt)-1].strip('"').strip("'")
+            right_attribute = rt[7:len(rt) - 1].strip('"').strip("'")
     else:
         pass
 
@@ -76,17 +102,28 @@ def parse_feat_str(str, tok, sim):
 
 
 def add_feature(feat_table, feat_name, feat_dict):
-    if len(feat_table) > 0:
-        feat_names = list(feat_table['feature_name'])
-        if feat_name in feat_names:
-            logger.warning('Input feature name is already present in feature table')
-            return False
+    if not isinstance(feat_table, pd.DataFrame):
+        logger.error('Input feature table is not of type data frame')
+        raise AssertionError('Input feature table is not of type data frame')
+
+    if not isinstance(feat_name, six.string_types):
+        logger.error('Input feature name is not of type string')
+        raise AssertionError('Input feature name is not of type string')
+
+    if not isinstance(feat_dict, dict):
+        logger.error('Input feature dictionary is not of type dict')
+        raise AssertionError('Input feature dictionary is not of type dict')
+
+    feat_names = list(feat_table['feature_name'])
+    if feat_name in feat_names:
+        logger.error('Input feature name is already present in feature table')
+        raise AssertionError('Input feature name is already present in feature table')
 
     feat_dict['feature_name'] = feat_name
     # rename function
     f = feat_dict['function']
-    f_name=feat_name
-    #f_name.func_name = feat_name
+    f_name = feat_name
+    # f_name.func_name = feat_name
     exec 'f_name = f'
     feat_dict['function'] = f_name
     if len(feat_table) > 0:
@@ -97,6 +134,7 @@ def add_feature(feat_table, feat_name, feat_dict):
         feat_table.loc[len(feat_table)] = feat_dict
     return True
 
+
 def create_feature_table():
     feat_table = pd.DataFrame()
     feat_table.columns = ['feature_name', 'left_attribute', 'right_attribute', 'left_attr_tokenizer',
@@ -105,8 +143,18 @@ def create_feature_table():
     return feat_table
 
 
-
 def add_blackbox_feature(feat_table, feat_name, feat_fn):
+    if not isinstance(feat_table, pd.DataFrame):
+        logger.error('Input feature table is not of type data frame')
+        raise AssertionError('Input feature table is not of type data frame')
+
+    if not isinstance(feat_name, six.string_types):
+        logger.error('Input feature name is not of type string')
+        raise AssertionError('Input feature name is not of type string')
+
+    if feat_name in feat_table.columns:
+        logger.error('Input feature name is already present in feature table')
+        raise AssertionError('Input feature name is already present in feature table')
     d = {}
     d['feature_name'] = feat_name
     d['function'] = feat_fn

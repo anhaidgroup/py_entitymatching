@@ -1,7 +1,7 @@
 # coding=utf-8
 import logging
 import os
-import pickle
+import six
 
 
 import cloud
@@ -24,6 +24,9 @@ def get_install_path():
 
 
 def remove_non_ascii(s):
+    if not isinstance(s, six.string_types):
+        logger.error('Property name is not of type string')
+        raise AssertionError('Property name is not of type string')
     s = ''.join(i for i in s if ord(i) < 128)
     s = str(s)
     return str.strip(s)
@@ -31,27 +34,53 @@ def remove_non_ascii(s):
 
 # find list difference
 def list_diff(a_list, b_list):
+
+    if not isinstance(a_list, list) and not isinstance(a_list, set):
+        logger.error('a_list is not of type list or set')
+        raise AssertionError('a_list is not of type list or set')
+
+    if not isinstance(b_list, list) and not isinstance(b_list, set):
+        logger.error('b_list is not of type list or set')
+        raise AssertionError('b_list is not of type list or set')
+
     b_set = list_drop_duplicates(b_list)
     return [a for a in a_list if a not in b_set]
 
 
 def load_dataset(file_name, key=None, **kwargs):
+    if not isinstance(file_name, six.string_types):
+        logger.error('file name is not a string')
+        raise AssertionError('file name is not a string')
     p = get_install_path()
     p = os.sep.join([p, 'datasets', file_name+'.csv'])
-    if file_name == 'table_A' or file_name == 'table_B':
-        if key is None:
-            key = 'ID'
-    table = read_csv_metadata(p, key=key, **kwargs)
+    table = pd.read_csv(p, **kwargs)
+    if key is not None:
+        cm.set_key(table, key)
     return table
 
 
 # remove rows with NaN in a particular attribute
 def rem_nan(table, attr):
+    if not isinstance(table, pd.DataFrame):
+        logger.error('Input object is not of type pandas data frame')
+        raise AssertionError('Input object is not of type pandas data frame')
+    if not isinstance(attr, six.string_types):
+        logger.error('Input attr. should be of type string')
+        raise AssertionError('Input attr. should be of type string')
+
+    if not attr in table.columns:
+        logger.error('Input attr not in the table columns')
+        raise KeyError('Input attr. not in the table columns')
+
     l = table.index.values[np.where(table[attr].notnull())[0]]
     return table.ix[l]
 
 
 def list_drop_duplicates(lst):
+    if not isinstance(lst, list) and not isinstance(lst, set):
+        logger.error('Input object not of type list or set')
+        raise AssertionError('Input object is not of type list or set')
+
     a = []
     for i in lst:
         if i not in a:
@@ -62,6 +91,11 @@ def list_drop_duplicates(lst):
 def add_output_attributes(candset, l_output_attrs=None, r_output_attrs=None, l_output_prefix='ltable_',
                           r_output_prefix='rtable_', validate=True, copy_props=True,
                           delete_from_catalog=True, verbose=False):
+
+    if not isinstance(candset, pd.DataFrame):
+        logger.error('Input object is not of type pandas data frame')
+        raise AssertionError('Input object is not of type pandas data frame')
+
     # # get metadata
     key, fk_ltable, fk_rtable, ltable, rtable, l_key, r_key = cm.get_metadata_for_candset(candset, logger, verbose)
     if validate:
@@ -88,18 +122,40 @@ def _add_output_attributes(candset, fk_ltable, fk_rtable, ltable=None, rtable=No
                           l_output_attrs=None, r_output_attrs=None,
                           l_output_prefix='ltable_', r_output_prefix='rtable_',
                           validate=True):
+
+    if not isinstance(candset, pd.DataFrame):
+        logger.error('Input object is not of type pandas data frame')
+        raise AssertionError('Input object is not of type pandas data frame')
+
+    if not isinstance(fk_ltable, six.string_types):
+        logger.error('fk_ltable is not of type string')
+        raise AssertionError('fk_ltable is not of type string')
+
+    if not isinstance(fk_rtable, six.string_types):
+        logger.error('fk_rtable is not of type string')
+        raise AssertionError('fk_rtable is not of type string')
+
     if l_output_attrs is not None:
-        assert ltable is not None, 'ltable is not given to pull l_output_attrs'
-        assert l_key is not None, 'ltable key cannot be None'
+
+        if ltable is None:
+            logger.error('ltable is not given to pull l_output_attrs')
+            raise AssertionError('ltable is not given to pull l_output_attrs')
+        if l_key is None:
+            logger.error('ltable key cannot be None')
+            raise AssertionError('ltable key cannot be None')
+
         if validate:
             check_fk_constraint(candset, fk_ltable, ltable, l_key)
         col_names = [l_output_prefix+c for c in l_output_attrs]
         l_df = create_proj_dataframe(ltable, l_key, candset[fk_ltable], l_output_attrs, col_names)
 
-
     if r_output_attrs is not None:
-        assert rtable is not None, 'rtable is not given to pull r_output_attrs'
-        assert r_key is not None, 'rtable key cannot be None'
+        if rtable is None:
+            logger.error('rtable is not given to pull r_output_attrs')
+            raise AssertionError('rtable is not given to pull r_output_attrs')
+        if r_key is None:
+            logger.error('rtable key cannot be None')
+            raise AssertionError('rtable key cannot be None')
         if validate:
             check_fk_constraint(candset, fk_rtable, rtable, r_key)
         col_names = [r_output_prefix+c for c in r_output_attrs]
@@ -109,12 +165,23 @@ def _add_output_attributes(candset, fk_ltable, fk_rtable, ltable=None, rtable=No
         candset = pd.concat([candset, l_df], axis=1)
     if r_output_attrs is not None:
         candset = pd.concat([candset, r_df], axis=1)
-
-
     return candset
 
 
 def create_proj_dataframe(df, key, key_vals, attrs, col_names):
+    if not isinstance(df, pd.DataFrame):
+        logger.error('Input object is not of type pandas data frame')
+        raise AssertionError('Input object is not of type pandas data frame')
+
+    if not isinstance(key, six.string_types):
+        logger.error('Input key is not of type string')
+        raise AssertionError('Input key is not of type string')
+
+    if not key in df.columns:
+        logger.error('Input key is not in the dataframe columns')
+        raise KeyError('Input key is not in the dataframe columns')
+
+
     df = df.set_index(key, drop=False)
     df = df.ix[key_vals, attrs]
     df.reset_index(drop=True, inplace=True)
