@@ -1,6 +1,5 @@
 from PyQt4 import QtGui, QtCore
 from collections import OrderedDict
-import pandas as pd
 
 import magellan as mg
 import magellan.core.catalog_manager as cm
@@ -19,11 +18,8 @@ class MainWindowManager(QtGui.QWidget):
         self.fp_dataframe = fp_dataframe
         self.fn_dataframe = fn_dataframe
 
-        # ltable = self.table.get_property('ltable')
-        # rtable = self.table.get_property('rtable')
-        ltable = cm.get_property(self.table, 'ltable')
-        rtable = cm.get_property(self.table, 'rtable')
-
+        ltable = cm.get_ltable(self.table)
+        rtable = cm.get_rtable(self.table)
         l_df = ltable.to_dataframe()
         r_df = rtable.to_dataframe()
 
@@ -57,37 +53,11 @@ class MainWindowManager(QtGui.QWidget):
         layout.addWidget(splitter)
         self.setLayout(layout)
 
-
-    # def handle_debug_button(self, index):
-    #     # print 'Debug button clicked : ' + str(index)
-    #     r = self.current_dataframe.iloc[[index]]
-    #     l_fkey = self.table.get_property('foreign_key_ltable')
-    #     r_fkey = self.table.get_property('foreign_key_rtable')
-    #     l_val = r.ix[r.index.values[0], l_fkey]
-    #     r_val = r.ix[r.index.values[0], r_fkey]
-    #     d1 = OrderedDict(self.l_df.ix[l_val])
-    #     d2 = OrderedDict(self.r_df.ix[r_val])
-    #
-    #
-    #     # if self.matcher_type == 'dt':
-    #     #     ret_val, node_list = mg.vis_tuple_debug_dt_matcher(self.matcher, r, self.exclude_attrs_or_feature_table)
-    #     # elif self.matcher_type == 'rf':
-    #     #     ret_val, node_list = mg.vis_tuple_debug_rf_matcher(self.matcher, r, self.exclude_attrs_or_feature_table)
-    #     # elif self.matcher_type == 'rm':
-    #     #     ret_val, node_list = mg.vis_tuple_debug_rm_matcher(self.matcher, self.l_df.ix[l_val], self.r_df.ix[r_val],
-    #     #                                                        self.exclude_attrs_or_feature_table)
-    #     # else:
-    #     #     raise TypeError('Unknown matcher type ')
-    #     debug_result = [ret_val]
-    #     debug_result.append(node_list)
-    #     debug_obj = DebugWindowManager(d1, d2, self.matcher_type, debug_result)
-    #     debug_obj.show()
-
     def handle_show_button(self, index):
-        # print 'Show button clicked : ' + str(index)
         r = self.current_dataframe.iloc[[index]]
-        l_fkey = cm.get_property(self.table, 'fk_ltable')
-        r_fkey = cm.get_property(self.table, 'fk_rtable')
+        l_fkey = cm.get_fk_ltable(self.table)
+        r_fkey = cm.get_fk_rtable(self.table)
+
         l_val = r.ix[r.index.values[0], l_fkey]
         r_val = r.ix[r.index.values[0], r_fkey]
         d1 = OrderedDict(self.l_df.ix[l_val])
@@ -107,7 +77,6 @@ class MainWindowManager(QtGui.QWidget):
             self.dataframe_widget.tbl_obj.dataframe = self.current_dataframe
             self.dataframe_widget.tbl_obj.setup_gui()
             self.dataframe_widget.label_obj.setText(text)
-            # self.dataframe_widget.setup_gui()
 
 
 class ShowWindowManager(QtGui.QWidget):
@@ -149,7 +118,6 @@ class DebugWindowManager(QtGui.QWidget):
         self.left_tuple_widget = DictTableViewWithLabel(self, self.left_tuple_dict, 'Left Tuple')
         self.right_tuple_widget = DictTableViewWithLabel(self, self.right_tuple_dict, 'Right Tuple')
         self.setWindowTitle('Debug Tuples')
-        # self.debug_widget = DictTableViewWithLabel(self, self.debug_result, 'Debug Result')
         self.debug_widget = TreeViewWithLabel(self, "Tree details", type=self.matcher_type,
                                               debug_result = self.debug_result
                                               )
@@ -164,6 +132,3 @@ class DebugWindowManager(QtGui.QWidget):
         splitter2.addWidget(self.debug_widget)
         layout.addWidget(splitter2)
         self.setLayout(layout)
-
-
-
