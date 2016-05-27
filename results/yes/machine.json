@@ -1,0 +1,8 @@
+{
+    "arch": "yes", 
+    "cpu": "yes", 
+    "machine": "yes", 
+    "os": "yes", 
+    "ram": "yes", 
+    "version": 1
+}

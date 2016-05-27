@@ -1,4 +1,4 @@
-from PyQt4 import QtGui
+#from PyQt4 import QtGui
 from magellan.core.catalog import Catalog
 
 __version__ = '0.1.0'
@@ -67,4 +67,4 @@ _match_s = None
 _match_c = None
 
 # GUI related
-_viewapp = QtGui.QApplication([])
+#_viewapp = QtGui.QApplication([])

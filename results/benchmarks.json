@@ -1,0 +1,15 @@
+{
+    "benchmark_attr_equiv_blocker.TimeBlockTables.time_books": {
+        "code": "def time_books(self):                                                 \n\tself.ab.block_tables(self.A, self.B, self.l_block_attr, self.r_block_attr)\n", 
+        "goal_time": 2.0, 
+        "name": "benchmark_attr_equiv_blocker.TimeBlockTables.time_books", 
+        "number": 0, 
+        "param_names": [], 
+        "params": [], 
+        "repeat": 0, 
+        "timeout": 60.0, 
+        "type": "time", 
+        "unit": "seconds"
+    }, 
+    "version": 1
+}
