@@ -36,8 +36,6 @@ def read_csv_metadata(file_path, **kwargs):
     # will be updated for A
     >>> A.get_key()
     """
-
-
     # input type validations
     if not isinstance(file_path, six.string_types):
         logger.error('Input file path is not of type string')
@@ -65,7 +63,16 @@ def read_csv_metadata(file_path, **kwargs):
     if key is not None:
         cm.set_key(df, key)
     for k, v in metadata.iteritems():
-        cm.set_property(df, k, v)
+        if k == 'key':
+            cm.set_key(df, k)
+        elif k == 'fk_ltable' and metadata.has_key('ltable') and isinstance(metadata['ltable'], pd.DataFrame):
+            cm.validate_and_set_fk_ltable(df, metadata['fk_ltable'], metadata['ltable'],
+                                          cm.get_key(metadata['ltable']))
+        elif k == 'fk_rtable' and metadata.has_key('rtable') and isinstance(metadata['rtable'], pd.DataFrame):
+            cm.validate_and_set_fk_ltable(df, metadata['fk_rtable'], metadata['rtable'],
+                                          cm.get_key(metadata['rtable']))
+        else:
+            cm.set_property(df, k, v)
     return df
 
 
@@ -156,7 +163,7 @@ def _write_metadata(df, file_path):
                 metadata_dict[k] = v
 
         with open(file_path, 'w') as f:
-            for k, v in d.iteritems():
+            for k, v in metadata_dict.iteritems():
                 f.write('#%s=%s\n' % (k, v))
 
     return True

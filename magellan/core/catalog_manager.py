@@ -413,6 +413,34 @@ def set_key(df, key):
     else:
         return set_property(df, 'key', key)
 
+def gentle_set_key(df, key):
+    """
+    Set the key attribute for a dataframe
+
+    Args:
+        df (pandas dataframe): Dataframe for which the key must be set
+        key (str): Key attribute in the dataframe
+
+    Returns:
+        status (bool). Returns True if the key attribute was set successfully, else returns False
+
+    """
+
+    if not isinstance(df, pd.DataFrame):
+        logger.error('Input object is not of type pandas data frame')
+        raise AssertionError('Input object is not of type pandas data frame')
+
+    if not key in df.columns:
+        logger.warning('Input key ( %s ) not in the dataframe' %key)
+        return False
+
+    if ch.is_key_attribute(df, key) is False:
+        logger.warning('Attribute (' + key + ') does not qualify to be a key; Not setting/replacing the key')
+        return False
+    else:
+        return set_property(df, 'key', key)
+
+
 
 def get_fk_ltable(df):
     if not isinstance(df, pd.DataFrame):
@@ -448,8 +476,27 @@ def set_fk_ltable(df, fk_ltable):
         logger.error('Input attr. ( %s ) not in the dataframe' %fk_ltable)
         raise KeyError('Input attr. ( %s ) not in the dataframe' %fk_ltable)
 
-
     return set_property(df, 'fk_ltable', fk_ltable)
+
+def validate_and_set_fk_ltable(df_foreign, fk_ltable, ltable, l_key):
+    # validations are done inside the check_fk_constraint fn.
+    status = ch.check_fk_constraint(df_foreign, fk_ltable, ltable, l_key)
+    if status is True:
+        return set_property(df_foreign, fk_ltable)
+    else:
+        logger.warning('FK constraint for ltable and fk_ltable is not satisfied; Not setting the fk_ltable and ltable')
+        return False
+
+
+def validate_and_set_fk_rtable(df_foreign, fk_rtable, rtable, r_key):
+    # validations are done inside the check_fk_constraint fn.
+    status = ch.check_fk_constraint(df_foreign, fk_rtable, rtable, r_key)
+    if status is True:
+        return set_property(df_foreign, fk_rtable)
+    else:
+        logger.warning('FK constraint for rtable and fk_rtable is not satisfied; Not setting the fk_rtable and rtable')
+        return False
+
 
 
 def set_fk_rtable(df, fk_rtable):

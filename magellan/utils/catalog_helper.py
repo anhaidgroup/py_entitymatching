@@ -176,6 +176,7 @@ def check_fk_constraint(df_foreign, attr_foreign, df_base, attr_base):
         raise AssertionError('Input attr (attr_base) is not of type string')
 
     if check_attrs_present(df_base, attr_base) is False:
+        logger.warning('The attribute %s is not in df_base' %attr_base)
         return False
 
     t = df_base[df_base[attr_base].isin(pd.unique(df_foreign[attr_foreign]))]
