@@ -334,6 +334,25 @@ def set_properties(df, prop_dict, replace=True):
         catalog.set_property(df, k, v)
     return True
 
+def has_property(df, prop):
+    catalog = Catalog.Instance()
+    if not isinstance(df, pd.DataFrame):
+        logger.error('Input object is not of type pandas data frame')
+        raise AssertionError('Input object is not of type pandas data frame')
+
+    if not isinstance(prop, six.string_types):
+        logger.error('Property name is not of type string')
+        raise AssertionError('Property name is not of type string')
+
+    if not is_dfinfo_present(df):
+        logger.error('Dataframe is not in the catalog')
+        raise AssertionError('Dataframe is not in the catalog')
+
+    p = get_all_properties(df)
+    return p.has_key(prop)
+
+
+
 
 def copy_properties(src, tar, replace=True):
     """
@@ -413,6 +432,8 @@ def set_key(df, key):
     else:
         return set_property(df, 'key', key)
 
+
+
 def gentle_set_key(df, key):
     """
     Set the key attribute for a dataframe
@@ -481,8 +502,8 @@ def set_fk_ltable(df, fk_ltable):
 def validate_and_set_fk_ltable(df_foreign, fk_ltable, ltable, l_key):
     # validations are done inside the check_fk_constraint fn.
     status = ch.check_fk_constraint(df_foreign, fk_ltable, ltable, l_key)
-    if status is True:
-        return set_property(df_foreign, fk_ltable)
+    if status == True:
+        return set_property(df_foreign, 'fk_ltable', fk_ltable)
     else:
         logger.warning('FK constraint for ltable and fk_ltable is not satisfied; Not setting the fk_ltable and ltable')
         return False
@@ -491,8 +512,8 @@ def validate_and_set_fk_ltable(df_foreign, fk_ltable, ltable, l_key):
 def validate_and_set_fk_rtable(df_foreign, fk_rtable, rtable, r_key):
     # validations are done inside the check_fk_constraint fn.
     status = ch.check_fk_constraint(df_foreign, fk_rtable, rtable, r_key)
-    if status is True:
-        return set_property(df_foreign, fk_rtable)
+    if status == True:
+        return set_property(df_foreign, 'fk_rtable', fk_rtable)
     else:
         logger.warning('FK constraint for rtable and fk_rtable is not satisfied; Not setting the fk_rtable and rtable')
         return False
