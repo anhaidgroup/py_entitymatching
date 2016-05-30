@@ -46,10 +46,16 @@ def read_csv_metadata(file_path, **kwargs):
         logger.error('File does not exist at path %s' % file_path)
         raise AssertionError('File does not exist at path %s' % file_path)
 
+    ext = kwargs.pop('metadata_extn', None)
+    if ext == None:
+        ext = '.metadata'
+    if ext.startswith('.') == False:
+        ext = '.'+ext
+
     # update metadata from file (if present)
-    if _is_metadata_file_present(file_path):
+    if _is_metadata_file_present(file_path, ext=ext):
         file_name, file_ext = os.path.splitext(file_path)
-        file_name += '.metadata'
+        file_name += ext
         metadata, num_lines = _get_metadata_from_file(file_name)
     else:
         logger.warning('Metadata file is not present in the given path; proceeding to read the csv file.')
@@ -105,6 +111,11 @@ def to_csv_metadata(df, file_path, **kwargs):
         logger.error('Input file path is not of type string')
         raise AssertionError('Input file path is not of type string')
 
+    ext = kwargs.pop('metadata_extn', None)
+    if ext == None:
+        ext = '.metadata'
+    if ext.startswith('.') == False:
+        ext = '.'+ext
 
 
     index = kwargs.pop('index', None)
@@ -113,7 +124,7 @@ def to_csv_metadata(df, file_path, **kwargs):
         kwargs['index'] = False
 
     file_name, file_ext = os.path.splitext(file_path)
-    metadata_filename = file_name + '.metadata'
+    metadata_filename = file_name + ext
 
     can_write, file_exists = _check_file_path(file_path)
     if can_write:
@@ -175,7 +186,7 @@ def _write_metadata(df, file_path):
     return True
 
 
-def _is_metadata_file_present(file_path):
+def _is_metadata_file_present(file_path, ext='.metadata'):
     """
     Check if the metadata file is present
     Args:
@@ -186,7 +197,7 @@ def _is_metadata_file_present(file_path):
         This is an internal function
     """
     file_name, file_ext = os.path.splitext(file_path)
-    file_name += '.metadata'
+    file_name += ext
     return os.path.exists(file_name)
 
 
