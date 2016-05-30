@@ -45,7 +45,7 @@ class RuleBasedBlocker(Blocker):
             feat_dict = dict(zip(self.feature_table['feature_name'], feature_table['function']))
 
 
-        exec fn_str in feat_dict
+        exec(fn_str in feat_dict)
 
         return feat_dict[name], name, fn_str
 
