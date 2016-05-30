@@ -6,14 +6,15 @@ import unittest
 import pandas as pd
 from nose.tools import *
 
-from magellan.io.parsers import read_csv_metadata, to_csv_metadata
-from magellan.utils.generic_helper import get_install_path
+from magellan.io.parsers import read_csv_metadata, to_csv_metadata, _get_metadata_from_file
+from magellan.utils.generic_helper import get_install_path, del_files_in_dir
 import magellan.core.catalog_manager as cm
 
 io_datasets_path = os.sep.join([get_install_path(), 'datasets', 'test_datasets', 'io'])
 path_a = os.sep.join([io_datasets_path, 'A.csv'])
 path_b = os.sep.join([io_datasets_path, 'B.csv'])
 path_c = os.sep.join([io_datasets_path, 'C.csv'])
+sndbx_path = os.sep.join([os.sep.join([get_install_path(), 'datasets', 'test_datasets']), 'sandbox'])
 
 class ReadCSVMetadataTestCases(unittest.TestCase):
     def test_valid_path_wi_valid_metadata(self):
@@ -96,8 +97,108 @@ class ReadCSVMetadataTestCases(unittest.TestCase):
         self.assertEqual(cm.has_property(IM, 'key'), True)
 
 
-class WriteCSVMetadataTestCases(unittest.TestCase):
-    pass
+class ToCSVMetadataTestCases(unittest.TestCase):
+    @raises(AssertionError)
+    def test_invalid_df_1(self):
+        cm.del_catalog()
+        del_files_in_dir(sndbx_path)
+        p = os.sep.join([sndbx_path, 'A_saved.csv'])
+        to_csv_metadata(10, p)
+
+    @raises(AssertionError)
+    def test_invalid_df_2(self):
+        cm.del_catalog()
+        del_files_in_dir(sndbx_path)
+        p = os.sep.join([sndbx_path, 'A_saved.csv'])
+        to_csv_metadata(None, p)
+
+
+    @raises(AssertionError)
+    def test_invalid_path_1(self):
+        cm.del_catalog()
+        del_files_in_dir(sndbx_path)
+        A = read_csv_metadata(path_a)
+        to_csv_metadata(A, 10)
+
+    @raises(AssertionError)
+    def test_invalid_path_1(self):
+        cm.del_catalog()
+        del_files_in_dir(sndbx_path)
+        A = read_csv_metadata(path_a)
+        to_csv_metadata(A, None)
+
+    @raises(AssertionError)
+    def test_invalid_path_df(self):
+        cm.del_catalog()
+        del_files_in_dir(sndbx_path)
+        to_csv_metadata(None, None)
+
+    def test_valid_path_df_chk_metadatafile_1(self):
+        cm.del_catalog()
+        del_files_in_dir(sndbx_path)
+        A = read_csv_metadata(path_a)
+
+        p = os.sep.join([sndbx_path, 'A_saved.csv'])
+        to_csv_metadata(A, p)
+
+        p_meta_1=os.sep.join([sndbx_path, 'A_saved.metadata'])
+        m1 = _get_metadata_from_file(p_meta_1)
+
+        p_meta_2=os.sep.join([io_datasets_path, 'expected_A.metadata'])
+        m2 = _get_metadata_from_file(p_meta_2)
+
+        self.assertEqual(m1, m2, 'The metadata information is not same.')
+
+
+    def test_valid_path_df_chk_metadatafile_2(self):
+        cm.del_catalog()
+        del_files_in_dir(sndbx_path)
+        A = read_csv_metadata(path_a)
+        B = read_csv_metadata(path_b, key='ID')
+        C = read_csv_metadata(path_c, ltable=A, rtable=B)
+
+        p = os.sep.join([sndbx_path, 'C_saved.csv'])
+        to_csv_metadata(C, p)
+
+        p_meta_1=os.sep.join([sndbx_path, 'C_saved.metadata'])
+        m1 = _get_metadata_from_file(p_meta_1)
+
+        p_meta_2=os.sep.join([io_datasets_path, 'expected_C.metadata'])
+        m2 = _get_metadata_from_file(p_meta_2)
+
+        self.assertEqual(m1, m2, 'The metadata information is not same.')
+
+
+    def test_valid_path_df_chk_catalog_1(self):
+        cm.del_catalog()
+        del_files_in_dir(sndbx_path)
+        A = read_csv_metadata(path_a)
+
+        p = os.sep.join([sndbx_path, 'A_saved.csv'])
+        to_csv_metadata(A, p)
+
+        A1 = read_csv_metadata(p)
+
+        self.assertEqual(cm.get_key(A1), cm.get_key(A), 'The keys in the catalog are not same')
+
+    def test_valid_path_df_chk_catalog_2(self):
+        cm.del_catalog()
+        del_files_in_dir(sndbx_path)
+        A = read_csv_metadata(path_a)
+        B = read_csv_metadata(path_b, key='ID')
+
+        C = read_csv_metadata(path_c, ltable=A, rtable=B)
+
+        p = os.sep.join([sndbx_path, 'C_saved.csv'])
+        to_csv_metadata(C, p)
+
+        C1 = read_csv_metadata(p, ltable=A, rtable=B)
+
+        self.assertEqual(cm.get_all_properties(C1), cm.get_all_properties(C), 'The properties in the '
+                                                                                  'catalog are not same')
+
+
+
 
 
 

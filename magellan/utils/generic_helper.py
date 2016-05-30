@@ -118,10 +118,10 @@ def add_output_attributes(candset, l_output_attrs=None, r_output_attrs=None, l_o
 
 
 def _add_output_attributes(candset, fk_ltable, fk_rtable, ltable=None, rtable=None,
-                          l_key=None, r_key=None,
-                          l_output_attrs=None, r_output_attrs=None,
-                          l_output_prefix='ltable_', r_output_prefix='rtable_',
-                          validate=True):
+                           l_key=None, r_key=None,
+                           l_output_attrs=None, r_output_attrs=None,
+                           l_output_prefix='ltable_', r_output_prefix='rtable_',
+                           validate=True):
 
     if not isinstance(candset, pd.DataFrame):
         logger.error('Input object is not of type pandas data frame')
@@ -189,3 +189,9 @@ def create_proj_dataframe(df, key, key_vals, attrs, col_names):
     return df
 
 
+def del_files_in_dir(dir):
+    filelist = [ f for f in os.listdir(dir)  ]
+    for f in filelist:
+        p = os.sep.join([dir, f])
+        # print(p)
+        os.remove(p)

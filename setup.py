@@ -30,7 +30,7 @@ setup(
     author_email='pradap@cs.wisc.edu',
     license=['MIT'],
     packages=['magellan'],
-    install_requires=['JPype1>=0.5.7',
+    install_requires=[
                       'pandas >= 0.16.0',
                       'numpy >= 1.7.0',
                       'six',
