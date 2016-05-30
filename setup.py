@@ -35,7 +35,7 @@ setup(
                       'numpy >= 1.7.0',
                       'six',
                       'scikit-learn >= 0.16.1',
-                      'cloud >= 2.8.5',
+                      'cloudpickle',
                       'pyparsing >= 2.0.3',
                       'scipy >= 0.16.0',
                       'Cython >= 0.23.0',

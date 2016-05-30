@@ -4,7 +4,6 @@ import os
 import six
 
 
-import cloud
 import numpy as np
 import pandas as pd
 
