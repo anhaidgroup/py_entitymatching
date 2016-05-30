@@ -189,8 +189,9 @@ def create_proj_dataframe(df, key, key_vals, attrs, col_names):
 
 
 def del_files_in_dir(dir):
-    filelist = [ f for f in os.listdir(dir)  ]
-    for f in filelist:
-        p = os.sep.join([dir, f])
-        # print(p)
-        os.remove(p)
+    if os.path.isdir(dir):
+        filelist = [ f for f in os.listdir(dir)  ]
+        for f in filelist:
+            p = os.sep.join([dir, f])
+            # print(p)
+            os.remove(p)
