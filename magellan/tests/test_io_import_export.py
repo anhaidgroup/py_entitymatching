@@ -7,7 +7,7 @@ import pandas as pd
 from nose.tools import *
 
 from magellan.io.parsers import read_csv_metadata, to_csv_metadata, _get_metadata_from_file
-from magellan.utils.generic_helper import get_install_path, del_files_in_dir
+from magellan.utils.generic_helper import get_install_path, del_files_in_dir, creat_dir_ifnot_exists
 import magellan.core.catalog_manager as cm
 
 io_datasets_path = os.sep.join([get_install_path(), 'datasets', 'test_datasets', 'io'])
@@ -131,6 +131,7 @@ class ToCSVMetadataTestCases(unittest.TestCase):
     def test_invalid_path_df(self):
         cm.del_catalog()
         del_files_in_dir(sndbx_path)
+        creat_dir_ifnot_exists(sndbx_path)
         to_csv_metadata(None, None)
 
     def test_valid_path_df_chk_metadatafile_1(self):
@@ -139,6 +140,7 @@ class ToCSVMetadataTestCases(unittest.TestCase):
         A = read_csv_metadata(path_a)
 
         p = os.sep.join([sndbx_path, 'A_saved.csv'])
+        creat_dir_ifnot_exists(sndbx_path)
         to_csv_metadata(A, p)
 
         p_meta_1=os.sep.join([sndbx_path, 'A_saved.metadata'])
@@ -158,6 +160,7 @@ class ToCSVMetadataTestCases(unittest.TestCase):
         C = read_csv_metadata(path_c, ltable=A, rtable=B)
 
         p = os.sep.join([sndbx_path, 'C_saved.csv'])
+        creat_dir_ifnot_exists(sndbx_path)
         to_csv_metadata(C, p)
 
         p_meta_1=os.sep.join([sndbx_path, 'C_saved.metadata'])
@@ -175,6 +178,8 @@ class ToCSVMetadataTestCases(unittest.TestCase):
         A = read_csv_metadata(path_a)
 
         p = os.sep.join([sndbx_path, 'A_saved.csv'])
+
+        creat_dir_ifnot_exists(sndbx_path)
         to_csv_metadata(A, p)
 
         A1 = read_csv_metadata(p)
@@ -190,6 +195,7 @@ class ToCSVMetadataTestCases(unittest.TestCase):
         C = read_csv_metadata(path_c, ltable=A, rtable=B)
 
         p = os.sep.join([sndbx_path, 'C_saved.csv'])
+        creat_dir_ifnot_exists(sndbx_path)
         to_csv_metadata(C, p)
 
         C1 = read_csv_metadata(p, ltable=A, rtable=B)

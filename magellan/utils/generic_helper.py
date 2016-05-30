@@ -195,3 +195,7 @@ def del_files_in_dir(dir):
             p = os.sep.join([dir, f])
             # print(p)
             os.remove(p)
+
+def creat_dir_ifnot_exists(dir):
+    if not os.path.exists(dir):
+        os.makedirs(dir)
