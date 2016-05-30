@@ -68,7 +68,7 @@ def is_attr_unique(df, attr):
         logger.error('Input attr. is not of type string')
         raise AssertionError('Input attr. is not of type string')
 
-    uniq_flag = len(np.unique(df[attr])) == len(df)
+    uniq_flag = (len(pd.unique(df[attr])) == len(df))
     if not uniq_flag:
         return False
     else:
@@ -128,7 +128,7 @@ def is_key_attribute(df, attr, verbose=False):
     # check if the length is > 0
     if len(df) > 0:
         # check for uniqueness
-        uniq_flag = len(np.unique(df[attr])) == len(df)
+        uniq_flag = len(pd.unique(df[attr])) == len(df)
         if not uniq_flag:
             if verbose:
                 logger.warning('Attribute ' + attr + ' does not contain unique values')

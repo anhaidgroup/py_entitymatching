@@ -349,7 +349,8 @@ def has_property(df, prop):
         raise AssertionError('Dataframe is not in the catalog')
 
     p = get_all_properties(df)
-    return p.has_key(prop)
+    # return p.has_key(prop)
+    return prop in p
 
 
 
