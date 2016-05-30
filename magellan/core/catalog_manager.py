@@ -663,24 +663,24 @@ def show_properties(df):
         logger.warning('Dataframe information is not present in the catalog')
         return
     metadata = get_all_properties(df)
-    print 'id: ' + str(id(df))
+    print('id: ' + str(id(df)))
     for prop in metadata.iterkeys():
         value = metadata[prop]
         if isinstance(value, basestring):
-            print prop + ": " + value
+            print(prop + ": " + value)
         else:
-            print prop + "(obj.id): " + str(id(value))
+            print(prop + "(obj.id): " + str(id(value)))
 
 
 def show_properties_for_id(obj_id):
     metadata = get_all_properties_for_id(obj_id)
-    print 'id: ' + str(obj_id)
+    print('id: ' + str(obj_id))
     for prop in metadata.iterkeys():
         value = metadata[prop]
         if isinstance(value, basestring):
-            print prop + ": " + value
+            print(prop + ": " + value)
         else:
-            print prop + "(obj.id): " + str(id(value))
+            print(prop + "(obj.id): " + str(id(value)))
 
 
 def set_candset_properties(candset, key, fk_ltable, fk_rtable, ltable, rtable):
