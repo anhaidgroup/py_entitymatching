@@ -85,6 +85,12 @@ def save_table(df, file_path, metadata_ext='.pklmetadata'):
         logger.error('Input file path is not of type string')
         raise AssertionError('Input file path is not of type string')
 
+    # input type validations
+    if not isinstance(metadata_ext, six.string_types):
+        logger.error('Input metadata ext is not of type string')
+        raise AssertionError('Input metadata ext is not of type string')
+
+
     file_name, file_ext = os.path.splitext(file_path)
     metadata_filename = file_name + metadata_ext
 
@@ -126,8 +132,8 @@ def save_table(df, file_path, metadata_ext='.pklmetadata'):
             # write metadata contents
             with open(metadata_filename, 'wb') as f:
                 cloudpickle.dump(metadata_dict, f)
-    else:
-        logger.warning('Cannot write metadata at the file path %s. Skip writing metadata file' % metadata_filename)
+    # else:
+    #     logger.warning('Cannot write metadata at the file path %s. Skip writing metadata file' % metadata_filename)
 
     return True
 
@@ -142,6 +148,18 @@ def load_table(file_path, metadata_ext='.pklmetadata'):
     """
     # load data frame from file path
     # # input validations are done in load_object
+
+    # input type validations
+    if not isinstance(file_path, six.string_types):
+        logger.error('Input file path is not of type string')
+        raise AssertionError('Input file path is not of type string')
+
+    # input type validations
+    if not isinstance(metadata_ext, six.string_types):
+        logger.error('Input metadata ext is not of type string')
+        raise AssertionError('Input metadata ext is not of type string')
+
+
     df = load_object(file_path)
 
     # load metadata from file path
@@ -150,9 +168,12 @@ def load_table(file_path, metadata_ext='.pklmetadata'):
         metadata_filename = file_name + metadata_ext
         metadata_dict = load_object(metadata_filename)
         # update metadata in the catalog
-        for key, value in metadata_dict.iteritems():
-            if key is 'key':
-                cm.set_key(df, key)
+        # for key, value in metadata_dict.iteritems():
+        for key, value in six.iteritems(metadata_dict):
+            if key == 'key':
+                cm.set_key(df, value)
             else:
                 cm.set_property(df, key, value)
+    else:
+        logger.warning('There is no metadata file')
     return df
