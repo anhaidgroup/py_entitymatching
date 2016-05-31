@@ -47,7 +47,7 @@ def test_ab_block_tables():
     k2 = np.array(C[r_output_prefix + r_block_attr_1])
     assert_equal(all(k1 == k2), True)
 
-def test_ab_block_tables_wi_no_tuples():
+def test_ab_block_tables_wi_no_output_tuples():
     A = mg.read_csv_metadata(path_for_A)
     mg.set_key(A, l_key)
     B = mg.read_csv_metadata(path_for_B)
@@ -59,6 +59,21 @@ def test_ab_block_tables_wi_no_tuples():
 		 r_output_prefix + r_key]))
     assert_equal(mg.get_key(C), '_id')
     assert_equal(mg.get_property(C, 'fk_ltable'), l_output_prefix + l_key)
+    assert_equal(mg.get_property(C, 'fk_rtable'), r_output_prefix + r_key)
+
+def test_ab_block_tables_wi_no_output_attrs():                                                     
+    A = mg.read_csv_metadata(path_for_A)                                        
+    mg.set_key(A, l_key)                                                        
+    B = mg.read_csv_metadata(path_for_B)                                        
+    mg.set_key(B, r_key)                                                        
+    ab = mg.AttrEquivalenceBlocker()                                            
+    C = ab.block_tables(A, B, l_block_attr_1, r_block_attr_1, None, None,   
+                        l_output_prefix, r_output_prefix)       
+    s1 = ['_id', l_output_prefix + l_key, r_output_prefix + r_key]              
+    s1 = sorted(s1)                                                             
+    assert_equal(s1, sorted(C.columns))                                         
+    assert_equal(mg.get_key(C), '_id')                                          
+    assert_equal(mg.get_property(C, 'fk_ltable'), l_output_prefix + l_key)      
     assert_equal(mg.get_property(C, 'fk_rtable'), r_output_prefix + r_key)
 
 def test_ab_block_candset():

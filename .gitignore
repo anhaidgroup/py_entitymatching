@@ -69,3 +69,5 @@ scratch/
 magellan/datasets/msd_reduced.csv
 magellan/datasets/test_datasets/sandbox/*
 cover/
+
+magellan/io/pickles.py
