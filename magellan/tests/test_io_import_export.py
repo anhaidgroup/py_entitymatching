@@ -111,11 +111,13 @@ class ReadCSVMetadataTestCases(unittest.TestCase):
         self.assertEqual(A.equals(pd_A), True)
         self.assertEqual(cm.get_key(A), 'ID')
 
+    @raises(KeyError)
     def test_validpath_metadata_set_to_none_1(self):
-
         cm.del_catalog()
         del_files_in_dir(sndbx_path)
         A = read_csv_metadata(path_a, key=None)
+        self.assertEqual(cm.is_dfinfo_present(A), True)
+        cm.get_key(A)
 
         # self.assertEqual(cm.get_key(A1), cm.get_key(A), 'The keys in the catalog are not same')
 

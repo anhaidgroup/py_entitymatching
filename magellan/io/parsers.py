@@ -238,7 +238,8 @@ def _update_metadata_for_read_cmd(metadata, **kwargs):
     """
 
     # first update from the key-value arguments
-    for k in metadata.keys():
+    copy_metadata = metadata.copy()
+    for k in copy_metadata.keys():
         # if kwargs.has_key(k):
         if k in kwargs:
             value = kwargs.pop(k)
