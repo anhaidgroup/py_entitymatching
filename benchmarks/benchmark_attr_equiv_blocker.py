@@ -35,8 +35,37 @@ class TimeBlockTablesBooks:
 	del self.B
 	del self.ab
 
+class TimeBlockTablesBikes:
+    def setup(self):
+	p = mg.get_install_path()                                                       
+	path_for_A = os.sep.join([p, 'datasets', 'benchmark_datasets', 'bikes', 'A.csv'])                        
+	path_for_B = os.sep.join([p, 'datasets', 'benchmark_datasets', 'bikes', 'B.csv'])                        
+	l_key = 'ID'                                                                    
+	r_key = 'ID'                                                                    
+	self.A = mg.read_csv_metadata(path_for_A)
+    	mg.set_key(self.A, l_key)                                                        
+    	self.B = mg.read_csv_metadata(path_for_B)                                        
+    	mg.set_key(self.B, r_key)                                                        
+	self.l_block_attr = 'city_posted'                                                       
+	self.r_block_attr = 'city_posted'
+	self.l_output_attrs = ['bike_name', 'city_posted', 'km_driven', 'price',
+			  'color', 'model_year']                                                       
+	self.r_output_attrs = ['bike_name', 'city_posted', 'km_driven', 'price',
+			  'color', 'model_year']                                                       
+    	self.ab = mg.AttrEquivalenceBlocker()
+
+    def time_block_tables(self):                                                 
+	self.ab.block_tables(self.A, self.B, self.l_block_attr,
+				      self.r_block_attr, self.l_output_attrs,
+				      self.r_output_attrs, verbose=False)                                            
+
+    def teardown(self):
+	del self.A
+	del self.B
+	del self.ab
+
 class TimeBlockCandsetBikes:
-    timeout = 3600.0                                                               
+    timeout = 300.0                                                               
     def setup(self):
 	p = mg.get_install_path()                                                       
 	path_for_A = os.sep.join([p, 'datasets', 'benchmark_datasets', 'bikes', 'A.csv'])                        

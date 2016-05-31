@@ -37,6 +37,12 @@ class AttrEquivalenceBlocker(Blocker):
         # # remove nans: should be modified based on missing data policy
         l_df, r_df = rem_nan(ltable, l_block_attr), rem_nan(rtable, r_block_attr)
 
+	# # do projection before merge
+	l_proj_attrs = self.get_proj_attrs(l_key, l_block_attr, l_output_attrs)
+	l_df = l_df[l_proj_attrs]
+	r_proj_attrs = self.get_proj_attrs(r_key, r_block_attr, r_output_attrs)
+	r_df = r_df[r_proj_attrs]
+
         # # use pandas merge to do equi join
         candset = pd.merge(l_df, r_df, left_on=l_block_attr, right_on=r_block_attr, suffixes=('_ltable', '_rtable'))
 
@@ -86,17 +92,33 @@ class AttrEquivalenceBlocker(Blocker):
         l_df = ltable.set_index(l_key, drop=False)
         r_df = rtable.set_index(r_key, drop=False)
 
+	# # get the indexes for the key attributes in the candset
+	col_names = list(candset.columns)
+	print col_names
+	lkey_idx = col_names.index(fk_ltable)
+	rkey_idx = col_names.index(fk_rtable)
+
+	# # create a look up table for the blocking attribute values
+	l_dict = {}
+	r_dict = {}
+
         # # iterate the rows in candset
-        # # @todo replace iterrows with itertuples
-        for idx, row in candset.iterrows():
+        for row in candset.itertuples(index=False):
 
             # # update the progress bar
             if show_progress:
                 bar.update()
 
             # # get the value of block attributes
-            l_val = l_df.ix[row[fk_ltable], l_block_attr]
-            r_val = r_df.ix[row[fk_rtable], r_block_attr]
+	    row_lkey = row[lkey_idx]
+	    if row_lkey not in l_dict:
+	        l_dict[row_lkey] = l_df.ix[row_lkey, l_block_attr]
+            l_val = l_dict[row_lkey]
+	    
+	    row_rkey = row[rkey_idx]
+	    if row_rkey not in r_dict:
+	        r_dict[row_rkey] = r_df.ix[row_rkey, r_block_attr]
+            r_val = r_dict[row_rkey]
 
             if l_val != np.NaN and r_val != np.NaN:
                 if l_val == r_val:
@@ -150,41 +172,66 @@ class AttrEquivalenceBlocker(Blocker):
             r_block_attr = [r_block_attr]
         assert set(r_block_attr).issubset(rtable.columns) is True, 'Right block attribute is not in the right table'
 
+#    def output_columns(self, l_key, r_key, col_names, l_output_attrs, r_output_attrs, l_output_prefix, r_output_prefix):
+#
+#        ret_cols = []
+#        fin_cols = []
+#
+#        # retain id columns from merge
+#        ret_l_id = [self.retain_names(x, col_names, '_ltable') for x in [l_key]]
+#        ret_r_id = [self.retain_names(x, col_names, '_rtable') for x in [r_key]]
+#        ret_cols.extend(ret_l_id)
+#        ret_cols.extend(ret_r_id)
+#
+#        # retain output attrs from merge
+#        if l_output_attrs:
+#            l_output_attrs = [x for x in l_output_attrs if x not in [l_key]]
+#            ret_l_col = [self.retain_names(x, col_names, '_ltable') for x in l_output_attrs]
+#            ret_cols.extend(ret_l_col)
+#        if r_output_attrs:
+#            l_output_attrs = [x for x in r_output_attrs if x not in [r_key]]
+#            ret_r_col = [self.retain_names(x, col_names, '_rtable') for x in r_output_attrs]
+#            ret_cols.extend(ret_r_col)
+#
+#        # final columns in the output
+#        fin_l_id = [self.final_names(x, l_output_prefix) for x in [l_key]]
+#        fin_r_id = [self.final_names(x, r_output_prefix) for x in [r_key]]
+#        fin_cols.extend(fin_l_id)
+#        fin_cols.extend(fin_r_id)
+#
+#        # final output attrs from merge
+#        if l_output_attrs:
+#            fin_l_col = [self.final_names(x, l_output_prefix) for x in l_output_attrs]
+#            fin_cols.extend(fin_l_col)
+#        if r_output_attrs:
+#            fin_r_col = [self.final_names(x, r_output_prefix) for x in r_output_attrs]
+#            fin_cols.extend(fin_r_col)
+#
+#        return ret_cols, fin_cols
+
     def output_columns(self, l_key, r_key, col_names, l_output_attrs, r_output_attrs, l_output_prefix, r_output_prefix):
-
-        ret_cols = []
-        fin_cols = []
-
-        # retain id columns from merge
-        ret_l_id = [self.retain_names(x, col_names, '_ltable') for x in [l_key]]
-        ret_r_id = [self.retain_names(x, col_names, '_rtable') for x in [r_key]]
-        ret_cols.extend(ret_l_id)
-        ret_cols.extend(ret_r_id)
-
-        # retain output attrs from merge
-        if l_output_attrs:
-            l_output_attrs = [x for x in l_output_attrs if x not in [l_key]]
-            ret_l_col = [self.retain_names(x, col_names, '_ltable') for x in l_output_attrs]
-            ret_cols.extend(ret_l_col)
-        if r_output_attrs:
-            l_output_attrs = [x for x in r_output_attrs if x not in [r_key]]
-            ret_r_col = [self.retain_names(x, col_names, '_rtable') for x in r_output_attrs]
-            ret_cols.extend(ret_r_col)
-
-        # final columns in the output
-        fin_l_id = [self.final_names(x, l_output_prefix) for x in [l_key]]
-        fin_r_id = [self.final_names(x, r_output_prefix) for x in [r_key]]
-        fin_cols.extend(fin_l_id)
-        fin_cols.extend(fin_r_id)
-
-        # final output attrs from merge
-        if l_output_attrs:
-            fin_l_col = [self.final_names(x, l_output_prefix) for x in l_output_attrs]
-            fin_cols.extend(fin_l_col)
-        if r_output_attrs:
-            fin_r_col = [self.final_names(x, r_output_prefix) for x in r_output_attrs]
-            fin_cols.extend(fin_r_col)
-
+                                                                                
+        # retain id columns from merge                                          
+        ret_cols = [self.retain_names(l_key, col_names, '_ltable')]             
+        ret_cols.append(self.retain_names(r_key, col_names, '_rtable'))         
+                                                                                
+        # final columns in the output                                           
+        fin_cols = [self.final_names(l_key, l_output_prefix)]                   
+        fin_cols.append(self.final_names(r_key, r_output_prefix))               
+                                                                                
+        # retain output attrs from merge                                        
+        if l_output_attrs:                                                      
+            for x in l_output_attrs:                                            
+                if x != l_key:                                                  
+                    ret_cols.append(self.retain_names(x, col_names, '_ltable')) 
+                    fin_cols.append(self.final_names(x, l_output_prefix))       
+                                                                                
+        if r_output_attrs:                                                      
+            for x in r_output_attrs:                                            
+                if x != r_key:                                                  
+                    ret_cols.append(self.retain_names(x, col_names, '_rtable')) 
+                    fin_cols.append(self.final_names(x, r_output_prefix))       
+                                                                                
         return ret_cols, fin_cols
 
     def retain_names(self, x, col_names, suffix):

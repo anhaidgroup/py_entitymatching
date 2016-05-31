@@ -13,8 +13,10 @@
     "python": "2.7", 
     "requirements": {}, 
     "results": {
-        "benchmark_attr_equiv_blocker.TimeBlockCandsetBikes.time_block_candset": 3081.541365872, 
-        "benchmark_attr_equiv_blocker.TimeBlockTablesBooks.time_block_tables": 35.541261863
+        "benchmark_attr_equiv_blocker.TimeBlockCandsetBikes.time_block_candset": 200.39474261200002, 
+        "benchmark_attr_equiv_blocker.TimeBlockTablesBikes.time_block_candset": null, 
+        "benchmark_attr_equiv_blocker.TimeBlockTablesBikes.time_block_tables": 7.543248239, 
+        "benchmark_attr_equiv_blocker.TimeBlockTablesBooks.time_block_tables": 10.117241812
     }, 
     "version": 1
 }

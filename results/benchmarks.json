@@ -7,7 +7,19 @@
         "param_names": [], 
         "params": [], 
         "repeat": 0, 
-        "timeout": 3600.0, 
+        "timeout": 300.0, 
+        "type": "time", 
+        "unit": "seconds"
+    }, 
+    "benchmark_attr_equiv_blocker.TimeBlockTablesBikes.time_block_tables": {
+        "code": "    def time_block_tables(self):                                                 \n\tself.ab.block_tables(self.A, self.B, self.l_block_attr,\n\t\t\t\t      self.r_block_attr, self.l_output_attrs,\n\t\t\t\t      self.r_output_attrs, verbose=False)                                            \n", 
+        "goal_time": 2.0, 
+        "name": "benchmark_attr_equiv_blocker.TimeBlockTablesBikes.time_block_tables", 
+        "number": 0, 
+        "param_names": [], 
+        "params": [], 
+        "repeat": 0, 
+        "timeout": 60.0, 
         "type": "time", 
         "unit": "seconds"
     }, 
