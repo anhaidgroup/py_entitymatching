@@ -98,9 +98,9 @@ def jaro(s1, s2):
         return np.NaN
     if pd.isnull(s1) or pd.isnull(s2):
         return np.NaN
-    if isinstance(s1, basestring):
+    if isinstance(s1, six.string_types):
         s1 = remove_non_ascii(s1)
-    if isinstance(s2, basestring):
+    if isinstance(s2, six.string_types):
         s2 = remove_non_ascii(s2)
     return sim.jaro(str(s1), str(s2))
 
@@ -110,9 +110,9 @@ def jaro_winkler(s1, s2):
         return np.NaN
     if pd.isnull(s1) or pd.isnull(s2):
         return np.NaN
-    if isinstance(s1, basestring):
+    if isinstance(s1, six.string_types):
         s1 = remove_non_ascii(s1)
-    if isinstance(s2, basestring):
+    if isinstance(s2, six.string_types):
         s2 = remove_non_ascii(s2)
     return sim.jaro_winkler(str(s1), str(s2))
 
@@ -122,9 +122,9 @@ def needleman_wunsch(s1, s2):
         return np.NaN
     if pd.isnull(s1) or pd.isnull(s2):
         return np.NaN
-    if isinstance(s1, basestring):
+    if isinstance(s1, six.string_types):
         s1 = remove_non_ascii(s1)
-    if isinstance(s2, basestring):
+    if isinstance(s2, six.string_types):
         s2 = remove_non_ascii(s2)
     return sim.needleman_wunsch(s1, s2)
 
@@ -134,9 +134,9 @@ def smith_waterman(s1, s2):
         return np.NaN
     if pd.isnull(s1) or pd.isnull(s2):
         return np.NaN
-    if isinstance(s1, basestring):
+    if isinstance(s1, six.string_types):
         s1 = remove_non_ascii(s1)
-    if isinstance(s2, basestring):
+    if isinstance(s2, six.string_types):
         s2 = remove_non_ascii(s2)
     return sim.smith_waterman(s1, s2)
 

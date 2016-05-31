@@ -1,5 +1,6 @@
 import logging
 
+
 import pandas as pd
 import six
 
@@ -28,7 +29,7 @@ def get_feature_fn(feat_str, tok, sim):
     fn += '    '
     fn += 'return ' + feat_str
     d = parse_feat_str(feat_str, tok, sim)
-    exec fn in temp
+    exec(fn in temp)
     d['function'] = temp['fn']
     d['function_source'] = fn
     return d
@@ -67,7 +68,7 @@ def parse_feat_str(str, tok, sim):
     feat = wi_tok | wo_tok
     try:
         f = feat.parseString(str)
-    except ParseException, e:
+    except ParseException as e:
         exp_flag = True
 
     if exp_flag == False:
@@ -124,7 +125,7 @@ def add_feature(feat_table, feat_name, feat_dict):
     f = feat_dict['function']
     f_name = feat_name
     # f_name.func_name = feat_name
-    exec 'f_name = f'
+    exec('f_name = f')
     feat_dict['function'] = f_name
     if len(feat_table) > 0:
         feat_table.loc[len(feat_table)] = feat_dict

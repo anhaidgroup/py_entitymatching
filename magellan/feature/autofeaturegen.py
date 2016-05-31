@@ -1,6 +1,7 @@
 import logging
 
 import pandas as pd
+import six
 
 from magellan.feature.simfunctions import get_sim_funs_for_blocking, get_sim_funs_for_matching
 from magellan.feature.tokenizers import  get_tokenizers_for_blocking, get_tokenizers_for_matching
@@ -215,7 +216,7 @@ def conv_func_objs(feats, attrs, tok_funcs, sim_funcs):
 # check whether tokenizers and simfunctions are allowed
 # inp is of the form ('jaccard', 'qgm_3', 'qgm_3') or ('lev')
 def check_valid_tok_sim(inp, simlist, toklist):
-    if isinstance(inp, basestring):
+    if isinstance(inp, six.string_types):
         inp = [inp]
     assert len(inp) == 1 or len(inp) == 3, 'len of feature config should be 1 or 3'
     # check whether the sim function in features is in simlist
@@ -232,7 +233,7 @@ def get_fn_str(inp, attrs):
     if inp:
         args = []
         args.extend(attrs)
-        if isinstance(inp, basestring):
+        if isinstance(inp, six.string_types):
             inp = [inp]
         else:
             args.extend(inp)
@@ -316,7 +317,7 @@ def conv_fn_str_to_obj(fn_tup, tok, sim_funcs):
         tok_1 = f[3]
         tok_2 = f[4]
         simfunction = f[5]
-        exec f[6] in d_orig
+        exec(f[6] in d_orig)
         d_ret['function'] = d_orig[name]
         d_ret['feature_name'] = name
         d_ret['left_attribute'] = attr1

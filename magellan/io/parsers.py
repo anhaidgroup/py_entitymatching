@@ -36,8 +36,6 @@ def read_csv_metadata(file_path, **kwargs):
     # will be updated for A
     >>> A.get_key()
     """
-
-
     # input type validations
     if not isinstance(file_path, six.string_types):
         logger.error('Input file path is not of type string')
@@ -64,8 +62,21 @@ def read_csv_metadata(file_path, **kwargs):
     df = pd.read_csv(file_path, **kwargs)
     if key is not None:
         cm.set_key(df, key)
-    for k, v in metadata.iteritems():
-        cm.set_property(df, k, v)
+
+    # for k, v in metadata.iteritems():
+    for k, v in six.iteritems(metadata):
+        if k == 'key':
+            cm.set_key(df, k)
+        # elif k == 'fk_ltable' and metadata.has_key('ltable') and isinstance(metadata['ltable'], pd.DataFrame):
+        #     cm.validate_and_set_fk_ltable(df, metadata['fk_ltable'], metadata['ltable'],
+        #                                   cm.get_key(metadata['ltable']))
+        # elif k == 'fk_rtable' and metadata.has_key('rtable') and isinstance(metadata['rtable'], pd.DataFrame):
+        #     cm.validate_and_set_fk_rtable(df, metadata['fk_rtable'], metadata['rtable'],
+        #                                   cm.get_key(metadata['rtable']))
+        else:
+            cm.set_property(df, k, v)
+    if cm.is_dfinfo_present(df) == False:
+        cm.init_properties(df)
     return df
 
 
@@ -149,14 +160,16 @@ def _write_metadata(df, file_path):
 
     # write properties to disk
     if len(d) > 0:
-        for k, v in d.iteritems():
+        # for k, v in d.iteritems():
+        for k, v in six.iteritems(d):
             if isinstance(v, six.string_types) is False:
                 metadata_dict[k] = 'POINTER'
             else:
                 metadata_dict[k] = v
 
         with open(file_path, 'w') as f:
-            for k, v in d.iteritems():
+            # for k, v in metadata_dict.iteritems():
+            for k, v in six.iteritems(metadata_dict):
                 f.write('#%s=%s\n' % (k, v))
 
     return True
@@ -221,7 +234,8 @@ def _update_metadata_for_read_cmd(metadata, **kwargs):
 
     # first update from the key-value arguments
     for k in metadata.keys():
-        if kwargs.has_key(k):
+        # if kwargs.has_key(k):
+        if k in kwargs:
             value = kwargs.pop(k)
             if value is not None:
                 metadata[k] = value
@@ -232,7 +246,7 @@ def _update_metadata_for_read_cmd(metadata, **kwargs):
     # Add the properties from key-value arguments
     table_props = ['key', 'ltable', 'rtable', 'fk_ltable', 'fk_rtable']
     for k in table_props:
-        if kwargs.has_key(k):
+        if k in kwargs:
             value = kwargs.pop(k)
             if value is not None:
                 metadata[k] = value

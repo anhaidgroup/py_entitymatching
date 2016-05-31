@@ -68,7 +68,7 @@ def is_attr_unique(df, attr):
         logger.error('Input attr. is not of type string')
         raise AssertionError('Input attr. is not of type string')
 
-    uniq_flag = len(np.unique(df[attr])) == len(df)
+    uniq_flag = (len(pd.unique(df[attr])) == len(df))
     if not uniq_flag:
         return False
     else:
@@ -128,7 +128,7 @@ def is_key_attribute(df, attr, verbose=False):
     # check if the length is > 0
     if len(df) > 0:
         # check for uniqueness
-        uniq_flag = len(np.unique(df[attr])) == len(df)
+        uniq_flag = len(pd.unique(df[attr])) == len(df)
         if not uniq_flag:
             if verbose:
                 logger.warning('Attribute ' + attr + ' does not contain unique values')
@@ -176,11 +176,36 @@ def check_fk_constraint(df_foreign, attr_foreign, df_base, attr_base):
         raise AssertionError('Input attr (attr_base) is not of type string')
 
     if check_attrs_present(df_base, attr_base) is False:
+        logger.warning('The attribute %s is not in df_base' %attr_base)
         return False
 
-    t = df_base[df_base[attr_base].isin(pd.unique(df_foreign[attr_foreign]))]
 
-    return is_key_attribute(t, attr_base)
+    # 1. check attr_foreign does not contain missing values
+    # 2. all elements in attr_foreign must have an unique entry in the base table.
+
+    if any(pd.isnull(df_foreign[attr_foreign])) == True:
+        logger.warning('The attribute %s in foreign table contains null values' %attr_foreign)
+        return False
+
+    uniq_fk_vals = set(pd.unique(df_foreign[attr_foreign]))
+    base_attr_vals = df_base[attr_base].values
+    d = uniq_fk_vals.difference(base_attr_vals)
+    if len(d) > 0:
+        logger.warning('For some attr. values in (%s) in the foreign table there are no values in '
+                       '(%s) in the base table' %(attr_foreign, attr_base))
+        return False
+
+    # check whether those values are unique in the base table.
+    t = df_base[df_base[attr_base].isin(pd.unique(df_foreign[attr_foreign]))]
+    status = is_key_attribute(t, attr_base)
+
+    if status == False:
+        logger.warning('Key attr. constraint for the subset of values (derived from. %s)'
+                       'in %s is not satisifed' %(attr_foreign, attr_base))
+        return False
+    else:
+        return True
+
 
 
 def does_contain_rows(df):

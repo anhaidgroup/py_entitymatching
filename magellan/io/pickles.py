@@ -3,7 +3,7 @@ from collections import OrderedDict
 import logging
 import os
 
-import cloud.serialization.cloudpickle
+import cloudpickle
 import pandas as pd
 import pickle
 import six
@@ -33,10 +33,10 @@ def save_object(obj, file_path):
         if file_exists:
             logger.warning('File already exists at %s; Overwriting it' % file_path)
             with open(file_path, 'w') as f:
-                cloud.serialization.cloudpickle.dump(obj, f)
+                cloudpickle.dump(obj, f)
         else:
             with open(file_path, 'w') as f:
-                cloud.serialization.cloudpickle.dump(obj, f)
+                cloudpickle.dump(obj, f)
 
     else:
         logger.error('Cannot write in the file path %s; Exiting' % file_path)
@@ -94,10 +94,10 @@ def save_table(df, file_path):
         if file_exists:
             logger.warning('File already exists at %s; Overwriting it' % file_path)
             with open(file_path, 'w') as f:
-                cloud.serialization.cloudpickle.dump(df, f)
+                cloudpickle.dump(df, f)
         else:
             with open(file_path, 'w') as f:
-                cloud.serialization.cloudpickle.dump(df, f)
+                cloudpickle.dump(df, f)
 
     else:
         logger.error('Cannot write in the file path %s; Exiting' % file_path)
@@ -121,11 +121,11 @@ def save_table(df, file_path):
             logger.warning('Metadata file already exists at %s. Overwriting it' % metadata_filename)
             # write metadata contents
             with open(metadata_filename, 'w') as f:
-                cloud.serialization.cloudpickle.dump(metadata_dict, f)
+                cloudpickle.dump(metadata_dict, f)
         else:
             # write metadata contents
             with open(metadata_filename, 'w') as f:
-                cloud.serialization.cloudpickle.dump(metadata_dict, f)
+                cloudpickle.dump(metadata_dict, f)
     else:
         logger.warning('Cannot write metadata at the file path %s. Skip writing metadata file' % metadata_filename)
 
