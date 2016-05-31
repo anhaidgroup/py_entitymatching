@@ -3,7 +3,7 @@ from collections import OrderedDict
 import logging
 import os
 
-#import cloudpickle
+import cloudpickle
 import pandas as pd
 import pickle
 import six
