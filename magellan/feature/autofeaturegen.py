@@ -317,7 +317,8 @@ def conv_fn_str_to_obj(fn_tup, tok, sim_funcs):
         tok_1 = f[3]
         tok_2 = f[4]
         simfunction = f[5]
-        exec(f[6] in d_orig)
+        # exec(f[6] in d_orig)
+        six.exec_(f[6], d_orig)
         d_ret['function'] = d_orig[name]
         d_ret['feature_name'] = name
         d_ret['left_attribute'] = attr1

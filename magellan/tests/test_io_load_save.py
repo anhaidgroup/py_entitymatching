@@ -43,20 +43,21 @@ class SaveObjectTestCases(unittest.TestCase):
         A1 = load_object(p)
         self.assertEqual(A.equals(A1), True)
 
-    # def test_valid_object_2(self):
-    #     cm.del_catalog()
-    #     del_files_in_dir(sndbx_path)
-    #     A = read_csv_metadata(path_a)
-    #     B = read_csv_metadata(path_b)
-    #     feature_table = get_features_for_blocking(A, B)
-    #     rb = RuleBasedBlocker()
-    #     rb.add_rule('zipcode_zipcode_exm(ltuple, rtuple) != 1', feature_table)
-    #     C = rb.block_tables(A, B)
-    #     p = os.sep.join([sndbx_path, 'C.pkl'])
-    #     creat_dir_ifnot_exists(sndbx_path)
-    #     save_object(C, p)
-    #
-    #     rb1 = load_object(p)
-    #     C1 = rb1.block_tables(A, B)
-    #     self.assertEqual(C.equals(C1), True)
+    def test_valid_object_2(self):
+        cm.del_catalog()
+        del_files_in_dir(sndbx_path)
+        A = read_csv_metadata(path_a)
+        B = read_csv_metadata(path_b, key='ID')
+        feature_table = get_features_for_blocking(A, B)
+        rb = RuleBasedBlocker()
+        rb.add_rule('zipcode_zipcode_exm(ltuple, rtuple) != 1', feature_table)
+        C = rb.block_tables(A, B, show_progress=False)
+        self.assertEqual(len(C), 15)
+        p = os.sep.join([sndbx_path, 'C.pkl'])
+        creat_dir_ifnot_exists(sndbx_path)
+        save_object(rb, p)
+
+        rb1 = load_object(p)
+        C1 = rb1.block_tables(A, B, show_progress=False)
+        self.assertEqual(C.equals(C1), True)
 

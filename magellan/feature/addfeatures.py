@@ -29,7 +29,8 @@ def get_feature_fn(feat_str, tok, sim):
     fn += '    '
     fn += 'return ' + feat_str
     d = parse_feat_str(feat_str, tok, sim)
-    exec(fn in temp)
+    # six.exec_(fn, temp, temp)
+    six.exec_(fn, temp)
     d['function'] = temp['fn']
     d['function_source'] = fn
     return d
@@ -124,9 +125,17 @@ def add_feature(feat_table, feat_name, feat_dict):
     # rename function
     f = feat_dict['function']
     f_name = feat_name
-    # f_name.func_name = feat_name
-    exec('f_name = f')
-    feat_dict['function'] = f_name
+    # f.func_name = feature_name
+    # feat_dict['function'].func_name = feat_name
+    # six.exec_('f_name = f', locals=locals()) # check this
+    # if six.PY2 == True:
+    #     six.exec_('f_name=f')
+    #     # feat_dict['function'] = f_name
+    #     # six.exec_('f_name=feat_dict["function"]')
+    #     feat_dict['function'] = f_name
+    # else:
+    #     pass
+
     if len(feat_table) > 0:
         feat_table.loc[len(feat_table)] = feat_dict
     else:
