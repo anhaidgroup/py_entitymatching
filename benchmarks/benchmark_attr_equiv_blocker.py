@@ -4,7 +4,7 @@
 import os                                                                       
 import sys
                                                                                 
-import magellan as mg                                                           
+import magellan  as mg                                                           
                                                                                 
 class TimeBlockTablesBooks:                                                               
     def setup(self):
