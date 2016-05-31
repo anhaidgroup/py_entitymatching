@@ -32,10 +32,10 @@ def save_object(obj, file_path):
     if can_write:
         if file_exists:
             logger.warning('File already exists at %s; Overwriting it' % file_path)
-            with open(file_path, 'w') as f:
+            with open(file_path, 'wb') as f:
                 cloudpickle.dump(obj, f)
         else:
-            with open(file_path, 'w') as f:
+            with open(file_path, 'wb') as f:
                 cloudpickle.dump(obj, f)
 
     else:
@@ -62,12 +62,12 @@ def load_object(file_path):
         logger.error('File does not exist at path %s' % file_path)
         raise AssertionError('File does not exist at path %s' % file_path)
 
-    with open(file_path, 'r') as f:
+    with open(file_path, 'rb') as f:
         result = pickle.load(f)
     return result
 
 
-def save_table(df, file_path):
+def save_table(df, file_path, metadata_ext='.pklmetadata'):
     """
     Pickle dataframe along with the metadata
     Args:
@@ -85,18 +85,24 @@ def save_table(df, file_path):
         logger.error('Input file path is not of type string')
         raise AssertionError('Input file path is not of type string')
 
+    # input type validations
+    if not isinstance(metadata_ext, six.string_types):
+        logger.error('Input metadata ext is not of type string')
+        raise AssertionError('Input metadata ext is not of type string')
+
+
     file_name, file_ext = os.path.splitext(file_path)
-    metadata_filename = file_name + '.metadata'
+    metadata_filename = file_name + metadata_ext
 
     can_write, file_exists = _check_file_path(file_path)
 
     if can_write:
         if file_exists:
             logger.warning('File already exists at %s; Overwriting it' % file_path)
-            with open(file_path, 'w') as f:
+            with open(file_path, 'wb') as f:
                 cloudpickle.dump(df, f)
         else:
-            with open(file_path, 'w') as f:
+            with open(file_path, 'wb') as f:
                 cloudpickle.dump(df, f)
 
     else:
@@ -110,8 +116,9 @@ def save_table(df, file_path):
 
     # write properties to disk
     if len(d) > 0:
-        for k, v in d.iteritems():
-            if isinstance(v, basestring) is True:
+        # for k, v in d.iteritems():
+        for k, v in six.iteritems(d):
+            if isinstance(v, six.string_types) is True:
                 metadata_dict[k] = v
 
     # try to save metadata
@@ -120,19 +127,19 @@ def save_table(df, file_path):
         if file_exists:
             logger.warning('Metadata file already exists at %s. Overwriting it' % metadata_filename)
             # write metadata contents
-            with open(metadata_filename, 'w') as f:
+            with open(metadata_filename, 'wb') as f:
                 cloudpickle.dump(metadata_dict, f)
         else:
             # write metadata contents
-            with open(metadata_filename, 'w') as f:
+            with open(metadata_filename, 'wb') as f:
                 cloudpickle.dump(metadata_dict, f)
-    else:
-        logger.warning('Cannot write metadata at the file path %s. Skip writing metadata file' % metadata_filename)
+    # else:
+    #     logger.warning('Cannot write metadata at the file path %s. Skip writing metadata file' % metadata_filename)
 
     return True
 
 
-def load_table(file_path):
+def load_table(file_path, metadata_ext='.pklmetadata'):
     """
     Load table from file
     Args:
@@ -142,17 +149,32 @@ def load_table(file_path):
     """
     # load data frame from file path
     # # input validations are done in load_object
+
+    # input type validations
+    if not isinstance(file_path, six.string_types):
+        logger.error('Input file path is not of type string')
+        raise AssertionError('Input file path is not of type string')
+
+    # input type validations
+    if not isinstance(metadata_ext, six.string_types):
+        logger.error('Input metadata ext is not of type string')
+        raise AssertionError('Input metadata ext is not of type string')
+
+
     df = load_object(file_path)
 
     # load metadata from file path
-    if _is_metadata_file_present(file_path):
+    if _is_metadata_file_present(file_path, ext=metadata_ext):
         file_name, file_ext = os.path.splitext(file_path)
-        metadata_filename = file_name + '.metadata'
+        metadata_filename = file_name + metadata_ext
         metadata_dict = load_object(metadata_filename)
         # update metadata in the catalog
-        for key, value in metadata_dict.iteritems():
-            if key is 'key':
-                cm.set_key(df, key)
+        # for key, value in metadata_dict.iteritems():
+        for key, value in six.iteritems(metadata_dict):
+            if key == 'key':
+                cm.set_key(df, value)
             else:
                 cm.set_property(df, key, value)
+    else:
+        logger.warning('There is no metadata file')
     return df
