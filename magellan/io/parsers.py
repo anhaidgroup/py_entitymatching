@@ -71,16 +71,10 @@ def read_csv_metadata(file_path, **kwargs):
 
     # for k, v in metadata.iteritems():
     for k, v in six.iteritems(metadata):
-        if k == 'key':
-            cm.set_key(df, k)
-        # elif k == 'fk_ltable' and metadata.has_key('ltable') and isinstance(metadata['ltable'], pd.DataFrame):
-        #     cm.validate_and_set_fk_ltable(df, metadata['fk_ltable'], metadata['ltable'],
-        #                                   cm.get_key(metadata['ltable']))
-        # elif k == 'fk_rtable' and metadata.has_key('rtable') and isinstance(metadata['rtable'], pd.DataFrame):
-        #     cm.validate_and_set_fk_rtable(df, metadata['fk_rtable'], metadata['rtable'],
-        #                                   cm.get_key(metadata['rtable']))
-        else:
-            cm.set_property(df, k, v)
+        # if k == 'key':
+        #     cm.set_key(df, k)
+        # else:
+        cm.set_property(df, k, v)
     if cm.is_dfinfo_present(df) == False:
         cm.init_properties(df)
     return df
@@ -145,8 +139,8 @@ def to_csv_metadata(df, file_path, **kwargs):
             _write_metadata(df, metadata_filename)
         else:
             _write_metadata(df, metadata_filename)
-    else:
-        logger.warning('Cannot write metadata at the file path %s. Skip writing metadata file' % metadata_filename)
+    # else:
+    #     logger.warning('Cannot write metadata at the file path %s. Skip writing metadata file' % metadata_filename)
 
     return True
 
@@ -262,8 +256,11 @@ def _update_metadata_for_read_cmd(metadata, **kwargs):
             if value is not None:
                 metadata[k] = value
             else:
-                logger.warning('%s key had a value in file but input arg is set to None' %k)
-                v = metadata.pop(k)  # remove the key-value pair
+                logger.warning('Metadata %s is set to None' %k)
+                v = metadata.pop(k, None)  # remove the key-value pair
+            # else:
+            #     logger.warning('%s key had a value in file but input arg is set to None' %k)
+
     return metadata, kwargs
 
 
@@ -291,11 +288,11 @@ def _check_metadata_for_read_cmd(metadata):
             raise AssertionError('Dataframe requires all valid ltable, rtable, fk_ltable, '
                                  'fk_rtable parameters set')
 
-        if isinstance(metadata['ltable'], pd.DataFrame) is False:
+        if isinstance(metadata['ltable'], pd.DataFrame) == False:
             logger.error('The parameter ltable must be set to valid Dataframe')
             raise AssertionError('The parameter ltable must be set to valid Dataframe')
 
-        if isinstance(metadata['rtable'], pd.DataFrame) is False:
+        if isinstance(metadata['rtable'], pd.DataFrame) == False:
             logger.error('The parameter rtable must be set to valid Dataframe')
             raise AssertionError('The parameter rtable must be set to valid Dataframe')
 
