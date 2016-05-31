@@ -98,14 +98,6 @@ def init_properties(df):
     catalog.init_properties(df)
 
 
-def get_all_properties_for_id(obj_id):
-    catalog = Catalog.Instance()
-    if obj_id not in catalog.get_catalog():
-        logger.error('Object not in the catalog')
-        raise KeyError('Object not in the catalog')
-    return catalog.get_all_properties_for_id(obj_id)
-
-
 def get_all_properties(df):
     """
     Get all the properties for a dataframe
