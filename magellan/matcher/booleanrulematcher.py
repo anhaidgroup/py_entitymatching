@@ -4,6 +4,7 @@ import logging
 import magellan.core.catalog_manager as cm
 from magellan.matcher.rulematcher import RuleMatcher
 from magellan.matcher.matcherutils import get_ts
+import six
 
 logger = logging.getLogger(__name__)
 
@@ -88,7 +89,8 @@ class BooleanRuleMatcher(RuleMatcher):
         else:
             feat_dict = dict(zip(self.feature_table['feature_name'], self.feature_table['function']))
 
-        exec fn_str in feat_dict
+        # exec fn_str in feat_dict
+        six.exec_(fn_str, feat_dict)
         return feat_dict[name], name, fn_str
 
     def add_rule(self, conjunct_list, feature_table):

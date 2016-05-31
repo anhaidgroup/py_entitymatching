@@ -46,10 +46,16 @@ def read_csv_metadata(file_path, **kwargs):
         logger.error('File does not exist at path %s' % file_path)
         raise AssertionError('File does not exist at path %s' % file_path)
 
+    ext = kwargs.pop('metadata_extn', None)
+    if ext == None:
+        ext = '.metadata'
+    if ext.startswith('.') == False:
+        ext = '.'+ext
+
     # update metadata from file (if present)
-    if _is_metadata_file_present(file_path):
+    if _is_metadata_file_present(file_path, ext=ext):
         file_name, file_ext = os.path.splitext(file_path)
-        file_name += '.metadata'
+        file_name += ext
         metadata, num_lines = _get_metadata_from_file(file_name)
     else:
         logger.warning('Metadata file is not present in the given path; proceeding to read the csv file.')
@@ -65,16 +71,10 @@ def read_csv_metadata(file_path, **kwargs):
 
     # for k, v in metadata.iteritems():
     for k, v in six.iteritems(metadata):
-        if k == 'key':
-            cm.set_key(df, k)
-        # elif k == 'fk_ltable' and metadata.has_key('ltable') and isinstance(metadata['ltable'], pd.DataFrame):
-        #     cm.validate_and_set_fk_ltable(df, metadata['fk_ltable'], metadata['ltable'],
-        #                                   cm.get_key(metadata['ltable']))
-        # elif k == 'fk_rtable' and metadata.has_key('rtable') and isinstance(metadata['rtable'], pd.DataFrame):
-        #     cm.validate_and_set_fk_rtable(df, metadata['fk_rtable'], metadata['rtable'],
-        #                                   cm.get_key(metadata['rtable']))
-        else:
-            cm.set_property(df, k, v)
+        # if k == 'key':
+        #     cm.set_key(df, k)
+        # else:
+        cm.set_property(df, k, v)
     if cm.is_dfinfo_present(df) == False:
         cm.init_properties(df)
     return df
@@ -105,6 +105,11 @@ def to_csv_metadata(df, file_path, **kwargs):
         logger.error('Input file path is not of type string')
         raise AssertionError('Input file path is not of type string')
 
+    ext = kwargs.pop('metadata_extn', None)
+    if ext == None:
+        ext = '.metadata'
+    if ext.startswith('.') == False:
+        ext = '.'+ext
 
 
     index = kwargs.pop('index', None)
@@ -113,7 +118,7 @@ def to_csv_metadata(df, file_path, **kwargs):
         kwargs['index'] = False
 
     file_name, file_ext = os.path.splitext(file_path)
-    metadata_filename = file_name + '.metadata'
+    metadata_filename = file_name + ext
 
     can_write, file_exists = _check_file_path(file_path)
     if can_write:
@@ -134,8 +139,8 @@ def to_csv_metadata(df, file_path, **kwargs):
             _write_metadata(df, metadata_filename)
         else:
             _write_metadata(df, metadata_filename)
-    else:
-        logger.warning('Cannot write metadata at the file path %s. Skip writing metadata file' % metadata_filename)
+    # else:
+    #     logger.warning('Cannot write metadata at the file path %s. Skip writing metadata file' % metadata_filename)
 
     return True
 
@@ -175,7 +180,7 @@ def _write_metadata(df, file_path):
     return True
 
 
-def _is_metadata_file_present(file_path):
+def _is_metadata_file_present(file_path, ext='.metadata'):
     """
     Check if the metadata file is present
     Args:
@@ -186,7 +191,7 @@ def _is_metadata_file_present(file_path):
         This is an internal function
     """
     file_name, file_ext = os.path.splitext(file_path)
-    file_name += '.metadata'
+    file_name += ext
     return os.path.exists(file_name)
 
 
@@ -233,7 +238,8 @@ def _update_metadata_for_read_cmd(metadata, **kwargs):
     """
 
     # first update from the key-value arguments
-    for k in metadata.keys():
+    copy_metadata = metadata.copy()
+    for k in copy_metadata.keys():
         # if kwargs.has_key(k):
         if k in kwargs:
             value = kwargs.pop(k)
@@ -251,8 +257,11 @@ def _update_metadata_for_read_cmd(metadata, **kwargs):
             if value is not None:
                 metadata[k] = value
             else:
-                logger.warning('%s key had a value in file but input arg is set to None' %k)
-                v = metadata.pop(k)  # remove the key-value pair
+                logger.warning('Metadata %s is set to None' %k)
+                v = metadata.pop(k, None)  # remove the key-value pair
+            # else:
+            #     logger.warning('%s key had a value in file but input arg is set to None' %k)
+
     return metadata, kwargs
 
 
@@ -280,11 +289,11 @@ def _check_metadata_for_read_cmd(metadata):
             raise AssertionError('Dataframe requires all valid ltable, rtable, fk_ltable, '
                                  'fk_rtable parameters set')
 
-        if isinstance(metadata['ltable'], pd.DataFrame) is False:
+        if isinstance(metadata['ltable'], pd.DataFrame) == False:
             logger.error('The parameter ltable must be set to valid Dataframe')
             raise AssertionError('The parameter ltable must be set to valid Dataframe')
 
-        if isinstance(metadata['rtable'], pd.DataFrame) is False:
+        if isinstance(metadata['rtable'], pd.DataFrame) == False:
             logger.error('The parameter rtable must be set to valid Dataframe')
             raise AssertionError('The parameter rtable must be set to valid Dataframe')
 

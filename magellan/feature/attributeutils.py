@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import six
 
 import logging
 
@@ -69,7 +70,7 @@ def get_type(col):
         if t == bool:
             return 'boolean'
         # consider string and unicode as same
-        elif t == str or t == unicode:
+        elif t == six.string_types or t == six.unichr:
             # get average token length
             avg_tok_len = pd.Series.mean(col.str.split(' ').apply(len_handle_nan))
             if avg_tok_len == 1:

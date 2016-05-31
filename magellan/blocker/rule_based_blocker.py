@@ -3,6 +3,7 @@ import logging
 
 import pandas as pd
 import pyprind
+import six
 
 from magellan.blocker.blocker import Blocker
 import magellan.core.catalog_manager as cm
@@ -45,7 +46,7 @@ class RuleBasedBlocker(Blocker):
             feat_dict = dict(zip(self.feature_table['feature_name'], feature_table['function']))
 
 
-        exec(fn_str in feat_dict)
+        six.exec_(fn_str, feat_dict)
 
         return feat_dict[name], name, fn_str
 
