@@ -1,9 +1,21 @@
 {
     "benchmarks": {
-        "benchmark_attr_equiv_blocker.TimeBlockTables.time_books": {
-            "code": "def time_books(self):                                                 \n\tself.ab.block_tables(self.A, self.B, self.l_block_attr, self.r_block_attr)\n", 
+        "benchmark_attr_equiv_blocker.TimeBlockCandsetBikes.time_block_candset": {
+            "code": "    def time_block_candset(self):                                                 \n    \tself.ab.block_candset(self.C, self.l_block_attr, self.r_block_attr,\n\t\t\t      verbose=False, show_progress=False)\n", 
             "goal_time": 2.0, 
-            "name": "benchmark_attr_equiv_blocker.TimeBlockTables.time_books", 
+            "name": "benchmark_attr_equiv_blocker.TimeBlockCandsetBikes.time_block_candset", 
+            "number": 0, 
+            "param_names": [], 
+            "params": [], 
+            "repeat": 0, 
+            "timeout": 3600.0, 
+            "type": "time", 
+            "unit": "seconds"
+        }, 
+        "benchmark_attr_equiv_blocker.TimeBlockTablesBooks.time_block_tables": {
+            "code": "    def time_block_tables(self):                                                 \n    \tself.ab.block_tables(self.A, self.B, self.l_block_attr,\n\t\t\t     self.r_block_attr, verbose=False)\n", 
+            "goal_time": 2.0, 
+            "name": "benchmark_attr_equiv_blocker.TimeBlockTablesBooks.time_block_tables", 
             "number": 0, 
             "param_names": [], 
             "params": [], 
@@ -17,36 +29,45 @@
         "1464373039000": "c81743b3"
     }, 
     "machines": {
-        "yes": {
-            "arch": "yes", 
-            "cpu": "yes", 
-            "machine": "yes", 
-            "os": "yes", 
-            "ram": "yes", 
+        "ernie": {
+            "arch": "x86_64", 
+            "cpu": "Intel(R) Xeon(R) CPU E5-2470 0 @ 2.30GHz", 
+            "machine": "ernie", 
+            "os": "Linux 2.6.32-573.7.1.el6.x86_64", 
+            "ram": "32G", 
+            "version": 1
+        }, 
+        "ernie.cs.wisc.edu": {
+            "arch": "x86_64", 
+            "cpu": "Intel(R) Xeon(R) CPU E5-2470 0 @ 2.30GHz", 
+            "machine": "ernie.cs.wisc.edu", 
+            "os": "Linux 2.6.32-573.7.1.el6.x86_64", 
+            "ram": "32852008", 
             "version": 1
         }
     }, 
     "params": {
         "arch": [
-            "yes"
+            "x86_64"
         ], 
         "branch": [
             "scaleup_AE_blocker"
         ], 
         "cpu": [
-            "yes"
+            "Intel(R) Xeon(R) CPU E5-2470 0 @ 2.30GHz"
         ], 
         "machine": [
-            "yes"
+            "ernie", 
+            "ernie.cs.wisc.edu"
         ], 
         "os": [
-            "yes"
+            "Linux 2.6.32-573.7.1.el6.x86_64"
         ], 
         "python": [
             "2.7"
         ], 
         "ram": [
-            "yes"
+            "32852008"
         ]
     }, 
     "project": ".", 

@@ -1,8 +1,20 @@
 {
-    "benchmark_attr_equiv_blocker.TimeBlockTables.time_books": {
-        "code": "    def time_books(self):                                                 \n    \tself.ab.block_tables(self.A, self.B, self.l_block_attr,\n\t\t\t     self.r_block_attr, verbose=False)\n", 
+    "benchmark_attr_equiv_blocker.TimeBlockCandsetBikes.time_block_candset": {
+        "code": "    def time_block_candset(self):                                                 \n    \tself.ab.block_candset(self.C, self.l_block_attr, self.r_block_attr,\n\t\t\t      verbose=False, show_progress=False)\n", 
         "goal_time": 2.0, 
-        "name": "benchmark_attr_equiv_blocker.TimeBlockTables.time_books", 
+        "name": "benchmark_attr_equiv_blocker.TimeBlockCandsetBikes.time_block_candset", 
+        "number": 0, 
+        "param_names": [], 
+        "params": [], 
+        "repeat": 0, 
+        "timeout": 3600.0, 
+        "type": "time", 
+        "unit": "seconds"
+    }, 
+    "benchmark_attr_equiv_blocker.TimeBlockTablesBooks.time_block_tables": {
+        "code": "    def time_block_tables(self):                                                 \n    \tself.ab.block_tables(self.A, self.B, self.l_block_attr,\n\t\t\t     self.r_block_attr, verbose=False)\n", 
+        "goal_time": 2.0, 
+        "name": "benchmark_attr_equiv_blocker.TimeBlockTablesBooks.time_block_tables", 
         "number": 0, 
         "param_names": [], 
         "params": [], 
