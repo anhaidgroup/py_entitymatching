@@ -116,7 +116,8 @@ def save_table(df, file_path, metadata_ext='.pklmetadata'):
 
     # write properties to disk
     if len(d) > 0:
-        for k, v in d.iteritems():
+        # for k, v in d.iteritems():
+        for k, v in six.iteritems(d):
             if isinstance(v, six.string_types) is True:
                 metadata_dict[k] = v
 
