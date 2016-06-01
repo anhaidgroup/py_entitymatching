@@ -216,6 +216,81 @@ class CatalogManagerTestCases(unittest.TestCase):
         status = cm.is_property_present_for_df(A, 'key1')
         self.assertEqual(status, False)
 
+    @raises(AssertionError)
+    def test_is_property_present_for_df_invalid_df(self):
+        cm.is_property_present_for_df(None, 'key')
+
+    @raises(KeyError)
+    def test_is_property_present_for_df_notin_catalog(self):
+        A = pd.read_csv(path_a)
+        cm.is_property_present_for_df(A, 'key')
+
+    def test_catalog_len(self):
+        A = read_csv_metadata(path_a)
+        self.assertEqual(cm.get_catalog_len(), 1)
+
+    def test_set_properties_valid_1(self):
+        A = read_csv_metadata(path_a)
+        p = cm.get_all_properties(A)
+        B = pd.read_csv(path_b)
+        cm.init_properties(B)
+        cm.set_properties(B,p)
+        self.assertEqual(cm.get_all_properties(B)==p, True)
+
+    def test_set_properties_valid_2(self):
+        A = read_csv_metadata(path_a)
+        p = cm.get_all_properties(A)
+        B = pd.read_csv(path_b)
+        cm.set_properties(B,p)
+        self.assertEqual(cm.get_all_properties(B)==p, True)
+
+    @raises(AssertionError)
+    def test_set_properties_invalid_df_1(self):
+        cm.set_properties(None, {})
+
+    @raises(AssertionError)
+    def test_set_properties_invalid_dict_1(self):
+        A = read_csv_metadata(path_a)
+        cm.set_properties(A, None)
+
+
+    def test_set_properties_df_notin_catalog_replace_false(self):
+        A = read_csv_metadata(path_a)
+        cm.set_properties(A, {}, replace=False)
+        self.assertEqual(cm.get_key(A), 'ID')
+
+    def test_has_property_valid_1(self):
+        A = read_csv_metadata(path_a)
+        self.assertEqual(cm.has_property(A, 'key'), True)
+
+    def test_has_property_valid_2(self):
+        A = read_csv_metadata(path_a)
+        self.assertEqual(cm.has_property(A, 'key1'), False)
+
+    @raises(AssertionError)
+    def test_has_property_invalid_df(self):
+        cm.has_property(None, 'key')
+
+    @raises(AssertionError)
+    def test_has_property_invalid_prop_name(self):
+        A = read_csv_metadata(path_a)
+        cm.has_property(A, None)
+
+    @raises(KeyError)
+    def test_has_property_df_notin_catalog(self):
+        A = pd.read_csv(path_a)
+        cm.has_property(A, 'key')
+
+
+
+
+
+
+
+
+
+
+
 
 # import os
 # from nose.tools import *

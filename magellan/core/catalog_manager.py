@@ -338,7 +338,7 @@ def has_property(df, prop):
 
     if not is_dfinfo_present(df):
         logger.error('Dataframe is not in the catalog')
-        raise AssertionError('Dataframe is not in the catalog')
+        raise KeyError('Dataframe is not in the catalog')
 
     p = get_all_properties(df)
     # return p.has_key(prop)
