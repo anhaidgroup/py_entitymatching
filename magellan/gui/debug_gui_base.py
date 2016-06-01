@@ -2,7 +2,7 @@ from PyQt4 import QtGui, QtCore
 from collections import OrderedDict
 
 import magellan as mg
-import magellan.core.catalog_manager as cm
+import magellan.catalog.catalog_manager as cm
 from  magellan.gui.gui_utils import DictTableViewWithLabel, DataFrameTableViewWithLabel, TreeViewWithLabel
 
 

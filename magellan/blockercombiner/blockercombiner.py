@@ -5,7 +5,7 @@ import logging
 import pandas as pd
 import pyprind
 
-import magellan.core.catalog_manager as cm
+import magellan.catalog.catalog_manager as cm
 from magellan.utils.catalog_helper import log_info, get_name_for_key, add_key_column
 from magellan.utils.generic_helper import list_diff, _add_output_attributes, list_drop_duplicates
 

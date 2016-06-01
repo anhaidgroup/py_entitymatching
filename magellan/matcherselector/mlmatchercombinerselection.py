@@ -1,7 +1,7 @@
 import numpy as np
 import itertools
 
-from magellan.matcherselection.mlmatcherselection import select_matcher
+from magellan.matcherselector.mlmatcherselection import select_matcher
 from magellan.matcher.ensemblematcher import EnsembleMatcher
 
 def selector_matcher_combiner(matchers, combiners, x=None, y=None, table=None, exclude_attrs=None, target_attr=None,

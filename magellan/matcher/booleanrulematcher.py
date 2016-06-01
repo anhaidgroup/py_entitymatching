@@ -1,7 +1,7 @@
 from collections import OrderedDict
 import logging
 
-import magellan.core.catalog_manager as cm
+import magellan.catalog.catalog_manager as cm
 from magellan.matcher.rulematcher import RuleMatcher
 from magellan.matcher.matcherutils import get_ts
 import six

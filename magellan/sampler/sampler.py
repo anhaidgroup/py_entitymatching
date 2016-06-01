@@ -14,7 +14,7 @@ from datetime import datetime
 import time
 
 
-import magellan.core.catalog_manager as cm
+import magellan.catalog.catalog_manager as cm
 
 logger = logging.getLogger(__name__)
 

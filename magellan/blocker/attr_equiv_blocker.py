@@ -6,7 +6,7 @@ import numpy as np
 import pyprind
 
 from magellan.blocker.blocker import Blocker
-import magellan.core.catalog_manager as cm
+import magellan.catalog.catalog_manager as cm
 from magellan.utils.catalog_helper import log_info, get_name_for_key, add_key_column
 from magellan.utils.generic_helper import rem_nan
 

@@ -13,10 +13,15 @@
     "python": "2.7", 
     "requirements": {}, 
     "results": {
-        "benchmark_attr_equiv_blocker.TimeBlockCandsetBikes.time_block_candset": 204.661192129, 
+        "benchmark_attr_equiv_blocker.TimeBlockCandsetAnime.time_block_candset": 8.304809873, 
+        "benchmark_attr_equiv_blocker.TimeBlockCandsetBikes.time_block_candset": 203.82848818899998, 
+        "benchmark_attr_equiv_blocker.TimeBlockCandsetBooks.time_block_candset": 0.22006316900000034, 
+        "benchmark_attr_equiv_blocker.TimeBlockTablesAnime.time_block_tables": 0.2950204919999999, 
         "benchmark_attr_equiv_blocker.TimeBlockTablesBikes.time_block_candset": null, 
-        "benchmark_attr_equiv_blocker.TimeBlockTablesBikes.time_block_tables": 7.552525580000001, 
-        "benchmark_attr_equiv_blocker.TimeBlockTablesBooks.time_block_tables": 10.182486354999998
+        "benchmark_attr_equiv_blocker.TimeBlockTablesBikes.time_block_tables": 7.575868163999999, 
+        "benchmark_attr_equiv_blocker.TimeBlockTablesBooks.time_block_tables": 0.03466612250000001, 
+        "benchmark_attr_equiv_blocker.TimeBlockTablesElectronics.time_block_tables": 1.6484237690000008, 
+        "benchmark_attr_equiv_blocker.TimeBlockTablesRestaurants.time_block_tables": 0.0343109739
     }, 
     "version": 1
 }

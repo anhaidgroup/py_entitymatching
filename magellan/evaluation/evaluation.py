@@ -1,7 +1,7 @@
 from collections import OrderedDict
 import pandas as pd
 
-import magellan.core.catalog_manager as cm
+import magellan.catalog.catalog_manager as cm
 
 def evaluate(M, G, label_map, id_map):
     # M - MTable with predicted labels
