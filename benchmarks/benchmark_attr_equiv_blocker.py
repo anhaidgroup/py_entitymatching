@@ -38,10 +38,10 @@ class TimeBlockTablesBooks:
 class TimeBlockTablesBikes:
     def setup(self):
 	p = mg.get_install_path()                                                       
-	path_for_A = os.sep.join([p, 'datasets', 'benchmark_datasets', 'bikes', 'A.csv'])                        
-	path_for_B = os.sep.join([p, 'datasets', 'benchmark_datasets', 'bikes', 'B.csv'])                        
-	l_key = 'ID'                                                                    
-	r_key = 'ID'                                                                    
+	path_for_A = os.sep.join([p, 'datasets', 'example_datasets', 'bikes', 'A.csv'])                        
+	path_for_B = os.sep.join([p, 'datasets', 'example_datasets', 'bikes', 'B.csv'])                        
+	l_key = 'id'                                                                    
+	r_key = 'id'                                                                    
 	self.A = mg.read_csv_metadata(path_for_A)
     	mg.set_key(self.A, l_key)                                                        
     	self.B = mg.read_csv_metadata(path_for_B)                                        
@@ -68,10 +68,10 @@ class TimeBlockCandsetBikes:
     timeout = 300.0                                                               
     def setup(self):
 	p = mg.get_install_path()                                                       
-	path_for_A = os.sep.join([p, 'datasets', 'benchmark_datasets', 'bikes', 'A.csv'])                        
-	path_for_B = os.sep.join([p, 'datasets', 'benchmark_datasets', 'bikes', 'B.csv'])                        
-	l_key = 'ID'                                                                    
-	r_key = 'ID'                                                                    
+	path_for_A = os.sep.join([p, 'datasets', 'example_datasets', 'bikes', 'A.csv'])                        
+	path_for_B = os.sep.join([p, 'datasets', 'example_datasets', 'bikes', 'B.csv'])                        
+	l_key = 'id'                                                                    
+	r_key = 'id'                                                                    
 	self.A = mg.read_csv_metadata(path_for_A)
     	mg.set_key(self.A, l_key)                                                        
     	self.B = mg.read_csv_metadata(path_for_B)                                        

@@ -94,7 +94,6 @@ class AttrEquivalenceBlocker(Blocker):
 
 	# # get the indexes for the key attributes in the candset
 	col_names = list(candset.columns)
-	print col_names
 	lkey_idx = col_names.index(fk_ltable)
 	rkey_idx = col_names.index(fk_rtable)
 
@@ -171,43 +170,6 @@ class AttrEquivalenceBlocker(Blocker):
         if not isinstance(r_block_attr, list):
             r_block_attr = [r_block_attr]
         assert set(r_block_attr).issubset(rtable.columns) is True, 'Right block attribute is not in the right table'
-
-#    def output_columns(self, l_key, r_key, col_names, l_output_attrs, r_output_attrs, l_output_prefix, r_output_prefix):
-#
-#        ret_cols = []
-#        fin_cols = []
-#
-#        # retain id columns from merge
-#        ret_l_id = [self.retain_names(x, col_names, '_ltable') for x in [l_key]]
-#        ret_r_id = [self.retain_names(x, col_names, '_rtable') for x in [r_key]]
-#        ret_cols.extend(ret_l_id)
-#        ret_cols.extend(ret_r_id)
-#
-#        # retain output attrs from merge
-#        if l_output_attrs:
-#            l_output_attrs = [x for x in l_output_attrs if x not in [l_key]]
-#            ret_l_col = [self.retain_names(x, col_names, '_ltable') for x in l_output_attrs]
-#            ret_cols.extend(ret_l_col)
-#        if r_output_attrs:
-#            l_output_attrs = [x for x in r_output_attrs if x not in [r_key]]
-#            ret_r_col = [self.retain_names(x, col_names, '_rtable') for x in r_output_attrs]
-#            ret_cols.extend(ret_r_col)
-#
-#        # final columns in the output
-#        fin_l_id = [self.final_names(x, l_output_prefix) for x in [l_key]]
-#        fin_r_id = [self.final_names(x, r_output_prefix) for x in [r_key]]
-#        fin_cols.extend(fin_l_id)
-#        fin_cols.extend(fin_r_id)
-#
-#        # final output attrs from merge
-#        if l_output_attrs:
-#            fin_l_col = [self.final_names(x, l_output_prefix) for x in l_output_attrs]
-#            fin_cols.extend(fin_l_col)
-#        if r_output_attrs:
-#            fin_r_col = [self.final_names(x, r_output_prefix) for x in r_output_attrs]
-#            fin_cols.extend(fin_r_col)
-#
-#        return ret_cols, fin_cols
 
     def output_columns(self, l_key, r_key, col_names, l_output_attrs, r_output_attrs, l_output_prefix, r_output_prefix):
                                                                                 
