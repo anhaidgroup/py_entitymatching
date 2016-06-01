@@ -2,7 +2,7 @@
 from collections import OrderedDict
 import logging
 
-import magellan.core.catalog_manager as cm
+import magellan.catalog.catalog_manager as cm
 import six
 
 logger = logging.getLogger(__name__)
