@@ -322,7 +322,8 @@ def set_properties(df, prop_dict, replace=True):
     if not catalog.is_dfinfo_present(df):
         catalog.init_properties(df)
 
-    for k, v in prop_dict.iteritems():
+    # for k, v in prop_dict.iteritems():
+    for k, v in six.iteritems(prop_dict):
         catalog.set_property(df, k, v)
     return True
 
@@ -666,7 +667,8 @@ def show_properties(df):
 
 
 def show_properties_for_id(obj_id):
-    metadata = get_all_properties_for_id(obj_id)
+    catalog = Catalog.Instance()
+    metadata = catalog.get_all_properties_for_id(obj_id)
     print('id: ' + str(obj_id))
     for prop in metadata.iterkeys():
         value = metadata[prop]
