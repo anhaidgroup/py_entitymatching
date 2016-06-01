@@ -38,7 +38,7 @@ class AttrEquivalenceBlocker(Blocker):
         l_df, r_df = rem_nan(ltable, l_block_attr), rem_nan(rtable, r_block_attr)
 
 	# # do projection before merge
-	l_proj_attrs = self.get_proj_attrs(l_key, l_block_attr, l_output_attrs)
+        l_proj_attrs = self.get_proj_attrs(l_key, l_block_attr, l_output_attrs)
 	l_df = l_df[l_proj_attrs]
 	r_proj_attrs = self.get_proj_attrs(r_key, r_block_attr, r_output_attrs)
 	r_df = r_df[r_proj_attrs]
