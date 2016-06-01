@@ -109,14 +109,14 @@ class AttrEquivalenceBlocker(Blocker):
                 bar.update()
 
             # # get the value of block attributes
-	    row_lkey = row[lkey_idx]
-	    if row_lkey not in l_dict:
-	        l_dict[row_lkey] = l_df.ix[row_lkey, l_block_attr]
+            row_lkey = row[lkey_idx]
+            if row_lkey not in l_dict:
+                l_dict[row_lkey] = l_df.ix[row_lkey, l_block_attr]
             l_val = l_dict[row_lkey]
-	    
-	    row_rkey = row[rkey_idx]
-	    if row_rkey not in r_dict:
-	        r_dict[row_rkey] = r_df.ix[row_rkey, r_block_attr]
+
+            row_rkey = row[rkey_idx]
+            if row_rkey not in r_dict:
+                r_dict[row_rkey] = r_df.ix[row_rkey, r_block_attr]
             r_val = r_dict[row_rkey]
 
             if l_val != np.NaN and r_val != np.NaN:
