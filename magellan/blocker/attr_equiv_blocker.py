@@ -92,14 +92,14 @@ class AttrEquivalenceBlocker(Blocker):
         l_df = ltable.set_index(l_key, drop=False)
         r_df = rtable.set_index(r_key, drop=False)
 
-	# # get the indexes for the key attributes in the candset
-	col_names = list(candset.columns)
-	lkey_idx = col_names.index(fk_ltable)
-	rkey_idx = col_names.index(fk_rtable)
+        # # get the indexes for the key attributes in the candset
+        col_names = list(candset.columns)
+        lkey_idx = col_names.index(fk_ltable)
+        rkey_idx = col_names.index(fk_rtable)
 
-	# # create a look up table for the blocking attribute values
-	l_dict = {}
-	r_dict = {}
+        # # create a look up table for the blocking attribute values
+        l_dict = {}
+        r_dict = {}
 
         # # iterate the rows in candset
         for row in candset.itertuples(index=False):
