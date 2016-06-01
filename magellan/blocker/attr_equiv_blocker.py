@@ -39,9 +39,9 @@ class AttrEquivalenceBlocker(Blocker):
 
 	# # do projection before merge
         l_proj_attrs = self.get_proj_attrs(l_key, l_block_attr, l_output_attrs)
-	l_df = l_df[l_proj_attrs]
-	r_proj_attrs = self.get_proj_attrs(r_key, r_block_attr, r_output_attrs)
-	r_df = r_df[r_proj_attrs]
+        l_df = l_df[l_proj_attrs]
+        r_proj_attrs = self.get_proj_attrs(r_key, r_block_attr, r_output_attrs)
+        r_df = r_df[r_proj_attrs]
 
         # # use pandas merge to do equi join
         candset = pd.merge(l_df, r_df, left_on=l_block_attr, right_on=r_block_attr, suffixes=('_ltable', '_rtable'))
