@@ -16,7 +16,7 @@ import pandas as pd
 
 from magellan.io.parsers import read_csv_metadata
 from magellan.utils.generic_helper import get_install_path
-import magellan.core.catalog_manager as cm
+import magellan.catalog.catalog_manager as cm
 
 logging.basicConfig()
 

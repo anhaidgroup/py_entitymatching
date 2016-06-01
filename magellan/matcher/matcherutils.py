@@ -5,7 +5,7 @@ import time
 import sklearn.cross_validation as cv
 import numpy as np
 
-import magellan.core.catalog_manager as cm
+import magellan.catalog.catalog_manager as cm
 
 def train_test_split(labeled_data, train_proportion=0.5, random_state=None):
 

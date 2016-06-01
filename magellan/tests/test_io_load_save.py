@@ -11,7 +11,7 @@ from magellan.io.parsers import read_csv_metadata
 from magellan.blocker.rule_based_blocker import RuleBasedBlocker
 from magellan.feature.autofeaturegen import get_features_for_blocking
 from magellan.utils.generic_helper import get_install_path, del_files_in_dir, creat_dir_ifnot_exists
-import magellan.core.catalog_manager as cm
+import magellan.catalog.catalog_manager as cm
 
 io_datasets_path = os.sep.join([get_install_path(), 'datasets', 'test_datasets', 'io'])
 path_a = os.sep.join([io_datasets_path, 'A.csv'])

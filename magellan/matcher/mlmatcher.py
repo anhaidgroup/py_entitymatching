@@ -5,7 +5,7 @@ from sklearn.preprocessing import Imputer
 
 from magellan.matcher.matcher import Matcher
 from magellan.utils.generic_helper import list_diff
-import magellan.core.catalog_manager as cm
+import magellan.catalog.catalog_manager as cm
 
 class MLMatcher(Matcher):
     def fit_sklearn(self, x, y, check_rem=True):

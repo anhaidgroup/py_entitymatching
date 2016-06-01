@@ -2,7 +2,7 @@ import logging
 
 import pandas as pd
 
-import magellan.core.catalog_manager as cm
+import magellan.catalog.catalog_manager as cm
 
 from magellan.utils.catalog_helper import check_attrs_present, log_info
 from magellan.utils.generic_helper import list_diff

@@ -1,7 +1,7 @@
 import logging
 import pandas as pd
 import six
-import magellan.core.catalog_manager as cm
+import magellan.catalog.catalog_manager as cm
 
 logger = logging.getLogger(__name__)
 def label_table(table, col_name, replace=True):

@@ -9,7 +9,7 @@ import pickle
 import six
 
 from magellan.io.parsers import _is_metadata_file_present, _check_file_path
-import magellan.core.catalog_manager as cm
+import magellan.catalog.catalog_manager as cm
 
 logger = logging.getLogger(__name__)
 

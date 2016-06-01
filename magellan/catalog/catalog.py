@@ -111,7 +111,7 @@ class Catalog(object):
         return len(self.properties_catalog)
 
     def is_catalog_empty(self):
-        return self.properties_catalog > 0
+        return len(self.properties_catalog) == 0
 
     def is_dfinfo_present(self, df):
         return id(df) in self.properties_catalog

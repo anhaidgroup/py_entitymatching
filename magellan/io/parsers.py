@@ -6,7 +6,7 @@ from collections import OrderedDict
 import pandas as pd
 import six
 
-import magellan.core.catalog_manager as cm
+import magellan.catalog.catalog_manager as cm
 
 logger = logging.getLogger(__name__)
 

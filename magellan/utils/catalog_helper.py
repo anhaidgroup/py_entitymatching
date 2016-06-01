@@ -98,7 +98,7 @@ def does_contain_missing_vals(df, attr):
         logger.error('Input attr. is not of type string')
         raise AssertionError('Input attr. is not of type string')
 
-    nan_flag = sum(df[attr].isnull()) == 0
+    nan_flag = (sum(df[attr].isnull()) != 0)
     if not nan_flag:
         return False
     else:

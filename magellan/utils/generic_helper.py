@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 
 from magellan.utils.catalog_helper import check_fk_constraint
-import magellan.core.catalog_manager as cm
+import magellan.catalog.catalog_manager as cm
 
 
 from magellan.utils import install_path
