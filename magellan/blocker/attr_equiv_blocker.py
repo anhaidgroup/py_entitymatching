@@ -119,11 +119,8 @@ class AttrEquivalenceBlocker(Blocker):
                 r_dict[row_rkey] = r_df.ix[row_rkey, r_block_attr]
             r_val = r_dict[row_rkey]
 
-            if l_val != np.NaN and r_val != np.NaN:
-                if l_val == r_val:
-                    valid.append(True)
-                else:
-                    valid.append(False)
+            if l_val == r_val:
+                valid.append(True)
             else:
                 valid.append(False)
 

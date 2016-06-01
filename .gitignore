@@ -71,3 +71,6 @@ magellan/datasets/test_datasets/sandbox/*
 cover/
 
 magellan/io/pickles.py
+results/
+html/
+magellan/tests/cover/
