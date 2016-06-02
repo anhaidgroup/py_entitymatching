@@ -5,8 +5,8 @@ import numpy as np
 import magellan as mg
 
 p = mg.get_install_path()
-path_for_A = os.sep.join([p, 'datasets', 'test_datasets', 'blocker', 'table_A.csv'])
-path_for_B = os.sep.join([p, 'datasets', 'test_datasets', 'blocker', 'table_B.csv'])
+path_for_A = os.sep.join([p, 'datasets', 'table_A.csv'])
+path_for_B = os.sep.join([p, 'datasets', 'table_B.csv'])
 l_key = 'ID'
 r_key = 'ID'
 l_block_attr_1 = 'zipcode'

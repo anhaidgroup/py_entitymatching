@@ -166,37 +166,35 @@ class TimeBlockCandsetBooks:
 	del self.l_block_attr
 	del self.r_block_attr
 
-"""
-class TimeBlockTablesBooks:                                                               
+class TimeBlockTablesCitations:
+                                                               
     def setup(self):
-	p = mg.get_install_path()                                                       
-	path_for_A = os.sep.join([p, 'datasets', 'test_datasets', 'blocker', 'bowker.csv'])                        
-	path_for_B = os.sep.join([p, 'datasets', 'test_datasets', 'blocker', 'walmart.csv'])                       
-	l_key = 'ID'                                                                    
-	r_key = 'ID'                                                                    
-	self.l_block_attr = 'pubYear'                                                       
-	self.r_block_attr = 'pubYear'                                                       
-	#l_output_attrs = ['pubYear']                                                   
-	#r_output_attrs = ['pubYear']                                                   
-	#l_output_prefix = 'ltable_'                                                     
-	#r_output_prefix = 'rtable_' 
+	path_for_A = os.sep.join([datasets_path, 'citations', 'A.csv'])                        
+	path_for_B = os.sep.join([datasets_path, 'citations', 'B.csv'])                       
+	self.l_block_attr = 'year'                                                       
+	self.r_block_attr = 'year'                                                       
+	self.l_output_attrs = ['title','author','year','ENTRYTYPE']
+	self.r_output_attrs = ['title','author','year','ENTRYTYPE']
 	self.A = mg.read_csv_metadata(path_for_A)
-	#print sys.stderr, "Size of A: ", len(self.A)                                        
-    	mg.set_key(self.A, l_key)                                                        
+    	mg.set_key(self.A, 'ID')                                                        
     	self.B = mg.read_csv_metadata(path_for_B)                                        
-	#print sys.stderr, "Size of B: ", len(self.B)                                        
-    	mg.set_key(self.B, r_key)                                                        
-    	self.ab = mg.AttrEquivalenceBlocker()                                            
+    	mg.set_key(self.B, 'ID')                                                        
     
     def time_block_tables(self):                                                 
-    	self.ab.block_tables(self.A, self.B, self.l_block_attr,
-			     self.r_block_attr, verbose=False)
+    	ab.block_tables(self.A, self.B, self.l_block_attr,
+			self.r_block_attr, self.l_output_attrs,
+			self.r_output_attrs)
+	
     def teardown(self):
 	del self.A
 	del self.B
-	del self.ab
+	del self.l_block_attr
+	del self.r_block_attr
+	del self.l_output_attrs
+	del self.r_output_attrs
 
 class TimeBlockTablesBikes:
+
     def setup(self):
 	p = mg.get_install_path()                                                       
 	path_for_A = os.sep.join([p, 'datasets', 'example_datasets', 'bikes', 'A.csv'])                        
@@ -227,6 +225,7 @@ class TimeBlockTablesBikes:
 
 class TimeBlockCandsetBikes:
     timeout = 300.0                                                               
+
     def setup(self):
 	p = mg.get_install_path()                                                       
 	path_for_A = os.sep.join([p, 'datasets', 'example_datasets', 'bikes', 'A.csv'])                        
@@ -259,4 +258,3 @@ class TimeBlockCandsetBikes:
 	del self.B
 	del self.C
 	del self.ab
-"""
