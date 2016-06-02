@@ -4,6 +4,7 @@ import logging
 
 import pandas as pd
 import pyprind
+import six
 
 import magellan.catalog.catalog_manager as cm
 from magellan.utils.catalog_helper import log_info, get_name_for_key, add_key_column
@@ -13,7 +14,20 @@ logger = logging.getLogger(__name__)
 
 
 def combine_blocker_outputs_via_union(blocker_output_list, l_prefix='ltable_', r_prefix='rtable_', verbose=False):
+
+    # validate inputs
+    if not isinstance(l_prefix, six.string_types):
+        logger.error('l_prefix is not of type string')
+        raise AssertionError('l_prefix is not of type string')
+
+    if not isinstance(r_prefix, six.string_types):
+        logger.error('r_prefix is not of type string')
+        raise AssertionError('r_prefix is not of type string')
+
+
     _validate_lr_tables(blocker_output_list)
+
+
 
     ltable, rtable = cm.get_property(blocker_output_list[0], 'ltable'), \
                      cm.get_property(blocker_output_list[0], 'rtable')
@@ -33,10 +47,12 @@ def combine_blocker_outputs_via_union(blocker_output_list, l_prefix='ltable_', r
     proj_output_list = []
     l_output_attrs = []
     r_output_attrs = []
+
+
     for b in blocker_output_list:
         proj_b = b[[fk_ltable, fk_rtable]]
         proj_output_list.append(proj_b)
-        col_set = (list_diff(b, [fk_ltable, fk_rtable]))
+        col_set = (list_diff(list(b.columns), [fk_ltable, fk_rtable, cm.get_key(b)]))
         l_attrs, r_attrs = _lr_cols(col_set, l_prefix, r_prefix)
         l_output_attrs.extend(l_attrs)
         r_output_attrs.extend(r_attrs)
@@ -51,14 +67,16 @@ def combine_blocker_outputs_via_union(blocker_output_list, l_prefix='ltable_', r
 
     # construct output table
     l_output_attrs, r_output_attrs = list_drop_duplicates(l_output_attrs), list_drop_duplicates(r_output_attrs)
-    deduplicated_candset.reset_index(inplace=True)
+    deduplicated_candset.reset_index(inplace=True, drop=True)
     candset = _add_output_attributes(deduplicated_candset, fk_ltable, fk_rtable, ltable, rtable, l_key, r_key,
                                      l_output_attrs, r_output_attrs, l_prefix, r_prefix,
                                      validate=False)
 
     # update catalog
+    candset.sort_values([fk_ltable, fk_rtable], inplace=True)
     key = get_name_for_key(candset.columns)
     candset = add_key_column(candset, key)
+    candset.reset_index(inplace=True, drop=True)
     cm.set_candset_properties(candset, key, fk_ltable, fk_rtable, ltable, rtable)
 
     # return candidate set
