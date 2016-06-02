@@ -2,7 +2,6 @@ import logging
 
 
 import pandas as pd
-import numpy as np
 import pyprind
 
 from magellan.blocker.blocker import Blocker
@@ -14,19 +13,22 @@ logger = logging.getLogger(__name__)
 
 
 class AttrEquivalenceBlocker(Blocker):
-    def block_tables(self, ltable, rtable, l_block_attr, r_block_attr, l_output_attrs=None, r_output_attrs=None,
+    def block_tables(self, ltable, rtable, l_block_attr, r_block_attr,
+		     l_output_attrs=None, r_output_attrs=None,
                      l_output_prefix='ltable_', r_output_prefix='rtable_',
                      verbose=True):
 
         # validate input parameters
         self.validate_block_attrs(ltable, rtable, l_block_attr, r_block_attr)
-        self.validate_output_attrs(ltable, rtable, l_output_attrs, r_output_attrs)
+        self.validate_output_attrs(ltable, rtable, l_output_attrs,
+				   r_output_attrs)
 
         # get and validate required metadata
         log_info(logger, 'Required metadata: ltable key, rtable key', verbose)
 
         # # get metadata
-        l_key, r_key = cm.get_keys_for_ltable_rtable(ltable, rtable, logger, verbose)
+        l_key, r_key = cm.get_keys_for_ltable_rtable(ltable, rtable, logger,
+						     verbose)
 
         # # validate metadata
         cm.validate_metadata_for_table(ltable, l_key, 'ltable', logger, verbose)
@@ -44,36 +46,45 @@ class AttrEquivalenceBlocker(Blocker):
         r_df = r_df[r_proj_attrs]
 
         # # use pandas merge to do equi join
-        candset = pd.merge(l_df, r_df, left_on=l_block_attr, right_on=r_block_attr, suffixes=('_ltable', '_rtable'))
+        candset = pd.merge(l_df, r_df, left_on=l_block_attr,
+			   right_on=r_block_attr,
+			   suffixes=('_ltable', '_rtable'))
 
         # construct output table
-        retain_cols, final_cols = self.output_columns(l_key, r_key, list(candset.columns),
-                                                      l_output_attrs, r_output_attrs,
-                                                      l_output_prefix, r_output_prefix)
+        retain_cols, final_cols = self.output_columns(l_key, r_key,
+						      list(candset.columns),
+                                                      l_output_attrs,
+						      r_output_attrs,
+                                                      l_output_prefix,
+						      r_output_prefix)
         candset = candset[retain_cols]
         candset.columns = final_cols
 
         # update catalog
         key = get_name_for_key(candset.columns)
         candset = add_key_column(candset, key)
-        cm.set_candset_properties(candset, key, l_output_prefix+l_key, r_output_prefix+r_key, ltable, rtable)
+        cm.set_candset_properties(candset, key, l_output_prefix+l_key,
+				  r_output_prefix+r_key, ltable, rtable)
 
         # return candidate set
         return candset
 
 
 
-    def block_candset(self, candset, l_block_attr, r_block_attr, verbose=True, show_progress=True):
+    def block_candset(self, candset, l_block_attr, r_block_attr, verbose=True,
+		      show_progress=True):
 
         # get and validate metadata
-        log_info(logger, 'Required metadata: cand.set key, fk ltable, fk rtable, '
-                                'ltable, rtable, ltable key, rtable key', verbose)
+        log_info(logger, 'Required metadata: cand.set key, fk ltable, ' +
+			 'fk rtable, ltable, rtable, ltable key, rtable key',
+		 verbose)
 
         # # get metadata
         key, fk_ltable, fk_rtable, ltable, rtable, l_key, r_key = cm.get_metadata_for_candset(candset, logger, verbose)
 
         # # validate metadata
-        cm.validate_metadata_for_candset(candset, key, fk_ltable, fk_rtable, ltable, rtable, l_key, r_key,
+        cm.validate_metadata_for_candset(candset, key, fk_ltable, fk_rtable,
+					 ltable, rtable, l_key, r_key,
                                          logger, verbose)
 
         # validate input parameters
@@ -83,7 +94,7 @@ class AttrEquivalenceBlocker(Blocker):
 
         # # initialize progress bar
         if show_progress:
-            bar = pyprind.ProgBar(len(candset))
+            prog_bar = pyprind.ProgBar(len(candset))
 
         # # initialize list to keep track of valid ids
         valid = []
@@ -106,7 +117,7 @@ class AttrEquivalenceBlocker(Blocker):
 
             # # update the progress bar
             if show_progress:
-                bar.update()
+                prog_bar.update()
 
             # # get the value of block attributes
             row_lkey = row[lkey_idx]
@@ -131,7 +142,8 @@ class AttrEquivalenceBlocker(Blocker):
             out_table = pd.DataFrame(columns=candset.columns)
 
         # update the catalog
-        cm.set_candset_properties(out_table, key, fk_ltable, fk_rtable, ltable, rtable)
+        cm.set_candset_properties(out_table, key, fk_ltable, fk_rtable,
+				  ltable, rtable)
 
         # return the output table
         return out_table
@@ -156,7 +168,7 @@ class AttrEquivalenceBlocker(Blocker):
 
 
     # -----------------------------------------------------
-    # utility functions -- this function seems to be specific to attribute equivalence blocking
+    # utility functions - seem to be specific to attribute equivalence blocking
 
     # validate the blocking attrs
     def validate_block_attrs(self, ltable, rtable, l_block_attr, r_block_attr):
@@ -168,7 +180,8 @@ class AttrEquivalenceBlocker(Blocker):
             r_block_attr = [r_block_attr]
         assert set(r_block_attr).issubset(rtable.columns) is True, 'Right block attribute is not in the right table'
 
-    def output_columns(self, l_key, r_key, col_names, l_output_attrs, r_output_attrs, l_output_prefix, r_output_prefix):
+    def output_columns(self, l_key, r_key, col_names, l_output_attrs,
+		       r_output_attrs, l_output_prefix, r_output_prefix):
                                                                                 
         # retain id columns from merge                                          
         ret_cols = [self.retain_names(l_key, col_names, '_ltable')]             
@@ -180,24 +193,24 @@ class AttrEquivalenceBlocker(Blocker):
                                                                                 
         # retain output attrs from merge                                        
         if l_output_attrs:                                                      
-            for x in l_output_attrs:                                            
-                if x != l_key:                                                  
-                    ret_cols.append(self.retain_names(x, col_names, '_ltable')) 
-                    fin_cols.append(self.final_names(x, l_output_prefix))       
+            for at in l_output_attrs:                                            
+                if at != l_key:                                                  
+                    ret_cols.append(self.retain_names(at, col_names, '_ltable')) 
+                    fin_cols.append(self.final_names(at, l_output_prefix))       
                                                                                 
         if r_output_attrs:                                                      
-            for x in r_output_attrs:                                            
-                if x != r_key:                                                  
-                    ret_cols.append(self.retain_names(x, col_names, '_rtable')) 
-                    fin_cols.append(self.final_names(x, r_output_prefix))       
+            for at in r_output_attrs:                                            
+                if at != r_key:                                                  
+                    ret_cols.append(self.retain_names(at, col_names, '_rtable')) 
+                    fin_cols.append(self.final_names(at, r_output_prefix))       
                                                                                 
         return ret_cols, fin_cols
 
-    def retain_names(self, x, col_names, suffix):
-        if x in col_names:
-            return x
+    def retain_names(self, col, col_names, suffix):
+        if col in col_names:
+            return col
         else:
-            return str(x) + suffix
+            return str(col) + suffix
 
-    def final_names(self, x, prefix):
-        return prefix + str(x)
+    def final_names(self, col, prefix):
+        return prefix + str(col)
