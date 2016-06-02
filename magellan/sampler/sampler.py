@@ -135,7 +135,7 @@ def _probe_index(b_table, y, s_tbl_sz, s_inv_index):
             h_table.update(s_pos_set, s_neg_set)
     return h_table
 
-# down sample two tables : based on sanjib's index based solution
+# down sample of two tables : based on sanjib's index based solution
 def down_sample(s_table, b_table, size, y):
     if len(b_table) < size:
         # print('Warning!! size of table B is less than b_size parameter - using entire table B')
