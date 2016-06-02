@@ -34,7 +34,7 @@ class Blocker(object):
 
     def get_proj_attrs(self, key, block_attr, output_attrs):
         if not output_attrs:
-            output_attrs = [];              
+            output_attrs = []
         if key not in output_attrs:                                             
             output_attrs.append(key)                                            
         if block_attr not in output_attrs:                                      
