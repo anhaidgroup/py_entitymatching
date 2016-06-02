@@ -1,6 +1,7 @@
 import os
 from nose.tools import *
-import numpy as np
+import pandas as pd
+#import numpy as np
 
 import magellan as mg
 
@@ -39,8 +40,8 @@ def test_ab_block_tables():
     assert_equal(mg.get_key(C), '_id')
     assert_equal(mg.get_property(C, 'fk_ltable'), l_output_prefix + l_key)
     assert_equal(mg.get_property(C, 'fk_rtable'), r_output_prefix + r_key)
-    k1 = np.array(C[l_output_prefix + l_block_attr_1])
-    k2 = np.array(C[r_output_prefix + r_block_attr_1])
+    k1 = pd.np.array(C[l_output_prefix + l_block_attr_1])
+    k2 = pd.np.array(C[r_output_prefix + r_block_attr_1])
     assert_equal(all(k1 == k2), True)
 
 def test_ab_block_tables_wi_no_output_tuples():
@@ -184,8 +185,8 @@ def test_ab_block_candset():
     assert_equal(mg.get_key(D), '_id')
     assert_equal(mg.get_property(D, 'fk_ltable'), mg.get_property(C, 'fk_ltable'))
     assert_equal(mg.get_property(D, 'fk_rtable'), mg.get_property(C, 'fk_rtable'))
-    k1 = np.array(D[l_output_prefix + l_block_attr_2])
-    k2 = np.array(D[r_output_prefix + r_block_attr_2])
+    k1 = pd.np.array(D[l_output_prefix + l_block_attr_2])
+    k2 = pd.np.array(D[r_output_prefix + r_block_attr_2])
     assert_equal(all(k1 == k2), True)
 
 def test_ab_block_candset_empty_input():
