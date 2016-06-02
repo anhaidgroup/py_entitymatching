@@ -73,7 +73,14 @@ def combine_blocker_outputs_via_union(blocker_output_list, l_prefix='ltable_', r
                                      validate=False)
 
     # update catalog
-    candset.sort_values([fk_ltable, fk_rtable], inplace=True)
+
+    # candset.sort_values([fk_ltable, fk_rtable], inplace=True) # this seems to fail in py 3.3
+    try: # check if sort_values is defined
+        candset.sort_values([fk_ltable, fk_rtable], inplace=True) # this seems to fail in py 3.3
+        # Method exists, and was used.
+    except AttributeError:
+        candset.sort([fk_ltable, fk_rtable], inplace=True)
+
     key = get_name_for_key(candset.columns)
     candset = add_key_column(candset, key)
     candset.reset_index(inplace=True, drop=True)
