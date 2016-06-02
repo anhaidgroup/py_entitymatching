@@ -65,14 +65,8 @@ scratch/
 .idea/
 # Created by .ignore support plugin (hsz.mobi)
 
-
 magellan/datasets/msd_reduced.csv
 magellan/datasets/test_datasets/sandbox/*
 cover/
-
-magellan/io/pickles.py
 results/
 html/
-magellan/tests/cover/
-magellan/__init__.py
-magellan/datasets/example_datasets/
