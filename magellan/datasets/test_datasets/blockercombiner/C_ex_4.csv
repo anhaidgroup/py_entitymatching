@@ -1,0 +1,18 @@
+_id,l_ID,r_ID,l_name,l_address,l_birth_year,l_zipcode,r_name,r_address,r_birth_year,r_zipcode
+0,a1,b1,Kevin Smith,"607 From St, San Francisco",1989,94107,Mark Levene,"108 Clement St, San Francisco",1987,94107
+1,a1,b2,Kevin Smith,"607 From St, San Francisco",1989,94107,Bill Bridge,"3131 Webster St, San Francisco",1986,94107
+2,a1,b6,Kevin Smith,"607 From St, San Francisco",1989,94107,Michael Brodie,"133 Clement Street, San Francisco",1987,94107
+3,a2,b3,Michael Franklin,"1652 Stockton St, San Francisco",1988,94122,Mike Franklin,"1652 Stockton St, San Francisco",1988,94122
+4,a2,b4,Michael Franklin,"1652 Stockton St, San Francisco",1988,94122,Joseph Kuan,"108 South Park, San Francisco",1982,94122
+5,a2,b5,Michael Franklin,"1652 Stockton St, San Francisco",1988,94122,Alfons Kemper,"170 Post St, Apt 4,  San Francisco",1984,94122
+6,a3,b1,William Bridge,"3131 Webster St, San Francisco",1986,94107,Mark Levene,"108 Clement St, San Francisco",1987,94107
+7,a3,b2,William Bridge,"3131 Webster St, San Francisco",1986,94107,Bill Bridge,"3131 Webster St, San Francisco",1986,94107
+8,a3,b6,William Bridge,"3131 Webster St, San Francisco",1986,94107,Michael Brodie,"133 Clement Street, San Francisco",1987,94107
+9,a4,b1,Binto George,"423 Powell St, San Francisco",1987,94122,Mark Levene,"108 Clement St, San Francisco",1987,94107
+10,a4,b3,Binto George,"423 Powell St, San Francisco",1987,94122,Mike Franklin,"1652 Stockton St, San Francisco",1988,94122
+11,a4,b4,Binto George,"423 Powell St, San Francisco",1987,94122,Joseph Kuan,"108 South Park, San Francisco",1982,94122
+12,a4,b5,Binto George,"423 Powell St, San Francisco",1987,94122,Alfons Kemper,"170 Post St, Apt 4,  San Francisco",1984,94122
+13,a4,b6,Binto George,"423 Powell St, San Francisco",1987,94122,Michael Brodie,"133 Clement Street, San Francisco",1987,94107
+14,a5,b3,Alphonse Kemper,"1702 Post Street, San Francisco",1984,94122,Mike Franklin,"1652 Stockton St, San Francisco",1988,94122
+15,a5,b4,Alphonse Kemper,"1702 Post Street, San Francisco",1984,94122,Joseph Kuan,"108 South Park, San Francisco",1982,94122
+16,a5,b5,Alphonse Kemper,"1702 Post Street, San Francisco",1984,94122,Alfons Kemper,"170 Post St, Apt 4,  San Francisco",1984,94122

@@ -13,10 +13,10 @@ from magellan.feature.autofeaturegen import get_features_for_blocking
 from magellan.utils.generic_helper import get_install_path, del_files_in_dir, creat_dir_ifnot_exists
 import magellan.catalog.catalog_manager as cm
 
-io_datasets_path = os.sep.join([get_install_path(), 'datasets', 'test_datasets', 'io'])
-path_a = os.sep.join([io_datasets_path, 'A.csv'])
-path_b = os.sep.join([io_datasets_path, 'B.csv'])
-path_c = os.sep.join([io_datasets_path, 'C.csv'])
+datasets_path = os.sep.join([get_install_path(), 'datasets', 'test_datasets'])
+path_a = os.sep.join([datasets_path, 'A.csv'])
+path_b = os.sep.join([datasets_path, 'B.csv'])
+path_c = os.sep.join([datasets_path, 'C.csv'])
 sndbx_path = os.sep.join([os.sep.join([get_install_path(), 'datasets', 'test_datasets']), 'sandbox'])
 
 

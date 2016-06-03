@@ -72,6 +72,11 @@ def _get_str_cols_list(table):
     col_list = []
     for x in cols:
         col_list.append(table.columns.get_loc(x))
+
+    if not col_list:
+        logger.error('No String Columns in the table to build inverted index')
+        raise AssertionError('No string columns in the input table')
+
     return col_list
 
 
@@ -139,6 +144,35 @@ def _probe_index(b_table, y, s_tbl_sz, s_inv_index):
 
 # down sample of two tables : based on sanjib's index based solution
 def down_sample(s_table, b_table, size, y):
+    """                                                                                                                                                                                                     
+    This is down sample table function:                                                                                                                                                                     
+    Args:                                                                                                                                                                                                   
+        s_table: dataframe <input table A>                                                                                                                                                                  
+        b_table: dataframe <input table B>                                                                                                                                                                  
+        size: down_sampled size of table B                                                                                                                                                                  
+        y: down_sampled size of table A should be close to size * y                                                                                                                                         
+                                                                                                                                                                                                            
+    Returns:                                                                                                                                                                                                
+        down sampled tables A and B                                                                                                                                                                         
+                                                                                                                                                                                                            
+    """
+
+    if not isinstance(s_table, pd.DataFrame):
+        logger.error('Input table A is not of type pandas dataframe')
+        raise AssertionError('Input table A is not of type pandas dataframe')
+
+    if not isinstance(b_table, pd.DataFrame):
+        logger.error('Input table B is not of type pandas dataframe')
+        raise AssertionError('Input table B is not of type pandas dataframe')
+
+    if len(s_table) == 0 or len(b_table) == 0:
+        logger.error('Size of the input table is 0')
+        raise AssertionError('Size of the input table is 0')
+
+    if size == 0 or y == 0:
+        logger.error('size or y cannot be zero (3rd and 4th parameter of downsample)')
+        raise AssertionError('size or y cannot be zero (3rd and 4th parameter of downsample)')
+
     if len(b_table) < size:
         logger.warning('Size of table B is less than b_size parameter - using entire table B')
 
