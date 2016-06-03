@@ -29,7 +29,7 @@ from magellan.blocker.rule_based_blocker import RuleBasedBlocker
 from magellan.blockercombiner.blockercombiner import combine_blocker_outputs_via_union
 
 # # sampling
-from magellan.sampler.sampler import sample_table
+from magellan.sampler.single_table import sample_table
 
 # # labeling
 from magellan.labeler.labeler import label_table

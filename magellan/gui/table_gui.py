@@ -1,5 +1,7 @@
 import logging
+# from builtins import str
 from PyQt4 import QtGui
+import six
 
 import magellan as mg
 from magellan.utils.generic_helper import remove_non_ascii
@@ -7,7 +9,7 @@ from magellan.utils.generic_helper import remove_non_ascii
 logger = logging.getLogger(__name__)
 
 
-def view_table(table, edit_flag=False):
+def view_table(table, edit_flag=False, show_flag=True):
     datatable = QtGui.QTableWidget()
 
     # disable edit
@@ -33,17 +35,20 @@ def view_table(table, edit_flag=False):
     # set window title
     datatable.setWindowTitle("Dataframe")
 
-    # show window
-    datatable.show()
-    mg._viewapp.exec_()
+    if show_flag:
+        # show window
+        datatable.show()
+        mg._viewapp.exec_()
+
+
     if edit_flag:
         return datatable
 
 
 
 # edit table
-def edit_table(table):
-    datatable = view_table(table, edit_flag=True)
+def edit_table(table, show_flag=True):
+    datatable = view_table(table, edit_flag=True, show_flag=show_flag)
     cols = list(table.columns)
     idxv = list(table.index)
     for i in range(len(table.index)):
@@ -63,8 +68,8 @@ def _cast_val(v, i):
         return float(v)
     elif isinstance(i, int):
         return int(v)
-    elif isinstance(i, basestring):
-        v = remove_non_ascii(unicode(v))
+    elif isinstance(i, six.string_types):
+        v = remove_non_ascii(str(v))
         return str(v)
     elif isinstance(i, object):
         return v
