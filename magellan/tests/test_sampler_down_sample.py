@@ -73,9 +73,44 @@ class InvertedIndexTestCases(unittest.TestCase):
         inv_index = _inv_index(A)
         self.assertNotEqual(len(inv_index), 0)
 
+    def test_down_sample_inv_index_key_check(self):
+        A = read_csv_metadata(path_a)
+        inv_index = _inv_index(A)
+        self.assertTrue(inv_index.has_key('william'))
+
+    def test_down_sample_inv_index_value_check(self):
+        A = read_csv_metadata(path_a)
+        inv_index = _inv_index(A)
+        self.assertNotEqual(len(inv_index.get('kemper')), 0)
+
+    def test_down_sample_inv_index_nostop_words_check(self):
+        A = read_csv_metadata(path_a)
+        inv_index = _inv_index(A)
+        self.assertFalse(inv_index.has_key('from'))
+        self.assertFalse(inv_index.has_key('to'))
+
 class StrColTestCases(unittest.TestCase):
     @raises(AssertionError)
-    def test_down_sample_get_str_cols_list_valid(self):
+    def test_down_sample_get_str_cols_list_valid1(self):
+        A = read_csv_metadata(path_a)
+        str_col_list = _get_str_cols_list(pd.DataFrame())
+
+    def test_down_sample_get_str_cols_list_valid2(self):
         A = read_csv_metadata(path_a)
         str_col_list = _get_str_cols_list(A)
-        self.assertNotEqual(len(str_col_list), 3)
+        self.assertNotEqual(len(str_col_list), 0)
+
+class ProbeIndexTestCases(unittest.TestCase):
+    def test_down_sample_probe_index_invalid_set(self):
+        A = read_csv_metadata(path_a)
+        B = read_csv_metadata(path_b, key='ID')
+        in_index = _inv_index(A)
+        s_tbl_indices = _probe_index(B, 5, len(A), in_index)
+        self.assertTrue(type(s_tbl_indices) is set)
+        
+    def test_down_sample_probe_index_validchk1(self):
+        A = read_csv_metadata(path_a)
+        B = read_csv_metadata(path_b, key='ID')
+        in_index = _inv_index(A)
+        s_tbl_indices = _probe_index(B, 5, len(A), in_index)
+        self.assertNotEqual(len(s_tbl_indices), 0)
