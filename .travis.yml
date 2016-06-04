@@ -15,22 +15,22 @@ matrix:
   - os: osx
     language: generic
     env:
-    - TOXENV=py27
+#    - TOXENV=py27
     - PYTHON_VERSION=2.7
   - os: osx
     language: generic
     env:
-    - TOXENV=py33
+#    - TOXENV=py33
     - PYTHON_VERSION=3.3
   - os: osx
     language: generic
     env:
-    - TOXENV=py34
+#    - TOXENV=py34
     - PYTHON_VERSION=3.4
   - os: osx
     language: generic
     env:
-    - TOXENV=py35
+#    - TOXENV=py35
     - PYTHON_VERSION=3.5
 
 before_install:
