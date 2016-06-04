@@ -1,19 +1,45 @@
-sudo: false
-language: python
-python:
-  - "2.7"
-  - "3.3"
-  - "3.4"
-  - "3.5"
+matrix:
+  include:
+  - os: linux
+    python: 2.7
+    env: PYTHON_VERSION=2.7
+  - os: linux
+    python: 3.3
+    env: PYTHON_VERSION=3.3
+  - os: linux
+    python: 3.4
+    env: PYTHON_VERSION=3.4
+  - os: linux
+    python: 3.5
+    env: PYTHON_VERSION=3.5
+  - os: osx
+    language: generic
+    env:
+    - PYTHON_VERSION=2.7
+  - os: osx
+    language: generic
+    env:
+    - PYTHON_VERSION=3.3
+  - os: osx
+    language: generic
+    env:
+    - PYTHON_VERSION=3.4
+  - os: osx
+    language: generic
+    env:
+    - PYTHON_VERSION=3.5
+
 before_install:
-  - wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then wget https://repo.continuum.io/miniconda/Miniconda-latest-MacOSX-x86_64.sh -O miniconda.sh; fi
   - bash miniconda.sh -b -p $HOME/miniconda
   - export PATH="$HOME/miniconda/bin:$PATH"
   - conda update --yes conda
-  - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export DISPLAY=:99.0; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sh -e /etc/init.d/xvfb start; fi
+
 install:
-  - conda install --yes python=$TRAVIS_PYTHON_VERSION pip numpy scipy nose pandas pyparsing six scikit-learn Cython pyqt cloudpickle
+  - conda install --yes python=$PYTHON_VERSION pip numpy scipy nose pandas pyparsing six scikit-learn Cython pyqt cloudpickle
   - pip install -r requirements.txt
 
 script:
