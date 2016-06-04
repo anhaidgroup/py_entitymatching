@@ -17,6 +17,11 @@ class AttrEquivalenceBlocker(Blocker):
                      l_output_prefix='ltable_', r_output_prefix='rtable_',
                      verbose=True):
 
+	# validate data types of input parameters
+	self.validate_types(ltable, rtable, l_block_attr, r_block_attr,
+			    l_output_attrs, r_output_attrs, l_output_prefix,
+			    r_output_prefix, verbose)
+
         # validate input parameters
         self.validate_block_attrs(ltable, rtable, l_block_attr, r_block_attr)
         self.validate_output_attrs(ltable, rtable, l_output_attrs,

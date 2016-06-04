@@ -1,5 +1,61 @@
+import logging
+
+import pandas as pd
+import six
+
+logger = logging.getLogger(__name__)
+
 class Blocker(object):
     pass
+
+    def validate_types(self, ltable, rtable, l_block_attr, r_block_attr,
+		       l_output_attrs, r_output_attrs, l_output_prefix,
+		       r_output_prefix, verbose):
+        if not isinstance(ltable, pd.DataFrame):
+            logger.error('Input left table is not of type pandas data frame')
+            raise AssertionError('Input left table is not of type pandas data frame')
+
+        if not isinstance(rtable, pd.DataFrame):
+            logger.error('Input right table is not of type pandas data frame')
+            raise AssertionError('Input right table is not of type pandas data frame')
+
+        if not isinstance(l_block_attr, six.string_types):
+            logger.error('Blocking attribute name of left table is not of type string')
+            raise AssertionError('Blocking attribute name of left table is not of type string')
+
+        if not isinstance(r_block_attr, six.string_types):
+            logger.error('Blocking attribute name of right table is not of type string')
+            raise AssertionError('Blocking attribute name of right table is not of type string')
+
+	if l_output_attrs:
+            if not isinstance(l_output_attrs, list):
+            	logger.error('Output attributes of left table is not of type list')
+            	raise AssertionError('Output attributes of left table is not of type list')
+	    for x in l_output_attrs:
+        	if not isinstance(x, six.string_types):
+            	    logger.error('An output attribute name of left table is not of type string')
+            	    raise AssertionError('An output attribute name of left table is not of type string')
+
+	if r_output_attrs:
+            if not isinstance(r_output_attrs, list):
+            	logger.error('Output attributes of right table is not of type list')
+            	raise AssertionError('Output attributes of right table is not of type list')
+	    for x in r_output_attrs:
+        	if not isinstance(x, six.string_types):
+            	    logger.error('An output attribute name of right table is not of type string')
+            	    raise AssertionError('An output attribute name of right table is not of type string')
+
+        if not isinstance(l_output_prefix, six.string_types):
+            logger.error('Output prefix of left table is not of type string')
+            raise AssertionError('Output prefix of left table is not of type string')
+
+        if not isinstance(r_output_prefix, six.string_types):
+            logger.error('Output prefix of right table is not of type string')
+            raise AssertionError('Output prefix of right table is not of type string')
+        
+	if not isinstance(verbose, bool):
+            logger.error('Parameter verbose is not of type bool')
+            raise AssertionError('Parameter verbose is not of type bool')
 
     def process_output_attrs(self, table, key, attrs, error_str=''):
         if attrs:
