@@ -17,8 +17,8 @@ class AttrEquivalenceBlocker(Blocker):
                      l_output_prefix='ltable_', r_output_prefix='rtable_',
                      verbose=True):
 
-	# validate data types of input parameters
-	self.validate_types(ltable, rtable, l_block_attr, r_block_attr,
+        # validate data types of input parameters
+        self.validate_types_tables(ltable, rtable, l_block_attr, r_block_attr,
 			    l_output_attrs, r_output_attrs, l_output_prefix,
 			    r_output_prefix, verbose)
 
@@ -76,6 +76,8 @@ class AttrEquivalenceBlocker(Blocker):
     def block_candset(self, candset, l_block_attr, r_block_attr, verbose=True,
                       show_progress=True):
 
+	self.validate_types_candset(candset, l_block_attr, r_block_attr,
+				    verbose, show_progress)
         # get and validate metadata
         log_info(logger, 'Required metadata: cand.set key, fk ltable, ' +
                  'fk rtable, ltable, rtable, ltable key, rtable key',

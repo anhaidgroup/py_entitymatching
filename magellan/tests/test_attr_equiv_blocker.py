@@ -41,135 +41,135 @@ class AttrEquivBlockerTestCases(unittest.TestCase):
 
     @raises(AssertionError)
     def test_ab_block_tables_invalid_ltable_1(self):
-        C = self.ab.block_tables(None, self.B, l_block_attr_1, r_block_attr_1)
+        self.ab.block_tables(None, self.B, l_block_attr_1, r_block_attr_1)
 
     @raises(AssertionError)
     def test_ab_block_tables_invalid_ltable_2(self):
-        C = self.ab.block_tables([10, 10], self.B, l_block_attr_1, r_block_attr_1)
+        self.ab.block_tables([10, 10], self.B, l_block_attr_1, r_block_attr_1)
 
     @raises(AssertionError)
     def test_ab_block_tables_invalid_ltable_3(self):
-        C = self.ab.block_tables(pd.DataFrame(), self.B, l_block_attr_1, r_block_attr_1)
+        self.ab.block_tables(pd.DataFrame(), self.B, l_block_attr_1, r_block_attr_1)
 
     @raises(AssertionError)
     def test_ab_block_tables_invalid_rtable_1(self):
-        C = self.ab.block_tables(self.A, None, l_block_attr_1, r_block_attr_1)
+        self.ab.block_tables(self.A, None, l_block_attr_1, r_block_attr_1)
 
     @raises(AssertionError)
     def test_ab_block_tables_invalid_rtable_2(self):
-        C = self.ab.block_tables(self.A, [10, 10], l_block_attr_1, r_block_attr_1)
+        self.ab.block_tables(self.A, [10, 10], l_block_attr_1, r_block_attr_1)
 
     @raises(AssertionError)
     def test_ab_block_tables_invalid_rtable_3(self):
-        C = self.ab.block_tables(self.A, pd.DataFrame(), l_block_attr_1, r_block_attr_1)
+        self.ab.block_tables(self.A, pd.DataFrame(), l_block_attr_1, r_block_attr_1)
 
     @raises(AssertionError)
     def test_ab_block_tables_invalid_l_block_attr_1(self):
-        C = self.ab.block_tables(self.A, self.B, None, r_block_attr_1)
+        self.ab.block_tables(self.A, self.B, None, r_block_attr_1)
 
     @raises(AssertionError)
     def test_ab_block_tables_invalid_l_block_attr_2(self):
-        C = self.ab.block_tables(self.A, self.B, 10, r_block_attr_1)
+        self.ab.block_tables(self.A, self.B, 10, r_block_attr_1)
 
     @raises(AssertionError)
     def test_ab_block_tables_invalid_l_block_attr_3(self):
-        C = self.ab.block_tables(self.A, self.B, True, r_block_attr_1)
+        self.ab.block_tables(self.A, self.B, True, r_block_attr_1)
 
     @raises(AssertionError)
     def test_ab_block_tables_bogus_l_block_attr(self):
-        C = self.ab.block_tables(self.A, self.B, bogus_attr, r_block_attr_1)
+        self.ab.block_tables(self.A, self.B, bogus_attr, r_block_attr_1)
 
     @raises(AssertionError)
     def test_ab_block_tables_multi_l_block_attr(self):
-        C = self.ab.block_tables(self.A, self.B, block_attr_multi, r_block_attr_1)
+        self.ab.block_tables(self.A, self.B, block_attr_multi, r_block_attr_1)
 
     @raises(AssertionError)
     def test_ab_block_tables_invalid_r_block_attr_1(self):
-        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, None)
+        self.ab.block_tables(self.A, self.B, l_block_attr_1, None)
 
     @raises(AssertionError)
     def test_ab_block_tables_invalid_r_block_attr_2(self):
-        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, 10)
+        self.ab.block_tables(self.A, self.B, l_block_attr_1, 10)
 
     @raises(AssertionError)
     def test_ab_block_tables_invalid_r_block_attr_3(self):
-        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, True)
+        self.ab.block_tables(self.A, self.B, l_block_attr_1, True)
 
     @raises(AssertionError)
     def test_ab_block_tables_bogus_r_block_attr(self):
-        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, bogus_attr)
+        self.ab.block_tables(self.A, self.B, l_block_attr_1, bogus_attr)
 
     @raises(AssertionError)
     def test_ab_block_tables_multi_r_block_attr(self):
-        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, block_attr_multi)
+        self.ab.block_tables(self.A, self.B, l_block_attr_1, block_attr_multi)
 
     @raises(AssertionError)
     def test_ab_block_tables_invalid_l_output_attrs_1(self):
-        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, 1)
+        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, 1)
 
     @raises(AssertionError)
     def test_ab_block_tables_invalid_l_output_attrs_2(self):
-        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, 'name')
+        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, 'name')
 
     @raises(AssertionError)
     def test_ab_block_tables_invalid_l_output_attrs_3(self):
-        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, [1, 2])
+        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, [1, 2])
 
     @raises(AssertionError)
     def test_ab_block_tables_bogus_l_output_attrs(self):
-        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, [bogus_attr])
+        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, [bogus_attr])
 
     @raises(AssertionError)
     def test_ab_block_tables_invalid_r_output_attrs_1(self):
-        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, r_output_attrs=1)
+        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, r_output_attrs=1)
 
     @raises(AssertionError)
     def test_ab_block_tables_invalid_r_output_attrs_2(self):
-        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, r_output_attrs='name')
+        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, r_output_attrs='name')
 
     @raises(AssertionError)
     def test_ab_block_tables_invalid_r_output_attrs_3(self):
-        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, r_output_attrs=[1, 2])
+        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, r_output_attrs=[1, 2])
 
     @raises(AssertionError)
     def test_ab_block_tables_bogus_r_output_attrs(self):
-        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, r_output_attrs=[bogus_attr])
+        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, r_output_attrs=[bogus_attr])
 
     @raises(AssertionError)
     def test_ab_block_tables_invalid_l_output_prefix_1(self):
-        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, l_output_prefix=None)
+        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, l_output_prefix=None)
 
     @raises(AssertionError)
     def test_ab_block_tables_invalid_l_output_prefix_2(self):
-        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, l_output_prefix=1)
+        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, l_output_prefix=1)
 
     @raises(AssertionError)
     def test_ab_block_tables_invalid_l_output_prefix_3(self):
-        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, l_output_prefix=True)
+        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, l_output_prefix=True)
 
     @raises(AssertionError)
     def test_ab_block_tables_invalid_r_output_prefix_1(self):
-        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, r_output_prefix=None)
+        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, r_output_prefix=None)
 
     @raises(AssertionError)
     def test_ab_block_tables_invalid_r_output_prefix_2(self):
-        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, r_output_prefix=1)
+        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, r_output_prefix=1)
 
     @raises(AssertionError)
     def test_ab_block_tables_invalid_r_output_prefix_3(self):
-        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, r_output_prefix=True)
+        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, r_output_prefix=True)
 
     @raises(AssertionError)
     def test_ab_block_tables_invalid_verbose_1(self):
-        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, verbose=None)
+        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, verbose=None)
 
     @raises(AssertionError)
     def test_ab_block_tables_invalid_verbose_2(self):
-        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, verbose=1)
+        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, verbose=1)
 
     @raises(AssertionError)
     def test_ab_block_tables_invalid_verbose_3(self):
-        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, verbose='yes')
+        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, verbose='yes')
 
     def test_ab_block_tables(self):
         C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, l_output_attrs,
@@ -234,6 +234,98 @@ class AttrEquivBlockerTestCases(unittest.TestCase):
         assert_equal(mg.get_key(C), '_id')
         assert_equal(mg.get_property(C, 'fk_ltable'), 'ltable_' + l_key)
         assert_equal(mg.get_property(C, 'fk_rtable'), 'rtable_' + r_key)
+
+    @raises(AssertionError)
+    def test_ab_block_candset_invalid_candset_1(self):
+        self.ab.block_candset(None, l_block_attr_1, r_block_attr_1)
+
+    @raises(AssertionError)
+    def test_ab_block_candset_invalid_candset_2(self):
+        self.ab.block_candset([10, 10], l_block_attr_1, r_block_attr_1)
+
+    @raises(KeyError)
+    def test_ab_block_candset_invalid_candset_3(self):
+        self.ab.block_candset(pd.DataFrame(), l_block_attr_1, r_block_attr_1)
+
+    @raises(AssertionError)
+    def test_ab_block_candset_invalid_l_block_attr_1(self):
+        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1)
+        self.ab.block_candset(C, None, r_block_attr_2)
+
+    @raises(AssertionError)
+    def test_ab_block_candset_invalid_l_block_attr_2(self):
+        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1)
+        self.ab.block_candset(C, 10, r_block_attr_2)
+
+    @raises(AssertionError)
+    def test_ab_block_candset_invalid_l_block_attr_3(self):
+        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1)
+        self.ab.block_candset(C, True, r_block_attr_2)
+
+    @raises(AssertionError)
+    def test_ab_block_candset_bogus_l_block_attr(self):
+        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1)
+        self.ab.block_candset(C, bogus_attr, r_block_attr_2)
+
+    @raises(AssertionError)
+    def test_ab_block_candset_multi_l_block_attr(self):
+        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1)
+        self.ab.block_candset(C, block_attr_multi, r_block_attr_2)
+
+    @raises(AssertionError)
+    def test_ab_block_candset_invalid_r_block_attr_1(self):
+        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1)
+        self.ab.block_candset(C, l_block_attr_2, None)
+
+    @raises(AssertionError)
+    def test_ab_block_candset_invalid_r_block_attr_2(self):
+        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1)
+        self.ab.block_candset(C, l_block_attr_2, 10)
+
+    @raises(AssertionError)
+    def test_ab_block_candset_invalid_r_block_attr_3(self):
+        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1)
+        self.ab.block_candset(C, l_block_attr_2, True)
+
+    @raises(AssertionError)
+    def test_ab_block_candset_bogus_r_block_attr(self):
+        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1)
+        self.ab.block_candset(C, l_block_attr_2, bogus_attr)
+
+    @raises(AssertionError)
+    def test_ab_block_candset_multi_r_block_attr(self):
+        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1)
+        self.ab.block_candset(C, l_block_attr_2, block_attr_multi)
+
+    @raises(AssertionError)
+    def test_ab_block_candset_invalid_verbose_1(self):
+        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1)
+        self.ab.block_candset(C, l_block_attr_2, r_block_attr_2, None)
+
+    @raises(AssertionError)
+    def test_ab_block_candset_invalid_verbose_2(self):
+        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1)
+        self.ab.block_candset(C, l_block_attr_2, r_block_attr_2, 1)
+
+    @raises(AssertionError)
+    def test_ab_block_candset_invalid_verbose_3(self):
+        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1)
+        self.ab.block_candset(C, l_block_attr_2, r_block_attr_2, 'yes')
+
+    @raises(AssertionError)
+    def test_ab_block_candset_invalid_show_progress_1(self):
+        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1)
+        self.ab.block_candset(C, l_block_attr_2, r_block_attr_2, show_progress=None)
+
+    @raises(AssertionError)
+    def test_ab_block_candset_invalid_show_progress_2(self):
+        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1)
+        self.ab.block_candset(C, l_block_attr_2, r_block_attr_2, show_progress=1)
+
+    @raises(AssertionError)
+    def test_ab_block_candset_invalid_show_progress_3(self):
+        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1)
+        self.ab.block_candset(C, l_block_attr_2, r_block_attr_2, show_progress='yes')
 
     def test_ab_block_candset(self):
         C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, l_output_attrs,

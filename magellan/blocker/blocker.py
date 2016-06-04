@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 class Blocker(object):
     pass
 
-    def validate_types(self, ltable, rtable, l_block_attr, r_block_attr,
+    def validate_types_tables(self, ltable, rtable, l_block_attr, r_block_attr,
 		       l_output_attrs, r_output_attrs, l_output_prefix,
 		       r_output_prefix, verbose):
         if not isinstance(ltable, pd.DataFrame):
@@ -56,6 +56,28 @@ class Blocker(object):
 	if not isinstance(verbose, bool):
             logger.error('Parameter verbose is not of type bool')
             raise AssertionError('Parameter verbose is not of type bool')
+
+    def validate_types_candset(self, candset, l_block_attr, r_block_attr,
+		       	       verbose, show_progress):
+        if not isinstance(candset, pd.DataFrame):
+            logger.error('Input candset is not of type pandas data frame')
+            raise AssertionError('Input candset is not of type pandas data frame')
+
+        if not isinstance(l_block_attr, six.string_types):
+            logger.error('Left blocking attribute name is not of type string')
+            raise AssertionError('Left blocking attribute name is not of type string')
+
+        if not isinstance(r_block_attr, six.string_types):
+            logger.error('Right blocking attribute name is not of type string')
+            raise AssertionError('Right blocking attribute name is not of type string')
+
+	if not isinstance(verbose, bool):
+            logger.error('Parameter verbose is not of type bool')
+            raise AssertionError('Parameter verbose is not of type bool')
+
+	if not isinstance(show_progress, bool):
+            logger.error('Parameter show_progress is not of type bool')
+            raise AssertionError('Parameter show_progress is not of type bool')
 
     def process_output_attrs(self, table, key, attrs, error_str=''):
         if attrs:
