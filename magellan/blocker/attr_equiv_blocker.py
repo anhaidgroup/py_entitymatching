@@ -76,7 +76,7 @@ class AttrEquivalenceBlocker(Blocker):
     def block_candset(self, candset, l_block_attr, r_block_attr, verbose=True,
                       show_progress=True):
 
-	self.validate_types_candset(candset, l_block_attr, r_block_attr,
+        self.validate_types_candset(candset, l_block_attr, r_block_attr,
 				    verbose, show_progress)
         # get and validate metadata
         log_info(logger, 'Required metadata: cand.set key, fk ltable, ' +
