@@ -65,7 +65,8 @@ scratch/
 .idea/
 # Created by .ignore support plugin (hsz.mobi)
 
-
 magellan/datasets/msd_reduced.csv
 magellan/datasets/test_datasets/sandbox/*
 cover/
+results/
+html/
