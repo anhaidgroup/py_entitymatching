@@ -40,6 +40,7 @@ setup(
                       'scipy >= 0.16.0',
                       'Cython >= 0.23.0',
                       'PyPrind >= 2.9.3'
+                      'pyqt'
                       ],
     include_package_data=True,
     zip_safe=False
