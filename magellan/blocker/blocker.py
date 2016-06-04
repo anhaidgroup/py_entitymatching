@@ -27,23 +27,23 @@ class Blocker(object):
             logger.error('Blocking attribute name of right table is not of type string')
             raise AssertionError('Blocking attribute name of right table is not of type string')
 
-	if l_output_attrs:
+        if l_output_attrs:
             if not isinstance(l_output_attrs, list):
-            	logger.error('Output attributes of left table is not of type list')
-            	raise AssertionError('Output attributes of left table is not of type list')
-	    for x in l_output_attrs:
-        	if not isinstance(x, six.string_types):
-            	    logger.error('An output attribute name of left table is not of type string')
-            	    raise AssertionError('An output attribute name of left table is not of type string')
+                logger.error('Output attributes of left table is not of type list')
+                raise AssertionError('Output attributes of left table is not of type list')
+            for x in l_output_attrs:
+                if not isinstance(x, six.string_types):
+                    logger.error('An output attribute name of left table is not of type string')
+                    raise AssertionError('An output attribute name of left table is not of type string')
 
-	if r_output_attrs:
+        if r_output_attrs:
             if not isinstance(r_output_attrs, list):
-            	logger.error('Output attributes of right table is not of type list')
-            	raise AssertionError('Output attributes of right table is not of type list')
-	    for x in r_output_attrs:
-        	if not isinstance(x, six.string_types):
-            	    logger.error('An output attribute name of right table is not of type string')
-            	    raise AssertionError('An output attribute name of right table is not of type string')
+                logger.error('Output attributes of right table is not of type list')
+                raise AssertionError('Output attributes of right table is not of type list')
+            for x in r_output_attrs:
+                if not isinstance(x, six.string_types):
+                    logger.error('An output attribute name of right table is not of type string')
+                    raise AssertionError('An output attribute name of right table is not of type string')
 
         if not isinstance(l_output_prefix, six.string_types):
             logger.error('Output prefix of left table is not of type string')
@@ -53,7 +53,7 @@ class Blocker(object):
             logger.error('Output prefix of right table is not of type string')
             raise AssertionError('Output prefix of right table is not of type string')
         
-	if not isinstance(verbose, bool):
+        if not isinstance(verbose, bool):
             logger.error('Parameter verbose is not of type bool')
             raise AssertionError('Parameter verbose is not of type bool')
 
@@ -71,11 +71,11 @@ class Blocker(object):
             logger.error('Right blocking attribute name is not of type string')
             raise AssertionError('Right blocking attribute name is not of type string')
 
-	if not isinstance(verbose, bool):
+        if not isinstance(verbose, bool):
             logger.error('Parameter verbose is not of type bool')
             raise AssertionError('Parameter verbose is not of type bool')
 
-	if not isinstance(show_progress, bool):
+        if not isinstance(show_progress, bool):
             logger.error('Parameter show_progress is not of type bool')
             raise AssertionError('Parameter show_progress is not of type bool')
 
