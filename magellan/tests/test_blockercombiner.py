@@ -43,7 +43,8 @@ class BlockerCombinerTestCases(unittest.TestCase):
 
         C_exp.reset_index(inplace=True, drop=True)
         C_exp['_id'] = six.moves.range(0, len(C_exp))
-        # self.assertEqual(C.equals(C_exp), True)
+        if os.name != 'nt':
+            self.assertEqual(C.equals(C_exp), True)
         p1 = cm.get_all_properties(C)
         p2 = cm.get_all_properties(C_exp)
         self.assertEqual(p1, p2)
@@ -90,7 +91,8 @@ class BlockerCombinerTestCases(unittest.TestCase):
         C1.reset_index(inplace=True, drop=True)
         C1['_id'] = six.moves.range(0, len(C1))
 
-        # self.assertEqual(C.equals(C1), True)
+        if os.name != 'nt':
+            self.assertEqual(C.equals(C1), True)
         p1 = cm.get_all_properties(C)
         p2 = cm.get_all_properties(C1)
         self.assertEqual(p1, p2)
@@ -120,7 +122,8 @@ class BlockerCombinerTestCases(unittest.TestCase):
         C_exp.reset_index(inplace=True, drop=True)
         C_exp['_id'] = six.moves.range(0, len(C_exp))
 
-        # self.assertEqual(C.equals(C_exp), True)
+        if os.name != 'nt':
+            self.assertEqual(C.equals(C_exp), True)
         p1 = cm.get_all_properties(C)
         p2 = cm.get_all_properties(C_exp)
         self.assertEqual(p1, p2)
