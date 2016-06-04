@@ -35,9 +35,9 @@ class AttrEquivBlockerTestCases(unittest.TestCase):
         self.ab = mg.AttrEquivalenceBlocker()
         
     def tearDown(self):
-	del self.A
-	del self.B
-	del self.ab
+        del self.A
+        del self.B
+        del self.ab
 
     @raises(AssertionError)
     def test_ab_block_tables_invalid_ltable_1(self):
