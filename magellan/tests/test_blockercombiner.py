@@ -7,7 +7,7 @@ import six
 
 from magellan.utils.generic_helper import get_install_path
 import magellan.catalog.catalog_manager as cm
-from magellan.io.parsers import read_csv_metadata
+from magellan.io.parsers import read_csv_metadata, to_csv_metadata
 from magellan.blockercombiner.blockercombiner import combine_blocker_outputs_via_union
 
 datasets_path = os.sep.join([get_install_path(), 'datasets', 'test_datasets'])
@@ -34,10 +34,12 @@ class BlockerCombinerTestCases(unittest.TestCase):
         C3 = read_csv_metadata(path_c3, ltable=A, rtable=B)
         C = combine_blocker_outputs_via_union([C1, C2, C3])
         C_exp = read_csv_metadata(path_c, ltable=A, rtable=B)
-        try:
-            C_exp.sort_values(['ltable_ID', 'rtable_ID'], inplace=True)
-        except AttributeError:
-            C_exp.sort(['ltable_ID', 'rtable_ID'], inplace=True)
+        # try:
+        #     C_exp.sort_values(['ltable_ID', 'rtable_ID'], inplace=True)
+        # except AttributeError:
+        #     C_exp.sort(['ltable_ID', 'rtable_ID'], inplace=True)
+        # to_csv_metadata(C_exp, path_c)
+
 
         C_exp.reset_index(inplace=True, drop=True)
         C_exp['_id'] = six.moves.range(0, len(C_exp))
@@ -79,10 +81,11 @@ class BlockerCombinerTestCases(unittest.TestCase):
         B = read_csv_metadata(path_b, key='ID')
         C1 = read_csv_metadata(os.sep.join([bc_datasets_path, 'C1_ex_1.csv']), ltable=A, rtable=B)
         C = combine_blocker_outputs_via_union([C1, C1])
-        try:
-            C1.sort_values(['ltable_ID', 'rtable_ID'], inplace=True)
-        except AttributeError:
-            C1.sort(['ltable_ID', 'rtable_ID'], inplace=True)
+        # try:
+        #     C1.sort_values(['ltable_ID', 'rtable_ID'], inplace=True)
+        # except AttributeError:
+        #     C1.sort(['ltable_ID', 'rtable_ID'], inplace=True)
+        # to_csv_metadata(C1, os.sep.join([bc_datasets_path, 'C1_ex_1.csv']))
 
         C1.reset_index(inplace=True, drop=True)
         C1['_id'] = six.moves.range(0, len(C1))
@@ -110,10 +113,10 @@ class BlockerCombinerTestCases(unittest.TestCase):
         C = combine_blocker_outputs_via_union([C1, C2], 'l_', 'r_')
 
         C_exp = read_csv_metadata(os.sep.join([bc_datasets_path, 'C_ex_4.csv']), ltable=A, rtable=B)
-        try:
-            C_exp.sort_values(['l_ID', 'r_ID'], inplace=True)
-        except AttributeError:
-            C_exp.sort(['l_ID', 'r_ID'], inplace=True)
+        # try:
+        #     C_exp.sort_values(['l_ID', 'r_ID'], inplace=True)
+        # except AttributeError:
+        #     C_exp.sort(['l_ID', 'r_ID'], inplace=True)
         C_exp.reset_index(inplace=True, drop=True)
         C_exp['_id'] = six.moves.range(0, len(C_exp))
 
