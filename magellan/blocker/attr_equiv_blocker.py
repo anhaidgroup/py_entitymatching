@@ -25,9 +25,9 @@ def block_tables_per_process(l_df, r_df, l_key, r_key, l_block_attr, r_block_att
 				  l_output_attrs, r_output_attrs, l_output_prefix,
 				  r_output_prefix)
 
-    print "candset attrs: ", list(candset.columns)   
-    print "retain attrs: ", retain_cols  
-    print "final_attrs: ", final_cols  
+    #print "candset attrs: ", list(candset.columns)   
+    #print "retain attrs: ", retain_cols  
+    #print "final_attrs: ", final_cols  
     candset = candset[retain_cols]
     candset.columns = final_cols
     return candset
