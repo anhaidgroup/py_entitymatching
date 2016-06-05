@@ -53,6 +53,7 @@
          "scikit-learn":[],
          "cloudpickle":[]
      },
+
     // The directory (relative to the current directory) that benchmarks are
     // stored in.  If not provided, defaults to "benchmarks"
     "benchmark_dir": "benchmarks"
