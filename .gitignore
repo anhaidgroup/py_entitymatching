@@ -67,6 +67,7 @@ scratch/
 
 magellan/datasets/msd_reduced.csv
 magellan/datasets/test_datasets/sandbox/*
+magellan/datasets/example_datasets
 cover/
 results/
 html/
