@@ -181,8 +181,7 @@ def abs_norm(d1, d2):
     if d1 == 0.0 and d2 == 0.0:
         return 0
     else:
-        x = 1 - (abs(d1 - d2) / max(d1, d2))
-
+        x = (abs(d1 - d2) / max(d1, d2))
         if x <= 10e-5:
             x = 0
-        return x
+        return 1.0 - x
