@@ -186,6 +186,21 @@ class AttrEquivBlockerTestCases(unittest.TestCase):
         k2 = pd.np.array(C[r_output_prefix + r_block_attr_1])
         assert_equal(all(k1 == k2), True)
 
+    def test_ab_block_tables_multi(self):
+        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, l_output_attrs,
+                            r_output_attrs, l_output_prefix, r_output_prefix, n_jobs=2)
+        s1 = ['_id', l_output_prefix + l_key, r_output_prefix + r_key]
+        s1 += [l_output_prefix + x for x in l_output_attrs if x != l_key]
+        s1 += [r_output_prefix + x for x in r_output_attrs if x != r_key]
+        s1 = sorted(s1)
+        assert_equal(s1, sorted(C.columns))
+        assert_equal(mg.get_key(C), '_id')
+        assert_equal(mg.get_property(C, 'fk_ltable'), l_output_prefix + l_key)
+        assert_equal(mg.get_property(C, 'fk_rtable'), r_output_prefix + r_key)
+        k1 = pd.np.array(C[l_output_prefix + l_block_attr_1])
+        k2 = pd.np.array(C[r_output_prefix + r_block_attr_1])
+        assert_equal(all(k1 == k2), True)
+
     def test_ab_block_tables_wi_no_output_tuples(self):
         C = self.ab.block_tables(self.A, self.B, l_block_attr_3, r_block_attr_3)
         assert_equal(len(C),  0)

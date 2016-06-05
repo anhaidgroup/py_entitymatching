@@ -1,5 +1,6 @@
 import logging
 
+import math
 import pandas as pd
 import six
 
@@ -118,3 +119,10 @@ class Blocker(object):
         if block_attr not in output_attrs:                                      
             output_attrs.append(block_attr)                                     
         return output_attrs
+
+    def get_split_params(self, n_procs):
+        m = int(math.sqrt(n_procs))
+        while n_procs % m != 0:
+            m = m - 1
+        n = n_procs / m
+        return m, n
