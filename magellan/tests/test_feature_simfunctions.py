@@ -1,13 +1,8 @@
 from functools import partial
-import os
 from nose.tools import *
 import unittest
 import pandas as pd
 import six
-
-from magellan.utils.generic_helper import get_install_path
-import magellan.catalog.catalog_manager as cm
-from magellan.io.parsers import read_csv_metadata
 
 import magellan.feature.simfunctions as sim
 
