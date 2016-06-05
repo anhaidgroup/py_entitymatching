@@ -70,7 +70,7 @@ def get_type(col):
         if t == bool:
             return 'boolean'
         # consider string and unicode as same
-        elif t == six.string_types or t == six.unichr:
+        elif t == str or t == six.unichr or t == six.text_type:
             # get average token length
             avg_tok_len = pd.Series.mean(col.str.split(' ').apply(len_handle_nan))
             if avg_tok_len == 1:
