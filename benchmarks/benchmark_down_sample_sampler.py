@@ -5,6 +5,7 @@ import os
 
 import magellan  as mg
 
+# setting path
 p = mg.get_install_path()
 datasets_path = os.sep.join([p, 'datasets', 'example_datasets'])
 
