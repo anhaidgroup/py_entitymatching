@@ -227,3 +227,17 @@ class AutoFeatureGenerationTestCases(unittest.TestCase):
 
     def test_get_magellan_str_types(self):
         x = afg.get_magellan_str_types()
+
+    def test_valid_tok_sim_valid(self):
+        sim = afg.get_sim_funs_for_blocking()
+        tok = afg.get_tokenizers_for_blocking()
+        status = afg.check_valid_tok_sim(('lev1', 'tok', 'tok'), sim, tok)
+        self.assertEqual(status, None)
+
+    def test_get_fn_str_valid1(self):
+        status = afg.get_fn_str(None, None)
+        self.assertEqual(status, None)
+
+    def test_get_fn_str_valid2(self):
+        status = afg.get_fn_str('lev', ('year', 'year'))
+        self.assertNotEqual(status, None)

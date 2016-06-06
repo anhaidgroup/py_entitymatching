@@ -235,10 +235,9 @@ def get_fn_str(inp, attrs):
     if inp:
         args = []
         args.extend(attrs)
-        if isinstance(inp, six.string_types):
+        if isinstance(inp, six.string_types) == True:
             inp = [inp]
-        else:
-            args.extend(inp)
+        args.extend(inp)
         # fill function string from a template
         return fill_fn_template(*args)
     else:

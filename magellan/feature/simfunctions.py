@@ -126,7 +126,7 @@ def needleman_wunsch(s1, s2):
         s1 = remove_non_ascii(s1)
     if isinstance(s2, six.string_types):
         s2 = remove_non_ascii(s2)
-    return sim.needleman_wunsch(s1, s2)
+    return sim.needleman_wunsch(str(s1), str(s2))
 
 
 def smith_waterman(s1, s2):
@@ -138,7 +138,7 @@ def smith_waterman(s1, s2):
         s1 = remove_non_ascii(s1)
     if isinstance(s2, six.string_types):
         s2 = remove_non_ascii(s2)
-    return sim.smith_waterman(s1, s2)
+    return sim.smith_waterman(str(s1), str(s2))
 
 
 # boolean/string/numeric similarity measure

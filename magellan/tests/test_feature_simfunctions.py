@@ -132,6 +132,15 @@ class SimFunctionsTestCases(unittest.TestCase):
         val = sim.lev(a, b)
         self.assertEqual(val, 6)
 
+    def test_sim_lev_valid_2(self):
+        val = sim.lev(100, "101" )
+        self.assertEqual(val, 1)
+
+    def test_sim_lev_valid_3(self):
+        val = sim.lev("100", 101 )
+        self.assertEqual(val, 1)
+
+
     def test_sim_jaro_valid_1(self):
         #         >>> jaro('MARTHA', 'MARHTA')
         # 0.9444444444444445
@@ -141,17 +150,38 @@ class SimFunctionsTestCases(unittest.TestCase):
         self.assertAlmostEqual(val, 0.9444444444444445)
 
 
+    def test_sim_jaro_valid_2(self):
+        #         >>> jaro('MARTHA', 'MARHTA')
+        # 0.9444444444444445
+        a = 'MARTHA'
+        b = 'MARHTA'
+        val = sim.jaro(10, 10)
+        self.assertAlmostEqual(val, 1.0)
+
+
     def test_sim_jaro_winkler_valid_1(self):
         a = 'MARTHA'
         b = 'MARHTA'
         val = sim.jaro_winkler(a, b)
         self.assertAlmostEqual(val, 0.9611111111111111)
 
-    def test_needleman_wunch_valid(self):
+    def test_sim_jaro_winkler_valid_2(self):
+        a = 'MARTHA'
+        b = 'MARHTA'
+        val = sim.jaro_winkler(10, 10)
+        self.assertAlmostEqual(val, 1.0)
+
+    def test_needleman_wunch_valid_1(self):
         self.assertEqual(sim.needleman_wunsch('dva', 'deeva'), 1.0)
 
-    def test_smith_waterman_valid(self):
+    def test_needleman_wunch_valid_2(self):
+        self.assertEqual(sim.needleman_wunsch(10, 10), 2.0)
+
+    def test_smith_waterman_valid_1(self):
         self.assertEqual(sim.smith_waterman('cat', 'hat'), 2.0)
+
+    def test_smith_waterman_valid_2(self):
+        self.assertEqual(sim.smith_waterman(10, 10), 2.0)
 
     def test_rel_diff_valid_1(self):
         a, b = float(10.0), float(11.0)

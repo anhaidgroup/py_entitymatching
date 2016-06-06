@@ -44,6 +44,12 @@ class TokenizerTestCases(unittest.TestCase):
     def test_get_single_arg_tokenizers_valid_3(self):
         tok.get_single_arg_tokenizers(q=[], dlm_char=[])
 
+    def test_get_single_arg_tokenizers_valid_4(self):
+        tok.get_single_arg_tokenizers(q=None, dlm_char=[' '])
+
+    def test_get_single_arg_tokenizers_valid_5(self):
+        tok.get_single_arg_tokenizers(q=3, dlm_char=None)
+
     def test_qgram_invalid(self):
         x = tok.make_tok_qgram(3)
         self.assertEqual(pd.isnull(x(pd.np.NaN)), True)
