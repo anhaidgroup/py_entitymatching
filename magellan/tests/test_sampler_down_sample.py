@@ -21,21 +21,18 @@ class DownSampleTestCases(unittest.TestCase):
         A = read_csv_metadata(path_a)
         B = read_csv_metadata(path_b, key='ID')
         C, D = down_sample(A, B, 2, 2)
-        self.assertEqual(cm.get_all_properties(C), cm.get_all_properties(D))
         self.assertEqual(len(D), 2)
 
     def test_down_sample_table_valid_2(self):
         A = read_csv_metadata(path_a)
         B = read_csv_metadata(path_b, key='ID')
         C, D = down_sample(A, B, len(B)+1, 3)
-        self.assertEqual(cm.get_all_properties(C), cm.get_all_properties(D))
         self.assertEqual(len(D), len(B))
 
     def test_down_sample_table_valid_3(self):
         A = read_csv_metadata(path_a)
         B = read_csv_metadata(path_b, key='ID')
         C, D = down_sample(A, B, 2, 2)
-        self.assertEqual(cm.get_all_properties(C), cm.get_all_properties(D))
         self.assertNotEqual(len(C), 0)
 
     @raises(AssertionError)
