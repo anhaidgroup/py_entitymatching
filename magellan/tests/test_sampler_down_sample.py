@@ -34,7 +34,7 @@ class DownSampleTestCases(unittest.TestCase):
     def test_down_sample_table_valid_3(self):
         A = read_csv_metadata(path_a)
         B = read_csv_metadata(path_b, key='ID')
-        C, D = down_sample(A, B, 5, 5)
+        C, D = down_sample(A, B, 2, 2)
         self.assertEqual(cm.get_all_properties(C), cm.get_all_properties(D))
         self.assertNotEqual(len(C), 0)
 
