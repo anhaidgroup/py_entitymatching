@@ -83,7 +83,7 @@ class InvertedIndexTestCases(unittest.TestCase):
     def test_down_sample_inv_index_key_check(self):
         A = read_csv_metadata(path_a)
         inv_index = _inv_index(A)
-        self.assertTrue(inv_index.has_key('william'))
+        self.assertTrue('william' in inv_index)
 
     def test_down_sample_inv_index_value_check(self):
         A = read_csv_metadata(path_a)
@@ -93,8 +93,8 @@ class InvertedIndexTestCases(unittest.TestCase):
     def test_down_sample_inv_index_nostop_words_check(self):
         A = read_csv_metadata(path_a)
         inv_index = _inv_index(A)
-        self.assertFalse(inv_index.has_key('from'))
-        self.assertFalse(inv_index.has_key('to'))
+        self.assertFalse('from' in inv_index)
+        self.assertFalse('to' in inv_index)
 
 class StrColTestCases(unittest.TestCase):
     @raises(AssertionError)
