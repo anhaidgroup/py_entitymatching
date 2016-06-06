@@ -2,7 +2,6 @@ import os
 from nose.tools import *
 import unittest
 import pandas as pd
-import six
 
 from magellan.utils.generic_helper import get_install_path
 from magellan.io.parsers import read_csv_metadata

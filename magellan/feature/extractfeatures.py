@@ -32,7 +32,7 @@ def extract_feature_vecs(candset, attrs_before=None, feature_table=None, attrs_a
                                                            'in the input table')
 
 
-    if not feature_table is None:
+    if feature_table is None:
         logger.error('Feature table cannot be null')
         raise AssertionError('The feature table cannot be null')
 
@@ -86,8 +86,10 @@ def extract_feature_vecs(candset, attrs_before=None, feature_table=None, attrs_a
             attrs_after = [attrs_after]
         attrs_after = list_diff(attrs_after, [key, fk_ltable, fk_rtable])
         attrs_after.reverse()
+        col_pos = len(table.columns)
         for a in attrs_after:
-            table.insert(0, a, candset[a])
+            table.insert(col_pos, a, candset[a])
+            col_pos += 1
 
     # reset the index
     table.reset_index(inplace=True, drop=True)
