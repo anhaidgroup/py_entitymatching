@@ -28,6 +28,21 @@ class TimeBlockTablesRestaurants:
                         self.r_block_attr, self.l_output_attrs,
                         self.r_output_attrs)
 
+    def time_block_tables_njobs_2(self):
+        ab.block_tables(self.A, self.B, self.l_block_attr,
+                        self.r_block_attr, self.l_output_attrs,
+                        self.r_output_attrs, n_jobs=2)
+
+    def time_block_tables_njobs_4(self):
+        ab.block_tables(self.A, self.B, self.l_block_attr,
+                        self.r_block_attr, self.l_output_attrs,
+                        self.r_output_attrs, n_jobs=4)
+
+    def time_block_tables_njobs_all(self):
+        ab.block_tables(self.A, self.B, self.l_block_attr,
+                        self.r_block_attr, self.l_output_attrs,
+                        self.r_output_attrs, n_jobs=-1)
+
     def teardown(self):
         del self.A
         del self.B
@@ -51,9 +66,24 @@ class TimeBlockTablesElectronics:
         mg.set_key(self.B, 'ID')
 
     def time_block_tables(self):
-        C = ab.block_tables(self.A, self.B, self.l_block_attr,
+        ab.block_tables(self.A, self.B, self.l_block_attr,
                             self.r_block_attr, self.l_output_attrs,
                             self.r_output_attrs)
+
+    def time_block_tables_njobs_2(self):
+        ab.block_tables(self.A, self.B, self.l_block_attr,
+                        self.r_block_attr, self.l_output_attrs,
+                        self.r_output_attrs, n_jobs=2)
+
+    def time_block_tables_njobs_4(self):
+        ab.block_tables(self.A, self.B, self.l_block_attr,
+                        self.r_block_attr, self.l_output_attrs,
+                        self.r_output_attrs, n_jobs=4)
+
+    def time_block_tables_njobs_all(self):
+        ab.block_tables(self.A, self.B, self.l_block_attr,
+                        self.r_block_attr, self.l_output_attrs,
+                        self.r_output_attrs, n_jobs=-1)
 
     def teardown(self):
         del self.A
@@ -82,6 +112,21 @@ class TimeBlockTablesAnime:
                         self.r_block_attr, self.l_output_attrs,
                         self.r_output_attrs)
 
+    def time_block_tables_njobs_2(self):
+        ab.block_tables(self.A, self.B, self.l_block_attr,
+                        self.r_block_attr, self.l_output_attrs,
+                        self.r_output_attrs, n_jobs=2)
+
+    def time_block_tables_njobs_4(self):
+        ab.block_tables(self.A, self.B, self.l_block_attr,
+                        self.r_block_attr, self.l_output_attrs,
+                        self.r_output_attrs, n_jobs=4)
+
+    def time_block_tables_njobs_all(self):
+        ab.block_tables(self.A, self.B, self.l_block_attr,
+                        self.r_block_attr, self.l_output_attrs,
+                        self.r_output_attrs, n_jobs=-1)
+
     def teardown(self):
         del self.A
         del self.B
@@ -107,6 +152,18 @@ class TimeBlockCandsetAnime:
 
     def time_block_candset(self):
         ab.block_candset(self.C, self.l_block_attr, self.r_block_attr)
+
+    def time_block_candset_njobs_2(self):
+        ab.block_candset(self.C, self.l_block_attr, self.r_block_attr,
+                              verbose=False, show_progress=False, n_jobs=2)
+
+    def time_block_candset_njobs_4(self):
+        ab.block_candset(self.C, self.l_block_attr, self.r_block_attr,
+                              verbose=False, show_progress=False, n_jobs=4)
+
+    def time_block_candset_njobs_all(self):
+        ab.block_candset(self.C, self.l_block_attr, self.r_block_attr,
+                              verbose=False, show_progress=False, n_jobs=-1)
 
     def teardown(self):
         del self.C
@@ -134,6 +191,21 @@ class TimeBlockTablesBooks:
                         self.r_block_attr, self.l_output_attrs,
                         self.r_output_attrs)
 
+    def time_block_tables_njobs_2(self):
+        ab.block_tables(self.A, self.B, self.l_block_attr,
+                        self.r_block_attr, self.l_output_attrs,
+                        self.r_output_attrs, n_jobs=2)
+
+    def time_block_tables_njobs_4(self):
+        ab.block_tables(self.A, self.B, self.l_block_attr,
+                        self.r_block_attr, self.l_output_attrs,
+                        self.r_output_attrs, n_jobs=4)
+
+    def time_block_tables_njobs_all(self):
+        ab.block_tables(self.A, self.B, self.l_block_attr,
+                        self.r_block_attr, self.l_output_attrs,
+                        self.r_output_attrs, n_jobs=-1)
+
     def teardown(self):
         del self.A
         del self.B
@@ -160,6 +232,18 @@ class TimeBlockCandsetBooks:
     def time_block_candset(self):
         ab.block_candset(self.C, self.l_block_attr, self.r_block_attr)
 
+    def time_block_candset_njobs_2(self):
+        ab.block_candset(self.C, self.l_block_attr, self.r_block_attr,
+                              verbose=False, show_progress=False, n_jobs=2)
+
+    def time_block_candset_njobs_4(self):
+        ab.block_candset(self.C, self.l_block_attr, self.r_block_attr,
+                              verbose=False, show_progress=False, n_jobs=4)
+
+    def time_block_candset_njobs_all(self):
+        ab.block_candset(self.C, self.l_block_attr, self.r_block_attr,
+                              verbose=False, show_progress=False, n_jobs=-1)
+
     def teardown(self):
         del self.C
         del self.l_block_attr
@@ -184,6 +268,21 @@ class TimeBlockTablesCitations:
                         self.r_block_attr, self.l_output_attrs,
                         self.r_output_attrs)
 
+    def time_block_tables_njobs_2(self):
+        ab.block_tables(self.A, self.B, self.l_block_attr,
+                        self.r_block_attr, self.l_output_attrs,
+                        self.r_output_attrs, n_jobs=2)
+
+    def time_block_tables_njobs_4(self):
+        ab.block_tables(self.A, self.B, self.l_block_attr,
+                        self.r_block_attr, self.l_output_attrs,
+                        self.r_output_attrs, n_jobs=4)
+
+    def time_block_tables_njobs_all(self):
+        ab.block_tables(self.A, self.B, self.l_block_attr,
+                        self.r_block_attr, self.l_output_attrs,
+                        self.r_output_attrs, n_jobs=-1)
+
     def teardown(self):
         del self.A
         del self.B
@@ -198,63 +297,82 @@ class TimeBlockTablesBikes:
         p = mg.get_install_path()
         path_for_A = os.sep.join([p, 'datasets', 'example_datasets', 'bikes', 'A.csv'])
         path_for_B = os.sep.join([p, 'datasets', 'example_datasets', 'bikes', 'B.csv'])
-        l_key = 'id'
-        r_key = 'id'
         self.A = mg.read_csv_metadata(path_for_A)
-        mg.set_key(self.A, l_key)
+        mg.set_key(self.A, 'id')
         self.B = mg.read_csv_metadata(path_for_B)
-        mg.set_key(self.B, r_key)
+        mg.set_key(self.B, 'id')
         self.l_block_attr = 'city_posted'
         self.r_block_attr = 'city_posted'
         self.l_output_attrs = ['bike_name', 'city_posted', 'km_driven', 'price',
                                'color', 'model_year']
         self.r_output_attrs = ['bike_name', 'city_posted', 'km_driven', 'price',
                                'color', 'model_year']
-        self.ab = mg.AttrEquivalenceBlocker()
 
     def time_block_tables(self):
-        self.ab.block_tables(self.A, self.B, self.l_block_attr,
+        ab.block_tables(self.A, self.B, self.l_block_attr,
                              self.r_block_attr, self.l_output_attrs,
                              self.r_output_attrs, verbose=False)
+
+    def time_block_tables_njobs_2(self):
+        ab.block_tables(self.A, self.B, self.l_block_attr,
+                        self.r_block_attr, self.l_output_attrs,
+                        self.r_output_attrs, n_jobs=2)
+
+    def time_block_tables_njobs_4(self):
+        ab.block_tables(self.A, self.B, self.l_block_attr,
+                        self.r_block_attr, self.l_output_attrs,
+                        self.r_output_attrs, n_jobs=4)
+
+    def time_block_tables_njobs_all(self):
+        ab.block_tables(self.A, self.B, self.l_block_attr,
+                        self.r_block_attr, self.l_output_attrs,
+                        self.r_output_attrs, n_jobs=-1)
 
     def teardown(self):
         del self.A
         del self.B
-        del self.ab
+        del self.l_block_attr
+        del self.r_block_attr
+        del self.l_output_attrs
+        del self.r_output_attrs
 
 
 class TimeBlockCandsetBikes:
     timeout = 300.0
 
     def setup(self):
-        p = mg.get_install_path()
         path_for_A = os.sep.join([p, 'datasets', 'example_datasets', 'bikes', 'A.csv'])
         path_for_B = os.sep.join([p, 'datasets', 'example_datasets', 'bikes', 'B.csv'])
-        l_key = 'id'
-        r_key = 'id'
-        self.A = mg.read_csv_metadata(path_for_A)
-        mg.set_key(self.A, l_key)
-        self.B = mg.read_csv_metadata(path_for_B)
-        mg.set_key(self.B, r_key)
-        l_block_attr_1 = 'city_posted'
-        r_block_attr_1 = 'city_posted'
+        A = mg.read_csv_metadata(path_for_A)
+        mg.set_key(A, 'id')
+        B = mg.read_csv_metadata(path_for_B)
+        mg.set_key(B, 'id')
         l_output_attrs = ['bike_name', 'city_posted', 'km_driven', 'price',
                           'color', 'model_year']
         r_output_attrs = ['bike_name', 'city_posted', 'km_driven', 'price',
                           'color', 'model_year']
-        self.ab = mg.AttrEquivalenceBlocker()
-        self.C = self.ab.block_tables(self.A, self.B, l_block_attr_1,
-                                      r_block_attr_1, l_output_attrs,
-                                      r_output_attrs, verbose=False)
+        self.C = ab.block_tables(A, B, 'city_posted', 'city_posted',
+                                 l_output_attrs, r_output_attrs, verbose=False)
         self.l_block_attr = 'model_year'
         self.r_block_attr = 'model_year'
 
     def time_block_candset(self):
-        self.ab.block_candset(self.C, self.l_block_attr, self.r_block_attr,
+        ab.block_candset(self.C, self.l_block_attr, self.r_block_attr,
                               verbose=False, show_progress=False)
 
+    def time_block_candset_njobs_2(self):
+        ab.block_candset(self.C, self.l_block_attr, self.r_block_attr,
+                              verbose=False, show_progress=False, n_jobs=2)
+
+    def time_block_candset_njobs_4(self):
+        ab.block_candset(self.C, self.l_block_attr, self.r_block_attr,
+                              verbose=False, show_progress=False, n_jobs=4)
+
+    def time_block_candset_njobs_all(self):
+        ab.block_candset(self.C, self.l_block_attr, self.r_block_attr,
+                              verbose=False, show_progress=False, n_jobs=-1)
+
     def teardown(self):
-        del self.A
-        del self.B
         del self.C
-        del self.ab
+        del self.l_block_attr
+        del self.r_block_attr

@@ -31,7 +31,52 @@ def block_tables_per_process(l_df, r_df, l_key, r_key, l_block_attr, r_block_att
     candset = candset[retain_cols]
     candset.columns = final_cols
     return candset
- 
+
+def get_valid(c_df, l_df, r_df, l_key, r_key, l_block_attr, r_block_attr, fk_ltable, fk_rtable, show_progress):
+
+    # initialize progress bar
+    if show_progress:
+        prog_bar = pyprind.ProgBar(len(c_df))
+
+    # initialize list to keep track of valid ids
+    valid = []
+
+    # get the indexes for the key attributes in the candset
+    col_names = list(c_df.columns)
+    lkey_idx = col_names.index(fk_ltable)
+    rkey_idx = col_names.index(fk_rtable)
+
+    # create a look up table for the blocking attribute values
+    l_dict = {}
+    r_dict = {}
+
+    # iterate the rows in candset
+    for row in c_df.itertuples(index=False):
+
+        # # update the progress bar
+        if show_progress:
+            prog_bar.update()
+
+        # # get the value of block attributes
+        row_lkey = row[lkey_idx]
+        if row_lkey not in l_dict:
+            l_dict[row_lkey] = l_df.ix[row_lkey, l_block_attr]
+        l_val = l_dict[row_lkey]
+
+        row_rkey = row[rkey_idx]
+        if row_rkey not in r_dict:
+            r_dict[row_rkey] = r_df.ix[row_rkey, r_block_attr]
+        r_val = r_dict[row_rkey]
+
+        if l_val == r_val:
+            valid.append(True)
+        else:
+            valid.append(False)
+
+    return valid
+
+
+
 def output_columns_fn(l_key, r_key, col_names, l_output_attrs,
                       r_output_attrs, l_output_prefix, r_output_prefix):
 
@@ -174,7 +219,7 @@ class AttrEquivalenceBlocker(Blocker):
         return candset
 
     def block_candset(self, candset, l_block_attr, r_block_attr, verbose=True,
-                      show_progress=True):
+                      show_progress=True, n_jobs=1):
 
         self.validate_types_candset(candset, l_block_attr, r_block_attr,
 				    verbose, show_progress)
@@ -196,48 +241,30 @@ class AttrEquivalenceBlocker(Blocker):
 
         # do blocking
 
-        # # initialize progress bar
-        if show_progress:
-            prog_bar = pyprind.ProgBar(len(candset))
-
-        # # initialize list to keep track of valid ids
-        valid = []
+        # # determine number of processes to launch parallely
+        n_cpus = multiprocessing.cpu_count()
+        if n_jobs >= 0:
+            n_procs = n_jobs
+        else:
+            n_procs = n_cpus + 1 + n_jobs
 
         # # set index for convenience
         l_df = ltable.set_index(l_key, drop=False)
         r_df = rtable.set_index(r_key, drop=False)
 
-        # # get the indexes for the key attributes in the candset
-        col_names = list(candset.columns)
-        lkey_idx = col_names.index(fk_ltable)
-        rkey_idx = col_names.index(fk_rtable)
-
-        # # create a look up table for the blocking attribute values
-        l_dict = {}
-        r_dict = {}
-
-        # # iterate the rows in candset
-        for row in candset.itertuples(index=False):
-
-            # # update the progress bar
-            if show_progress:
-                prog_bar.update()
-
-            # # get the value of block attributes
-            row_lkey = row[lkey_idx]
-            if row_lkey not in l_dict:
-                l_dict[row_lkey] = l_df.ix[row_lkey, l_block_attr]
-            l_val = l_dict[row_lkey]
-
-            row_rkey = row[rkey_idx]
-            if row_rkey not in r_dict:
-                r_dict[row_rkey] = r_df.ix[row_rkey, r_block_attr]
-            r_val = r_dict[row_rkey]
-
-            if l_val == r_val:
-                valid.append(True)
-            else:
-                valid.append(False)
+        valid = []
+	if n_procs <= 1:
+            # single process
+            valid = get_valid(candset, l_df, r_df, l_key, r_key, l_block_attr, r_block_attr, fk_ltable, fk_rtable, show_progress)
+        else:
+            c_splits = pd.np.array_split(candset, n_procs)
+            valid_splits = Parallel(n_jobs=n_procs)(delayed(get_valid)(c,
+	    						    l_df, r_df,
+                                                            l_key, r_key,
+	    						    l_block_attr, r_block_attr,
+	    						    fk_ltable, fk_rtable, show_progress)
+	    						    for c in c_splits)
+	    valid = sum(valid_splits, [])
 
         # construct output table
         if len(candset) > 0:
