@@ -56,17 +56,17 @@ def get_type(col):
         return 'numeric'
 
     if len(type_list) > 1:
-        logger.warning('Column %s qualifies to be more than one type (%s). \n'
+        logger.warning('Column %s qualifies to be more than one type. \n'
                         'Please explicitly set the column type like this:\n'
                         'A["address"] = A["address"].astype(str) \n'
-                        'Similarly use int, float, boolean types.' % (col.name, ', '.join(type_list)))
-        raise AssertionError('Column %s qualifies to be more than one type (%s). \n'
+                        'Similarly use int, float, boolean types.' % col.name)
+        raise AssertionError('Column %s qualifies to be more than one type. \n'
                         'Please explicitly set the column type like this:\n'
                         'A["address"] = A["address"].astype(str) \n'
-                        'Similarly use int, float, boolean types.' % (col.name, ', '.join(type_list)))
+                        'Similarly use int, float, boolean types.' % col.name)
     else:
         t = type_list[0]
-        if t == bool:
+        if t == bool or t == pd.np.bool_:
             return 'boolean'
         # consider string and unicode as same
         elif t == str or t == six.unichr or t == six.text_type:

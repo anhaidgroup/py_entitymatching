@@ -39,6 +39,15 @@ class AddFeaturesTestCases(unittest.TestCase):
         self.assertEqual(feature_table.ix[len(feature_table)-1, 'function'](A.ix[1], B.ix[2]), 1.0)
 
 
+    def test_feature_fn_valid_nosim_tok(self):
+        A = read_csv_metadata(path_a)
+        B = read_csv_metadata(path_b, key='ID')
+        feature_table = get_features_for_matching(A, B)
+        len1 = len(feature_table)
+        feature_string = "exact_match(ltuple['zipcode'], rtuple['zipcode'])"
+        f_dict = get_feature_fn(feature_string, dict(), dict())
+
+
     @raises(AssertionError)
     def test_get_feature_fn_invalid_feat_str(self):
         get_feature_fn(None, dict(), dict())
@@ -71,7 +80,7 @@ class AddFeaturesTestCases(unittest.TestCase):
         for k,v in six.iteritems(p_dict):
             self.assertEqual(v, 'PARSE_EXP')
 
-    def test_parse_feat_str_parse_valid(self):
+    def test_parse_feat_str_parse_valid_1(self):
         feature_string = "jaccard(qgm_3(ltuple['zipcode']), qgm_3(rtuple['zipcode']))"
         p_dict = parse_feat_str(feature_string, get_tokenizers_for_matching(), get_sim_funs_for_matching())
         self.assertEqual(p_dict['left_attr_tokenizer'], 'qgm_3')
@@ -80,6 +89,24 @@ class AddFeaturesTestCases(unittest.TestCase):
         self.assertEqual(p_dict['left_attribute'], 'zipcode')
         self.assertEqual(p_dict['right_attribute'], 'zipcode')
 
+    def test_parse_feat_str_parse_valid_2(self):
+        feature_string = "jaccard(qgm_3(ltuple['zipcode']), qgm_3(ltuple['zipcode']))"
+        p_dict = parse_feat_str(feature_string, get_tokenizers_for_matching(), get_sim_funs_for_matching())
+        self.assertEqual(p_dict['left_attr_tokenizer'], 'qgm_3')
+        self.assertEqual(p_dict['right_attr_tokenizer'], 'qgm_3')
+        self.assertEqual(p_dict['simfunction'], 'jaccard')
+        # self.assertEqual(p_dict['left_attribute'], 'zipcode')
+        # self.assertEqual(p_dict['right_attribute'], 'zipcode')
+
+
+    def test_parse_feat_str_parse_valid_3(self):
+        feature_string = "jaccard(qgm_3(rtuple['zipcode']), qgm_3(rtuple['zipcode']))"
+        p_dict = parse_feat_str(feature_string, get_tokenizers_for_matching(), get_sim_funs_for_matching())
+        self.assertEqual(p_dict['left_attr_tokenizer'], 'qgm_3')
+        self.assertEqual(p_dict['right_attr_tokenizer'], 'qgm_3')
+        self.assertEqual(p_dict['simfunction'], 'jaccard')
+        # self.assertEqual(p_dict['left_attribute'], 'zipcode')
+        # self.assertEqual(p_dict['right_attribute'], 'zipcode')
 
     def test_add_feature_empty_df(self):
         A = read_csv_metadata(path_a)

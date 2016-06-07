@@ -27,8 +27,19 @@ class AttributeUtilsTestCases(unittest.TestCase):
     def test_get_attr_types_invalid_df(self):
         x = get_attr_types(None)
 
-    def test_get_attr_corres_valid(self):
+    def test_get_attr_corres_valid_1(self):
         A = read_csv_metadata(path_a)
+        B = read_csv_metadata(path_b, key='ID')
+        ac = get_attr_corres(A, B)
+        for c in ac['corres']:
+            self.assertEqual(c[0], c[1])
+
+        self.assertEqual(all(ac['ltable'] == A), True)
+        self.assertEqual(all(ac['rtable'] == B), True)
+
+    def test_get_attr_corres_valid_2(self):
+        A = read_csv_metadata(path_a)
+        A['label'] = 0
         B = read_csv_metadata(path_b, key='ID')
         ac = get_attr_corres(A, B)
         for c in ac['corres']:
@@ -60,8 +71,24 @@ class AttributeUtilsTestCases(unittest.TestCase):
         t = get_type(pd.Series())
         self.assertEqual(t, 'numeric')
 
-    # @raises(AssertionError)
-    # def test_get_type_multiple_types(self):
-    #     A = read_csv_metadata(path_a)
-    #     A.ix[0, 'ID'] = 1000
-    #     t = get_type(A['ID'])
+    @raises(AssertionError)
+    def test_get_type_multiple_types(self):
+        A = read_csv_metadata(path_a)
+        A.ix[0, 'ID'] = 1000
+        t = get_type(A['ID'])
+
+    def test_get_type_valid_2(self):
+        A = read_csv_metadata(path_a)
+        A['temp'] = True
+        t = get_type(A['temp'])
+        self.assertEqual(t, 'boolean')
+
+    def test_get_type_valid_3(self):
+        A = read_csv_metadata(path_a)
+        A['temp'] = "This is a very very very very very very very very very very very very very long string"
+        t = get_type(A['temp'])
+        self.assertEqual(t, "str_gt_10w")
+
+    def test_len_handle_nan_invalid(self):
+        result = len_handle_nan(None)
+        self.assertEqual(pd.isnull(result), True)

@@ -21,9 +21,9 @@ def get_feature_fn(feat_str, tok, sim):
         raise AssertionError('Input sim. is not of type dict')
     temp = {}
     # update sim
-    if sim:
+    if len(sim) > 0:
         temp.update(sim)
-    if tok:
+    if len(tok) > 0:
         temp.update(tok)
     fn = 'def fn(ltuple, rtuple):\n'
     fn += '    '
