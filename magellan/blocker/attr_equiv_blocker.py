@@ -129,7 +129,7 @@ def retain_cols_fn(l_key, r_key, col_names, l_output_attrs, r_output_attrs):
     
     # retain output attrs from merge
     if l_output_attrs:
-    	ret_cols.extend([retain_names_fn(x, col_names, '_ltable') for x in l_output_attrs if x != l_key])
+        ret_cols.extend([retain_names_fn(x, col_names, '_ltable') for x in l_output_attrs if x != l_key])
     if r_output_attrs:
         ret_cols.extend([retain_names_fn(x, col_names, '_rtable') for x in r_output_attrs if x != r_key])
     return ret_cols
@@ -253,7 +253,7 @@ class AttrEquivalenceBlocker(Blocker):
         r_df = rtable.set_index(r_key, drop=False)
 
         valid = []
-	if n_procs <= 1:
+        if n_procs <= 1:
             # single process
             valid = get_valid(candset, l_df, r_df, l_key, r_key, l_block_attr, r_block_attr, fk_ltable, fk_rtable, show_progress)
         else:
@@ -264,7 +264,7 @@ class AttrEquivalenceBlocker(Blocker):
 	    						    l_block_attr, r_block_attr,
 	    						    fk_ltable, fk_rtable, show_progress)
 	    						    for c in c_splits)
-	    valid = sum(valid_splits, [])
+            valid = sum(valid_splits, [])
 
         # construct output table
         if len(candset) > 0:
