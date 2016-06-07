@@ -126,4 +126,4 @@ class Blocker(object):
         n_procs = n_jobs
         if n_jobs < 0:
             n_procs = n_cpus + 1 + n_jobs
-
+        return n_procs

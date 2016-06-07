@@ -3,7 +3,6 @@ import logging
 import pandas as pd
 import six
 import pyprind
-import multiprocessing
 from joblib import Parallel, delayed
 
 from magellan.blocker.blocker import Blocker
