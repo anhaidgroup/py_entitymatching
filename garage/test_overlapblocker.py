@@ -6,3 +6,9 @@ ob = mg.OverlapBlocker()
 C = ob.block_tables(A, B, 'name', 'name')
 
 print C
+
+
+
+# define structures for each type
+
+

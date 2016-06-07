@@ -141,6 +141,8 @@ def check_table_order(ltable, rtable, l_attr_types, r_attr_types, attr_corres):
         logger.error('rtable is not the same as table mentioned in attr correspondence')
         return False
 
+    return True
+
 
 # get look up table to generate features
 def get_feat_lkp_tbl():
@@ -233,10 +235,9 @@ def get_fn_str(inp, attrs):
     if inp:
         args = []
         args.extend(attrs)
-        if isinstance(inp, six.string_types):
+        if isinstance(inp, six.string_types) == True:
             inp = [inp]
-        else:
-            args.extend(inp)
+        args.extend(inp)
         # fill function string from a template
         return fill_fn_template(*args)
     else:
