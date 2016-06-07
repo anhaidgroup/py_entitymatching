@@ -3,15 +3,17 @@ import logging
 import math
 import pandas as pd
 import six
+import multiprocessing
 
 logger = logging.getLogger(__name__)
 
 class Blocker(object):
     pass
 
-    def validate_types_tables(self, ltable, rtable, l_block_attr, r_block_attr,
+    def validate_types_params_tables(self, ltable, rtable,
 		       l_output_attrs, r_output_attrs, l_output_prefix,
-		       r_output_prefix, verbose):
+		       r_output_prefix, verbose, n_jobs):
+
         if not isinstance(ltable, pd.DataFrame):
             logger.error('Input left table is not of type pandas data frame')
             raise AssertionError('Input left table is not of type pandas data frame')
@@ -19,14 +21,6 @@ class Blocker(object):
         if not isinstance(rtable, pd.DataFrame):
             logger.error('Input right table is not of type pandas data frame')
             raise AssertionError('Input right table is not of type pandas data frame')
-
-        if not isinstance(l_block_attr, six.string_types):
-            logger.error('Blocking attribute name of left table is not of type string')
-            raise AssertionError('Blocking attribute name of left table is not of type string')
-
-        if not isinstance(r_block_attr, six.string_types):
-            logger.error('Blocking attribute name of right table is not of type string')
-            raise AssertionError('Blocking attribute name of right table is not of type string')
 
         if l_output_attrs:
             if not isinstance(l_output_attrs, list):
@@ -58,19 +52,14 @@ class Blocker(object):
             logger.error('Parameter verbose is not of type bool')
             raise AssertionError('Parameter verbose is not of type bool')
 
-    def validate_types_candset(self, candset, l_block_attr, r_block_attr,
-		       	       verbose, show_progress):
+        if not isinstance(n_jobs, int):
+            logger.error('Parameter n_jobs is not of type int')
+            raise AssertionError('Parameter n_jobs is not of type int')
+
+    def validate_types_params_candset(self, candset, verbose, show_progress, n_jobs):
         if not isinstance(candset, pd.DataFrame):
             logger.error('Input candset is not of type pandas data frame')
             raise AssertionError('Input candset is not of type pandas data frame')
-
-        if not isinstance(l_block_attr, six.string_types):
-            logger.error('Left blocking attribute name is not of type string')
-            raise AssertionError('Left blocking attribute name is not of type string')
-
-        if not isinstance(r_block_attr, six.string_types):
-            logger.error('Right blocking attribute name is not of type string')
-            raise AssertionError('Right blocking attribute name is not of type string')
 
         if not isinstance(verbose, bool):
             logger.error('Parameter verbose is not of type bool')
@@ -79,6 +68,10 @@ class Blocker(object):
         if not isinstance(show_progress, bool):
             logger.error('Parameter show_progress is not of type bool')
             raise AssertionError('Parameter show_progress is not of type bool')
+
+        if not isinstance(n_jobs, int):
+            logger.error('Parameter n_jobs is not of type int')
+            raise AssertionError('Parameter n_jobs is not of type int')
 
     def process_output_attrs(self, table, key, attrs, error_str=''):
         if attrs:
@@ -111,7 +104,7 @@ class Blocker(object):
 
         return ret_cols
 
-    def get_proj_attrs(self, key, block_attr, output_attrs):
+    def get_attrs_to_project(self, key, block_attr, output_attrs):
         if not output_attrs:
             output_attrs = []
         if key not in output_attrs:                                             
@@ -126,3 +119,11 @@ class Blocker(object):
             m = m - 1
         n = n_procs / m
         return m, n
+    
+    def get_num_procs(self, n_jobs):        
+        # determine number of processes to launch parallely
+        n_cpus = multiprocessing.cpu_count()
+        n_procs = n_jobs
+        if n_jobs < 0:
+            n_procs = n_cpus + 1 + n_jobs
+
