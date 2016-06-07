@@ -120,10 +120,10 @@ class Blocker(object):
         n = n_procs / m
         return m, n
     
-    def get_num_procs(self, n_jobs):        
+    def get_num_procs(self, n_jobs, min_procs):        
         # determine number of processes to launch parallely
         n_cpus = multiprocessing.cpu_count()
         n_procs = n_jobs
         if n_jobs < 0:
             n_procs = n_cpus + 1 + n_jobs
-        return n_procs
+        return min(n_procs, min_procs)

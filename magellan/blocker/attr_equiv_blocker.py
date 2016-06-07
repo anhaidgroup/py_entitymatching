@@ -55,7 +55,7 @@ class AttrEquivalenceBlocker(Blocker):
         r_df = r_df[r_proj_attrs]
        
         # # determine number of processes to launch parallely
-        n_procs = self.get_num_procs(n_jobs) 
+        n_procs = self.get_num_procs(n_jobs, min(len(l_df), len(r_df))) 
         candset = None
         if n_procs <= 1:
             # single process
@@ -116,7 +116,7 @@ class AttrEquivalenceBlocker(Blocker):
         r_df = rtable.set_index(r_key, drop=False)
 
         # # determine number of processes to launch parallely
-        n_procs = self.get_num_procs(n_jobs) 
+        n_procs = self.get_num_procs(n_jobs, len(candset)) 
 
         valid = []
         if n_procs <= 1:
