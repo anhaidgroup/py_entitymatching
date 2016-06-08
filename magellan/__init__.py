@@ -46,7 +46,16 @@ from magellan.feature.extractfeatures import extract_feature_vecs
 
 # # matcher related stuff
 from magellan.matcher.matcherutils import train_test_split
+from magellan.matcher.dtmatcher import DTMatcher
+from magellan.matcher.linregmatcher import LinRegMatcher
+from magellan.matcher.logregmatcher import LogRegMatcher
+from magellan.matcher.nbmatcher import NBMatcher
+from magellan.matcher.rfmatcher import RFMatcher
+from magellan.matcher.svmmatcher import SVMMatcher
 
+
+# # matcher selector
+from magellan.matcherselector.mlmatcherselection import select_matcher
 
 #
 
