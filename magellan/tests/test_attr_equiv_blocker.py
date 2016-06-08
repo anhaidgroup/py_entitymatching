@@ -1,7 +1,6 @@
 import os
 from nose.tools import *
 import pandas as pd
-from pandas.util.testing import assert_frame_equal
 import unittest
 
 import magellan as mg
@@ -637,33 +636,3 @@ class AttrEquivBlockerTestCases(unittest.TestCase):
                                      r_block_attr_1), False)
         assert_equal(self.ab.block_tuples(self.A.ix[2], self.B.ix[2], l_block_attr_1,
                                      r_block_attr_1), True)
-
-
-"""
-    def test_ab_block_tables_multi_skd2(self):
-        A = mg.read_csv_metadata('/p/sanjibkd/data1/anhaidgroup/anhaidgroup/magellan/magellan/datasets/example_datasets/books_big/msd_reduced_10K.csv')
-        mg.set_key(A, 'id')
-        B = mg.read_csv_metadata('/p/sanjibkd/data1/anhaidgroup/anhaidgroup/magellan/magellan/datasets/example_datasets/books_big/msd_reduced_50K.csv')
-        mg.set_key(B, 'id')
-        #t0 = time.time()
-        C = self.ab.block_tables(A, B, 'year', 'year', ['title', 'year'],
-			['title', 'year'], l_output_prefix, r_output_prefix, n_jobs=-1)
-        #t1 = time.time()
-        #print "Blocking time: ", (t1 - t0)
-
-    def test_ab_block_candset_multi_skd(self):
-        A = mg.read_csv_metadata('/p/sanjibkd/data1/anhaidgroup/magellan/magellan/datasets/example_datasets/bikes/A.csv')
-        mg.set_key(A, 'id')
-        B = mg.read_csv_metadata('/p/sanjibkd/data1/anhaidgroup/magellan/magellan/datasets/example_datasets/bikes/B.csv')
-        mg.set_key(B, 'id')
-        l_output_attrs = ['bike_name', 'city_posted', 'km_driven', 'price',
-                          'color', 'model_year']
-        r_output_attrs = ['bike_name', 'city_posted', 'km_driven', 'price',
-                          'color', 'model_year']
-        C = self.ab.block_tables(A, B, 'city_posted', 'city_posted',
-                                 l_output_attrs, r_output_attrs, verbose=False)
-        l_block_attr = 'model_year'
-        r_block_attr = 'model_year'
-        self.ab.block_candset(C, l_block_attr, r_block_attr,
-                              verbose=False, show_progress=False, n_jobs=2)
-"""
