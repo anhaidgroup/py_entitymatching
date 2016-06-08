@@ -1,0 +1,6 @@
+b1 mark levene 1987 30 108 clement st, san francisco 94107
+b2 bill bridge 1986 32 3131 webster st, san francisco 94107
+b3 mike franklin 1988 28 1652 stockton st, san francisco 94122
+b4 joseph kuan 1982 26 108 south park, san francisco 94122
+b5 alfons kemper 1984 35 170 post st, apt 4, san francisco 94122
+b6 michael brodie 1987 32 133 clement street, san francisco 94107
