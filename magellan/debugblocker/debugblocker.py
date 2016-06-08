@@ -403,7 +403,7 @@ def select_features(ltable, rtable, lkey, rkey):
     elif len(rank_list) <= 5:
         num_selected_fields = 3
     else:
-        num_selected_fields = len(rank_list) / 2
+        num_selected_fields = int(len(rank_list) / 2)
     for i in range(num_selected_fields):
         rank_index_list.append(rank_list[i].index)
     return sorted(rank_index_list)
@@ -525,7 +525,7 @@ def index_candidate_set(candidate_set, lrecord_id_to_index_map, rrecord_id_to_in
 def build_global_token_order(record_list, order_dict):
     for record in record_list:
         for token in record:
-            if order_dict.has_key(token):
+            if token in order_dict:
                 order_dict[token] = order_dict[token] + 1
             else:
                 order_dict[token] = 1
