@@ -171,6 +171,18 @@ class AttrEquivBlockerTestCases(unittest.TestCase):
     def test_ab_block_tables_invalid_verbose_3(self):
         self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, verbose='yes')
 
+    @raises(AssertionError)
+    def test_ab_block_tables_invalid_njobs_1(self):
+        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, n_jobs=None)
+
+    @raises(AssertionError)
+    def test_ab_block_tables_invalid_njobs_2(self):
+        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, n_jobs='1')
+
+    @raises(AssertionError)
+    def test_ab_block_tables_invalid_njobs_3(self):
+        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, n_jobs=1.5)
+
     def test_ab_block_tables(self):
         C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, l_output_attrs,
                             r_output_attrs, l_output_prefix, r_output_prefix)
@@ -227,6 +239,162 @@ class AttrEquivBlockerTestCases(unittest.TestCase):
 
     def test_ab_block_tables_wi_empty_r_output_attrs(self):
         C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, l_output_attrs, [])
+        s1 = ['_id', 'ltable_' + l_key, 'rtable_' + r_key]
+        s1 += ['ltable_' + x for x in l_output_attrs if x != l_key]
+        s1 = sorted(s1)
+        assert_equal(s1, sorted(C.columns))
+        assert_equal(mg.get_key(C), '_id')
+        assert_equal(mg.get_property(C, 'fk_ltable'), 'ltable_' + l_key)
+        assert_equal(mg.get_property(C, 'fk_rtable'), 'rtable_' + r_key)
+
+    def test_ab_block_tables_njobs_2(self):
+        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, l_output_attrs,
+                            r_output_attrs, l_output_prefix, r_output_prefix, n_jobs=2)
+        s1 = ['_id', l_output_prefix + l_key, r_output_prefix + r_key]
+        s1 += [l_output_prefix + x for x in l_output_attrs if x != l_key]
+        s1 += [r_output_prefix + x for x in r_output_attrs if x != r_key]
+        s1 = sorted(s1)
+        assert_equal(s1, sorted(C.columns))
+        assert_equal(mg.get_key(C), '_id')
+        assert_equal(mg.get_property(C, 'fk_ltable'), l_output_prefix + l_key)
+        assert_equal(mg.get_property(C, 'fk_rtable'), r_output_prefix + r_key)
+        k1 = pd.np.array(C[l_output_prefix + l_block_attr_1])
+        k2 = pd.np.array(C[r_output_prefix + r_block_attr_1])
+        assert_equal(all(k1 == k2), True)
+
+    def test_ab_block_tables_njobs_2_eq_1(self):
+        C1 = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, l_output_attrs,
+                            r_output_attrs, l_output_prefix, r_output_prefix, n_jobs=1)
+        C2 = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, l_output_attrs,
+                            r_output_attrs, l_output_prefix, r_output_prefix, n_jobs=2)
+        C1 = C1.sort([l_output_prefix + l_key, r_output_prefix + r_key])	
+        C2 = C2.sort([l_output_prefix + l_key, r_output_prefix + r_key])
+        s1 = pd.np.array(C1[l_output_prefix + l_key])
+        s2 = pd.np.array(C1[r_output_prefix + r_key])
+        t1 = pd.np.array(C2[l_output_prefix + l_key])
+        t2 = pd.np.array(C2[r_output_prefix + r_key])
+        assert_equal(all(s1 == t1), True)
+        assert_equal(all(s2 == t2), True)
+
+    def test_ab_block_tables_wi_no_output_tuples_njobs_2(self):
+        C = self.ab.block_tables(self.A, self.B, l_block_attr_3, r_block_attr_3, n_jobs=2)
+        assert_equal(len(C),  0)
+        assert_equal(sorted(C.columns), sorted(['_id', 'ltable_' + l_key,
+                                                'rtable_' + r_key]))
+        assert_equal(mg.get_key(C), '_id')
+        assert_equal(mg.get_property(C, 'fk_ltable'), 'ltable_' + l_key)
+        assert_equal(mg.get_property(C, 'fk_rtable'), 'rtable_' + r_key)
+
+    def test_ab_block_tables_wi_null_l_output_attrs_njobs_2(self):
+        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, None, r_output_attrs, n_jobs=2)
+        s1 = ['_id', 'ltable_' + l_key, 'rtable_' + r_key]
+        s1 += ['rtable_' + x for x in r_output_attrs if x != r_key]
+        s1 = sorted(s1)
+        assert_equal(s1, sorted(C.columns))
+        assert_equal(mg.get_key(C), '_id')
+        assert_equal(mg.get_property(C, 'fk_ltable'), 'ltable_' + l_key)
+        assert_equal(mg.get_property(C, 'fk_rtable'), 'rtable_' + r_key)
+
+    def test_ab_block_tables_wi_null_r_output_attrs_njobs_2(self):
+        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, l_output_attrs, None, n_jobs=2)
+        s1 = ['_id', 'ltable_' + l_key, 'rtable_' + r_key]
+        s1 += ['ltable_' + x for x in l_output_attrs if x != l_key]
+        s1 = sorted(s1)
+        assert_equal(s1, sorted(C.columns))
+        assert_equal(mg.get_key(C), '_id')
+        assert_equal(mg.get_property(C, 'fk_ltable'), 'ltable_' + l_key)
+        assert_equal(mg.get_property(C, 'fk_rtable'), 'rtable_' + r_key)
+
+    def test_ab_block_tables_wi_empty_l_output_attrs_njobs_2(self):
+        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, [], r_output_attrs, n_jobs=2)
+        s1 = ['_id', 'ltable_' + l_key, 'rtable_' + r_key]
+        s1 += ['rtable_' + x for x in r_output_attrs if x != r_key]
+        s1 = sorted(s1)
+        assert_equal(s1, sorted(C.columns))
+        assert_equal(mg.get_key(C), '_id')
+        assert_equal(mg.get_property(C, 'fk_ltable'), 'ltable_' + l_key)
+        assert_equal(mg.get_property(C, 'fk_rtable'), 'rtable_' + r_key)
+
+    def test_ab_block_tables_wi_empty_r_output_attrs_njobs_2(self):
+        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, l_output_attrs, [], n_jobs=2)
+        s1 = ['_id', 'ltable_' + l_key, 'rtable_' + r_key]
+        s1 += ['ltable_' + x for x in l_output_attrs if x != l_key]
+        s1 = sorted(s1)
+        assert_equal(s1, sorted(C.columns))
+        assert_equal(mg.get_key(C), '_id')
+        assert_equal(mg.get_property(C, 'fk_ltable'), 'ltable_' + l_key)
+        assert_equal(mg.get_property(C, 'fk_rtable'), 'rtable_' + r_key)
+
+    def test_ab_block_tables_njobs_all(self):
+        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, l_output_attrs,
+                            r_output_attrs, l_output_prefix, r_output_prefix, n_jobs=-1)
+        s1 = ['_id', l_output_prefix + l_key, r_output_prefix + r_key]
+        s1 += [l_output_prefix + x for x in l_output_attrs if x != l_key]
+        s1 += [r_output_prefix + x for x in r_output_attrs if x != r_key]
+        s1 = sorted(s1)
+        assert_equal(s1, sorted(C.columns))
+        assert_equal(mg.get_key(C), '_id')
+        assert_equal(mg.get_property(C, 'fk_ltable'), l_output_prefix + l_key)
+        assert_equal(mg.get_property(C, 'fk_rtable'), r_output_prefix + r_key)
+        k1 = pd.np.array(C[l_output_prefix + l_block_attr_1])
+        k2 = pd.np.array(C[r_output_prefix + r_block_attr_1])
+        assert_equal(all(k1 == k2), True)
+
+    def test_ab_block_tables_njobs_all_eq_1(self):
+        C1 = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, l_output_attrs,
+                            r_output_attrs, l_output_prefix, r_output_prefix, n_jobs=1)
+        C2 = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, l_output_attrs,
+                            r_output_attrs, l_output_prefix, r_output_prefix, n_jobs=-1)
+        C1 = C1.sort([l_output_prefix + l_key, r_output_prefix + r_key])	
+        C2 = C2.sort([l_output_prefix + l_key, r_output_prefix + r_key])
+        s1 = pd.np.array(C1[l_output_prefix + l_key])
+        s2 = pd.np.array(C1[r_output_prefix + r_key])
+        t1 = pd.np.array(C2[l_output_prefix + l_key])
+        t2 = pd.np.array(C2[r_output_prefix + r_key])
+        assert_equal(all(s1 == t1), True)
+        assert_equal(all(s2 == t2), True)
+
+    def test_ab_block_tables_wi_no_output_tuples_njobs_all(self):
+        C = self.ab.block_tables(self.A, self.B, l_block_attr_3, r_block_attr_3, n_jobs=-1)
+        assert_equal(len(C),  0)
+        assert_equal(sorted(C.columns), sorted(['_id', 'ltable_' + l_key,
+                                                'rtable_' + r_key]))
+        assert_equal(mg.get_key(C), '_id')
+        assert_equal(mg.get_property(C, 'fk_ltable'), 'ltable_' + l_key)
+        assert_equal(mg.get_property(C, 'fk_rtable'), 'rtable_' + r_key)
+
+    def test_ab_block_tables_wi_null_l_output_attrs_njobs_all(self):
+        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, None, r_output_attrs, n_jobs=-1)
+        s1 = ['_id', 'ltable_' + l_key, 'rtable_' + r_key]
+        s1 += ['rtable_' + x for x in r_output_attrs if x != r_key]
+        s1 = sorted(s1)
+        assert_equal(s1, sorted(C.columns))
+        assert_equal(mg.get_key(C), '_id')
+        assert_equal(mg.get_property(C, 'fk_ltable'), 'ltable_' + l_key)
+        assert_equal(mg.get_property(C, 'fk_rtable'), 'rtable_' + r_key)
+
+    def test_ab_block_tables_wi_null_r_output_attrs_njobs_all(self):
+        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, l_output_attrs, None, n_jobs=-1)
+        s1 = ['_id', 'ltable_' + l_key, 'rtable_' + r_key]
+        s1 += ['ltable_' + x for x in l_output_attrs if x != l_key]
+        s1 = sorted(s1)
+        assert_equal(s1, sorted(C.columns))
+        assert_equal(mg.get_key(C), '_id')
+        assert_equal(mg.get_property(C, 'fk_ltable'), 'ltable_' + l_key)
+        assert_equal(mg.get_property(C, 'fk_rtable'), 'rtable_' + r_key)
+
+    def test_ab_block_tables_wi_empty_l_output_attrs_njobs_all(self):
+        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, [], r_output_attrs, n_jobs=-1)
+        s1 = ['_id', 'ltable_' + l_key, 'rtable_' + r_key]
+        s1 += ['rtable_' + x for x in r_output_attrs if x != r_key]
+        s1 = sorted(s1)
+        assert_equal(s1, sorted(C.columns))
+        assert_equal(mg.get_key(C), '_id')
+        assert_equal(mg.get_property(C, 'fk_ltable'), 'ltable_' + l_key)
+        assert_equal(mg.get_property(C, 'fk_rtable'), 'rtable_' + r_key)
+
+    def test_ab_block_tables_wi_empty_r_output_attrs_njobs_all(self):
+        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, l_output_attrs, [], n_jobs=-1)
         s1 = ['_id', 'ltable_' + l_key, 'rtable_' + r_key]
         s1 += ['ltable_' + x for x in l_output_attrs if x != l_key]
         s1 = sorted(s1)
@@ -327,6 +495,21 @@ class AttrEquivBlockerTestCases(unittest.TestCase):
         C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1)
         self.ab.block_candset(C, l_block_attr_2, r_block_attr_2, show_progress='yes')
 
+    @raises(AssertionError)
+    def test_ab_block_candset_invalid_njobs_1(self):
+        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1)
+        self.ab.block_candset(C, l_block_attr_2, r_block_attr_2, n_jobs=None)
+
+    @raises(AssertionError)
+    def test_ab_block_candset_invalid_njobs_2(self):
+        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1)
+        self.ab.block_candset(C, l_block_attr_2, r_block_attr_2, n_jobs='1')
+
+    @raises(AssertionError)
+    def test_ab_block_candset_invalid_njobs_3(self):
+        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1)
+        self.ab.block_candset(C, l_block_attr_2, r_block_attr_2, n_jobs=1.5)
+
     def test_ab_block_candset(self):
         C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, l_output_attrs,
                             r_output_attrs, l_output_prefix, r_output_prefix)
@@ -352,6 +535,96 @@ class AttrEquivBlockerTestCases(unittest.TestCase):
     def test_ab_block_candset_empty_output(self):
         C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1)
         D = self.ab.block_candset(C, l_block_attr_3, r_block_attr_3)
+        assert_equal(len(D),  0)
+        assert_equal(sorted(D.columns), sorted(C.columns))
+        assert_equal(mg.get_key(C), '_id')
+        assert_equal(mg.get_property(D, 'fk_ltable'), mg.get_property(C, 'fk_ltable'))
+        assert_equal(mg.get_property(D, 'fk_rtable'), mg.get_property(C, 'fk_rtable'))
+
+    def test_ab_block_candset_njobs_2(self):
+        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, l_output_attrs,
+                            r_output_attrs, l_output_prefix, r_output_prefix)
+        D = self.ab.block_candset(C, l_block_attr_2, r_block_attr_2, n_jobs=2)
+        assert_equal(sorted(C.columns), sorted(D.columns))
+        assert_equal(mg.get_key(D), '_id')
+        assert_equal(mg.get_property(D, 'fk_ltable'), mg.get_property(C, 'fk_ltable'))
+        assert_equal(mg.get_property(D, 'fk_rtable'), mg.get_property(C, 'fk_rtable'))
+        k1 = pd.np.array(D[l_output_prefix + l_block_attr_2])
+        k2 = pd.np.array(D[r_output_prefix + r_block_attr_2])
+        assert_equal(all(k1 == k2), True)
+
+    def test_ab_block_candset_njobs_2_eq_1(self):
+        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, l_output_attrs,
+                            r_output_attrs, l_output_prefix, r_output_prefix)
+        D1 = self.ab.block_candset(C, l_block_attr_2, r_block_attr_2, n_jobs=1)
+        D2 = self.ab.block_candset(C, l_block_attr_2, r_block_attr_2, n_jobs=2)
+        D1 = D1.sort([l_output_prefix + l_key, r_output_prefix + r_key])	
+        D2 = D2.sort([l_output_prefix + l_key, r_output_prefix + r_key])
+        s1 = pd.np.array(D1[l_output_prefix + l_key])
+        s2 = pd.np.array(D1[r_output_prefix + r_key])
+        t1 = pd.np.array(D2[l_output_prefix + l_key])
+        t2 = pd.np.array(D2[r_output_prefix + r_key])
+        assert_equal(all(s1 == t1), True)
+        assert_equal(all(s2 == t2), True)
+
+    def test_ab_block_candset_empty_input_njobs_2(self):
+        C = self.ab.block_tables(self.A, self.B, l_block_attr_3, r_block_attr_3)
+        assert_equal(len(C),  0)
+        D = self.ab.block_candset(C, l_block_attr_2, r_block_attr_2, n_jobs=2)
+        assert_equal(len(D),  0)
+        assert_equal(sorted(D.columns), sorted(C.columns))
+        assert_equal(mg.get_key(C), '_id')
+        assert_equal(mg.get_property(D, 'fk_ltable'), mg.get_property(C, 'fk_ltable'))
+        assert_equal(mg.get_property(D, 'fk_rtable'), mg.get_property(C, 'fk_rtable'))
+
+    def test_ab_block_candset_empty_output_njobs_2(self):
+        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1)
+        D = self.ab.block_candset(C, l_block_attr_3, r_block_attr_3, n_jobs=2)
+        assert_equal(len(D),  0)
+        assert_equal(sorted(D.columns), sorted(C.columns))
+        assert_equal(mg.get_key(C), '_id')
+        assert_equal(mg.get_property(D, 'fk_ltable'), mg.get_property(C, 'fk_ltable'))
+        assert_equal(mg.get_property(D, 'fk_rtable'), mg.get_property(C, 'fk_rtable'))
+
+    def test_ab_block_candset_njobs_all(self):
+        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, l_output_attrs,
+                            r_output_attrs, l_output_prefix, r_output_prefix)
+        D = self.ab.block_candset(C, l_block_attr_2, r_block_attr_2, n_jobs=-1)
+        assert_equal(sorted(C.columns), sorted(D.columns))
+        assert_equal(mg.get_key(D), '_id')
+        assert_equal(mg.get_property(D, 'fk_ltable'), mg.get_property(C, 'fk_ltable'))
+        assert_equal(mg.get_property(D, 'fk_rtable'), mg.get_property(C, 'fk_rtable'))
+        k1 = pd.np.array(D[l_output_prefix + l_block_attr_2])
+        k2 = pd.np.array(D[r_output_prefix + r_block_attr_2])
+        assert_equal(all(k1 == k2), True)
+
+    def test_ab_block_candset_njobs_all_eq_1(self):
+        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, l_output_attrs,
+                            r_output_attrs, l_output_prefix, r_output_prefix)
+        D1 = self.ab.block_candset(C, l_block_attr_2, r_block_attr_2, n_jobs=1)
+        D2 = self.ab.block_candset(C, l_block_attr_2, r_block_attr_2, n_jobs=-1)
+        D1 = D1.sort([l_output_prefix + l_key, r_output_prefix + r_key])	
+        D2 = D2.sort([l_output_prefix + l_key, r_output_prefix + r_key])
+        s1 = pd.np.array(D1[l_output_prefix + l_key])
+        s2 = pd.np.array(D1[r_output_prefix + r_key])
+        t1 = pd.np.array(D2[l_output_prefix + l_key])
+        t2 = pd.np.array(D2[r_output_prefix + r_key])
+        assert_equal(all(s1 == t1), True)
+        assert_equal(all(s2 == t2), True)
+
+    def test_ab_block_candset_empty_input_njobs_all(self):
+        C = self.ab.block_tables(self.A, self.B, l_block_attr_3, r_block_attr_3)
+        assert_equal(len(C),  0)
+        D = self.ab.block_candset(C, l_block_attr_2, r_block_attr_2, n_jobs=-1)
+        assert_equal(len(D),  0)
+        assert_equal(sorted(D.columns), sorted(C.columns))
+        assert_equal(mg.get_key(C), '_id')
+        assert_equal(mg.get_property(D, 'fk_ltable'), mg.get_property(C, 'fk_ltable'))
+        assert_equal(mg.get_property(D, 'fk_rtable'), mg.get_property(C, 'fk_rtable'))
+
+    def test_ab_block_candset_empty_output_njobs_all(self):
+        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1)
+        D = self.ab.block_candset(C, l_block_attr_3, r_block_attr_3, n_jobs=-1)
         assert_equal(len(D),  0)
         assert_equal(sorted(D.columns), sorted(C.columns))
         assert_equal(mg.get_key(C), '_id')

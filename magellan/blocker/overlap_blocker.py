@@ -6,6 +6,7 @@ import string
 
 import pandas as pd
 import pyprind
+import six
 
 from magellan.blocker.blocker import Blocker
 import magellan.catalog.catalog_manager as cm
@@ -33,7 +34,16 @@ class OverlapBlocker(Blocker):
                      rem_stop_words=False, q_val=None, word_level=True, overlap_size=1,
                      l_output_attrs=None, r_output_attrs=None,
                      l_output_prefix='ltable_', r_output_prefix='rtable_',
-                     verbose=True, show_progress=True):
+                     verbose=True, show_progress=True, n_jobs=1):
+
+        # validate data types of input parameters
+        self.validate_types_params_tables(ltable, rtable,
+			    l_output_attrs, r_output_attrs, l_output_prefix,
+			    r_output_prefix, verbose, n_jobs)
+
+        # validate data types of input blocking attributes
+        self.validate_types_overlap_attrs(l_overlap_attr, r_overlap_attr)
+ 
         # validations
         self.validate_overlap_attrs(ltable, rtable, l_overlap_attr, r_overlap_attr)
         self.validate_output_attrs(ltable, rtable, l_output_attrs, r_output_attrs)
@@ -56,9 +66,9 @@ class OverlapBlocker(Blocker):
         r_df = rem_nan(rtable, r_overlap_attr)
 
         # # do projection before merge
-        l_proj_attrs = self.get_proj_attrs(l_key, l_overlap_attr, l_output_attrs)
+        l_proj_attrs = self.get_attrs_to_project(l_key, l_overlap_attr, l_output_attrs)
         l_df = l_df[l_proj_attrs]
-        r_proj_attrs = self.get_proj_attrs(r_key, r_overlap_attr, r_output_attrs)
+        r_proj_attrs = self.get_attrs_to_project(r_key, r_overlap_attr, r_output_attrs)
         r_df = r_df[r_proj_attrs]
 
         # #reset indexes in the dataframe
@@ -365,6 +375,16 @@ class OverlapBlocker(Blocker):
             return False
 
     # helper functions
+    # validate the data types of the overlap attributes 
+    def validate_types_overlap_attrs(self, l_overlap_attr, r_overlap_attr):
+        if not isinstance(l_overlap_attr, six.string_types):
+            logger.error('Overlap attribute name of left table is not of type string')
+            raise AssertionError('Overlap attribute name of left table is not of type string')
+
+        if not isinstance(r_overlap_attr, six.string_types):
+            logger.error('Overlap attribute name of right table is not of type string')
+            raise AssertionError('Overlap attribute name of right table is not of type string')
+
     # validate the blocking attrs
     def validate_overlap_attrs(self, ltable, rtable, l_overlap_attr, r_overlap_attr):
         if not isinstance(l_overlap_attr, list):
