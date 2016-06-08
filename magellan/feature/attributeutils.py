@@ -42,7 +42,7 @@ def get_attr_corres(table_a, table_b):
 
 def get_type(col):
     if not isinstance(col, pd.Series):
-        raise ValueError('Input is not of type pandas series')
+        raise AssertionError('Input is not of type pandas series')
     # drop NAs
     col = col.dropna()
     # get type for each element and convert it into a set
@@ -56,21 +56,20 @@ def get_type(col):
         return 'numeric'
 
     if len(type_list) > 1:
-        logger.error('Column %s qualifies to be more than one type (%s). \n'
+        logger.warning('Column %s qualifies to be more than one type. \n'
                         'Please explicitly set the column type like this:\n'
                         'A["address"] = A["address"].astype(str) \n'
-                        'Similarly use int, float, boolean types.' % (col.name, ', '.join(type_list)))
-
-        raise TypeError('Column %s qualifies to be more than one type (%s). \n'
+                        'Similarly use int, float, boolean types.' % col.name)
+        raise AssertionError('Column %s qualifies to be more than one type. \n'
                         'Please explicitly set the column type like this:\n'
                         'A["address"] = A["address"].astype(str) \n'
-                        'Similarly use int, float, boolean types.' % (col.name, ', '.join(type_list)))
+                        'Similarly use int, float, boolean types.' % col.name)
     else:
         t = type_list[0]
-        if t == bool:
+        if t == bool or t == pd.np.bool_:
             return 'boolean'
         # consider string and unicode as same
-        elif t == six.string_types or t == six.unichr:
+        elif t == str or t == six.unichr or t == six.text_type:
             # get average token length
             avg_tok_len = pd.Series.mean(col.str.split(' ').apply(len_handle_nan))
             if avg_tok_len == 1:

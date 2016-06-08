@@ -40,23 +40,22 @@ def get_single_arg_tokenizers(q=[2, 3], dlm_char=[' ']):
     names = []
     fns = []
     if q is not None:
-        if len(q) > 0:
-            if not isinstance(q, list):
-                q = [q]
-            qgm_fn_list = [make_tok_qgram(k) for k in q]
-            qgm_names = ['qgm_' + str(x) for x in q]
-            names.extend(qgm_names)
-            fns.extend(qgm_fn_list)
+        if not isinstance(q, list):
+            q = [q]
+        qgm_fn_list = [make_tok_qgram(k) for k in q]
+        qgm_names = ['qgm_' + str(x) for x in q]
+        names.extend(qgm_names)
+        fns.extend(qgm_fn_list)
 
     if dlm_char is not None:
-        if len(dlm_char) > 0:
-            if not isinstance(dlm_char, list) and isinstance(dlm_char, six.string_types):
-                dlm_char = [dlm_char]
+        # if len(dlm_char) > 0:
+        if not isinstance(dlm_char, list) and isinstance(dlm_char, six.string_types):
+            dlm_char = [dlm_char]
 
-            dlm_fn_list = [make_tok_delim(k) for k in dlm_char]
-            dlm_names = ['dlm_dc' + str(i) for i in range(len(dlm_char))]
-            names.extend(dlm_names)
-            fns.extend(dlm_fn_list)
+        dlm_fn_list = [make_tok_delim(k) for k in dlm_char]
+        dlm_names = ['dlm_dc' + str(i) for i in range(len(dlm_char))]
+        names.extend(dlm_names)
+        fns.extend(dlm_fn_list)
 
     if len(names) > 0 and len(fns) > 0:
         return dict(zip(names, fns))
@@ -98,4 +97,4 @@ def tok_qgram(s, q):
 def tok_delim(s, d):
     if pd.isnull(s):
         return s
-    tok.delimiter(s, d)
+    return tok.delimiter(s, d)
