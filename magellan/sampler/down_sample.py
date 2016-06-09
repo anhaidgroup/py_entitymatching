@@ -2,7 +2,7 @@
 """
 This module contains sampling related routines
 """
-
+from random import randint
 import math
 import logging
 
@@ -157,32 +157,21 @@ def _probe_index(b_table, y, s_tbl_sz, s_inv_index):
             ids = s_inv_index.get(token, None)
             if ids is not None:
                 m.update(ids)
+
         # pick y/2 elements from m
         k = min(y_pos, len(m))
         m = list(m)
-        
-        # Randomly select y/2 items
-        j = 0
-        smpl_pos = []
-        while(j < k):
-            j += 1
+        smpl_pos_neg = set()
+
+        while(len(smpl_pos_neg) < k):
             num = random.choice(m)
-            smpl_pos.append(num)
-
-        s_pos_set = set()
-        s_pos_set.update(smpl_pos)
-        s_tbl_ids = set(range(s_tbl_sz))
-        rem_locs = list(s_tbl_ids.difference(s_pos_set))
-
-        if y - k > 0:
-            # remaining y/2 items are selected here
-            s_neg_set = []
-            counter = 0
-            while (counter < (y-k)):
-                counter += 1
-                rand_item_num = random.choice(rem_locs)
-                s_neg_set.append(rand_item_num)
-            h_table.update(s_pos_set, s_neg_set)
+            smpl_pos_neg.add(num)
+            
+        # remaining y/2 items are selected here
+        while (len(smpl_pos_neg) < y):
+            rand_item_num = randint(0,s_tbl_sz-1)
+            smpl_pos_neg.add(rand_item_num)
+        h_table.update(smpl_pos_neg)
 
     return h_table
 
