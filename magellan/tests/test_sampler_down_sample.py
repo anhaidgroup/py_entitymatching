@@ -12,9 +12,9 @@ from magellan.sampler.down_sample import _inv_index, _probe_index, down_sample, 
 import magellan.catalog.catalog_manager as cm
 from magellan.io.parsers import read_csv_metadata
 
-datasets_path = os.sep.join([get_install_path(), 'datasets', 'example_datasets'])
-path_a = os.sep.join([datasets_path, 'restaurants', 'A.csv'])
-path_b = os.sep.join([datasets_path, 'restaurants', 'B.csv'])
+datasets_path = os.sep.join([get_install_path(), 'datasets', 'test_datasets'])
+path_a = os.sep.join([datasets_path, 'restA.csv'])
+path_b = os.sep.join([datasets_path, 'restB.csv'])
 
 class DownSampleTestCases(unittest.TestCase):
     def test_down_sample_table_valid_1(self):
