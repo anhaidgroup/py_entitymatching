@@ -59,6 +59,8 @@ from magellan.matcherselector.mlmatcherselection import select_matcher
 
 #
 
+# # evaluation
+from magellan.evaluation.evaluation import eval_matches
 
 # # helper functions
 from magellan.utils.generic_helper import get_install_path, load_dataset, add_output_attributes
