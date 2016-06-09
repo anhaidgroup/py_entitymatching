@@ -177,6 +177,8 @@ class OverlapBlockerTestCases(unittest.TestCase):
         s1 += [l_output_prefix + x for x in l_output_attrs if x != l_key]
         s1 += [r_output_prefix + x for x in r_output_attrs if x != r_key]
         s1 = sorted(s1)
+        print "Expected columns: ", s1
+        #print "Candset columns in test: ", sorted(C.columns)
         assert_equal(s1, sorted(C.columns))
         assert_equal(mg.get_key(C), '_id')
         assert_equal(mg.get_property(C, 'fk_ltable'), l_output_prefix + l_key)

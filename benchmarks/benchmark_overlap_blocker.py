@@ -31,11 +31,50 @@ class TimeBlockTablesRestaurants:
                         r_output_attrs=self.r_output_attrs)
         print >> sys.stderr, 'size of C:', len(C)
 
+    def time_block_tables_address_4_njobs_2(self):
+        C = ob.block_tables(self.A, self.B, 'ADDRESS', 'ADDRESS',
+                            overlap_size=4,
+			    l_output_attrs=self.l_output_attrs,
+                            r_output_attrs=self.r_output_attrs, n_jobs=2)
+        print >> sys.stderr, 'size of C:', len(C)
+
+    def time_block_tables_address_4_njobs_4(self):
+        C = ob.block_tables(self.A, self.B, 'ADDRESS', 'ADDRESS',
+                            overlap_size=4,
+			    l_output_attrs=self.l_output_attrs,
+                            r_output_attrs=self.r_output_attrs, n_jobs=4)
+        print >> sys.stderr, 'size of C:', len(C)
+
+    def time_block_tables_address_4_njobs_all(self):
+        C = ob.block_tables(self.A, self.B, 'ADDRESS', 'ADDRESS',
+                            overlap_size=4,
+			    l_output_attrs=self.l_output_attrs,
+                            r_output_attrs=self.r_output_attrs, n_jobs=-1)
+        print >> sys.stderr, 'size of C:', len(C)
+
     def time_block_tables_name_1(self):
         C = ob.block_tables(self.A, self.B, 'NAME',
                         'NAME',
 			l_output_attrs=self.l_output_attrs,
                         r_output_attrs=self.r_output_attrs)
+        print >> sys.stderr, 'size of C:', len(C)
+
+    def time_block_tables_name_1_njobs_2(self):
+        C = ob.block_tables(self.A, self.B, 'NAME', 'NAME',
+			l_output_attrs=self.l_output_attrs,
+                        r_output_attrs=self.r_output_attrs, n_jobs=2)
+        print >> sys.stderr, 'size of C:', len(C)
+
+    def time_block_tables_name_1_njobs_4(self):
+        C = ob.block_tables(self.A, self.B, 'NAME', 'NAME',
+			l_output_attrs=self.l_output_attrs,
+                        r_output_attrs=self.r_output_attrs, n_jobs=4)
+        print >> sys.stderr, 'size of C:', len(C)
+
+    def time_block_tables_name_1_njobs_all(self):
+        C = ob.block_tables(self.A, self.B, 'NAME', 'NAME',
+			l_output_attrs=self.l_output_attrs,
+                        r_output_attrs=self.r_output_attrs, n_jobs=-1)
         print >> sys.stderr, 'size of C:', len(C)
 
     def teardown(self):

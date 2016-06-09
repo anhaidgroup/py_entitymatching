@@ -13,6 +13,9 @@ import magellan.catalog.catalog_manager as cm
 from magellan.externals.py_stringmatching.tokenizers import qgram
 from magellan.utils.catalog_helper import log_info, get_name_for_key, add_key_column
 
+from magellan.externals.py_stringsimjoin.join.join import overlap_join
+from magellan.externals.py_stringsimjoin.utils.tokenizers import create_qgram_tokenizer, create_delimiter_tokenizer
+
 from magellan.utils.generic_helper import remove_non_ascii, rem_nan
 
 from functools import partial
@@ -35,7 +38,6 @@ class OverlapBlocker(Blocker):
                      l_output_attrs=None, r_output_attrs=None,
                      l_output_prefix='ltable_', r_output_prefix='rtable_',
                      verbose=True, show_progress=True, n_jobs=1):
-
         # validate data types of input parameters
         self.validate_types_params_tables(ltable, rtable,
 			    l_output_attrs, r_output_attrs, l_output_prefix,
@@ -54,14 +56,18 @@ class OverlapBlocker(Blocker):
         # get metadata
         l_key, r_key = cm.get_keys_for_ltable_rtable(ltable, rtable, logger, verbose)
 
-        # do blocking
+        # # validate metadata
+        cm.validate_metadata_for_table(ltable, l_key, 'ltable', logger, verbose)
+        cm.validate_metadata_for_table(rtable, r_key, 'rtable', logger, verbose)
 
         if word_level == True and q_val != None:
             raise SyntaxError('Parameters word_level and q_val cannot be set together; Note that word_level is '
                               'set to True by default, so explicity set word_level=false to use qgram with the '
                               'specified q_val')
 
-        # #rem nans
+        # do blocking
+
+        # # rem nans
         l_df = rem_nan(ltable, l_overlap_attr)
         r_df = rem_nan(rtable, r_overlap_attr)
 
@@ -71,17 +77,7 @@ class OverlapBlocker(Blocker):
         r_proj_attrs = self.get_attrs_to_project(r_key, r_overlap_attr, r_output_attrs)
         r_df = r_df[r_proj_attrs]
 
-        # #reset indexes in the dataframe
-        l_df.reset_index(inplace=True, drop=True)
-        r_df.reset_index(inplace=True, drop=True)
-
-        # #create a dummy column with all values set to 1.
-        l_dummy_col_name = self.get_dummy_col_name(l_df.columns)
-        r_dummy_col_name = self.get_dummy_col_name(r_df.columns)
-        l_df[l_dummy_col_name] = 1  # need to fix this - should be a name that does not occur in the col. names
-        r_df[r_dummy_col_name] = 1
-
-        # #case the column to string if required.
+        # # case the column to string if required.
         if l_df.dtypes[l_overlap_attr] != object:
             logger.warning('Left overlap attribute is not of type string; coverting to string temporarily')
             l_df[l_overlap_attr] = l_df[l_overlap_attr].astype(str)
@@ -90,70 +86,22 @@ class OverlapBlocker(Blocker):
             logger.warning('Right overlap attribute is not of type string; coverting to string temporarily')
             r_df[r_overlap_attr] = r_df[r_overlap_attr].astype(str)
 
-        l_dict = {}
-        r_dict = {}
+        # # cleanup the tables from non-ascii characters, punctuations, and stop words
+        self.cleanup_table(l_df, l_overlap_attr, rem_stop_words)
+        self.cleanup_table(r_df, r_overlap_attr, rem_stop_words)
 
-        # #create a lookup table for quick access
-        for k, r in l_df.iterrows():
-            l_dict[k] = r
-
-        for k, r in r_df.iterrows():
-            r_dict[k] = r
-
-        l_colvalues_chopped = self.process_table(l_df, l_overlap_attr, q_val, rem_stop_words)
-        zipped_l_colvalues = zip(l_colvalues_chopped, range(0, len(l_colvalues_chopped)))
-        appended_l_colidx_values = [self.append_index_values(val[0], val[1]) for val in zipped_l_colvalues]
-
-        inv_idx = {}
-        sink = [self.compute_inv_index(t, inv_idx) for c in appended_l_colidx_values for t in c]
-
-        r_colvalues_chopped = self.process_table(r_df, r_overlap_attr, q_val, rem_stop_words)
-        r_idx = 0
-
-        white_list = []
-        if show_progress:
-            bar = pyprind.ProgBar(len(r_colvalues_chopped))
-
-        df_list = []
-        for col_values in r_colvalues_chopped:
-            if show_progress:
-                bar.update()
-
-            qualifying_ltable_indices = self.get_potential_match_indices(col_values, inv_idx, overlap_size)
-            r_row = r_dict[r_idx]
-            r_row_dict = r_row.to_frame().T
-
-            l_rows_dict = l_df.iloc[qualifying_ltable_indices]
-            df = l_rows_dict.merge(r_row_dict, left_on=l_dummy_col_name, right_on=r_dummy_col_name,
-                                   suffixes=('_ltable', '_rtable'))
-
-            if len(df) > 0:
-                df_list.append(df)
-            r_idx += 1
-
-        # Construct the output table
-        candset = pd.concat(df_list)
-        l_output_attrs = self.process_output_attrs(ltable, l_key, l_output_attrs, 'left')
-        r_output_attrs = self.process_output_attrs(rtable, r_key, r_output_attrs, 'right')
-
-        # retain_cols = self.get_attrs_to_retain(l_key, r_key, l_output_attrs, r_output_attrs,
-        #                                        l_output_prefix, r_output_prefix)
-        retain_cols, final_cols = self.output_columns(l_key, r_key, list(candset.columns),
-                                                      l_output_attrs, r_output_attrs,
-                                                      l_output_prefix, r_output_prefix)
-
-
-
-
-        if len(candset) > 0:
-            candset = candset[retain_cols]
-            candset.columns = final_cols
+        tokenizer = None
+        if word_level == True:
+            tokenizer = create_delimiter_tokenizer()
         else:
-            candset = pd.DataFrame(columns=final_cols)
-
+            tokenizer = create_qgram_tokenizer(q_val)
+        candset = overlap_join(l_df, r_df, l_key, r_key, l_overlap_attr, r_overlap_attr,
+                     tokenizer, overlap_size, l_output_attrs, r_output_attrs,
+                     l_output_prefix, r_output_prefix, out_sim_score=False,
+                     n_jobs=n_jobs)
+        
         # Update metadata in the catalog
-        key = get_name_for_key(candset.columns)
-        candset = add_key_column(candset, key)
+        key = '_id'
         cm.set_candset_properties(candset, key, l_output_prefix + l_key, r_output_prefix + r_key, ltable, rtable)
 
         # return the candidate set
@@ -274,10 +222,6 @@ class OverlapBlocker(Blocker):
         retain_cols, final_cols = self.output_columns(l_key, r_key, list(candset.columns),
                                                       l_output_attrs, r_output_attrs,
                                                       l_output_prefix, r_output_prefix)
-
-
-
-
         if len(candset) > 0:
             candset = candset[retain_cols]
             candset.columns = final_cols
@@ -385,7 +329,7 @@ class OverlapBlocker(Blocker):
             logger.error('Overlap attribute name of right table is not of type string')
             raise AssertionError('Overlap attribute name of right table is not of type string')
 
-    # validate the blocking attrs
+    # validate the overlap attrs
     def validate_overlap_attrs(self, ltable, rtable, l_overlap_attr, r_overlap_attr):
         if not isinstance(l_overlap_attr, list):
             l_overlap_attr = [l_overlap_attr]
@@ -474,6 +418,31 @@ class OverlapBlocker(Blocker):
             col_values_chopped = [qgram(val, q_val) for val in values]
 
         return col_values_chopped
+
+    def cleanup_table(self, table, overlap_attr, rem_stop_words):
+
+        # get overlap_attr column
+        attr_col_values = table[overlap_attr]
+
+        # remove non-ascii chars
+        attr_col_values = [remove_non_ascii(val) for val in attr_col_values]
+
+        # remove special characters
+        attr_col_values = [self.rem_punctuations(val).lower() for val in attr_col_values]
+
+        # chop the attribute values
+        col_values_chopped = [val.split() for val in attr_col_values]
+
+        # convert the chopped values into a set
+        col_values_chopped = [list(set(val)) for val in col_values_chopped]
+
+        # remove stop words
+        if rem_stop_words == True:
+            col_values_chopped = [self.rem_stopwords(val) for val in col_values_chopped]
+
+        values = [' '.join(val) for val in col_values_chopped]
+
+        table[overlap_attr] = values
 
     def rem_punctuations(self, s):
         return self.regex_punctuation.sub('', s)
