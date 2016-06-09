@@ -111,6 +111,14 @@ class AttrEquivalenceBlocker(Blocker):
 
         # do blocking
 
+        # # remove nans: should be modified based on missing data policy
+        l_df, r_df = rem_nan(ltable, l_block_attr), rem_nan(rtable, r_block_attr)
+
+        # # do projection before merge
+        l_df = l_df[[l_key, l_block_attr]]
+        r_df = r_df[[r_key, r_block_attr]]
+       
+
         # # set index for convenience
         l_df = ltable.set_index(l_key, drop=False)
         r_df = rtable.set_index(r_key, drop=False)
