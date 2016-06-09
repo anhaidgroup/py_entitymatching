@@ -81,23 +81,6 @@ class OverlapFilter(Filter):
         Returns:
         result : Pandas data frame
         """
-        # check if the input tables are dataframes
-        validate_input_table(ltable, 'left table')
-        validate_input_table(rtable, 'right table')
-
-        # check if the key attributes and filter attributes exist
-        validate_attr(l_key_attr, ltable.columns,
-                      'key attribute', 'left table')
-        validate_attr(r_key_attr, rtable.columns,
-                      'key attribute', 'right table')
-        validate_attr(l_filter_attr, ltable.columns,
-                      'filter attribute', 'left table')
-        validate_attr(r_filter_attr, rtable.columns,
-                      'filter attribute', 'right table')
-
-        # check if the output attributes exist
-        validate_output_attrs(l_out_attrs, ltable.columns,
-                              r_out_attrs, rtable.columns)
 
         # check if the key attributes are unique and do not contain missing values
         validate_key_attr(l_key_attr, ltable, 'left table')
@@ -111,7 +94,7 @@ class OverlapFilter(Filter):
                                                 l_out_attrs, r_out_attrs,
                                                 l_out_prefix, r_out_prefix,
                                                 out_sim_score)
-            output_table.insert(0, '_id', range(0, len(output_table)))
+            #output_table.insert(0, '_id', range(0, len(output_table)))
             return output_table
         else:
             rtable_splits = split_table(rtable, n_jobs)
@@ -125,7 +108,7 @@ class OverlapFilter(Filter):
                                                   out_sim_score)
                                               for rtable_split in rtable_splits)
             output_table = pd.concat(results)
-            output_table.insert(0, '_id', range(0, len(output_table)))
+            #output_table.insert(0, '_id', range(0, len(output_table)))
             return output_table
 
 
