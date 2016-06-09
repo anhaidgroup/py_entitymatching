@@ -35,6 +35,7 @@ def visualize_tree(dt, fv_columns, exclude_attrs, create_file=True):
     except:
         logger.error("Could not run dot, ie graphviz, to "
              "produce visualization")
+        return
     print("Execute the following command in IPython command prompt:")
     print("")
     print("from IPython.display import Image")
