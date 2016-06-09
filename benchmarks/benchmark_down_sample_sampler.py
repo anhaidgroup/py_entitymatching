@@ -15,13 +15,12 @@ if sys.version[0] == '2':
 p = get_install_path()
 datasets_path = os.sep.join([p, 'datasets', 'example_datasets'])
 
-
 class TimeDownSampleRestaurants:
     def setup(self):
         path_for_A = os.sep.join([datasets_path, 'restaurants', 'A.csv'])
         path_for_B = os.sep.join([datasets_path, 'restaurants', 'B.csv'])
-        self.size = 200
-        self.y = 1000
+        self.size = 500
+        self.y = 2
         self.A = read_csv_metadata(path_for_A)
         self.B = read_csv_metadata(path_for_B)
 
@@ -38,8 +37,8 @@ class TimeDownSampleElectronics:
     def setup(self):
         path_for_A = os.sep.join([datasets_path, 'electronics', 'A.csv'])
         path_for_B = os.sep.join([datasets_path, 'electronics', 'B.csv'])
-        self.size = 200
-        self.y = 1000
+        self.size = 500
+        self.y = 5
         self.A = read_csv_metadata(path_for_A)
         self.B = read_csv_metadata(path_for_B)
 
@@ -56,8 +55,8 @@ class TimeDownSampleAnime:
     def setup(self):
         path_for_A = os.sep.join([datasets_path, 'anime', 'A.csv'])
         path_for_B = os.sep.join([datasets_path, 'anime', 'B.csv'])
-        self.size = 200
-        self.y = 1000
+        self.size = 1000
+        self.y = 1
         self.A = read_csv_metadata(path_for_A)
         self.B = read_csv_metadata(path_for_B)
 
@@ -74,8 +73,8 @@ class TimeDownSampleBooks:
     def setup(self):
         path_for_A = os.sep.join([datasets_path, 'books', 'A.csv'])
         path_for_B = os.sep.join([datasets_path, 'books', 'B.csv'])
-        self.size = 200
-        self.y = 1000
+        self.size = 2000
+        self.y = 2
         self.A = read_csv_metadata(path_for_A)
         self.B = read_csv_metadata(path_for_B)
 
@@ -92,8 +91,8 @@ class TimeDownSampleCitations:
     def setup(self):
         path_for_A = os.sep.join([datasets_path, 'citations', 'A.csv'])
         path_for_B = os.sep.join([datasets_path, 'citations', 'B.csv'])
-        self.size = 200
-        self.y = 1000
+        self.size = 3000
+        self.y = 2
         self.A = read_csv_metadata(path_for_A)
         self.B = read_csv_metadata(path_for_B)
 
@@ -110,8 +109,8 @@ class TimeDownSampleBikes:
     def setup(self):
         path_for_A = os.sep.join([datasets_path, 'bikes', 'A.csv'])
         path_for_B = os.sep.join([datasets_path, 'bikes', 'B.csv'])
-        self.size = 200
-        self.y = 1000
+        self.size = 2500
+        self.y = 2
         self.A = read_csv_metadata(path_for_A)
         self.B = read_csv_metadata(path_for_B)
 
@@ -128,8 +127,8 @@ class TimeDownSampleCosmetics:
     def setup(self):
         path_for_A = os.sep.join([datasets_path, 'cosmetics', 'A.csv'])
         path_for_B = os.sep.join([datasets_path, 'cosmetics', 'B.csv'])
-        self.size = 200
-        self.y = 1000
+        self.size = 4000
+        self.y = 1
         self.A = read_csv_metadata(path_for_A, encoding='iso-8859-1')
         self.B = read_csv_metadata(path_for_B, encoding='iso-8859-1')
 
@@ -146,8 +145,8 @@ class TimeDownSampleEbooks:
     def setup(self):
         path_for_A = os.sep.join([datasets_path, 'ebooks', 'A.csv'])
         path_for_B = os.sep.join([datasets_path, 'ebooks', 'B.csv'])
-        self.size = 200
-        self.y = 1000
+        self.size = 3000
+        self.y = 1
         self.A = read_csv_metadata(path_for_A)
         self.B = read_csv_metadata(path_for_B)
 
@@ -164,8 +163,8 @@ class TimeDownSampleMovies:
     def setup(self):
         path_for_A = os.sep.join([datasets_path, 'movies', 'tableA.csv'])
         path_for_B = os.sep.join([datasets_path, 'movies', 'tableB.csv'])
-        self.size = 200
-        self.y = 1000
+        self.size = 1000
+        self.y = 2
         self.A = read_csv_metadata(path_for_A)
         self.B = read_csv_metadata(path_for_B)
 
@@ -182,8 +181,8 @@ class TimeDownSampleMusic:
     def setup(self):
         path_for_A = os.sep.join([datasets_path, 'music', 'A.csv'])
         path_for_B = os.sep.join([datasets_path, 'music', 'B.csv'])
-        self.size = 200
-        self.y = 1000
+        self.size = 1500
+        self.y = 2
         self.A = read_csv_metadata(path_for_A, encoding='iso-8859-1')
         self.B = read_csv_metadata(path_for_B, encoding='iso-8859-1')
 
@@ -200,8 +199,8 @@ class TimeDownSampleBeer:
     def setup(self):
         path_for_A = os.sep.join([datasets_path, 'beer', 'A.csv'])
         path_for_B = os.sep.join([datasets_path, 'beer', 'B.csv'])
-        self.size = 100
-        self.y = 500
+        self.size = 500
+        self.y = 10
         self.A = read_csv_metadata(path_for_A, encoding='iso-8859-1')
         self.B = read_csv_metadata(path_for_B, encoding='iso-8859-1')
 
@@ -217,13 +216,13 @@ class TimeDownSampleBeer:
 # Below two datasets might not be available in the package and have to be downloaded from the website.
 
 class TimeDownSampleASongs1:
-    timeout = 600.0
+    timeout = 2000.0
 
     def time_down_sample_tables(self):
         path_for_A = os.sep.join([datasets_path, 'songs', 'A.csv'])
         path_for_B = os.sep.join([datasets_path, 'songs', 'A.csv'])
-        self.size = 200
-        self.y = 1000
+        self.size = 2000
+        self.y = 2
         try:
             self.A = read_csv_metadata(path_for_A, encoding='iso-8859-1')
             self.B = read_csv_metadata(path_for_B, encoding='iso-8859-1')
@@ -236,13 +235,13 @@ class TimeDownSampleASongs1:
             print("Songs dataset is not available here. Please visit the website to download this dataset")
 
 class TimeDownSampleASongs2:
-    timeout = 600.0
+    timeout = 2000.0
 
     def time_down_sample_tables(self):
         path_for_A = os.sep.join([datasets_path, 'songs', 'A.csv'])
         path_for_B = os.sep.join([datasets_path, 'songs', 'A.csv'])
-        self.size = 400
-        self.y = 2000
+        self.size = 3000
+        self.y = 1
 
         try:
             self.A = read_csv_metadata(path_for_A, encoding='iso-8859-1')
@@ -255,14 +254,35 @@ class TimeDownSampleASongs2:
         except AssertionError:
             print("Songs dataset is not available here. Please visit the website to download this dataset")
 
+class TimeDownSampleASongs3:
+    timeout = 2000.0
+
+    def time_down_sample_tables(self):
+        path_for_A = os.sep.join([datasets_path, 'songs', 'A.csv'])
+        path_for_B = os.sep.join([datasets_path, 'songs', 'A.csv'])
+        self.size = 4000
+        self.y = 1
+
+        try:
+            self.A = read_csv_metadata(path_for_A, encoding='iso-8859-1')
+            self.B = read_csv_metadata(path_for_B, encoding='iso-8859-1')
+            down_sample(self.A, self.B, self.size, self.y)
+            del self.A
+            del self.B
+            del self.size
+            del self.y
+        except AssertionError:
+            print("Songs dataset is not available here. Please visit the website to download this dataset")
+
+
 class TimeDownSampleCitation1:
-    timeout = 1000.0
+    timeout = 2000.0
 
     def time_down_sample_tables(self):
         path_for_A = os.sep.join([datasets_path, 'citation', 'A.csv'])
         path_for_B = os.sep.join([datasets_path, 'citation', 'B.csv'])
-        self.size = 200
-        self.y = 1000
+        self.size = 1000
+        self.y = 1
 
         try:
             self.A = read_csv_metadata(path_for_A, encoding='iso-8859-1')
@@ -276,13 +296,13 @@ class TimeDownSampleCitation1:
             print("Citation dataset is not available here. Please visit the website to download this dataset")
 
 class TimeDownSampleCitation2:
-    timeout = 1000.0
+    timeout = 2000.0
 
     def time_down_sample_tables(self):
         path_for_A = os.sep.join([datasets_path, 'citation', 'A.csv'])
         path_for_B = os.sep.join([datasets_path, 'citation', 'B.csv'])
-        self.size = 100
-        self.y = 1000
+        self.size = 2000
+        self.y = 1
 
         try:
             self.A = read_csv_metadata(path_for_A, encoding='iso-8859-1')
