@@ -193,48 +193,48 @@ class VisDTDebugMatcherTestCases(unittest.TestCase):
                       target_attr='labels', show_window=False)
 
 
-    def test_vis_debug_matcher_dt_tar_attrs_notin_exattrs(self):
-        A = read_csv_metadata(path_a)
-        B = read_csv_metadata(path_b, key='ID')
-        C = read_csv_metadata(path_c, ltable=A, rtable=B)
-        labels = [0] * 7
-        labels.extend([1] * 8)
-        C['labels'] = labels
+    # def test_vis_debug_matcher_dt_tar_attrs_notin_exattrs(self):
+    #     A = read_csv_metadata(path_a)
+    #     B = read_csv_metadata(path_b, key='ID')
+    #     C = read_csv_metadata(path_c, ltable=A, rtable=B)
+    #     labels = [0] * 7
+    #     labels.extend([1] * 8)
+    #     C['labels'] = labels
+    #
+    #     feature_table = get_features_for_matching(A, B)
+    #     feature_vectors = extract_feature_vecs(C, feature_table=feature_table,
+    #                                            attrs_after='labels')
+    #
+    #     dt = DTMatcher()
+    #     train_test = mu.train_test_split(feature_vectors)
+    #
+    #     train = train_test['train']
+    #     test = train_test['test']
+    #     _vis_debug_dt(dt, train, test,
+    #                   exclude_attrs=['_id', 'ltable_ID', 'rtable_ID'],
+    #                   target_attr='labels', show_window=False)
 
-        feature_table = get_features_for_matching(A, B)
-        feature_vectors = extract_feature_vecs(C, feature_table=feature_table,
-                                               attrs_after='labels')
 
-        dt = DTMatcher()
-        train_test = mu.train_test_split(feature_vectors)
-
-        train = train_test['train']
-        test = train_test['test']
-        _vis_debug_dt(dt, train, test,
-                      exclude_attrs=['_id', 'ltable_ID', 'rtable_ID'],
-                      target_attr='labels', show_window=False)
-
-
-    def test_vis_debug_matcher_dt_label_col_wi_sp_name(self):
-        A = read_csv_metadata(path_a)
-        B = read_csv_metadata(path_b, key='ID')
-        C = read_csv_metadata(path_c, ltable=A, rtable=B)
-        labels = [0] * 7
-        labels.extend([1] * 8)
-        C['_predicted'] = labels
-
-        feature_table = get_features_for_matching(A, B)
-        feature_vectors = extract_feature_vecs(C, feature_table=feature_table,
-                                               attrs_after='_predicted')
-
-        dt = DTMatcher()
-        train_test = mu.train_test_split(feature_vectors)
-
-        train = train_test['train']
-        test = train_test['test']
-        _vis_debug_dt(dt, train, test,
-                      exclude_attrs=['_id', 'ltable_ID', 'rtable_ID'],
-                      target_attr='_predicted', show_window=False)
+    # def test_vis_debug_matcher_dt_label_col_wi_sp_name(self):
+    #     A = read_csv_metadata(path_a)
+    #     B = read_csv_metadata(path_b, key='ID')
+    #     C = read_csv_metadata(path_c, ltable=A, rtable=B)
+    #     labels = [0] * 7
+    #     labels.extend([1] * 8)
+    #     C['_predicted'] = labels
+    #
+    #     feature_table = get_features_for_matching(A, B)
+    #     feature_vectors = extract_feature_vecs(C, feature_table=feature_table,
+    #                                            attrs_after='_predicted')
+    #
+    #     dt = DTMatcher()
+    #     train_test = mu.train_test_split(feature_vectors)
+    #
+    #     train = train_test['train']
+    #     test = train_test['test']
+    #     _vis_debug_dt(dt, train, test,
+    #                   exclude_attrs=['_id', 'ltable_ID', 'rtable_ID'],
+    #                   target_attr='_predicted', show_window=False)
 
 class DTDebugMatcherTestCases(unittest.TestCase):
     def setUp(self):

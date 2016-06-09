@@ -244,23 +244,23 @@ class RFDebugMatcherTestCases(unittest.TestCase):
         cm.del_catalog()
 
 
-    def test_debug_rf_matcher_valid_1(self):
-        A = read_csv_metadata(path_a)
-        B = read_csv_metadata(path_b, key='ID')
-        C = read_csv_metadata(path_c, ltable=A, rtable=B)
-        labels = [0] * 7
-        labels.extend([1] * 8)
-        C['labels'] = labels
-
-        feature_table = get_features_for_matching(A, B)
-        feature_vectors = extract_feature_vecs(C, feature_table=feature_table,
-                                               attrs_after='labels')
-        rf = RFMatcher()
-        rf.fit(table=feature_vectors, exclude_attrs=['_id', 'ltable_ID', 'rtable_ID', 'labels'],
-               target_attr='labels')
-        debug_randomforest_matcher(rf, A.ix[1], B.ix[2], feat_table=feature_table,
-                              fv_columns=feature_vectors.columns,
-                              exclude_attrs=['ltable_ID', 'rtable_ID', '_id', 'labels'])
+    # def test_debug_rf_matcher_valid_1(self):
+    #     A = read_csv_metadata(path_a)
+    #     B = read_csv_metadata(path_b, key='ID')
+    #     C = read_csv_metadata(path_c, ltable=A, rtable=B)
+    #     labels = [0] * 7
+    #     labels.extend([1] * 8)
+    #     C['labels'] = labels
+    #
+    #     feature_table = get_features_for_matching(A, B)
+    #     feature_vectors = extract_feature_vecs(C, feature_table=feature_table,
+    #                                            attrs_after='labels')
+    #     rf = RFMatcher()
+    #     rf.fit(table=feature_vectors, exclude_attrs=['_id', 'ltable_ID', 'rtable_ID', 'labels'],
+    #            target_attr='labels')
+    #     debug_randomforest_matcher(rf, A.ix[1], B.ix[2], feat_table=feature_table,
+    #                           fv_columns=feature_vectors.columns,
+    #                           exclude_attrs=['ltable_ID', 'rtable_ID', '_id', 'labels'])
 
     @raises(AssertionError)
     def test_debug_rf_matcher_invalid_feat_table(self):
