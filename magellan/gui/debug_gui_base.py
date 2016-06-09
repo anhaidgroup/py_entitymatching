@@ -1,5 +1,6 @@
-from PyQt4 import QtGui, QtCore
 from collections import OrderedDict
+
+from PyQt4 import QtGui, QtCore
 
 import magellan as mg
 import magellan.catalog.catalog_manager as cm
@@ -7,8 +8,8 @@ from  magellan.gui.gui_utils import DictTableViewWithLabel, DataFrameTableViewWi
 
 
 class MainWindowManager(QtGui.QWidget):
-
-    def __init__(self, matcher, matcher_type, exclude_attrs_or_feature_table, dictionary, table, fp_dataframe, fn_dataframe):
+    def __init__(self, matcher, matcher_type, exclude_attrs_or_feature_table, dictionary, table,
+                 fp_dataframe, fn_dataframe):
         super(MainWindowManager, self).__init__()
         self.matcher = matcher
         self.matcher_type = matcher_type
@@ -20,8 +21,10 @@ class MainWindowManager(QtGui.QWidget):
 
         ltable = cm.get_ltable(self.table)
         rtable = cm.get_rtable(self.table)
-        l_df = ltable.to_dataframe()
-        r_df = rtable.to_dataframe()
+        l_df = ltable.copy()
+        # cm.copy_properties(ltable, l_df)
+        r_df = rtable.copy()
+        # cm.copy_properties(rtable, r_df)
 
         self.l_df = l_df.set_index(cm.get_key(ltable), drop=False)
         self.r_df = r_df.set_index(cm.get_key(rtable), drop=False)
@@ -31,10 +34,9 @@ class MainWindowManager(QtGui.QWidget):
         self.current_combo_text = 'False Positives'
         self.current_dataframe = self.fp_dataframe
         self.setup_gui()
-        width = min((40 + 1)*105, mg._viewapp.desktop().screenGeometry().width() - 50)
-        height = min((50 + 1)*41, mg._viewapp.desktop().screenGeometry().width() - 100)
+        width = min((40 + 1) * 105, mg._viewapp.desktop().screenGeometry().width() - 50)
+        height = min((50 + 1) * 41, mg._viewapp.desktop().screenGeometry().width() - 100)
         self.resize(width, height)
-
 
     def setup_gui(self):
         self.combo_box = QtGui.QComboBox()
@@ -44,7 +46,8 @@ class MainWindowManager(QtGui.QWidget):
         self.metric_widget = DictTableViewWithLabel(self, self.dictionary, 'Metrics',
                                                     self.combo_box)
         self.dataframe_widget = DataFrameTableViewWithLabel(self,
-                                                            self.current_dataframe, self.current_combo_text)
+                                                            self.current_dataframe,
+                                                            self.current_combo_text)
         self.setWindowTitle('Debugger')
         layout = QtGui.QVBoxLayout(self)
         splitter = QtGui.QSplitter(QtCore.Qt.Horizontal)
@@ -52,6 +55,35 @@ class MainWindowManager(QtGui.QWidget):
         splitter.addWidget(self.dataframe_widget)
         layout.addWidget(splitter)
         self.setLayout(layout)
+
+    def handle_debug_button(self, index):
+        # print 'Debug button clicked : ' + str(index)
+        r = self.current_dataframe.iloc[[index]]
+        # l_fkey = self.table.get_property('foreign_key_ltable')
+        # r_fkey = self.table.get_property('foreign_key_rtable')
+
+        l_fkey = cm.get_fk_ltable(self.table)
+        r_fkey = cm.get_fk_rtable(self.table)
+        l_val = r.ix[r.index.values[0], l_fkey]
+        r_val = r.ix[r.index.values[0], r_fkey]
+        d1 = OrderedDict(self.l_df.ix[l_val])
+        d2 = OrderedDict(self.r_df.ix[r_val])
+        if self.matcher_type == 'dt':
+            ret_val, node_list = mg.vis_tuple_debug_dt_matcher(self.matcher, r,
+                                                               self.exclude_attrs_or_feature_table)
+        elif self.matcher_type == 'rf':
+            ret_val, node_list = mg.vis_tuple_debug_rf_matcher(self.matcher, r,
+                                                               self.exclude_attrs_or_feature_table)
+        # elif self.matcher_type == 'rm':
+        #     ret_val, node_list = mg.vis_tuple_debug_rm_matcher(self.matcher, self.l_df.ix[l_val],
+        #                                                        self.r_df.ix[r_val],
+        #                                                        self.exclude_attrs_or_feature_table)
+        else:
+            raise TypeError('Unknown matcher type ')
+        debug_result = [ret_val]
+        debug_result.append(node_list)
+        debug_obj = DebugWindowManager(d1, d2, self.matcher_type, debug_result)
+        debug_obj.show()
 
     def handle_show_button(self, index):
         r = self.current_dataframe.iloc[[index]]
@@ -101,7 +133,6 @@ class ShowWindowManager(QtGui.QWidget):
         self.setLayout(layout)
 
 
-
 class DebugWindowManager(QtGui.QWidget):
     def __init__(self, left_tuple_dict, right_tuple_dict, matcher_type, debug_result):
         super(DebugWindowManager, self).__init__()
@@ -119,7 +150,7 @@ class DebugWindowManager(QtGui.QWidget):
         self.right_tuple_widget = DictTableViewWithLabel(self, self.right_tuple_dict, 'Right Tuple')
         self.setWindowTitle('Debug Tuples')
         self.debug_widget = TreeViewWithLabel(self, "Tree details", type=self.matcher_type,
-                                              debug_result = self.debug_result
+                                              debug_result=self.debug_result
                                               )
 
         layout = QtGui.QHBoxLayout()

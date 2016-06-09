@@ -104,6 +104,7 @@ class MLMatcher(Matcher):
                 else:
                     tbl = table.copy()
                     tbl[target_attr] = y
+                    cm.copy_properties(table, tbl)
                     return tbl
 
         else:
