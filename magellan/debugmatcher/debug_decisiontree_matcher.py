@@ -1,4 +1,5 @@
 import subprocess
+import logging
 
 import numpy as np
 import pandas as pd
@@ -8,7 +9,9 @@ from sklearn.tree import export_graphviz
 from magellan.feature.extractfeatures import apply_feat_fns
 from magellan.matcher.dtmatcher import DTMatcher
 
-def visualize_tree(dt, fv_columns, exclude_attrs):
+logger = logging.getLogger(__name__)
+
+def visualize_tree(dt, fv_columns, exclude_attrs, create_file=True):
     """Create tree png using graphviz.
 
     """
@@ -30,7 +33,7 @@ def visualize_tree(dt, fv_columns, exclude_attrs):
     try:
         subprocess.check_call(command)
     except:
-        exit("Could not run dot, ie graphviz, to "
+        logger.error("Could not run dot, ie graphviz, to "
              "produce visualization")
     print("Execute the following command in IPython command prompt:")
     print("")
