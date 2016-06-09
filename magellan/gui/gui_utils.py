@@ -1,6 +1,7 @@
 from functools import partial
 from PyQt4 import QtGui, QtCore, Qt
 import pandas as pd
+import six
 
 class DataFrameTableView(QtGui.QTableWidget):
     def __init__(self, controller, dataframe):
@@ -118,7 +119,7 @@ class DictTableView(QtGui.QTableWidget):
         self.setColumnCount(1)
 
         #nrows
-        nrows = len(self.dictionary.keys())
+        nrows = len(list(self.dictionary.keys()))
         if self.combo_box is not None:
             nrows += 1
         self.setRowCount(nrows)
@@ -128,13 +129,13 @@ class DictTableView(QtGui.QTableWidget):
         self.horizontalHeader().setStretchLastSection(True)
 
         # vertical headers
-        h = self.dictionary.keys()
+        h = list(self.dictionary.keys())
         h.append('Show')
         self.setVerticalHeaderLabels(h)
 
         idx = 0
 
-        for k, v in self.dictionary.iteritems():
+        for k, v in six.iteritems(self.dictionary):
             self.setItem(idx, 0, QtGui.QTableWidgetItem(str(v)))
             idx += 1
         if self.combo_box is not None:
