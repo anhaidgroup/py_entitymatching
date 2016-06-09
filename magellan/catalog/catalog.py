@@ -20,6 +20,7 @@ class Singleton(object):
     def __init__(self, decorated):
         self._decorated = decorated
 
+    # noinspection PyPep8Naming
     def Instance(self):
         """
         Returns the singleton instance. Upon its first call, it creates a
@@ -29,6 +30,7 @@ class Singleton(object):
         try:
             return self._instance
         except AttributeError:
+            # noinspection PyAttributeOutsideInit
             self._instance = self._decorated()
             return self._instance
 
@@ -113,7 +115,7 @@ class Catalog(object):
     def is_catalog_empty(self):
         return len(self.properties_catalog) == 0
 
-    def is_dfinfo_present(self, df):
+    def is_df_info_present_in_catalog(self, df):
         return id(df) in self.properties_catalog
 
     def is_property_present_for_id(self, obj_id, name):

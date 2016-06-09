@@ -71,3 +71,6 @@ magellan/datasets/example_datasets
 cover/
 results/
 html/
+
+*.dot
+*.png

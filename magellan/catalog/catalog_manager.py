@@ -4,8 +4,8 @@ import logging
 import pandas as pd
 import six
 
-from magellan.catalog.catalog import Catalog
 import magellan.utils.catalog_helper as ch
+from magellan.catalog.catalog import Catalog
 
 logger = logging.getLogger(__name__)
 
@@ -38,18 +38,19 @@ def get_property(df, name):
         logger.error('Property name is not of type string')
         raise AssertionError('Property name is not of type string')
 
-
     # if df is None or pd.isnull(df):
     #     logger.error('Input dataframe cannot be null')
     #     raise AttributeError('Input dataframe cannot be null')
 
-    if not catalog.is_dfinfo_present(df):
+    if not catalog.is_df_info_present_in_catalog(df):
         logger.error('Dataframe information is not present in the catalog')
         raise KeyError('Dataframe information is not present in the catalog')
 
     if not catalog.is_property_present_for_df(df, name):
-        logger.error('Requested metadata ( %s ) for the given dataframe is not present in the catalog' %name)
-        raise KeyError('Requested metadata ( %s ) for the given dataframe is not present in the catalog' %name)
+        logger.error(
+            'Requested metadata ( %s ) for the given dataframe is not present in the catalog' % name)
+        raise KeyError(
+            'Requested metadata ( %s ) for the given dataframe is not present in the catalog' % name)
 
     return catalog.get_property(df, name)
 
@@ -80,11 +81,10 @@ def set_property(df, name, value):
         logger.error('Property name is not of type string')
         raise AssertionError('Property name is not of type string')
 
-
     # if df is None:
     #     raise AttributeError('Input dataframe cannot be null')
 
-    if not catalog.is_dfinfo_present(df):
+    if not catalog.is_df_info_present_in_catalog(df):
         catalog.init_properties(df)
 
     catalog.set_property(df, name, value)
@@ -119,7 +119,7 @@ def get_all_properties(df):
         logger.error('Input object is not of type pandas data frame')
         raise AssertionError('Input object is not of type pandas data frame')
 
-    if not catalog.is_dfinfo_present(df):
+    if not catalog.is_df_info_present_in_catalog(df):
         logger.error('Dataframe information is not present in the catalog')
         raise KeyError('Dataframe information is not present in the catalog')
 
@@ -152,15 +152,14 @@ def del_property(df, name):
         logger.error('Property name is not of type string')
         raise AssertionError('Property name is not of type string')
 
-
-    if not catalog.is_dfinfo_present(df):
+    if not catalog.is_df_info_present_in_catalog(df):
         logger.error('Dataframe information is not present in the catalog')
         raise KeyError('Dataframe information is not present in the catalog')
 
     if not catalog.is_property_present_for_df(df, name):
         logger.error('Dataframe information is not present in the catalog')
         raise KeyError('Requested metadata ( %s ) for the given dataframe is '
-                       'not present in the catalog' %name)
+                       'not present in the catalog' % name)
 
     return catalog.del_property(df, name)
 
@@ -184,7 +183,7 @@ def del_all_properties(df):
         logger.error('Input object is not of type pandas data frame')
         raise AssertionError('Input object is not of type pandas data frame')
 
-    if not catalog.is_dfinfo_present(df):
+    if not catalog.is_df_info_present_in_catalog(df):
         logger.error('Dataframe information is not present in the catalog')
         raise KeyError('Dataframe information is not present in the catalog')
 
@@ -246,7 +245,7 @@ def is_dfinfo_present(df):
         logger.error('Input object is not of type pandas data frame')
         raise AssertionError('Input object is not of type pandas data frame')
 
-    return catalog.is_dfinfo_present(df)
+    return catalog.is_df_info_present_in_catalog(df)
 
 
 def is_property_present_for_df(df, name):
@@ -270,7 +269,7 @@ def is_property_present_for_df(df, name):
         logger.error('Input object is not of type pandas data frame')
         raise AssertionError('Input object is not of type pandas data frame')
 
-    if catalog.is_dfinfo_present(df) is False:
+    if catalog.is_df_info_present_in_catalog(df) is False:
         logger.error('Dataframe information is not present in the catalog')
         raise KeyError('Dataframe information is not present in the catalog')
 
@@ -301,8 +300,10 @@ def set_properties(df, prop_dict, replace=True):
         status (bool). Returns True if the setting of properties was successful
 
     Notes:
-        The function is intended to set all the properties in the catalog with the given property dictionary.
-          The replace flag is just a check where the properties will be not be disturbed if they exist already in the
+        The function is intended to set all the properties in the catalog with the given
+        property dictionary.
+          The replace flag is just a check where the properties will be not be disturbed
+          if they exist already in the
           catalog
 
     """
@@ -315,17 +316,19 @@ def set_properties(df, prop_dict, replace=True):
         logger.error('The properties should be of type python dictionary')
         raise AssertionError('The properties should be of type python dictionary')
 
-    if catalog.is_dfinfo_present(df) and replace is False:
-        logger.warning('Properties already exists for df ( %s ). Not replacing it' %str(id(df)))
+    if catalog.is_df_info_present_in_catalog(df) and replace is False:
+        logger.warning(
+            'Properties already exists for df ( %s ). Not replacing it' % str(id(df)))
         return False
 
-    if not catalog.is_dfinfo_present(df):
+    if not catalog.is_df_info_present_in_catalog(df):
         catalog.init_properties(df)
 
     # for k, v in prop_dict.iteritems():
     for k, v in six.iteritems(prop_dict):
         catalog.set_property(df, k, v)
     return True
+
 
 def has_property(df, prop):
     catalog = Catalog.Instance()
@@ -346,15 +349,14 @@ def has_property(df, prop):
     return prop in p
 
 
-
-
 def copy_properties(src, tar, update=True):
     """
     Copy properties from one dataframe to another
     Args:
         src (pandas dataframe): Dataframe from which the properties to be copied from
         tar (pandas dataframe): Dataframe to which the properties to be copied
-        update (bool): Flag to indicate whether the source properties can replace the tart properties
+        update (bool): Flag to indicate whether the source properties can replace
+        the tart properties
 
     Returns:
         status (bool). Returns True if the copying was successful
@@ -374,12 +376,12 @@ def copy_properties(src, tar, update=True):
         logger.error('Input object (tar) is not of type pandas data frame')
         raise AssertionError('Input object (tar) is not of type pandas data frame')
 
-    if catalog.is_dfinfo_present(src) is False:
+    if catalog.is_df_info_present_in_catalog(src) is False:
         logger.error('Dataframe information (src) is not present in the catalog')
         raise KeyError('Dataframe information (src) is not present in the catalog')
 
     metadata = catalog.get_all_properties(src)
-    return set_properties(tar, metadata, update) # this initializes tar in the catalog.
+    return set_properties(tar, metadata, update)  # this initializes tar in the catalog.
 
 
 # key related methods
@@ -410,7 +412,9 @@ def set_key(df, key):
         key (str): Key attribute in the dataframe
 
     Returns:
-        status (bool). Returns True if the key attribute was set successfully, else returns False
+        status (bool). Returns True if the key attribute was set successfully,
+        else returns False
+
 
     """
 
@@ -419,15 +423,16 @@ def set_key(df, key):
         raise AssertionError('Input object is not of type pandas data frame')
 
     if not key in df.columns:
-        logger.error('Input key ( %s ) not in the dataframe' %key)
-        raise KeyError('Input key ( %s ) not in the dataframe' %key)
+        logger.error('Input key ( %s ) not in the dataframe' % key)
+        raise KeyError('Input key ( %s ) not in the dataframe' % key)
 
     if ch.is_key_attribute(df, key) is False:
-        logger.warning('Attribute (' + key + ') does not qualify to be a key; Not setting/replacing the key')
+        logger.warning(
+            'Attribute (' + key + ') does not qualify to be a key; '
+                                  'Not setting/replacing the key')
         return False
     else:
         return set_property(df, 'key', key)
-
 
 
 # def gentle_set_key(df, key):
@@ -439,7 +444,8 @@ def set_key(df, key):
 #         key (str): Key attribute in the dataframe
 #
 #     Returns:
-#         status (bool). Returns True if the key attribute was set successfully, else returns False
+#         status (bool). Returns True if the key attribute was set successfully,
+# else returns False
 #
 #     """
 #
@@ -452,7 +458,8 @@ def set_key(df, key):
 #         return False
 #
 #     if ch.is_key_attribute(df, key) is False:
-#         logger.warning('Attribute (' + key + ') does not qualify to be a key; Not setting/replacing the key')
+#         logger.warning('Attribute (' + key + ') does not qualify to be a key;
+# Not setting/replacing the key')
 #         return False
 #     else:
 #         return set_property(df, 'key', key)
@@ -490,10 +497,11 @@ def set_fk_ltable(df, fk_ltable):
         raise AssertionError('Input object is not of type pandas data frame')
 
     if not fk_ltable in df.columns:
-        logger.error('Input attr. ( %s ) not in the dataframe' %fk_ltable)
-        raise KeyError('Input attr. ( %s ) not in the dataframe' %fk_ltable)
+        logger.error('Input attr. ( %s ) not in the dataframe' % fk_ltable)
+        raise KeyError('Input attr. ( %s ) not in the dataframe' % fk_ltable)
 
     return set_property(df, 'fk_ltable', fk_ltable)
+
 
 def validate_and_set_fk_ltable(df_foreign, fk_ltable, ltable, l_key):
     # validations are done inside the check_fk_constraint fn.
@@ -501,7 +509,9 @@ def validate_and_set_fk_ltable(df_foreign, fk_ltable, ltable, l_key):
     if status == True:
         return set_property(df_foreign, 'fk_ltable', fk_ltable)
     else:
-        logger.warning('FK constraint for ltable and fk_ltable is not satisfied; Not setting the fk_ltable and ltable')
+        logger.warning(
+            'FK constraint for ltable and fk_ltable is not satisfied; Not setting the '
+            'fk_ltable and ltable')
         return False
 
 
@@ -511,9 +521,9 @@ def validate_and_set_fk_rtable(df_foreign, fk_rtable, rtable, r_key):
     if status == True:
         return set_property(df_foreign, 'fk_rtable', fk_rtable)
     else:
-        logger.warning('FK constraint for rtable and fk_rtable is not satisfied; Not setting the fk_rtable and rtable')
+        logger.warning(
+            'FK constraint for rtable and fk_rtable is not satisfied; Not setting the fk_rtable and rtable')
         return False
-
 
 
 def set_fk_rtable(df, fk_rtable):
@@ -531,8 +541,8 @@ def set_fk_rtable(df, fk_rtable):
         raise AssertionError('Input object is not of type pandas data frame')
 
     if not fk_rtable in df.columns:
-        logger.error('Input attr. ( %s ) not in the dataframe' %fk_rtable)
-        raise KeyError('Input attr. ( %s ) not in the dataframe' %fk_rtable)
+        logger.error('Input attr. ( %s ) not in the dataframe' % fk_rtable)
+        raise KeyError('Input attr. ( %s ) not in the dataframe' % fk_rtable)
 
     return set_property(df, 'fk_rtable', fk_rtable)
 
@@ -559,8 +569,6 @@ def get_reqd_metadata_from_catalog(df, reqd_metadata):
 
     if not isinstance(reqd_metadata, list):
         reqd_metadata = [reqd_metadata]
-
-
 
     metadata = {}
     d = get_all_properties(df)
@@ -601,7 +609,6 @@ def update_reqd_metadata_with_kwargs(metadata, kwargs_dict, reqd_metadata):
         logger.error('Input kwargs_dict is not of type dict')
         raise AssertionError('Input kwargs_dict is not of type dict')
 
-
     if not isinstance(reqd_metadata, list):
         reqd_metadata = [reqd_metadata]
 
@@ -625,7 +632,8 @@ def get_diff_with_reqd_metadata(metadata, reqd_metadata):
         reqd_metadata (list): List of properties
 
     Returns:
-        diff list (list) of properties between the property dictionary and the properties list
+        diff list (list) of properties between the property dictionary and the properties
+        list
 
     Notes:
         This is an internal helper function
@@ -704,15 +712,14 @@ def validate_metadata_for_table(table, key, out_str, lgr, verbose):
         logger.error('Input object is not of type pandas data frame')
         raise AssertionError('Input object is not of type pandas data frame')
 
-
     if not key in table.columns:
-        logger.error('Input key ( %s ) not in the dataframe' %key)
-        raise KeyError('Input key ( %s ) not in the dataframe' %key)
-
+        logger.error('Input key ( %s ) not in the dataframe' % key)
+        raise KeyError('Input key ( %s ) not in the dataframe' % key)
 
     ch.log_info(lgr, 'Validating ' + out_str + ' key: ' + str(key), verbose)
     assert isinstance(key, six.string_types) is True, 'Key attribute must be a string.'
-    assert ch.check_attrs_present(table, key) is True, 'Key attribute is not present in the ' + out_str + ' table'
+    assert ch.check_attrs_present(table,
+                                  key) is True, 'Key attribute is not present in the ' + out_str + ' table'
     assert ch.is_key_attribute(table, key, verbose) == True, 'Attribute ' + str(key) + \
                                                              ' in the ' + out_str + ' table ' \
                                                                                     'does not qualify to be the key'
@@ -720,24 +727,24 @@ def validate_metadata_for_table(table, key, out_str, lgr, verbose):
     return True
 
 
-def validate_metadata_for_candset(candset, key, fk_ltable, fk_rtable, ltable, rtable, l_key, r_key,
+def validate_metadata_for_candset(candset, key, fk_ltable, fk_rtable, ltable, rtable,
+                                  l_key, r_key,
                                   lgr, verbose):
     if not isinstance(candset, pd.DataFrame):
         logger.error('Input cand.set is not of type pandas data frame')
         raise AssertionError('Input cand.set is not of type pandas data frame')
 
     if not key in candset.columns:
-        logger.error('Input key ( %s ) not in the dataframe' %key)
-        raise KeyError('Input key ( %s ) not in the dataframe' %key)
+        logger.error('Input key ( %s ) not in the dataframe' % key)
+        raise KeyError('Input key ( %s ) not in the dataframe' % key)
 
     if not fk_ltable in candset.columns:
-        logger.error('Input fk_ltable ( %s ) not in the dataframe' %fk_ltable)
-        raise KeyError('Input fk_ltable ( %s ) not in the dataframe' %fk_ltable)
+        logger.error('Input fk_ltable ( %s ) not in the dataframe' % fk_ltable)
+        raise KeyError('Input fk_ltable ( %s ) not in the dataframe' % fk_ltable)
 
     if not fk_rtable in candset.columns:
-        logger.error('Input fk_rtable ( %s ) not in the dataframe' %fk_rtable)
-        raise KeyError('Input fk_rtable ( %s ) not in the dataframe' %fk_rtable)
-
+        logger.error('Input fk_rtable ( %s ) not in the dataframe' % fk_rtable)
+        raise KeyError('Input fk_rtable ( %s ) not in the dataframe' % fk_rtable)
 
     if not isinstance(ltable, pd.DataFrame):
         logger.error('Input ltable is not of type pandas data frame')
@@ -748,30 +755,30 @@ def validate_metadata_for_candset(candset, key, fk_ltable, fk_rtable, ltable, rt
         raise AssertionError('Input rtable is not of type pandas data frame')
 
     if not l_key in ltable:
-        logger.error('ltable key ( %s ) not in ltable' %l_key)
-        raise KeyError('ltable key ( %s ) not in ltable' %l_key)
+        logger.error('ltable key ( %s ) not in ltable' % l_key)
+        raise KeyError('ltable key ( %s ) not in ltable' % l_key)
 
     if not r_key in rtable:
-        logger.error('rtable key ( %s ) not in rtable' %r_key)
-        raise KeyError('rtable key ( %s ) not in rtable' %r_key)
-
+        logger.error('rtable key ( %s ) not in rtable' % r_key)
+        raise KeyError('rtable key ( %s ) not in rtable' % r_key)
 
     validate_metadata_for_table(candset, key, 'cand.set', lgr, verbose)
 
     ch.log_info(lgr, 'Validating foreign key constraint for left table', verbose)
-    assert ch.check_fk_constraint(candset, fk_ltable, ltable, l_key) == True, 'Cand.set does not satisfy foreign key ' \
-                                                                              'constraint with the left table'
+    assert ch.check_fk_constraint(candset, fk_ltable, ltable,
+                                  l_key) == True, 'Cand.set does not satisfy foreign key ' \
+                                                  'constraint with the left table'
     ch.log_info(lgr, '..... Done', verbose)
     ch.log_info(lgr, 'Validating foreign key constraint for right table', verbose)
-    assert ch.check_fk_constraint(candset, fk_rtable, rtable, r_key) == True, 'Cand.set does not satisfy foreign key ' \
-                                                                              'constraint with the right table'
+    assert ch.check_fk_constraint(candset, fk_rtable, rtable,
+                                  r_key) == True, 'Cand.set does not satisfy foreign key ' \
+                                                  'constraint with the right table'
     ch.log_info(lgr, '..... Done', verbose)
 
     return True
 
 
 def get_keys_for_ltable_rtable(ltable, rtable, lgr, verbose):
-
     if not isinstance(ltable, pd.DataFrame):
         logger.error('Input ltable is not of type pandas data frame')
         raise AssertionError('Input ltable is not of type pandas data frame')
@@ -804,8 +811,10 @@ def get_metadata_for_candset(candset, lgr, verbose):
     ch.log_info(lgr, '..... Done', verbose)
     return key, fk_ltable, fk_rtable, ltable, rtable, l_key, r_key
 
+
 def get_ltable(candset):
     return get_property(candset, 'ltable')
+
 
 def get_rtable(candset):
     return get_property(candset, 'rtable')
