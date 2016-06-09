@@ -262,6 +262,48 @@ class DebugblockerTestCases(unittest.TestCase):
         db.index_candidate_set(C,
                 lrecord_id_to_index_map, rrecord_id_to_index_map, False)
 
+    def test_index_candidate_set_4(self):
+        A_list = [[1, 'asdf', 'fdas'], [2, 'fdsa', 'asdf']]
+        B_list = [['B002', 'qqqq', 'wwww'], ['B003', 'rrrr', 'fdsa']]
+        A = pd.DataFrame(A_list)
+        A.columns = ['ID', 'f1', 'f2']
+        mg.set_key(A, 'ID')
+        B = pd.DataFrame(B_list)
+        B.columns = ['ID', 'f1', 'f2']
+        mg.set_key(B, 'ID')
+        C_list = [[0, 1, 'B003'], [1, 2, 'B002']]
+        C = pd.DataFrame(C_list)
+        C.columns = ['_id', 'ltable_ID', 'rtable_ID']
+        cm.set_candset_properties(C, '_id', 'ltable_ID',
+                                  'rtable_ID', A, B)
+        lrecord_id_to_index_map = db.get_record_id_to_index_map(A, 'ID')
+        rrecord_id_to_index_map = db.get_record_id_to_index_map(B, 'ID')
+        expected_cand_set = {(0, 1), (1, 0)}
+        actuacl_cand_set = db.index_candidate_set(C,
+                lrecord_id_to_index_map, rrecord_id_to_index_map, False)
+        self.assertEqual(expected_cand_set, actuacl_cand_set)
+
+    @raises(AssertionError)
+    def test_index_candidate_set_5(self):
+        A_list = [[1, 'asdf', 'fdas'], [2, 'fdsa', 'asdf']]
+        B_list = [['B002', 'qqqq', 'wwww'], ['B003', 'rrrr', 'fdsa']]
+        A = pd.DataFrame(A_list)
+        A.columns = ['ID', 'f1', 'f2']
+        mg.set_key(A, 'ID')
+        B = pd.DataFrame(B_list)
+        B.columns = ['ID', 'f1', 'f2']
+        mg.set_key(B, 'ID')
+        C_list = [[0, 1, 'B001'], [1, 2, 'B002']]
+        C = pd.DataFrame(C_list)
+        C.columns = ['_id', 'ltable_ID', 'rtable_ID']
+        cm.set_candset_properties(C, '_id', 'ltable_ID',
+                                  'rtable_ID', A, B)
+        lrecord_id_to_index_map = db.get_record_id_to_index_map(A, 'ID')
+        rrecord_id_to_index_map = db.get_record_id_to_index_map(B, 'ID')
+        db.index_candidate_set(C,
+                lrecord_id_to_index_map, rrecord_id_to_index_map, False)
+
+
     def test_generate_prefix_events_impl_1(self):
         record_list = []
         prefix_events = []

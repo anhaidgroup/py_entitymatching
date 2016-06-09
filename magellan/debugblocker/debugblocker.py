@@ -434,7 +434,7 @@ def get_record_id_to_index_map(table, table_key):
     record_id_to_index = {}
     id_col = list(table[table_key])
     for i in range(len(id_col)):
-        id_col[i] = str(id_col[i])
+        # id_col[i] = str(id_col[i])
         if id_col[i] in record_id_to_index:
             raise AssertionError('Duplicate keys found:', id_col[i])
         record_id_to_index[id_col[i]] = i
@@ -491,33 +491,41 @@ def replace_nan_to_empty(field):
 
 
 def index_candidate_set(candidate_set, lrecord_id_to_index_map, rrecord_id_to_index_map, verbose):
-    new_formatted_candidate_set = set([])
+    new_formatted_candidate_set = set()
     # # get metadata
     key, fk_ltable, fk_rtable, ltable, rtable, l_key, r_key =\
         cm.get_metadata_for_candset(candidate_set, logger, verbose)
 
     # # validate metadata
-    #cm.validate_metadata_for_candset(candidate_set, key, fk_ltable, fk_rtable, ltable, rtable, l_key, r_key,
-    #                                 logger, verbose)
-    pair_list = []
+    cm.validate_metadata_for_candset(candidate_set, key, fk_ltable, fk_rtable, ltable, rtable, l_key, r_key,
+                                     logger, verbose)
+
     ltable_key_data = list(candidate_set[fk_ltable])
-    for i in range(len(ltable_key_data)):
-        lkey_value = str(ltable_key_data[i])
-        if lkey_value not in lrecord_id_to_index_map:
-            raise AssertionError('Error: the left key in the candidate'
-                                 ' set doesn\'t appear in the left'
-                                 ' table:', lkey_value)
-        pair_list.append([lrecord_id_to_index_map[lkey_value]])
     rtable_key_data = list(candidate_set[fk_rtable])
-    for i in range(len(rtable_key_data)):
-        rkey_value = str(rtable_key_data[i])
-        if rkey_value not in rrecord_id_to_index_map:
-            raise AssertionError('Error: the left key in the candidate'
-                                 ' set doesn\'t appear in the left'
-                                 ' table: ', rkey_value)
-        pair_list[i].append(rrecord_id_to_index_map[rkey_value])
-    for i in range(len(pair_list)):
-        new_formatted_candidate_set.add((pair_list[i][0], pair_list[i][1]))
+
+    for i in range(len(ltable_key_data)):
+        new_formatted_candidate_set.add((lrecord_id_to_index_map[ltable_key_data[i]],
+                                         rrecord_id_to_index_map[rtable_key_data[i]]))
+
+    # pair_list = []
+    # ltable_key_data = list(candidate_set[fk_ltable])
+    # for i in range(len(ltable_key_data)):
+    #     lkey_value = str(ltable_key_data[i])
+    #     if lkey_value not in lrecord_id_to_index_map:
+    #         raise AssertionError('Error: the left key in the candidate'
+    #                              ' set doesn\'t appear in the left'
+    #                              ' table:', lkey_value)
+    #     pair_list.append([lrecord_id_to_index_map[lkey_value]])
+    # rtable_key_data = list(candidate_set[fk_rtable])
+    # for i in range(len(rtable_key_data)):
+    #     rkey_value = str(rtable_key_data[i])
+    #     if rkey_value not in rrecord_id_to_index_map:
+    #         raise AssertionError('Error: the left key in the candidate'
+    #                              ' set doesn\'t appear in the left'
+    #                              ' table: ', rkey_value)
+    #     pair_list[i].append(rrecord_id_to_index_map[rkey_value])
+    # for i in range(len(pair_list)):
+    #     new_formatted_candidate_set.add((pair_list[i][0], pair_list[i][1]))
 
     return new_formatted_candidate_set
 
