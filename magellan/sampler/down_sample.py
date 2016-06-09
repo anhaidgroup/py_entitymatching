@@ -83,6 +83,20 @@ def _get_str_cols_list(table):
 
 # create inverted index from token to position
 def _inv_index(table):
+    """
+    This is inverted index function that builds inverted index of tokens on a table
+
+    Args:
+        table: dataframe <input table>
+    
+    Returns:
+        inverted index of type dictionary
+
+    Example:
+        inv_index = _inv_index(table)
+    
+    """
+
     stop_words = set(_get_stop_words())
     str_cols_ix = _get_str_cols_list(table)
     n = len(table)
@@ -109,6 +123,19 @@ def _inv_index(table):
 
 
 def _probe_index(b_table, y, s_tbl_sz, s_inv_index):
+    """
+    This is probe index function that probes the second table into inverted index to get good coverage in the down sampled output
+
+    Args:
+        b_table: dataframe <input table B>
+        s_tbl_sz: size of table A
+        y: down_sampled size of table A should be close to size * y
+        s_inv_index: inverted index built on Table A
+    
+    Returns:
+        set with indexes
+    
+    """
     y_pos = math.floor(y/2)
     h_table = set()
     stop_words = set(_get_stop_words())
@@ -133,13 +160,28 @@ def _probe_index(b_table, y, s_tbl_sz, s_inv_index):
         # pick y/2 elements from m
         k = min(y_pos, len(m))
         m = list(m)
-        smpl_pos = np.random.choice(m, k, replace=False)
+        
+        # Randomly select y/2 items
+        j = 0
+        smpl_pos = []
+        while(j < k):
+            j += 1
+            num = random.choice(m)
+            smpl_pos.append(num)
+
         s_pos_set = set()
         s_pos_set.update(smpl_pos)
         s_tbl_ids = set(range(s_tbl_sz))
         rem_locs = list(s_tbl_ids.difference(s_pos_set))
+
         if y - k > 0:
-            s_neg_set = np.random.choice(rem_locs, y - k, replace=False)
+            # remaining y/2 items are selected here
+            s_neg_set = []
+            counter = 0
+            while (counter < (y-k)):
+                counter += 1
+                rand_item_num = random.choice(rem_locs)
+                s_neg_set.append(rand_item_num)
             h_table.update(s_pos_set, s_neg_set)
 
     return h_table
@@ -147,7 +189,8 @@ def _probe_index(b_table, y, s_tbl_sz, s_inv_index):
 # down sample of two tables : based on sanjib's index based solution
 def down_sample(s_table, b_table, size, y):
     """
-    This is down sample table function:
+    This is down sample table function that down samples 2 tables A and B.
+
     Args:
         s_table: dataframe <input table A>
         b_table: dataframe <input table B>
@@ -156,6 +199,13 @@ def down_sample(s_table, b_table, size, y):
     
     Returns:
         down sampled tables A and B
+
+    Raises:
+        AssertionError : 1) If any of the input tables are empty or not a dataframe 2) If size or y parameter is empty or 0 or not a valid integer value 3) If output sampled tables are empty
+        or not as per user defined
+
+    Example:
+        C, D = mg.down_sample(A, B, b_size, y)
     
     """
 
