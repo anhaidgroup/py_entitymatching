@@ -39,13 +39,16 @@ class OverlapBlocker(Blocker):
                      l_output_attrs=None, r_output_attrs=None,
                      l_output_prefix='ltable_', r_output_prefix='rtable_',
                      verbose=True, show_progress=True, n_jobs=1):
-        # validate data types of input parameters
+
+        # validate data types of standard input parameters
         self.validate_types_params_tables(ltable, rtable,
 			    l_output_attrs, r_output_attrs, l_output_prefix,
 			    r_output_prefix, verbose, n_jobs)
 
-        # validate data types of input blocking attributes
-        self.validate_types_overlap_attrs(l_overlap_attr, r_overlap_attr)
+        # validate data types of input parameters specific to overlap blocker
+        self.validate_types_other_params(l_overlap_attr, r_overlap_attr,
+                                         rem_stop_words, q_val,
+                                         word_level, overlap_size)
  
         # validations
         self.validate_overlap_attrs(ltable, rtable, l_overlap_attr, r_overlap_attr)
@@ -65,6 +68,11 @@ class OverlapBlocker(Blocker):
             raise SyntaxError('Parameters word_level and q_val cannot be set together; Note that word_level is '
                               'set to True by default, so explicity set word_level=false to use qgram with the '
                               'specified q_val')
+
+        if word_level == False and q_val == None:
+            raise SyntaxError('Parameters word_level and q_val cannot be unset together; Note that q_val is '
+                              'set to None by default, so if you want to use qgram then '
+                              'explictiy specify set word_level=False and specify the q_val')
 
         # do blocking
 
@@ -123,12 +131,14 @@ class OverlapBlocker(Blocker):
                       rem_stop_words=False, q_val=None, word_level=True, overlap_size=1,
                       verbose=True, show_progress=True, n_jobs=1):
 
-        # validate data types of input parameters
+        # validate data types of standard input parameters
         self.validate_types_params_candset(candset, verbose, show_progress, n_jobs)
 
-        # validate data types of input blocking attributes
-        self.validate_types_overlap_attrs(l_overlap_attr, r_overlap_attr)
- 
+        # validate data types of input parameters specific to overlap blocker
+        self.validate_types_other_params(l_overlap_attr, r_overlap_attr,
+                                         rem_stop_words, q_val,
+                                         word_level, overlap_size)
+
         # get and validate metadata
         log_info(logger, 'Required metadata: cand.set key, fk ltable, fk rtable, '
                          'ltable, rtable, ltable key, rtable key', verbose)
@@ -178,8 +188,9 @@ class OverlapBlocker(Blocker):
         if n_procs < 1:
             n_procs = 1
         out_table = overlap_filter.filter_candset(candset, fk_ltable, fk_rtable,
-                                             l_df, r_df, l_key, r_key,
-                                             l_overlap_attr, r_overlap_attr, n_jobs=n_procs)
+                                                  l_df, r_df, l_key, r_key,
+                                                  l_overlap_attr, r_overlap_attr,
+                                                  n_jobs=n_procs)
         # update catalog
         cm.set_candset_properties(out_table, key, fk_ltable, fk_rtable, ltable, rtable)
 
@@ -198,15 +209,29 @@ class OverlapBlocker(Blocker):
             return False
 
     # helper functions
-    # validate the data types of the overlap attributes 
-    def validate_types_overlap_attrs(self, l_overlap_attr, r_overlap_attr):
+
+    # validate the data types of input parameters specific to overlap blocker
+    def validate_types_other_params(self, l_overlap_attr, r_overlap_attr,
+                                    rem_stop_words, q_val,
+                                    word_level, overlap_size):
         if not isinstance(l_overlap_attr, six.string_types):
             logger.error('Overlap attribute name of left table is not of type string')
             raise AssertionError('Overlap attribute name of left table is not of type string')
-
         if not isinstance(r_overlap_attr, six.string_types):
             logger.error('Overlap attribute name of right table is not of type string')
             raise AssertionError('Overlap attribute name of right table is not of type string')
+        if not isinstance(rem_stop_words, bool):
+            logger.error('Parameter rem_stop_words is not of type bool')
+            raise AssertionError('Parameter rem_stop_words is not of type bool')
+        if q_val != None and not isinstance(q_val, int):
+            logger.error('Parameter q_val is not of type int')
+            raise AssertionError('Parameter q_val is not of type int')
+        if not isinstance(word_level, bool):
+            logger.error('Parameter word_level is not of type bool')
+            raise AssertionError('Parameter word_level is not of type bool')
+        if not isinstance(overlap_size, int):
+            logger.error('Parameter overlap_size is not of type int')
+            raise AssertionError('Parameter overlap_size is not of type int')
 
     # validate the overlap attrs
     def validate_overlap_attrs(self, ltable, rtable, l_overlap_attr, r_overlap_attr):

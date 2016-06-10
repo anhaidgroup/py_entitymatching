@@ -22,6 +22,10 @@ r_output_prefix = 'r_'
 bogus_attr = 'bogus'
 overlap_attr_multi = ['zipcode', 'birth_year']
 
+# overlap on [r,l]_overlap_attr_1 with overlap_size=1
+expected_ids_1 = [('a2', 'b3'), ('a2', 'b6'), ('a3', 'b2'), ('a5', 'b5')]
+# overlap on [r,l]_overlap_attr_2 with overlap_size=4
+expected_ids_2 = [('a2', 'b3'), ('a3', 'b2')]
 
 class OverlapBlockerTestCases(unittest.TestCase):
 
@@ -31,10 +35,6 @@ class OverlapBlockerTestCases(unittest.TestCase):
         self.B = mg.read_csv_metadata(path_for_B)
         mg.set_key(self.B, r_key)
         self.ob = mg.OverlapBlocker()
-        # overlap on [r,l]_overlap_attr_1 with overlap_size=1
-        self.expected_ids_1 = [('a2', 'b3'), ('a2', 'b6'), ('a3', 'b2'), ('a5', 'b5')]
-        # overlap on [r,l]_overlap_attr_2 with overlap_size=4
-        expected_ids_2 = [('a2', 'b3'), ('a3', 'b2')]
         
     def tearDown(self):
         del self.A
@@ -173,6 +173,58 @@ class OverlapBlockerTestCases(unittest.TestCase):
     def test_ob_block_tables_invalid_verbose_3(self):
         self.ob.block_tables(self.A, self.B, l_overlap_attr_1, r_overlap_attr_1, verbose='yes')
 
+    @raises(AssertionError)
+    def test_ob_block_tables_invalid_rem_stop_words_1(self):
+        self.ob.block_tables(self.A, self.B, l_overlap_attr_1, r_overlap_attr_1, rem_stop_words=None)
+
+    @raises(AssertionError)
+    def test_ob_block_tables_invalid_rem_stop_words_2(self):
+        self.ob.block_tables(self.A, self.B, l_overlap_attr_1, r_overlap_attr_1, rem_stop_words=1)
+
+    @raises(AssertionError)
+    def test_ob_block_tables_invalid_rem_stop_words_3(self):
+        self.ob.block_tables(self.A, self.B, l_overlap_attr_1, r_overlap_attr_1, rem_stop_words='yes')
+
+    @raises(AssertionError)
+    def test_ob_block_tables_invalid_qval_1(self):
+        self.ob.block_tables(self.A, self.B, l_overlap_attr_1, r_overlap_attr_1, word_level=False, q_val=1.5)
+
+    @raises(AssertionError)
+    def test_ob_block_tables_invalid_qval_2(self):
+        self.ob.block_tables(self.A, self.B, l_overlap_attr_1, r_overlap_attr_1, word_level=False, q_val='1')
+
+    @raises(AssertionError)
+    def test_ob_block_tables_invalid_word_level_1(self):
+        self.ob.block_tables(self.A, self.B, l_overlap_attr_1, r_overlap_attr_1, word_level=None)
+
+    @raises(AssertionError)
+    def test_ob_block_tables_invalid_word_level_2(self):
+        self.ob.block_tables(self.A, self.B, l_overlap_attr_1, r_overlap_attr_1, word_level=1)
+
+    @raises(AssertionError)
+    def test_ob_block_tables_invalid_word_level_3(self):
+        self.ob.block_tables(self.A, self.B, l_overlap_attr_1, r_overlap_attr_1, word_level='yes')
+
+    @raises(SyntaxError)
+    def test_ob_block_tables_invalid_qval_word_level_1(self):
+        self.ob.block_tables(self.A, self.B, l_overlap_attr_1, r_overlap_attr_1, q_val=1)
+
+    @raises(SyntaxError)
+    def test_ob_block_tables_invalid_qval_word_level_2(self):
+        self.ob.block_tables(self.A, self.B, l_overlap_attr_1, r_overlap_attr_1, word_level=False)
+
+    @raises(AssertionError)
+    def test_ob_block_tables_invalid_overlap_size_1(self):
+        self.ob.block_tables(self.A, self.B, l_overlap_attr_1, r_overlap_attr_1, overlap_size=None)
+
+    @raises(AssertionError)
+    def test_ob_block_tables_invalid_overlap_size_2(self):
+        self.ob.block_tables(self.A, self.B, l_overlap_attr_1, r_overlap_attr_1, overlap_size=1.5)
+
+    @raises(AssertionError)
+    def test_ob_block_tables_invalid_overlap_size_3(self):
+        self.ob.block_tables(self.A, self.B, l_overlap_attr_1, r_overlap_attr_1, overlap_size='1')
+
     def test_ob_block_tables(self):
         C = self.ob.block_tables(self.A, self.B, l_overlap_attr_1, r_overlap_attr_1,
                                  l_output_attrs=l_output_attrs, r_output_attrs=r_output_attrs,
@@ -186,8 +238,8 @@ class OverlapBlockerTestCases(unittest.TestCase):
         assert_equal(mg.get_property(C, 'fk_ltable'), l_output_prefix + l_key)
         assert_equal(mg.get_property(C, 'fk_rtable'), r_output_prefix + r_key)
         C_ids = C[[l_output_prefix + l_key, r_output_prefix + r_key]]
-        actual_ids = sorted(list(C_ids.set_index([l_output_prefix + l_key, r_output_prefix + r_key]).index.values))
-        assert_equal(self.expected_ids_1, actual_ids)
+        actual_ids = sorted(C_ids.set_index([l_output_prefix + l_key, r_output_prefix + r_key]).index.values.tolist())
+        assert_equal(expected_ids_1, actual_ids)
 
     def test_ob_block_tables_njobs_2(self):
         C = self.ob.block_tables(self.A, self.B, l_overlap_attr_1, r_overlap_attr_1,
@@ -203,7 +255,7 @@ class OverlapBlockerTestCases(unittest.TestCase):
         assert_equal(mg.get_property(C, 'fk_rtable'), r_output_prefix + r_key)
         C_ids = C[[l_output_prefix + l_key, r_output_prefix + r_key]]
         actual_ids = sorted(C_ids.set_index([l_output_prefix + l_key, r_output_prefix + r_key]).index.tolist())
-        assert_equal(self.expected_ids_1, actual_ids)
+        assert_equal(expected_ids_1, actual_ids)
 
     def test_ob_block_tables_njobs_all(self):
         C = self.ob.block_tables(self.A, self.B, l_overlap_attr_1, r_overlap_attr_1,
@@ -218,18 +270,18 @@ class OverlapBlockerTestCases(unittest.TestCase):
         assert_equal(mg.get_property(C, 'fk_ltable'), l_output_prefix + l_key)
         assert_equal(mg.get_property(C, 'fk_rtable'), r_output_prefix + r_key)
         C_ids = C[[l_output_prefix + l_key, r_output_prefix + r_key]]
-        actual_ids = sorted(list(C_ids.set_index([l_output_prefix + l_key, r_output_prefix + r_key]).index.values))
-        assert_equal(self.expected_ids_1, actual_ids)
+        actual_ids = sorted(C_ids.set_index([l_output_prefix + l_key, r_output_prefix + r_key]).index.tolist())
+        assert_equal(expected_ids_1, actual_ids)
 
     def test_ob_block_tables_wi_no_output_tuples(self):
         C = self.ob.block_tables(self.A, self.B, l_overlap_attr_1,
                                  r_overlap_attr_1, overlap_size=2)
-        assert_equal(len(C),  0)
         assert_equal(sorted(C.columns), sorted(['_id', 'ltable_' + l_key,
                                                 'rtable_' + r_key]))
         assert_equal(mg.get_key(C), '_id')
         assert_equal(mg.get_property(C, 'fk_ltable'), 'ltable_' + l_key)
         assert_equal(mg.get_property(C, 'fk_rtable'), 'rtable_' + r_key)
+        assert_equal(len(C),  0)
 
     def test_ob_block_tables_wi_null_l_output_attrs(self):
         C = self.ob.block_tables(self.A, self.B, l_overlap_attr_1,
@@ -242,6 +294,9 @@ class OverlapBlockerTestCases(unittest.TestCase):
         assert_equal(mg.get_key(C), '_id')
         assert_equal(mg.get_property(C, 'fk_ltable'), 'ltable_' + l_key)
         assert_equal(mg.get_property(C, 'fk_rtable'), 'rtable_' + r_key)
+        C_ids = C[['ltable_' + l_key, 'rtable_' + r_key]]
+        actual_ids = sorted(C_ids.set_index(['ltable_' + l_key, 'rtable_' + r_key]).index.tolist())
+        assert_equal(expected_ids_1, actual_ids)
 
     def test_ob_block_tables_wi_null_r_output_attrs(self):
         C = self.ob.block_tables(self.A, self.B, l_overlap_attr_1,
@@ -254,6 +309,9 @@ class OverlapBlockerTestCases(unittest.TestCase):
         assert_equal(mg.get_key(C), '_id')
         assert_equal(mg.get_property(C, 'fk_ltable'), 'ltable_' + l_key)
         assert_equal(mg.get_property(C, 'fk_rtable'), 'rtable_' + r_key)
+        C_ids = C[['ltable_' + l_key, 'rtable_' + r_key]]
+        actual_ids = sorted(C_ids.set_index(['ltable_' + l_key, 'rtable_' + r_key]).index.tolist())
+        assert_equal(expected_ids_1, actual_ids)
 
     def test_ob_block_tables_wi_empty_l_output_attrs(self):
         C = self.ob.block_tables(self.A, self.B, l_overlap_attr_1,
@@ -265,6 +323,9 @@ class OverlapBlockerTestCases(unittest.TestCase):
         assert_equal(mg.get_key(C), '_id')
         assert_equal(mg.get_property(C, 'fk_ltable'), 'ltable_' + l_key)
         assert_equal(mg.get_property(C, 'fk_rtable'), 'rtable_' + r_key)
+        C_ids = C[['ltable_' + l_key, 'rtable_' + r_key]]
+        actual_ids = sorted(C_ids.set_index(['ltable_' + l_key, 'rtable_' + r_key]).index.tolist())
+        assert_equal(expected_ids_1, actual_ids)
 
     def test_ob_block_tables_wi_empty_r_output_attrs(self):
         C = self.ob.block_tables(self.A, self.B, l_overlap_attr_1,
@@ -277,6 +338,9 @@ class OverlapBlockerTestCases(unittest.TestCase):
         assert_equal(mg.get_key(C), '_id')
         assert_equal(mg.get_property(C, 'fk_ltable'), 'ltable_' + l_key)
         assert_equal(mg.get_property(C, 'fk_rtable'), 'rtable_' + r_key)
+        C_ids = C[['ltable_' + l_key, 'rtable_' + r_key]]
+        actual_ids = sorted(C_ids.set_index(['ltable_' + l_key, 'rtable_' + r_key]).index.tolist())
+        assert_equal(expected_ids_1, actual_ids)
 
     @raises(AssertionError)
     def test_ob_block_candset_invalid_candset_1(self):
@@ -374,31 +438,27 @@ class OverlapBlockerTestCases(unittest.TestCase):
         C = self.ob.block_tables(self.A, self.B, l_overlap_attr_1, r_overlap_attr_1,
                                  l_output_attrs=l_output_attrs, r_output_attrs=r_output_attrs,
                                  l_output_prefix=l_output_prefix, r_output_prefix=r_output_prefix)
-        assert_equal(len(C), 4)
         D = self.ob.block_candset(C, l_overlap_attr_2, r_overlap_attr_2, overlap_size=4)
         assert_equal(sorted(C.columns), sorted(D.columns))
         assert_equal(mg.get_key(D), '_id')
         assert_equal(mg.get_property(D, 'fk_ltable'), mg.get_property(C, 'fk_ltable'))
         assert_equal(mg.get_property(D, 'fk_rtable'), mg.get_property(C, 'fk_rtable'))
-        assert_equal(len(D), 2)
-        #k1 = pd.np.array(D[l_output_prefix + l_overlap_attr_2])
-        #k2 = pd.np.array(D[r_output_prefix + r_overlap_attr_2])
-        #assert_equal(all(k1 == k2), True)
+        D_ids = D[[l_output_prefix + l_key, r_output_prefix + r_key]]
+        actual_ids = sorted(D_ids.set_index([l_output_prefix + l_key, r_output_prefix + r_key]).index.tolist())
+        assert_equal(expected_ids_2, actual_ids)
 
     def test_ob_block_candset_njobs_2(self):
         C = self.ob.block_tables(self.A, self.B, l_overlap_attr_1, r_overlap_attr_1,
                                  l_output_attrs=l_output_attrs, r_output_attrs=r_output_attrs,
                                  l_output_prefix=l_output_prefix, r_output_prefix=r_output_prefix)
-        assert_equal(len(C), 4)
         D = self.ob.block_candset(C, l_overlap_attr_2, r_overlap_attr_2, overlap_size=4, n_jobs=2)
         assert_equal(sorted(C.columns), sorted(D.columns))
         assert_equal(mg.get_key(D), '_id')
         assert_equal(mg.get_property(D, 'fk_ltable'), mg.get_property(C, 'fk_ltable'))
         assert_equal(mg.get_property(D, 'fk_rtable'), mg.get_property(C, 'fk_rtable'))
-        assert_equal(len(D), 2)
-        #k1 = pd.np.array(D[l_output_prefix + l_overlap_attr_2])
-        #k2 = pd.np.array(D[r_output_prefix + r_overlap_attr_2])
-        #assert_equal(all(k1 == k2), True)
+        D_ids = D[[l_output_prefix + l_key, r_output_prefix + r_key]]
+        actual_ids = sorted(D_ids.set_index([l_output_prefix + l_key, r_output_prefix + r_key]).index.tolist())
+        assert_equal(expected_ids_2, actual_ids)
 
     def test_ob_block_candset_njobs_all(self):
         C = self.ob.block_tables(self.A, self.B, l_overlap_attr_1, r_overlap_attr_1,
@@ -410,34 +470,32 @@ class OverlapBlockerTestCases(unittest.TestCase):
         assert_equal(mg.get_key(D), '_id')
         assert_equal(mg.get_property(D, 'fk_ltable'), mg.get_property(C, 'fk_ltable'))
         assert_equal(mg.get_property(D, 'fk_rtable'), mg.get_property(C, 'fk_rtable'))
-        assert_equal(len(D), 2)
-        #k1 = pd.np.array(D[l_output_prefix + l_overlap_attr_2])
-        #k2 = pd.np.array(D[r_output_prefix + r_overlap_attr_2])
-        #assert_equal(all(k1 == k2), True)
+        D_ids = D[[l_output_prefix + l_key, r_output_prefix + r_key]]
+        actual_ids = sorted(D_ids.set_index([l_output_prefix + l_key, r_output_prefix + r_key]).index.tolist())
+        assert_equal(expected_ids_2, actual_ids)
 
     def test_ob_block_candset_empty_input(self):
         C = self.ob.block_tables(self.A, self.B, l_overlap_attr_1,
                                  r_overlap_attr_1, overlap_size=2)
         assert_equal(len(C),  0)
         D = self.ob.block_candset(C, l_overlap_attr_2, r_overlap_attr_2)
-        assert_equal(len(D),  0)
         assert_equal(sorted(D.columns), sorted(C.columns))
         assert_equal(mg.get_key(C), '_id')
         assert_equal(mg.get_property(D, 'fk_ltable'), mg.get_property(C, 'fk_ltable'))
         assert_equal(mg.get_property(D, 'fk_rtable'), mg.get_property(C, 'fk_rtable'))
+        assert_equal(len(D),  0)
 
     def test_ob_block_candset_empty_output(self):
         C = self.ob.block_tables(self.A, self.B, l_overlap_attr_2, r_overlap_attr_2)
         D = self.ob.block_candset(C, l_overlap_attr_1, r_overlap_attr_1, overlap_size=2)
-        assert_equal(len(D),  0)
         assert_equal(sorted(D.columns), sorted(C.columns))
         assert_equal(mg.get_key(C), '_id')
         assert_equal(mg.get_property(D, 'fk_ltable'), mg.get_property(C, 'fk_ltable'))
         assert_equal(mg.get_property(D, 'fk_rtable'), mg.get_property(C, 'fk_rtable'))
-    """
+        assert_equal(len(D),  0)
+
     def test_ob_block_tuples(self):
         assert_equal(self.ob.block_tuples(self.A.ix[1], self.B.ix[2], l_overlap_attr_1,
                                      r_overlap_attr_1), False)
         assert_equal(self.ob.block_tuples(self.A.ix[2], self.B.ix[2], l_overlap_attr_1,
                                      r_overlap_attr_1), True)
-    """
