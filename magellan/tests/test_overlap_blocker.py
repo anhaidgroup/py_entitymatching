@@ -31,6 +31,10 @@ class OverlapBlockerTestCases(unittest.TestCase):
         self.B = mg.read_csv_metadata(path_for_B)
         mg.set_key(self.B, r_key)
         self.ob = mg.OverlapBlocker()
+        # overlap on [r,l]_overlap_attr_1 with overlap_size=1
+        self.expected_ids_1 = [('a2', 'b3'), ('a2', 'b6'), ('a3', 'b2'), ('a5', 'b5')]
+        # overlap on [r,l]_overlap_attr_2 with overlap_size=4
+        expected_ids_2 = [('a2', 'b3'), ('a3', 'b2')]
         
     def tearDown(self):
         del self.A
@@ -181,10 +185,9 @@ class OverlapBlockerTestCases(unittest.TestCase):
         assert_equal(mg.get_key(C), '_id')
         assert_equal(mg.get_property(C, 'fk_ltable'), l_output_prefix + l_key)
         assert_equal(mg.get_property(C, 'fk_rtable'), r_output_prefix + r_key)
-        assert_equal(len(C), 4)
-        #k1 = pd.np.array(C[l_output_prefix + l_overlap_attr_1])
-        #k2 = pd.np.array(C[r_output_prefix + r_overlap_attr_1])
-        #assert_equal(all(k1 == k2), True)
+        C_ids = C[[l_output_prefix + l_key, r_output_prefix + r_key]]
+        actual_ids = sorted(list(C_ids.set_index([l_output_prefix + l_key, r_output_prefix + r_key]).index.values))
+        assert_equal(cmp(self.expected_ids_1, actual_ids), 0)
 
     def test_ob_block_tables_njobs_2(self):
         C = self.ob.block_tables(self.A, self.B, l_overlap_attr_1, r_overlap_attr_1,
@@ -198,10 +201,9 @@ class OverlapBlockerTestCases(unittest.TestCase):
         assert_equal(mg.get_key(C), '_id')
         assert_equal(mg.get_property(C, 'fk_ltable'), l_output_prefix + l_key)
         assert_equal(mg.get_property(C, 'fk_rtable'), r_output_prefix + r_key)
-        assert_equal(len(C), 4)
-        #k1 = pd.np.array(C[l_output_prefix + l_overlap_attr_1])
-        #k2 = pd.np.array(C[r_output_prefix + r_overlap_attr_1])
-        #assert_equal(all(k1 == k2), True)
+        C_ids = C[[l_output_prefix + l_key, r_output_prefix + r_key]]
+        actual_ids = sorted(C_ids.set_index([l_output_prefix + l_key, r_output_prefix + r_key]).index.tolist())
+        assert_equal(cmp(self.expected_ids_1, actual_ids), 0)
 
     def test_ob_block_tables_njobs_all(self):
         C = self.ob.block_tables(self.A, self.B, l_overlap_attr_1, r_overlap_attr_1,
@@ -215,10 +217,9 @@ class OverlapBlockerTestCases(unittest.TestCase):
         assert_equal(mg.get_key(C), '_id')
         assert_equal(mg.get_property(C, 'fk_ltable'), l_output_prefix + l_key)
         assert_equal(mg.get_property(C, 'fk_rtable'), r_output_prefix + r_key)
-        assert_equal(len(C), 4)
-        #k1 = pd.np.array(C[l_output_prefix + l_overlap_attr_1])
-        #k2 = pd.np.array(C[r_output_prefix + r_overlap_attr_1])
-        #assert_equal(all(k1 == k2), True)
+        C_ids = C[[l_output_prefix + l_key, r_output_prefix + r_key]]
+        actual_ids = sorted(list(C_ids.set_index([l_output_prefix + l_key, r_output_prefix + r_key]).index.values))
+        assert_equal(cmp(self.expected_ids_1, actual_ids), 0)
 
     def test_ob_block_tables_wi_no_output_tuples(self):
         C = self.ob.block_tables(self.A, self.B, l_overlap_attr_1,
