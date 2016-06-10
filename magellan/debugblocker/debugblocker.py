@@ -4,14 +4,9 @@ import logging
 import numpy
 from operator import attrgetter
 import pandas as pd
-#import six
-#import sys
-#sys.path.append('/Users/lihan/Documents/Magellan/magellan/')
 
 import magellan as mg
 import magellan.catalog.catalog_manager as cm
-from magellan.utils.catalog_helper import log_info, get_name_for_key, add_key_column
-from magellan.utils.generic_helper import rem_nan
 
 logger = logging.getLogger(__name__)
 
@@ -30,8 +25,8 @@ def debug_blocker(ltable, rtable, candidate_set, output_size=200,
         raise AssertionError('Error: rtable is empty!')
     if output_size <= 0:
         raise AssertionError('The input parameter: \'output_size\''
-                            ' is less than or equal to 0. Nothing needs'
-                            ' to be done!')
+                             ' is less than or equal to 0. Nothing needs'
+                             ' to be done!')
 
     # Get metadata
     l_key, r_key = cm.get_keys_for_ltable_rtable(ltable, rtable, logger, verbose)
@@ -61,11 +56,6 @@ def debug_blocker(ltable, rtable, candidate_set, output_size=200,
         ltable, rtable, l_key, r_key, corres_list)
 
     feature_list = select_features(ltable_filtered, rtable_filtered, l_key, r_key)
-    #if len(feature_list) == 1:
-    #    raise AssertionError('\nError: the selected field list is empty,'
-    #                        ' nothing could be done! Please check if all'
-    #                        ' table fields are numeric types.')
-    # print 'selected_fields:', ltable_filtered.columns[feature_list]
 
     lrecord_id_to_index_map = get_record_id_to_index_map(ltable_filtered, l_key)
     rrecord_id_to_index_map = get_record_id_to_index_map(rtable_filtered, r_key)
@@ -225,8 +215,6 @@ def topk_sim_join_impl(lrecord_list, rrecord_list, prefix_events,
                         hq.heappush(topk_heap, (sim, rec_idx, r_rec_idx))
 
                     total_compared_pairs += 1
-                    # if total_compared_pairs % 100000 == 0:
-                    #     print total_compared_pairs, topk_heap[0], prefix_events[0]
                     compared_set.add(pair)
 
             if token not in l_inverted_index:
@@ -250,8 +238,6 @@ def topk_sim_join_impl(lrecord_list, rrecord_list, prefix_events,
                         hq.heappush(topk_heap, (sim, l_rec_idx, rec_idx))
 
                     total_compared_pairs += 1
-                    # if total_compared_pairs % 100000 == 0:
-                    #     print total_compared_pairs, topk_heap[0], prefix_events[0]
                     compared_set.add(pair)
             if token not in r_inverted_index:
                 r_inverted_index[token] = set()
@@ -278,7 +264,7 @@ def check_input_field_correspondence_list(ltable, rtable, field_corres_list):
     for pair in field_corres_list:
         if type(pair) != tuple or len(pair) != 2:
             raise AssertionError('Error in checking user input field'
-                                ' correspondence: the input field pairs'
+                                 ' correspondence: the input field pairs'
                                  'are not in the required tuple format!')
 
     given_ltable_fields = [field[0] for field in field_corres_list]
@@ -286,14 +272,14 @@ def check_input_field_correspondence_list(ltable, rtable, field_corres_list):
     for given_field in given_ltable_fields:
         if given_field not in true_ltable_fields:
             raise AssertionError('Error in checking user input field'
-                                ' correspondence: the field \'%s\' is'
-                                ' not in the ltable!' %(given_field))
+                                 ' correspondence: the field \'%s\' is'
+                                 ' not in the ltable!' % given_field)
     for given_field in given_rtable_fields:
         if given_field not in true_rtable_fields:
             raise AssertionError('Error in checking user input field'
-                                ' correspondence:'
-                                ' the field \'%s\' is not in the'
-                                ' rtable!' %(given_field))
+                                 ' correspondence:'
+                                 ' the field \'%s\' is not in the'
+                                 ' rtable!' % given_field)
     return
 
 
@@ -336,15 +322,12 @@ def filter_corres_list(ltable, rtable, ltable_key, rtable_key,
                              ' list, or check if each field is of numeric'
                              ' type!')
 
+
 def get_filtered_table(ltable, rtable, lkey, rkey, corres_list):
     ltable_cols = [col_pair[0] for col_pair in corres_list]
     rtable_cols = [col_pair[1] for col_pair in corres_list]
     lfiltered_table = ltable[ltable_cols]
     rfiltered_table = rtable[rtable_cols]
-    #if lkey not in lfiltered_table.columns:
-    #    raise AssertionError('lkey not in the filtered table:', lkey)
-    #if rkey not in rfiltered_table.columns:
-    #    raise AssertionError('rkey not in the filtered table:', rkey)
     mg.set_key(lfiltered_table, lkey)
     mg.set_key(rfiltered_table, rkey)
     return lfiltered_table, rfiltered_table
@@ -362,37 +345,20 @@ def select_features(ltable, rtable, lkey, rkey):
     lcolumns = list(ltable.columns)
     rcolumns = list(rtable.columns)
     lkey_index = -1
-    rkey_index = -1
     if len(lcolumns) != len(rcolumns):
         raise AssertionError('Error: FILTERED ltable and FILTERED rtable'
-                            ' have different number of fields!')
+                             ' have different number of fields!')
     for i in range(len(lcolumns)):
         if lkey == lcolumns[i]:
             lkey_index = i
-    #if lkey_index < 0:
-    #    raise AssertionError('Error: cannot find key in the FILTERED'
-    #                        ' ltable schema!')
-    for i in range(len(rcolumns)):
-        if rkey == rcolumns[i]:
-            rkey_index = i
-    #if rkey_index < 0:
-    #    raise AssertionError('Error: cannot find key in the FILTERED'
-    #                        ' rtable schema!')
 
     lweight = get_feature_weight(ltable)
-    #logging.info('\nFinish calculate ltable feature weights.')
     rweight = get_feature_weight(rtable)
-    #logging.info('\nFinish calculate rtable feature weights.')
-    #if len(lweight) != len(rweight):
-    #    raise AssertionError('Error: ltable and rtable don\'t have the'
-    #                        ' same schema')
 
     Rank = namedtuple('Rank', ['index', 'weight'])
     rank_list = []
     for i in range(len(lweight)):
         rank_list.append(Rank(i, lweight[i] * rweight[i]))
-    # if lkey_index != rkey_index:
-    #     raise AssertionError('lkey and rkey doesn\'t have the same index')
     rank_list.pop(lkey_index)
 
     rank_list = sorted(rank_list, key=attrgetter('weight'), reverse=True)
@@ -416,7 +382,7 @@ def get_feature_weight(table):
     weight = []
     for col in table.columns:
         value_set = set()
-        non_empty_count = 0;
+        non_empty_count = 0
         col_values = table[col]
         for value in col_values:
             if not pd.isnull(value) and value != '':
@@ -434,7 +400,6 @@ def get_record_id_to_index_map(table, table_key):
     record_id_to_index = {}
     id_col = list(table[table_key])
     for i in range(len(id_col)):
-        # id_col[i] = str(id_col[i])
         if id_col[i] in record_id_to_index:
             raise AssertionError('Duplicate keys found:', id_col[i])
         record_id_to_index[id_col[i]] = i
@@ -488,16 +453,15 @@ def replace_nan_to_empty(field):
         return str('{0:.0f}'.format(field))
     else:
         return field
-        #return str(field)
-
+        
 
 def index_candidate_set(candidate_set, lrecord_id_to_index_map, rrecord_id_to_index_map, verbose):
     new_formatted_candidate_set = set()
-    # # get metadata
+    # get metadata
     key, fk_ltable, fk_rtable, ltable, rtable, l_key, r_key =\
         cm.get_metadata_for_candset(candidate_set, logger, verbose)
 
-    # # validate metadata
+    # validate metadata
     cm.validate_metadata_for_candset(candidate_set, key, fk_ltable, fk_rtable, ltable, rtable, l_key, r_key,
                                      logger, verbose)
 
@@ -508,26 +472,6 @@ def index_candidate_set(candidate_set, lrecord_id_to_index_map, rrecord_id_to_in
         new_formatted_candidate_set.add((lrecord_id_to_index_map[ltable_key_data[i]],
                                          rrecord_id_to_index_map[rtable_key_data[i]]))
 
-    # pair_list = []
-    # ltable_key_data = list(candidate_set[fk_ltable])
-    # for i in range(len(ltable_key_data)):
-    #     lkey_value = str(ltable_key_data[i])
-    #     if lkey_value not in lrecord_id_to_index_map:
-    #         raise AssertionError('Error: the left key in the candidate'
-    #                              ' set doesn\'t appear in the left'
-    #                              ' table:', lkey_value)
-    #     pair_list.append([lrecord_id_to_index_map[lkey_value]])
-    # rtable_key_data = list(candidate_set[fk_rtable])
-    # for i in range(len(rtable_key_data)):
-    #     rkey_value = str(rtable_key_data[i])
-    #     if rkey_value not in rrecord_id_to_index_map:
-    #         raise AssertionError('Error: the left key in the candidate'
-    #                              ' set doesn\'t appear in the left'
-    #                              ' table: ', rkey_value)
-    #     pair_list[i].append(rrecord_id_to_index_map[rkey_value])
-    # for i in range(len(pair_list)):
-    #     new_formatted_candidate_set.add((pair_list[i][0], pair_list[i][1]))
-
     return new_formatted_candidate_set
 
 
@@ -535,7 +479,7 @@ def build_global_token_order(record_list, order_dict):
     for record in record_list:
         for token in record:
             if token in order_dict:
-                order_dict[token] = order_dict[token] + 1
+                order_dict[token] += 1
             else:
                 order_dict[token] = 1
 
@@ -568,25 +512,3 @@ def generate_prefix_events_impl(record_list, prefix_events, table_indicator):
 
 def calc_threshold(token_index, record_length):
     return 1 - token_index * 1.0 / record_length
-
-
-#if __name__ == "__main__":
-    #ltable = mg.read_csv_metadata('../../datasets/test_datasets/A.csv', key='ID')
-    #rtable = mg.read_csv_metadata('../../datasets/test_datasets/B.csv', key='ID')
-    #cand_set = mg.read_csv_metadata('../../datasets/test_datasets/C.csv',
-    #                                ltable=ltable, rtable=rtable, fk_ltable='ltable_ID',
-    #                                fk_rtable='rtable_ID', key='_id')
-
-    #ltable = mg.read_csv_metadata('../../datasets/CS784/S_hanli/tableA.csv', key='id')
-    #rtable = mg.read_csv_metadata('../../datasets/CS784/S_hanli/tableB.csv', key='id')
-    #cand_set = mg.read_csv_metadata('../../datasets/CS784/S_hanli/tableC_new.csv',
-    #                                ltable=ltable, rtable=rtable, fk_ltable='ltable.id',
-    #                                fk_rtable='rtable.id', key='_id')
-
-    #ltable = mg.read_csv_metadata('../../datasets/CS784/S_shaleen/tableA.csv', key='id')
-    #rtable = mg.read_csv_metadata('../../datasets/CS784/S_shaleen/tableB.csv', key='id')
-    #cand_set = mg.read_csv_metadata('../../datasets/CS784/S_shaleen/tableC_new.csv',
-    #                                ltable=ltable, rtable=rtable, fk_ltable='ltable.id',
-    #                                fk_rtable='rtable.id', key='_id')
-
-    #debug_blocker(ltable, rtable, cand_set)
