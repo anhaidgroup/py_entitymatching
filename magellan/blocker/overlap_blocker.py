@@ -251,10 +251,10 @@ class OverlapBlocker(Blocker):
         if l_val == None and r_val == None:
             return 0
 
-        if not isinstance(l_val, basestring):
+        if not isinstance(l_val, six.string_types):
             l_val = str(l_val)
 
-        if not isinstance(r_val, basestring):
+        if not isinstance(r_val, six.string_types):
             r_val = str(r_val)
 
         l_val_lst = set(self.process_val(l_val, q_val, rem_stop_words))
