@@ -487,7 +487,8 @@ def replace_nan_to_empty(field):
     elif type(field) in [float, numpy.float64, int, numpy.int64]:
         return str('{0:.0f}'.format(field))
     else:
-        return str(field)
+        return field
+        #return str(field)
 
 
 def index_candidate_set(candidate_set, lrecord_id_to_index_map, rrecord_id_to_index_map, verbose):
