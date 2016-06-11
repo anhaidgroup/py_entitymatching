@@ -133,7 +133,7 @@ def to_csv_metadata(data_frame, file_path, **kwargs):
     Write the DataFrame contents to a CSV file, and its metadata to a
     separate file (with the same file name but a different extension).
 
-    This functions writes the DataFrame contents to a CSV file as given in
+    This function writes the DataFrame contents to a CSV file as given in
     the file path. This function uses 'to_csv' method from pandas to write
     the CSV file. The metadata contents are written to the same directory
     derived from the file path but with the different extension. This
