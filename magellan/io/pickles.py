@@ -164,7 +164,7 @@ def load_table(file_path, metadata_ext='.pklmetadata'):
     df = load_object(file_path)
 
     # load metadata from file path
-    if _is_metadata_file_present(file_path, ext=metadata_ext):
+    if _is_metadata_file_present(file_path, extension=metadata_ext):
         file_name, file_ext = os.path.splitext(file_path)
         metadata_filename = file_name + metadata_ext
         metadata_dict = load_object(metadata_filename)
