@@ -248,7 +248,7 @@ def save_table(data_frame, file_path, metadata_ext='.pklmetadata'):
     return True
 
 
-# noinspection PyProtectedMember,PyProtectedMember
+# noinspection PyProtectedMember
 def load_table(file_path, metadata_ext='.pklmetadata'):
     """
     Load DataFrame from file, along with its metadata (if present).
