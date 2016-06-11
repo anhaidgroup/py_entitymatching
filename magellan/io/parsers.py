@@ -1,5 +1,5 @@
 # coding=utf-8
-"""File containing functions to read and write CSV files"""
+"""This module defines functions to read and write CSV files"""
 import collections
 import logging
 import os
@@ -56,14 +56,6 @@ def read_csv_metadata(file_path, **kwargs):
         AssertionError: If the input file path is not of type string.
         AssertionError: If a file does not exist in the given file path.
 
-    Examples:
-    >>> import magellan as mg
-    >>> import os
-    >>> file_path = os.sep.join[mg.get_install_path(), 'datasets']
-    >>> A = mg.read_csv_metadata(file_path)# A.metadata is present in file_path
-    >>> mg.get_key(A)
-    >>> A = mg.read_csv_metadata(file_path, key='ID')#explictly set the metadata
-    >>> mg.get_key(A)
     """
     # Validate the input parameters.
 
@@ -154,13 +146,6 @@ def to_csv_metadata(data_frame, file_path, **kwargs):
     Returns:
         A boolean value of True is returned if the files were written
         successfully.
-
-    Examples:
-        >>> import magellan as mg
-        >>> A = mg.read_csv_metadata('A.csv')
-        >>> mg.to_csv_metadata(A, 'updated.csv', metadata_extn='mdata')
-        # writes the contents of DataFrame A to updated.csv and the metadata
-        to A.mdata.
 
     Raises:
         AssertionError: If the input DataFrame is not of type pandas DataFrame.
