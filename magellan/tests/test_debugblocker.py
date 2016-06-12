@@ -527,8 +527,7 @@ class DebugblockerTestCases(unittest.TestCase):
         A = read_csv_metadata(path_a, key='ID')
         B = read_csv_metadata(path_b, key='ID')
         A_key = mg.get_key(A)
-        B_key = mg.get_key(B)
-        actual_selected_features = db.select_features(A, B, A_key, B_key)
+        actual_selected_features = db.select_features(A, B, A_key)
         expected_selected_features = [1, 3, 4]
         self.assertEqual(actual_selected_features, expected_selected_features)
 
@@ -540,7 +539,7 @@ class DebugblockerTestCases(unittest.TestCase):
         corres_list = [(0, 0), (1, 1), (4, 4)]
         A_filtered, B_filtered = db.get_filtered_table(A, B, A_key, B_key, corres_list)
         actual_selected_features = db.select_features(
-            A_filtered, B_filtered, A_key, B_key)
+            A_filtered, B_filtered, A_key)
         expected_selected_features = [1, 2]
         self.assertEqual(actual_selected_features, expected_selected_features)
 
@@ -552,7 +551,7 @@ class DebugblockerTestCases(unittest.TestCase):
         corres_list = [(0, 0)]
         A_filtered, B_filtered = db.get_filtered_table(A, B, A_key, B_key, corres_list)
         actual_selected_features = db.select_features(
-            A_filtered, B_filtered, A_key, B_key)
+            A_filtered, B_filtered, A_key)
         expected_selected_features = []
         self.assertEqual(actual_selected_features, expected_selected_features)
 
@@ -561,28 +560,26 @@ class DebugblockerTestCases(unittest.TestCase):
         A = read_csv_metadata(path_a, key='ID')
         B = read_csv_metadata(path_b, key='ID')
         A_key = mg.get_key(A)
-        B_key = mg.get_key(B)
         A_field_set = [0, 1, 2]
         B_field_set = [0, 1, 2, 3]
 
         A_filtered = A[A_field_set]
         B_filtered = B[B_field_set]
         db.select_features(
-            A_filtered, B_filtered, A_key, B_key)
+            A_filtered, B_filtered, A_key)
 
     @raises(AssertionError)
     def test_select_features_5(self):
         A = read_csv_metadata(path_a, key='ID')
         B = read_csv_metadata(path_b, key='ID')
         A_key = mg.get_key(A)
-        B_key = mg.get_key(B)
         A_field_set = [0, 1, 2, 3]
         B_field_set = [0, 1, 2]
 
         A_filtered = A[A_field_set]
         B_filtered = B[B_field_set]
         db.select_features(
-            A_filtered, B_filtered, A_key, B_key)
+            A_filtered, B_filtered, A_key)
 
     def test_topk_sim_join_1(self):
         ltable_path = os.sep.join([debugblocker_datasets_path, 'test_topk_sim_join_1_A.txt'])

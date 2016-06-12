@@ -14,21 +14,23 @@ logger = logging.getLogger(__name__)
 def debug_blocker(ltable, rtable, candidate_set, output_size=200,
                   attr_corres=None, verbose=True):
 
-    # Check input types
+    # Check input types.
     validate_types(ltable, rtable, candidate_set, output_size,
                    attr_corres, verbose)
 
-    # basic checks.
+    # Check table size.
     if len(ltable) == 0:
         raise AssertionError('Error: ltable is empty!')
     if len(rtable) == 0:
         raise AssertionError('Error: rtable is empty!')
+
+    # Check the value of output size.
     if output_size <= 0:
         raise AssertionError('The input parameter: \'output_size\''
                              ' is less than or equal to 0. Nothing needs'
                              ' to be done!')
 
-    # Get metadata
+    # Get table metadata.
     l_key, r_key = cm.get_keys_for_ltable_rtable(ltable, rtable, logger, verbose)
 
     # Validate metadata
@@ -55,29 +57,44 @@ def debug_blocker(ltable, rtable, candidate_set, output_size=200,
     ltable_filtered, rtable_filtered = get_filtered_table(
         ltable, rtable, l_key, r_key, corres_list)
 
-    feature_list = select_features(ltable_filtered, rtable_filtered, l_key, r_key)
+    # Select a subset of fields with high scores.
+    feature_list = select_features(ltable_filtered, rtable_filtered, l_key)
 
+    # Map the record key value to its index in the table.
     lrecord_id_to_index_map = get_record_id_to_index_map(ltable_filtered, l_key)
     rrecord_id_to_index_map = get_record_id_to_index_map(rtable_filtered, r_key)
+
+    # Build the tokenized record list delimited by a white space on the
+    # selected fields.
     lrecord_list = get_tokenized_table(ltable_filtered, l_key, feature_list)
     rrecord_list = get_tokenized_table(rtable_filtered, r_key, feature_list)
 
+    # Reformat the candidate set from a dataframe to a list of record index
+    # tuple pair.
     new_formatted_candidate_set = index_candidate_set(
          candidate_set, lrecord_id_to_index_map, rrecord_id_to_index_map, verbose)
 
+    # Build the token order according to token's frequency. To run a
+    # prefix filtering based similarity join algorithm, we first need
+    # the global token order.
     order_dict = {}
     build_global_token_order(lrecord_list, order_dict)
     build_global_token_order(rrecord_list, order_dict)
 
+    # Sort the tokens in each record by the global order.
     sort_record_tokens_by_global_order(lrecord_list, order_dict)
     sort_record_tokens_by_global_order(rrecord_list, order_dict)
 
+    # Run the topk similarity join.
     topk_heap = topk_sim_join(
         lrecord_list, rrecord_list, new_formatted_candidate_set, output_size)
 
+    # Assemble the topk record list to a dataframe.
     ret_dataframe = assemble_topk_table(topk_heap, ltable_filtered, rtable_filtered)
     return ret_dataframe
 
+
+# Validate the types of input parameters.
 def validate_types(ltable, rtable, candidate_set, output_size,
                    attr_corres, verbose):
     if not isinstance(ltable, pd.DataFrame):
@@ -115,6 +132,7 @@ def validate_types(ltable, rtable, candidate_set, output_size,
         raise AssertionError('Parameter verbose is not of type bool')
 
 
+# Assemble the topk heap to a dataframe.
 def assemble_topk_table(topk_heap, ltable, rtable, ret_key='_id',
                         l_output_prefix='ltable_', r_output_prefix='rtable_'):
     topk_heap.sort(key=lambda tup: tup[0], reverse = True)
@@ -173,7 +191,9 @@ def assemble_topk_table(topk_heap, ltable, rtable, ret_key='_id',
     return data_frame
 
 
+# Topk similarity join wrapper.
 def topk_sim_join(lrecord_list, rrecord_list, cand_set, output_size):
+    # Build prefix events.
     prefix_events = generate_prefix_events(lrecord_list, rrecord_list)
     topk_heap = topk_sim_join_impl(lrecord_list, rrecord_list,
                                    prefix_events, cand_set, output_size)
@@ -181,6 +201,8 @@ def topk_sim_join(lrecord_list, rrecord_list, cand_set, output_size):
     return topk_heap
 
 
+# Implement topk similarity join. Refer to "top-k set similarity join"
+# by Xiao et al. for details.
 def topk_sim_join_impl(lrecord_list, rrecord_list, prefix_events,
                        cand_set, output_size):
     total_compared_pairs = 0
@@ -203,8 +225,10 @@ def topk_sim_join_impl(lrecord_list, rrecord_list, prefix_events,
                 r_records = r_inverted_index[token]
                 for r_rec_idx in r_records:
                     pair = (rec_idx, r_rec_idx)
+                    # Skip if the pair is in the candidate set.
                     if pair in cand_set:
                         continue
+                    # Skip if the pair has been compared.
                     if pair in compared_set:
                         continue
                     sim = jaccard_sim(
@@ -217,6 +241,7 @@ def topk_sim_join_impl(lrecord_list, rrecord_list, prefix_events,
                     total_compared_pairs += 1
                     compared_set.add(pair)
 
+            # Update the inverted index.
             if token not in l_inverted_index:
                 l_inverted_index[token] = set()
             l_inverted_index[token].add(rec_idx)
@@ -226,8 +251,10 @@ def topk_sim_join_impl(lrecord_list, rrecord_list, prefix_events,
                 l_records = l_inverted_index[token]
                 for l_rec_idx in l_records:
                     pair = (l_rec_idx, rec_idx)
+                    # Skip if the pair is in the candidate set.
                     if pair in cand_set:
                         continue
+                    # Skip if the pair has been compared.
                     if pair in compared_set:
                         continue
                     sim = jaccard_sim(
@@ -239,6 +266,8 @@ def topk_sim_join_impl(lrecord_list, rrecord_list, prefix_events,
 
                     total_compared_pairs += 1
                     compared_set.add(pair)
+
+            # Update the inverted index.
             if token not in r_inverted_index:
                 r_inverted_index[token] = set()
             r_inverted_index[token].add(rec_idx)
@@ -246,6 +275,7 @@ def topk_sim_join_impl(lrecord_list, rrecord_list, prefix_events,
     return topk_heap
 
 
+# Calculate the token-based Jaccard similarity of two string sets.
 def jaccard_sim(l_token_set, r_token_set):
     l_len = len(l_token_set)
     r_len = len(r_token_set)
@@ -256,12 +286,14 @@ def jaccard_sim(l_token_set, r_token_set):
     return intersect_size * 1.0 / (l_len + r_len - intersect_size)
 
 
+# Check the input field correspondence list.
 def check_input_field_correspondence_list(ltable, rtable, field_corres_list):
     if field_corres_list is None:
         return
     true_ltable_fields = list(ltable.columns)
     true_rtable_fields = list(rtable.columns)
     for pair in field_corres_list:
+        # Raise an error if the pair in not a tuple or the length is not two.
         if type(pair) != tuple or len(pair) != 2:
             raise AssertionError('Error in checking user input field'
                                  ' correspondence: the input field pairs'
@@ -269,6 +301,9 @@ def check_input_field_correspondence_list(ltable, rtable, field_corres_list):
 
     given_ltable_fields = [field[0] for field in field_corres_list]
     given_rtable_fields = [field[1] for field in field_corres_list]
+
+    # Raise an error if a field is in the correspondence list but not in
+    # the table schema.
     for given_field in given_ltable_fields:
         if given_field not in true_ltable_fields:
             raise AssertionError('Error in checking user input field'
@@ -283,6 +318,9 @@ def check_input_field_correspondence_list(ltable, rtable, field_corres_list):
     return
 
 
+# Get the field correspondence list. If the input list is empty, call
+# the system builtin function to get the correspondence, or use the
+# user input as the correspondence.
 def get_field_correspondence_list(ltable, rtable, lkey, rkey, attr_corres):
     corres_list = []
     if attr_corres is None or len(attr_corres) == 0:
@@ -295,6 +333,7 @@ def get_field_correspondence_list(ltable, rtable, lkey, rkey, attr_corres):
         for tu in attr_corres:
             corres_list.append(tu)
 
+    # If the key correspondence is not in the list, add it in.
     key_pair = (lkey, rkey)
     if key_pair not in corres_list:
         corres_list.append(key_pair)
@@ -302,6 +341,7 @@ def get_field_correspondence_list(ltable, rtable, lkey, rkey, attr_corres):
     return corres_list
 
 
+# Filter the correspondence list. Remove the fields in numeric types.
 def filter_corres_list(ltable, rtable, ltable_key, rtable_key,
                        ltable_col_dict, rtable_col_dict, corres_list):
     ltable_dtypes = list(ltable.dtypes)
@@ -323,6 +363,8 @@ def filter_corres_list(ltable, rtable, ltable_key, rtable_key,
                              ' type!')
 
 
+# Filter the original input tables according to the correspondence list.
+# The filtered tables will only contain the fields in the correspondence list.
 def get_filtered_table(ltable, rtable, lkey, rkey, corres_list):
     ltable_cols = [col_pair[0] for col_pair in corres_list]
     rtable_cols = [col_pair[1] for col_pair in corres_list]
@@ -333,6 +375,7 @@ def get_filtered_table(ltable, rtable, lkey, rkey, corres_list):
     return lfiltered_table, rfiltered_table
 
 
+# Build the mapping bewteen field name and its index in the schema.
 def build_col_name_index_dict(table):
     col_dict = {}
     col_names = list(table.columns)
@@ -341,7 +384,10 @@ def build_col_name_index_dict(table):
     return col_dict
 
 
-def select_features(ltable, rtable, lkey, rkey):
+# Select the most important fields for similarity join. The importance
+# of a fields is measured by the combination of field value uniqueness
+# and non-emptyness.
+def select_features(ltable, rtable, lkey):
     lcolumns = list(ltable.columns)
     rcolumns = list(rtable.columns)
     lkey_index = -1
@@ -375,6 +421,7 @@ def select_features(ltable, rtable, lkey, rkey):
     return sorted(rank_index_list)
 
 
+# Calculate the importance (weight) for each field in a table.
 def get_feature_weight(table):
     num_records = len(table)
     if num_records == 0:
@@ -392,10 +439,14 @@ def get_feature_weight(table):
         if non_empty_count != 0:
             selectivity = len(value_set) * 1.0 / non_empty_count
         non_empty_ratio = non_empty_count * 1.0 / num_records
+
+        # The field weight is the combination of non-emptyness
+        # and uniqueness.
         weight.append(non_empty_ratio + selectivity)
     return weight
 
 
+# Build the mapping of record key value and its index in the table.
 def get_record_id_to_index_map(table, table_key):
     record_id_to_index = {}
     id_col = list(table[table_key])
@@ -406,6 +457,10 @@ def get_record_id_to_index_map(table, table_key):
     return record_id_to_index
 
 
+# Tokenize a table. First tokenize each table column by a white space,
+# then concatenate the column of each record. The reason for tokenizing
+# columns first is that it's more efficient than iterate each dataframe
+# tuple.
 def get_tokenized_table(table, table_key, feature_list):
     record_list = []
     columns = table.columns[feature_list]
@@ -434,6 +489,7 @@ def get_tokenized_table(table, table_key, feature_list):
     return record_list
 
 
+# Tokenize each table column by white spaces.
 def get_tokenized_column(column):
     column_token_list = []
     for value in list(column):
@@ -446,6 +502,8 @@ def get_tokenized_column(column):
     return column_token_list
 
 
+# Check the value of each field. Replace nan with empty string.
+# Cast floats into integers.
 def replace_nan_to_empty(field):
     if pd.isnull(field):
         return ''
@@ -455,9 +513,13 @@ def replace_nan_to_empty(field):
         return field
         
 
+# Reformat the input candidate set. Since the input format is DataFrame,
+# it's difficult for us to know if a tuple pair is in the candidate
+# set or not. We will use the reformatted candidate set in the topk
+# similarity join.
 def index_candidate_set(candidate_set, lrecord_id_to_index_map, rrecord_id_to_index_map, verbose):
     new_formatted_candidate_set = set()
-    # get metadata
+    # Get metadata
     key, fk_ltable, fk_rtable, ltable, rtable, l_key, r_key =\
         cm.get_metadata_for_candset(candidate_set, logger, verbose)
 
@@ -475,6 +537,7 @@ def index_candidate_set(candidate_set, lrecord_id_to_index_map, rrecord_id_to_in
     return new_formatted_candidate_set
 
 
+# Build the global order of tokens in the table by frequency.
 def build_global_token_order(record_list, order_dict):
     for record in record_list:
         for token in record:
@@ -484,6 +547,7 @@ def build_global_token_order(record_list, order_dict):
                 order_dict[token] = 1
 
 
+# Sort each tokenized record by the global token order.
 def sort_record_tokens_by_global_order(record_list, order_dict):
     for i in range(len(record_list)):
         tmp_record = []
@@ -493,6 +557,8 @@ def sort_record_tokens_by_global_order(record_list, order_dict):
         record_list[i] = sorted(tmp_record, key=lambda x: order_dict[x])
 
 
+# Generate the prefix events of two tables for topk similarity joins.
+# Refer to "top-k set similarity join" by Xiao et al. for details.
 def generate_prefix_events(lrecord_list, rrecord_list):
     prefix_events = []
     generate_prefix_events_impl(lrecord_list, prefix_events, 0)
@@ -501,6 +567,7 @@ def generate_prefix_events(lrecord_list, rrecord_list):
     return prefix_events
 
 
+# Prefix event generation for a table.
 def generate_prefix_events_impl(record_list, prefix_events, table_indicator):
     for i in range(len(record_list)):
         length = len(record_list[i])
@@ -510,5 +577,7 @@ def generate_prefix_events_impl(record_list, prefix_events, table_indicator):
                         (-1.0 * threshold, table_indicator, i, j, record_list[i][j]))
 
 
+# Calculate the corresponding topk similarity join of a token in a record.
+# Refer to "top-k set similarity join" by Xiao et al. for details.
 def calc_threshold(token_index, record_length):
     return 1 - token_index * 1.0 / record_length
