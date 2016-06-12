@@ -31,7 +31,7 @@ def save_object(object_to_save, file_path):
     Args:
         object_to_save (Python object): Python object to save. This can be
             Magellan objects such as blockers, matchers, etc.
-        file_path (str): File path to store the objects.
+        file_path (string): File path to store the objects.
 
     Returns:
         A boolean value of True is returned, if the saving was successful.
@@ -84,7 +84,7 @@ def load_object(file_path):
     blockers, matchers, etc.
 
     Args:
-        file_path (str): File path to load object from.
+        file_path (string): File path to load object from.
 
     Returns:
         A Python object read from the file path.
@@ -133,8 +133,8 @@ def save_table(data_frame, file_path, metadata_ext='.pklmetadata'):
 
     Args:
         data_frame (DataFrame): DataFrame that should be saved
-        file_path (str): File path where the DataFrame must be stored
-        metadata_ext (str): Metadata extension that should be used while
+        file_path (string): File path where the DataFrame must be stored
+        metadata_ext (string): Metadata extension that should be used while
             storing the metadata information. The default value is
             '.pklmetadata'.
 
@@ -260,8 +260,8 @@ def load_table(file_path, metadata_ext='.pklmetadata'):
     the catalog.
 
     Args:
-        file_path (str): File path to load the file from
-        metadata_ext (str): Metadata file extension (with the default value
+        file_path (string): File path to load the file from
+        metadata_ext (string): Metadata file extension (with the default value
             set to '.pklmetadata')
     Returns:
         If the loading is successful, the function returns a pandas DataFrame
