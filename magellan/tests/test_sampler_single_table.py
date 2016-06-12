@@ -29,7 +29,10 @@ class SamplerSingleTableTestCases(unittest.TestCase):
         B = read_csv_metadata(path_b, key='ID')
         C = read_csv_metadata(path_c, ltable=A, rtable=B)
         D = sample_table(C, 10, True)
-        self.assertEqual(cm.get_all_properties(C), cm.get_all_properties(D))
+        self.assertEqual(id(cm.get_ltable(D)), id(cm.get_ltable(C)))
+        self.assertEqual(id(cm.get_rtable(D)), id(cm.get_rtable(C)))
+        self.assertEqual(cm.get_fk_ltable(D), cm.get_fk_ltable(C))
+        self.assertEqual(cm.get_fk_rtable(D), cm.get_fk_rtable(C))
         self.assertEqual(len(D), 10)
 
     @raises(AssertionError)
