@@ -17,7 +17,8 @@ logger = logging.getLogger(__name__)
 def combine_blocker_outputs_via_union(blocker_output_list, l_prefix='ltable_',
                                       r_prefix='rtable_', verbose=False):
     """
-    Combine multiple blocker outputs by unioning their tuple pair ids (foreign
+    Combine multiple blocker outputs by doing an union of their tuple pair ids (
+    foreign
     key ltable, foreign key rtable).
 
     This function combines multiple blocker outputs via union. Specifically,
@@ -31,7 +32,7 @@ def combine_blocker_outputs_via_union(blocker_output_list, l_prefix='ltable_',
     catalog: (1) key,fk_ltable, fk_rtable, ltable, and rtable. Second,
     all the DataFrames must be a result of blocking from the same underlying
     tables. Concretely the ltable and rtable properties must refer to the
-    same DataFrame acros all the input tables. Third, all the input
+    same DataFrame across all the input tables. Third, all the input
     DataFrames must have the same fk_ltable and fk_rtable properties.
     Finally, in each input DataFrame, for the attributes included from the
     ltable or rtable, the attribute names must be prefixed with the given
@@ -151,9 +152,9 @@ def combine_blocker_outputs_via_union(blocker_output_list, l_prefix='ltable_',
     for data_frame in blocker_output_list:
         # Project out the tuple pair ids. A tuple pair id is a fk_ltable,
         # fk_rtable pair
-        proj_b = data_frame[[fk_ltable, fk_rtable]]
+        projected_tuple_pair_ids = data_frame[[fk_ltable, fk_rtable]]
         # Update the list that tracks tuple pair ids
-        tuple_pair_ids.append(proj_b)
+        tuple_pair_ids.append(projected_tuple_pair_ids)
 
         # Get the columns, which should be segregated into the attributes
         # from the ltable and table
@@ -180,6 +181,8 @@ def combine_blocker_outputs_via_union(blocker_output_list, l_prefix='ltable_',
 
     # Deduplicate the DataFrame. Now the returned DataFrame will contain
     # unique tuple pair ids.
+
+    # noinspection PyUnresolvedReferences
     deduplicated_tuple_pair_ids = concatenated_tuple_pair_ids.drop_duplicates()
 
     ch.log_info(logger, 'Deduplicating the tuple pair ids ... DONE', verbose)
@@ -198,14 +201,16 @@ def combine_blocker_outputs_via_union(blocker_output_list, l_prefix='ltable_',
     # attribute values from the input list of DataFrames. This attribute values
     # could be harvested (at the expense of some space) while we iterate the
     # input blocker output list for the first time.
-    consolidated_data_frame = gh._add_output_attributes \
-        (deduplicated_tuple_pair_ids, fk_ltable,
-         fk_rtable,
-         ltable, rtable, l_key, r_key,
-         l_output_attrs, r_output_attrs,
-         l_prefix,
-         r_prefix,
-         validate=False)
+
+    # noinspection PyProtectedMember
+    consolidated_data_frame = gh._add_output_attributes(
+        deduplicated_tuple_pair_ids, fk_ltable,
+        fk_rtable,
+        ltable, rtable, l_key, r_key,
+        l_output_attrs, r_output_attrs,
+        l_prefix,
+        r_prefix,
+        validate=False)
     # Sort the DataFrame ordered by fk_ltable and fk_rtable.
     # The function "sort" will be depreciated in the newer versions of
     # pandas DataFrame, and it will replaced by 'sort_values' function. So we
@@ -295,21 +300,22 @@ def _validate_lr_tables(blocker_output_list):
     return True
 
 
-def _lr_cols(columns_from_blocker_ouput_list, l_output_prefix, r_output_prefix):
+def _lr_cols(columns_from_blocker_output_list, l_output_prefix,
+             r_output_prefix):
     """
     Get the columns to be retrieved from ltable and rtable based on the
     columns that was observed in the input DataFrames.
     """
     # Get the column name based on the l_output_prefix
     l_columns = [_get_col(column, l_output_prefix)
-                 for column in columns_from_blocker_ouput_list]
+                 for column in columns_from_blocker_output_list]
     # Remove the column names that are None. The column names will be
     # typically None if the column does not start with the given prefix
     l_columns = [x for x in l_columns if x is not None]
 
     # Get the column name based on the r_output_prefix
     r_columns = [_get_col(column, r_output_prefix)
-                 for column in columns_from_blocker_ouput_list]
+                 for column in columns_from_blocker_output_list]
 
     # Remove the column names that are None. The column names will be
     # typically None if the column does not start with the given prefix
