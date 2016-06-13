@@ -29,7 +29,7 @@ def label_table(table, label_column_name, verbose=False):
         table (DataFrame): Input DataFrame to be labeled. Specifically,
             a DataFrame containing the metadata of a candidate set (such as
             key, fk_ltable, fk_rtable, ltable, rtable) in the catalog.
-        label_column_name (str): Column name to be given for the labels
+        label_column_name (string): Column name to be given for the labels
             entered by the user.
         verbose (boolean): Flag to indicate whether more detailed information
             about the execution steps should be printed out (default value is
