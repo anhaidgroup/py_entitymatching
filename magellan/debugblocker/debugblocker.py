@@ -121,7 +121,7 @@ def debug_blocker(ltable, rtable, candidate_set, output_size=200,
     # Reformat the candidate set from a dataframe to a list of record index
     # tuple pair.
     new_formatted_candidate_set = index_candidate_set(
-         candidate_set, lrecord_id_to_index_map, rrecord_id_to_index_map, verbose)
+        candidate_set, lrecord_id_to_index_map, rrecord_id_to_index_map, verbose)
 
     # Build the token order according to token's frequency. To run a
     # prefix filtering based similarity join algorithm, we first need
@@ -184,7 +184,7 @@ def validate_types(ltable, rtable, candidate_set, output_size,
 # Assemble the topk heap to a dataframe.
 def assemble_topk_table(topk_heap, ltable, rtable, ret_key='_id',
                         l_output_prefix='ltable_', r_output_prefix='rtable_'):
-    topk_heap.sort(key=lambda tup: tup[0], reverse = True)
+    topk_heap.sort(key=lambda tup: tup[0], reverse=True)
     ret_data_col_name_list = ['_id', 'similarity']
     ltable_col_names = list(ltable.columns)
     rtable_col_names = list(rtable.columns)
@@ -235,7 +235,7 @@ def assemble_topk_table(topk_heap, ltable, rtable, ret_key='_id',
     lkey = mg.get_key(ltable)
     rkey = mg.get_key(rtable)
     cm.set_candset_properties(data_frame, ret_key, l_output_prefix + lkey,
-        r_output_prefix + rkey, ltable, rtable)
+                              r_output_prefix + rkey, ltable, rtable)
 
     return data_frame
 
@@ -560,7 +560,7 @@ def replace_nan_to_empty(field):
         return str('{0:.0f}'.format(field))
     else:
         return field
-        
+
 
 # Reformat the input candidate set. Since the input format is DataFrame,
 # it's difficult for us to know if a tuple pair is in the candidate
@@ -573,7 +573,8 @@ def index_candidate_set(candidate_set, lrecord_id_to_index_map, rrecord_id_to_in
         cm.get_metadata_for_candset(candidate_set, logger, verbose)
 
     # validate metadata
-    cm.validate_metadata_for_candset(candidate_set, key, fk_ltable, fk_rtable, ltable, rtable, l_key, r_key,
+    cm.validate_metadata_for_candset(candidate_set, key, fk_ltable, fk_rtable,
+                                     ltable, rtable, l_key, r_key,
                                      logger, verbose)
 
     ltable_key_data = list(candidate_set[fk_ltable])
