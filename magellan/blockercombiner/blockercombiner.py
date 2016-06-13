@@ -26,165 +26,306 @@ def combine_blocker_outputs_via_union(blocker_output_list, l_prefix='ltable_',
     DataFrame contains the union of tuple pair ids (foreign key ltable,
     foreign key rtable) and other attributes from the input list of DataFrames.
 
+    This function makes some assumptions about the input DataFrames. First,
+    each DataFrame is expected to contain the following metadata in the
+    catalog: (1) key,fk_ltable, fk_rtable, ltable, and rtable. Second,
+    all the DataFrames must be a result of blocking from the same underlying
+    tables. Concretely the ltable and rtable properties must refer to the
+    same DataFrame acros all the input tables. Third, all the input
+    DataFrames must have the same fk_ltable and fk_rtable properties.
+    Finally, in each input DataFrame, for the attributes included from the
+    ltable or rtable, the attribute names must be prefixed with the given
+    l_prefix and r_prefix in the function. As an example, the schema of an
+    input DataFrame may look like this: _id, ltable_ID, rtable_ID,
+    ltable_name, rtable_name
+
+    The input DataFrames may contain different attribute lists and it begs
+    the question how to combine them. Currently Magellan takes an union
+    of attribute names that has prefix l_prefix or r_prefix. across
+    input tables. After taking the union, for each tuple id pair included
+    in output, the attribute values (for union-ed attribute names) are
+    probed from ltable/rtable and included in the output.
+
+    A subtle point to note here is,  if an input DataFrame has a column
+    added by user (say label for some reason), then that column will not
+    be present in the output. The reason is, the same column may not be
+    present in other candidate sets so it is not clear about how to
+    combine them. One possibility is include label in output for all
+    tuple id pairs, but set as NaN for the values not present. Currently
+    magellan does not include such columns and addressing it will be part
+    of future work.
+
     Args:
         blocker_output_list (list of DataFrames): List of DataFrames that
             should be combined. Refer notes section for a detailed
             description of the assumptions made by the function about the
             input list  of blocker outputs.
-        l_prefix (string): Prefix given to the attributes from the ltable.
-        r_prefix (string): Prefix given to the attributes from the rtable.
+        l_prefix (str): Prefix given to the attributes from the ltable.
+        r_prefix (str): Prefix given to the attributes from the rtable.
         verbose (boolean): Flag to indicate whether more detailed information
             about the execution steps should be printed out (default value is
             False).
 
     Returns:
         A new DataFrame with the combined tuple pairs and other attributes from
-        all the blocker lists . Refer notes section , for a detailed
-        discussion on what  attributes are added to the output DataFrame.
-        Further, the metadata for the consolidated DataFrame  with the
-        metadata (in the catalog) derived from the input blocker list.
+        all the blocker lists.
 
     Raises:
         AssertionError: If the l_prefix is not of type string.
         AssertionError: If the r_prefix is not of type string.
-
-
+        AssertionError: If the length of the input DataFrame list if 0.
+        AssertionError: If the input blocker output list is not a list of
+            DataFrames.
+        AssertionError: If the ltables are different across the input list of
+            DataFrames.
+        AssertionError: If the rtables are different across the input list of
+            DataFrames.
+        AssertionError: If the fk_ltable values are different across the
+            input list of DataFrames.
+        AssertionError: If the fk_rtable values are different across the
+            input list of DataFrames.
     """
 
-    # validate inputs
+    # validate input parameters
+
+    # The l_prefix is expected to be of type string
     if not isinstance(l_prefix, six.string_types):
         logger.error('l_prefix is not of type string')
         raise AssertionError('l_prefix is not of type string')
 
+    # The r_prefix is expected to be of type string
     if not isinstance(r_prefix, six.string_types):
         logger.error('r_prefix is not of type string')
         raise AssertionError('r_prefix is not of type string')
 
+    # We cannot combine empty DataFrame list
+    if not len(blocker_output_list) > 0:
+        logger.error('There no DataFrames to combine')
+        raise AssertionError('There are no DataFrames to combine')
+
+    # Validate the assumptions about the input tables.
+    # # 1) All the input object must be DataFrames
+    # # 2) All the input DataFrames must have the metadata as that of a
+    # candidate set
+    # # 3) All the input DataFrames must have the same fk_ltable and fk_rtable
     _validate_lr_tables(blocker_output_list)
 
-    ltable, rtable = cm.get_property(blocker_output_list[0], 'ltable'), \
-                     cm.get_property(blocker_output_list[0], 'rtable')
+    # # Get the ltable and rtable. We take it from the first DataFrame as all
+    #  the DataFrames contain the same ltables and rtables
+    ltable = cm.get_ltable(blocker_output_list[0])
+    rtable = cm.get_rtable(blocker_output_list[0])
 
-    fk_ltable, fk_rtable = cm.get_property(blocker_output_list[0], 'fk_ltable'), \
-                           cm.get_property(blocker_output_list[0], 'fk_rtable')
+    # # Get the fk_ltable and fk_rtable. We take it from the first DataFrame as
+    #  all the DataFrames contain the same ltables and rtables
+    fk_ltable = cm.get_fk_ltable(blocker_output_list[0])
+    fk_rtable = cm.get_fk_rtable(blocker_output_list[0])
 
-    l_key, r_key = cm.get_key(ltable), cm.get_key(rtable)
+    # Retrieve the keys for the ltable and rtables.
+    l_key = cm.get_key(ltable)
+    r_key = cm.get_key(rtable)
 
+    # Check if the fk_ltable is starting with the given prefix, if not its
+    # not an error. Just raise a warning.
     if fk_ltable.startswith(l_prefix) is False:
         logger.warning(
-            'Foreign key for ltable is not starting with the given prefix')
+            'Foreign key for ltable is not starting with the given prefix ('
+            '%s)', l_prefix)
 
+    # Check if the fk_rtable is starting with the given prefix, if not its
+    # not an error. Just raise a warning.
     if fk_rtable.startswith(r_prefix) is False:
         logger.warning(
-            'Foreign key for rtable is not starting with the given prefix')
+            'Foreign key for rtable is not starting with the given prefix ('
+            '%s)', r_prefix)
 
-    # combine the ids
-    proj_output_list = []
+    # Initialize lists
+    # # keep track of projected tuple pair ids
+    tuple_pair_ids = []
+    # # keep track of output attributes from the left table
     l_output_attrs = []
+    # # keep track of output attributes from the right table
     r_output_attrs = []
 
-    for b in blocker_output_list:
-        proj_b = b[[fk_ltable, fk_rtable]]
-        proj_output_list.append(proj_b)
+    # for each DataFrame in the given list, project out tuple pair ids, get the
+    #  attributes from the ltable and rtable
+    for data_frame in blocker_output_list:
+        # Project out the tuple pair ids. A tuple pair id is a fk_ltable,
+        # fk_rtable pair
+        proj_b = data_frame[[fk_ltable, fk_rtable]]
+        # Update the list that tracks tuple pair ids
+        tuple_pair_ids.append(proj_b)
+
+        # Get the columns, which should be segregated into the attributes
+        # from the ltable and table
         col_set = (
-            gh.list_diff(list(b.columns),
-                         [fk_ltable, fk_rtable, cm.get_key(b)]))
+            gh.list_diff(list(data_frame.columns),
+                         [fk_ltable, fk_rtable, cm.get_key(data_frame)]))
+
+        # Segregate the columns as attributes from the ltable and rtable
         l_attrs, r_attrs = _lr_cols(col_set, l_prefix, r_prefix)
+
+        # Update the l_output_attrs, r_output_attrs
         l_output_attrs.extend(l_attrs)
+        # the reason we use extend because l_attrs a list
         r_output_attrs.extend(r_attrs)
 
-    ch.log_info(logger, 'Concatenating the output list ...', verbose)
-    concat_output_projs = pd.concat(proj_output_list)
-    ch.log_info(logger, 'Concatenating the output list ... DONE', verbose)
+    ch.log_info(logger, 'Concatenating the tuple pair ids across given '
+                        'blockers ...', verbose)
 
-    ch.log_info(logger, 'Deduplicating the output list ...', verbose)
-    deduplicated_candset = concat_output_projs.drop_duplicates()
-    ch.log_info(logger, 'Deduplicating the output list ... DONE', verbose)
+    # concatenate the tuple pair ids from the list of input DataFrames
+    concatenated_tuple_pair_ids = pd.concat(tuple_pair_ids)
 
-    # construct output table
-    l_output_attrs, r_output_attrs = gh.list_drop_duplicates(
-        l_output_attrs), gh.list_drop_duplicates(r_output_attrs)
-    deduplicated_candset.reset_index(inplace=True, drop=True)
-    candset = gh._add_output_attributes(deduplicated_candset, fk_ltable,
-                                        fk_rtable,
-                                        ltable, rtable, l_key, r_key,
-                                        l_output_attrs, r_output_attrs,
-                                        l_prefix,
-                                        r_prefix,
-                                        validate=False)
+    ch.log_info(logger, 'Concatenating the tuple pair ids ... DONE', verbose)
+    ch.log_info(logger, 'Deduplicating the tuple pair ids ...', verbose)
 
-    # update catalog
+    # Deduplicate the DataFrame. Now the returned DataFrame will contain
+    # unique tuple pair ids.
+    deduplicated_tuple_pair_ids = concatenated_tuple_pair_ids.drop_duplicates()
 
-    # candset.sort_values([fk_ltable, fk_rtable], inplace=True) # this seems to fail in py 3.3
-    try:  # check if sort_values is defined
-        candset.sort_values([fk_ltable, fk_rtable],
-                            inplace=True)  # this seems to fail in py 3.3
-        # Method exists, and was used.
+    ch.log_info(logger, 'Deduplicating the tuple pair ids ... DONE', verbose)
+
+    # Construct output table
+    # # Get unique list of attributes across different tables
+    l_output_attrs = gh.list_drop_duplicates(l_output_attrs)
+    r_output_attrs = gh.list_drop_duplicates(r_output_attrs)
+
+    # Reset the index that might have lingered from concatenation.
+    deduplicated_tuple_pair_ids.reset_index(inplace=True, drop=True)
+
+    # Add the output attribtues from the ltable and rtable.
+    # NOTE: This approach may be inefficient as it probes the ltable, rtable
+    # to get the attribute values. A better way would be to fill the
+    # attribute values from the input list of DataFrames. This attribute values
+    # could be harvested (at the expense of some space) while we iterate the
+    # input blocker output list for the first time.
+    consolidated_data_frame = gh._add_output_attributes \
+        (deduplicated_tuple_pair_ids, fk_ltable,
+         fk_rtable,
+         ltable, rtable, l_key, r_key,
+         l_output_attrs, r_output_attrs,
+         l_prefix,
+         r_prefix,
+         validate=False)
+    # Sort the DataFrame ordered by fk_ltable and fk_rtable.
+    # The function "sort" will be depreciated in the newer versions of
+    # pandas DataFrame, and it will replaced by 'sort_values' function. So we
+    # will first try to use sort_values if this fails we will use sort.
+    try:
+        consolidated_data_frame.sort_values([fk_ltable, fk_rtable],
+                                            inplace=True)
     except AttributeError:
-        candset.sort([fk_ltable, fk_rtable], inplace=True)
+        consolidated_data_frame.sort([fk_ltable, fk_rtable], inplace=True)
 
-    key = ch.get_name_for_key(candset.columns)
-    candset = ch.add_key_column(candset, key)
-    candset.reset_index(inplace=True, drop=True)
-    cm.set_candset_properties(candset, key, fk_ltable, fk_rtable, ltable,
+    # update the catalog for the consolidated DataFrame
+    # First get a column name for the key
+    key = ch.get_name_for_key(consolidated_data_frame.columns)
+    # Second, add the column name as the key
+    consolidated_data_frame = ch.add_key_column(consolidated_data_frame, key)
+    # Third, reset the index to remove any out of order index  values from
+    # the sort.
+    consolidated_data_frame.reset_index(inplace=True, drop=True)
+    # Finally, set the properties for the consolidated DataFrame in the catalog
+    cm.set_candset_properties(consolidated_data_frame, key, fk_ltable,
+                              fk_rtable, ltable,
                               rtable)
 
-    # return candidate set
-    return candset
+    # Return the consolidated DataFrame
+    return consolidated_data_frame
 
 
 def _validate_lr_tables(blocker_output_list):
-    # validate blocker output list
-    idx = 0
-    for c in blocker_output_list:
-        if not isinstance(c, pd.DataFrame):
+    """
+    Validate the input blocker output list.
+    """
+    ltable_ids = []
+    rtable_ids = []
+    fk_ltable_list = []
+    fk_rtable_list = []
+    # Iterate through the DataFrame list and keep track the following
+    # # 1) Validate whether the input objects are all DataFrames
+    # # 2) Update the ltable, rtable (ids), fk_ltable and fk_rtable.
+    for data_frame in blocker_output_list:
+        if not isinstance(data_frame, pd.DataFrame):
             logger.error(
-                'Input object at index %s is not a data frame' % str(c))
+                'Input object at index %s is not a data frame', str(data_frame))
             raise AssertionError(
-                'Input object at index %s is not a data frame' % str(c))
+                'Input object at index %s is not a data frame', str(data_frame))
+        ltable_ids.append(id(cm.get_ltable(data_frame)))
+        rtable_ids.append(id(cm.get_rtable(data_frame)))
+        fk_ltable_list.append(cm.get_fk_ltable(data_frame))
+        fk_rtable_list.append(cm.get_fk_rtable(data_frame))
 
-    # get ids of all ltables from blocker output list
-    id_l = [id(cm.get_ltable(c)) for c in blocker_output_list]
-    # convert to set
-    id_l = set(id_l)
-    if not len(id_l) == 1:
+    # Check whether all the ltables in the catalog are same for the input
+    # DataFrame list
+    ltable_ids = set(ltable_ids)
+    # # We expect all the ltable ids are same (i.e the len. of set should be 1)
+    if not len(ltable_ids) == 1:
         logger.error('Candidate set list contains different left tables')
         raise AssertionError('Candidate set list contains different '
                              'left tables')
 
+    # Check whether all the rtables in the catalog are same for the input
+    # DataFrame list
+    rtable_ids = set(rtable_ids)
+    # # We expect all the ltable ids are same (i.e the len. of set should be 1)
+    if not len(rtable_ids) == 1:
+        logger.error('Candidate set list contains different right tables')
+        raise AssertionError('Candidate set list contains different '
+                             'right tables')
 
-    # check foreign key values are same
-    id_fk_l = [cm.get_fk_ltable(c) for c in blocker_output_list]
-    # convert to set
-    id_fk_l = set(id_fk_l)
+    # Check whether all the fk_ltable values in the catalog are same for the
+    # input DataFrame list
+    fk_ltable_set = set(fk_ltable_list)
+    if not len(fk_ltable_set) == 1:
+        logger.error('Candidate set list contains different foreign key '
+                     'for left tables')
+        raise AssertionError('Candidate set list contains different '
+                             'foreign key for left tables')
+
+    # Check whether all the fk_rtable values in the catalog are same for the
+    # input DataFrame list
+    fk_rtable_set = set(fk_rtable_list)
+    if not len(fk_rtable_set) == 1:
+        logger.error('Candidate set list contains different foreign key '
+                     'for right tables')
+        raise AssertionError('Candidate set list contains different '
+                             'foreign key for right tables')
+
+    # If everything looks fine then return True
+    return True
 
 
-    assert len(
-        id_fk_l) is 1, 'Candidate set list contains different foreign key for ltables'
+def _lr_cols(columns_from_blocker_ouput_list, l_output_prefix, r_output_prefix):
+    """
+    Get the columns to be retrieved from ltable and rtable based on the
+    columns that was observed in the input DataFrames.
+    """
+    # Get the column name based on the l_output_prefix
+    l_columns = [_get_col(column, l_output_prefix)
+                 for column in columns_from_blocker_ouput_list]
+    # Remove the column names that are None. The column names will be
+    # typically None if the column does not start with the given prefix
+    l_columns = [x for x in l_columns if x is not None]
 
-    id_r = [id(cm.get_rtable(c)) for c in blocker_output_list]
-    id_r = set(id_r)
-    assert len(id_r) is 1, 'Candidate set list contains different right tables'
+    # Get the column name based on the r_output_prefix
+    r_columns = [_get_col(column, r_output_prefix)
+                 for column in columns_from_blocker_ouput_list]
 
-    id_fk_r = [cm.get_fk_rtable(c) for c in blocker_output_list]
-    # convert to set
-    id_fk_r = set(id_fk_r)
-    assert len(
-        id_fk_r) is 1, 'Candidate set list contains different foreign key for rtables'
+    # Remove the column names that are None. The column names will be
+    # typically None if the column does not start with the given prefix
+    r_columns = [x for x in r_columns if x is not None]
 
-
-def _lr_cols(col_set, l_output_prefix, r_output_prefix):
-    cols = col_set
-    col_l = [_get_col(s, l_output_prefix) for s in cols]
-    col_l = [x for x in col_l if x is not None]
-
-    col_r = [_get_col(s, r_output_prefix) for s in cols]
-    col_r = [x for x in col_r if x is not None]
-
-    return col_l, col_r
+    # Return the l_columns and r_columns
+    return l_columns, r_columns
 
 
-def _get_col(s, p):
-    if s.startswith(p):
-        return s[len(p):]
+def _get_col(column, prefix):
+    """
+    Get the column name after removing the prefix.
+    """
+    # Check if the column is starting with the given prefix
+    if column.startswith(prefix):
+        # Return the column name after removing the prefix
+        return column[len(prefix):]
+    # Return None, if the column does not start with the given prefix
     return None
