@@ -77,11 +77,6 @@ class InvertedIndexTestCases(unittest.TestCase):
         inv_index = _inv_index(A)
         self.assertNotEqual(len(inv_index.get('beach')), 0)
 
-    def test_down_sample_inv_index_nostop_words_check(self):
-        A = read_csv_metadata(path_a)
-        inv_index = _inv_index(A)
-        self.assertFalse('to' in inv_index)
-
 class StrColTestCases(unittest.TestCase):
     @raises(AssertionError)
     def test_down_sample_get_str_cols_list_valid1(self):
