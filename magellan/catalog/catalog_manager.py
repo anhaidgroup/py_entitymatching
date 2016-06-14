@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 def get_property(data_frame, property_name):
     """
-    Get a property (with the given property name) for a pandas DataFrame from
+    Gets a property (with the given property name) for a pandas DataFrame from
     the Catalog.
 
     Args:
@@ -33,25 +33,30 @@ def get_property(data_frame, property_name):
         KeyError: If the DataFrame information is not present in the catalog.
         KeyError: If the requested property for the DataFrame is not present
             in the catalog.
-
-
-
     """
+    # Validate input parameters
 
-    catalog = Catalog.Instance()
-
+    # # The input object should be of type pandas DataFrame
     if not isinstance(data_frame, pd.DataFrame):
         logger.error('Input object is not of type pandas DataFrame')
         raise AssertionError('Input object is not of type pandas DataFrame')
 
+    # # The property name should be of type string
     if not isinstance(property_name, six.string_types):
         logger.error('Property name is not of type string')
         raise AssertionError('Property name is not of type string')
 
+    # Get the catalog instance, this is imported here because this object
+    # used to validate the presence of a DataFrame in the catalog, and the
+    # presence of requested metadata in the catalog.
+    catalog = Catalog.Instance()
+
+    # Check for the present of input DataFrame in the catalog.
     if not catalog.is_df_info_present_in_catalog(data_frame):
         logger.error('Dataframe information is not present in the catalog')
         raise KeyError('Dataframe information is not present in the catalog')
 
+    # Check if the requested property is present in the catalog.
     if not catalog.is_property_present_for_df(data_frame, property_name):
         logger.error(
             'Requested metadata ( %s ) for the given dataframe is not '
@@ -60,142 +65,222 @@ def get_property(data_frame, property_name):
             'Requested metadata ( %s ) for the given dataframe is not '
             'present in the catalog', property_name)
 
+    # Return the requested property for the input DataFrame
     return catalog.get_property(data_frame, property_name)
 
 
-def set_property(df, name, value):
+def set_property(data_frame, property_name, property_value):
     """
-    Set property for a dataframe
+    Sets a property (with the given property name) for a pandas DataFrame in
+    the Catalog.
 
     Args:
-        df (pandas dataframe): Dataframe for which the property has to be set
-        name (str): Property name
-        value (pandas object): Property value
+        data_frame (DataFrame): DataFrame for which the property must  be set.
+        property_name (str): Name of the property to be set.
+        property_value (object): Value of the property to be set. This is
+            typically a string (such as key) or pandas DataFrame (such as
+            ltable, rtable).
 
     Returns:
-        status (bool). Returns True if the property was set successfully
+        A boolean value of True is returned if the update was successful.
 
     Raises:
-        AttributeError: If the input dataframe is null
+        AssertionError: If the input object is not of type pandas DataFrame.
+        AssertionError: If the property name is not of type string.
+
+    Note:
+        If the input DataFrame is not present in the catalog, this function
+        will create an entry in the catalog and set the given property.
 
     """
-    catalog = Catalog.Instance()
+    # Validate input parameters
 
-    if not isinstance(df, pd.DataFrame):
+    # # The input object is expected to be of type pandas DataFrame
+    if not isinstance(data_frame, pd.DataFrame):
         logger.error('Input object is not of type pandas data frame')
         raise AssertionError('Input object is not of type pandas data frame')
 
-    if not isinstance(name, six.string_types):
+    # # The property name is expected to be of type string.
+    if not isinstance(property_name, six.string_types):
         logger.error('Property name is not of type string')
         raise AssertionError('Property name is not of type string')
 
-    # if df is None:
-    #     raise AttributeError('Input dataframe cannot be null')
 
-    if not catalog.is_df_info_present_in_catalog(df):
-        catalog.init_properties(df)
-
-    catalog.set_property(df, name, value)
-
-
-def init_properties(df):
     catalog = Catalog.Instance()
-    if not isinstance(df, pd.DataFrame):
-        logger.error('Input object is not of type pandas data frame')
-        raise AssertionError('Input object is not of type pandas data frame')
-    catalog.init_properties(df)
+
+    # Check if the DataFrame information is present in the catalog. If the
+    # information is not present, then initialize an entry for that DataFrame
+    #  in the catalog.
+    if not catalog.is_df_info_present_in_catalog(data_frame):
+        catalog.init_properties(data_frame)
+
+    # Set the property in the catalog, and relay the return value from the
+    # underlying catalog object's function. The return value is typically
+    # True if the update was successful.
+    return catalog.set_property(data_frame, property_name, property_value)
 
 
-def get_all_properties(df):
+def init_properties(data_frame):
     """
-    Get all the properties for a dataframe
+    Initializes properties for a pandas DataFrame in the catalog.
+
+    Specifically, this function creates an entry in the catalog and sets its
+    properties to empty.
 
     Args:
-        df (pandas dataframe): Dataframe for which the properties must be retrieved
+        data_frame (DataFrame): DataFrame for which the properties must be
+            initialized.
 
     Returns:
-        Property dictionary (dict). The keys are property names (str) and the values are property values (pandas object)
-
-    Raises:
-        AttributeError: If the input dataframe is null
-        KeyError: If the information about the input dataframe is not present in the catalog
+        A boolean value of True is returned if the initialization was
+        successful.
 
     """
+    # Validate input parameters
+
+    # # Input object is expected to be of type pandas DataFrame
+    if not isinstance(data_frame, pd.DataFrame):
+        logger.error('Input object is not of type pandas DataFrame')
+        raise AssertionError('Input object is not of type pandas DataFrame')
+
+
     catalog = Catalog.Instance()
 
-    if not isinstance(df, pd.DataFrame):
-        logger.error('Input object is not of type pandas data frame')
-        raise AssertionError('Input object is not of type pandas data frame')
+    # Initialize the property in the catalog.
+    # Relay the return value from the underlying catalog object's function.
+    # The return value is typically True if the initialization was successful
+    return catalog.init_properties(data_frame)
 
-    if not catalog.is_df_info_present_in_catalog(df):
+
+def get_all_properties(data_frame):
+    """
+    Gets all the properties for a pandas DataFrame object from the catalog.
+
+    Args:
+        data_frame (DataFrame): DataFrame for which the properties must be
+            retrieved.
+
+    Returns:
+        A dictionary containing properties for the input pandas DataFrame.
+
+    Raises:
+        AttributeError: If the input object is not of type pandas DataFrame.
+        KeyError: If the information about DataFrame is not present in the
+            catalog.
+
+
+    """
+    # Validate input parameters
+    # # The input object is expected to be of type DataFrame
+    if not isinstance(data_frame, pd.DataFrame):
+        logger.error('Input object is not of type pandas DataFrame')
+        raise AssertionError('Input object is not of type pandas DataFrame')
+
+    catalog = Catalog.Instance()
+
+    # Check if the DataFrame information is present in the catalog. If not
+    # raise an error.
+    if not catalog.is_df_info_present_in_catalog(data_frame):
         logger.error('Dataframe information is not present in the catalog')
         raise KeyError('Dataframe information is not present in the catalog')
 
-    return catalog.get_all_properties(df)
+    # Retrieve the properties for the DataFrame from the catalog and return
+    # it back to the user.
+    return catalog.get_all_properties(data_frame)
 
 
-def del_property(df, name):
+def del_property(data_frame, property_name):
     """
-    Delete a property from the catalog
+    Delete a property for a pandas DataFrame from the catalog.
 
     Args:
-        df (pandas dataframe): Input dataframe for which a property must be deleted
-        name (str): Property name
+        data_frame (DataFrame): Input DataFrame for which a property must be
+            deleted from the catalog.
+        property_name (str): Name of the property that should be deleted.
 
     Returns:
-        status (bool). Returns True if the deletion was successful
+        A boolean value of True is returned if the deletion was successful.
 
     Raises:
-        AttributeError: If the input dataframe is null
-        KeyError: If the Dataframe info. is not present or the given property is not present for that dataframe in the
-            catalog
+        AssertionError: If the object is not of type pandas DataFrame.
+        AssertionError: If the property name is not of type string.
+        KeyError: If the DataFrame information is not present in the catalog.
+        KeyError: If the requested property for the DataFrame is not present
+            in the catalog.
     """
-    catalog = Catalog.Instance()
+    # Validate input parameters
 
-    if not isinstance(df, pd.DataFrame):
-        logger.error('Input object is not of type pandas data frame')
-        raise AssertionError('Input object is not of type pandas data frame')
+    # # The input object should be of type pandas DataFrame
+    if not isinstance(data_frame, pd.DataFrame):
+        logger.error('Input object is not of type pandas DataFrame')
+        raise AssertionError('Input object is not of type pandas DataFrame')
 
-    if not isinstance(name, six.string_types):
+    # # The input property name is expected to be of type string
+    if not isinstance(property_name, six.string_types):
         logger.error('Property name is not of type string')
         raise AssertionError('Property name is not of type string')
 
-    if not catalog.is_df_info_present_in_catalog(df):
-        logger.error('Dataframe information is not present in the catalog')
-        raise KeyError('Dataframe information is not present in the catalog')
+    catalog = Catalog.Instance()
 
-    if not catalog.is_property_present_for_df(df, name):
-        logger.error('Dataframe information is not present in the catalog')
-        raise KeyError('Requested metadata ( %s ) for the given dataframe is '
-                       'not present in the catalog' % name)
+    # Check if the DataFrame information is present in the catalog, if not
+    # raise an error.
+    if not catalog.is_df_info_present_in_catalog(data_frame):
+        logger.error('DataFrame information is not present in the catalog')
+        raise KeyError('DataFrame information is not present in the catalog')
 
-    return catalog.del_property(df, name)
+    # Check if the requested property name to be deleted  is present for the
+    # DataFrame in the catalog, if not raise an error.
+    if not catalog.is_property_present_for_df(data_frame, property_name):
+        logger.error('Requested metadata ( %s ) for the given DataFrame is '
+                     'not present in the catalog', property_name)
+        raise KeyError('Requested metadata ( %s ) for the given DataFrame is '
+                       'not present in the catalog', property_name)
+
+    # Delete the property using the underlying catalog object and relay the
+    # return value. Typically the return value is True if the deletion was
+    # successful
+    return catalog.del_property(data_frame, property_name)
 
 
-def del_all_properties(df):
+def del_all_properties(data_frame):
     """
-    Delete all properties for a dataframe
+    Delete all properties for a DataFrame from the catalog.
 
     Args:
-        df (pandas dataframe): Input dataframe for which all the properties must be deleted.
+        data_frame (DataFrame): Input DataFrame for which all the properties
+            must be deleted from the catalog.
 
     Returns:
-        status (bool). Returns True if the deletion was successful
+        A boolean of True is returned if the deletion was successful
+        from the catalog.
 
     Raises:
-        AttributeError: If the input dataframe is null
-        KeyError: If the dataframe information is not present in the catalog
+        AssertionError: If the input object is not of type pandas DataFrame.
+        KeyError: If the DataFrame information is not present in the catalog.
+
+    Note:
+        This method's functionality is not as same as init_properties. Here
+        the DataFrame's entry will be removed from the catalog,
+        but init_properties will add (if the DataFrame is not present in the
+        catalog) and initialize its properties to an empty object (
+        specifically, an empty python dictionary).
     """
-    catalog = Catalog.Instance()
-    if not isinstance(df, pd.DataFrame):
+    # Validations of input parameters
+    # # The input object is expected to be of type pandas DataFrame
+    if not isinstance(data_frame, pd.DataFrame):
         logger.error('Input object is not of type pandas data frame')
         raise AssertionError('Input object is not of type pandas data frame')
 
-    if not catalog.is_df_info_present_in_catalog(df):
+    catalog = Catalog.Instance()
+
+    # Check if the DataFrame is present in the catalog. If not, raise an error
+    if not catalog.is_df_info_present_in_catalog(data_frame):
         logger.error('Dataframe information is not present in the catalog')
         raise KeyError('Dataframe information is not present in the catalog')
 
-    return catalog.del_all_properties(df)
+    # Call the underlying catalog object's function to delete the properties
+    # and relay its return value
+    return catalog.del_all_properties(data_frame)
 
 
 def get_catalog():
