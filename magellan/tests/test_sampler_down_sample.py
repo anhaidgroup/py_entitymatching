@@ -80,7 +80,6 @@ class InvertedIndexTestCases(unittest.TestCase):
     def test_down_sample_inv_index_nostop_words_check(self):
         A = read_csv_metadata(path_a)
         inv_index = _inv_index(A)
-        self.assertFalse('from' in inv_index)
         self.assertFalse('to' in inv_index)
 
 class StrColTestCases(unittest.TestCase):
