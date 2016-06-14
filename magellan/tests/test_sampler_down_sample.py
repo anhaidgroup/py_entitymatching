@@ -17,59 +17,49 @@ path_a = os.sep.join([datasets_path, 'restA.csv'])
 path_b = os.sep.join([datasets_path, 'restB.csv'])
 
 class DownSampleTestCases(unittest.TestCase):
+    def setUp(self):
+        self.A = read_csv_metadata(path_a)
+        self.B = read_csv_metadata(path_b, key='ID')
+
+    def tearDown(self):
+        del self.A
+        del self.B
+
     def test_down_sample_table_valid_1(self):
-        A = read_csv_metadata(path_a)
-        B = read_csv_metadata(path_b, key='ID')
-        C, D = down_sample(A, B, 100, 10)
+        C, D = down_sample(self.A, self.B, 100, 10)
         self.assertEqual(len(D), 100)
 
     def test_down_sample_table_valid_2(self):
-        A = read_csv_metadata(path_a)
-        B = read_csv_metadata(path_b, key='ID')
-        C, D = down_sample(A, B, len(B)+1, 10)
-        self.assertEqual(len(D), len(B))
+        C, D = down_sample(self.A, self.B, len(self.B)+1, 10)
+        self.assertEqual(len(D), len(self.B))
 
     def test_down_sample_table_valid_3(self):
-        A = read_csv_metadata(path_a)
-        B = read_csv_metadata(path_b, key='ID')
-        C, D = down_sample(A, B, 100, 10)
+        C, D = down_sample(self.A, self.B, 100, 10)
         self.assertNotEqual(len(C), 0)
 
     @raises(AssertionError)
     def test_down_sample_table_invalid_dfA(self):
-        A = read_csv_metadata(path_a)
-        B = read_csv_metadata(path_b, key='ID')
-        C, D = down_sample(None, B, 100, 10)
+        C, D = down_sample(None, self.B, 100, 10)
 
     @raises(AssertionError)
     def test_down_sample_table_invalid_dfB(self):
-        A = read_csv_metadata(path_a)
-        B = read_csv_metadata(path_b, key='ID')
-        C, D = down_sample(A, None, 100, 10)
+        C, D = down_sample(self.A, None, 100, 10)
 
     @raises(AssertionError)
     def test_down_sample_invalid_df_sz0A(self):
-        A = read_csv_metadata(path_a)
-        B = read_csv_metadata(path_b, key='ID')
-        C, D = down_sample(pd.DataFrame(), B, 100, 10)
+        C, D = down_sample(pd.DataFrame(), self.B, 100, 10)
 
     @raises(AssertionError)
     def test_down_sample_invalid_df_sz0B(self):
-        A = read_csv_metadata(path_a)
-        B = read_csv_metadata(path_b, key='ID')
-        C, D = down_sample(A, pd.DataFrame(), 100, 10)
+        C, D = down_sample(self.A, pd.DataFrame(), 100, 10)
 
     @raises(AssertionError)
     def test_down_sample_invalid_param_size(self):
-        A = read_csv_metadata(path_a)
-        B = read_csv_metadata(path_b, key='ID')
-        C, D = down_sample(A, B, 0, 10)
+        C, D = down_sample(self.A, self.B, 0, 10)
 
     @raises(AssertionError)
     def test_down_sample_invalid_param_y(self):
-        A = read_csv_metadata(path_a)
-        B = read_csv_metadata(path_b, key='ID')
-        C, D = down_sample(A, B, 100, 0)
+        C, D = down_sample(self.A, self.B, 100, 0)
 
 class InvertedIndexTestCases(unittest.TestCase):
     def test_down_sample_inv_index_valid_1(self):
