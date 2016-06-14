@@ -31,7 +31,8 @@ def get_property(data_frame, property_name):
         AssertionError: If the object is not of type pandas DataFrame.
         AssertionError: If the property name is not of type string.
         KeyError: If the DataFrame information is not present in the catalog.
-        KeyError: If the requested property for the 
+        KeyError: If the requested property for the DataFrame is not present
+            in the catalog.
 
 
 
@@ -47,19 +48,17 @@ def get_property(data_frame, property_name):
         logger.error('Property name is not of type string')
         raise AssertionError('Property name is not of type string')
 
-    # if df is None or pd.isnull(df):
-    #     logger.error('Input dataframe cannot be null')
-    #     raise AttributeError('Input dataframe cannot be null')
-
     if not catalog.is_df_info_present_in_catalog(data_frame):
         logger.error('Dataframe information is not present in the catalog')
         raise KeyError('Dataframe information is not present in the catalog')
 
     if not catalog.is_property_present_for_df(data_frame, property_name):
         logger.error(
-            'Requested metadata ( %s ) for the given dataframe is not present in the catalog' % property_name)
+            'Requested metadata ( %s ) for the given dataframe is not '
+            'present in the catalog', property_name)
         raise KeyError(
-            'Requested metadata ( %s ) for the given dataframe is not present in the catalog' % property_name)
+            'Requested metadata ( %s ) for the given dataframe is not '
+            'present in the catalog', property_name)
 
     return catalog.get_property(data_frame, property_name)
 
@@ -323,11 +322,13 @@ def set_properties(df, prop_dict, replace=True):
 
     if not isinstance(prop_dict, dict):
         logger.error('The properties should be of type python dictionary')
-        raise AssertionError('The properties should be of type python dictionary')
+        raise AssertionError(
+            'The properties should be of type python dictionary')
 
     if catalog.is_df_info_present_in_catalog(df) and replace is False:
         logger.warning(
-            'Properties already exists for df ( %s ). Not replacing it' % str(id(df)))
+            'Properties already exists for df ( %s ). Not replacing it' % str(
+                id(df)))
         return False
 
     if not catalog.is_df_info_present_in_catalog(df):
@@ -379,18 +380,23 @@ def copy_properties(src, tar, update=True):
     catalog = Catalog.Instance()
     if not isinstance(src, pd.DataFrame):
         logger.error('Input object (src) is not of type pandas data frame')
-        raise AssertionError('Input object (src) is not of type pandas data frame')
+        raise AssertionError(
+            'Input object (src) is not of type pandas data frame')
 
     if not isinstance(tar, pd.DataFrame):
         logger.error('Input object (tar) is not of type pandas data frame')
-        raise AssertionError('Input object (tar) is not of type pandas data frame')
+        raise AssertionError(
+            'Input object (tar) is not of type pandas data frame')
 
     if catalog.is_df_info_present_in_catalog(src) is False:
-        logger.error('Dataframe information (src) is not present in the catalog')
-        raise KeyError('Dataframe information (src) is not present in the catalog')
+        logger.error(
+            'Dataframe information (src) is not present in the catalog')
+        raise KeyError(
+            'Dataframe information (src) is not present in the catalog')
 
     metadata = catalog.get_all_properties(src)
-    return set_properties(tar, metadata, update)  # this initializes tar in the catalog.
+    return set_properties(tar, metadata,
+                          update)  # this initializes tar in the catalog.
 
 
 # key related methods
@@ -585,7 +591,8 @@ def get_reqd_metadata_from_catalog(df, reqd_metadata):
     diff_elts = set(reqd_metadata).difference(d)
     if len(diff_elts) != 0:
         logger.error('All the required metadata is not present in the catalog')
-        raise AssertionError('All the required metadata is not present in the catalog')
+        raise AssertionError(
+            'All the required metadata is not present in the catalog')
 
     for m in reqd_metadata:
         if m in d:
@@ -624,7 +631,8 @@ def _update_reqd_metadata_with_kwargs(metadata, kwargs_dict, reqd_metadata):
     diff_elts = set(reqd_metadata).difference(kwargs_dict.keys())
     if len(diff_elts) != 0:
         logger.error('All the required metadata is not present in the catalog')
-        raise AssertionError('All the required metadata is not present in the catalog')
+        raise AssertionError(
+            'All the required metadata is not present in the catalog')
 
     for m in reqd_metadata:
         if m in kwargs_dict:
@@ -726,17 +734,20 @@ def validate_metadata_for_table(table, key, out_str, lgr, verbose):
         raise KeyError('Input key ( %s ) not in the dataframe' % key)
 
     ch.log_info(lgr, 'Validating ' + out_str + ' key: ' + str(key), verbose)
-    assert isinstance(key, six.string_types) is True, 'Key attribute must be a string.'
+    assert isinstance(key,
+                      six.string_types) is True, 'Key attribute must be a string.'
     assert ch.check_attrs_present(table,
                                   key) is True, 'Key attribute is not present in the ' + out_str + ' table'
-    assert ch.is_key_attribute(table, key, verbose) == True, 'Attribute ' + str(key) + \
+    assert ch.is_key_attribute(table, key, verbose) == True, 'Attribute ' + str(
+        key) + \
                                                              ' in the ' + out_str + ' table ' \
                                                                                     'does not qualify to be the key'
     ch.log_info(lgr, '..... Done', verbose)
     return True
 
 
-def validate_metadata_for_candset(candset, key, fk_ltable, fk_rtable, ltable, rtable,
+def validate_metadata_for_candset(candset, key, fk_ltable, fk_rtable, ltable,
+                                  rtable,
                                   l_key, r_key,
                                   lgr, verbose):
     if not isinstance(candset, pd.DataFrame):
@@ -749,11 +760,13 @@ def validate_metadata_for_candset(candset, key, fk_ltable, fk_rtable, ltable, rt
 
     if not fk_ltable in candset.columns:
         logger.error('Input fk_ltable ( %s ) not in the dataframe' % fk_ltable)
-        raise KeyError('Input fk_ltable ( %s ) not in the dataframe' % fk_ltable)
+        raise KeyError(
+            'Input fk_ltable ( %s ) not in the dataframe' % fk_ltable)
 
     if not fk_rtable in candset.columns:
         logger.error('Input fk_rtable ( %s ) not in the dataframe' % fk_rtable)
-        raise KeyError('Input fk_rtable ( %s ) not in the dataframe' % fk_rtable)
+        raise KeyError(
+            'Input fk_rtable ( %s ) not in the dataframe' % fk_rtable)
 
     if not isinstance(ltable, pd.DataFrame):
         logger.error('Input ltable is not of type pandas data frame')
@@ -773,12 +786,14 @@ def validate_metadata_for_candset(candset, key, fk_ltable, fk_rtable, ltable, rt
 
     validate_metadata_for_table(candset, key, 'cand.set', lgr, verbose)
 
-    ch.log_info(lgr, 'Validating foreign key constraint for left table', verbose)
+    ch.log_info(lgr, 'Validating foreign key constraint for left table',
+                verbose)
     assert ch.check_fk_constraint(candset, fk_ltable, ltable,
                                   l_key) == True, 'Cand.set does not satisfy foreign key ' \
                                                   'constraint with the left table'
     ch.log_info(lgr, '..... Done', verbose)
-    ch.log_info(lgr, 'Validating foreign key constraint for right table', verbose)
+    ch.log_info(lgr, 'Validating foreign key constraint for right table',
+                verbose)
     assert ch.check_fk_constraint(candset, fk_rtable, rtable,
                                   r_key) == True, 'Cand.set does not satisfy foreign key ' \
                                                   'constraint with the right table'
