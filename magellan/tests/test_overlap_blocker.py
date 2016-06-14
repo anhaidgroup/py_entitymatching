@@ -275,6 +275,30 @@ class OverlapBlockerTestCases(unittest.TestCase):
         actual_ids = sorted(C_ids.set_index([l_output_prefix + l_key, r_output_prefix + r_key]).index.tolist())
         assert_equal(expected_ids_1, actual_ids)
 
+    def test_ob_block_tables_empty_ltable(self):
+        empty_A = pd.DataFrame(columns=self.A.columns)
+        mg.set_key(empty_A, l_key)
+        C = self.ob.block_tables(empty_A, self.B, l_overlap_attr_1, r_overlap_attr_1)
+        s1 = ['_id', 'ltable_' + l_key, 'rtable_' + r_key]
+        s1 = sorted(s1)
+        assert_equal(s1, sorted(C.columns))
+        assert_equal(mg.get_key(C), '_id')
+        assert_equal(mg.get_property(C, 'fk_ltable'), 'ltable_' + l_key)
+        assert_equal(mg.get_property(C, 'fk_rtable'), 'rtable_' + r_key)
+        assert_equal(len(C), 0)
+
+    def test_ob_block_tables_empty_rtable(self):
+        empty_B = pd.DataFrame(columns=self.B.columns)
+        mg.set_key(empty_B, r_key)
+        C = self.ob.block_tables(self.A, empty_B, l_overlap_attr_1, r_overlap_attr_1)
+        s1 = ['_id', 'ltable_' + l_key, 'rtable_' + r_key]
+        s1 = sorted(s1)
+        assert_equal(s1, sorted(C.columns))
+        assert_equal(mg.get_key(C), '_id')
+        assert_equal(mg.get_property(C, 'fk_ltable'), 'ltable_' + l_key)
+        assert_equal(mg.get_property(C, 'fk_rtable'), 'rtable_' + r_key)
+        assert_equal(len(C), 0)
+
     def test_ob_block_tables_wi_no_output_tuples(self):
         C = self.ob.block_tables(self.A, self.B, l_overlap_attr_1,
                                  r_overlap_attr_1, overlap_size=2)

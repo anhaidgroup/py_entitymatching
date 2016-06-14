@@ -14,7 +14,6 @@ from magellan.externals.py_stringmatching.tokenizers import qgram
 from magellan.utils.catalog_helper import log_info, get_name_for_key, add_key_column
 
 from magellan.externals.py_stringsimjoin.filter.overlap_filter import OverlapFilter
-from magellan.externals.py_stringsimjoin.join.join import overlap_join
 from magellan.externals.py_stringsimjoin.utils.tokenizers import create_qgram_tokenizer, create_delimiter_tokenizer
 
 from magellan.utils.generic_helper import remove_non_ascii, rem_nan
@@ -72,7 +71,7 @@ class OverlapBlocker(Blocker):
         if word_level == False and q_val == None:
             raise SyntaxError('Parameters word_level and q_val cannot be unset together; Note that q_val is '
                               'set to None by default, so if you want to use qgram then '
-                              'explictiy specify set word_level=False and specify the q_val')
+                              'explictiy set word_level=False and specify the q_val')
 
         # do blocking
 
@@ -88,11 +87,11 @@ class OverlapBlocker(Blocker):
 
         # # case the column to string if required.
         if l_df.dtypes[l_overlap_attr] != object:
-            logger.warning('Left overlap attribute is not of type string; coverting to string temporarily')
+            logger.warning('Left overlap attribute is not of type string; converting to string temporarily')
             l_df[l_overlap_attr] = l_df[l_overlap_attr].astype(str)
 
         if r_df.dtypes[r_overlap_attr] != object:
-            logger.warning('Right overlap attribute is not of type string; coverting to string temporarily')
+            logger.warning('Right overlap attribute is not of type string; converting to string temporarily')
             r_df[r_overlap_attr] = r_df[r_overlap_attr].astype(str)
 
         # # cleanup the tables from non-ascii characters, punctuations, and stop words
@@ -104,16 +103,19 @@ class OverlapBlocker(Blocker):
             tokenizer = create_delimiter_tokenizer()
         else:
             tokenizer = create_qgram_tokenizer(q_val)
-
+        overlap_filter = OverlapFilter(tokenizer, overlap_size)
+        
         # # determine number of processes to launch parallely
         n_procs = self.get_num_procs(n_jobs, len(r_df))
         if n_procs < 1:
             n_procs = 1 
 
-        candset = overlap_join(l_df, r_df, l_key, r_key, l_overlap_attr, r_overlap_attr,
-                     tokenizer, overlap_size, l_output_attrs, r_output_attrs,
-                     l_output_prefix, r_output_prefix, out_sim_score=False,
-                     n_jobs=n_procs)
+        candset = overlap_filter.filter_tables(l_df, r_df, l_key, r_key,
+                                               l_overlap_attr, r_overlap_attr,
+                                               l_output_attrs, r_output_attrs,
+                                               l_output_prefix, r_output_prefix,
+                                               out_sim_score=False,
+                                               n_jobs=n_procs)
         
         retain_cols = self.get_attrs_to_retain(l_key, r_key, l_output_attrs, r_output_attrs,
                                                l_output_prefix, r_output_prefix)
@@ -152,6 +154,16 @@ class OverlapBlocker(Blocker):
 
         # validate overlap attrs
         self.validate_overlap_attrs(ltable, rtable, l_overlap_attr, r_overlap_attr)
+
+        if word_level == True and q_val != None:
+            raise SyntaxError('Parameters word_level and q_val cannot be set together; Note that word_level is '
+                              'set to True by default, so explicity set word_level=False to use qgram with the '
+                              'specified q_val')
+
+        if word_level == False and q_val == None:
+            raise SyntaxError('Parameters word_level and q_val cannot be unset together; Note that q_val is '
+                              'set to None by default, so if you want to use qgram then '
+                              'explictiy set word_level=False and specify the q_val')
 
         # do blocking
 
@@ -201,12 +213,36 @@ class OverlapBlocker(Blocker):
                      rem_stop_words=False, q_val=None, word_level=True,
                      overlap_size=1):
 
-        num_overlap = self.get_token_overlap_bt_two_tuples(ltuple, rtuple, l_overlap_attr, r_overlap_attr,
-                                                           q_val, rem_stop_words)
-        if num_overlap < overlap_size:
-            return True
+        #num_overlap = self.get_token_overlap_bt_two_tuples(ltuple, rtuple, l_overlap_attr, r_overlap_attr,
+        #                                                   q_val, rem_stop_words)
+        #if num_overlap < overlap_size:
+        #    return True
+        #else:
+        #    return False
+        # validate data types of input parameters specific to overlap blocker
+        self.validate_types_other_params(l_overlap_attr, r_overlap_attr,
+                                         rem_stop_words, q_val,
+                                         word_level, overlap_size)
+ 
+        if word_level == True and q_val != None:
+            raise SyntaxError('Parameters word_level and q_val cannot be set together; Note that word_level is '
+                              'set to True by default, so explicity set word_level=False to use qgram with the '
+                              'specified q_val')
+
+        if word_level == False and q_val == None:
+            raise SyntaxError('Parameters word_level and q_val cannot be unset together; Note that q_val is '
+                              'set to None by default, so if you want to use qgram then '
+                              'explictiy set word_level=False and specify the q_val')
+
+        tokenizer = None
+        if word_level == True:
+            tokenizer = create_delimiter_tokenizer()
         else:
-            return False
+            tokenizer = create_qgram_tokenizer(q_val)       
+        overlap_filter = OverlapFilter(tokenizer, overlap_size)
+
+        return overlap_filter.filter_pair(ltuple[l_overlap_attr], rtuple[r_overlap_attr])
+        
 
     # helper functions
 
