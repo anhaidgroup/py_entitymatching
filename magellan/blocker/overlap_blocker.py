@@ -63,15 +63,8 @@ class OverlapBlocker(Blocker):
         cm.validate_metadata_for_table(ltable, l_key, 'ltable', logger, verbose)
         cm.validate_metadata_for_table(rtable, r_key, 'rtable', logger, verbose)
 
-        if word_level == True and q_val != None:
-            raise SyntaxError('Parameters word_level and q_val cannot be set together; Note that word_level is '
-                              'set to True by default, so explicity set word_level=false to use qgram with the '
-                              'specified q_val')
-
-        if word_level == False and q_val == None:
-            raise SyntaxError('Parameters word_level and q_val cannot be unset together; Note that q_val is '
-                              'set to None by default, so if you want to use qgram then '
-                              'explictiy set word_level=False and specify the q_val')
+        # validate word_level and q_val
+        self.validate_word_level_qval(word_level, q_val)  
 
         # do blocking
 
@@ -155,15 +148,8 @@ class OverlapBlocker(Blocker):
         # validate overlap attrs
         self.validate_overlap_attrs(ltable, rtable, l_overlap_attr, r_overlap_attr)
 
-        if word_level == True and q_val != None:
-            raise SyntaxError('Parameters word_level and q_val cannot be set together; Note that word_level is '
-                              'set to True by default, so explicity set word_level=False to use qgram with the '
-                              'specified q_val')
-
-        if word_level == False and q_val == None:
-            raise SyntaxError('Parameters word_level and q_val cannot be unset together; Note that q_val is '
-                              'set to None by default, so if you want to use qgram then '
-                              'explictiy set word_level=False and specify the q_val')
+        # validate word_level and q_val
+        self.validate_word_level_qval(word_level, q_val)  
 
         # do blocking
 
@@ -213,26 +199,12 @@ class OverlapBlocker(Blocker):
                      rem_stop_words=False, q_val=None, word_level=True,
                      overlap_size=1):
 
-        #num_overlap = self.get_token_overlap_bt_two_tuples(ltuple, rtuple, l_overlap_attr, r_overlap_attr,
-        #                                                   q_val, rem_stop_words)
-        #if num_overlap < overlap_size:
-        #    return True
-        #else:
-        #    return False
-        # validate data types of input parameters specific to overlap blocker
         self.validate_types_other_params(l_overlap_attr, r_overlap_attr,
                                          rem_stop_words, q_val,
                                          word_level, overlap_size)
  
-        if word_level == True and q_val != None:
-            raise SyntaxError('Parameters word_level and q_val cannot be set together; Note that word_level is '
-                              'set to True by default, so explicity set word_level=False to use qgram with the '
-                              'specified q_val')
-
-        if word_level == False and q_val == None:
-            raise SyntaxError('Parameters word_level and q_val cannot be unset together; Note that q_val is '
-                              'set to None by default, so if you want to use qgram then '
-                              'explictiy set word_level=False and specify the q_val')
+        # validate word_level and q_val
+        self.validate_word_level_qval(word_level, q_val)  
 
         tokenizer = None
         if word_level == True:
@@ -279,35 +251,16 @@ class OverlapBlocker(Blocker):
             r_overlap_attr = [r_overlap_attr]
         assert set(r_overlap_attr).issubset(rtable.columns) is True, 'Right block attribute is not in the right table'
 
-    def get_token_overlap_bt_two_tuples(self, l_tuple, r_tuple, l_overlap_attr, r_overlap_attr,
-                                        q_val, rem_stop_words):
-        l_val = l_tuple[l_overlap_attr]
-        r_val = r_tuple[r_overlap_attr]
+    def validate_word_level_qval(self, word_level, q_val):
+        if word_level == True and q_val != None:
+            raise SyntaxError('Parameters word_level and q_val cannot be set together; Note that word_level is '
+                              'set to True by default, so explicity set word_level=false to use qgram with the '
+                              'specified q_val')
 
-        if l_val == None and r_val == None:
-            return 0
-
-        if not isinstance(l_val, six.string_types):
-            l_val = str(l_val)
-
-        if not isinstance(r_val, six.string_types):
-            r_val = str(r_val)
-
-        l_val_lst = set(self.process_val(l_val, q_val, rem_stop_words))
-        r_val_lst = set(self.process_val(r_val, q_val, rem_stop_words))
-
-        return len(l_val_lst.intersection(r_val_lst))
-
-    def process_val(self, val, q_val, rem_stop_words):
-        val = remove_non_ascii(val)
-        val = self.rem_punctuations(val).lower()
-        chopped_vals = val.split()
-        if rem_stop_words == True:
-            chopped_vals = self.rem_stopwords(chopped_vals)
-        if q_val != None:
-            values = ' '.join(chopped_vals)
-            chopped_vals = qgram(values, q_val)
-        return list(set(chopped_vals))
+        if word_level == False and q_val == None:
+            raise SyntaxError('Parameters word_level and q_val cannot be unset together; Note that q_val is '
+                              'set to None by default, so if you want to use qgram then '
+                              'explictiy set word_level=False and specify the q_val')
 
     def cleanup_table(self, table, overlap_attr, rem_stop_words):
 
