@@ -522,51 +522,51 @@ class CatalogManagerTestCases(unittest.TestCase):
         A = read_csv_metadata(path_a)
         d = cm.get_all_properties(A)
         metadata = {}
-        cm.update_reqd_metadata_with_kwargs(metadata, d, ['key'])
+        cm._update_reqd_metadata_with_kwargs(metadata, d, ['key'])
         self.assertEqual(metadata['key'], d['key'])
 
     def test_update_reqd_metadata_with_kwargs_valid_2(self):
         A = read_csv_metadata(path_a)
         d = cm.get_all_properties(A)
         metadata = {}
-        cm.update_reqd_metadata_with_kwargs(metadata, d, 'key')
+        cm._update_reqd_metadata_with_kwargs(metadata, d, 'key')
         self.assertEqual(metadata['key'], d['key'])
 
     @raises(AssertionError)
     def test_update_reqf_metadata_with_kwargs_invalid_dict_1(self):
         A = read_csv_metadata(path_a)
         d = cm.get_all_properties(A)
-        cm.update_reqd_metadata_with_kwargs(None, d, 'key')
+        cm._update_reqd_metadata_with_kwargs(None, d, 'key')
 
     @raises(AssertionError)
     def test_update_reqf_metadata_with_kwargs_invalid_dict_2(self):
         A = read_csv_metadata(path_a)
         d = cm.get_all_properties(A)
-        cm.update_reqd_metadata_with_kwargs(d, None, 'key')
+        cm._update_reqd_metadata_with_kwargs(d, None, 'key')
 
     @raises(AssertionError)
     def test_update_reqd_metadata_with_kwargs_invalid_elts(self):
         A = read_csv_metadata(path_a)
         d = cm.get_all_properties(A)
         metadata = {}
-        cm.update_reqd_metadata_with_kwargs(metadata, d, ['key1'])
+        cm._update_reqd_metadata_with_kwargs(metadata, d, ['key1'])
 
 
     def test_get_diff_with_reqd_metadata_valid_1(self):
         A = read_csv_metadata(path_a)
         d = cm.get_all_properties(A)
-        d1 = cm.get_diff_with_reqd_metadata(d, 'key1')
+        d1 = cm._get_diff_with_reqd_metadata(d, 'key1')
         self.assertEqual(len(d1), 1)
 
     def test_get_diff_with_reqd_metadata_valid_2(self):
         A = read_csv_metadata(path_a)
         d = cm.get_all_properties(A)
-        d1 = cm.get_diff_with_reqd_metadata(d, ['key1'])
+        d1 = cm._get_diff_with_reqd_metadata(d, ['key1'])
         self.assertEqual(len(d1), 1)
 
     @raises(AssertionError)
     def test_get_diff_with_reqd_metadata_invalid_dict(self):
-        d1 = cm.get_diff_with_reqd_metadata(None, ['key1'])
+        d1 = cm._get_diff_with_reqd_metadata(None, ['key1'])
 
     def test_is_all_reqd_metadata_present_valid_1(self):
         A = read_csv_metadata(path_a)

@@ -1,4 +1,7 @@
 # coding=utf-8
+"""
+This module contains wrapper functions for the catalog.
+"""
 import logging
 
 import pandas as pd
@@ -10,31 +13,37 @@ from magellan.catalog.catalog import Catalog
 logger = logging.getLogger(__name__)
 
 
-def get_property(df, name):
+def get_property(data_frame, property_name):
     """
-    Get property for a dataframe
+    Get a property (with the given property name) for a pandas DataFrame from
+    the Catalog.
 
     Args:
-        df (pandas dataframe): Dataframe for which the property should be retrieved
-        name (str): Name of the property that should be retrieved
+        data_frame (DataFrame): Dataframe for which the property should be
+            retrieved.
+        property_name (str): Name of the property that should be retrieved.
 
     Returns:
-        Property value (pandas object) for the given property name
+        A pandas object (typically a string or a pandas DataFrame depending
+        on the property name) is returned.
 
     Raises:
-        AttributeError: If the input dataframe in null
-        KeyError: If the dataframe is not present in the catalog, or the requested property is not
-            present in the catalog
+        AssertionError: If the object is not of type pandas DataFrame.
+        AssertionError: If the property name is not of type string.
+        KeyError: If the DataFrame information is not present in the catalog.
+        KeyError: If the requested property for the 
+
+
 
     """
 
     catalog = Catalog.Instance()
 
-    if not isinstance(df, pd.DataFrame):
-        logger.error('Input object is not of type pandas data frame')
-        raise AssertionError('Input object is not of type pandas data frame')
+    if not isinstance(data_frame, pd.DataFrame):
+        logger.error('Input object is not of type pandas DataFrame')
+        raise AssertionError('Input object is not of type pandas DataFrame')
 
-    if not isinstance(name, six.string_types):
+    if not isinstance(property_name, six.string_types):
         logger.error('Property name is not of type string')
         raise AssertionError('Property name is not of type string')
 
@@ -42,17 +51,17 @@ def get_property(df, name):
     #     logger.error('Input dataframe cannot be null')
     #     raise AttributeError('Input dataframe cannot be null')
 
-    if not catalog.is_df_info_present_in_catalog(df):
+    if not catalog.is_df_info_present_in_catalog(data_frame):
         logger.error('Dataframe information is not present in the catalog')
         raise KeyError('Dataframe information is not present in the catalog')
 
-    if not catalog.is_property_present_for_df(df, name):
+    if not catalog.is_property_present_for_df(data_frame, property_name):
         logger.error(
-            'Requested metadata ( %s ) for the given dataframe is not present in the catalog' % name)
+            'Requested metadata ( %s ) for the given dataframe is not present in the catalog' % property_name)
         raise KeyError(
-            'Requested metadata ( %s ) for the given dataframe is not present in the catalog' % name)
+            'Requested metadata ( %s ) for the given dataframe is not present in the catalog' % property_name)
 
-    return catalog.get_property(df, name)
+    return catalog.get_property(data_frame, property_name)
 
 
 def set_property(df, name, value):
@@ -584,7 +593,7 @@ def get_reqd_metadata_from_catalog(df, reqd_metadata):
     return metadata
 
 
-def update_reqd_metadata_with_kwargs(metadata, kwargs_dict, reqd_metadata):
+def _update_reqd_metadata_with_kwargs(metadata, kwargs_dict, reqd_metadata):
     """
     Update the metadata with input args
 
@@ -623,7 +632,7 @@ def update_reqd_metadata_with_kwargs(metadata, kwargs_dict, reqd_metadata):
     return metadata
 
 
-def get_diff_with_reqd_metadata(metadata, reqd_metadata):
+def _get_diff_with_reqd_metadata(metadata, reqd_metadata):
     """
     Find what metadata is missing from the required list
 
@@ -668,7 +677,7 @@ def is_all_reqd_metadata_present(metadata, reqd_metadata):
         logger.error('Input metdata is not of type dict')
         raise AssertionError('Input metdata is not of type dict')
 
-    d = get_diff_with_reqd_metadata(metadata, reqd_metadata)
+    d = _get_diff_with_reqd_metadata(metadata, reqd_metadata)
     if len(d) == 0:
         return True
     else:
