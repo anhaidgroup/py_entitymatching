@@ -37,7 +37,7 @@ def read_csv_metadata(file_path, **kwargs):
 
 
     Args:
-        file_path (str): CSV file path.
+        file_path (string): CSV file path.
 
         kwargs (dict): A python dictionary containing key-value arguments. There
             are a few key-value pairs that are specific to read_csv_metadata and
@@ -133,7 +133,8 @@ def to_csv_metadata(data_frame, file_path, **kwargs):
 
     Args:
         data_frame (DataFrame): Data frame to written to disk
-        file_path (str):  File path where the DataFrame contents to be written.
+        file_path (string):  File path where the DataFrame contents to be
+        written.
             Metadata is written with the same file name with the
             extension given by the user (defaults to .metadata).
         kwargs (dict):  A python dictionary containing key-value pairs.
