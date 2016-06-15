@@ -17,9 +17,9 @@ path_c = os.sep.join([datasets_path, 'C.csv'])
 
 class LabelTableTestCases(unittest.TestCase):
     @nottest
-    def _test_label_table(self, table, col_name, label_values, replace=True):
-        _validate_inputs(table, col_name)
-        lbl_table = _init_label_table(table, col_name, replace)
+    def _test_label_table(self, table, col_name, label_values):
+        _validate_inputs(table, col_name,  verbose=False)
+        lbl_table = _init_label_table(table, col_name)
         from magellan.gui.table_gui import edit_table
         edit_table(lbl_table, show_flag=False)
 
@@ -75,6 +75,7 @@ class LabelTableTestCases(unittest.TestCase):
         col_name = 'label'
         label_table(C, None)
 
+    @raises(AssertionError)
     def test_label_table_with_already_colname(self):
         A = read_csv_metadata(path_a)
         B = read_csv_metadata(path_b, key='ID')
@@ -89,20 +90,20 @@ class LabelTableTestCases(unittest.TestCase):
         p1, p2 = cm.get_all_properties(C), cm.get_all_properties(D)
         self.assertEqual(p1, p2)
 
-
-    def test_label_table_with_already_colname_replace_false(self):
-        A = read_csv_metadata(path_a)
-        B = read_csv_metadata(path_b, key='ID')
-        C = read_csv_metadata(path_c, ltable=A, rtable=B)
-        C['label'] = 0
-        col_name = 'label'
-        num_zeros, num_ones = 8, 7
-        label_values = [0]*num_zeros
-        label_values.extend([1]*num_ones)
-        D = self._test_label_table(C, col_name, label_values, replace=False)
-        self.assertEqual(pd.np.sum(D[col_name]), num_ones)
-        p1, p2 = cm.get_all_properties(C), cm.get_all_properties(D)
-        self.assertEqual(p1, p2)
+    # @raises(AssertionError)
+    # def test_label_table_with_already_colname_replace_false(self):
+    #     A = read_csv_metadata(path_a)
+    #     B = read_csv_metadata(path_b, key='ID')
+    #     C = read_csv_metadata(path_c, ltable=A, rtable=B)
+    #     C['label'] = 0
+    #     col_name = 'label'
+    #     num_zeros, num_ones = 8, 7
+    #     label_values = [0]*num_zeros
+    #     label_values.extend([1]*num_ones)
+    #     D = self._test_label_table(C, col_name, label_values)
+    #     # self.assertEqual(pd.np.sum(D[col_name]), num_ones)
+    #     # p1, p2 = cm.get_all_properties(C), cm.get_all_properties(D)
+    #     # self.assertEqual(p1, p2)
 
     @raises(AssertionError)
     def test_label_table_with_colname_diff_values(self):
@@ -116,7 +117,7 @@ class LabelTableTestCases(unittest.TestCase):
         label_values.extend([1]*num_ones)
         label_values.extend([2]*num_twos)
 
-        D = self._test_label_table(C, col_name, label_values, replace=False)
+        D = self._test_label_table(C, col_name, label_values)
 
     @nottest
     def test_label_table_valid_3(self):
