@@ -105,7 +105,7 @@ def set_property(data_frame, property_name, property_value):
         logger.error('Property name is not of type string')
         raise AssertionError('Property name is not of type string')
 
-
+    # Get the catalog instance
     catalog = Catalog.Instance()
 
     # Check if the DataFrame information is present in the catalog. If the
@@ -143,7 +143,7 @@ def init_properties(data_frame):
         logger.error('Input object is not of type pandas DataFrame')
         raise AssertionError('Input object is not of type pandas DataFrame')
 
-
+    # Get the catalog instance
     catalog = Catalog.Instance()
 
     # Initialize the property in the catalog.
@@ -176,6 +176,7 @@ def get_all_properties(data_frame):
         logger.error('Input object is not of type pandas DataFrame')
         raise AssertionError('Input object is not of type pandas DataFrame')
 
+    # Get the catalog instance
     catalog = Catalog.Instance()
 
     # Check if the DataFrame information is present in the catalog. If not
@@ -191,7 +192,7 @@ def get_all_properties(data_frame):
 
 def del_property(data_frame, property_name):
     """
-    Delete a property for a pandas DataFrame from the catalog.
+    Deletes a property for a pandas DataFrame from the catalog.
 
     Args:
         data_frame (DataFrame): Input DataFrame for which a property must be
@@ -220,6 +221,7 @@ def del_property(data_frame, property_name):
         logger.error('Property name is not of type string')
         raise AssertionError('Property name is not of type string')
 
+    # Get the catalog instance
     catalog = Catalog.Instance()
 
     # Check if the DataFrame information is present in the catalog, if not
@@ -244,7 +246,7 @@ def del_property(data_frame, property_name):
 
 def del_all_properties(data_frame):
     """
-    Delete all properties for a DataFrame from the catalog.
+    Deletes all properties for a DataFrame from the catalog.
 
     Args:
         data_frame (DataFrame): Input DataFrame for which all the properties
@@ -271,6 +273,7 @@ def del_all_properties(data_frame):
         logger.error('Input object is not of type pandas data frame')
         raise AssertionError('Input object is not of type pandas data frame')
 
+    # Get the catalog instance
     catalog = Catalog.Instance()
 
     # Check if the DataFrame is present in the catalog. If not, raise an error
@@ -285,254 +288,365 @@ def del_all_properties(data_frame):
 
 def get_catalog():
     """
-    Get Catalog information.
-
+    Gets the catalog information for the current session.
 
     Returns:
-        Catalog information in a dictionary format.
-
+        A python dictionary containing the caatalog information.
+        Specifically, the dictionary contains id(DataFrame object) as the key
+        and their properties as value.
     """
+    # Get the catalog instance
     catalog = Catalog.Instance()
+    # Call the underlying catalog object's function to get the catalog. Relay
+    # the return value from the delegated function.
     return catalog.get_catalog()
 
 
 def del_catalog():
     """
-    Delete catalog information
+    Deletes the catalog for the current session.
 
     Returns:
-        status (bool). Returns True if the deletion was successful.
+        A boolean value of True is returned if the deletion was successful.
     """
+    # Get the catalog instance
     catalog = Catalog.Instance()
+    # Call the underlying catalog object's function to delete the catalog (a
+    # dict).  Relay the return value from the delegated function.
     return catalog.del_catalog()
 
 
 def is_catalog_empty():
     """
-    Check if the catalog is empty
+    Checks if the catalog is empty.
 
     Returns:
-        result (bool). Returns True if the catalog is empty, else returns False.
+        A boolean value of True is returned if the catalog is empty,
+        else returns False.
 
     """
+    # Get the catalog instance
     catalog = Catalog.Instance()
+
+    # Call the underlying catalog object's function to check if the catalog
+    # is empty.  Relay the return value from the delegated function.
     return catalog.is_catalog_empty()
 
 
-def is_dfinfo_present(df):
+def is_dfinfo_present(data_frame):
     """
-    Check if the dataframe information is present in the catalog
+    Checks whether the DataFrame information is present in the catalog.
 
     Args:
-        df (pandas dataframe): Input dataframe
+        data_frame (DataFrame): DataFrame that should be checked for its
+            presence in the catalog.
 
     Returns:
-        result (bool). Returns True if the dataframe information is present in the catalog, else returns False
+        A boolean value of True is returned if the DataFrame is present in
+        the catalog, else False is returned.
 
     Raises:
-        AttributeError: If the input dataframe is null
+        AssertionError: If the input object is not of type pandas DataFrame.
 
     """
-    catalog = Catalog.Instance()
-    if not isinstance(df, pd.DataFrame):
+    # Validate inputs
+    # We expect the input object to be of type pandas DataFrame
+    if not isinstance(data_frame, pd.DataFrame):
         logger.error('Input object is not of type pandas data frame')
         raise AssertionError('Input object is not of type pandas data frame')
 
-    return catalog.is_df_info_present_in_catalog(df)
+    # Get the catalog instance
+    catalog = Catalog.Instance()
+
+    # Call the underlying catalog object's function to check if the
+    # DataFrame information is present in the catalog.
+    # Relay the return value from the delegated function.
+    return catalog.is_df_info_present_in_catalog(data_frame)
 
 
-def is_property_present_for_df(df, name):
+def is_property_present_for_df(data_frame, property_name):
     """
-    Check if the property is present for the dataframe
+    Checks if the given property is present for the given DataFrame in the
+    catalog.
 
     Args:
-        df (pandas dataframe): Input dataframe
-        name (str): Property name
+        data_frame (DataFrame): DataFrame for which the property must be
+            retrieved.
+        property_name (str): Name of the property that should be checked for
+            its presence for the DataFrame, in the catalog.
 
     Returns:
-        result (bool). Returns True if the property is present for the input dataframe
+        A boolean value of True is returned if the property is present for
+        the given DataFrame.
 
     Raises:
-        AttributeError: If the input dataframe is null
-        KeyError: If the dataframe is not present in the catalog
-
+        AssertionError: If the input object is not of type pandas DataFrame.
+        AssertionError: If the input property name is not of type string.
+        KeyError: If the input DataFrame is not present in the catalog.
     """
-    catalog = Catalog.Instance()
-    if not isinstance(df, pd.DataFrame):
-        logger.error('Input object is not of type pandas data frame')
-        raise AssertionError('Input object is not of type pandas data frame')
+    # Input validations
 
-    if catalog.is_df_info_present_in_catalog(df) is False:
+    # # We expect the input object to be of type pandas DataFrame.
+    if not isinstance(data_frame, pd.DataFrame):
+        logger.error('Input object is not of type pandas DataFrame')
+        raise AssertionError('Input object is not of type pandas DataFrame')
+
+    # # The input property name should be of type string
+    if not isinstance(property_name, six.string_types):
+        logger.error('The property name is not of type string.')
+        raise AssertionError('The property name is not of type string.')
+
+    # Get the catalog instance
+    catalog = Catalog.Instance()
+
+    # Check if the given DataFrame information is present in the catalog. If
+    # not, raise an error.
+    if catalog.is_df_info_present_in_catalog(data_frame) is False:
         logger.error('Dataframe information is not present in the catalog')
         raise KeyError('Dataframe information is not present in the catalog')
 
-    return catalog.is_property_present_for_df(df, name)
+    # Call the underlying catalog object's function to check if the property
+    # is present for the given DataFrame. Relay the return value from that
+    # function.
+    return catalog.is_property_present_for_df(data_frame, property_name)
 
 
 def get_catalog_len():
     """
-    Get the number of entries in the catalog
+    Get the length (i.e the number of entries) in the catalog.
 
     Returns:
-        length (int) of the catalog
+        The number of entries in the catalog as an integer.
 
     """
+    # Get the catalog instance
     catalog = Catalog.Instance()
+    # Call the underlying catalog object's function to get the catalog length.
+    # Relay the return value from that function.
     return catalog.get_catalog_len()
 
 
-def set_properties(df, prop_dict, replace=True):
+def set_properties(data_frame, properties, replace=True):
     """
-    Set properties for a dataframe in the catalog
+    Sets the  properties for a DataFrame in the catalog.
+
     Args:
-        df (pandas dataframe): Input dataframe
-        prop_dict (dict): Property dictionary with keys as property names and values as python objects
-        replace (bool): Flag to indicate whether the input properties can replace the properties in the catalog
+        data_frame (DataFrame): DataFrame for which the properties must be set.
+        properties (dict): A python dictionary with keys as property names and
+            values as python objects (typically strings or DataFrames)
+        replace (Optional[bool]): Flag to indicate whether the  input
+            properties can replace the properties in the catalog. The default
+            value for the flag is True.
+            Specifically, if the DataFrame information is already present in
+            the catalog then the function will check if the replace flag is
+            True. If the flag is set to True, then the function will first
+            delete the existing properties, set it with the given properties.
+            If the flag is False, the function will just return without
+            modifying the existing properties.
+
 
     Returns:
-        status (bool). Returns True if the setting of properties was successful
+        A boolean value of True is returned if the properties were set for
+        the given DataFrame, else returns False.
 
-    Notes:
-        The function is intended to set all the properties in the catalog with the given
-        property dictionary.
-          The replace flag is just a check where the properties will be not be disturbed
-          if they exist already in the
-          catalog
+    Raises:
+        AssertionError: If the input data_frame object is not of type pandas
+            DataFrame.
+        AssertionError: If the input properties object is not of type python
+            dictionary.
 
     """
-    catalog = Catalog.Instance()
-    if not isinstance(df, pd.DataFrame):
-        logger.error('Input object is not of type pandas data frame')
-        raise AssertionError('Input object is not of type pandas data frame')
+    # Validate input parameters
+    # # Input object is expected to be a pandas DataFrame
+    if not isinstance(data_frame, pd.DataFrame):
+        logger.error('Input object is not of type pandas DataFrame')
+        raise AssertionError('Input object is not of type pandas DataFrame')
 
-    if not isinstance(prop_dict, dict):
+    # # Input properties is expected to be of type python dictionary
+    if not isinstance(properties, dict):
         logger.error('The properties should be of type python dictionary')
         raise AssertionError(
             'The properties should be of type python dictionary')
 
-    if catalog.is_df_info_present_in_catalog(df) and replace is False:
-        logger.warning(
-            'Properties already exists for df ( %s ). Not replacing it' % str(
-                id(df)))
-        return False
+    # Get the catalog instance
+    catalog = Catalog.Instance()
+    # Check if the the DataFrame information is present in the catalog. If
+    # present, we expect the replace flag to be True. If the flag was set to
+    # False, then warn the user and return False.
+    if catalog.is_df_info_present_in_catalog(data_frame):
+        if not replace:
+            logger.warning(
+                'Properties already exists for df ( %s ). Not replacing it',
+                str(id(data_frame)))
+            return False
+        else:
+            # DataFrame information is present and replace flag is True. We
+            # now reset the properties dictionary for this DataFrame.
+            catalog.init_properties(data_frame)
+    else:
+        # The DataFrame information is not present in the catalog. so
+        # initialize the properties
+        catalog.init_properties(data_frame)
 
-    if not catalog.is_df_info_present_in_catalog(df):
-        catalog.init_properties(df)
+    # Now iterate through the given properties and set for the DataFrame.
+    # Note: Here we dont check the correctness of the input properties (i.e
+    # we do not check if a property 'key' is indeed a key)
+    for property_name, property_value in six.iteritems(properties):
+        catalog.set_property(data_frame, property_name, property_value)
 
-    # for k, v in prop_dict.iteritems():
-    for k, v in six.iteritems(prop_dict):
-        catalog.set_property(df, k, v)
+    # Finally return True, if everything was successful
     return True
 
 
-def has_property(df, prop):
-    catalog = Catalog.Instance()
-    if not isinstance(df, pd.DataFrame):
-        logger.error('Input object is not of type pandas data frame')
-        raise AssertionError('Input object is not of type pandas data frame')
-
-    if not isinstance(prop, six.string_types):
-        logger.error('Property name is not of type string')
-        raise AssertionError('Property name is not of type string')
-
-    if not is_dfinfo_present(df):
-        logger.error('Dataframe is not in the catalog')
-        raise KeyError('Dataframe is not in the catalog')
-
-    p = get_all_properties(df)
-    # return p.has_key(prop)
-    return prop in p
-
-
-def copy_properties(src, tar, update=True):
+def copy_properties(source_data_frame, target_data_frame, replace=True):
     """
-    Copy properties from one dataframe to another
+    Copies properties from a source DataFrame to target DataFrame in the
+    catalog.
+
     Args:
-        src (pandas dataframe): Dataframe from which the properties to be copied from
-        tar (pandas dataframe): Dataframe to which the properties to be copied
-        update (bool): Flag to indicate whether the source properties can replace
-        the tart properties
+        source_data_frame (DataFrame): DataFrame from which the properties
+            to be copied from, in the catalog.
+        target_data_frame (DataFrame): DataFrame to which the properties to be
+            copied to, in the catalog.
+        replace (Optional[bool]): Flag to indicate whether the source
+            DataFrame's  properties can replace the target
+            DataFrame's properties in the catalog. The default value for the
+            flag is True.
+            Specifically, if the target DataFrame's information is already
+            present in the catalog then the function will check if the
+            replace flag is True. If the flag is set to True, then the
+            function will first delete the existing properties and then set
+            it with the source DataFrame properties.
+            If the flag is False, the function will just return without
+            modifying the existing properties.
 
     Returns:
-        status (bool). Returns True if the copying was successful
+        A boolean value of True is returned if the copying was successful.
 
-    Notes:
-        This function internally calls set_properties and get_all_properties
+    Raises:
+        AssertionError: If the input object (source_data_frame) is not of
+            type pandas DataFrame.
+        AssertionError: If the input object (target_data_frame) is not of
+            type pandas DataFrame.
+        KeyError: If the source DataFrame  is not present in the
+            catalog.
 
 
     """
-    # copy catalog information from src to tar
+    # Validate input parameters
+
+    # # The source_data_frame is expected to be of type pandas DataFrame
+    if not isinstance(source_data_frame, pd.DataFrame):
+        logger.error('Input object (source_data_frame) is not of type pandas '
+                     'DataFrame')
+        raise AssertionError(
+            'Input object (source_data_frame) is not of type pandas DataFrame')
+
+    # # The target_data_frame is expected to be of type pandas DataFrame
+    if not isinstance(target_data_frame, pd.DataFrame):
+        logger.error('Input object (target_data_frame) is not of type pandas '
+                     'DataFrame')
+        raise AssertionError('Input object (target_data_frame) is not  of '
+                             'type pandas DataFrame')
+
+    # Get the catalog instance
     catalog = Catalog.Instance()
-    if not isinstance(src, pd.DataFrame):
-        logger.error('Input object (src) is not of type pandas data frame')
-        raise AssertionError(
-            'Input object (src) is not of type pandas data frame')
 
-    if not isinstance(tar, pd.DataFrame):
-        logger.error('Input object (tar) is not of type pandas data frame')
-        raise AssertionError(
-            'Input object (tar) is not of type pandas data frame')
-
-    if catalog.is_df_info_present_in_catalog(src) is False:
+    # Check if the source DataFrame information is present in the catalog. If
+    #  not raise an error.
+    if catalog.is_df_info_present_in_catalog(source_data_frame) is False:
         logger.error(
-            'Dataframe information (src) is not present in the catalog')
+            'DataFrame information (source_data_frame) is not present in the '
+            'catalog')
         raise KeyError(
-            'Dataframe information (src) is not present in the catalog')
+            'DataFrame information (source_data_frame) is not present in the '
+            'catalog')
 
-    metadata = catalog.get_all_properties(src)
-    return set_properties(tar, metadata,
-                          update)  # this initializes tar in the catalog.
+    # Get all properties for the source DataFrame
+    metadata = catalog.get_all_properties(source_data_frame)
+
+    # Set the properties to the target DataFrame. Specifically, call the set
+    # properties function and relay its return value.
+
+    # Note: There is a redundancy in validating the input parameters. This
+    # might have a slight performance impact, but we don't expect that this
+    # function gets called so often.
+    return set_properties(target_data_frame, metadata,
+                          replace)  # this initializes tar in the catalog.
 
 
 # key related methods
-def get_key(df):
+def get_key(data_frame):
     """
-    Get the key attribute for a dataframe
+    Gets the 'key' property for a DataFrame from the catalog.
 
     Args:
-        df (pandas dataframe): Dataframe for which the key must be retrieved
+        data_frame (DataFrame): DataFrame for which the key must be retrieved
+            from the catalog.
 
     Returns:
-        key (str)
+        A string value containing the key column name is returned (if present).
+
+    Raises:
+        This function calls get_properties internally, and get_properties
+        raises the following exceptions:
+        AssertionError: If the object is not of type pandas DataFrame.
+        AssertionError: If the property name is not of type string.
+        KeyError: If the DataFrame information is not present in the catalog.
+        KeyError: If the requested property for the DataFrame is not present
+            in the catalog.
 
     """
-    if not isinstance(df, pd.DataFrame):
-        logger.error('Input object is not of type pandas data frame')
-        raise AssertionError('Input object is not of type pandas data frame')
-
-    return get_property(df, 'key')
+    # This function is just a sugar to get the 'key' property for a DataFrame
+    return get_property(data_frame, 'key')
 
 
-def set_key(df, key):
+def set_key(data_frame, key_attribute):
     """
-    Set the key attribute for a dataframe
+    Sets the 'key' property for a DataFrame in the catalog with the given
+    attribute (i.e column name).
+    Specifically, this function set the the key attribute for the DataFrame
+    if the given attribute satisfies the following two properties:
+        * The key attribute should have unique values.
+        * The key attribute should not have missing values. A missing value
+        is represented as np.NaN.
 
     Args:
-        df (pandas dataframe): Dataframe for which the key must be set
-        key (str): Key attribute in the dataframe
+        data_frame (DataFrame): DataFrame for which the key must be set in
+            the catalog.
+        key_attribute (str): Key attribute (column name) in the DataFrame.
 
     Returns:
-        status (bool). Returns True if the key attribute was set successfully,
-        else returns False
+        A boolean value of True was successful if the given attribute
+        satisfies the conditions for a key and the update was successful.
+
+    Raises:
+        AssertionError: If the input object (data_frame) is not of type
+            pandas DataFrame.
+        AssertionError: If the input key_attribute is not of type string.
+        KeyError: If the given key attribute is not in the DataFrame columns.
 
 
     """
 
-    if not isinstance(df, pd.DataFrame):
-        logger.error('Input object is not of type pandas data frame')
-        raise AssertionError('Input object is not of type pandas data frame')
+    if not isinstance(data_frame, pd.DataFrame):
+        logger.error('Input object is not of type pandas DataFrame')
+        raise AssertionError('Input object is not of type pandas DataFrame')
 
-    if not key in df.columns:
-        logger.error('Input key ( %s ) not in the dataframe' % key)
-        raise KeyError('Input key ( %s ) not in the dataframe' % key)
+    if not isinstance(key_attribute, six.string_types):
+        logger.error('Input key attribute is not of type string')
 
-    if ch.is_key_attribute(df, key) is False:
+    if not ch.check_attrs_present(data_frame, key_attribute):
+        logger.error('Input key ( %s ) not in the dataframe' % key_attribute)
+        raise KeyError('Input key ( %s ) not in the dataframe' % key_attribute)
+
+    if ch.is_key_attribute(data_frame, key_attribute) is False:
         logger.warning(
-            'Attribute (' + key + ') does not qualify to be a key; '
+            'Attribute (' + key_attribute + ') does not qualify to be a key; '
                                   'Not setting/replacing the key')
         return False
     else:
-        return set_property(df, 'key', key)
+        return set_property(data_frame, 'key', key_attribute)
 
 
 # def gentle_set_key(df, key):

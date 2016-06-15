@@ -260,27 +260,27 @@ class CatalogManagerTestCases(unittest.TestCase):
         cm.set_properties(A, {}, replace=False)
         self.assertEqual(cm.get_key(A), 'ID')
 
-    def test_has_property_valid_1(self):
-        A = read_csv_metadata(path_a)
-        self.assertEqual(cm.has_property(A, 'key'), True)
-
-    def test_has_property_valid_2(self):
-        A = read_csv_metadata(path_a)
-        self.assertEqual(cm.has_property(A, 'key1'), False)
-
-    @raises(AssertionError)
-    def test_has_property_invalid_df(self):
-        cm.has_property(None, 'key')
-
-    @raises(AssertionError)
-    def test_has_property_invalid_prop_name(self):
-        A = read_csv_metadata(path_a)
-        cm.has_property(A, None)
-
-    @raises(KeyError)
-    def test_has_property_df_notin_catalog(self):
-        A = pd.read_csv(path_a)
-        cm.has_property(A, 'key')
+    # def test_has_property_valid_1(self):
+    #     A = read_csv_metadata(path_a)
+    #     self.assertEqual(cm.has_property(A, 'key'), True)
+    #
+    # def test_has_property_valid_2(self):
+    #     A = read_csv_metadata(path_a)
+    #     self.assertEqual(cm.has_property(A, 'key1'), False)
+    #
+    # @raises(AssertionError)
+    # def test_has_property_invalid_df(self):
+    #     cm.has_property(None, 'key')
+    #
+    # @raises(AssertionError)
+    # def test_has_property_invalid_prop_name(self):
+    #     A = read_csv_metadata(path_a)
+    #     cm.has_property(A, None)
+    #
+    # @raises(KeyError)
+    # def test_has_property_df_notin_catalog(self):
+    #     A = pd.read_csv(path_a)
+    #     cm.has_property(A, 'key')
 
     def test_copy_properties_valid_1(self):
         A = read_csv_metadata(path_a)
@@ -322,13 +322,13 @@ class CatalogManagerTestCases(unittest.TestCase):
     def test_copy_properties_update_false_1(self):
         A = read_csv_metadata(path_a)
         A1 = read_csv_metadata(path_a)
-        status=cm.copy_properties(A, A1, update=False)
+        status=cm.copy_properties(A, A1, replace=False)
         self.assertEqual(status, False)
 
     def test_copy_properties_update_false_2(self):
         A = read_csv_metadata(path_a)
         A1 = pd.read_csv(path_a)
-        cm.copy_properties(A, A1, update=False)
+        cm.copy_properties(A, A1, replace=False)
         p = cm.get_all_properties(A)
         p1 = cm.get_all_properties(A1)
         self.assertEqual(p, p1)
