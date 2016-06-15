@@ -3,8 +3,6 @@ from nose.tools import *
 import unittest
 import numpy as np
 import pandas as pd
-#import sys
-#sys.path.append('/Users/lihan/Documents/Magellan/magellan/')
 
 import magellan as mg
 from magellan.utils.generic_helper import get_install_path
@@ -25,74 +23,74 @@ class DebugblockerTestCases(unittest.TestCase):
     def test_calc_threshold_1(self):
         index = 0
         length = 5
-        thres = db.calc_threshold(index, length)
+        thres = db._calc_threshold(index, length)
         self.assertEqual(thres, 1.0)
 
     def test_calc_threshold_2(self):
         index = 5
         length = 5
-        thres = db.calc_threshold(index, length)
+        thres = db._calc_threshold(index, length)
         self.assertEqual(thres, 0.0)
 
     def test_jaccard_sim_1(self):
         lset = set()
         rset = set()
-        self.assertEqual(db.jaccard_sim(lset, rset), 0.0)
+        self.assertEqual(db._jaccard_sim(lset, rset), 0.0)
 
     def test_jaccard_sim_2(self):
         lset = {'hello'}
         rset = set()
-        self.assertEqual(db.jaccard_sim(lset, rset), 0.0)
+        self.assertEqual(db._jaccard_sim(lset, rset), 0.0)
 
     def test_jaccard_sim_3(self):
         lset = set([])
         rset = {'hello'}
-        self.assertEqual(db.jaccard_sim(lset, rset), 0.0)
+        self.assertEqual(db._jaccard_sim(lset, rset), 0.0)
 
     def test_jaccard_sim_4(self):
         lset = {'hello', 'this'}
         rset = {'hello'}
-        self.assertEqual(db.jaccard_sim(lset, rset), 0.5)
+        self.assertEqual(db._jaccard_sim(lset, rset), 0.5)
 
     def test_check_input_field_correspondence_list_1(self):
         A = read_csv_metadata(path_a)
         B = read_csv_metadata(path_b)
         field_corres_list = None
-        db.check_input_field_correspondence_list(A, B, field_corres_list)
+        db._check_input_field_correspondence_list(A, B, field_corres_list)
 
     def test_check_input_field_correspondence_list_2(self):
         A = read_csv_metadata(path_a)
         B = read_csv_metadata(path_b)
         field_corres_list = []
-        db.check_input_field_correspondence_list(A, B, field_corres_list)
+        db._check_input_field_correspondence_list(A, B, field_corres_list)
 
     @raises(AssertionError)
     def test_check_input_field_correspondence_list_3(self):
         A = read_csv_metadata(path_a)
         B = read_csv_metadata(path_b)
         field_corres_list = [('adsf', 'fdsa'), 'asdf']
-        db.check_input_field_correspondence_list(A, B, field_corres_list)
+        db._check_input_field_correspondence_list(A, B, field_corres_list)
 
     @raises(AssertionError)
     def test_check_input_field_correspondence_list_4(self):
         A = read_csv_metadata(path_a)
         B = read_csv_metadata(path_b)
         field_corres_list = [('asdf', 'fdsa')]
-        db.check_input_field_correspondence_list(A, B, field_corres_list)
+        db._check_input_field_correspondence_list(A, B, field_corres_list)
 
     @raises(AssertionError)
     def test_check_input_field_correspondence_list_5(self):
         A = read_csv_metadata(path_a)
         B = read_csv_metadata(path_b)
         field_corres_list = [('address', 'fdsa')]
-        db.check_input_field_correspondence_list(A, B, field_corres_list)
+        db._check_input_field_correspondence_list(A, B, field_corres_list)
 
     def test_check_input_field_correspondence_list_7(self):
         A = read_csv_metadata(path_a)
         B = read_csv_metadata(path_b)
         field_corres_list = [('zipcode', 'zipcode'),
                              ('birth_year', 'birth_year')]
-        db.check_input_field_correspondence_list(A, B, field_corres_list)
+        db._check_input_field_correspondence_list(A, B, field_corres_list)
 
     def test_get_field_correspondence_list_1(self):
         A = read_csv_metadata(path_a, key='ID')
@@ -105,12 +103,12 @@ class DebugblockerTestCases(unittest.TestCase):
                          ('address', 'address'),
                          ('zipcode', 'zipcode')]
         attr_corres = None
-        corres_list = db.get_field_correspondence_list(
+        corres_list = db._get_field_correspondence_list(
             A, B, A_key, B_key, attr_corres)
         self.assertEqual(corres_list, expected_list)
 
         attr_corres = []
-        corres_list = db.get_field_correspondence_list(
+        corres_list = db._get_field_correspondence_list(
             A, B, A_key, B_key, attr_corres)
         self.assertEqual(corres_list, expected_list)
 
@@ -125,7 +123,7 @@ class DebugblockerTestCases(unittest.TestCase):
         attr_corres = [('ID', 'ID'), ('name', 'name'),
                          ('address', 'address'),
                          ('zipcode', 'zipcode')]
-        corres_list = db.get_field_correspondence_list(
+        corres_list = db._get_field_correspondence_list(
             A, B, A_key, B_key, attr_corres)
         self.assertEqual(corres_list, expected_list)
 
@@ -139,7 +137,7 @@ class DebugblockerTestCases(unittest.TestCase):
         B_key = 'Id'
         attr_corres = []
 
-        corrres_list = db.get_field_correspondence_list(
+        corrres_list = db._get_field_correspondence_list(
             A, B, A_key, B_key, attr_corres)
         expected_list = [('Id', 'Id'), ('ISBN', 'ISBN')]
         self.assertEqual(corrres_list, expected_list)
@@ -154,7 +152,7 @@ class DebugblockerTestCases(unittest.TestCase):
         B.columns = ['Id', 'title', 'ISBN']
         B_key = 'Id'
         attr_corres = []
-        db.get_field_correspondence_list(
+        db._get_field_correspondence_list(
             A, B, A_key, B_key, attr_corres)
 
     def test_get_field_correspondence_list_5(self):
@@ -168,7 +166,7 @@ class DebugblockerTestCases(unittest.TestCase):
         B_key = mg.get_key(B)
         attr_corres = [('name', 'item_name'),
                        ('price', 'item_price')]
-        actual_attr_corres = db.get_field_correspondence_list(
+        actual_attr_corres = db._get_field_correspondence_list(
             A, B, A_key, B_key, attr_corres)
 
         expected_attr_corres = [('name', 'item_name'),
@@ -180,7 +178,7 @@ class DebugblockerTestCases(unittest.TestCase):
         A = read_csv_metadata(path_a, key='ID')
         B = read_csv_metadata(path_b, key='ID')
         topk_heap = []
-        ret_dataframe = db.assemble_topk_table(topk_heap, A, B)
+        ret_dataframe = db._assemble_topk_table(topk_heap, A, B)
         self.assertEqual(len(ret_dataframe), 0)
         self.assertEqual(list(ret_dataframe.columns), [])
 
@@ -189,7 +187,7 @@ class DebugblockerTestCases(unittest.TestCase):
         B = read_csv_metadata(path_b, key='ID')
         topk_heap = [(0.2727272727272727, 1, 0), (0.23076923076923078, 0, 4),
                      (0.16666666666666666, 0, 3)]
-        ret_dataframe = db.assemble_topk_table(topk_heap, A, B)
+        ret_dataframe = db._assemble_topk_table(topk_heap, A, B)
         expected_columns = ['_id','similarity', 'ltable_ID', 'rtable_ID',
                             'ltable_name', 'ltable_birth_year',
                             'ltable_hourly_wage',
@@ -222,13 +220,13 @@ class DebugblockerTestCases(unittest.TestCase):
         l_key = cm.get_key(A)
         r_key = cm.get_key(B)
 
-        lrecord_id_to_index_map = db.get_record_id_to_index_map(A, l_key)
-        rrecord_id_to_index_map = db.get_record_id_to_index_map(B, r_key)
+        lrecord_id_to_index_map = db._get_record_id_to_index_map(A, l_key)
+        rrecord_id_to_index_map = db._get_record_id_to_index_map(B, r_key)
 
         expected_cand_set = {(0, 1), (1, 2), (3, 2), (0, 0), (3, 3),
                              (4, 4), (1, 4), (2, 0), (1, 3), (0, 5),
                              (2, 1), (4, 3), (4, 2), (2, 5), (3, 4)}
-        actual_cand_set = db.index_candidate_set(C,
+        actual_cand_set = db._index_candidate_set(C,
                 lrecord_id_to_index_map, rrecord_id_to_index_map, False)
         self.assertEqual(expected_cand_set, actual_cand_set)
 
@@ -241,10 +239,10 @@ class DebugblockerTestCases(unittest.TestCase):
         r_key = cm.get_key(B)
         C.ix[0, 'ltable_ID'] = 'aaaa'
 
-        lrecord_id_to_index_map = db.get_record_id_to_index_map(A, l_key)
-        rrecord_id_to_index_map = db.get_record_id_to_index_map(B, r_key)
+        lrecord_id_to_index_map = db._get_record_id_to_index_map(A, l_key)
+        rrecord_id_to_index_map = db._get_record_id_to_index_map(B, r_key)
 
-        db.index_candidate_set(C,
+        db._index_candidate_set(C,
                 lrecord_id_to_index_map, rrecord_id_to_index_map, False)
 
     @raises(AssertionError)
@@ -256,10 +254,10 @@ class DebugblockerTestCases(unittest.TestCase):
         r_key = cm.get_key(B)
         C.ix[0, 'rtable_ID'] = 'bbbb'
 
-        lrecord_id_to_index_map = db.get_record_id_to_index_map(A, l_key)
-        rrecord_id_to_index_map = db.get_record_id_to_index_map(B, r_key)
+        lrecord_id_to_index_map = db._get_record_id_to_index_map(A, l_key)
+        rrecord_id_to_index_map = db._get_record_id_to_index_map(B, r_key)
 
-        db.index_candidate_set(C,
+        db._index_candidate_set(C,
                 lrecord_id_to_index_map, rrecord_id_to_index_map, False)
 
     def test_index_candidate_set_4(self):
@@ -276,10 +274,10 @@ class DebugblockerTestCases(unittest.TestCase):
         C.columns = ['_id', 'ltable_ID', 'rtable_ID']
         cm.set_candset_properties(C, '_id', 'ltable_ID',
                                   'rtable_ID', A, B)
-        lrecord_id_to_index_map = db.get_record_id_to_index_map(A, 'ID')
-        rrecord_id_to_index_map = db.get_record_id_to_index_map(B, 'ID')
+        lrecord_id_to_index_map = db._get_record_id_to_index_map(A, 'ID')
+        rrecord_id_to_index_map = db._get_record_id_to_index_map(B, 'ID')
         expected_cand_set = {(0, 1), (1, 0)}
-        actuacl_cand_set = db.index_candidate_set(C,
+        actuacl_cand_set = db._index_candidate_set(C,
                 lrecord_id_to_index_map, rrecord_id_to_index_map, False)
         self.assertEqual(expected_cand_set, actuacl_cand_set)
 
@@ -298,28 +296,28 @@ class DebugblockerTestCases(unittest.TestCase):
         C.columns = ['_id', 'ltable_ID', 'rtable_ID']
         cm.set_candset_properties(C, '_id', 'ltable_ID',
                                   'rtable_ID', A, B)
-        lrecord_id_to_index_map = db.get_record_id_to_index_map(A, 'ID')
-        rrecord_id_to_index_map = db.get_record_id_to_index_map(B, 'ID')
-        db.index_candidate_set(C,
+        lrecord_id_to_index_map = db._get_record_id_to_index_map(A, 'ID')
+        rrecord_id_to_index_map = db._get_record_id_to_index_map(B, 'ID')
+        db._index_candidate_set(C,
                 lrecord_id_to_index_map, rrecord_id_to_index_map, False)
 
 
     def test_generate_prefix_events_impl_1(self):
         record_list = []
         prefix_events = []
-        db.generate_prefix_events_impl(record_list, prefix_events, 0)
+        db._generate_prefix_events_impl(record_list, prefix_events, 0)
         self.assertEqual(prefix_events, [])
 
         record_list = [[], [], []]
         prefix_events = []
-        db.generate_prefix_events_impl(record_list, prefix_events, 0)
+        db._generate_prefix_events_impl(record_list, prefix_events, 0)
         self.assertEqual(prefix_events, [])
 
     def test_generate_prefix_events_impl_2(self):
         record_list = [['a1', 'a2'], [], ['c1']]
         table_indicator = 0
         actual_prefix_events = []
-        db.generate_prefix_events_impl(
+        db._generate_prefix_events_impl(
             record_list, actual_prefix_events, table_indicator)
         expected_prefix_events = [(-1.0, 0, 0, 0, 'a1'),
                                   (-0.5, 0, 0, 1, 'a2'), (-1.0, 0, 2, 0, 'c1')]
@@ -328,18 +326,18 @@ class DebugblockerTestCases(unittest.TestCase):
     def test_generate_prefix_events_1(self):
         lrecord_list = []
         rrecord_list = []
-        prefix_events = db.generate_prefix_events(lrecord_list, rrecord_list)
+        prefix_events = db._generate_prefix_events(lrecord_list, rrecord_list)
         self.assertEqual(prefix_events, [])
 
         lrecord_list = [[], [], []]
         rrecord_list = [[], []]
-        prefix_events = db.generate_prefix_events(lrecord_list, rrecord_list)
+        prefix_events = db._generate_prefix_events(lrecord_list, rrecord_list)
         self.assertEqual(prefix_events, [])
 
     def test_generate_prefix_events_2(self):
         lrecord_list = [['a1', 'a2'], [], ['c1', 'c2', 'c3']]
         rrecord_list = [[], ['b1', 'b2'], ['c1']]
-        actual_prefix_events = db.generate_prefix_events(
+        actual_prefix_events = db._generate_prefix_events(
             lrecord_list, rrecord_list)
         expected_prefix_events = [(-1.0, 0, 0, 0, 'a1'),
                                   (-1.0, 1, 2, 0, 'c1'),
@@ -353,78 +351,78 @@ class DebugblockerTestCases(unittest.TestCase):
 
     def test_replace_nan_to_empty_1(self):
         field = np.nan
-        self.assertEqual(db.replace_nan_to_empty(field), '')
+        self.assertEqual(db._replace_nan_to_empty(field), '')
 
     def test_replace_nan_to_empty_2(self):
         field = ''
-        self.assertEqual(db.replace_nan_to_empty(field), '')
+        self.assertEqual(db._replace_nan_to_empty(field), '')
         field = 'string'
-        self.assertEqual(db.replace_nan_to_empty(field), 'string')
+        self.assertEqual(db._replace_nan_to_empty(field), 'string')
 
     def test_replace_nan_to_empty_3(self):
         field = 1
-        self.assertEqual(db.replace_nan_to_empty(field), '1')
+        self.assertEqual(db._replace_nan_to_empty(field), '1')
         field = 3.57
-        self.assertEqual(db.replace_nan_to_empty(field), '4')
+        self.assertEqual(db._replace_nan_to_empty(field), '4')
         field = 1234.5678e5
-        self.assertEqual(db.replace_nan_to_empty(field), '123456780')
+        self.assertEqual(db._replace_nan_to_empty(field), '123456780')
 
     def test_build_global_token_order_1(self):
         record_list = []
         actual_dict = {}
         expected_dict = {}
-        db.build_global_token_order(record_list, actual_dict)
+        db._build_global_token_order(record_list, actual_dict)
         self.assertEqual(actual_dict, expected_dict)
 
         record_list = [[], [], []]
         actual_dict = {}
         expected_dict = {}
-        db.build_global_token_order(record_list, actual_dict)
+        db._build_global_token_order(record_list, actual_dict)
         self.assertEqual(actual_dict, expected_dict)
 
     def test_build_global_token_order_2(self):
         record_list = [['c', 'b', 'a'], [], ['b', 'c'], ['c', 'c']]
         actual_dict = {}
         expected_dict = {'a': 1, 'c': 4, 'b': 2}
-        db.build_global_token_order(record_list, actual_dict)
+        db._build_global_token_order(record_list, actual_dict)
         self.assertEqual(actual_dict, expected_dict)
 
     def test_sort_record_tokens_by_global_order_1(self):
         record_list = []
         order_dict = {}
-        db.build_global_token_order(record_list, order_dict)
-        db.sort_record_tokens_by_global_order(record_list, order_dict)
+        db._build_global_token_order(record_list, order_dict)
+        db._sort_record_tokens_by_global_order(record_list, order_dict)
         expected_out_list = []
         self.assertEqual(record_list, expected_out_list)
 
         record_list = [[], [], []]
         order_dict = {}
-        db.build_global_token_order(record_list, order_dict)
-        db.sort_record_tokens_by_global_order(record_list, order_dict)
+        db._build_global_token_order(record_list, order_dict)
+        db._sort_record_tokens_by_global_order(record_list, order_dict)
         expected_out_list = [[], [], []]
         self.assertEqual(record_list, expected_out_list)
 
     def test_sort_record_tokens_by_global_order_2(self):
         record_list = [['c', 'b', 'a'], [], ['c', 'b'], ['c', 'c']]
         order_dict = {}
-        db.build_global_token_order(record_list, order_dict)
-        db.sort_record_tokens_by_global_order(record_list, order_dict)
+        db._build_global_token_order(record_list, order_dict)
+        db._sort_record_tokens_by_global_order(record_list, order_dict)
         expected_out_list = [['a', 'b', 'c'], [], ['b', 'c'], ['c', 'c']]
         self.assertEqual(record_list, expected_out_list)
 
     def test_sort_record_tokens_by_global_order_3(self):
         record_list = [['c', 'b', 'a'], [], ['c', 'b'], ['c', 'c']]
         order_dict = {}
-        db.build_global_token_order(record_list, order_dict)
+        db._build_global_token_order(record_list, order_dict)
         record_list[1] = ['d', 'e', 'c']
-        db.sort_record_tokens_by_global_order(record_list, order_dict)
+        db._sort_record_tokens_by_global_order(record_list, order_dict)
         expected_out_list = [['a', 'b', 'c'], ['c'], ['b', 'c'], ['c', 'c']]
         self.assertEqual(record_list, expected_out_list)
 
     def test_get_record_id_to_index_map_1(self):
         A = read_csv_metadata(path_a, key='ID')
         key = mg.get_key(A)
-        actual_rec_id_to_idx = db.get_record_id_to_index_map(A, key)
+        actual_rec_id_to_idx = db._get_record_id_to_index_map(A, key)
         expected_rec_id_to_idx = {'a1': 0, 'a3': 2, 'a2': 1, 'a5': 4, 'a4': 3}
         self.assertEqual(actual_rec_id_to_idx, expected_rec_id_to_idx)
 
@@ -435,18 +433,18 @@ class DebugblockerTestCases(unittest.TestCase):
         dataframe = pd.DataFrame(table)
         dataframe.columns = ['ID', 'title']
         mg.set_key(dataframe, key)
-        db.get_record_id_to_index_map(dataframe, key)
+        db._get_record_id_to_index_map(dataframe, key)
 
     def test_get_tokenized_column_1(self):
         column = []
-        actual_ret_column = db.get_tokenized_column(column)
+        actual_ret_column = db._get_tokenized_column(column)
         expected_ret_column = []
         self.assertEqual(actual_ret_column, expected_ret_column)
 
     def test_get_tokenized_column_2(self):
         column = ['hello world', np.nan, 'how are you',
                   '', 'this is a blocking debugger']
-        actual_ret_column = db.get_tokenized_column(column)
+        actual_ret_column = db._get_tokenized_column(column)
         expected_ret_column = [['hello', 'world'], [''],
                                ['how', 'are', 'you'], [''],
                                 ['this', 'is', 'a', 'blocking', 'debugger']]
@@ -456,7 +454,7 @@ class DebugblockerTestCases(unittest.TestCase):
         A = read_csv_metadata(path_a, key='ID')
         A_key = mg.get_key(A)
         feature_list = range(len(A.columns))
-        actual_record_list = db.get_tokenized_table(A, A_key, feature_list)
+        actual_record_list = db._get_tokenized_table(A, A_key, feature_list)
 
         expected_record_list = []
         test_file_path = os.sep.join([debugblocker_datasets_path, 'test_get_tokenized_table_1.txt'])
@@ -470,7 +468,7 @@ class DebugblockerTestCases(unittest.TestCase):
         B = read_csv_metadata(path_b, key='ID')
         B_key = mg.get_key(B)
         feature_list = [0, 1, 3]
-        actual_record_list = db.get_tokenized_table(B, B_key, feature_list)
+        actual_record_list = db._get_tokenized_table(B, B_key, feature_list)
 
         expected_record_list = []
         test_file_path = os.sep.join([debugblocker_datasets_path, 'test_get_tokenized_table_2.txt'])
@@ -489,7 +487,7 @@ class DebugblockerTestCases(unittest.TestCase):
         key = 'ID'
         mg.set_key(dataframe, key)
         feature_list = [1, 3, 4, 5]
-        actual_record_list = db.get_tokenized_table(dataframe, key, feature_list)
+        actual_record_list = db._get_tokenized_table(dataframe, key, feature_list)
         expected_record_list = [['abc', 'abc_1', 'asdf', '135', 'east', 'abc_2', 'st'],
                                 ['aaa', 'bbb', '246', 'west', 'abc', 'st'],
                                 ['cc', 'dd', 'cc_1', 'unknown', '246', 'west', 'def', 'st']]
@@ -499,7 +497,7 @@ class DebugblockerTestCases(unittest.TestCase):
     def test_get_feature_weight_1(self):
         A = []
         dataframe = pd.DataFrame(A)
-        db.get_feature_weight(dataframe)
+        db._get_feature_weight(dataframe)
 
     def test_get_feature_weight_2(self):
         A = read_csv_metadata(path_a, key='ID')
@@ -507,27 +505,27 @@ class DebugblockerTestCases(unittest.TestCase):
         A_key = mg.get_key(A)
         B_key = mg.get_key(B)
         corres_list = [(0, 0), (1, 1), (4, 4), (5, 5)]
-        A_filtered, B_filtered = db.get_filtered_table(
+        A_filtered, B_filtered = db._get_filtered_table(
             A, B, A_key, B_key, corres_list)
-        A_wlist = db.get_feature_weight(A_filtered)
+        A_wlist = db._get_feature_weight(A_filtered)
         expected_A_wlist = [2.0, 2.0, 2.0, 1.4]
         self.assertEqual(A_wlist, expected_A_wlist)
 
-        B_wlist = db.get_feature_weight(B_filtered)
+        B_wlist = db._get_feature_weight(B_filtered)
         expected_B_wlist = [2.0, 2.0, 2.0, 1.3333333333333333]
         self.assertEqual(B_wlist, expected_B_wlist)
 
     def test_get_feature_weight_3(self):
         table = [[''], [np.nan]]
         dataframe = pd.DataFrame(table)
-        weight_list = db.get_feature_weight(dataframe)
+        weight_list = db._get_feature_weight(dataframe)
         self.assertEqual(weight_list, [0.0])
 
     def test_select_features_1(self):
         A = read_csv_metadata(path_a, key='ID')
         B = read_csv_metadata(path_b, key='ID')
         A_key = mg.get_key(A)
-        actual_selected_features = db.select_features(A, B, A_key)
+        actual_selected_features = db._select_features(A, B, A_key)
         expected_selected_features = [1, 3, 4]
         self.assertEqual(actual_selected_features, expected_selected_features)
 
@@ -537,8 +535,8 @@ class DebugblockerTestCases(unittest.TestCase):
         A_key = mg.get_key(A)
         B_key = mg.get_key(B)
         corres_list = [(0, 0), (1, 1), (4, 4)]
-        A_filtered, B_filtered = db.get_filtered_table(A, B, A_key, B_key, corres_list)
-        actual_selected_features = db.select_features(
+        A_filtered, B_filtered = db._get_filtered_table(A, B, A_key, B_key, corres_list)
+        actual_selected_features = db._select_features(
             A_filtered, B_filtered, A_key)
         expected_selected_features = [1, 2]
         self.assertEqual(actual_selected_features, expected_selected_features)
@@ -549,8 +547,8 @@ class DebugblockerTestCases(unittest.TestCase):
         A_key = mg.get_key(A)
         B_key = mg.get_key(B)
         corres_list = [(0, 0)]
-        A_filtered, B_filtered = db.get_filtered_table(A, B, A_key, B_key, corres_list)
-        actual_selected_features = db.select_features(
+        A_filtered, B_filtered = db._get_filtered_table(A, B, A_key, B_key, corres_list)
+        actual_selected_features = db._select_features(
             A_filtered, B_filtered, A_key)
         expected_selected_features = []
         self.assertEqual(actual_selected_features, expected_selected_features)
@@ -565,7 +563,7 @@ class DebugblockerTestCases(unittest.TestCase):
 
         A_filtered = A[A_field_set]
         B_filtered = B[B_field_set]
-        db.select_features(
+        db._select_features(
             A_filtered, B_filtered, A_key)
 
     @raises(AssertionError)
@@ -578,7 +576,7 @@ class DebugblockerTestCases(unittest.TestCase):
 
         A_filtered = A[A_field_set]
         B_filtered = B[B_field_set]
-        db.select_features(
+        db._select_features(
             A_filtered, B_filtered, A_key)
 
     def test_topk_sim_join_1(self):
@@ -589,7 +587,7 @@ class DebugblockerTestCases(unittest.TestCase):
         cand_path = os.sep.join([debugblocker_datasets_path, 'test_topk_sim_join_1_C.txt'])
         cand_set = read_formatted_cand_set(cand_path)
 
-        actual_topk_heap = db.topk_sim_join(lrecord_list, rrecord_list, cand_set, 100)
+        actual_topk_heap = db._topk_sim_join(lrecord_list, rrecord_list, cand_set, 100)
         expected_topk_heap = [(0.1, 0, 3),(0.15789473684210525, 0, 2),(0.1, 2, 3),
                               (0.15789473684210525, 1, 1), (0.15789473684210525, 2, 2),
                               (0.14285714285714285, 0, 4),(0.1, 4, 0),
@@ -603,7 +601,7 @@ class DebugblockerTestCases(unittest.TestCase):
         lrecord_list = [['asdf', 'fdsa']]
         rrecord_list = [['aa', 'bb']]
         cand_set = {(0, 0)}
-        actual_topk_heap = db.topk_sim_join(lrecord_list, rrecord_list, cand_set, 100)
+        actual_topk_heap = db._topk_sim_join(lrecord_list, rrecord_list, cand_set, 100)
         expected_topk_heap = []
         self.assertEqual(actual_topk_heap, expected_topk_heap)
 

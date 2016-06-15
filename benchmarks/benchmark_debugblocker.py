@@ -9,7 +9,6 @@ ab = mg.AttrEquivalenceBlocker()
 
 
 class TimeDebugBlockingAnime:
-    timeout=60.0
 
     def setup(self):
         path_for_A = os.sep.join([datasets_path, 'anime', 'A.csv'])
@@ -37,7 +36,6 @@ class TimeDebugBlockingAnime:
 
 
 class TimeDebugBlockingBeer:
-    timeout=60.0
 
     def setup(self):
         path_for_A = os.sep.join([datasets_path, 'beer', 'A.csv'])
@@ -65,7 +63,6 @@ class TimeDebugBlockingBeer:
 
 
 class TimeDebugBlockingBikes:
-    timeout=60.0
 
     def setup(self):
         path_for_A = os.sep.join([datasets_path, 'bikes', 'A.csv'])
@@ -93,7 +90,6 @@ class TimeDebugBlockingBikes:
 
 
 class TimeDebugBlockingBooks:
-    timeout=60.0
 
     def setup(self):
         path_for_A = os.sep.join([datasets_path, 'books', 'A.csv'])
@@ -121,7 +117,6 @@ class TimeDebugBlockingBooks:
 
 
 class TimeDebugBlockingCitations:
-    timeout=60.0
 
     def setup(self):
         path_for_A = os.sep.join([datasets_path, 'citations', 'A.csv'])
@@ -149,7 +144,6 @@ class TimeDebugBlockingCitations:
 
 
 class TimeDebugBlockingCosmetics:
-    timeout=60.0
 
     def setup(self):
         path_for_A = os.sep.join([datasets_path, 'cosmetics', 'A.csv'])
