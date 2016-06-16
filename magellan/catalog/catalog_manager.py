@@ -588,7 +588,7 @@ def get_key(data_frame):
         A string value containing the key column name is returned (if present).
 
     Raises:
-        This function calls get_properties internally, and get_properties
+        This function calls get_property internally, and get_property
         raises the following exceptions:
         AssertionError: If the object is not of type pandas DataFrame.
         AssertionError: If the property name is not of type string.
@@ -625,75 +625,101 @@ def set_key(data_frame, key_attribute):
             pandas DataFrame.
         AssertionError: If the input key_attribute is not of type string.
         KeyError: If the given key attribute is not in the DataFrame columns.
-
-
     """
+    # Validate input parameters
 
+    # # We expect the input object (data_frame) to be of type pandas DataFrame
     if not isinstance(data_frame, pd.DataFrame):
         logger.error('Input object is not of type pandas DataFrame')
         raise AssertionError('Input object is not of type pandas DataFrame')
 
+    # # We expect input key attribute to be of type string
     if not isinstance(key_attribute, six.string_types):
         logger.error('Input key attribute is not of type string')
 
+    # Check if the key attribute is present as one of the columns in the
+    # DataFrame
     if not ch.check_attrs_present(data_frame, key_attribute):
-        logger.error('Input key ( %s ) not in the dataframe' % key_attribute)
-        raise KeyError('Input key ( %s ) not in the dataframe' % key_attribute)
+        logger.error('Input key ( %s ) not in the dataframe', key_attribute)
+        raise KeyError('Input key ( %s ) not in the dataframe', key_attribute)
 
+    # Check if the key attribute satisfies the conditions to be a key. If
+    # not, just return False.
+    # Note: Currently it is not clear, whether we should return False from
+    # here or raise an exception. As of now resorting to just returning
+    # False, because this function is used by other computation
+    # intensive commands in Magellan and raising an exception might make all
+    # the work done in those commands go in vain (or those commands should
+    # catch the exception correctly, which may be complicated and require
+    # changes to the current code). We need to revisit this
+    # later.
     if ch.is_key_attribute(data_frame, key_attribute) is False:
-        logger.warning(
-            'Attribute (' + key_attribute + ') does not qualify to be a key; '
-                                  'Not setting/replacing the key')
+        logger.warning('Attribute (%s ) does not qualify  to be a key; Not '
+                       'setting/replacing the key', key_attribute)
         return False
     else:
+        # Set the key property for the input DataFrame
         return set_property(data_frame, 'key', key_attribute)
 
 
-# def gentle_set_key(df, key):
-#     """
-#     Set the key attribute for a dataframe
-#
-#     Args:
-#         df (pandas dataframe): Dataframe for which the key must be set
-#         key (str): Key attribute in the dataframe
-#
-#     Returns:
-#         status (bool). Returns True if the key attribute was set successfully,
-# else returns False
-#
-#     """
-#
-#     if not isinstance(df, pd.DataFrame):
-#         logger.error('Input object is not of type pandas data frame')
-#         raise AssertionError('Input object is not of type pandas data frame')
-#
-#     if not key in df.columns:
-#         logger.warning('Input key ( %s ) not in the dataframe' %key)
-#         return False
-#
-#     if ch.is_key_attribute(df, key) is False:
-#         logger.warning('Attribute (' + key + ') does not qualify to be a key;
-# Not setting/replacing the key')
-#         return False
-#     else:
-#         return set_property(df, 'key', key)
+def get_fk_ltable(data_frame):
+    """
+    Gets foreign key to left table for a DataFrame from the catalog.
+
+     Specifically this function is a sugar function that will get the foreign
+     key to left table using underlying get_property function. This function
+     is typically called on a DataFrame which contains metadata such as foreign
+     key, ltable, foreign key rtable, ltable, rtable.
+
+    Args:
+        data_frame (DataFrame): Input DataFrame for which the foreign key
+            ltable property must be retrieved.
+
+    Returns:
+        A python object, typically a string is returned.
+
+    Raises:
+        This function calls get_property internally, and get_property
+        raises the following exceptions:
+        AssertionError: If the object is not of type pandas DataFrame.
+        AssertionError: If the property name is not of type string.
+        KeyError: If the DataFrame information is not present in the catalog.
+        KeyError: If the requested property for the DataFrame is not present
+            in the catalog.
+
+    """
+    # Call the get_property function and relay the result.
+    return get_property(data_frame, 'fk_ltable')
 
 
+def get_fk_rtable(data_frame):
+    """
+    Gets foreign key to right table for a DataFrame from the catalog.
 
-def get_fk_ltable(df):
-    if not isinstance(df, pd.DataFrame):
-        logger.error('Input object is not of type pandas data frame')
-        raise AssertionError('Input object is not of type pandas data frame')
+     Specifically this function is a sugar function that will get the foreign
+     key to right table using underlying get_property function. This function
+     is typically called on a DataFrame which contains metadata such as foreign
+     key, ltable, foreign key rtable, ltable, rtable.
 
-    return get_property(df, 'fk_ltable')
+    Args:
+        data_frame (DataFrame): Input DataFrame for which the foreign key
+            rtable property must be retrieved.
 
+    Returns:
+        A python object, typically a string is returned.
 
-def get_fk_rtable(df):
-    if not isinstance(df, pd.DataFrame):
-        logger.error('Input object is not of type pandas data frame')
-        raise AssertionError('Input object is not of type pandas data frame')
+    Raises:
+        This function calls get_property internally, and get_property
+        raises the following exceptions:
+        AssertionError: If the object is not of type pandas DataFrame.
+        AssertionError: If the property name is not of type string.
+        KeyError: If the DataFrame information is not present in the catalog.
+        KeyError: If the requested property for the DataFrame is not present
+            in the catalog.
 
-    return get_property(df, 'fk_rtable')
+    """
+    # Call the get_property function and relay the result.
+    return get_property(data_frame, 'fk_rtable')
 
 
 def set_fk_ltable(df, fk_ltable):
