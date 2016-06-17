@@ -1,5 +1,5 @@
 #!/bin/bash
-for i in `seq 1 100`;
+for i in `seq 1 1000`;
 do
-  nosetests 
+  nosetests -w magellan/tests/multicore
 done
