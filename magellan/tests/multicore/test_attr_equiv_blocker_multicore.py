@@ -85,7 +85,7 @@ class AttrEquivBlockerMulticoreTestCases(unittest.TestCase):
         self.validate_metadata(C, l_output_attrs, r_output_attrs,
                                l_output_prefix, r_output_prefix)
         self.validate_data(C, expected_ids_1)
-
+    
     def test_ab_block_tables_wi_no_output_tuples_njobs_2(self):
         C = self.ab.block_tables(self.A, self.B, l_block_attr_3, r_block_attr_3, n_jobs=2)
         self.validate_metadata(C)
@@ -149,7 +149,7 @@ class AttrEquivBlockerMulticoreTestCases(unittest.TestCase):
         self.validate_metadata(C, l_output_attrs, r_output_attrs,
                                l_output_prefix, r_output_prefix)
         self.validate_data(C, expected_ids_1)
-        D = self.ab.block_candset(C, l_block_attr_2, r_block_attr_2, n_jobs=2)
+        D = self.ab.block_candset(C, l_block_attr_2, r_block_attr_2, n_jobs=2, show_progress=False)
         self.validate_metadata_two_candsets(C, D)
         self.validate_data(D, expected_ids_2)
 
@@ -157,7 +157,7 @@ class AttrEquivBlockerMulticoreTestCases(unittest.TestCase):
         C = self.ab.block_tables(self.A, self.B, l_block_attr_3, r_block_attr_3)
         self.validate_metadata(C)
         self.validate_data(C)
-        D = self.ab.block_candset(C, l_block_attr_2, r_block_attr_2, n_jobs=2)
+        D = self.ab.block_candset(C, l_block_attr_2, r_block_attr_2, n_jobs=2, show_progress=False)
         self.validate_metadata_two_candsets(C, D)
         self.validate_data(D)
 
@@ -165,7 +165,7 @@ class AttrEquivBlockerMulticoreTestCases(unittest.TestCase):
         C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1)
         self.validate_metadata(C)
         self.validate_data(C, expected_ids_1)
-        D = self.ab.block_candset(C, l_block_attr_3, r_block_attr_3, n_jobs=2)
+        D = self.ab.block_candset(C, l_block_attr_3, r_block_attr_3, n_jobs=2, show_progress=False)
         self.validate_metadata_two_candsets(C, D)
         self.validate_data(D)
 
@@ -175,7 +175,7 @@ class AttrEquivBlockerMulticoreTestCases(unittest.TestCase):
         self.validate_metadata(C, l_output_attrs, r_output_attrs,
                                l_output_prefix, r_output_prefix)
         self.validate_data(C, expected_ids_1)
-        D = self.ab.block_candset(C, l_block_attr_2, r_block_attr_2, n_jobs=-1)
+        D = self.ab.block_candset(C, l_block_attr_2, r_block_attr_2, n_jobs=-1, show_progress=False)
         self.validate_metadata_two_candsets(C, D)
         self.validate_data(D, expected_ids_2)
 
@@ -183,7 +183,7 @@ class AttrEquivBlockerMulticoreTestCases(unittest.TestCase):
         C = self.ab.block_tables(self.A, self.B, l_block_attr_3, r_block_attr_3)
         self.validate_metadata(C)
         self.validate_data(C)
-        D = self.ab.block_candset(C, l_block_attr_2, r_block_attr_2, n_jobs=-1)
+        D = self.ab.block_candset(C, l_block_attr_2, r_block_attr_2, n_jobs=-1, show_progress=False)
         self.validate_metadata_two_candsets(C, D)
         self.validate_data(D)
 
@@ -191,7 +191,7 @@ class AttrEquivBlockerMulticoreTestCases(unittest.TestCase):
         C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1)
         self.validate_metadata(C)
         self.validate_data(C, expected_ids_1)
-        D = self.ab.block_candset(C, l_block_attr_3, r_block_attr_3, n_jobs=-1)
+        D = self.ab.block_candset(C, l_block_attr_3, r_block_attr_3, show_progress=False, n_jobs=-1)
         self.validate_metadata_two_candsets(C, D)
         self.validate_data(D)
 
@@ -200,3 +200,4 @@ class AttrEquivBlockerMulticoreTestCases(unittest.TestCase):
                                      r_block_attr_1), False)
         assert_equal(self.ab.block_tuples(self.A.ix[2], self.B.ix[2], l_block_attr_1,
                                      r_block_attr_1), True)
+    
