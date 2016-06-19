@@ -722,25 +722,40 @@ def get_fk_rtable(data_frame):
     return get_property(data_frame, 'fk_rtable')
 
 
-def set_fk_ltable(df, fk_ltable):
+def set_fk_ltable(data_frame, fk_ltable):
     """
-    Set foreign key attribute to the left table
+    Sets the foreign key to ltable for a DataFrame in the catalog.
+
+     Specifically this function is a sugar function that will set the foreign
+     key to left table using underlying set_property function. This function
+     is typically called on a DataFrame which contains metadata such as foreign
+     key, ltable, foreign key rtable, ltable, rtable.
+
     Args:
-        df (pandas dataframe): Dataframe for which the foreign key must be set
-        fk_ltable (str): Foreign key attribute in the dataframe
+        data_frame (DataFrame): Input DataFrame for which the foreign key
+            ltable property must be set.
+        fk_ltable (str): Foreign key to the ltable that must tbe set for the
+            DataFrame in the catalog.
 
     Returns:
-        status (bool). Returns True if the ltable foreign key attribute was set successfully, else returns False
+        status (bool). Returns True if the ltable foreign key
+        attribute was set successfully, else returns False.
+
+    Raises:
+        AssertionError: If the input object (data_frame) is not of type
+        pandas DataFrame.
+        AssertionError: If the attribute (fk_ltable) is not in the input
+        DataFrame.
     """
-    if not isinstance(df, pd.DataFrame):
+    if not isinstance(data_frame, pd.DataFrame):
         logger.error('Input object is not of type pandas data frame')
         raise AssertionError('Input object is not of type pandas data frame')
 
-    if not fk_ltable in df.columns:
+    if not fk_ltable in data_frame.columns:
         logger.error('Input attr. ( %s ) not in the dataframe' % fk_ltable)
         raise KeyError('Input attr. ( %s ) not in the dataframe' % fk_ltable)
 
-    return set_property(df, 'fk_ltable', fk_ltable)
+    return set_property(data_frame, 'fk_ltable', fk_ltable)
 
 
 def validate_and_set_fk_ltable(df_foreign, fk_ltable, ltable, l_key):
