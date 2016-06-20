@@ -485,107 +485,107 @@ class CatalogManagerTestCases(unittest.TestCase):
         self.assertEqual(cm.is_dfinfo_present(C), False)
 
 
-    def test_get_reqd_metadata_from_catalog_valid_1(self):
-        A = read_csv_metadata(path_a)
-        d = cm.get_reqd_metadata_from_catalog(A, 'key')
-        self.assertEqual(d['key'], cm.get_key(A))
+    # def test_get_reqd_metadata_from_catalog_valid_1(self):
+    #     A = read_csv_metadata(path_a)
+    #     d = cm.get_reqd_metadata_from_catalog(A, 'key')
+    #     self.assertEqual(d['key'], cm.get_key(A))
+    #
+    # def test_get_reqd_metadata_from_catalog_valid_2(self):
+    #     A = read_csv_metadata(path_a)
+    #     d = cm.get_reqd_metadata_from_catalog(A, ['key'])
+    #     self.assertEqual(d['key'], cm.get_key(A))
+    #
+    # def test_get_reqd_metadata_from_catalog_valid_3(self):
+    #     A = read_csv_metadata(path_a)
+    #     B = read_csv_metadata(path_b, key='ID')
+    #     C = read_csv_metadata(path_c, ltable=A, rtable=B)
+    #     d = cm.get_reqd_metadata_from_catalog(C, ['key', 'fk_ltable', 'fk_rtable', 'ltable', 'rtable'])
+    #     self.assertEqual(d['key'], cm.get_key(C))
+    #     self.assertEqual(d['fk_ltable'], cm.get_fk_ltable(C))
+    #     self.assertEqual(d['fk_rtable'], cm.get_fk_rtable(C))
+    #     self.assertEqual(cm.get_ltable(C).equals(A), True)
+    #     self.assertEqual(cm.get_rtable(C).equals(B), True)
+    #
+    # @raises(AssertionError)
+    # def test_get_reqd_metadata_from_catalog_err_1(self):
+    #     cm.get_reqd_metadata_from_catalog(None, ['key'])
+    #
+    # @raises(AssertionError)
+    # def test_get_reqd_metadata_from_catalog_err_2(self):
+    #     A = read_csv_metadata(path_a)
+    #     B = read_csv_metadata(path_b, key='ID')
+    #     C = read_csv_metadata(path_c, ltable=A, rtable=B)
+    #     d = cm.get_reqd_metadata_from_catalog(C, ['key', 'fk_ltable1', 'fk_rtable', 'ltable', 'rtable'])
+    #
+    #
+    # def test_update_reqd_metadata_with_kwargs_valid_1(self):
+    #     A = read_csv_metadata(path_a)
+    #     d = cm.get_all_properties(A)
+    #     metadata = {}
+    #     cm._update_reqd_metadata_with_kwargs(metadata, d, ['key'])
+    #     self.assertEqual(metadata['key'], d['key'])
+    #
+    # def test_update_reqd_metadata_with_kwargs_valid_2(self):
+    #     A = read_csv_metadata(path_a)
+    #     d = cm.get_all_properties(A)
+    #     metadata = {}
+    #     cm._update_reqd_metadata_with_kwargs(metadata, d, 'key')
+    #     self.assertEqual(metadata['key'], d['key'])
+    #
+    # @raises(AssertionError)
+    # def test_update_reqf_metadata_with_kwargs_invalid_dict_1(self):
+    #     A = read_csv_metadata(path_a)
+    #     d = cm.get_all_properties(A)
+    #     cm._update_reqd_metadata_with_kwargs(None, d, 'key')
+    #
+    # @raises(AssertionError)
+    # def test_update_reqf_metadata_with_kwargs_invalid_dict_2(self):
+    #     A = read_csv_metadata(path_a)
+    #     d = cm.get_all_properties(A)
+    #     cm._update_reqd_metadata_with_kwargs(d, None, 'key')
+    #
+    # @raises(AssertionError)
+    # def test_update_reqd_metadata_with_kwargs_invalid_elts(self):
+    #     A = read_csv_metadata(path_a)
+    #     d = cm.get_all_properties(A)
+    #     metadata = {}
+    #     cm._update_reqd_metadata_with_kwargs(metadata, d, ['key1'])
 
-    def test_get_reqd_metadata_from_catalog_valid_2(self):
-        A = read_csv_metadata(path_a)
-        d = cm.get_reqd_metadata_from_catalog(A, ['key'])
-        self.assertEqual(d['key'], cm.get_key(A))
 
-    def test_get_reqd_metadata_from_catalog_valid_3(self):
-        A = read_csv_metadata(path_a)
-        B = read_csv_metadata(path_b, key='ID')
-        C = read_csv_metadata(path_c, ltable=A, rtable=B)
-        d = cm.get_reqd_metadata_from_catalog(C, ['key', 'fk_ltable', 'fk_rtable', 'ltable', 'rtable'])
-        self.assertEqual(d['key'], cm.get_key(C))
-        self.assertEqual(d['fk_ltable'], cm.get_fk_ltable(C))
-        self.assertEqual(d['fk_rtable'], cm.get_fk_rtable(C))
-        self.assertEqual(cm.get_ltable(C).equals(A), True)
-        self.assertEqual(cm.get_rtable(C).equals(B), True)
+    # def test_get_diff_with_reqd_metadata_valid_1(self):
+    #     A = read_csv_metadata(path_a)
+    #     d = cm.get_all_properties(A)
+    #     d1 = cm._get_diff_with_required_metadata(d, 'key1')
+    #     self.assertEqual(len(d1), 1)
+    #
+    # def test_get_diff_with_reqd_metadata_valid_2(self):
+    #     A = read_csv_metadata(path_a)
+    #     d = cm.get_all_properties(A)
+    #     d1 = cm._get_diff_with_required_metadata(d, ['key1'])
+    #     self.assertEqual(len(d1), 1)
+    #
+    # @raises(AssertionError)
+    # def test_get_diff_with_reqd_metadata_invalid_dict(self):
+    #     d1 = cm._get_diff_with_required_metadata(None, ['key1'])
 
-    @raises(AssertionError)
-    def test_get_reqd_metadata_from_catalog_err_1(self):
-        cm.get_reqd_metadata_from_catalog(None, ['key'])
-
-    @raises(AssertionError)
-    def test_get_reqd_metadata_from_catalog_err_2(self):
-        A = read_csv_metadata(path_a)
-        B = read_csv_metadata(path_b, key='ID')
-        C = read_csv_metadata(path_c, ltable=A, rtable=B)
-        d = cm.get_reqd_metadata_from_catalog(C, ['key', 'fk_ltable1', 'fk_rtable', 'ltable', 'rtable'])
-
-
-    def test_update_reqd_metadata_with_kwargs_valid_1(self):
-        A = read_csv_metadata(path_a)
-        d = cm.get_all_properties(A)
-        metadata = {}
-        cm._update_reqd_metadata_with_kwargs(metadata, d, ['key'])
-        self.assertEqual(metadata['key'], d['key'])
-
-    def test_update_reqd_metadata_with_kwargs_valid_2(self):
-        A = read_csv_metadata(path_a)
-        d = cm.get_all_properties(A)
-        metadata = {}
-        cm._update_reqd_metadata_with_kwargs(metadata, d, 'key')
-        self.assertEqual(metadata['key'], d['key'])
-
-    @raises(AssertionError)
-    def test_update_reqf_metadata_with_kwargs_invalid_dict_1(self):
-        A = read_csv_metadata(path_a)
-        d = cm.get_all_properties(A)
-        cm._update_reqd_metadata_with_kwargs(None, d, 'key')
-
-    @raises(AssertionError)
-    def test_update_reqf_metadata_with_kwargs_invalid_dict_2(self):
-        A = read_csv_metadata(path_a)
-        d = cm.get_all_properties(A)
-        cm._update_reqd_metadata_with_kwargs(d, None, 'key')
-
-    @raises(AssertionError)
-    def test_update_reqd_metadata_with_kwargs_invalid_elts(self):
-        A = read_csv_metadata(path_a)
-        d = cm.get_all_properties(A)
-        metadata = {}
-        cm._update_reqd_metadata_with_kwargs(metadata, d, ['key1'])
-
-
-    def test_get_diff_with_reqd_metadata_valid_1(self):
-        A = read_csv_metadata(path_a)
-        d = cm.get_all_properties(A)
-        d1 = cm._get_diff_with_reqd_metadata(d, 'key1')
-        self.assertEqual(len(d1), 1)
-
-    def test_get_diff_with_reqd_metadata_valid_2(self):
-        A = read_csv_metadata(path_a)
-        d = cm.get_all_properties(A)
-        d1 = cm._get_diff_with_reqd_metadata(d, ['key1'])
-        self.assertEqual(len(d1), 1)
-
-    @raises(AssertionError)
-    def test_get_diff_with_reqd_metadata_invalid_dict(self):
-        d1 = cm._get_diff_with_reqd_metadata(None, ['key1'])
-
-    def test_is_all_reqd_metadata_present_valid_1(self):
-        A = read_csv_metadata(path_a)
-        d = cm.get_all_properties(A)
-        self.assertEqual(cm.is_all_reqd_metadata_present(d, 'key'),True)
-
-    def test_is_all_reqd_metadata_present_valid_2(self):
-        A = read_csv_metadata(path_a)
-        d = cm.get_all_properties(A)
-        self.assertEqual(cm.is_all_reqd_metadata_present(d, ['key']),True)
-
-    def test_is_all_reqd_metadata_present_valid_3(self):
-        A = read_csv_metadata(path_a)
-        d = cm.get_all_properties(A)
-        self.assertEqual(cm.is_all_reqd_metadata_present(d, ['key1']), False)
-
-    @raises(AssertionError)
-    def test_is_all_reqd_metadata_present_invalid_dict(self):
-        cm.is_all_reqd_metadata_present(None, 'key')
+    # def test_is_all_reqd_metadata_present_valid_1(self):
+    #     A = read_csv_metadata(path_a)
+    #     d = cm.get_all_properties(A)
+    #     self.assertEqual(cm.is_all_reqd_metadata_present(d, 'key'),True)
+    #
+    # def test_is_all_reqd_metadata_present_valid_2(self):
+    #     A = read_csv_metadata(path_a)
+    #     d = cm.get_all_properties(A)
+    #     self.assertEqual(cm.is_all_reqd_metadata_present(d, ['key']),True)
+    #
+    # def test_is_all_reqd_metadata_present_valid_3(self):
+    #     A = read_csv_metadata(path_a)
+    #     d = cm.get_all_properties(A)
+    #     self.assertEqual(cm.is_all_reqd_metadata_present(d, ['key1']), False)
+    #
+    # @raises(AssertionError)
+    # def test_is_all_reqd_metadata_present_invalid_dict(self):
+    #     cm.is_all_reqd_metadata_present(None, 'key')
 
 
     def test_show_properties_for_df_valid_1(self):
@@ -622,46 +622,46 @@ class CatalogManagerTestCases(unittest.TestCase):
 
     def test_validate_metadata_for_table_valid_1(self):
         A = pd.read_csv(path_a)
-        status = cm.validate_metadata_for_table(A, 'ID', 'table', None, False)
+        status = cm._validate_metadata_for_table(A, 'ID', 'table', None, False)
         self.assertEqual(status, True)
 
     def test_validate_metadata_for_table_valid_2(self):
         import logging
         logger = logging.getLogger(__name__)
         A = pd.read_csv(path_a)
-        status = cm.validate_metadata_for_table(A, 'ID', 'table', logger, True)
+        status = cm._validate_metadata_for_table(A, 'ID', 'table', logger, True)
         self.assertEqual(status, True)
 
     @raises(AssertionError)
     def test_validate_metadata_for_table_invalid_df(self):
-        status = cm.validate_metadata_for_table(None, 'ID', 'table', None, False)
+        status = cm._validate_metadata_for_table(None, 'ID', 'table', None, False)
 
     @raises(KeyError)
     def test_validate_metadata_for_table_key_notin_catalog(self):
         A = pd.read_csv(path_a)
-        status = cm.validate_metadata_for_table(A, 'ID1', 'table', None, False)
+        status = cm._validate_metadata_for_table(A, 'ID1', 'table', None, False)
 
     @raises(KeyError)
     def test_validate_metadata_for_table_key_notstring(self):
         A = pd.read_csv(path_a)
-        status = cm.validate_metadata_for_table(A, None, 'table', None, False)
+        status = cm._validate_metadata_for_table(A, None, 'table', None, False)
 
     @raises(AssertionError)
     def test_validate_metadata_for_table_key_notstring(self):
         A = pd.read_csv(path_a)
-        status = cm.validate_metadata_for_table(A, 'zipcode', 'table', None, False)
+        status = cm._validate_metadata_for_table(A, 'zipcode', 'table', None, False)
 
 
     def test_validate_metadata_for_candset_valid_1(self):
         A = read_csv_metadata(path_a)
         B = read_csv_metadata(path_b, key='ID')
         C = read_csv_metadata(path_c, ltable=A, rtable=B)
-        status = cm.validate_metadata_for_candset(C, '_id', 'ltable_ID', 'rtable_ID', A, B, 'ID', 'ID', None, False)
+        status = cm._validate_metadata_for_candset(C, '_id', 'ltable_ID', 'rtable_ID', A, B, 'ID', 'ID', None, False)
         self.assertEqual(status, True)
 
     @raises(AssertionError)
     def test_validate_metadata_for_candset_invalid_df(self):
-        status = cm.validate_metadata_for_candset(None, '_id', 'ltable_ID', 'rtable_ID', None, None,
+        status = cm._validate_metadata_for_candset(None, '_id', 'ltable_ID', 'rtable_ID', None, None,
                                                   'ID', 'ID', None, False)
 
     @raises(KeyError)
@@ -669,7 +669,7 @@ class CatalogManagerTestCases(unittest.TestCase):
         A = read_csv_metadata(path_a)
         B = read_csv_metadata(path_b, key='ID')
         C = read_csv_metadata(path_c, ltable=A, rtable=B)
-        status = cm.validate_metadata_for_candset(C, 'id', 'ltable_ID', 'rtable_ID', A, B, 'ID', 'ID', None, False)
+        status = cm._validate_metadata_for_candset(C, 'id', 'ltable_ID', 'rtable_ID', A, B, 'ID', 'ID', None, False)
 
 
     @raises(KeyError)
@@ -677,40 +677,40 @@ class CatalogManagerTestCases(unittest.TestCase):
         A = read_csv_metadata(path_a)
         B = read_csv_metadata(path_b, key='ID')
         C = read_csv_metadata(path_c, ltable=A, rtable=B)
-        status = cm.validate_metadata_for_candset(C, '_id', 'ltableID', 'rtable_ID', A, B, 'ID', 'ID', None, False)
+        status = cm._validate_metadata_for_candset(C, '_id', 'ltableID', 'rtable_ID', A, B, 'ID', 'ID', None, False)
 
     @raises(KeyError)
     def test_validate_metadata_for_candset_fk_rtable_notin(self):
         A = read_csv_metadata(path_a)
         B = read_csv_metadata(path_b, key='ID')
         C = read_csv_metadata(path_c, ltable=A, rtable=B)
-        status = cm.validate_metadata_for_candset(C, '_id', 'ltable_ID', 'rtableID', A, B, 'ID', 'ID', None, False)
+        status = cm._validate_metadata_for_candset(C, '_id', 'ltable_ID', 'rtableID', A, B, 'ID', 'ID', None, False)
 
     @raises(AssertionError)
     def test_validate_metadata_for_candset_invlaid_ltable(self):
         B = pd.read_csv(path_b)
         C = pd.read_csv(path_c)
-        status = cm.validate_metadata_for_candset(C, '_id', 'ltable_ID', 'rtable_ID', None, B, 'ID', 'ID', None, False)
+        status = cm._validate_metadata_for_candset(C, '_id', 'ltable_ID', 'rtable_ID', None, B, 'ID', 'ID', None, False)
 
     @raises(AssertionError)
     def test_validate_metadata_for_candset_invlaid_rtable(self):
         B = pd.read_csv(path_b)
         C = pd.read_csv(path_c)
-        status = cm.validate_metadata_for_candset(C, '_id', 'ltable_ID', 'rtable_ID', B, None, 'ID', 'ID', None, False)
+        status = cm._validate_metadata_for_candset(C, '_id', 'ltable_ID', 'rtable_ID', B, None, 'ID', 'ID', None, False)
 
     @raises(KeyError)
     def test_validate_metadata_for_candset_lkey_notin_ltable(self):
         A = pd.read_csv(path_a)
         B = pd.read_csv(path_b)
         C = pd.read_csv(path_c)
-        status = cm.validate_metadata_for_candset(C, '_id', 'ltable_ID', 'rtable_ID', A, B, 'ID1', 'ID', None, False)
+        status = cm._validate_metadata_for_candset(C, '_id', 'ltable_ID', 'rtable_ID', A, B, 'ID1', 'ID', None, False)
 
     @raises(KeyError)
     def test_validate_metadata_for_candset_rkey_notin_rtable(self):
         A = pd.read_csv(path_a)
         B = pd.read_csv(path_b)
         C = pd.read_csv(path_c)
-        status = cm.validate_metadata_for_candset(C, '_id', 'ltable_ID', 'rtable_ID', A, B, 'ID', 'ID1', None, False)
+        status = cm._validate_metadata_for_candset(C, '_id', 'ltable_ID', 'rtable_ID', A, B, 'ID', 'ID1', None, False)
 
 
     def test_get_keys_for_ltable_rtable_valid(self):

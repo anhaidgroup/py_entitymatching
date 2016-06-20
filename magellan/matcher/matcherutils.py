@@ -26,8 +26,8 @@ def train_test_split(labeled_data, train_proportion=0.5, random_state=None, verb
                                                                                           logger, verbose)
 
     # # validate metadata
-    cm.validate_metadata_for_candset(labeled_data, key, fk_ltable, fk_rtable, ltable, rtable, l_key, r_key,
-                                     logger, verbose)
+    cm._validate_metadata_for_candset(labeled_data, key, fk_ltable, fk_rtable, ltable, rtable, l_key, r_key,
+                                      logger, verbose)
 
     num_rows = len(labeled_data)
     assert train_proportion >= 0 and train_proportion <= 1, " Train proportion is expected to be between 0 and 1"

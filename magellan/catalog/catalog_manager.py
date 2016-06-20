@@ -19,7 +19,7 @@ def get_property(data_frame, property_name):
     the Catalog.
 
     Args:
-        data_frame (DataFrame): Dataframe for which the property should be
+        data_frame (DataFrame): DataFrame for which the property should be
             retrieved.
         property_name (str): Name of the property that should be retrieved.
 
@@ -53,16 +53,16 @@ def get_property(data_frame, property_name):
 
     # Check for the present of input DataFrame in the catalog.
     if not catalog.is_df_info_present_in_catalog(data_frame):
-        logger.error('Dataframe information is not present in the catalog')
-        raise KeyError('Dataframe information is not present in the catalog')
+        logger.error('DataFrame information is not present in the catalog')
+        raise KeyError('DataFrame information is not present in the catalog')
 
     # Check if the requested property is present in the catalog.
     if not catalog.is_property_present_for_df(data_frame, property_name):
         logger.error(
-            'Requested metadata ( %s ) for the given dataframe is not '
+            'Requested metadata ( %s ) for the given DataFrame is not '
             'present in the catalog', property_name)
         raise KeyError(
-            'Requested metadata ( %s ) for the given dataframe is not '
+            'Requested metadata ( %s ) for the given DataFrame is not '
             'present in the catalog', property_name)
 
     # Return the requested property for the input DataFrame
@@ -182,8 +182,8 @@ def get_all_properties(data_frame):
     # Check if the DataFrame information is present in the catalog. If not
     # raise an error.
     if not catalog.is_df_info_present_in_catalog(data_frame):
-        logger.error('Dataframe information is not present in the catalog')
-        raise KeyError('Dataframe information is not present in the catalog')
+        logger.error('DataFrame information is not present in the catalog')
+        raise KeyError('DataFrame information is not present in the catalog')
 
     # Retrieve the properties for the DataFrame from the catalog and return
     # it back to the user.
@@ -278,8 +278,8 @@ def del_all_properties(data_frame):
 
     # Check if the DataFrame is present in the catalog. If not, raise an error
     if not catalog.is_df_info_present_in_catalog(data_frame):
-        logger.error('Dataframe information is not present in the catalog')
-        raise KeyError('Dataframe information is not present in the catalog')
+        logger.error('DataFrame information is not present in the catalog')
+        raise KeyError('DataFrame information is not present in the catalog')
 
     # Call the underlying catalog object's function to delete the properties
     # and relay its return value
@@ -291,7 +291,7 @@ def get_catalog():
     Gets the catalog information for the current session.
 
     Returns:
-        A python dictionary containing the caatalog information.
+        A python dictionary containing the catalog information.
         Specifically, the dictionary contains id(DataFrame object) as the key
         and their properties as value.
     """
@@ -402,8 +402,8 @@ def is_property_present_for_df(data_frame, property_name):
     # Check if the given DataFrame information is present in the catalog. If
     # not, raise an error.
     if catalog.is_df_info_present_in_catalog(data_frame) is False:
-        logger.error('Dataframe information is not present in the catalog')
-        raise KeyError('Dataframe information is not present in the catalog')
+        logger.error('DataFrame information is not present in the catalog')
+        raise KeyError('DataFrame information is not present in the catalog')
 
     # Call the underlying catalog object's function to check if the property
     # is present for the given DataFrame. Relay the return value from that
@@ -489,7 +489,7 @@ def set_properties(data_frame, properties, replace=True):
         catalog.init_properties(data_frame)
 
     # Now iterate through the given properties and set for the DataFrame.
-    # Note: Here we dont check the correctness of the input properties (i.e
+    # Note: Here we don't check the correctness of the input properties (i.e
     # we do not check if a property 'key' is indeed a key)
     for property_name, property_value in six.iteritems(properties):
         catalog.set_property(data_frame, property_name, property_value)
@@ -640,8 +640,8 @@ def set_key(data_frame, key_attribute):
     # Check if the key attribute is present as one of the columns in the
     # DataFrame
     if not ch.check_attrs_present(data_frame, key_attribute):
-        logger.error('Input key ( %s ) not in the dataframe', key_attribute)
-        raise KeyError('Input key ( %s ) not in the dataframe', key_attribute)
+        logger.error('Input key ( %s ) not in the DataFrame', key_attribute)
+        raise KeyError('Input key ( %s ) not in the DataFrame', key_attribute)
 
     # Check if the key attribute satisfies the conditions to be a key. If
     # not, just return False.
@@ -744,341 +744,464 @@ def set_fk_ltable(data_frame, fk_ltable):
     Raises:
         AssertionError: If the input object (data_frame) is not of type
         pandas DataFrame.
+        AssertionError: If the input attribute (fk_ltable) is not of type
+        string.
         AssertionError: If the attribute (fk_ltable) is not in the input
         DataFrame.
     """
+    # Validate the input parameters
+    # # We expect the input object to be of type pandas DataFrame
     if not isinstance(data_frame, pd.DataFrame):
         logger.error('Input object is not of type pandas data frame')
         raise AssertionError('Input object is not of type pandas data frame')
 
-    if not fk_ltable in data_frame.columns:
-        logger.error('Input attr. ( %s ) not in the dataframe' % fk_ltable)
-        raise KeyError('Input attr. ( %s ) not in the dataframe' % fk_ltable)
+    # # We expect the input fk_ltable to be of type string
+    if not isinstance(fk_ltable, six.string_types):
+        logger.error('The input (fk_ltable) is not of type string')
+        raise AssertionError('The input (fk_ltable) is not of type string')
 
+    # # The fk_ltable attribute should be one of the columns in the input
+    # DataFrame
+    if not ch.check_attrs_present(data_frame, fk_ltable):
+        logger.error('Input attr. ( %s ) not in the DataFrame' % fk_ltable)
+        raise KeyError('Input attr. ( %s ) not in the DataFrame' % fk_ltable)
+
+    # Call the set_property function and relay the result.
     return set_property(data_frame, 'fk_ltable', fk_ltable)
 
 
-def validate_and_set_fk_ltable(df_foreign, fk_ltable, ltable, l_key):
-    # validations are done inside the check_fk_constraint fn.
-    status = ch.check_fk_constraint(df_foreign, fk_ltable, ltable, l_key)
-    if status == True:
-        return set_property(df_foreign, 'fk_ltable', fk_ltable)
-    else:
-        logger.warning(
-            'FK constraint for ltable and fk_ltable is not satisfied; Not setting the '
-            'fk_ltable and ltable')
-        return False
-
-
-def validate_and_set_fk_rtable(df_foreign, fk_rtable, rtable, r_key):
-    # validations are done inside the check_fk_constraint fn.
-    status = ch.check_fk_constraint(df_foreign, fk_rtable, rtable, r_key)
-    if status == True:
-        return set_property(df_foreign, 'fk_rtable', fk_rtable)
-    else:
-        logger.warning(
-            'FK constraint for rtable and fk_rtable is not satisfied; Not setting the fk_rtable and rtable')
-        return False
-
-
-def set_fk_rtable(df, fk_rtable):
+def validate_and_set_fk_ltable(foreign_data_frame, foreign_key_ltable, ltable,
+                               ltable_key):
     """
-    Set foreign key attribute to the right table
+    Validates and set the foreign key ltable for a DataFrame in the the catalog.
+
+    Specifically, given a DataFrame and a foreign key attribute it checks
+    for the following conditions to be satisfied for the attribute. First it
+    checks that foreign key ltable attribute does not have any missing
+    values. Second it checks that the subset of foreign key values,
+    have unique values in the primary (base) table.
+
     Args:
-        df (pandas dataframe): Dataframe for which the foreign key must be set
-        fk_rtable (str): Foreign key attribute in the dataframe
+        foreign_data_frame (DataFrame): DataFrame containing the foreign key
+            (typically a candidate set, for example output from blocking two
+            tables).
+        foreign_key_ltable (str): An attribute in the foreign DataFrame
+        ltable (DataFrame): Base DataFrame, in which the foreign key
+            attribute would form the primary key.
+        ltable_key (str): An attribute in the base table
+            (typically a primary key attribute).
 
     Returns:
-        status (bool). Returns True if the rtable foreign key attribute was set successfully, else returns False
+        A boolean value of True will be returned if the validation was
+        successful and the update was successful in the catalog.
+    Raises:
+        AssertionError: If the input foreign DataFrame (foreign_data_frame)
+            is not of type pandas DataFrame.
+        AssertionError: If the foreign key ltable (foreign_key_ltable) is not
+            of type string.
+        AssertionError: If the input ltable (ltable) is not of type pandas
+            DataFrame.
+        AssertionError: If the ltable key (ltable_key) is not of type string.
+
+
     """
-    if not isinstance(df, pd.DataFrame):
+
+    # check the foreign key constraint
+    # # Note all the validations are done inside the function
+    # check_fk_constraint
+    status = ch.check_fk_constraint(foreign_data_frame, foreign_key_ltable,
+                                    ltable, ltable_key)
+
+    # If the validation is successful then set the property
+    if status:
+        return set_property(foreign_data_frame, 'fk_ltable', foreign_key_ltable)
+    else:
+        # else report the error and just return False.
+        logger.warning(
+            'FK constraint for fk_ltable is not satisfied; '
+            'Not setting the fk_ltable')
+        return False
+
+
+def validate_and_set_fk_rtable(foreign_data_frame, foreign_key_rtable,
+                               rtable, rtable_key):
+    """
+    Validates and set the foreign key ltable for a DataFrame in the the catalog.
+
+    Specifically, given a DataFrame and a foreign key attribute it checks
+    for the following conditions to be satisfied for the attribute. First it
+    checks that foreign key rtable attribute does not have any missing
+    values. Second it checks that the subset of foreign key values,
+    have unique values in the primary (base) table.
+
+    Args:
+        foreign_data_frame (DataFrame): DataFrame containing the foreign key
+            (typically a candidate set, for example output from blocking two
+            tables).
+        foreign_key_rtable (str): An attribute in the foreign DataFrame
+        rtable (DataFrame): Base DataFrame, in which the foreign key
+            attribute would form the primary key.
+        rtable_key (str): An attribute in the base table
+            (typically a primary key attribute).
+
+    Returns:
+        A boolean value of True will be returned if the validation was
+        successful and the update was successful in the catalog.
+    Raises:
+        AssertionError: If the input foreign DataFrame (foreign_data_frame)
+            is not of type pandas DataFrame.
+        AssertionError: If the foreign key ltable (foreign_key_ltable) is not
+            of type string.
+        AssertionError: If the input ltable (ltable) is not of type pandas
+            DataFrame.
+        AssertionError: If the ltable key (ltable_key) is not of type string.
+
+
+    """
+
+    # Validate the foreign key constraint
+    # Note: All the basic input validations are done inside the
+    # check_fk_constraint function.
+    status = ch.check_fk_constraint(foreign_data_frame, foreign_key_rtable,
+                                    rtable, rtable_key)
+
+    # If the validation was successful, then set the property
+    if status:
+        return set_property(foreign_data_frame, 'fk_rtable', foreign_key_rtable)
+    # else just warn and return False
+    else:
+        logger.warning(
+            'FK constraint for fk_rtable is not satisfied; Not '
+            'setting the fk_rtable and rtable')
+        return False
+
+
+def set_fk_rtable(data_frame, foreign_key_rtable):
+    """
+    Sets the foreign key to rtable for a DataFrame in the catalog.
+
+     Specifically this function is a sugar function that will set the foreign
+     key to right table using underlying set_property function. This function
+     is typically called on a DataFrame which contains metadata such as foreign
+     key, ltable, foreign key rtable, ltable, rtable.
+
+    Args:
+        data_frame (DataFrame): Input DataFrame for which the foreign key
+            rtable property must be set.
+        foreign_key_rtable (str): Foreign key to the rtable that must tbe set
+            for the DataFrame in the catalog.
+
+    Returns:
+        status (bool). Returns True if the rtable foreign key
+        attribute was set successfully, else returns False.
+
+    Raises:
+        AssertionError: If the input object (data_frame) is not of type
+        pandas DataFrame.
+        AssertionError: If the input attribute (foreign_key_rtable) is not of
+        type string.
+        AssertionError: If the attribute (fk_ltable) is not in the input
+        DataFrame.
+    """
+    # Validate the input parameters
+    # # The input object is expected to be of type pandas DataFrame
+    if not isinstance(data_frame, pd.DataFrame):
         logger.error('Input object is not of type pandas data frame')
         raise AssertionError('Input object is not of type pandas data frame')
 
-    if not fk_rtable in df.columns:
-        logger.error('Input attr. ( %s ) not in the dataframe' % fk_rtable)
-        raise KeyError('Input attr. ( %s ) not in the dataframe' % fk_rtable)
+    # Check if the given attribute is present in the DataFrame
+    if not ch.check_attrs_present(data_frame, foreign_key_rtable):
+        logger.error('Input attr. ( %s ) not in the DataFrame'
+                     % foreign_key_rtable)
+        raise KeyError('Input attr. ( %s ) not in the DataFrame'
+                       % foreign_key_rtable)
 
-    return set_property(df, 'fk_rtable', fk_rtable)
+    # Finally set the property and relay the result
+    return set_property(data_frame, 'fk_rtable', foreign_key_rtable)
 
 
-def get_reqd_metadata_from_catalog(df, reqd_metadata):
+def show_properties(data_frame):
     """
-    Get a list of properties from the catalog
+    Shows properties for a DataFrame that is present in the catalog.
 
     Args:
-        df (pandas dataframe): Dataframe for which the properties must be retrieved
-        reqd_metadata (list): List of properties to be retrieved
-
-    Returns:
-        properties (dict)
-
-    Notes:
-        This is an internal helper function.
-
-
+        data_frame (DataFrame): Input pandas DataFrame for which the
+            properties must be displayed.
     """
-    if not isinstance(df, pd.DataFrame):
-        logger.error('Input object is not of type pandas data frame')
-        raise AssertionError('Input object is not of type pandas data frame')
-
-    if not isinstance(reqd_metadata, list):
-        reqd_metadata = [reqd_metadata]
-
-    metadata = {}
-    d = get_all_properties(df)
-
-    diff_elts = set(reqd_metadata).difference(d)
-    if len(diff_elts) != 0:
-        logger.error('All the required metadata is not present in the catalog')
-        raise AssertionError(
-            'All the required metadata is not present in the catalog')
-
-    for m in reqd_metadata:
-        if m in d:
-            metadata[m] = d[m]
-    return metadata
-
-
-def _update_reqd_metadata_with_kwargs(metadata, kwargs_dict, reqd_metadata):
-    """
-    Update the metadata with input args
-
-    Args:
-        metadata (dict): Properties dictonary
-        kwargs_dict (dict): Input key-value args
-        reqd_metadata (list): List of properties to be updated.
-
-    Returns:
-        updated properties (dict)
-
-    Notes:
-        This is an internal helper function.
-
-
-    """
-    if not isinstance(metadata, dict):
-        logger.error('Input metdata is not of type dict')
-        raise AssertionError('Input metdata is not of type dict')
-
-    if not isinstance(kwargs_dict, dict):
-        logger.error('Input kwargs_dict is not of type dict')
-        raise AssertionError('Input kwargs_dict is not of type dict')
-
-    if not isinstance(reqd_metadata, list):
-        reqd_metadata = [reqd_metadata]
-
-    diff_elts = set(reqd_metadata).difference(kwargs_dict.keys())
-    if len(diff_elts) != 0:
-        logger.error('All the required metadata is not present in the catalog')
-        raise AssertionError(
-            'All the required metadata is not present in the catalog')
-
-    for m in reqd_metadata:
-        if m in kwargs_dict:
-            metadata[m] = kwargs_dict[m]
-    return metadata
-
-
-def _get_diff_with_reqd_metadata(metadata, reqd_metadata):
-    """
-    Find what metadata is missing from the required list
-
-    Args:
-        metadata (dict): Property dictionary
-        reqd_metadata (list): List of properties
-
-    Returns:
-        diff list (list) of properties between the property dictionary and the properties
-        list
-
-    Notes:
-        This is an internal helper function
-    """
-    if not isinstance(metadata, dict):
-        logger.error('Input metdata is not of type dict')
-        raise AssertionError('Input metdata is not of type dict')
-
-    k = metadata.keys()
-    if not isinstance(reqd_metadata, list):
-        reqd_metadata = [reqd_metadata]
-    d = set(reqd_metadata).difference(k)
-    return d
-
-
-def is_all_reqd_metadata_present(metadata, reqd_metadata):
-    """
-    Check if all the required metadata are present
-
-    Args:
-        metadata (dict): Property dictionary
-        reqd_metadata (list): List of properties
-
-    Returns:
-        result (bool). Returns True if all the required metadata is present, else returns False
-
-    Notes:
-        This is an internal helper function
-
-    """
-    if not isinstance(metadata, dict):
-        logger.error('Input metdata is not of type dict')
-        raise AssertionError('Input metdata is not of type dict')
-
-    d = _get_diff_with_reqd_metadata(metadata, reqd_metadata)
-    if len(d) == 0:
-        return True
-    else:
-        return False
-
-
-def show_properties(df):
-    if not is_dfinfo_present(df):
-        logger.error('Dataframe information is not present in the catalog')
+    # Check if the DataFrame information is present in the catalog. If not
+    # return
+    if not is_dfinfo_present(data_frame):
+        logger.error('DataFrame information is not present in the catalog')
         return
-    metadata = get_all_properties(df)
-    print('id: ' + str(id(df)))
-    for prop, value in six.iteritems(metadata):
-        if isinstance(value, six.string_types):
-            print(prop + ": " + value)
-        else:
-            print(prop + "(obj.id): " + str(id(value)))
+
+    # Delegate it to show properties for the id if an object in the catalog
+    show_properties_for_id(id(data_frame))
+    # # Get the properties for the DataFrame from the catalog
+    # metadata = get_all_properties(data_frame)
+    #
+    # # First print the id for the DataFrame
+    # print('id: ' + str(id(data_frame)))
+    # # For each property name anf value, print the contents to the user
+    # for property_name, property_value in six.iteritems(metadata):
+    #     # If the property value is string print it out
+    #     if isinstance(property_value, six.string_types):
+    #         print(property_name + ": " + property_value)
+    #     # else, print just the id.
+    #     else:
+    #         print(property_name + "(obj.id): " + str(id(property_value)))
 
 
-def show_properties_for_id(obj_id):
+def show_properties_for_id(object_id):
+    """
+    Shows the properties for an object id present in the catalog.
+
+    Specifically, given an object id got from typically executing id(
+    <object>), where the object could be a DataFrame, this function will
+    display the properties present for that object id in the catalog.
+
+    Args:
+        object_id (int): Python identifier of an object.
+
+    """
     catalog = Catalog.Instance()
-    metadata = catalog.get_all_properties_for_id(obj_id)
-    print('id: ' + str(obj_id))
-    for prop, value in six.iteritems(metadata):
-        if isinstance(value, six.string_types):
-            print(prop + ": " + value)
+    metadata = catalog.get_all_properties_for_id(object_id)
+    # First print the id for the DataFrame
+    print('id: ' + str(object_id))
+    # For each property name anf value, print the contents to the user
+    for property_name, property_value in six.iteritems(metadata):
+        # If the property value is string print it out
+        if isinstance(property_value, six.string_types):
+            print(property_name + ": " + property_value)
+        # else, print just the id.
         else:
-            print(prop + "(obj.id): " + str(id(value)))
+            print(property_name + "(obj.id): " + str(id(property_value)))
 
 
-def set_candset_properties(candset, key, fk_ltable, fk_rtable, ltable, rtable):
+def set_candset_properties(candset, key, foreign_key_ltable,
+                           foreign_key_rtable, ltable, rtable):
+    """
+    Sets candidate set properties.
+
+    Specifically, this is a sugar function that sets all the properties for a
+    candidate set such as key, foreign key ltable, foreign key rtable,
+    ltable and rtable. Further, this function does not check the integrity of
+    input properties.
+
+
+
+    Args:
+        candset (DataFrame): Input DataFrame for which the properties must be
+            set.
+        key (str): Key attribute that must be set for the DataFrame in the
+            catalog.
+        foreign_key_ltable (str): Foreign key ltable attribute that must be
+            set for the DataFrame in the catalog.
+        foreign_key_rtable (str): Foreign key rtable attribute that must be
+            set for the DataFrame in the catalog.
+        ltable (DataFrame): DataFrame that must be set as ltable.
+        rtable (DataFrame): DataFrame that must be set as rtable.
+
+    Returns:
+        A boolean value of True is returned if the updates were successful.
+
+    """
+    # set the key
     set_property(candset, 'key', key)
-    set_fk_ltable(candset, fk_ltable)
-    set_fk_rtable(candset, fk_rtable)
+    # set the foreign key attributes
+    set_fk_ltable(candset, foreign_key_ltable)
+    set_fk_rtable(candset, foreign_key_rtable)
+    # set the ltable and rtables
     set_property(candset, 'ltable', ltable)
     set_property(candset, 'rtable', rtable)
+    return True
 
 
-def validate_metadata_for_table(table, key, out_str, lgr, verbose):
+def _validate_metadata_for_table(table, key, output_string, lgr, verbose):
+    """
+    Validates metadata for table (DataFrame)
+
+    """
+    # Validate input parameters
+    # # We expect the input table to be of type pandas DataFrame
     if not isinstance(table, pd.DataFrame):
-        logger.error('Input object is not of type pandas data frame')
-        raise AssertionError('Input object is not of type pandas data frame')
+        logger.error('Input object is not of type pandas DataFrame')
+        raise AssertionError('Input object is not of type pandas DataFrame')
 
-    if not key in table.columns:
-        logger.error('Input key ( %s ) not in the dataframe' % key)
-        raise KeyError('Input key ( %s ) not in the dataframe' % key)
+    # Check the key column is present in the table
+    if not ch.check_attrs_present(table, key):
+        logger.error('Input key ( %s ) not in the DataFrame' % key)
+        raise KeyError('Input key ( %s ) not in the DataFrame' % key)
 
-    ch.log_info(lgr, 'Validating ' + out_str + ' key: ' + str(key), verbose)
-    assert isinstance(key,
-                      six.string_types) is True, 'Key attribute must be a string.'
-    assert ch.check_attrs_present(table,
-                                  key) is True, 'Key attribute is not present in the ' + out_str + ' table'
-    assert ch.is_key_attribute(table, key, verbose) == True, 'Attribute ' + str(
-        key) + \
-                                                             ' in the ' + out_str + ' table ' \
-                                                                                    'does not qualify to be the key'
+    # Validate the key
+    ch.log_info(lgr, 'Validating ' + output_string + ' key: ' + str(key),
+                verbose)
+    # We expect the key to be of type string
+    if not isinstance(key, six.string_types):
+        logger.error('Key attribute must be of type string')
+        raise AssertionError('Key attribute must be of type string')
+    if not ch.is_key_attribute(table, key, verbose):
+        logger.error('Attribute %s in the %s table does not '
+                     'qualify to be the key' % (str(key), output_string))
+        raise AssertionError('Attribute %s in the %s table does not '
+                             'qualify to be the key' % (
+                                 str(key), output_string))
     ch.log_info(lgr, '..... Done', verbose)
     return True
 
 
-def validate_metadata_for_candset(candset, key, fk_ltable, fk_rtable, ltable,
-                                  rtable,
-                                  l_key, r_key,
-                                  lgr, verbose):
+def _validate_metadata_for_candset(candset, key, foreign_key_ltable,
+                                   foreign_key_rtable,
+                                   ltable, rtable,
+                                   ltable_key, rtable_key,
+                                   lgr, verbose):
+    """
+    Validates metadata for a candidate set.
+
+    """
+    # Validate input parameters
+    # # We expect candset to be of type pandas DataFrame
     if not isinstance(candset, pd.DataFrame):
-        logger.error('Input cand.set is not of type pandas data frame')
-        raise AssertionError('Input cand.set is not of type pandas data frame')
+        logger.error('Input candset is not of type pandas DataFrame')
+        raise AssertionError('Input candset is not of type pandas DataFrame')
 
-    if not key in candset.columns:
-        logger.error('Input key ( %s ) not in the dataframe' % key)
-        raise KeyError('Input key ( %s ) not in the dataframe' % key)
+    # Check if the key column is present in the candset
+    if not ch.check_attrs_present(candset, key):
+        logger.error('Input key ( %s ) not in the DataFrame' % key)
+        raise KeyError('Input key ( %s ) not in the DataFrame' % key)
 
-    if not fk_ltable in candset.columns:
-        logger.error('Input fk_ltable ( %s ) not in the dataframe' % fk_ltable)
+    # Check if the foreign key ltable column is present in the candset
+    if not ch.check_attrs_present(candset, foreign_key_ltable):
+        logger.error('Input foreign_key_ltable ( %s ) not in the DataFrame'
+                     % foreign_key_ltable)
         raise KeyError(
-            'Input fk_ltable ( %s ) not in the dataframe' % fk_ltable)
+            'Input foreign_key_ltable ( %s ) not in the DataFrame'
+            % foreign_key_ltable)
 
-    if not fk_rtable in candset.columns:
-        logger.error('Input fk_rtable ( %s ) not in the dataframe' % fk_rtable)
+    # Check if the foreign key rtable column is present in the candset
+    if not ch.check_attrs_present(candset, foreign_key_rtable):
+        logger.error(
+            'Input fk_rtable ( %s ) not in the DataFrame' % foreign_key_rtable)
         raise KeyError(
-            'Input fk_rtable ( %s ) not in the dataframe' % fk_rtable)
+            'Input fk_rtable ( %s ) not in the DataFrame' % foreign_key_rtable)
 
+    # We expect the ltable to be of type pandas DataFrame
     if not isinstance(ltable, pd.DataFrame):
         logger.error('Input ltable is not of type pandas data frame')
         raise AssertionError('Input ltable is not of type pandas data frame')
 
+    # We expect the rtable to be of type pandas DataFrame
     if not isinstance(rtable, pd.DataFrame):
         logger.error('Input rtable is not of type pandas data frame')
         raise AssertionError('Input rtable is not of type pandas data frame')
 
-    if not l_key in ltable:
-        logger.error('ltable key ( %s ) not in ltable' % l_key)
-        raise KeyError('ltable key ( %s ) not in ltable' % l_key)
+    # We expect the ltable key to be present in the ltable
+    if not ch.check_attrs_present(ltable, ltable_key):
+        logger.error('ltable key ( %s ) not in ltable' % ltable_key)
+        raise KeyError('ltable key ( %s ) not in ltable' % ltable_key)
 
-    if not r_key in rtable:
-        logger.error('rtable key ( %s ) not in rtable' % r_key)
-        raise KeyError('rtable key ( %s ) not in rtable' % r_key)
+    # We expect the rtable key to be present in the rtable
+    if not ch.check_attrs_present(rtable, rtable_key):
+        logger.error('rtable key ( %s ) not in rtable' % rtable_key)
+        raise KeyError('rtable key ( %s ) not in rtable' % rtable_key)
 
-    validate_metadata_for_table(candset, key, 'cand.set', lgr, verbose)
+    # First validate metadata for the candidate set (as a table)
+    _validate_metadata_for_table(candset, key, 'candset', lgr, verbose)
 
     ch.log_info(lgr, 'Validating foreign key constraint for left table',
                 verbose)
-    assert ch.check_fk_constraint(candset, fk_ltable, ltable,
-                                  l_key) == True, 'Cand.set does not satisfy foreign key ' \
-                                                  'constraint with the left table'
+    # Second check foreign key constraints
+    if not ch.check_fk_constraint(candset, foreign_key_ltable,
+                                  ltable, ltable_key):
+        logger.error('Candset does not satisfy foreign key constraint with '
+                     'the left table')
+        raise AssertionError(
+            'Candset does not satisfy foreign key constraint with '
+            'the left table')
+
+    if not ch.check_fk_constraint(candset, foreign_key_rtable,
+                                  rtable, rtable_key):
+        logger.error('Candset does not satisfy foreign key constraint with '
+                     'the right table')
+        raise AssertionError(
+            'Candset does not satisfy foreign key constraint with '
+            'the right table')
+
     ch.log_info(lgr, '..... Done', verbose)
     ch.log_info(lgr, 'Validating foreign key constraint for right table',
                 verbose)
-    assert ch.check_fk_constraint(candset, fk_rtable, rtable,
-                                  r_key) == True, 'Cand.set does not satisfy foreign key ' \
-                                                  'constraint with the right table'
     ch.log_info(lgr, '..... Done', verbose)
 
     return True
 
 
+# noinspection PyIncorrectDocstring
 def get_keys_for_ltable_rtable(ltable, rtable, lgr, verbose):
+    """
+    Gets keys for the ltable and rtable.
+    """
+    # We expect the ltable to be of type pandas DataFrame
     if not isinstance(ltable, pd.DataFrame):
         logger.error('Input ltable is not of type pandas data frame')
         raise AssertionError('Input ltable is not of type pandas data frame')
 
+    # We expect the rtable to be of type pandas DataFrame
     if not isinstance(rtable, pd.DataFrame):
         logger.error('Input rtable is not of type pandas data frame')
         raise AssertionError('Input rtable is not of type pandas data frame')
 
     ch.log_info(lgr, 'Required metadata: ltable key, rtable key', verbose)
     ch.log_info(lgr, 'Getting metadata from the catalog', verbose)
-    l_key = get_key(ltable)
-    r_key = get_key(rtable)
+    # Get the ltable key and rtable key from the catalog
+    ltable_key = get_key(ltable)
+    rtable_key = get_key(rtable)
     ch.log_info(lgr, '..... Done', verbose)
-    return l_key, r_key
+    # return the ltable and rtable keys
+    return ltable_key, rtable_key
 
 
+# noinspection PyIncorrectDocstring
 def get_metadata_for_candset(candset, lgr, verbose):
+    """
+    Gets metadata for the candset
+
+    """
+    # Validate input parameters
     if not isinstance(candset, pd.DataFrame):
         logger.error('Input candset is not of type pandas data frame')
         raise AssertionError('Input candset is not of type pandas data frame')
 
     ch.log_info(lgr, 'Getting metadata from the catalog', verbose)
+    # Get the key, foreign keys, ltable, rtable and their keys
+    # # Get key
     key = get_key(candset)
+    # # Get the foreign keys
     fk_ltable = get_fk_ltable(candset)
     fk_rtable = get_fk_rtable(candset)
+    # # Get the base tables
     ltable = get_ltable(candset)
     rtable = get_rtable(candset)
+    # Get the base table keys
     l_key = get_key(ltable)
     r_key = get_key(rtable)
     ch.log_info(lgr, '..... Done', verbose)
+    # Return the metadata
     return key, fk_ltable, fk_rtable, ltable, rtable, l_key, r_key
 
 
+# noinspection PyIncorrectDocstring
 def get_ltable(candset):
+    """
+    Gets the ltable.
+    """
+    # Return the ltable for a candidate set. This function is just a sugar
     return get_property(candset, 'ltable')
 
 
+# noinspection PyIncorrectDocstring
 def get_rtable(candset):
+    """
+    Gets the rtable.
+    """
+    # Return the rtable for a candidate set. This function is just a sugar
+
     return get_property(candset, 'rtable')
