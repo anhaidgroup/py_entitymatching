@@ -8,11 +8,12 @@ import multiprocessing
 logger = logging.getLogger(__name__)
 
 class Blocker(object):
-    pass
+    """Blocker base class.
+    """
 
     def validate_types_params_tables(self, ltable, rtable,
 		       l_output_attrs, r_output_attrs, l_output_prefix,
-		       r_output_prefix, verbose, n_jobs):
+		       r_output_prefix, verbose, show_progress, n_jobs):
 
         if not isinstance(ltable, pd.DataFrame):
             logger.error('Input left table is not of type pandas data frame')
@@ -51,6 +52,10 @@ class Blocker(object):
         if not isinstance(verbose, bool):
             logger.error('Parameter verbose is not of type bool')
             raise AssertionError('Parameter verbose is not of type bool')
+
+        if not isinstance(show_progress, bool):
+            logger.error('Parameter show_progress is not of type bool')
+            raise AssertionError('Parameter show_progress is not of type bool')
 
         if not isinstance(n_jobs, int):
             logger.error('Parameter n_jobs is not of type int')

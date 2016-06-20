@@ -172,6 +172,18 @@ class AttrEquivBlockerTestCases(unittest.TestCase):
         self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, verbose='yes')
 
     @raises(AssertionError)
+    def test_ab_block_tables_invalid_show_progress_1(self):
+        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, show_progress=None)
+
+    @raises(AssertionError)
+    def test_ab_block_tables_invalid_show_progress_2(self):
+        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, show_progress=1)
+
+    @raises(AssertionError)
+    def test_ab_block_tables_invalid_show_progress_3(self):
+        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, show_progress='yes')
+
+    @raises(AssertionError)
     def test_ab_block_tables_invalid_njobs_1(self):
         self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, n_jobs=None)
 

@@ -14,15 +14,68 @@ logger = logging.getLogger(__name__)
 
 
 class AttrEquivalenceBlocker(Blocker):
+    """Blocks two tables, a candset, or a pair of tuples based on attribute equivalence.
+    """
+
     def block_tables(self, ltable, rtable, l_block_attr, r_block_attr,
                      l_output_attrs=None, r_output_attrs=None,
                      l_output_prefix='ltable_', r_output_prefix='rtable_',
-                     verbose=True, n_jobs=1):
+                     verbose=False, show_progress=True, n_jobs=1):
+        """Blocks two tables based on attribute equivalence.
+
+        Finds tuple pairs from left and right tables such that the value of
+        attribute l_block_attr of a tuple from the left table exactly matches
+        the value of attribute r_block_attr of a tuple from the right table.
+        This is similar to equi-join of two tables.
+
+        Args:
+            ltable (pandas dataframe): left input table.
+
+            rtable (pandas dataframe): right input table.
+
+            l_block_attr (string): blocking attribute in left table.
+
+            r_block_attr (string): blocking attribute in right table. 
+
+            l_output_attrs (list of strings): list of attributes from the left
+                                              table to be included in the
+                                              output candidate set (defaults to None).
+
+            r_output_attrs (list of strings): list of attributes from the right
+                                              table to be included in the
+                                              output candidate set (defaults to None).
+
+            l_output_prefix (string): prefix to be used for the attribute names
+                                      coming from the left table in the output
+                                      candidate set (defaults to 'ltable\_').
+
+            r_output_prefix (string): prefix to be used for the attribute names
+                                      coming from the right table in the output
+                                      candidate set (defaults to 'rtable\_').
+
+            verbose (boolean): flag to indicate whether logging should be done
+                               (defaults to False).
+
+            show_progress (boolean): flag to indicate whether progress should
+                                     be displayed to the user (defaults to True).
+
+            n_jobs (int): number of parallel jobs to be used for computation
+                          (defaults to 1).
+                          If -1 all CPUs are used. If 0 or 1, no parallel computation
+                          is used at all, which is useful for debugging.
+                          For n_jobs below -1, (n_cpus + 1 + n_jobs) are used.
+                          Thus, for n_jobs = -2, all CPUS but one are used.
+                          If (n_cpus + 1 + n_jobs) is less than 1, then n_jobs is
+                          set to 1, which means no parallel computation at all.
+
+        Returns:
+            A candidate set of tuple pairs that survived blocking (pandas dataframe).
+        """
 
         # validate data types of input parameters
         self.validate_types_params_tables(ltable, rtable,
 			    l_output_attrs, r_output_attrs, l_output_prefix,
-			    r_output_prefix, verbose, n_jobs)
+			    r_output_prefix, verbose, show_progress, n_jobs)
 
         # validate data types of input blocking attributes
         self.validate_types_block_attrs(l_block_attr, r_block_attr)
@@ -86,6 +139,38 @@ class AttrEquivalenceBlocker(Blocker):
 
     def block_candset(self, candset, l_block_attr, r_block_attr, verbose=True,
                       show_progress=True, n_jobs=1):
+        """Blocks an input candidate set of tuple pairs based on attribute equivalence.
+
+        Finds tuple pairs from an input candidate set of tuple pairs
+        such that the value of attribute l_block_attr of the left tuple in a
+        tuple pair exactly matches the value of attribute r_block_attr of the 
+        right tuple in the tuple pair.
+
+        Args:
+            candset (pandas dataframe): input candidate set of tuple pairs.
+
+            l_block_attr (string): blocking attribute in left table.
+
+            r_block_attr (string): blocking attribute in right table. 
+
+            verbose (boolean): flag to indicate whether logging should be done
+                               (defaults to False).
+
+            show_progress (boolean): flag to indicate whether progress should
+                                     be displayed to the user (defaults to True).
+
+            n_jobs (int): number of parallel jobs to be used for computation
+                          (defaults to 1).
+                          If -1 all CPUs are used. If 0 or 1, no parallel computation
+                          is used at all, which is useful for debugging.
+                          For n_jobs below -1, (n_cpus + 1 + n_jobs) are used.
+                          Thus, for n_jobs = -2, all CPUS but one are used.
+                          If (n_cpus + 1 + n_jobs) is less than 1, then n_jobs is
+                          set to 1, which means no parallel computation at all.
+
+        Returns:
+            A candidate set of tuple pairs that survived blocking (pandas dataframe).
+        """
 
         # validate data types of input parameters
         self.validate_types_params_candset(candset, verbose, show_progress, n_jobs)
@@ -118,7 +203,6 @@ class AttrEquivalenceBlocker(Blocker):
         l_df = l_df[[l_key, l_block_attr]]
         r_df = r_df[[r_key, r_block_attr]]
        
-
         # # set index for convenience
         l_df = ltable.set_index(l_key, drop=False)
         r_df = rtable.set_index(r_key, drop=False)
@@ -156,6 +240,22 @@ class AttrEquivalenceBlocker(Blocker):
         return out_table
 
     def block_tuples(self, ltuple, rtuple, l_block_attr, r_block_attr):
+        """Blocks a tuple pair based on attribute equivalence.
+
+        Args:
+            ltuple (pandas series): input left tuple.
+
+            rtuple (pandas series): input right tuple.
+            
+            l_block_attr (string): blocking attribute in left tuple.
+
+            r_block_attr (string): blocking attribute in right tuple.
+
+        Returns:
+            A status indicating if the tuple pair is blocked, i.e., the values
+            of l_block_attr in ltuple and r_block_attr in rtuple are different
+            (boolean).
+        """
         return ltuple[l_block_attr] != rtuple[r_block_attr]
 
     # ------------------------------------------------------------
