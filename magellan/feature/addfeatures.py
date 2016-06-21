@@ -34,7 +34,7 @@ def get_feature_fn(feature_string, tokenizers, similarity_functions):
     Returns:
         This function returns a dictionary which contains sufficient information
         (such as parsed information, function code) to be added to the
-        feature table. The created function is ”self contained” function
+        feature table. The created function is self contained function
         which means that it the tokenizers or sim function that it calls is
         bundled along with the returned function code.
 
