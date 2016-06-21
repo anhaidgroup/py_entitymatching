@@ -301,6 +301,21 @@ class DebugblockerTestCases(unittest.TestCase):
         db._index_candidate_set(C,
                 lrecord_id_to_index_map, rrecord_id_to_index_map, False)
 
+    def test_index_candidate_set_6(self):
+        A_list = [[1, 'asdf', 'fdas'], [2, 'fdsa', 'asdf']]
+        B_list = [['B002', 'qqqq', 'wwww'], ['B003', 'rrrr', 'fdsa']]
+        A = pd.DataFrame(A_list)
+        A.columns = ['ID', 'f1', 'f2']
+        mg.set_key(A, 'ID')
+        B = pd.DataFrame(B_list)
+        B.columns = ['ID', 'f1', 'f2']
+        mg.set_key(B, 'ID')
+        C = pd.DataFrame()
+        lrecord_id_to_index_map = db._get_record_id_to_index_map(A, 'ID')
+        rrecord_id_to_index_map = db._get_record_id_to_index_map(B, 'ID')
+        new_C = db._index_candidate_set(C,
+                lrecord_id_to_index_map, rrecord_id_to_index_map, False)
+        self.assertEqual(new_C, set())
 
     def test_generate_prefix_events_impl_1(self):
         record_list = []

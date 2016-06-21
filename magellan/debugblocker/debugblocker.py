@@ -568,6 +568,9 @@ def _replace_nan_to_empty(field):
 # similarity join.
 def _index_candidate_set(candidate_set, lrecord_id_to_index_map, rrecord_id_to_index_map, verbose):
     new_formatted_candidate_set = set()
+    if len(candidate_set) == 0:
+        return new_formatted_candidate_set
+
     # Get metadata
     key, fk_ltable, fk_rtable, ltable, rtable, l_key, r_key =\
         cm.get_metadata_for_candset(candidate_set, logger, verbose)
