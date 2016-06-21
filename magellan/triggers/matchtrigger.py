@@ -49,8 +49,8 @@ class MatchTrigger(object):
                                                                                               verbose)
 
         # # validate metadata
-        cm.validate_metadata_for_candset(input_table, key, fk_ltable, fk_rtable, ltable, rtable, l_key, r_key,
-                                         logger, verbose)
+        cm._validate_metadata_for_candset(input_table, key, fk_ltable, fk_rtable, ltable, rtable, l_key, r_key,
+                                          logger, verbose)
 
 
         assert ltable is not None, 'Left table is not set'

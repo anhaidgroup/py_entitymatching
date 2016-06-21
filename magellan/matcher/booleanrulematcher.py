@@ -29,8 +29,8 @@ class BooleanRuleMatcher(RuleMatcher):
         key, fk_ltable, fk_rtable, ltable, rtable, l_key, r_key = cm.get_metadata_for_candset(candset, logger, verbose)
 
         # # validate metadata
-        cm.validate_metadata_for_candset(candset, key, fk_ltable, fk_rtable, ltable, rtable, l_key, r_key,
-                                         logger, verbose)
+        cm._validate_metadata_for_candset(candset, key, fk_ltable, fk_rtable, ltable, rtable, l_key, r_key,
+                                          logger, verbose)
 
         # # keep track of predictions
         predictions = []
