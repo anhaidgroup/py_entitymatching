@@ -83,8 +83,8 @@ def debug_blocker(ltable, rtable, candidate_set, output_size=200,
     l_key, r_key = cm.get_keys_for_ltable_rtable(ltable, rtable, logger, verbose)
 
     # Validate metadata
-    cm.validate_metadata_for_table(ltable, l_key, 'ltable', logger, verbose)
-    cm.validate_metadata_for_table(rtable, r_key, 'rtable', logger, verbose)
+    cm._validate_metadata_for_table(ltable, l_key, 'ltable', logger, verbose)
+    cm._validate_metadata_for_table(rtable, r_key, 'rtable', logger, verbose)
 
     # Check the user input field correst list (if exists) and get the raw
     # version of our internal correst list.
@@ -576,7 +576,7 @@ def _index_candidate_set(candidate_set, lrecord_id_to_index_map, rrecord_id_to_i
         cm.get_metadata_for_candset(candidate_set, logger, verbose)
 
     # validate metadata
-    cm.validate_metadata_for_candset(candidate_set, key, fk_ltable, fk_rtable,
+    cm._validate_metadata_for_candset(candidate_set, key, fk_ltable, fk_rtable,
                                      ltable, rtable, l_key, r_key,
                                      logger, verbose)
 
