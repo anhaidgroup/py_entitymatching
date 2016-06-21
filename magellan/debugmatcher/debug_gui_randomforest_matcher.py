@@ -1,4 +1,5 @@
 import logging
+from PyQt4 import QtGui
 
 import six
 
@@ -71,7 +72,11 @@ def _vis_debug_rf(matcher, train, test, exclude_attrs, target_attr, show_window=
     metric = get_metric(eval_summary)
     fp_dataframe = get_dataframe(predicted, eval_summary['false_pos_ls'])
     fn_dataframe = get_dataframe(predicted, eval_summary['false_neg_ls'])
+    mg._viewapp = QtGui.QApplication.instance()
+    if mg._viewapp is None:
+        mg._viewapp = QtGui.QApplication([])
     app = mg._viewapp
+
     m = MainWindowManager(matcher, "rf", exclude_attrs, metric, predicted, fp_dataframe,
                           fn_dataframe)
     if show_window == True:

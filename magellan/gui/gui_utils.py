@@ -3,11 +3,16 @@ from PyQt4 import QtGui, QtCore, Qt
 import pandas as pd
 import six
 
+import magellan as mg
+
 class DataFrameTableView(QtGui.QTableWidget):
     def __init__(self, controller, dataframe):
         super(DataFrameTableView, self).__init__()
         self.controller = controller
         self.dataframe = dataframe
+        mg._viewapp = QtGui.QApplication.instance()
+        if mg._viewapp is None:
+            mg._viewapp = QtGui.QApplication([])
         self.setup_gui()
 
     def set_dataframe(self, dataframe):
@@ -63,6 +68,9 @@ class DataFrameTableViewWithLabel(QtGui.QWidget):
         self.controller = controller
         self.tbl_obj = None
         self.label_obj = None
+        mg._viewapp = QtGui.QApplication.instance()
+        if mg._viewapp is None:
+            mg._viewapp = QtGui.QApplication([])
         self.setup_gui()
 
     def set_dataframe(self, data_frame):
@@ -88,6 +96,10 @@ class DictTableViewWithLabel(QtGui.QWidget):
         self.label = label
         self.controller = controller
         self.combo_box = combo_box
+        mg._viewapp = QtGui.QApplication.instance()
+        if mg._viewapp is None:
+            mg._viewapp = QtGui.QApplication([])
+        app = mg._viewapp
         self.setup_gui()
 
     def setup_gui(self):
@@ -107,6 +119,9 @@ class DictTableView(QtGui.QTableWidget):
         self.controller = controller
         self.dictionary = dictionary
         self.combo_box = combo_box
+        mg._viewapp = QtGui.QApplication.instance()
+        if mg._viewapp is None:
+            mg._viewapp = QtGui.QApplication([])
         self.setup_gui()
 
 
@@ -147,6 +162,10 @@ class TreeView(QtGui.QTreeWidget):
         self.controller = controller
         self.debug_result = debug_result
         self.type = type
+        mg._viewapp = QtGui.QApplication.instance()
+        if mg._viewapp is None:
+            mg._viewapp = QtGui.QApplication([])
+        app = mg._viewapp
         self.setup_gui()
 
     def setup_gui(self):
@@ -230,6 +249,9 @@ class TreeViewWithLabel(QtGui.QWidget):
         self.debug_result = debug_result
         self.label = label
         self.controller = controller
+        mg._viewapp = QtGui.QApplication.instance()
+        if mg._viewapp is None:
+            mg._viewapp = QtGui.QApplication([])
         self.setup_gui()
 
     def setup_gui(self):

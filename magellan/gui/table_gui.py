@@ -10,6 +10,11 @@ logger = logging.getLogger(__name__)
 
 
 def view_table(table, edit_flag=False, show_flag=True):
+    mg._viewapp = QtGui.QApplication.instance()
+    if mg._viewapp is None:
+        mg._viewapp = QtGui.QApplication([])
+    app = mg._viewapp
+
     datatable = QtGui.QTableWidget()
 
     # disable edit
@@ -28,8 +33,10 @@ def view_table(table, edit_flag=False, show_flag=True):
     datatable.setHorizontalHeaderLabels(list_col)
 
     # set window size
-    width = min((j + 1) * 105, mg._viewapp.desktop().screenGeometry().width() - 50)
-    height = min((i + 1) * 41, mg._viewapp.desktop().screenGeometry().width() - 100)
+
+
+    width = min((j + 1) * 105, app.desktop().screenGeometry().width() - 50)
+    height = min((i + 1) * 41, app.desktop().screenGeometry().width() - 100)
     datatable.resize(width, height)
 
     # set window title
@@ -38,7 +45,11 @@ def view_table(table, edit_flag=False, show_flag=True):
     if show_flag:
         # show window
         datatable.show()
-        mg._viewapp.exec_()
+        mg._viewapp = QtGui.QApplication.instance()
+        if mg._viewapp is None:
+            mg._viewapp = QtGui.QApplication([])
+        app = mg._viewapp
+        app.exec_()
 
 
     if edit_flag:

@@ -1,6 +1,7 @@
 import logging
 
 import six
+from PyQt4 import QtGui
 
 import magellan as mg
 from magellan import DTMatcher
@@ -76,7 +77,13 @@ def _vis_debug_dt(matcher, train, test, exclude_attrs, target_attr, show_window=
     fp_dataframe = get_dataframe(predicted, eval_summary['false_pos_ls'])
 
     fn_dataframe = get_dataframe(predicted, eval_summary['false_neg_ls'])
+
+    mg._viewapp = QtGui.QApplication.instance()
+    if mg._viewapp is None:
+        mg._viewapp = QtGui.QApplication([])
     app = mg._viewapp
+
+
     m = MainWindowManager(matcher, "dt", exclude_attrs, metric, predicted, fp_dataframe,
                           fn_dataframe)
     if show_window == True:
