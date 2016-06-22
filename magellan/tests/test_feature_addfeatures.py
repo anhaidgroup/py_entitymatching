@@ -78,7 +78,8 @@ class AddFeaturesTestCases(unittest.TestCase):
         feature_string = "jaccard~(qgm_3(ltuple[['zipcode']), qgm_3(rtuple['zipcode']))"
         p_dict = _parse_feat_str(feature_string, get_tokenizers_for_matching(), get_sim_funs_for_matching())
         for k,v in six.iteritems(p_dict):
-            self.assertEqual(v, 'PARSE_EXP')
+            if k != 'is_auto_generated':
+                self.assertEqual(v, 'PARSE_EXP')
 
     def test_parse_feat_str_parse_valid_1(self):
         feature_string = "jaccard(qgm_3(ltuple['zipcode']), qgm_3(rtuple['zipcode']))"

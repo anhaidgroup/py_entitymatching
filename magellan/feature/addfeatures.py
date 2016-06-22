@@ -12,12 +12,10 @@ logger = logging.getLogger(__name__)
 def get_feature_fn(feature_string, tokenizers, similarity_functions):
     """
     This function creates a feature in a declarative manner.
-
     Specifically, this function uses the feature string and compiles it into
     an function using tokenizers and similarity functions. This compiled
     function will take in two tuples and return the feature (typically a
     number).
-
     Args:
         feature_string (str): Feature expression to be converted into a
             function.
@@ -30,14 +28,12 @@ def get_feature_fn(feature_string, tokenizers, similarity_functions):
             similarity function names as keys and similarity functions as
             values. The similarity function typically
             takes in a string or two lists and returns a number.
-
     Returns:
         This function returns a dictionary which contains sufficient information
         (such as parsed information, function code) to be added to the
         feature table. The created function is self contained function
         which means that it the tokenizers or sim function that it calls is
         bundled along with the returned function code.
-
     Raises:
         AssertionError: If the input feature string is not of type string.
         AssertionError: If th input object tokenizers is not of type
@@ -179,27 +175,25 @@ def _parse_feat_str(feature_string, tokenizers, similarity_functions):
                    'right_attribute': right_attribute,
                    'left_attr_tokenizer': left_attr_tokenizer,
                    'right_attr_tokenizer': right_attr_tokenizer,
-                   'simfunction': sim_function}
+                   'simfunction': sim_function,
+                   'is_auto_generated': False}
+
     return parsed_dict
 
 
 def add_feature(feature_table, feature_name, feature_dict):
     """
     Adds feature to the feature table.
-
     Specifically, this function is used in combination with  get_feature_fn.
     First the user creates a dictionary using get_feature_fn, then the user
     uses this function to add it to the feature table.
-
     Args:
         feature_table (DataFrame): A DataFrame containing features.
         feature_names (str): Name that should be given to the feature.
         feature_dict (dictionary): Python dictionary, that is typically
             returned by executing get_feature_fn
-
     Returns:
         A boolean value of True is returned if the addition was successful.
-
     Raises:
         AssertionError: If the input object (feature_table) is not of type
             pandas DataFrame.
@@ -214,7 +208,6 @@ def add_feature(feature_table, feature_name, feature_dict):
             'function_source' in the DataFrame.
         AssertionError: If the feature name is already present in the feature
             table.
-
     """
     # Validate input parameters
     # # We expect the feature_table to be of pandas DataFrame
@@ -254,7 +247,8 @@ def add_feature(feature_table, feature_name, feature_dict):
                                  'right_attribute', 'left_attr_tokenizer',
                                  'right_attr_tokenizer', 'simfunction',
                                  'function',
-                                 'function_source']
+                                 'function_source',
+                                 'is_auto_generated']
         feature_table.loc[len(feature_table)] = feature_dict
     # Finally, return True if everything was fine
     return True
@@ -266,9 +260,9 @@ def create_feature_table():
     """
     # Fix the column names
     column_names = ['feature_name', 'left_attribute', 'right_attribute',
-            'left_attr_tokenizer',
-            'right_attr_tokenizer', 'simfunction', 'function',
-            'function_source']
+                    'left_attr_tokenizer',
+                    'right_attr_tokenizer', 'simfunction', 'function',
+                    'function_source', 'is_auto_generated']
     # Create a pandas DataFrame using the column names
     feature_table = pd.DataFrame(columns=column_names)
 
@@ -287,7 +281,6 @@ def add_blackbox_feature(feature_table, feature_name, feature_function):
             feature.
     Returns:
         A boolean value of True is returned if the addition was successful.
-
     Raises:
         AssertionError: If the input object (feature_table) is not of type
             DataFrame.
@@ -300,8 +293,6 @@ def add_blackbox_feature(feature_table, feature_name, feature_function):
             'function_source' in the DataFrame.
         AssertionError: If the feature name is already present in the feature
             table.
-
-
     """
     # Validate input parameters
     # # We expect the feature_table to be of type pandas DataFrame
@@ -337,15 +328,17 @@ def add_blackbox_feature(feature_table, feature_name, feature_function):
     feature_dict['right_attr_tokenizer'] = None
     feature_dict['simfunction'] = None
     feature_dict['function_source'] = None
+    feature_dict['is_auto_generated'] = False
 
     # Add the feature to the feature table as a last entry.
     if len(feature_table) > 0:
         feature_table.loc[len(feature_table)] = feature_dict
     else:
         feature_table.columns = ['feature_name', 'left_attribute',
-                              'right_attribute', 'left_attr_tokenizer',
-                              'right_attr_tokenizer', 'simfunction', 'function',
-                              'function_source']
+                                 'right_attribute', 'left_attr_tokenizer',
+                                 'right_attr_tokenizer', 'simfunction',
+                                 'function',
+                                 'function_source', 'is_auto_generated']
         feature_table.loc[len(feature_table)] = feature_dict
     # Finally return True if the addition was successful
     return True

@@ -4,9 +4,8 @@ import pandas as pd
 import numpy as np
 import six
 
-import magellan.externals.py_stringmatching.simfunctions as sim
-import magellan.externals.py_stringmatching.tokenizers as tok
-from magellan.utils.generic_helper import remove_non_ascii
+import py_stringmatching.similarity_measure as sim
+import magellan.utils.generic_helper as gh
 
 sim_fn_names = ['jaccard', 'lev', 'cosine', 'monge_elkan',
                 'needleman_wunsch', 'smith_waterman', 'jaro', 'jaro_winkler',
@@ -47,7 +46,8 @@ def jaccard(arr1, arr2):
         arr2 = [arr2]
     if any(pd.isnull(arr2)):
         return np.NaN
-    return sim.jaccard(set(arr1), set(arr2))
+    measure = sim.jaccard.Jaccard()
+    return measure.get_raw_score(set(arr1), set(arr2))
 
 
 def cosine(arr1, arr2):
@@ -61,8 +61,8 @@ def cosine(arr1, arr2):
         arr2 = [arr2]
     if any(pd.isnull(arr2)):
         return np.NaN
-
-    return sim.cosine(arr1, arr2)
+    measure = sim.cosine.Cosine()
+    return measure.get_raw_score(arr1, arr2)
 
 
 def monge_elkan(arr1, arr2):
@@ -76,8 +76,8 @@ def monge_elkan(arr1, arr2):
         arr2 = [arr2]
     if any(pd.isnull(arr2)):
         return np.NaN
-
-    return sim.monge_elkan(arr1, arr2)
+    measure = sim.monge_elkan.MongeElkan()
+    return measure.get_raw_score(arr1, arr2)
 
 
 # string based
@@ -87,10 +87,11 @@ def lev(s1, s2):
     if pd.isnull(s1) or pd.isnull(s2):
         return np.NaN
     if isinstance(s1, six.string_types):
-        s1 = remove_non_ascii(s1)
+        s1 = gh.remove_non_ascii(s1)
     if isinstance(s2, six.string_types):
-        s2 = remove_non_ascii(s2)
-    return sim.levenshtein(str(s1), str(s2))
+        s2 = gh.remove_non_ascii(s2)
+    measure = sim.levenshtein.Levenshtein()
+    return measure.get_raw_score(str(s1), str(s2))
 
 
 def jaro(s1, s2):
@@ -99,10 +100,11 @@ def jaro(s1, s2):
     if pd.isnull(s1) or pd.isnull(s2):
         return np.NaN
     if isinstance(s1, six.string_types):
-        s1 = remove_non_ascii(s1)
+        s1 = gh.remove_non_ascii(s1)
     if isinstance(s2, six.string_types):
-        s2 = remove_non_ascii(s2)
-    return sim.jaro(str(s1), str(s2))
+        s2 = gh.remove_non_ascii(s2)
+    measure = sim.jaro.Jaro()
+    return measure.get_raw_score(str(s1), str(s2))
 
 
 def jaro_winkler(s1, s2):
@@ -111,10 +113,11 @@ def jaro_winkler(s1, s2):
     if pd.isnull(s1) or pd.isnull(s2):
         return np.NaN
     if isinstance(s1, six.string_types):
-        s1 = remove_non_ascii(s1)
+        s1 = gh.remove_non_ascii(s1)
     if isinstance(s2, six.string_types):
-        s2 = remove_non_ascii(s2)
-    return sim.jaro_winkler(str(s1), str(s2))
+        s2 = gh.remove_non_ascii(s2)
+    measure = sim.jaro_winkler.JaroWinkler()
+    return measure.get_raw_score(str(s1), str(s2))
 
 
 def needleman_wunsch(s1, s2):
@@ -123,10 +126,11 @@ def needleman_wunsch(s1, s2):
     if pd.isnull(s1) or pd.isnull(s2):
         return np.NaN
     if isinstance(s1, six.string_types):
-        s1 = remove_non_ascii(s1)
+        s1 = gh.remove_non_ascii(s1)
     if isinstance(s2, six.string_types):
-        s2 = remove_non_ascii(s2)
-    return sim.needleman_wunsch(str(s1), str(s2))
+        s2 = gh.remove_non_ascii(s2)
+    measure = sim.needleman_wunsch.NeedlemanWunsch()
+    return measure.get_raw_score(str(s1), str(s2))
 
 
 def smith_waterman(s1, s2):
@@ -135,10 +139,11 @@ def smith_waterman(s1, s2):
     if pd.isnull(s1) or pd.isnull(s2):
         return np.NaN
     if isinstance(s1, six.string_types):
-        s1 = remove_non_ascii(s1)
+        s1 = gh.remove_non_ascii(s1)
     if isinstance(s2, six.string_types):
-        s2 = remove_non_ascii(s2)
-    return sim.smith_waterman(str(s1), str(s2))
+        s2 = gh.remove_non_ascii(s2)
+    measure = sim.smith_waterman.SmithWaterman()
+    return measure.get_raw_score(str(s1), str(s2))
 
 
 # boolean/string/numeric similarity measure
