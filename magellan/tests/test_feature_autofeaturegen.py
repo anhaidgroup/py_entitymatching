@@ -9,7 +9,10 @@ from magellan.feature.simfunctions import get_sim_funs_for_matching
 from magellan.feature.tokenizers import get_tokenizers_for_matching
 
 import magellan.feature.autofeaturegen as afg
+import magellan.feature.attributeutils as au
 import magellan.catalog.catalog_manager as cm
+import magellan.feature.simfunctions as simfuncs
+import magellan.feature.tokenizers as toks
 
 datasets_path = os.sep.join([get_install_path(), 'datasets', 'test_datasets'])
 bc_datasets_path = os.sep.join([get_install_path(), 'datasets', 'test_datasets', 'blockercombiner'])
@@ -27,9 +30,9 @@ class AutoFeatureGenerationTestCases(unittest.TestCase):
     def test_get_features_valid(self):
         A = read_csv_metadata(path_a)
         B = read_csv_metadata(path_b, key='ID')
-        l_attr_types = afg.get_attr_types(A)
-        r_attr_types = afg.get_attr_types(B)
-        attr_corres = afg.get_attr_corres(A, B)
+        l_attr_types = au.get_attr_types(A)
+        r_attr_types = au.get_attr_types(B)
+        attr_corres = au.get_attr_corres(A, B)
         tok = get_tokenizers_for_matching()
         sim = get_sim_funs_for_matching()
         feat_table = afg.get_features(A, B, l_attr_types, r_attr_types, attr_corres, tok, sim)
@@ -43,9 +46,9 @@ class AutoFeatureGenerationTestCases(unittest.TestCase):
     def test_get_features_invalid_df1(self):
         A = read_csv_metadata(path_a)
         B = read_csv_metadata(path_b, key='ID')
-        l_attr_types = afg.get_attr_types(A)
-        r_attr_types = afg.get_attr_types(B)
-        attr_corres = afg.get_attr_corres(A, B)
+        l_attr_types = au.get_attr_types(A)
+        r_attr_types = au.get_attr_types(B)
+        attr_corres = au.get_attr_corres(A, B)
         tok = get_tokenizers_for_matching()
         sim = get_sim_funs_for_matching()
         feat_table = afg.get_features(None, B, l_attr_types, r_attr_types, attr_corres, tok, sim)
@@ -54,9 +57,9 @@ class AutoFeatureGenerationTestCases(unittest.TestCase):
     def test_get_features_invalid_df2(self):
         A = read_csv_metadata(path_a)
         B = read_csv_metadata(path_b, key='ID')
-        l_attr_types = afg.get_attr_types(A)
-        r_attr_types = afg.get_attr_types(B)
-        attr_corres = afg.get_attr_corres(A, B)
+        l_attr_types = au.get_attr_types(A)
+        r_attr_types = au.get_attr_types(B)
+        attr_corres = au.get_attr_corres(A, B)
         tok = get_tokenizers_for_matching()
         sim = get_sim_funs_for_matching()
         feat_table = afg.get_features(A, None, l_attr_types, r_attr_types, attr_corres, tok, sim)
@@ -65,9 +68,9 @@ class AutoFeatureGenerationTestCases(unittest.TestCase):
     def test_get_features_invalid_ltable_rtable_switch(self):
         A = read_csv_metadata(path_a)
         B = read_csv_metadata(path_b, key='ID')
-        l_attr_types = afg.get_attr_types(A)
-        r_attr_types = afg.get_attr_types(B)
-        attr_corres = afg.get_attr_corres(B, A)
+        l_attr_types = au.get_attr_types(A)
+        r_attr_types = au.get_attr_types(B)
+        attr_corres = au.get_attr_corres(B, A)
         tok = get_tokenizers_for_matching()
         sim = get_sim_funs_for_matching()
         feat_table = afg.get_features(A, B, l_attr_types, r_attr_types, attr_corres, tok, sim)
@@ -121,69 +124,69 @@ class AutoFeatureGenerationTestCases(unittest.TestCase):
     def test_check_table_order_valid(self):
         A = read_csv_metadata(path_a)
         B = read_csv_metadata(path_b, key='ID')
-        l_attr_types = afg.get_attr_types(A)
-        r_attr_types = afg.get_attr_types(B)
-        attr_corres = afg.get_attr_corres(A, B)
-        status = afg.check_table_order(A, B, l_attr_types, r_attr_types, attr_corres)
+        l_attr_types = au.get_attr_types(A)
+        r_attr_types = au.get_attr_types(B)
+        attr_corres = au.get_attr_corres(A, B)
+        status = afg._check_table_order(A, B, l_attr_types, r_attr_types, attr_corres)
         self.assertEqual(status, True)
 
     @raises(AssertionError)
     def test_check_table_order_invalid_df1(self):
         A = read_csv_metadata(path_a)
         B = read_csv_metadata(path_b, key='ID')
-        l_attr_types = afg.get_attr_types(A)
-        r_attr_types = afg.get_attr_types(B)
-        attr_corres = afg.get_attr_corres(A, B)
-        status = afg.check_table_order(None, B, l_attr_types, r_attr_types, attr_corres)
+        l_attr_types = au.get_attr_types(A)
+        r_attr_types = au.get_attr_types(B)
+        attr_corres = au.get_attr_corres(A, B)
+        status = afg._check_table_order(None, B, l_attr_types, r_attr_types, attr_corres)
 
     @raises(AssertionError)
     def test_check_table_order_invalid_df2(self):
         A = read_csv_metadata(path_a)
         B = read_csv_metadata(path_b, key='ID')
-        l_attr_types = afg.get_attr_types(A)
-        r_attr_types = afg.get_attr_types(B)
-        attr_corres = afg.get_attr_corres(A, B)
-        status = afg.check_table_order(A, None, l_attr_types, r_attr_types, attr_corres)
+        l_attr_types = au.get_attr_types(A)
+        r_attr_types = au.get_attr_types(B)
+        attr_corres = au.get_attr_corres(A, B)
+        status = afg._check_table_order(A, None, l_attr_types, r_attr_types, attr_corres)
 
 
     def test_check_table_order_invalid_l_attrtype_table(self):
         A = read_csv_metadata(path_a)
         B = read_csv_metadata(path_b, key='ID')
-        l_attr_types = afg.get_attr_types(A)
+        l_attr_types = au.get_attr_types(A)
         l_attr_types['_table'] = pd.DataFrame()
-        r_attr_types = afg.get_attr_types(B)
-        attr_corres = afg.get_attr_corres(A, B)
-        status = afg.check_table_order(A, B, l_attr_types, r_attr_types, attr_corres)
+        r_attr_types = au.get_attr_types(B)
+        attr_corres = au.get_attr_corres(A, B)
+        status = afg._check_table_order(A, B, l_attr_types, r_attr_types, attr_corres)
         self.assertEqual(status, False)
 
     def test_check_table_order_invalid_r_attrtype_table(self):
         A = read_csv_metadata(path_a)
         B = read_csv_metadata(path_b, key='ID')
-        l_attr_types = afg.get_attr_types(A)
-        r_attr_types = afg.get_attr_types(B)
+        l_attr_types = au.get_attr_types(A)
+        r_attr_types = au.get_attr_types(B)
         r_attr_types['_table'] = pd.DataFrame()
-        attr_corres = afg.get_attr_corres(A, B)
-        status = afg.check_table_order(A, B, l_attr_types, r_attr_types, attr_corres)
+        attr_corres = au.get_attr_corres(A, B)
+        status = afg._check_table_order(A, B, l_attr_types, r_attr_types, attr_corres)
         self.assertEqual(status, False)
 
     def test_check_table_order_invalid_attrcorres_rtable(self):
         A = read_csv_metadata(path_a)
         B = read_csv_metadata(path_b, key='ID')
-        l_attr_types = afg.get_attr_types(A)
-        r_attr_types = afg.get_attr_types(B)
-        attr_corres = afg.get_attr_corres(A, B)
+        l_attr_types = au.get_attr_types(A)
+        r_attr_types = au.get_attr_types(B)
+        attr_corres = au.get_attr_corres(A, B)
         attr_corres['rtable'] = pd.DataFrame()
-        status = afg.check_table_order(A, B, l_attr_types, r_attr_types, attr_corres)
+        status = afg._check_table_order(A, B, l_attr_types, r_attr_types, attr_corres)
         self.assertEqual(status, False)
 
     def test_check_table_order_invalid_attrcorres_ltable(self):
         A = read_csv_metadata(path_a)
         B = read_csv_metadata(path_b, key='ID')
-        l_attr_types = afg.get_attr_types(A)
-        r_attr_types = afg.get_attr_types(B)
-        attr_corres = afg.get_attr_corres(A, B)
+        l_attr_types = au.get_attr_types(A)
+        r_attr_types = au.get_attr_types(B)
+        attr_corres = au.get_attr_corres(A, B)
         attr_corres['ltable'] = pd.DataFrame()
-        status = afg.check_table_order(A, B, l_attr_types, r_attr_types, attr_corres)
+        status = afg._check_table_order(A, B, l_attr_types, r_attr_types, attr_corres)
         self.assertEqual(status, False)
 
     def test_check_get_lkp_tbl_valid(self):
@@ -228,8 +231,8 @@ class AutoFeatureGenerationTestCases(unittest.TestCase):
         x = afg.get_magellan_str_types()
 
     def test_valid_tok_sim_valid(self):
-        sim = afg.get_sim_funs_for_blocking()
-        tok = afg.get_tokenizers_for_blocking()
+        sim = simfuncs.get_sim_funs_for_blocking()
+        tok = toks.get_tokenizers_for_blocking()
         status = afg.check_valid_tok_sim(('lev1', 'tok', 'tok'), sim, tok)
         self.assertEqual(status, None)
 
