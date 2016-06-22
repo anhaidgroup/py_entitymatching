@@ -102,6 +102,7 @@ def parse_feat_str(feature_string, tok, sim):
     d['left_attr_tokenizer'] = left_attr_tokenizer
     d['right_attr_tokenizer'] = right_attr_tokenizer
     d['simfunction'] = sim_function
+    d['is_auto_generated'] = False
     return d
 
 
@@ -151,14 +152,16 @@ def add_feature(feat_table, feat_name, feat_dict):
         feat_table.loc[len(feat_table)] = feat_dict
     else:
         feat_table.columns = ['feature_name', 'left_attribute', 'right_attribute', 'left_attr_tokenizer',
-                              'right_attr_tokenizer', 'simfunction', 'function', 'function_source']
+                              'right_attr_tokenizer', 'simfunction', 'function',
+                              'function_source', 'is_auto_generated']
         feat_table.loc[len(feat_table)] = feat_dict
     return True
 
 
 def create_feature_table():
     cols = ['feature_name', 'left_attribute', 'right_attribute', 'left_attr_tokenizer',
-            'right_attr_tokenizer', 'simfunction', 'function', 'function_source']
+            'right_attr_tokenizer', 'simfunction', 'function',
+            'function_source', 'is_auto_generated']
 
     feat_table = pd.DataFrame(columns=cols)
 
@@ -195,11 +198,13 @@ def add_blackbox_feature(feat_table, feat_name, feat_fn):
     d['right_attr_tokenizer'] = None
     d['simfunction'] = None
     d['function_source'] = None
+    d['is_auto_generated'] = False
 
     if len(feat_table) > 0:
         feat_table.loc[len(feat_table)] = d
     else:
         feat_table.columns = ['feature_name', 'left_attribute', 'right_attribute', 'left_attr_tokenizer',
-                              'right_attr_tokenizer', 'simfunction', 'function', 'function_source']
+                              'right_attr_tokenizer', 'simfunction', 'function',
+                              'function_source', 'is_auto_generated']
         feat_table.loc[len(feat_table)] = d
     return True
