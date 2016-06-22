@@ -52,7 +52,7 @@ def get_features(ltable, rtable, l_attr_types, r_attr_types, attr_corres, tok_fu
 
     df = pd.DataFrame(flatten_list(feat_dict_list))
     df = df[['feature_name', 'left_attribute', 'right_attribute', 'left_attr_tokenizer', 'right_attr_tokenizer',
-             'simfunction', 'function', 'function_source']]
+             'simfunction', 'function', 'function_source', 'is_auto_generated']]
     return df
 
 
@@ -328,6 +328,7 @@ def conv_fn_str_to_obj(fn_tup, tok, sim_funcs):
         d_ret['right_attr_tokenizer'] = tok_2
         d_ret['simfunction'] = simfunction
         d_ret['function_source'] = f[6]
+        d_ret['is_auto_generated'] = True
 
         d_ret_list.append(d_ret)
     return d_ret_list
