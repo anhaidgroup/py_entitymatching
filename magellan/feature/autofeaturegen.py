@@ -6,11 +6,10 @@ import logging
 import pandas as pd
 import six
 
+import magellan as mg
+import magellan.feature.attributeutils as au
 import magellan.feature.simfunctions as sim
 import magellan.feature.tokenizers as tok
-import magellan.feature.attributeutils as au
-
-import magellan as mg
 
 logger = logging.getLogger(__name__)
 
@@ -138,7 +137,7 @@ def get_features(ltable, rtable, l_attr_types, r_attr_types,
                            % (ac[0], l_attr_type, ac[1], r_attr_type))
             continue
         # Generate features
-        features = get_features_for_type(l_attr_type)
+        features = _get_features_for_type(l_attr_type)
 
         # Convert features to function objects
         fn_objs = _conv_func_objs(features, ac, tok_funcs, sim_funcs)
@@ -151,7 +150,7 @@ def get_features(ltable, rtable, l_attr_types, r_attr_types,
     feature_table = feature_table[['feature_name', 'left_attribute',
                                    'right_attribute', 'left_attr_tokenizer',
                                    'right_attr_tokenizer',
-                                    'simfunction', 'function',
+                                   'simfunction', 'function',
                                    'function_source', 'is_auto_generated']]
     # Return the feature table.
     return feature_table
@@ -173,165 +172,276 @@ def get_features_for_blocking(ltable, rtable):
         _block_t contains the tokenizers used and _block_s contains the
         similarity functions used for creating features. The variables
         _atypes1, _atypes2 contain the attribute types for ltable and rtable
-        respectively. The variable _block_c contain the
+        respectively. The variable _block_c contain the attribute
+        correspondence between the two input tables.
 
+    Raises:
+        AssertionError: If the input object (ltable) is not of type pandas
+            DataFrame.
+        AssertionError: If the input object (rtable) is not of type pandas
+            DataFrame.
     """
+    # Validate input parameters
+    # # We expect the ltable to be of type pandas DataFrame
     if not isinstance(ltable, pd.DataFrame):
-        logger.error('Input table A is not of type pandas dataframe')
-        raise AssertionError('Input table A is not of type pandas dataframe')
+        logger.error('Input table A is not of type pandas DataFrame')
+        raise AssertionError('Input table A is not of type pandas DataFrame')
 
+    # # We expect the rtable to be of type pandas DataFrame
     if not isinstance(rtable, pd.DataFrame):
         logger.error('Input table B is not of type pandas dataframe')
         raise AssertionError('Input table B is not of type pandas dataframe')
-
+    # Get the similarity functions to be used for blocking
     sim_funcs = sim.get_sim_funs_for_blocking()
+    # Get the tokenizers to be used for blocking
     tok_funcs = tok.get_tokenizers_for_blocking()
-    t_A = au.get_attr_types(ltable)
-    t_B = au.get_attr_types(rtable)
-    attr_corres = au.get_attr_corres(ltable, rtable)
-    feat_table = get_features(ltable, rtable, t_A, t_B, attr_corres, tok_funcs, sim_funcs)
 
-    # export important variables to global name space
+    # Get the attr. types for ltable and rtable
+    attr_types_ltable = au.get_attr_types(ltable)
+    attr_types_rtable = au.get_attr_types(rtable)
+    # Get the attr. correspondences between ltable and rtable
+    attr_corres = au.get_attr_corres(ltable, rtable)
+    # Get features based on attr types, attr correspondences, sim functions
+    # and tok. functions
+    feature_table = get_features(ltable, rtable, attr_types_ltable,
+                                 attr_types_rtable, attr_corres,
+                                 tok_funcs, sim_funcs)
+
+    # Export important variables to global name space
     mg._block_t = tok_funcs
     mg._block_s = sim_funcs
-    mg._atypes1 = t_A
-    mg._atypes2 = t_B
+    mg._atypes1 = attr_types_ltable
+    mg._atypes2 = attr_types_rtable
     mg._block_c = attr_corres
-    return feat_table
+    # Return the feature table
+    return feature_table
 
 
-def get_features_for_matching(A, B):
-    if not isinstance(A, pd.DataFrame):
-        logger.error('Input table A is not of type pandas dataframe')
-        raise AssertionError('Input table A is not of type pandas dataframe')
+def get_features_for_matching(ltable, rtable):
+    """
+    This function automatically generates features that can be used for
+    matching purposes.
 
-    if not isinstance(B, pd.DataFrame):
-        logger.error('Input table B is not of type pandas dataframe')
-        raise AssertionError('Input table B is not of type pandas dataframe')
+    Args:
+        ltable, rtable (DataFrame): Input pandas DataFrames for which the
+            features to be generated.
 
+    Returns:
+        A pandas DataFrame containing automatically generated features.
+        Further, this function also sets the following global varaibles:
+        _match_t, _match_s, _atypes1, _atypes2, _match_c. The variable
+        _match_t contains the tokenizers used and _match_s contains the
+        similarity functions used for creating features. The variables
+        _atypes1, _atypes2 contain the attribute types for ltable and rtable
+        respectively. The variable _match_c contain the attribute
+        correspondence between the two input tables.
+
+    Raises:
+        AssertionError: If the input object (ltable) is not of type pandas
+            DataFrame.
+        AssertionError: If the input object (rtable) is not of type pandas
+            DataFrame.
+    """
+    # Validate input parameters
+    # # We expect the ltable to be of type pandas DataFrame
+    if not isinstance(ltable, pd.DataFrame):
+        logger.error('Input table A is not of type pandas DataFrame')
+        raise AssertionError('Input table A is not of type pandas DataFrame')
+
+    # # We expect the rtable to be of type pandas DataFrame
+    if not isinstance(rtable, pd.DataFrame):
+        logger.error('Input table B is not of type pandas DataFrame')
+        raise AssertionError('Input table B is not of type pandas DataFrame')
+
+    # Get similarity functions for generating the features for matching
     sim_funcs = sim.get_sim_funs_for_matching()
+    # Get tokenizer functions for generating the features for matching
     tok_funcs = tok.get_tokenizers_for_matching()
-    t_A = au.get_attr_types(A)
-    t_B = au.get_attr_types(B)
-    attr_corres = au.get_attr_corres(A, B)
-    feat_table = get_features(A, B, t_A, t_B, attr_corres, tok_funcs, sim_funcs)
 
-    # export important variables to global name space
+    # Get the attribute types of the input tables
+    attr_types_ltable = au.get_attr_types(ltable)
+    attr_types_rtable = au.get_attr_types(rtable)
+
+    # Get the attribute correspondence between the input tables
+    attr_corres = au.get_attr_corres(ltable, rtable)
+
+    # Get the features
+    feature_table = get_features(ltable, rtable, attr_types_ltable,
+                                 attr_types_rtable, attr_corres,
+                                 tok_funcs, sim_funcs)
+
+    # Export important variables to global name space
     mg._match_t = tok_funcs
     mg._match_s = sim_funcs
-    mg._atypes1 = t_A
-    mg._atypes2 = t_B
+    mg._atypes1 = attr_types_ltable
+    mg._atypes2 = attr_types_ltable
     mg._match_c = attr_corres
-    return feat_table
+
+    # Finally return the feature table
+    return feature_table
 
 
-# check whether the order of tables matches with what is mentioned in  l_attr_types, r_attr_type and attr_corres
+#
 def _check_table_order(ltable, rtable, l_attr_types, r_attr_types, attr_corres):
-
+    """
+    Check whether the order of tables matches with what is mentioned in
+    l_attr_types, r_attr_type and attr_corres.
+    """
+    # Validate the input parameters
+    # We expect the input object ltable to be of type pandas DataFrame
     if not isinstance(ltable, pd.DataFrame):
         logger.error('Input ltable is not of type pandas dataframe')
         raise AssertionError('Input ltable is not of type pandas dataframe')
 
+    # We expect the input object rtable to be of type pandas DataFrame
     if not isinstance(rtable, pd.DataFrame):
         logger.error('Input rtable is not of type pandas dataframe')
         raise AssertionError('Input rtable is not of type pandas dataframe')
 
-    # get the ids
-    l_id = id(ltable)
-    r_id = id(rtable)
+    # Get the ids of the input tables. This is used to validate the order
+    # of tables present in the given data structures.
+    # Note: This kind of checking is bit too aggressive, the reason is this
+    # checking needs the ltable and rtable to point to exact memory location
+    # across the given dictionaries and the input. Ideally, we just need to
+    # check whether the contents of those DataFrames are same.
+    ltable_id = id(ltable)
+    rtable_id = id(rtable)
 
-    # check whether ltable id matches with id of table mentioned in l_attr_types
-    if l_id != id(l_attr_types['_table']):
-        logger.error('ltable is not the same as table mentioned in left attr types')
+    # Check whether ltable id matches with id of table mentioned in l_attr_types
+    if ltable_id != id(l_attr_types['_table']):
+        logger.error(
+            'ltable is not the same as table mentioned in left attr types')
         return False
 
-    # check whether rtable id matches with id of table mentioned in r_attr_types
-    if r_id != id(r_attr_types['_table']):
-        logger.error('rtable is not the same as table mentioned in right attr types')
+    # Check whether rtable id matches with id of table mentioned in r_attr_types
+    if rtable_id != id(r_attr_types['_table']):
+        logger.error(
+            'rtable is not the same as table mentioned in right attr types')
         return False
 
-    # check whether ltable matches with ltable mentioned in attr_corres
-    if l_id != id(attr_corres['ltable']):
-        logger.error('ltable is not the same as table mentioned in attr correspondence')
+    # Check whether ltable matches with ltable mentioned in attr_corres
+    if ltable_id != id(attr_corres['ltable']):
+        logger.error(
+            'ltable is not the same as table mentioned in attr correspondence')
         return False
 
-    # check whether rtable matches with rtable mentioned in attr_corres
-    if r_id != id(attr_corres['rtable']):
-        logger.error('rtable is not the same as table mentioned in attr correspondence')
+    # Check whether rtable matches with rtable mentioned in attr_corres
+    if rtable_id != id(attr_corres['rtable']):
+        logger.error(
+            'rtable is not the same as table mentioned in attr correspondence')
         return False
 
+    # Finally, return True.
     return True
 
 
 # get look up table to generate features
-def get_feat_lkp_tbl():
-    lkp_tbl = dict()
+def _get_feat_lkp_tbl():
+    """
+    This function embeds the knowledge of mapping what features to be
+    generated for what kind of attr. types.
 
-    # THE FOLLOWING MUST BE MODIFIED
-    # features for type str_eq_1w
-    lkp_tbl['STR_EQ_1W'] = [('lev'), ('jaro'), ('jaro_winkler'), ('exact_match'),
-                            ('jaccard', 'qgm_3', 'qgm_3')]
+    """
+    # Initialize a lookup table
+    lookup_table = dict()
 
-    # features for type str_bt_1w_5w
-    lkp_tbl['STR_BT_1W_5W'] = [('jaccard', 'qgm_3', 'qgm_3'),
-                               ('cosine', 'dlm_dc0', 'dlm_dc0'),
-                               ('jaccard', 'dlm_dc0', 'dlm_dc0'),
-                               ('monge_elkan'), ('lev'), ('needleman_wunsch'), ('smith_waterman')
+    # Features for type str_eq_1w
+    lookup_table['STR_EQ_1W'] = [('lev'), ('jaro'), ('jaro_winkler'),
+                                 ('exact_match'),
+                                 ('jaccard', 'qgm_3', 'qgm_3')]
 
-                               ]  # dlm_dc0 is the concrete space tokenizer
+    # Features for type str_bt_1w_5w
+    lookup_table['STR_BT_1W_5W'] = [('jaccard', 'qgm_3', 'qgm_3'),
+                                    ('cosine', 'dlm_dc0', 'dlm_dc0'),
+                                    ('jaccard', 'dlm_dc0', 'dlm_dc0'),
+                                    ('monge_elkan'), ('lev'),
+                                    ('needleman_wunsch'),
+                                    ('smith_waterman')
 
-    # features for type str_bt_5w_10w
-    lkp_tbl['STR_BT_5W_10W'] = [('jaccard', 'qgm_3', 'qgm_3'),
-                                ('cosine', 'dlm_dc0', 'dlm_dc0'),
-                                ('monge_elkan'), ('lev')]
+                                    ]  # dlm_dc0 is the concrete space tokenizer
 
-    # features for type str_gt_10w
-    lkp_tbl['STR_GT_10W'] = [('jaccard', 'qgm_3', 'qgm_3'),
-                             ('cosine', 'dlm_dc0', 'dlm_dc0')]
+    # Features for type str_bt_5w_10w
+    lookup_table['STR_BT_5W_10W'] = [('jaccard', 'qgm_3', 'qgm_3'),
+                                     ('cosine', 'dlm_dc0', 'dlm_dc0'),
+                                     ('monge_elkan'), ('lev')]
 
-    # features for NUMERIC type
-    # lkp_tbl['NUM'] = [('rel_diff')]
-    lkp_tbl['NUM'] = [('exact_match'), ('abs_norm'), ('lev')]
+    # Features for type str_gt_10w
+    lookup_table['STR_GT_10W'] = [('jaccard', 'qgm_3', 'qgm_3'),
+                                  ('cosine', 'dlm_dc0', 'dlm_dc0')]
 
-    # features for BOOLEAN type
-    lkp_tbl['BOOL'] = [('exact_match')]
+    # Features for NUMERIC type
+    lookup_table['NUM'] = [('exact_match'), ('abs_norm'), ('lev')]
 
-    return lkp_tbl
+    # Features for BOOLEAN type
+    lookup_table['BOOL'] = [('exact_match')]
+
+    # Finally, return the lookup table
+    return lookup_table
 
 
-# get features to be generated for a type
-def get_features_for_type(t):
-    lkp_tbl = get_feat_lkp_tbl()
-    if t is 'str_eq_1w':
-        rec_fns = lkp_tbl['STR_EQ_1W']
-    elif t is 'str_bt_1w_5w':
-        rec_fns = lkp_tbl['STR_BT_1W_5W']
-    elif t is 'str_bt_5w_10w':
-        rec_fns = lkp_tbl['STR_BT_5W_10W']
-    elif t is 'str_gt_10w':
-        rec_fns = lkp_tbl['STR_GT_10W']
-    elif t is 'numeric':
-        rec_fns = lkp_tbl['NUM']
-    elif t is 'boolean':
-        rec_fns = lkp_tbl['BOOL']
+def _get_features_for_type(column_type):
+    """
+    Get features to be generated for a type
+    """
+    # First get the look up table
+    lookup_table = _get_feat_lkp_tbl()
+
+    # Based on the column type, return the feature functions that should be
+    # generated.
+    if column_type is 'str_eq_1w':
+        features = lookup_table['STR_EQ_1W']
+    elif column_type is 'str_bt_1w_5w':
+        features = lookup_table['STR_BT_1W_5W']
+    elif column_type is 'str_bt_5w_10w':
+        features = lookup_table['STR_BT_5W_10W']
+    elif column_type is 'str_gt_10w':
+        features = lookup_table['STR_GT_10W']
+    elif column_type is 'numeric':
+        features = lookup_table['NUM']
+    elif column_type is 'boolean':
+        features = lookup_table['BOOL']
     else:
         raise TypeError('Unknown type')
-    return rec_fns
+    return features
 
-# get types
+
 def get_magellan_str_types():
-    return ['str_eq_1w', 'str_bt_1w_5w', 'str_bt_5w_10w', 'str_gt_10w', 'numeric','boolean']
+    """
+    This function returns the Magellan types as a list of  strings.
+    """
+
+    return ['str_eq_1w', 'str_bt_1w_5w', 'str_bt_5w_10w', 'str_gt_10w',
+            'numeric', 'boolean']
+
 
 # convert features from look up table to function objects
-def _conv_func_objs(feats, attrs, tok_funcs, sim_funcs):
-    tok_list = tok_funcs.keys()
-    sim_list = sim_funcs.keys()
-    valid_list = [check_valid_tok_sim(i, tok_list, sim_list) for i in feats]
-    # get function as a string and other meta data; finally we will get a list of tuples
-    func_tuples = [get_fn_str(inp, attrs) for inp in valid_list]
-    # print func_tuples
-    func_objs = conv_fn_str_to_obj(func_tuples, tok_funcs, sim_funcs)
-    return func_objs
+def _conv_func_objs(features, attributes,
+                    tokenizer_functions, similarity_functions):
+    """
+    Convert features from look up table to function objects
+    """
+    # We need to check whether the features have allowed tokenizers and
+    # similarity functions.
+
+    # # First get the tokenizer and similarity functions list.
+    tokenizer_list = tokenizer_functions.keys()
+    similarity_functions_list = similarity_functions.keys()
+
+    # # Second get the features that uses only valid tokenizers and
+    # similarity functions
+    valid_list = [check_valid_tok_sim(feature, tokenizer_list,
+                                      similarity_functions_list)
+                  for feature in features]
+
+    # Get function as a string and other meta data; finally we will get a
+    # list of tuples
+    function_tuples = [get_fn_str(input, attributes) for input in valid_list]
+
+    # Convert the function string into a function object
+    function_objects = conv_fn_str_to_obj(function_tuples, tokenizer_functions,
+                                   similarity_functions)
+
+    return function_objects
 
 
 # check whether tokenizers and simfunctions are allowed
@@ -339,7 +449,8 @@ def _conv_func_objs(feats, attrs, tok_funcs, sim_funcs):
 def check_valid_tok_sim(inp, simlist, toklist):
     if isinstance(inp, six.string_types):
         inp = [inp]
-    assert len(inp) == 1 or len(inp) == 3, 'len of feature config should be 1 or 3'
+    assert len(inp) == 1 or len(
+        inp) == 3, 'len of feature config should be 1 or 3'
     # check whether the sim function in features is in simlist
     if len(set(inp).intersection(simlist)) > 0:
         return inp

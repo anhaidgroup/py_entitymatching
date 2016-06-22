@@ -190,42 +190,42 @@ class AutoFeatureGenerationTestCases(unittest.TestCase):
         self.assertEqual(status, False)
 
     def test_check_get_lkp_tbl_valid(self):
-        x = afg.get_feat_lkp_tbl()
+        x = afg._get_feat_lkp_tbl()
         self.assertEqual(isinstance(x, dict), True)
 
     def test_get_features_for_type_valid_1(self):
-        x = afg.get_features_for_type('str_eq_1w')
+        x = afg._get_features_for_type('str_eq_1w')
         self.assertEqual(isinstance(x, list), True)
         self.assertEqual(len(x) >= 0, True)
 
     def test_get_features_for_type_valid_2(self):
-        x = afg.get_features_for_type('str_bt_1w_5w')
+        x = afg._get_features_for_type('str_bt_1w_5w')
         self.assertEqual(isinstance(x, list), True)
         self.assertEqual(len(x) >= 0, True)
 
     def test_get_features_for_type_valid_3(self):
-        x = afg.get_features_for_type('str_bt_5w_10w')
+        x = afg._get_features_for_type('str_bt_5w_10w')
         self.assertEqual(isinstance(x, list), True)
         self.assertEqual(len(x) >= 0, True)
 
     def test_get_features_for_type_valid_4(self):
-        x = afg.get_features_for_type('str_gt_10w')
+        x = afg._get_features_for_type('str_gt_10w')
         self.assertEqual(isinstance(x, list), True)
         self.assertEqual(len(x) >= 0, True)
 
     def test_get_features_for_type_valid_5(self):
-        x = afg.get_features_for_type('numeric')
+        x = afg._get_features_for_type('numeric')
         self.assertEqual(isinstance(x, list), True)
         self.assertEqual(len(x) >= 0, True)
 
     def test_get_features_for_type_valid_6(self):
-        x = afg.get_features_for_type('boolean')
+        x = afg._get_features_for_type('boolean')
         self.assertEqual(isinstance(x, list), True)
         self.assertEqual(len(x) >= 0, True)
 
     @raises(TypeError)
     def test_get_features_for_type_invlaid(self):
-        x = afg.get_features_for_type('unknown')
+        x = afg._get_features_for_type('unknown')
 
     def test_get_magellan_str_types(self):
         x = afg.get_magellan_str_types()
