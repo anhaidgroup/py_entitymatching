@@ -157,21 +157,39 @@ def get_features(ltable, rtable, l_attr_types, r_attr_types,
     return feature_table
 
 
-def get_features_for_blocking(A, B):
-    if not isinstance(A, pd.DataFrame):
+def get_features_for_blocking(ltable, rtable):
+    """
+    This function automatically generates features that can be used for
+    rule-based blocking purposes.
+
+    Args:
+        ltable, rtable (DataFrame): Input pandas DataFrames for which the
+            features to be generated.
+
+    Returns:
+        A pandas DataFrame containing automatically generated features.
+        Further, this function also sets the following global varaibles:
+        _block_t, _block_s, _atypes1, _atypes2, _block_c. The variable
+        _block_t contains the tokenizers used and _block_s contains the
+        similarity functions used for creating features. The variables
+        _atypes1, _atypes2 contain the attribute types for ltable and rtable
+        respectively. The variable _block_c contain the
+
+    """
+    if not isinstance(ltable, pd.DataFrame):
         logger.error('Input table A is not of type pandas dataframe')
         raise AssertionError('Input table A is not of type pandas dataframe')
 
-    if not isinstance(B, pd.DataFrame):
+    if not isinstance(rtable, pd.DataFrame):
         logger.error('Input table B is not of type pandas dataframe')
         raise AssertionError('Input table B is not of type pandas dataframe')
 
     sim_funcs = sim.get_sim_funs_for_blocking()
     tok_funcs = tok.get_tokenizers_for_blocking()
-    t_A = au.get_attr_types(A)
-    t_B = au.get_attr_types(B)
-    attr_corres = au.get_attr_corres(A, B)
-    feat_table = get_features(A, B, t_A, t_B, attr_corres, tok_funcs, sim_funcs)
+    t_A = au.get_attr_types(ltable)
+    t_B = au.get_attr_types(rtable)
+    attr_corres = au.get_attr_corres(ltable, rtable)
+    feat_table = get_features(ltable, rtable, t_A, t_B, attr_corres, tok_funcs, sim_funcs)
 
     # export important variables to global name space
     mg._block_t = tok_funcs

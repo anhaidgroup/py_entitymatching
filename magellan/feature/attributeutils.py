@@ -25,7 +25,7 @@ def get_attr_types(data_frame):
         Specifically, in the dictionary a key is an attribute name, a value
         is the type of that attribute. The dictionary would also specify that
         this information is for the input DataFrame A. So the dictionary will
-        have a  key ‘‘_table’’, and the value of that should be a pointer to
+        have a  key _table, and the value of that should be a pointer to
         the input DataFrame.
 
     Raises:
