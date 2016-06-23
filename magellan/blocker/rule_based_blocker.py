@@ -128,8 +128,8 @@ class RuleBasedBlocker(Blocker):
         l_key, r_key = cm.get_keys_for_ltable_rtable(ltable, rtable, logger, verbose)
 
         # # validate metadata
-        cm.validate_metadata_for_table(ltable, l_key, 'ltable', logger, verbose)
-        cm.validate_metadata_for_table(rtable, r_key, 'rtable', logger, verbose)
+        cm._validate_metadata_for_table(ltable, l_key, 'ltable', logger, verbose)
+        cm._validate_metadata_for_table(rtable, r_key, 'rtable', logger, verbose)
 
         # do blocking
 
