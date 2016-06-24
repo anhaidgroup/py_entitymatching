@@ -112,8 +112,8 @@ class RuleBasedBlocker(Blocker):
 
         # validate data types of input parameters
         self.validate_types_params_tables(ltable, rtable,
-		       l_output_attrs, r_output_attrs, l_output_prefix,
-		       r_output_prefix, verbose, show_progress, n_jobs)
+                       l_output_attrs, r_output_attrs, l_output_prefix,
+                       r_output_prefix, verbose, show_progress, n_jobs)
 
         # validate rules
         assert len(self.rules.keys()) > 0, 'There are no rules to apply'
@@ -440,7 +440,7 @@ class RuleBasedBlocker(Blocker):
         vals3 = vals2.split()
         operator = vals3[0].strip()
         threshold = vals3[1].strip()
-	ft_df = feature_table.set_index('feature_name')
+        ft_df = feature_table.set_index('feature_name')
         #print('ft_df: ', ft_df.ix[feature_name])
         return (ft_df.ix[feature_name]['simfunction'],
                ft_df.ix[feature_name]['left_attribute'],
