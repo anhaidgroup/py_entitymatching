@@ -17,7 +17,13 @@ r_output_prefix = 'r_'
 rule_1 = ['name_name_jac_qgm_3_qgm_3(ltuple,rtuple) < 0.3']
 expected_ids_1 = [('a2', 'b3'), ('a2', 'b6'), ('a3', 'b2'), ('a5', 'b5')]
 
-# Jaccard whitespace name < 0.5
+# Levenshtein distance birth_year > 0 -- currently a non-filterable rule 
+rule_2 = ['birth_year_birth_year_lev(ltuple, rtuple) > 0']
+expected_ids_2 = [('a2', 'b3'), ('a3', 'b2'), ('a4', 'b1'), ('a4', 'b6'),
+                  ('a5', 'b5')]
+
+# Jaccard whitespace name < 0.5 -- should return an empty candset
+rule_3 = ['name_name_jac_dlm_dc0_dlm_dc0(ltuple,rtuple) < 0.5']
 
 class RuleBasedBlockerTestCases(unittest.TestCase):
 
@@ -49,11 +55,13 @@ class RuleBasedBlockerTestCases(unittest.TestCase):
         assert_equal(mg.get_property(C, 'fk_rtable'), r_output_prefix + r_key)
     
     def validate_data(self, C, expected_ids=None):
+        #print('Expected ids: ', expected_ids)
         if expected_ids:
             lid = mg.get_property(C, 'fk_ltable')
             rid = mg.get_property(C, 'fk_rtable')
             C_ids = C[[lid, rid]].set_index([lid, rid])
             actual_ids = sorted(C_ids.index.values.tolist())
+            #print('Actual ids: ', actual_ids)
             assert_equal(expected_ids, actual_ids)
         else:
             assert_equal(len(C), 0)
@@ -162,64 +170,54 @@ class RuleBasedBlockerTestCases(unittest.TestCase):
     def test_rb_block_tables_invalid_show_progress_3(self):
         self.rb.block_tables(self.A, self.B, show_progress='yes')
     
-    def test_rb_block_tables(self):
+    def test_rb_block_tables_filterable_rule_single_conjunct(self):
         self.rb.add_rule(rule_1, self.feature_table)
         C = self.rb.block_tables(self.A, self.B, l_output_attrs,
-                            r_output_attrs, l_output_prefix, r_output_prefix)
+                                 r_output_attrs, l_output_prefix,
+                                 r_output_prefix, show_progress=False)
         self.validate_metadata(C, l_output_attrs, r_output_attrs,
                                l_output_prefix, r_output_prefix)
         self.validate_data(C, expected_ids_1)
-
-    """ 
+    
+    def test_rb_block_tables_non_filterable_rule_single_conjunct(self):
+        self.rb.add_rule(rule_2, self.feature_table)
+        C = self.rb.block_tables(self.A, self.B, l_output_attrs,
+                                 r_output_attrs, l_output_prefix,
+                                 r_output_prefix, show_progress=False)
+        self.validate_metadata(C, l_output_attrs, r_output_attrs,
+                               l_output_prefix, r_output_prefix)
+        self.validate_data(C, expected_ids_2)
+    
     def test_rb_block_tables_wi_no_output_tuples(self):
-        C = self.rb.block_tables(self.A, self.B, l_block_attr_3, r_block_attr_3)
-        assert_equal(len(C),  0)
-        assert_equal(sorted(C.columns), sorted(['_id', 'ltable_' + l_key,
-                                                'rtable_' + r_key]))
-        assert_equal(mg.get_key(C), '_id')
-        assert_equal(mg.get_property(C, 'fk_ltable'), 'ltable_' + l_key)
-        assert_equal(mg.get_property(C, 'fk_rtable'), 'rtable_' + r_key)
-
+        self.rb.add_rule(rule_3, self.feature_table)
+        C = self.rb.block_tables(self.A, self.B, show_progress=False)
+        self.validate_metadata(C)
+        self.validate_data(C)
+    
     def test_rb_block_tables_wi_null_l_output_attrs(self):
-        C = self.rb.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, None, r_output_attrs)
-        s1 = ['_id', 'ltable_' + l_key, 'rtable_' + r_key]
-        s1 += ['rtable_' + x for x in r_output_attrs if x != r_key]
-        s1 = sorted(s1)
-        assert_equal(s1, sorted(C.columns))
-        assert_equal(mg.get_key(C), '_id')
-        assert_equal(mg.get_property(C, 'fk_ltable'), 'ltable_' + l_key)
-        assert_equal(mg.get_property(C, 'fk_rtable'), 'rtable_' + r_key)
-
+        self.rb.add_rule(rule_1, self.feature_table)
+        C = self.rb.block_tables(self.A, self.B, None, r_output_attrs, show_progress=False)
+        self.validate_metadata(C, None, r_output_attrs)
+        self.validate_data(C, expected_ids_1)
+    
     def test_rb_block_tables_wi_null_r_output_attrs(self):
-        C = self.rb.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, l_output_attrs, None)
-        s1 = ['_id', 'ltable_' + l_key, 'rtable_' + r_key]
-        s1 += ['ltable_' + x for x in l_output_attrs if x != l_key]
-        s1 = sorted(s1)
-        assert_equal(s1, sorted(C.columns))
-        assert_equal(mg.get_key(C), '_id')
-        assert_equal(mg.get_property(C, 'fk_ltable'), 'ltable_' + l_key)
-        assert_equal(mg.get_property(C, 'fk_rtable'), 'rtable_' + r_key)
-
+        self.rb.add_rule(rule_1, self.feature_table)
+        C = self.rb.block_tables(self.A, self.B, l_output_attrs, None, show_progress=False)
+        self.validate_metadata(C, l_output_attrs, None)
+        self.validate_data(C, expected_ids_1)
+    
     def test_rb_block_tables_wi_empty_l_output_attrs(self):
-        C = self.rb.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, [], r_output_attrs)
-        s1 = ['_id', 'ltable_' + l_key, 'rtable_' + r_key]
-        s1 += ['rtable_' + x for x in r_output_attrs if x != r_key]
-        s1 = sorted(s1)
-        assert_equal(s1, sorted(C.columns))
-        assert_equal(mg.get_key(C), '_id')
-        assert_equal(mg.get_property(C, 'fk_ltable'), 'ltable_' + l_key)
-        assert_equal(mg.get_property(C, 'fk_rtable'), 'rtable_' + r_key)
-
+        self.rb.add_rule(rule_1, self.feature_table)
+        C = self.rb.block_tables(self.A, self.B, [], r_output_attrs, show_progress=False)
+        self.validate_metadata(C, [], r_output_attrs)
+        self.validate_data(C, expected_ids_1)
+    
     def test_rb_block_tables_wi_empty_r_output_attrs(self):
-        C = self.rb.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, l_output_attrs, [])
-        s1 = ['_id', 'ltable_' + l_key, 'rtable_' + r_key]
-        s1 += ['ltable_' + x for x in l_output_attrs if x != l_key]
-        s1 = sorted(s1)
-        assert_equal(s1, sorted(C.columns))
-        assert_equal(mg.get_key(C), '_id')
-        assert_equal(mg.get_property(C, 'fk_ltable'), 'ltable_' + l_key)
-        assert_equal(mg.get_property(C, 'fk_rtable'), 'rtable_' + r_key)
-
+        self.rb.add_rule(rule_1, self.feature_table)
+        C = self.rb.block_tables(self.A, self.B, l_output_attrs, [], show_progress=False)
+        self.validate_metadata(C, l_output_attrs, [])
+        self.validate_data(C, expected_ids_1)
+    """
     @raises(AssertionError)
     def test_rb_block_candset_invalid_candset_1(self):
         self.rb.block_candset(None, l_block_attr_1, r_block_attr_1)
@@ -348,7 +346,7 @@ class RuleBasedBlockerTestCases(unittest.TestCase):
                                      r_block_attr_1), False)
         assert_equal(self.rb.block_tuples(self.A.ix[2], self.B.ix[2], l_block_attr_1,
                                      r_block_attr_1), True)
-    
+     
     def test_block_tables_name_cos(self):
         path_a = os.sep.join([p, 'datasets', 'example_datasets', 'electronics', 'A.csv'])
         path_b = os.sep.join([p, 'datasets', 'example_datasets', 'electronics', 'B.csv'])
@@ -363,4 +361,4 @@ class RuleBasedBlockerTestCases(unittest.TestCase):
         C = rb.block_tables_skd(A, B, ['Name'], ['Name'], show_progress=True)
         C.to_csv('elec_name_cos.csv', index=False)
         print('size of C:', len(C))
-    """
+   """

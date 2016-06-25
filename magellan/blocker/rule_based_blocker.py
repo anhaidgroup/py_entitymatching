@@ -158,19 +158,22 @@ class RuleBasedBlocker(Blocker):
 
         if candset is None:
             # no filterable rule was applied
+            print('No filterable rule was applied')
             candset = self.block_tables_without_filters(l_df, r_df, l_key, r_key, l_output_attrs_1,
                                          r_output_attrs_1, l_output_prefix,
                                          r_output_prefix, verbose, show_progress, n_jobs)
-        elif len(rule_str) > 1:
+        elif len(self.rule_str) > 1:
             # one filterable rule was applied but other rules are left
             # block the candset by applying other rules
             valid = self.block_candset_excluding_rule(candset, l_df, r_df, l_key, r_key,
                                                  l_output_prefix + l_key,
                                                  r_output_prefix + r_key)
             candset = candset[valid]
-                                                 
+        
+        #print('candset cols: ', candset.columns)                                         
         retain_cols = self.get_attrs_to_retain(l_key, r_key, l_output_attrs_1, r_output_attrs_1,
                                                l_output_prefix, r_output_prefix)
+        #print('retain_cols: ', retain_cols)
         candset = candset[retain_cols]
  
         # update catalog
@@ -185,9 +188,9 @@ class RuleBasedBlocker(Blocker):
     def block_tables_skd(self, ltable, rtable, l_output_attrs=None, r_output_attrs=None,
                      l_output_prefix='ltable_', r_output_prefix='rtable_',
                      verbose=False, show_progress=True, n_jobs=1):
-        print('feature_table: ', self.feature_table)
-        print('rules: ', self.rules)
-        print('rule_source: ', self.rule_source)
+        #print('feature_table: ', self.feature_table)
+        #print('rules: ', self.rules)
+        #print('rule_source: ', self.rule_source)
         self.validate_types_params_tables(ltable, rtable,
 		       l_output_attrs, r_output_attrs, l_output_prefix,
 		       r_output_prefix, verbose, show_progress, n_jobs)
@@ -453,7 +456,7 @@ class RuleBasedBlocker(Blocker):
                               r_output_attrs, l_output_prefix, r_output_prefix, n_jobs):
         for rule_name, conjunct_list in six.iteritems(self.rule_str):
             # try to apply the rule with filters if possible
-            #print('Trying first rule: ', rule_name)
+            print('Trying first rule: ', rule_name)
             feature_table = self.rule_ft[rule_name]
             candset = self.apply_rule_if_filterable(conjunct_list, feature_table,
                                                     l_df, r_df,
@@ -461,7 +464,7 @@ class RuleBasedBlocker(Blocker):
                                                     r_output_attrs, l_output_prefix,
                                                     r_output_prefix, n_jobs)
             if candset is not None:
-                #print('Rule is filterable: ', rule_name)
+                print('Rule is filterable: ', rule_name)
                 # rule was filterable
                 return candset, rule_name   
         return None, None
@@ -474,43 +477,56 @@ class RuleBasedBlocker(Blocker):
         for conjunct in conjunct_list:
             sim_fn, l_attr, r_attr, l_tok, r_tok, op, th = self.parse_conjunct(conjunct, feature_table)
             if l_tok != r_tok:
-                #print('Conjunct not filterable tokenizer mismatch', l_tok, r_tok)
+                print('Conjunct not filterable tokenizer mismatch', l_tok, r_tok)
                 return None
             if sim_fn not in self.filterable_sim_fns:
-                #print('Conjunct not filterable unsupported sim_fn', sim_fn)
+                print('Conjunct not filterable unsupported sim_fn', sim_fn)
                 return None
             if op not in self.allowed_ops:
-                #print('Conjunct not filterable unsupported op', op)
+                print('Conjunct not filterable unsupported op', op)
                 return None
             # conjunct is filterable
             print('Conjunct is filterable', conjunct)
             tokenizer = None
             if l_tok == 'dlm_dc0':
-                #print('Choosing whitespace tokenizer')
+                print('Choosing whitespace tokenizer')
                 tokenizer = WhitespaceTokenizer(return_set=True)
             elif l_tok == 'qgm_3':
-                #print('Choosing 3gram tokenizer')
+                print('Choosing 3gram tokenizer')
                 tokenizer = QgramTokenizer(qval=3, return_set=True)
             else:
                 # not supported
-                #print('Tokenizer not supported')
+                print('Tokenizer not supported')
                 return None
  
             out_sim_score = False
             if op == '<=':
                 out_sim_score = True
-            #print('out_sim_score', out_sim_score)
+            print('out_sim_score', out_sim_score)
 
             c_df = None
-            join_fn = sim_fn + '_join'
-            try:
+            join_fn = None
+            if sim_fn == 'jaccard':
+                join_fn = jaccard_join
+            elif sim_fn == 'cosine':
+                join_fn = cosine_join
+            elif sim_fn == 'dice':
+                join_fn == dice_join
+            elif sim_fn == 'overlap':
+                join_fn = overlap_join
+            elif sim_fn == 'overlap_coefficient':
+                join_fn = overlap_coefficient_join
+            else:
+                logger.info(sim_fn + ' is not filterable, so not applying fitlers to this rule')
+                return None
+            if True:
                 c_df = join_fn(l_df, r_df, l_key, r_key, l_attr,
                                r_attr, tokenizer, float(th), l_output_attrs,
                                r_output_attrs, l_output_prefix,
                                r_output_prefix, out_sim_score, n_jobs)
-            except:    
-                logger.warning('Cannot apply filters to rule because ...')
-                return None
+            #except:    
+            #    logger.warning('Cannot apply filters to rule because ...')
+            #    return None
             if candset is not None:
                 # union the candset of this conjunct with the existing candset
                 candset = pd.merge(candset, c_df, how='outer',
