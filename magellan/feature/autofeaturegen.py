@@ -346,7 +346,8 @@ def _get_feat_lkp_tbl():
     lookup_table = dict()
 
     # Features for type str_eq_1w
-    lookup_table['STR_EQ_1W'] = [('lev'), ('jaro'), ('jaro_winkler'),
+    lookup_table['STR_EQ_1W'] = [('lev_dist'), ('lev_sim'), ('jaro'),
+                                ('jaro_winkler'),
                                  ('exact_match'),
                                  ('jaccard', 'qgm_3', 'qgm_3')]
 
@@ -354,23 +355,22 @@ def _get_feat_lkp_tbl():
     lookup_table['STR_BT_1W_5W'] = [('jaccard', 'qgm_3', 'qgm_3'),
                                     ('cosine', 'dlm_dc0', 'dlm_dc0'),
                                     ('jaccard', 'dlm_dc0', 'dlm_dc0'),
-                                    ('monge_elkan'), ('lev'),
+                                    ('monge_elkan'), ('lev_dist'), ('lev_sim'),
                                     ('needleman_wunsch'),
-                                    ('smith_waterman')
-
-                                    ]  # dlm_dc0 is the concrete space tokenizer
+                                    ('smith_waterman')]  # dlm_dc0 is the concrete space tokenizer
 
     # Features for type str_bt_5w_10w
     lookup_table['STR_BT_5W_10W'] = [('jaccard', 'qgm_3', 'qgm_3'),
                                      ('cosine', 'dlm_dc0', 'dlm_dc0'),
-                                     ('monge_elkan'), ('lev')]
+                                     ('monge_elkan'), ('lev_dist'), ('lev_sim')]
 
     # Features for type str_gt_10w
     lookup_table['STR_GT_10W'] = [('jaccard', 'qgm_3', 'qgm_3'),
                                   ('cosine', 'dlm_dc0', 'dlm_dc0')]
 
     # Features for NUMERIC type
-    lookup_table['NUM'] = [('exact_match'), ('abs_norm'), ('lev')]
+    lookup_table['NUM'] = [('exact_match'), ('abs_norm'), ('lev_dist'),
+                           ('lev_sim')]
 
     # Features for BOOLEAN type
     lookup_table['BOOL'] = [('exact_match')]
@@ -509,14 +509,14 @@ def get_fn_name(attr1, attr2, sim_func, tok_func_1=None, tok_func_2=None):
     fp = '_'.join([attr1, attr2])
     name_lkp = dict()
     name_lkp["jaccard"] = "jac"
-    name_lkp["lev"] = "lev"
+    name_lkp["lev_dist"] = "lev_dist"
+    name_lkp["lev_sim"] = "lev_sim"
     name_lkp["cosine"] = "cos"
     name_lkp["monge_elkan"] = "mel"
     name_lkp["needleman_wunsch"] = "nmw"
     name_lkp["smith_waterman"] = "sw"
     name_lkp["jaro"] = "jar"
     name_lkp["jaro_winkler"] = "jwn"
-    # name_lkp["soundex"] = "sdx"
     name_lkp["exact_match"] = "exm"
     name_lkp["abs_norm"] = "anm"
     name_lkp["rel_diff"] = "rdf"
