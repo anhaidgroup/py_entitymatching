@@ -41,9 +41,11 @@ class RuleBasedBlocker(Blocker):
 
     def create_rule(self, conjunct_list, feature_table=None):
         if feature_table is None and self.feature_table is None:
-            logger.error('Either feature table should be given as parameter or use set_feature_table to '
-                         'set the feature table')
-            return False
+            logger.error('Either feature table should be given as parameter ' +
+                         'or use set_feature_table to set the feature table')
+            raise AssertionError('Either feature table should be given as ' +
+                                 'parameter or use set_feature_table to set ' +
+                                 'the feature table')
 
         # set the rule name
         name = '_rule_' + str(self.rule_cnt)
@@ -446,6 +448,73 @@ class RuleBasedBlocker(Blocker):
         # return candidate set
         return candset
 
+    def block_candset_skd(self, candset, verbose=True, show_progress=True):
+
+        # validate rules
+        assert len(self.rules.keys()) > 0, 'There are no rules to apply'
+
+        # get and validate metadata
+        log_info(logger, 'Required metadata: cand.set key, fk ltable, fk rtable, '
+                                'ltable, rtable, ltable key, rtable key', verbose)
+
+        # # get metadata
+        key, fk_ltable, fk_rtable, ltable, rtable, l_key, r_key = cm.get_metadata_for_candset(candset, logger, verbose)
+
+        # # validate metadata
+        cm._validate_metadata_for_candset(candset, key, fk_ltable, fk_rtable, ltable, rtable, l_key, r_key,
+                                          logger, verbose)
+
+        # do blocking
+
+        # # initialize the progress bar
+        if show_progress:
+            bar = pyprind.ProgBar(len(candset))
+
+        # # set index for convenience
+        l_df = ltable.set_index(l_key, drop=False)
+        r_df = rtable.set_index(r_key, drop=False)
+
+        # # create lookup table for faster processing
+        l_dict = {}
+        for k, r in l_df.iterrows():
+            l_dict[k] = r
+
+        r_dict = {}
+        for k, r in r_df.iterrows():
+            r_dict[k] = r
+
+        # # list to keep track of valid ids
+        valid = []
+        l_id_pos = list(candset.columns).index(fk_ltable)
+        r_id_pos = list(candset.columns).index(fk_rtable)
+
+        # # iterate candidate set
+        for row in candset.itertuples(index=False):
+            # # update progress bar
+            if show_progress:
+                bar.update()
+
+            ltuple = l_dict[row[l_id_pos]]
+            rtuple = r_dict[row[r_id_pos]]
+
+            res = self.apply_rules(ltuple, rtuple)
+            if res != True:
+                valid.append(True)
+            else:
+                valid.append(False)
+
+        # construct output table
+        if len(candset) > 0:
+            candset = candset[valid]
+        else:
+            candset = pd.DataFrame(columns=candset.columns)
+
+        # update catalog
+        cm.set_candset_properties(candset, key, fk_ltable, fk_rtable, ltable, rtable)
+
+        # return candidate set
+        return candset
+
     def block_tuples(self, ltuple, rtuple):
         # validate rules
         assert len(self.rules.keys()) > 0, 'There are no rules to apply'
@@ -484,14 +553,19 @@ class RuleBasedBlocker(Blocker):
         #print >> sys.stderr, 'conjunct:', conjunct
         #print >> sys.stderr, 'conjunct split:', conjunct.split()
         # @TODO: Make parsing more robust using pyparsing
+        feature_table = self.rule_ft[rule_name]
         vals = conjunct.split('(')
         feature_name = vals[0].strip()
+        if feature_name not in feature_table.feature_name.values:
+            logger.error('Feature ' + feature_name + ' is not present in ' +
+                         'supplied feature table. Cannot apply rules.')
+            raise AssertionError('Feature ' + feature_name + ' is not present ' +
+                                 'in supplied feature table. Cannot apply rules.')
         vals1 = vals[1].split(')')
         vals2 = vals1[1].strip()
         vals3 = vals2.split()
         operator = vals3[0].strip()
         threshold = vals3[1].strip()
-        feature_table = self.rule_ft[rule_name]
         ft_df = feature_table.set_index('feature_name')
         #print('ft_df: ', ft_df.ix[feature_name])
         return (ft_df.ix[feature_name]['simfunction'],
