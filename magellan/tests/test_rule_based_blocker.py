@@ -13,17 +13,30 @@ r_output_attrs = ['zipcode', 'birth_year']
 l_output_prefix = 'l_'
 r_output_prefix = 'r_'
 
-# Jaccard 3gram name  < 0.3
+# Jaccard 3gram name  < 0.3 - filterable rule with single conjunct
 rule_1 = ['name_name_jac_qgm_3_qgm_3(ltuple,rtuple) < 0.3']
 expected_ids_1 = [('a2', 'b3'), ('a2', 'b6'), ('a3', 'b2'), ('a5', 'b5')]
 
-# Levenshtein distance birth_year > 0 -- currently a non-filterable rule 
+# Levenshtein distance birth_year > 0 - non-filterable rule with single conjunct
 rule_2 = ['birth_year_birth_year_lev(ltuple, rtuple) > 0']
 expected_ids_2 = [('a2', 'b3'), ('a3', 'b2'), ('a4', 'b1'), ('a4', 'b6'),
                   ('a5', 'b5')]
 
+expected_ids_1_and_2 = [('a2', 'b3'), ('a3', 'b2'), ('a5', 'b5')]
+
+# non-filterable rule with two conjuncts
+rule_3 = ['name_name_jac_qgm_3_qgm_3(ltuple, rtuple) < 0.3',
+          'birth_year_birth_year_lev(ltuple, rtuple) > 0']
+expected_ids_3 = [('a2', 'b3'), ('a2', 'b6'), ('a3', 'b2'), ('a4', 'b1'),
+                  ('a4', 'b6'), ('a5', 'b5')]
+
+# filterable rule with multiple conjuncts
+rule_4 = ['name_name_jac_qgm_3_qgm_3(ltuple,rtuple) < 0.3',
+          'name_name_cos_dlm_dc0_dlm_dc0(ltuple, rtuple) < 0.25']
+expected_ids_4 = [('a2', 'b3'), ('a2', 'b6'), ('a3', 'b2'), ('a5', 'b5')]
+
 # Jaccard whitespace name < 0.5 -- should return an empty candset
-rule_3 = ['name_name_jac_dlm_dc0_dlm_dc0(ltuple,rtuple) < 0.5']
+rule_5 = ['name_name_jac_dlm_dc0_dlm_dc0(ltuple,rtuple) < 0.5']
 
 class RuleBasedBlockerTestCases(unittest.TestCase):
 
@@ -188,8 +201,37 @@ class RuleBasedBlockerTestCases(unittest.TestCase):
                                l_output_prefix, r_output_prefix)
         self.validate_data(C, expected_ids_2)
     
-    def test_rb_block_tables_wi_no_output_tuples(self):
+    def test_rb_block_tables_non_filterable_rule_multiple_conjuncts(self):
         self.rb.add_rule(rule_3, self.feature_table)
+        C = self.rb.block_tables(self.A, self.B, l_output_attrs,
+                                 r_output_attrs, l_output_prefix,
+                                 r_output_prefix, show_progress=False)
+        self.validate_metadata(C, l_output_attrs, r_output_attrs,
+                               l_output_prefix, r_output_prefix)
+        self.validate_data(C, expected_ids_3)
+    
+    def test_rb_block_tables_filterable_rule_multiple_conjuncts(self):
+        self.rb.add_rule(rule_4, self.feature_table)
+        #print('feature_table:', self.feature_table)
+        C = self.rb.block_tables(self.A, self.B, l_output_attrs,
+                                 r_output_attrs, l_output_prefix,
+                                 r_output_prefix, show_progress=False)
+        self.validate_metadata(C, l_output_attrs, r_output_attrs,
+                               l_output_prefix, r_output_prefix)
+        self.validate_data(C, expected_ids_4)
+    
+    def test_rb_block_tables_rule_sequence_with_one_filterable_rule(self):
+        self.rb.add_rule(rule_1, self.feature_table)
+        self.rb.add_rule(rule_2, self.feature_table)
+        C = self.rb.block_tables(self.A, self.B, l_output_attrs,
+                                 r_output_attrs, l_output_prefix,
+                                 r_output_prefix, show_progress=False)
+        self.validate_metadata(C, l_output_attrs, r_output_attrs,
+                               l_output_prefix, r_output_prefix)
+        self.validate_data(C, expected_ids_1_and_2)
+    
+    def test_rb_block_tables_wi_no_output_tuples(self):
+        self.rb.add_rule(rule_5, self.feature_table)
         C = self.rb.block_tables(self.A, self.B, show_progress=False)
         self.validate_metadata(C)
         self.validate_data(C)

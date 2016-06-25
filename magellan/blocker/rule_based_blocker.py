@@ -162,18 +162,20 @@ class RuleBasedBlocker(Blocker):
             candset = self.block_tables_without_filters(l_df, r_df, l_key, r_key, l_output_attrs_1,
                                          r_output_attrs_1, l_output_prefix,
                                          r_output_prefix, verbose, show_progress, n_jobs)
-        elif len(self.rule_str) > 1:
+        elif len(self.rules) > 1:
             # one filterable rule was applied but other rules are left
             # block the candset by applying other rules
-            valid = self.block_candset_excluding_rule(candset, l_df, r_df, l_key, r_key,
+            rules = self.rules.copy()
+            rules.pop(rule_applied, None)
+            candset = self.block_candset_with_rules(candset, l_df, r_df, l_key, r_key,
                                                  l_output_prefix + l_key,
-                                                 r_output_prefix + r_key)
-            candset = candset[valid]
+                                                 r_output_prefix + r_key, rules,
+                                                 show_progress)
         
-        #print('candset cols: ', candset.columns)                                         
+        print('candset cols: ', candset.columns)                                         
         retain_cols = self.get_attrs_to_retain(l_key, r_key, l_output_attrs_1, r_output_attrs_1,
                                                l_output_prefix, r_output_prefix)
-        #print('retain_cols: ', retain_cols)
+        print('retain_cols: ', retain_cols)
         candset = candset[retain_cols]
  
         # update catalog
@@ -185,6 +187,53 @@ class RuleBasedBlocker(Blocker):
         #print('Candset:', candset)
         return candset
 
+    def block_candset_with_rules(self, c_df, l_df, r_df, l_key, r_key,
+                                 fk_ltable, fk_rtable, rules, show_progress):
+
+        # do blocking
+
+        # # initialize the progress bar
+        if show_progress:
+            bar = pyprind.ProgBar(len(c_df))
+
+        # # create lookup table for faster processing
+        l_dict = {}
+        for k, r in l_df.iterrows():
+            l_dict[k] = r
+
+        r_dict = {}
+        for k, r in r_df.iterrows():
+            r_dict[k] = r
+
+        # # list to keep track of valid ids
+        valid = []
+        l_id_pos = list(c_df.columns).index(fk_ltable)
+        r_id_pos = list(c_df.columns).index(fk_rtable)
+
+        # # iterate candidate set
+        for row in c_df.itertuples(index=False):
+            # # update progress bar
+            if show_progress:
+                bar.update()
+
+            ltuple = l_dict[row[l_id_pos]]
+            rtuple = r_dict[row[r_id_pos]]
+
+            res = self.apply_rules(ltuple, rtuple)
+            if res != True:
+                valid.append(True)
+            else:
+                valid.append(False)
+
+        # construct output table
+        if len(c_df) > 0:
+            candset = c_df[valid]
+        else:
+            candset = pd.DataFrame(columns=c_df.columns)
+
+        # return candidate set
+        return candset
+         
     def block_tables_skd(self, ltable, rtable, l_output_attrs=None, r_output_attrs=None,
                      l_output_prefix='ltable_', r_output_prefix='rtable_',
                      verbose=False, show_progress=True, n_jobs=1):
@@ -524,13 +573,17 @@ class RuleBasedBlocker(Blocker):
                                r_attr, tokenizer, float(th), l_output_attrs,
                                r_output_attrs, l_output_prefix,
                                r_output_prefix, out_sim_score, n_jobs)
+                #c_df = c_df.set_index('_id')
             #except:    
             #    logger.warning('Cannot apply filters to rule because ...')
             #    return None
             if candset is not None:
                 # union the candset of this conjunct with the existing candset
-                candset = pd.merge(candset, c_df, how='outer',
-                                   on=[l_output_prefix + l_key, r_output_prefix + r_key])
+                #candset = pd.merge(candset, c_df, how='outer', suffixes=('', ''),
+                #                   on=[l_output_prefix + l_key, r_output_prefix + r_key])
+                print('candset:', candset)
+                print('c_df:', c_df)
+                candset=pd.concat([candset, c_df]).drop_duplicates().reset_index(drop=True) 
             else:
                 # candset from the first conjunct of the rule
                 candset = c_df
