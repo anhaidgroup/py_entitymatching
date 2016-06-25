@@ -117,9 +117,6 @@ class RuleBasedBlocker(Blocker):
                        l_output_attrs, r_output_attrs, l_output_prefix,
                        r_output_prefix, verbose, show_progress, n_jobs)
 
-        # validate rules
-        assert len(self.rules.keys()) > 0, 'There are no rules to apply'
-
         # validate input parameters
         self.validate_output_attrs(ltable, rtable, l_output_attrs, r_output_attrs)
 
@@ -132,6 +129,9 @@ class RuleBasedBlocker(Blocker):
         # # validate metadata
         cm._validate_metadata_for_table(ltable, l_key, 'ltable', logger, verbose)
         cm._validate_metadata_for_table(rtable, r_key, 'rtable', logger, verbose)
+
+        # validate rules
+        assert len(self.rules.keys()) > 0, 'There are no rules to apply'
 
         # do blocking
 
@@ -381,14 +381,14 @@ class RuleBasedBlocker(Blocker):
 
 
 
-    def block_candset(self, candset, verbose=True, show_progress=True):
+    def block_candset(self, candset, verbose=True, show_progress=True, n_jobs=1):
 
-        # validate rules
-        assert len(self.rules.keys()) > 0, 'There are no rules to apply'
+        # validate data types of input parameters
+        self.validate_types_params_candset(candset, verbose, show_progress, n_jobs)
 
         # get and validate metadata
-        log_info(logger, 'Required metadata: cand.set key, fk ltable, fk rtable, '
-                                'ltable, rtable, ltable key, rtable key', verbose)
+        log_info(logger, 'Required metadata: cand.set key, fk ltable, ' +
+                         'fk rtable, ltable, rtable, ltable key, rtable key', verbose)
 
         # # get metadata
         key, fk_ltable, fk_rtable, ltable, rtable, l_key, r_key = cm.get_metadata_for_candset(candset, logger, verbose)
@@ -396,6 +396,9 @@ class RuleBasedBlocker(Blocker):
         # # validate metadata
         cm._validate_metadata_for_candset(candset, key, fk_ltable, fk_rtable, ltable, rtable, l_key, r_key,
                                           logger, verbose)
+
+        # validate rules
+        assert len(self.rules.keys()) > 0, 'There are no rules to apply'
 
         # do blocking
 
@@ -407,46 +410,20 @@ class RuleBasedBlocker(Blocker):
         l_df = ltable.set_index(l_key, drop=False)
         r_df = rtable.set_index(r_key, drop=False)
 
-        # # create lookup table for faster processing
-        l_dict = {}
-        for k, r in l_df.iterrows():
-            l_dict[k] = r
+        # # get attributes to project
+        l_proj_attrs, r_proj_attrs = self.get_attrs_to_project(l_key, r_key,
+                                                               [], [])
+        l_df, r_df = l_df[l_proj_attrs], r_df[r_proj_attrs]
 
-        r_dict = {}
-        for k, r in r_df.iterrows():
-            r_dict[k] = r
-
-        # # list to keep track of valid ids
-        valid = []
-        l_id_pos = list(candset.columns).index(fk_ltable)
-        r_id_pos = list(candset.columns).index(fk_rtable)
-
-        # # iterate candidate set
-        for row in candset.itertuples(index=False):
-            # # update progress bar
-            if show_progress:
-                bar.update()
-
-            ltuple = l_dict[row[l_id_pos]]
-            rtuple = r_dict[row[r_id_pos]]
-
-            res = self.apply_rules(ltuple, rtuple)
-            if res != True:
-                valid.append(True)
-            else:
-                valid.append(False)
-
-        # construct output table
-        if len(candset) > 0:
-            candset = candset[valid]
-        else:
-            candset = pd.DataFrame(columns=candset.columns)
+        c_df = self.block_candset_with_rules(candset, l_df, r_df, l_key, r_key,
+                                             fk_ltable, fk_rtable, self.rules,
+                                             show_progress) 
 
         # update catalog
-        cm.set_candset_properties(candset, key, fk_ltable, fk_rtable, ltable, rtable)
+        cm.set_candset_properties(c_df, key, fk_ltable, fk_rtable, ltable, rtable)
 
         # return candidate set
-        return candset
+        return c_df
 
     def block_candset_skd(self, candset, verbose=True, show_progress=True):
 
