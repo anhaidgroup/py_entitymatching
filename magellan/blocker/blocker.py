@@ -118,12 +118,13 @@ class Blocker(object):
             output_attrs.append(block_attr)                                     
         return output_attrs
 
-    def get_split_params(self, n_procs):
+    def get_split_params(self, n_procs, min_m, min_n):
         m = int(math.sqrt(n_procs))
         while n_procs % m != 0:
             m = m - 1
-        n = n_procs / m
-        return m, n
+        n = int(n_procs / m)
+        # to safeguard against small tables, do not split less than min values
+        return min(m, min_m), min(n, min_n)
     
     def get_num_procs(self, n_jobs, min_procs):        
         # determine number of processes to launch parallely
@@ -131,4 +132,5 @@ class Blocker(object):
         n_procs = n_jobs
         if n_jobs < 0:
             n_procs = n_cpus + 1 + n_jobs
+        # cannot launch less than min_procs to safeguard against small tables
         return min(n_procs, min_procs)
