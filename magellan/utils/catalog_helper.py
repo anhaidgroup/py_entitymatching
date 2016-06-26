@@ -166,7 +166,6 @@ def check_fk_constraint(df_foreign, attr_foreign, df_base, attr_base):
         logger.error('Input attr (attr_foreign) is not of type string')
         raise AssertionError('Input attr (attr_foreign) is not of type string')
 
-
     if not isinstance(df_base, pd.DataFrame):
         logger.error('Input object (df_base) is not of type pandas data frame')
         raise AssertionError('Input object (df_base) is not of type pandas data frame')
@@ -175,15 +174,15 @@ def check_fk_constraint(df_foreign, attr_foreign, df_base, attr_base):
         logger.error('Input attr (attr_base) is not of type string')
         raise AssertionError('Input attr (attr_base) is not of type string')
 
-    if check_attrs_present(df_base, attr_base) is False:
+    if not check_attrs_present(df_base, attr_base):
         logger.warning('The attribute %s is not in df_base' %attr_base)
         return False
 
+    if not check_attrs_present(df_foreign, attr_foreign):
+        logger.error('Input attr (attr_foreign) is not in df_foreign')
+        return False
 
-    # 1. check attr_foreign does not contain missing values
-    # 2. all elements in attr_foreign must have an unique entry in the base table.
-
-    if any(pd.isnull(df_foreign[attr_foreign])) == True:
+    if any(pd.isnull(df_foreign[attr_foreign])):
         logger.warning('The attribute %s in foreign table contains null values' %attr_foreign)
         return False
 

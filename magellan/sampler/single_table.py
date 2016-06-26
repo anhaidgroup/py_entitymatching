@@ -89,9 +89,9 @@ def sample_table(table, sample_size, replace=False, verbose=False):
         cm.get_metadata_for_candset(table, logger, verbose)
 
     # # Third, validate the metadata
-    cm.validate_metadata_for_candset(table, key, fk_ltable, fk_rtable,
-                                     ltable, rtable, l_key, r_key,
-                                     logger, verbose)
+    cm._validate_metadata_for_candset(table, key, fk_ltable, fk_rtable,
+                                      ltable, rtable, l_key, r_key,
+                                      logger, verbose)
 
     # Get the sample set for the output table
     sample_indices = pd.np.random.choice(len(table), sample_size,

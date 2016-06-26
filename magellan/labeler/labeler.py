@@ -104,9 +104,9 @@ def _validate_inputs(table, label_column_name, verbose):
         cm.get_metadata_for_candset(table, logger, verbose)
 
     # # Third, validate the metadata
-    cm.validate_metadata_for_candset(table, key, fk_ltable, fk_rtable,
-                                     ltable, rtable, l_key, r_key,
-                                     logger, verbose)
+    cm._validate_metadata_for_candset(table, key, fk_ltable, fk_rtable,
+                                      ltable, rtable, l_key, r_key,
+                                      logger, verbose)
 
     # Return True if everything was successful
     return True
