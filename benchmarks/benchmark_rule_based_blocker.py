@@ -9,6 +9,7 @@ import magellan  as mg
 p = mg.get_install_path()
 datasets_path = os.sep.join([p, 'datasets', 'example_datasets'])
 
+"""
 class TimeBlockTablesElectronics:
     timeout = 20000.0
 
@@ -20,25 +21,25 @@ class TimeBlockTablesElectronics:
         self.B = mg.read_csv_metadata(path_for_B)
         mg.set_key(self.B, 'ID')
         self.feature_table = mg.get_features_for_blocking(self.A, self.B)
-        self.rb = mg.RuleBasedBlocker()
 
     def teardown(self):
         del self.A
         del self.B
         del self.feature_table
-        del self.rb
     
     def time_block_tables_name_cos(self):
-        self.rb.add_rule(['Name_Name_cos_dlm_dc0_dlm_dc0(ltuple,rtuple) < 0.3'],
+        rb = mg.RuleBasedBlocker()
+        rb.add_rule(['Name_Name_cos_dlm_dc0_dlm_dc0(ltuple,rtuple) < 0.3'],
                          self.feature_table)
-        C = self.rb.block_tables(self.A, self.B, ['Name'], ['Name'])
-        C.to_csv('electronics', index=False)
+        C = rb.block_tables(self.A, self.B, ['Name'], ['Name'])
+        #C.to_csv('electronics', index=False)
         print >> sys.stderr, 'size of C:', len(C)
     
     def time_block_tables_features_jac(self):
-        self.rb.add_rule(['Features_Features_jac_qgm_3_qgm_3(ltuple,rtuple) < 0.6'],
+        rb = mg.RuleBasedBlocker()
+        rb.add_rule(['Features_Features_jac_qgm_3_qgm_3(ltuple,rtuple) < 0.6'],
                          self.feature_table)
-        C = self.rb.block_tables(self.A, self.B, ['Features'], ['Features'])
+        C = rb.block_tables(self.A, self.B, ['Features'], ['Features'])
         print >> sys.stderr, 'size of C:', len(C)
     
 class TimeBlockTablesAnime:
@@ -52,18 +53,17 @@ class TimeBlockTablesAnime:
         self.B = mg.read_csv_metadata(path_for_B)
         mg.set_key(self.B, 'ID')
         self.feature_table = mg.get_features_for_blocking(self.A, self.B)
-        self.rb = mg.RuleBasedBlocker()
 
     def teardown(self):
         del self.A
         del self.B
         del self.feature_table
-        del self.rb
 
     def time_block_tables(self):
-        self.rb.add_rule(['Title_Title_jac_qgm_3_qgm_3(ltuple,rtuple) < 0.4'],
+        rb = mg.RuleBasedBlocker()
+        rb.add_rule(['Title_Title_jac_qgm_3_qgm_3(ltuple,rtuple) < 0.4'],
                          self.feature_table)
-        C = self.rb.block_tables(self.A, self.B, ['Title'], ['Title'])
+        C = rb.block_tables(self.A, self.B, ['Title'], ['Title'])
         print >> sys.stderr, 'size of C:', len(C)
 
 class TimeBlockTablesBooks:
@@ -93,7 +93,6 @@ class TimeBlockTablesBooks:
                                  ['Title','Author','ISBN13','Publisher','Publication_Date'])
         print >> sys.stderr, 'size of C:', len(C)
 
-
 class TimeBlockTablesMovies:
     timeout = 10000.0
 
@@ -105,18 +104,17 @@ class TimeBlockTablesMovies:
         self.B = mg.read_csv_metadata(path_for_B)
         mg.set_key(self.B, 'id')
         self.feature_table = mg.get_features_for_blocking(self.A, self.B)
-        self.rb = mg.RuleBasedBlocker()
 
     def teardown(self):
         del self.A
         del self.B
         del self.feature_table
-        del self.rb
 
     def time_block_tables(self):
-        self.rb.add_rule(['movie_name_movie_name_jac_qgm_3_qgm_3(ltuple,rtuple) < 0.6'],
+        rb = mg.RuleBasedBlocker()
+        rb.add_rule(['movie_name_movie_name_jac_qgm_3_qgm_3(ltuple,rtuple) < 0.6'],
                          self.feature_table)
-        C = self.rb.block_tables(self.A, self.B,
+        C = rb.block_tables(self.A, self.B,
                                  ['movie_name','year','directors','actors','critic_rating','genre','pg_rating','duration'],
                                  ['movie_name','year','directors','actors','movie_rating','genre','duration'])
         print >> sys.stderr, 'size of C:', len(C)
@@ -150,6 +148,7 @@ class TimeBlockCandsetRestaurants:
         print >> sys.stderr, 'size of C:', len(self.C)
         print >> sys.stderr, 'size of D:', len(D)
 
+"""
 class TimeBlockCandsetEbooks:
     timeout = 600.0
 
