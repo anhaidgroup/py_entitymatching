@@ -5,6 +5,7 @@ import sys
 import pandas as pd
 import pyprind
 import six
+from joblib import Parallel, delayed
 
 from py_stringmatching.tokenizer.whitespace_tokenizer import WhitespaceTokenizer
 from py_stringmatching.tokenizer.qgram_tokenizer import QgramTokenizer
@@ -20,6 +21,8 @@ import magellan.catalog.catalog_manager as cm
 from magellan.utils.catalog_helper import log_info, get_name_for_key, add_key_column
 
 logger = logging.getLogger(__name__)
+
+global_rb = None
 
 class RuleBasedBlocker(Blocker):
     def __init__(self, *args, **kwargs):
@@ -174,10 +177,10 @@ class RuleBasedBlocker(Blocker):
                                                  r_output_prefix + r_key, rules,
                                                  show_progress)
         
-        print('candset cols: ', candset.columns)                                         
+        #print('candset cols: ', candset.columns)                                         
         retain_cols = self.get_attrs_to_retain(l_key, r_key, l_output_attrs_1, r_output_attrs_1,
                                                l_output_prefix, r_output_prefix)
-        print('retain_cols: ', retain_cols)
+        #print('retain_cols: ', retain_cols)
         candset = candset[retain_cols]
  
         # update catalog
@@ -355,12 +358,14 @@ class RuleBasedBlocker(Blocker):
         n_procs = self.get_num_procs(n_jobs)
 
         candset = None
+        global global_rb
+        global_rb = self
         if n_procs <= 1:
             # single process
             candset = _block_tables_split(l_df, r_df, l_key, r_key,
                                           l_output_attrs, r_output_attrs,
                                           l_output_prefix, r_output_prefix,
-                                          self, show_progress)
+                                          show_progress)
         else:
             # multiprocessing
             m, n = self.get_split_params(n_procs)
@@ -370,9 +375,9 @@ class RuleBasedBlocker(Blocker):
             r_splits = pd.np.array_split(r_df, n)
             c_splits = Parallel(n_jobs=m*n)(delayed(_block_tables_split)(l, r,
                                                 l_key, r_key, 
-                                                l_output_attrs_1, r_output_attrs_1,
+                                                l_output_attrs, r_output_attrs,
                                                 l_output_prefix, r_output_prefix,
-                                                self, show_progress)
+                                                show_progress)
                                                 for l in l_splits for r in r_splits)
             candset = pd.concat(c_splits, ignore_index=True)
 
@@ -657,7 +662,7 @@ class RuleBasedBlocker(Blocker):
 def _block_tables_split(l_df, r_df, l_key, r_key,
                         l_output_attrs, r_output_attrs,
                         l_output_prefix, r_output_prefix,
-                        self, show_progress):
+                        show_progress):
 
     # initialize progress bar
     if show_progress:
@@ -696,7 +701,7 @@ def _block_tables_split(l_df, r_df, l_key, r_key,
             rtuple = r_dict[r_t[r_id_pos]]
 
             # # apply the rules to the tuple pair
-            res = self.apply_rules(ltuple, rtuple)
+            res = global_rb.apply_rules(ltuple, rtuple)
 
             if res != True:
                 # # this tuple pair survives blocking
