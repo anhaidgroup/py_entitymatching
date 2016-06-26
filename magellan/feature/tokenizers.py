@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 # Initialize global tokenizers
 _global_tokenizers = pd.DataFrame(
-    {'function_name': ['tok_qgram', 'tok_delim', 'tok_wspce'],
+    {'function_name': ['tok_qgram', 'tok_delim', 'tok_wspace'],
      'short_name': ['qgm', 'dlm', 'wsp']})
 
 
@@ -111,6 +111,7 @@ def _get_single_arg_tokenizers(q=[2, 3], dlm_char=[' ']):
         names.extend(dlm_names)
         functions.extend(dlm_fn_list)
 
+
     if len(names) > 0 and len(functions) > 0:
         return dict(zip(names, functions))
     else:
@@ -193,4 +194,22 @@ def tok_delim(input_string, d):
         return input_string
     measure = sm.DelimiterTokenizer(delim_set=[d])
     return measure.tokenize(input_string)
+
+def tok_wspace(input_string):
+    """
+    This function splits the input string into a list of tokens
+    (based on the white space).
+    Args:
+        input_string (str): Input string that should be tokenized.
+
+    Returns:
+        A list of tokens, if the input string is not NaN ,
+        else returns NaN.
+
+    """
+    if pd.isnull(input_string):
+        return input_string
+    measure = sm.WhitespaceTokenizer()
+    return measure.tokenize(input_string)
+
 
