@@ -44,4 +44,3 @@ install:
 
 script:
   - nosetests
-  - bash mytest.sh
