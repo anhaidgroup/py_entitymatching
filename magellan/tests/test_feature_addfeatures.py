@@ -9,7 +9,7 @@ from magellan.io.parsers import read_csv_metadata
 from magellan.feature.simfunctions import get_sim_funs_for_matching
 from magellan.feature.tokenizers import get_tokenizers_for_matching
 from magellan.feature.autofeaturegen import get_features_for_matching
-from magellan.feature.addfeatures import add_feature, add_blackbox_feature, get_feature_fn, parse_feat_str, create_feature_table
+from magellan.feature.addfeatures import add_feature, add_blackbox_feature, get_feature_fn, _parse_feat_str, create_feature_table
 
 
 import magellan.catalog.catalog_manager as cm
@@ -63,26 +63,27 @@ class AddFeaturesTestCases(unittest.TestCase):
 
     @raises(AssertionError)
     def test_parse_feat_str_invalid(self):
-        parse_feat_str(None, dict(), dict())
+        _parse_feat_str(None, dict(), dict())
 
     @raises(AssertionError)
     def test_parse_feat_str_invalid_sim(self):
-        parse_feat_str("", None, dict())
+        _parse_feat_str("", None, dict())
 
     @raises(AssertionError)
     def test_parse_feat_str_invalid_tok(self):
-        parse_feat_str("", dict(), None)
+        _parse_feat_str("", dict(), None)
 
 
     def test_parse_feat_str_parse_exp(self):
         feature_string = "jaccard~(qgm_3(ltuple[['zipcode']), qgm_3(rtuple['zipcode']))"
-        p_dict = parse_feat_str(feature_string, get_tokenizers_for_matching(), get_sim_funs_for_matching())
+        p_dict = _parse_feat_str(feature_string, get_tokenizers_for_matching(), get_sim_funs_for_matching())
         for k,v in six.iteritems(p_dict):
-            self.assertEqual(v, 'PARSE_EXP')
+            if k != 'is_auto_generated':
+                self.assertEqual(v, 'PARSE_EXP')
 
     def test_parse_feat_str_parse_valid_1(self):
         feature_string = "jaccard(qgm_3(ltuple['zipcode']), qgm_3(rtuple['zipcode']))"
-        p_dict = parse_feat_str(feature_string, get_tokenizers_for_matching(), get_sim_funs_for_matching())
+        p_dict = _parse_feat_str(feature_string, get_tokenizers_for_matching(), get_sim_funs_for_matching())
         self.assertEqual(p_dict['left_attr_tokenizer'], 'qgm_3')
         self.assertEqual(p_dict['right_attr_tokenizer'], 'qgm_3')
         self.assertEqual(p_dict['simfunction'], 'jaccard')
@@ -91,7 +92,7 @@ class AddFeaturesTestCases(unittest.TestCase):
 
     def test_parse_feat_str_parse_valid_2(self):
         feature_string = "jaccard(qgm_3(ltuple['zipcode']), qgm_3(ltuple['zipcode']))"
-        p_dict = parse_feat_str(feature_string, get_tokenizers_for_matching(), get_sim_funs_for_matching())
+        p_dict = _parse_feat_str(feature_string, get_tokenizers_for_matching(), get_sim_funs_for_matching())
         self.assertEqual(p_dict['left_attr_tokenizer'], 'qgm_3')
         self.assertEqual(p_dict['right_attr_tokenizer'], 'qgm_3')
         self.assertEqual(p_dict['simfunction'], 'jaccard')
@@ -101,7 +102,7 @@ class AddFeaturesTestCases(unittest.TestCase):
 
     def test_parse_feat_str_parse_valid_3(self):
         feature_string = "jaccard(qgm_3(rtuple['zipcode']), qgm_3(rtuple['zipcode']))"
-        p_dict = parse_feat_str(feature_string, get_tokenizers_for_matching(), get_sim_funs_for_matching())
+        p_dict = _parse_feat_str(feature_string, get_tokenizers_for_matching(), get_sim_funs_for_matching())
         self.assertEqual(p_dict['left_attr_tokenizer'], 'qgm_3')
         self.assertEqual(p_dict['right_attr_tokenizer'], 'qgm_3')
         self.assertEqual(p_dict['simfunction'], 'jaccard')

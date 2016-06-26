@@ -98,8 +98,8 @@ def add_output_attributes(candset, l_output_attrs=None, r_output_attrs=None, l_o
     # # get metadata
     key, fk_ltable, fk_rtable, ltable, rtable, l_key, r_key = cm.get_metadata_for_candset(candset, logger, verbose)
     if validate:
-        cm.validate_metadata_for_candset(candset, key, fk_ltable, fk_rtable, ltable, rtable, l_key, r_key,
-                                         logger, verbose)
+        cm._validate_metadata_for_candset(candset, key, fk_ltable, fk_rtable, ltable, rtable, l_key, r_key,
+                                          logger, verbose)
     index_values = candset.index
 
     df = _add_output_attributes(candset, fk_ltable, fk_rtable, ltable, rtable, l_key, r_key,

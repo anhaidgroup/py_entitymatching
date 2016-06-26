@@ -87,4 +87,3 @@ _match_c = None
 
 # GUI related
 _viewapp = None
-

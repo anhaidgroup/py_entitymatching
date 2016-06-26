@@ -9,7 +9,7 @@ from magellan.io.parsers import read_csv_metadata
 from magellan.feature.simfunctions import get_sim_funs_for_matching
 from magellan.feature.tokenizers import get_tokenizers_for_matching
 from magellan.feature.autofeaturegen import get_features_for_matching
-from magellan.feature.attributeutils import get_attr_corres, get_attr_types, get_type, len_handle_nan
+from magellan.feature.attributeutils import get_attr_corres, get_attr_types, _get_type, _len_handle_nan
 
 import magellan.catalog.catalog_manager as cm
 
@@ -59,36 +59,36 @@ class AttributeUtilsTestCases(unittest.TestCase):
 
     def test_get_type_valid(self):
         A = read_csv_metadata(path_a)
-        t = get_type(A['ID'])
+        t = _get_type(A['ID'])
         self.assertEqual(t, 'str_eq_1w')
 
     @raises(AssertionError)
     def test_get_type_invalid_series(self):
-        get_type(None)
+        _get_type(None)
 
 
     def test_get_type_empty_series(self):
-        t = get_type(pd.Series())
+        t = _get_type(pd.Series())
         self.assertEqual(t, 'numeric')
 
     @raises(AssertionError)
     def test_get_type_multiple_types(self):
         A = read_csv_metadata(path_a)
         A.ix[0, 'ID'] = 1000
-        t = get_type(A['ID'])
+        t = _get_type(A['ID'])
 
     def test_get_type_valid_2(self):
         A = read_csv_metadata(path_a)
         A['temp'] = True
-        t = get_type(A['temp'])
+        t = _get_type(A['temp'])
         self.assertEqual(t, 'boolean')
 
     def test_get_type_valid_3(self):
         A = read_csv_metadata(path_a)
         A['temp'] = "This is a very very very very very very very very very very very very very long string"
-        t = get_type(A['temp'])
+        t = _get_type(A['temp'])
         self.assertEqual(t, "str_gt_10w")
 
     def test_len_handle_nan_invalid(self):
-        result = len_handle_nan(None)
+        result = _len_handle_nan(None)
         self.assertEqual(pd.isnull(result), True)
