@@ -97,24 +97,6 @@ class RuleBasedBlockerMulticoreTestCases(unittest.TestCase):
                                l_output_prefix, r_output_prefix)
         self.validate_data(C, expected_ids_1)
      
-    def test_rb_block_tables_non_filterable_rule_single_conjunct_njobs_2(self):
-        self.rb.add_rule(rule_2, self.feature_table)
-        C = self.rb.block_tables(self.A, self.B, l_output_attrs,
-                                 r_output_attrs, l_output_prefix,
-                                 r_output_prefix, show_progress=False, n_jobs=2)
-        self.validate_metadata(C, l_output_attrs, r_output_attrs,
-                               l_output_prefix, r_output_prefix)
-        self.validate_data(C, expected_ids_2)
-    
-    def test_rb_block_tables_non_filterable_rule_multiple_conjuncts_njobs_2(self):
-        self.rb.add_rule(rule_3, self.feature_table)
-        C = self.rb.block_tables(self.A, self.B, l_output_attrs,
-                                 r_output_attrs, l_output_prefix,
-                                 r_output_prefix, show_progress=False, n_jobs=2)
-        self.validate_metadata(C, l_output_attrs, r_output_attrs,
-                               l_output_prefix, r_output_prefix)
-        self.validate_data(C, expected_ids_3)
-    
     def test_rb_block_tables_filterable_rule_multiple_conjuncts_njobs_2(self):
         self.rb.add_rule(rule_4, self.feature_table)
         #print('feature_table:', self.feature_table)
@@ -134,7 +116,32 @@ class RuleBasedBlockerMulticoreTestCases(unittest.TestCase):
         self.validate_metadata(C, l_output_attrs, r_output_attrs,
                                l_output_prefix, r_output_prefix)
         self.validate_data(C, expected_ids_1_and_2)
-    
+
+    def test_rb_block_tables_wi_no_output_tuples_njobs_2(self):
+        self.rb.add_rule(rule_5, self.feature_table)
+        C = self.rb.block_tables(self.A, self.B, show_progress=False, n_jobs=2)
+        self.validate_metadata(C)
+        self.validate_data(C)
+
+    """
+    def test_rb_block_tables_non_filterable_rule_single_conjunct_njobs_2(self):
+        self.rb.add_rule(rule_2, self.feature_table)
+        C = self.rb.block_tables(self.A, self.B, l_output_attrs,
+                                 r_output_attrs, l_output_prefix,
+                                 r_output_prefix, show_progress=False, n_jobs=2)
+        self.validate_metadata(C, l_output_attrs, r_output_attrs,
+                               l_output_prefix, r_output_prefix)
+        self.validate_data(C, expected_ids_2)
+
+    def test_rb_block_tables_non_filterable_rule_multiple_conjuncts_njobs_2(self):
+        self.rb.add_rule(rule_3, self.feature_table)
+        C = self.rb.block_tables(self.A, self.B, l_output_attrs,
+                                 r_output_attrs, l_output_prefix,
+                                 r_output_prefix, show_progress=False, n_jobs=2)
+        self.validate_metadata(C, l_output_attrs, r_output_attrs,
+                               l_output_prefix, r_output_prefix)
+        self.validate_data(C, expected_ids_3)
+
     def test_rb_block_tables_rule_sequence_with_no_filterable_rule_njobs_2(self):
         self.rb.add_rule(rule_2, self.feature_table)
         self.rb.add_rule(rule_3, self.feature_table)
@@ -145,12 +152,6 @@ class RuleBasedBlockerMulticoreTestCases(unittest.TestCase):
                                l_output_prefix, r_output_prefix)
         self.validate_data(C, expected_ids_2_and_3)
     
-    def test_rb_block_tables_wi_no_output_tuples_njobs_2(self):
-        self.rb.add_rule(rule_5, self.feature_table)
-        C = self.rb.block_tables(self.A, self.B, show_progress=False, n_jobs=2)
-        self.validate_metadata(C)
-        self.validate_data(C)
-    """
     def test_rb_block_candset(self):
         rb = mg.RuleBasedBlocker()
         rb.add_rule(rule_1, self.feature_table)

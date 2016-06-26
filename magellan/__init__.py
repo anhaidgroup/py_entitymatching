@@ -86,4 +86,4 @@ _match_s = None
 _match_c = None
 
 # GUI related
-_viewapp = QtGui.QApplication([])
+#_viewapp = QtGui.QApplication([])
