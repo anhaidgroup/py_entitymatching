@@ -122,7 +122,7 @@ class Blocker(object):
         m = int(math.sqrt(n_procs))
         while n_procs % m != 0:
             m = m - 1
-        n = n_procs / m
+        n = int(n_procs / m)
         return m, n
     
     def get_num_procs(self, n_jobs):        

@@ -22,7 +22,7 @@ from magellan.utils.catalog_helper import log_info, get_name_for_key, add_key_co
 
 logger = logging.getLogger(__name__)
 
-#global_rb = None
+global_rb = None
 
 class RuleBasedBlocker(Blocker):
     def __init__(self, *args, **kwargs):
@@ -358,13 +358,13 @@ class RuleBasedBlocker(Blocker):
         n_procs = self.get_num_procs(n_jobs)
 
         candset = None
-        #global global_rb
-        #global_rb = self
+        global global_rb
+        global_rb = self
         if n_procs <= 1:
             # single process
             candset = _block_tables_split(l_df, r_df, l_key, r_key,
                                           l_output_attrs, r_output_attrs,
-                                          l_output_prefix, r_output_prefix, self,
+                                          l_output_prefix, r_output_prefix, #self,
                                           show_progress)
         else:
             # multiprocessing
@@ -376,12 +376,12 @@ class RuleBasedBlocker(Blocker):
             c_splits = Parallel(n_jobs=m*n)(delayed(_block_tables_split)(l, r,
                                                 l_key, r_key, 
                                                 l_output_attrs, r_output_attrs,
-                                                l_output_prefix, r_output_prefix, self,
+                                                l_output_prefix, r_output_prefix, #self,
                                                 show_progress)
                                                 for l in l_splits for r in r_splits)
             candset = pd.concat(c_splits, ignore_index=True)
 
-        #global_rb = None
+        global_rb = None
 
         # return candidate set
         return candset
@@ -663,7 +663,7 @@ class RuleBasedBlocker(Blocker):
 
 def _block_tables_split(l_df, r_df, l_key, r_key,
                         l_output_attrs, r_output_attrs,
-                        l_output_prefix, r_output_prefix, rule_based_blocker,
+                        l_output_prefix, r_output_prefix, #rule_based_blocker,
                         show_progress):
 
     # initialize progress bar
@@ -703,8 +703,8 @@ def _block_tables_split(l_df, r_df, l_key, r_key,
             rtuple = r_dict[r_t[r_id_pos]]
 
             # # apply the rules to the tuple pair
-            #res = global_rb.apply_rules(ltuple, rtuple)
-            res = rule_based_blocker.apply_rules(ltuple, rtuple)
+            res = global_rb.apply_rules(ltuple, rtuple)
+            #res = rule_based_blocker.apply_rules(ltuple, rtuple)
 
             if res != True:
                 # # this tuple pair survives blocking
