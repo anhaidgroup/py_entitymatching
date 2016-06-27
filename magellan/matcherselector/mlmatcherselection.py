@@ -42,8 +42,8 @@ def select_matcher(matchers, x=None, y=None, table=None, exclude_attrs=None,
         target_attr (str): The target attribute in the input table (defaults
             to None).
         metric (str): The metric based on which the matchers must be
-            selected. The string can be one of ’precision’, ’recall’,
-            ’f1’ (defaults to 'precision').
+            selected. The string can be one of 'precision', 'recall',
+            'f1' (defaults to 'precision').
         k (int): The k value for cross-validation (defaults to 5).
         random_state (object): Pseudo random number generator that should be
             used for splitting the data into folds (defaults to None).
