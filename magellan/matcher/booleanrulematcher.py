@@ -1,3 +1,7 @@
+"""
+This file contains functions for boolean rule based matcher.
+# NOTE: This will not be included in the first version of Magellan release
+"""
 from collections import OrderedDict
 import logging
 

@@ -1,3 +1,7 @@
+"""
+This module contains functions for ensembe matcher.
+Note: This is not going to be there in the first version of Magellan.
+"""
 import numpy as np
 
 import six
