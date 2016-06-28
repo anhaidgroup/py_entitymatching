@@ -14,15 +14,73 @@ logger = logging.getLogger(__name__)
 
 
 class AttrEquivalenceBlocker(Blocker):
+    """Blocks two tables, a candset, or a pair of tuples based on attribute equivalence.
+    """
+
     def block_tables(self, ltable, rtable, l_block_attr, r_block_attr,
                      l_output_attrs=None, r_output_attrs=None,
                      l_output_prefix='ltable_', r_output_prefix='rtable_',
-                     verbose=True, n_jobs=1):
+                     verbose=False, show_progress=True, n_jobs=1):
+        """Blocks two tables based on attribute equivalence.
+
+        Finds tuple pairs from left and right tables such that the value of
+        attribute l_block_attr of a tuple from the left table exactly matches
+        the value of attribute r_block_attr of a tuple from the right table.
+        This is similar to equi-join of two tables.
+
+        Args:
+            ltable (pandas dataframe): left input table.
+
+            rtable (pandas dataframe): right input table.
+
+            l_block_attr (string): blocking attribute in left table.
+
+            r_block_attr (string): blocking attribute in right table. 
+
+            l_output_attrs (list of strings): list of attributes from the left
+                                              table to be included in the
+                                              output candidate set (defaults to None).
+
+            r_output_attrs (list of strings): list of attributes from the right
+                                              table to be included in the
+                                              output candidate set (defaults to None).
+
+            l_output_prefix (string): prefix to be used for the attribute names
+                                      coming from the left table in the output
+                                      candidate set (defaults to 'ltable\_').
+
+            r_output_prefix (string): prefix to be used for the attribute names
+                                      coming from the right table in the output
+                                      candidate set (defaults to 'rtable\_').
+
+            verbose (boolean): flag to indicate whether logging should be done
+                               (defaults to False).
+
+            show_progress (boolean): flag to indicate whether progress should
+                                     be displayed to the user (defaults to True).
+
+            n_jobs (int): number of parallel jobs to be used for computation
+                          (defaults to 1).
+                          If -1 all CPUs are used. If 0 or 1, no parallel computation
+                          is used at all, which is useful for debugging.
+                          For n_jobs below -1, (n_cpus + 1 + n_jobs) are used.
+                          Thus, for n_jobs = -2, all CPUS but one are used.
+                          If (n_cpus + 1 + n_jobs) is less than 1, then n_jobs is
+                          set to 1, which means no parallel computation at all.
+
+        Returns:
+            A candidate set of tuple pairs that survived blocking (pandas dataframe).
+        """
 
         # validate data types of input parameters
         self.validate_types_params_tables(ltable, rtable,
 			    l_output_attrs, r_output_attrs, l_output_prefix,
-			    r_output_prefix, verbose, n_jobs)
+			    r_output_prefix, verbose, show_progress, n_jobs)
+
+        # initialize progress bar
+        if show_progress:
+            # 1. validate, 2. remove NaNs, 3. project, 4: merge, 5: update catalog
+            prog_bar = pyprind.ProgBar(5)
 
         # validate data types of input blocking attributes
         self.validate_types_block_attrs(l_block_attr, r_block_attr)
@@ -40,13 +98,21 @@ class AttrEquivalenceBlocker(Blocker):
                                                      verbose)
 
         # # validate metadata
-        cm.validate_metadata_for_table(ltable, l_key, 'ltable', logger, verbose)
-        cm.validate_metadata_for_table(rtable, r_key, 'rtable', logger, verbose)
+        cm._validate_metadata_for_table(ltable, l_key, 'ltable', logger, verbose)
+        cm._validate_metadata_for_table(rtable, r_key, 'rtable', logger, verbose)
 
+        # # update the progress bar
+        if show_progress:
+            prog_bar.update() # indicating completion of validation
+   
         # do blocking
 
         # # remove nans: should be modified based on missing data policy
         l_df, r_df = rem_nan(ltable, l_block_attr), rem_nan(rtable, r_block_attr)
+
+        # # update the progress bar to indicate completion of NaN removal
+        if show_progress:
+            prog_bar.update()
 
         # # do projection before merge
         l_proj_attrs = self.get_attrs_to_project(l_key, l_block_attr, l_output_attrs)
@@ -54,8 +120,12 @@ class AttrEquivalenceBlocker(Blocker):
         r_proj_attrs = self.get_attrs_to_project(r_key, r_block_attr, r_output_attrs)
         r_df = r_df[r_proj_attrs]
        
+        # # update the progress bar to indicate completion of projection of tables
+        if show_progress:
+            prog_bar.update()
+
         # # determine number of processes to launch parallely
-        n_procs = self.get_num_procs(n_jobs, min(len(l_df), len(r_df))) 
+        n_procs = self.get_num_procs(n_jobs, len(l_df) * len(r_df)) 
         candset = None
         if n_procs <= 1:
             # single process
@@ -65,15 +135,19 @@ class AttrEquivalenceBlocker(Blocker):
 					  l_output_prefix, r_output_prefix)
         else:
             # multiprocessing
-            m, n = self.get_split_params(n_procs)
+            m, n = self.get_split_params(n_procs, len(l_df), len(r_df))
             l_splits = pd.np.array_split(l_df, m)
             r_splits = pd.np.array_split(r_df, n)
-            c_splits = Parallel(n_jobs=n_procs)(delayed(_block_tables_split)(l, r, l_key, r_key,
+            c_splits = Parallel(n_jobs=m*n)(delayed(_block_tables_split)(l, r, l_key, r_key,
 						l_block_attr, r_block_attr,
 						l_output_attrs, r_output_attrs,
 						l_output_prefix, r_output_prefix)
 						for l in l_splits for r in r_splits)
             candset = pd.concat(c_splits, ignore_index=True)
+
+        # # update the progress bar to indicate completion of merge
+        if show_progress:
+            prog_bar.update()
 
         # update catalog
         key = get_name_for_key(candset.columns)
@@ -81,11 +155,47 @@ class AttrEquivalenceBlocker(Blocker):
         cm.set_candset_properties(candset, key, l_output_prefix + l_key,
                                   r_output_prefix + r_key, ltable, rtable)
 
+        # # update the progress bar to indicate completion of catalog update
+        if show_progress:
+            prog_bar.update()
+
         # return candidate set
         return candset
 
     def block_candset(self, candset, l_block_attr, r_block_attr, verbose=True,
                       show_progress=True, n_jobs=1):
+        """Blocks an input candidate set of tuple pairs based on attribute equivalence.
+
+        Finds tuple pairs from an input candidate set of tuple pairs
+        such that the value of attribute l_block_attr of the left tuple in a
+        tuple pair exactly matches the value of attribute r_block_attr of the 
+        right tuple in the tuple pair.
+
+        Args:
+            candset (pandas dataframe): input candidate set of tuple pairs.
+
+            l_block_attr (string): blocking attribute in left table.
+
+            r_block_attr (string): blocking attribute in right table. 
+
+            verbose (boolean): flag to indicate whether logging should be done
+                               (defaults to False).
+
+            show_progress (boolean): flag to indicate whether progress should
+                                     be displayed to the user (defaults to True).
+
+            n_jobs (int): number of parallel jobs to be used for computation
+                          (defaults to 1).
+                          If -1 all CPUs are used. If 0 or 1, no parallel computation
+                          is used at all, which is useful for debugging.
+                          For n_jobs below -1, (n_cpus + 1 + n_jobs) are used.
+                          Thus, for n_jobs = -2, all CPUS but one are used.
+                          If (n_cpus + 1 + n_jobs) is less than 1, then n_jobs is
+                          set to 1, which means no parallel computation at all.
+
+        Returns:
+            A candidate set of tuple pairs that survived blocking (pandas dataframe).
+        """
 
         # validate data types of input parameters
         self.validate_types_params_candset(candset, verbose, show_progress, n_jobs)
@@ -102,15 +212,22 @@ class AttrEquivalenceBlocker(Blocker):
         key, fk_ltable, fk_rtable, ltable, rtable, l_key, r_key = cm.get_metadata_for_candset(candset, logger, verbose)
 
         # # validate metadata
-        cm.validate_metadata_for_candset(candset, key, fk_ltable, fk_rtable,
-                                         ltable, rtable, l_key, r_key,
-                                         logger, verbose)
+        cm._validate_metadata_for_candset(candset, key, fk_ltable, fk_rtable,
+                                          ltable, rtable, l_key, r_key,
+                                          logger, verbose)
 
         # validate input parameters
         self.validate_block_attrs(ltable, rtable, l_block_attr, r_block_attr)
 
         # do blocking
 
+        # # remove nans: should be modified based on missing data policy
+        l_df, r_df = rem_nan(ltable, l_block_attr), rem_nan(rtable, r_block_attr)
+
+        # # do projection before merge
+        l_df = l_df[[l_key, l_block_attr]]
+        r_df = r_df[[r_key, r_block_attr]]
+       
         # # set index for convenience
         l_df = ltable.set_index(l_key, drop=False)
         r_df = rtable.set_index(r_key, drop=False)
@@ -126,12 +243,12 @@ class AttrEquivalenceBlocker(Blocker):
 					 fk_ltable, fk_rtable, show_progress)
         else:
             c_splits = pd.np.array_split(candset, n_procs)
-            valid_splits = Parallel(n_jobs=n_procs)(delayed(_block_candset_split)(c,
+            valid_splits = Parallel(n_jobs=n_procs)(delayed(_block_candset_split)(c_splits[i],
 	    						    l_df, r_df,
                                                             l_key, r_key,
 	    						    l_block_attr, r_block_attr,
-	    						    fk_ltable, fk_rtable, show_progress)
-	    						    for c in c_splits)
+	    						    fk_ltable, fk_rtable, show_progress and i == len(c_splits) - 1)
+	    						    for i in range(len(c_splits)))
             valid = sum(valid_splits, [])
 
         # construct output table
@@ -148,6 +265,22 @@ class AttrEquivalenceBlocker(Blocker):
         return out_table
 
     def block_tuples(self, ltuple, rtuple, l_block_attr, r_block_attr):
+        """Blocks a tuple pair based on attribute equivalence.
+
+        Args:
+            ltuple (pandas series): input left tuple.
+
+            rtuple (pandas series): input right tuple.
+            
+            l_block_attr (string): blocking attribute in left tuple.
+
+            r_block_attr (string): blocking attribute in right tuple.
+
+        Returns:
+            A status indicating if the tuple pair is blocked, i.e., the values
+            of l_block_attr in ltuple and r_block_attr in rtuple are different
+            (boolean).
+        """
         return ltuple[l_block_attr] != rtuple[r_block_attr]
 
     # ------------------------------------------------------------
@@ -165,13 +298,11 @@ class AttrEquivalenceBlocker(Blocker):
 
     # validate the blocking attributes
     def validate_block_attrs(self, ltable, rtable, l_block_attr, r_block_attr):
-        if not isinstance(l_block_attr, list):
-            l_block_attr = [l_block_attr]
-        assert set(l_block_attr).issubset(ltable.columns) is True, 'Left block attribute is not in the left table'
+        if l_block_attr not in ltable.columns:
+            raise AssertionError('Left block attribute is not in the left table')
 
-        if not isinstance(r_block_attr, list):
-            r_block_attr = [r_block_attr]
-        assert set(r_block_attr).issubset(rtable.columns) is True, 'Right block attribute is not in the right table'
+        if r_block_attr not in rtable.columns:
+            raise AssertionError('Right block attribute is not in the right table')
 
 
 def _block_tables_split(l_df, r_df, l_key, r_key, l_block_attr, r_block_attr,

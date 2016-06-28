@@ -8,11 +8,12 @@ import multiprocessing
 logger = logging.getLogger(__name__)
 
 class Blocker(object):
-    pass
+    """Blocker base class.
+    """
 
     def validate_types_params_tables(self, ltable, rtable,
 		       l_output_attrs, r_output_attrs, l_output_prefix,
-		       r_output_prefix, verbose, n_jobs):
+		       r_output_prefix, verbose, show_progress, n_jobs):
 
         if not isinstance(ltable, pd.DataFrame):
             logger.error('Input left table is not of type pandas data frame')
@@ -51,6 +52,10 @@ class Blocker(object):
         if not isinstance(verbose, bool):
             logger.error('Parameter verbose is not of type bool')
             raise AssertionError('Parameter verbose is not of type bool')
+
+        if not isinstance(show_progress, bool):
+            logger.error('Parameter show_progress is not of type bool')
+            raise AssertionError('Parameter show_progress is not of type bool')
 
         if not isinstance(n_jobs, int):
             logger.error('Parameter n_jobs is not of type int')
@@ -98,28 +103,28 @@ class Blocker(object):
 
         ret_cols = [l_output_prefix+l_key, r_output_prefix+r_key]
         if l_output_attrs:
-            ret_cols.extend(l_output_prefix+c for c in l_output_attrs if c != l_key)
+            ret_cols.extend(l_output_prefix+c for c in l_output_attrs)
         if r_output_attrs:
-            ret_cols.extend(r_output_prefix+c for c in r_output_attrs if c != r_key)
+            ret_cols.extend(r_output_prefix+c for c in r_output_attrs)
 
         return ret_cols
 
-    def get_attrs_to_project(self, key, join_attr, output_attrs):
-        proj_attrs = []
-        if output_attrs:
-            proj_attrs = list(output_attrs)
-        if key not in proj_attrs:                                             
-            proj_attrs.append(key)                                            
-        if join_attr not in proj_attrs:                                      
-            proj_attrs.append(join_attr)                                     
-        return proj_attrs
+    def get_attrs_to_project(self, key, block_attr, output_attrs):
+        if not output_attrs:
+            output_attrs = []
+        if key not in output_attrs:                                             
+            output_attrs.append(key)                                            
+        if block_attr not in output_attrs:                                      
+            output_attrs.append(block_attr)                                     
+        return output_attrs
 
-    def get_split_params(self, n_procs):
+    def get_split_params(self, n_procs, min_m, min_n):
         m = int(math.sqrt(n_procs))
         while n_procs % m != 0:
             m = m - 1
-        n = n_procs / m
-        return m, n
+        n = int(n_procs / m)
+        # to safeguard against small tables, do not split less than min values
+        return min(m, min_m), min(n, min_n)
     
     def get_num_procs(self, n_jobs, min_procs):        
         # determine number of processes to launch parallely
@@ -127,4 +132,5 @@ class Blocker(object):
         n_procs = n_jobs
         if n_jobs < 0:
             n_procs = n_cpus + 1 + n_jobs
+        # cannot launch less than min_procs to safeguard against small tables
         return min(n_procs, min_procs)

@@ -1,17 +1,20 @@
 # coding=utf-8
-from collections import OrderedDict, Counter
 import logging
 import re
 import string
+from collections import OrderedDict, Counter
 
 import pandas as pd
 import pyprind
 import six
 
-from magellan.blocker.blocker import Blocker
 import magellan.catalog.catalog_manager as cm
-from magellan.externals.py_stringmatching.tokenizers import qgram
-from magellan.utils.catalog_helper import log_info, get_name_for_key, add_key_column
+from magellan.blocker.blocker import Blocker
+
+# from magellan.externals.py_stringmatching.tokenizers import qgram
+import py_stringmatching.tokenizer as tok
+from magellan.utils.catalog_helper import log_info, get_name_for_key, \
+    add_key_column
 
 from magellan.externals.py_stringsimjoin.filter.overlap_filter import OverlapFilter
 from magellan.externals.py_stringsimjoin.utils.tokenizers import create_qgram_tokenizer, create_delimiter_tokenizer
@@ -30,11 +33,13 @@ class OverlapBlocker(Blocker):
                            'has', 'he', 'in', 'is', 'it',
                            'its', 'on', 'that', 'the', 'to',
                            'was', 'were', 'will', 'with']
-        self.regex_punctuation = re.compile('[%s]' % re.escape(string.punctuation))
+        self.regex_punctuation = re.compile(
+            '[%s]' % re.escape(string.punctuation))
         super(OverlapBlocker, self).__init__()
 
     def block_tables(self, ltable, rtable, l_overlap_attr, r_overlap_attr,
-                     rem_stop_words=False, q_val=None, word_level=True, overlap_size=1,
+                     rem_stop_words=False, q_val=None, word_level=True,
+                     overlap_size=1,
                      l_output_attrs=None, r_output_attrs=None,
                      l_output_prefix='ltable_', r_output_prefix='rtable_',
                      verbose=True, show_progress=True, n_jobs=1):
@@ -42,7 +47,7 @@ class OverlapBlocker(Blocker):
         # validate data types of standard input parameters
         self.validate_types_params_tables(ltable, rtable,
 			    l_output_attrs, r_output_attrs, l_output_prefix,
-			    r_output_prefix, verbose, n_jobs)
+			    r_output_prefix, verbose, show_progress, n_jobs)
 
         # validate data types of input parameters specific to overlap blocker
         self.validate_types_other_params(l_overlap_attr, r_overlap_attr,
@@ -50,18 +55,21 @@ class OverlapBlocker(Blocker):
                                          word_level, overlap_size)
  
         # validations
-        self.validate_overlap_attrs(ltable, rtable, l_overlap_attr, r_overlap_attr)
-        self.validate_output_attrs(ltable, rtable, l_output_attrs, r_output_attrs)
+        self.validate_overlap_attrs(ltable, rtable, l_overlap_attr,
+                                    r_overlap_attr)
+        self.validate_output_attrs(ltable, rtable, l_output_attrs,
+                                   r_output_attrs)
 
         # required metadata; keys from ltable and rtable
         log_info(logger, 'Required metadata: ltable key, rtable key', verbose)
 
         # get metadata
-        l_key, r_key = cm.get_keys_for_ltable_rtable(ltable, rtable, logger, verbose)
+        l_key, r_key = cm.get_keys_for_ltable_rtable(ltable, rtable, logger,
+                                                     verbose)
 
         # # validate metadata
-        cm.validate_metadata_for_table(ltable, l_key, 'ltable', logger, verbose)
-        cm.validate_metadata_for_table(rtable, r_key, 'rtable', logger, verbose)
+        cm._validate_metadata_for_table(ltable, l_key, 'ltable', logger, verbose)
+        cm._validate_metadata_for_table(rtable, r_key, 'rtable', logger, verbose)
 
         # validate word_level and q_val
         self.validate_word_level_qval(word_level, q_val)  
@@ -117,7 +125,8 @@ class OverlapBlocker(Blocker):
         # Update metadata in the catalog
         key = get_name_for_key(candset.columns)
         candset = add_key_column(candset, key)
-        cm.set_candset_properties(candset, key, l_output_prefix + l_key, r_output_prefix + r_key, ltable, rtable)
+        cm.set_candset_properties(candset, key, l_output_prefix + l_key,
+                                  r_output_prefix + r_key, ltable, rtable)
 
         # return the candidate set
         return candset
@@ -135,18 +144,22 @@ class OverlapBlocker(Blocker):
                                          word_level, overlap_size)
 
         # get and validate metadata
-        log_info(logger, 'Required metadata: cand.set key, fk ltable, fk rtable, '
-                         'ltable, rtable, ltable key, rtable key', verbose)
+        log_info(logger,
+                 'Required metadata: cand.set key, fk ltable, fk rtable, '
+                 'ltable, rtable, ltable key, rtable key', verbose)
 
         # # get metadata
-        key, fk_ltable, fk_rtable, ltable, rtable, l_key, r_key = cm.get_metadata_for_candset(candset, logger, verbose)
+        key, fk_ltable, fk_rtable, ltable, rtable, l_key, r_key = cm.get_metadata_for_candset(
+            candset, logger, verbose)
 
         # # validate metadata
-        cm.validate_metadata_for_candset(candset, key, fk_ltable, fk_rtable, ltable, rtable, l_key, r_key,
-                                         logger, verbose)
+        cm._validate_metadata_for_candset(candset, key, fk_ltable, fk_rtable,
+                                          ltable, rtable, l_key, r_key,
+                                          logger, verbose)
 
         # validate overlap attrs
-        self.validate_overlap_attrs(ltable, rtable, l_overlap_attr, r_overlap_attr)
+        self.validate_overlap_attrs(ltable, rtable, l_overlap_attr,
+                                    r_overlap_attr)
 
         # validate word_level and q_val
         self.validate_word_level_qval(word_level, q_val)  
@@ -245,11 +258,13 @@ class OverlapBlocker(Blocker):
     def validate_overlap_attrs(self, ltable, rtable, l_overlap_attr, r_overlap_attr):
         if not isinstance(l_overlap_attr, list):
             l_overlap_attr = [l_overlap_attr]
-        assert set(l_overlap_attr).issubset(ltable.columns) is True, 'Left block attribute is not in the left table'
+        assert set(l_overlap_attr).issubset(
+            ltable.columns) is True, 'Left block attribute is not in the left table'
 
         if not isinstance(r_overlap_attr, list):
             r_overlap_attr = [r_overlap_attr]
-        assert set(r_overlap_attr).issubset(rtable.columns) is True, 'Right block attribute is not in the right table'
+        assert set(r_overlap_attr).issubset(
+            rtable.columns) is True, 'Right block attribute is not in the right table'
 
     def validate_word_level_qval(self, word_level, q_val):
         if word_level == True and q_val != None:
@@ -271,7 +286,8 @@ class OverlapBlocker(Blocker):
         attr_col_values = [remove_non_ascii(val) for val in attr_col_values]
 
         # remove special characters
-        attr_col_values = [self.rem_punctuations(val).lower() for val in attr_col_values]
+        attr_col_values = [self.rem_punctuations(val).lower() for val in
+                           attr_col_values]
 
         # chop the attribute values
         col_values_chopped = [val.split() for val in attr_col_values]
@@ -281,7 +297,8 @@ class OverlapBlocker(Blocker):
 
         # remove stop words
         if rem_stop_words == True:
-            col_values_chopped = [self.rem_stopwords(val) for val in col_values_chopped]
+            col_values_chopped = [self.rem_stopwords(val) for val in
+                                  col_values_chopped]
 
         values = [' '.join(val) for val in col_values_chopped]
 
