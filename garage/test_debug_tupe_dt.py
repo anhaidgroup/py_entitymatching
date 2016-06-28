@@ -25,7 +25,7 @@ train = train_test['train']
 test = train_test['test']
 
 rf.fit(table=train, exclude_attrs=['ltable_ID', 'rtable_ID', '_id'], target_attr='labels')
-mg.debug_randomforest_matcher(rf, A.ix[1], B.ix[2], feat_table=feature_table,
-                              fv_columns=feature_vectors.columns,
+mg.debug_randomforest_matcher(rf, A.ix[1], B.ix[2], feature_table=feature_table,
+                              table_columns=feature_vectors.columns,
                               exclude_attrs=['ltable_ID', 'rtable_ID', '_id', 'labels'])
 print('Hi')
