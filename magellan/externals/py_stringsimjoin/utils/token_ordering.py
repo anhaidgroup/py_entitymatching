@@ -25,7 +25,7 @@ def gen_token_ordering_for_tables(table_list, attr_list, tokenizer,
     table_index = 0
     for table in table_list:
         for row in table:
-            for token in tokenizer.tokenize(str(row[attr_list[table_index]])):
+            for token in tokenizer.tokenize(row[attr_list[table_index]]):
                 token_freq_dict[token] = token_freq_dict.get(token, 0) + 1
         table_index += 1
 

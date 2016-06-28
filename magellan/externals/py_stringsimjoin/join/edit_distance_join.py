@@ -7,31 +7,38 @@ from py_stringmatching.tokenizer.qgram_tokenizer import QgramTokenizer
 import pandas as pd
 import pyprind
 
-from py_stringsimjoin.filter.prefix_filter import PrefixFilter, _find_candidates
-from py_stringsimjoin.index.prefix_index import PrefixIndex
-from py_stringsimjoin.utils.helper_functions import convert_dataframe_to_list, \
-    find_output_attribute_indices, get_output_header_from_tables, \
-    get_output_row_from_tables, split_table
-from py_stringsimjoin.utils.simfunctions import get_sim_function
-from py_stringsimjoin.utils.token_ordering import \
+from magellan.externals.py_stringsimjoin.filter.prefix_filter import PrefixFilter, _find_candidates
+from magellan.externals.py_stringsimjoin.index.prefix_index import PrefixIndex
+from magellan.externals.py_stringsimjoin.utils.helper_functions import convert_dataframe_to_list, \
+    find_output_attribute_indices, get_attrs_to_project, \
+    get_num_processes_to_launch, get_output_header_from_tables, \
+    get_output_row_from_tables, remove_non_ascii, remove_redundant_attrs, \
+    split_table, COMP_OP_MAP
+from magellan.externals.py_stringsimjoin.utils.missing_value_handler import \
+    get_pairs_with_missing_value
+from magellan.externals.py_stringsimjoin.utils.simfunctions import get_sim_function
+from magellan.externals.py_stringsimjoin.utils.token_ordering import \
     gen_token_ordering_for_tables, order_using_token_ordering
-from py_stringsimjoin.utils.validation import validate_attr, \
-    validate_key_attr, validate_input_table, validate_threshold, \
-    validate_tokenizer, validate_output_attrs
+from magellan.externals.py_stringsimjoin.utils.validation import validate_attr, \
+    validate_comp_op_for_sim_measure, validate_key_attr, validate_input_table, \
+    validate_threshold, validate_tokenizer, validate_output_attrs
 
 
 def edit_distance_join(ltable, rtable,
                        l_key_attr, r_key_attr,
                        l_join_attr, r_join_attr,
-                       threshold,
+                       threshold, comp_op='<=',
+                       allow_missing=False,
                        l_out_attrs=None, r_out_attrs=None,
                        l_out_prefix='l_', r_out_prefix='r_',
-                       out_sim_score=True, n_jobs=1,
+                       out_sim_score=True, n_jobs=1, show_progress=True,
                        tokenizer=QgramTokenizer(qval=2)):
     """Join two tables using edit distance measure.
 
     Finds tuple pairs from left table and right table such that the edit distance between
-    the join attributes is less than or equal to the input threshold.
+    the join attributes satisfies the condition on input threshold. That is, if the comparison
+    operator is '<=', finds tuples pairs whose edit distance on the join attributes is
+    less than or equal to the input threshold.
 
     Note:
         Currently, this method only computes an approximate join result. This is because, to perform the join we
@@ -39,8 +46,6 @@ def edit_distance_join(ltable, rtable,
         strings. Hence, we need atleast one qgram to be in common between two input strings, to appear in the join
         output. For smaller strings, where all qgrams of the strings differ, we cannot process them.
         
-        We plan to make this method compute exact join result, in the next release.
-
     Args:
         ltable (dataframe): left input table.
 
@@ -55,6 +60,9 @@ def edit_distance_join(ltable, rtable,
         r_join_attr (string): join attribute in right table.
 
         threshold (float): edit distance threshold to be satisfied.
+
+        comp_op (string): Comparison operator. Supported values are '<=', '<' and '='
+                          (defaults to '<=').  
 
         l_out_attrs (list): list of attributes to be included in the output table from
                             left table (defaults to None).
@@ -76,6 +84,8 @@ def edit_distance_join(ltable, rtable,
             which is useful for debugging. For n_jobs below -1, (n_cpus + 1 + n_jobs) are used. 
             Thus for n_jobs = -2, all CPUs but one are used. If (n_cpus + 1 + n_jobs) becomes less than 1,
             then n_jobs is set to 1.
+
+        show_progress (boolean): flag to indicate if task progress need to be shown (defaults to True).
         
         tokenizer (Tokenizer object): tokenizer to be used for filtering, when edit distance
                                       measure is transformed into an overlap measure. This must be
@@ -105,6 +115,9 @@ def edit_distance_join(ltable, rtable,
     # check if the input threshold is valid
     validate_threshold(threshold, 'EDIT_DISTANCE')
 
+    # check if the comparison operator is valid
+    validate_comp_op_for_sim_measure(comp_op, 'EDIT_DISTANCE')
+
     # check if the output attributes exist
     validate_output_attrs(l_out_attrs, ltable.columns,
                           r_out_attrs, rtable.columns)
@@ -116,41 +129,90 @@ def edit_distance_join(ltable, rtable,
     # convert threshold to integer (incase if it is float)
     threshold = int(floor(threshold))
 
+    # convert the join attributes to string type, in case it is int or float.
+    revert_l_join_attr_type = False
+    orig_l_join_attr_type = ltable[l_join_attr].dtype
+    if (orig_l_join_attr_type == pd.np.int64 or
+        orig_l_join_attr_type == pd.np.float64):
+        ltable[l_join_attr] = ltable[l_join_attr].astype(str)
+        revert_l_join_attr_type = True
+
+    revert_r_join_attr_type = False
+    orig_r_join_attr_type = rtable[r_join_attr].dtype
+    if (orig_r_join_attr_type == pd.np.int64 or
+        orig_r_join_attr_type == pd.np.float64):
+        rtable[r_join_attr] = rtable[r_join_attr].astype(str)
+        revert_r_join_attr_type = True
+
+    # remove redundant attrs from output attrs.
+    l_out_attrs = remove_redundant_attrs(l_out_attrs, l_key_attr)
+    r_out_attrs = remove_redundant_attrs(r_out_attrs, r_key_attr)
+
+    # get attributes to project.  
+    l_proj_attrs = get_attrs_to_project(l_out_attrs, l_key_attr, l_join_attr)
+    r_proj_attrs = get_attrs_to_project(r_out_attrs, r_key_attr, r_join_attr)
+
+    # do a projection on the input dataframes. Note that this doesn't create a copy
+    # of the dataframes. It only creates a view on original dataframes.
+    ltable_projected = ltable[l_proj_attrs]
+    rtable_projected = rtable[r_proj_attrs]
+
+    # computes the actual number of jobs to launch.
+    n_jobs = get_num_processes_to_launch(n_jobs)
+
     if n_jobs == 1:
-        output_table = _edit_distance_join_split(ltable, rtable,
+        output_table = _edit_distance_join_split(
+                               ltable_projected, rtable_projected,
                                l_key_attr, r_key_attr,
                                l_join_attr, r_join_attr,
-                               tokenizer,
-                               threshold,
+                               tokenizer, threshold, comp_op,
                                l_out_attrs, r_out_attrs,
                                l_out_prefix, r_out_prefix,
-                               out_sim_score)
-        output_table.insert(0, '_id', range(0, len(output_table)))
-        return output_table
+                               out_sim_score, show_progress)
     else:
-        r_splits = split_table(rtable, n_jobs)
+        r_splits = split_table(rtable_projected, n_jobs)
         results = Parallel(n_jobs=n_jobs)(delayed(_edit_distance_join_split)(
-                                             ltable, s,
+                                             ltable_projected, r_splits[job_index],
                                              l_key_attr, r_key_attr,
                                              l_join_attr, r_join_attr,
-                                             tokenizer,
-                                             threshold,
+                                             tokenizer, threshold, comp_op,
                                              l_out_attrs, r_out_attrs,
                                              l_out_prefix, r_out_prefix,
-                                             out_sim_score) for s in r_splits)
+                                             out_sim_score,
+                                      (show_progress and (job_index==n_jobs-1)))
+                                          for job_index in range(n_jobs))
         output_table = pd.concat(results)
-        output_table.insert(0, '_id', range(0, len(output_table)))
-        return output_table
+
+    if allow_missing:
+        missing_pairs = get_pairs_with_missing_value(
+                                            ltable_projected, rtable_projected,
+                                            l_key_attr, r_key_attr,
+                                            l_join_attr, r_join_attr,
+                                            l_out_attrs, r_out_attrs,
+                                            l_out_prefix, r_out_prefix,
+                                            out_sim_score, show_progress)
+        output_table = pd.concat([output_table, missing_pairs])
+
+    output_table.insert(0, '_id', range(0, len(output_table)))
+
+    # revert the type of join attributes to their original type, in case it
+    # was converted to string type.
+    if revert_l_join_attr_type:
+        ltable[l_join_attr] = ltable[l_join_attr].astype(orig_l_join_attr_type)
+
+    if revert_r_join_attr_type:
+        rtable[r_join_attr] = rtable[r_join_attr].astype(orig_r_join_attr_type)
+
+    return output_table
 
 
 def _edit_distance_join_split(ltable, rtable,
                               l_key_attr, r_key_attr,
                               l_join_attr, r_join_attr,
-                              tokenizer,
-                              threshold,
+                              tokenizer, threshold, comp_op,
                               l_out_attrs, r_out_attrs,
                               l_out_prefix, r_out_prefix,
-                              out_sim_score):
+                              out_sim_score, show_progress):
     """Perform edit distance join for a split of ltable and rtable"""
     # find column indices of key attr, join attr and output attrs in ltable
     l_columns = list(ltable.columns.values)
@@ -181,7 +243,7 @@ def _edit_distance_join_split(ltable, rtable,
     # cache l_join_attr lengths
     l_join_attr_list = []
     for row in ltable_list:
-        l_join_attr_list.append(len(str(row[l_join_attr_index])))
+        l_join_attr_list.append(len(row[l_join_attr_index]))
 
     # Build prefix index on l_join_attr
     prefix_index = PrefixIndex(ltable_list, l_join_attr_index,
@@ -190,14 +252,19 @@ def _edit_distance_join_split(ltable, rtable,
     prefix_index.build()
 
     prefix_filter = PrefixFilter(tokenizer, sim_measure_type, threshold)
+
+    comp_fn = COMP_OP_MAP[comp_op]
     sim_fn = get_sim_function(sim_measure_type)
+
     output_rows = []
     has_output_attributes = (l_out_attrs is not None or
                              r_out_attrs is not None)
-    prog_bar = pyprind.ProgBar(len(rtable))
+
+    if show_progress:
+        prog_bar = pyprind.ProgBar(len(rtable_list))
 
     for r_row in rtable_list:
-        r_string = str(r_row[r_join_attr_index])
+        r_string = r_row[r_join_attr_index]
         r_len = len(r_string)
 
         r_ordered_tokens = order_using_token_ordering(
@@ -208,8 +275,9 @@ def _edit_distance_join_split(ltable, rtable,
         for cand in candidates:
             if r_len - threshold <= l_join_attr_list[cand] <= r_len + threshold:
                 l_row = ltable_list[cand]
-                edit_dist = sim_fn(str(l_row[l_join_attr_index]), r_string)
-                if edit_dist <= threshold:
+                edit_dist = sim_fn(l_row[l_join_attr_index], r_string)
+
+                if comp_fn(edit_dist, threshold):
                     if has_output_attributes:
                         output_row = get_output_row_from_tables(
                                          l_row, r_row,
@@ -224,7 +292,8 @@ def _edit_distance_join_split(ltable, rtable,
                         output_row.append(edit_dist)
                     output_rows.append(output_row)
 
-        prog_bar.update()
+        if show_progress:
+            prog_bar.update()
 
     output_header = get_output_header_from_tables(
                         l_key_attr, r_key_attr,

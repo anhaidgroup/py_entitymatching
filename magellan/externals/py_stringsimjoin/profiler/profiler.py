@@ -2,7 +2,7 @@
 
 import pandas as pd
 
-from py_stringsimjoin.utils.validation import validate_attr, \
+from magellan.externals.py_stringsimjoin.utils.validation import validate_attr, \
                                               validate_input_table
 
 
@@ -10,17 +10,20 @@ def profile_table_for_join(input_table, profile_attrs=None):
     """Profiles the attributes in the table for join.
  
     Args:
-        input table (dataframe): input table to profile.
+        input_table (dataframe): input table to profile.
         profile_attrs (list of strings): list of attributes to be profiled (defaults to None). If
                                          not provided, all attributes in the input table will be profiled.
 
     Returns:
-        A dataframe consisting of profile output. Specifically, the dataframe contains three columns:
+        A dataframe consisting of profile output. Specifically, the dataframe contains three columns- 
+
         1) 'Unique values' column, which shows the number of unique values in each attribute,
-        2) 'Missing values' column, which shows the number of missing values in each attribute, and
-        3) 'Comments' column, which contains comments about each attribute.
+        2) 'Missing values' column, which shows the number of missing values in each attribute, and 
+        3) 'Comments' column, which contains comments about each attribute. 
+
         The dataframe is indexed by attribute name.
     """
+
     # check if the input table is a dataframe
     validate_input_table(input_table, 'input table')
 

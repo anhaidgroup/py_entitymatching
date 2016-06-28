@@ -9,7 +9,7 @@ from magellan.externals.py_stringsimjoin.filter.filter_utils import get_prefix_l
 from magellan.externals.py_stringsimjoin.index.position_index import PositionIndex
 from magellan.externals.py_stringsimjoin.utils.helper_functions import convert_dataframe_to_list, \
     find_output_attribute_indices, get_output_header_from_tables, \
-    get_output_row_from_tables 
+    get_output_row_from_tables, COMP_OP_MAP 
 from magellan.externals.py_stringsimjoin.utils.simfunctions import get_sim_function
 from magellan.externals.py_stringsimjoin.utils.token_ordering import \
     gen_token_ordering_for_tables, order_using_token_ordering
@@ -18,10 +18,10 @@ from magellan.externals.py_stringsimjoin.utils.token_ordering import \
 def set_sim_join(ltable, rtable,
                  l_key_attr, r_key_attr,
                  l_join_attr, r_join_attr,
-                 tokenizer, sim_measure_type, threshold,
+                 tokenizer, sim_measure_type, threshold, comp_op,
                  l_out_attrs, r_out_attrs,
                  l_out_prefix, r_out_prefix,
-                 out_sim_score):
+                 out_sim_score, show_progress):
     """Perform set similarity join for a split of ltable and rtable"""
 
     # find column indices of key attr, join attr and output attrs in ltable
@@ -54,7 +54,7 @@ def set_sim_join(ltable, rtable,
     l_join_attr_list = []
     for row in ltable_list:
         l_tokens = order_using_token_ordering(
-            tokenizer.tokenize(str(row[l_join_attr_index])), token_ordering)
+            tokenizer.tokenize(row[l_join_attr_index]), token_ordering)
         l_join_attr_list.append(l_tokens)
 
     # Build position index on l_join_attr
@@ -64,14 +64,19 @@ def set_sim_join(ltable, rtable,
     position_index.build()
 
     pos_filter = PositionFilter(tokenizer, sim_measure_type, threshold)
+
     sim_fn = get_sim_function(sim_measure_type)
+    comp_fn = COMP_OP_MAP[comp_op]
+
     output_rows = []
     has_output_attributes = (l_out_attrs is not None or
                              r_out_attrs is not None)
-    prog_bar = pyprind.ProgBar(len(rtable))
+
+    if show_progress:
+        prog_bar = pyprind.ProgBar(len(rtable_list))
 
     for r_row in rtable_list:
-        r_string = str(r_row[r_join_attr_index])
+        r_string = r_row[r_join_attr_index]
 
         r_ordered_tokens = order_using_token_ordering(
                 tokenizer.tokenize(r_string), token_ordering)
@@ -88,7 +93,7 @@ def set_sim_join(ltable, rtable,
             if overlap > 0:
                 l_ordered_tokens = l_join_attr_list[cand]
                 sim_score = sim_fn(l_ordered_tokens, r_ordered_tokens)
-                if sim_score >= threshold:
+                if comp_fn(sim_score, threshold):
                     if has_output_attributes:
                         output_row = get_output_row_from_tables(
                                          ltable_list[cand], r_row,
@@ -103,7 +108,8 @@ def set_sim_join(ltable, rtable,
                         output_row.append(sim_score)
                     output_rows.append(output_row)
 
-        prog_bar.update()
+        if show_progress:
+            prog_bar.update()
 
     output_header = get_output_header_from_tables(
                         l_key_attr, r_key_attr,

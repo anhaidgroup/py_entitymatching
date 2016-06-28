@@ -4,6 +4,8 @@ import pandas as pd
 
 from py_stringmatching.tokenizer.tokenizer import Tokenizer
 
+from magellan.externals.py_stringsimjoin.utils.helper_functions import COMP_OP_MAP
+
 
 def validate_input_table(table, table_label):
     """Check if the input table is a dataframe."""
@@ -48,7 +50,11 @@ def validate_output_attrs(l_out_attrs, l_columns, r_out_attrs, r_columns):
 
 def validate_threshold(threshold, sim_measure_type):
     """Check if the threshold is valid for the sim_measure_type."""
-    if sim_measure_type == 'OVERLAP' or sim_measure_type == 'EDIT_DISTANCE':
+    if sim_measure_type == 'EDIT_DISTANCE':
+        if threshold < 0:
+            raise AssertionError('threshold for ' + sim_measure_type + \
+                                 ' should be greater than or equal to 0')
+    elif sim_measure_type == 'OVERLAP':
         if threshold <= 0:
             raise AssertionError('threshold for ' + sim_measure_type + \
                                  ' should be greater than 0')
@@ -74,4 +80,26 @@ def validate_sim_measure_type(sim_measure_type):
         raise TypeError('\'' + sim_measure_type + '\' is not a valid ' + \
                         'sim_measure_type. Supported types are COSINE, DICE' + \
                         ', EDIT_DISTANCE, JACCARD and OVERLAP.')
-    return True 
+    return True
+
+
+def validate_comp_op_for_sim_measure(comp_op, sim_measure_type):
+    """Check if the comparison operator is valid for the sim_measure_type."""
+    if sim_measure_type == 'EDIT_DISTANCE':
+        if comp_op not in ['<=', '<', '=']:
+            raise AssertionError('Comparison operator not supported. ' + \
+                'Supported comparison operators for ' + sim_measure_type + \
+                ' are <=, < and =.')
+    else:
+        if comp_op not in ['>=', '>', '=']:
+            raise AssertionError('Comparison operator not supported. ' + \
+                'Supported comparison operators for ' + sim_measure_type + \
+                ' are >=, > and =.')
+    return True
+
+
+def validate_comp_op(comp_op):
+    """Check if the comparison operator is valid."""
+    if comp_op not in COMP_OP_MAP.keys():
+        raise AssertionError('Comparison operator not supported. ' + \
+            'Supported comparison operators are >=, >, <=, <, = and !=.')        

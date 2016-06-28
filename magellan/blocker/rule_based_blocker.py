@@ -15,6 +15,7 @@ from magellan.externals.py_stringsimjoin.join.dice_join import dice_join
 from magellan.externals.py_stringsimjoin.join.jaccard_join import jaccard_join
 from magellan.externals.py_stringsimjoin.join.overlap_coefficient_join import overlap_coefficient_join
 from magellan.externals.py_stringsimjoin.join.overlap_join import overlap_join
+from magellan.externals.py_stringsimjoin.join.edit_distance_join import edit_distance_join
 
 from magellan.blocker.blocker import Blocker
 import magellan.catalog.catalog_manager as cm
@@ -34,7 +35,9 @@ class RuleBasedBlocker(Blocker):
         self.rule_ft = OrderedDict()
         self.filterable_sim_fns = {'jaccard', 'cosine', 'dice', 'overlap',
                                    'overlap_coefficient'}
-        self.allowed_ops = {'<', '<='}
+        self.allowed_ops_for_sim_fns = {'<', '<='}
+        self.filterable_dist_fns = {'lev_dist'}
+        self.allowed_ops_for_dist_fns = {'>'}
  
         # meta data : should be removed if they are not useful.
         self.rule_source = OrderedDict()
@@ -594,14 +597,19 @@ class RuleBasedBlocker(Blocker):
         # a filterable sim function (jaccard, cosine, dice, ...),
         # an allowed operator (<, <=),
         sim_fn, l_attr, r_attr, l_tok, r_tok, op, th = self.parse_conjunct(conjunct, rule_name)
+        if sim_fn == 'lev_dist' and op == '>':
+            return True
         if l_tok != r_tok:
             print('Conjunct not filterable due to tokenizer mismatch', l_tok, r_tok)
             return False
-        if sim_fn not in self.filterable_sim_fns:
+        if sim_fn not in self.filterable_sim_fns and sim_fn not in self.filterable_dist_fns:
             print('Conjunct not filterable due to unsupported sim_fn', sim_fn)
             return False
-        if op not in self.allowed_ops:
-            print('Conjunct not filterable unsupported op', op)
+        if sim_fn in self.filterable_sim_fns and op not in self.allowed_ops_for_sim_fns:
+            print('Conjunct not filterable due to unsupported op', op)
+            return False
+        if sim_fn in self.filterable_dist_fns and op not in self.allowed_ops_for_dist_fns:
+            print('Conjunct not filterable due to unsupported op', op)
             return False
         # conjunct is filterable
         return True
@@ -621,7 +629,7 @@ class RuleBasedBlocker(Blocker):
             elif l_tok == 'qgm_3':
                 print('Choosing 3gram tokenizer')
                 tokenizer = QgramTokenizer(qval=3, return_set=True)
-            else:
+            elif sim_fn != 'lev_dist':
                 # not supported
                 print('Tokenizer not supported')
                 return None
@@ -637,14 +645,21 @@ class RuleBasedBlocker(Blocker):
                 join_fn = overlap_join
             elif sim_fn == 'overlap_coefficient':
                 join_fn = overlap_coefficient_join
+            elif sim_fn == 'lev_dist':
+                join_fn = edit_distance_join
             else:
                 logger.info(sim_fn + ' is not filterable, so not applying fitlers to this rule')
                 return None
             c_df = None
             #try:
-            if True:
+            if join_fn != edit_distance_join:
                 c_df = join_fn(l_df, r_df, l_key, r_key, l_attr,
-                               r_attr, tokenizer, float(th), l_output_attrs,
+                               r_attr, tokenizer, float(th), '>=', True, l_output_attrs,
+                               r_output_attrs, l_output_prefix,
+                               r_output_prefix, False, n_jobs)
+            else:
+                c_df = join_fn(l_df, r_df, l_key, r_key, l_attr, r_attr,
+                               float(th), '<=', True, l_output_attrs, 
                                r_output_attrs, l_output_prefix,
                                r_output_prefix, False, n_jobs)
             #except:    

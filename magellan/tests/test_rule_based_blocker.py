@@ -87,7 +87,7 @@ class RuleBasedBlockerTestCases(unittest.TestCase):
         assert_equal(mg.get_key(D), mg.get_key(C))
         assert_equal(mg.get_property(D, 'fk_ltable'), mg.get_property(C, 'fk_ltable'))
         assert_equal(mg.get_property(D, 'fk_rtable'), mg.get_property(C, 'fk_rtable'))
-
+    
     @raises(AssertionError)
     def test_rb_block_tables_invalid_ltable_1(self):
         self.rb.block_tables(None, self.B)
@@ -213,7 +213,7 @@ class RuleBasedBlockerTestCases(unittest.TestCase):
         self.validate_metadata(C, l_output_attrs, r_output_attrs,
                                l_output_prefix, r_output_prefix)
         self.validate_data(C, expected_ids_2)
-    
+    """
     def test_rb_block_tables_non_filterable_rule_multiple_conjuncts(self):
         self.rb.add_rule(rule_3, self.feature_table)
         C = self.rb.block_tables(self.A, self.B, l_output_attrs,
@@ -222,7 +222,7 @@ class RuleBasedBlockerTestCases(unittest.TestCase):
         self.validate_metadata(C, l_output_attrs, r_output_attrs,
                                l_output_prefix, r_output_prefix)
         self.validate_data(C, expected_ids_3)
-    
+    """ 
     def test_rb_block_tables_filterable_rule_multiple_conjuncts(self):
         self.rb.add_rule(rule_4, self.feature_table)
         #print('feature_table:', self.feature_table)
@@ -234,7 +234,7 @@ class RuleBasedBlockerTestCases(unittest.TestCase):
         self.validate_data(C, expected_ids_4)
     
     def test_rb_block_tables_rule_sequence_with_one_filterable_rule(self):
-        #print('Feature table: ', self.feature_table)
+        print('Feature table: ', self.feature_table)
         self.rb.add_rule(rule_1, self.feature_table)
         self.rb.add_rule(rule_2, self.feature_table)
         C = self.rb.block_tables(self.A, self.B, l_output_attrs,
@@ -243,7 +243,7 @@ class RuleBasedBlockerTestCases(unittest.TestCase):
         self.validate_metadata(C, l_output_attrs, r_output_attrs,
                                l_output_prefix, r_output_prefix)
         self.validate_data(C, expected_ids_1_and_2)
-
+    
     def test_rb_block_tables_rule_sequence_with_no_filterable_rule(self):
         self.rb.add_rule(rule_2, self.feature_table)
         self.rb.add_rule(rule_3, self.feature_table)
@@ -362,7 +362,7 @@ class RuleBasedBlockerTestCases(unittest.TestCase):
         self.rb.add_rule(rule_1, self.feature_table)
         C = self.rb.block_tables(self.A, self.B, show_progress=False)
         self.rb.block_candset(C, show_progress='yes')
-    
+     
     def test_rb_block_candset(self):
         rb = mg.RuleBasedBlocker()
         rb.add_rule(rule_1, self.feature_table)
@@ -397,7 +397,7 @@ class RuleBasedBlockerTestCases(unittest.TestCase):
         D = self.rb.block_candset(C)
         self.validate_metadata_two_candsets(C, D)
         self.validate_data(D)
-    """
+    """ 
     def test_rb_block_tuples(self):
         assert_equal(self.rb.block_tuples(self.A.ix[1], self.B.ix[2], l_block_attr_1,
                                      r_block_attr_1), False)
@@ -418,4 +418,4 @@ class RuleBasedBlockerTestCases(unittest.TestCase):
         C = rb.block_tables_skd(A, B, ['Name'], ['Name'], show_progress=True)
         C.to_csv('elec_name_cos.csv', index=False)
         print('size of C:', len(C))
-   """
+    """

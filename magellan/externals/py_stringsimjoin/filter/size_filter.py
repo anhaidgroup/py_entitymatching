@@ -6,18 +6,17 @@ from six.moves import xrange
 import pandas as pd
 import pyprind
 
-from py_stringsimjoin.filter.filter import Filter
-from py_stringsimjoin.filter.filter_utils import get_size_lower_bound
-from py_stringsimjoin.filter.filter_utils import get_size_upper_bound
-from py_stringsimjoin.index.size_index import SizeIndex
-from py_stringsimjoin.utils.helper_functions import convert_dataframe_to_list
-from py_stringsimjoin.utils.helper_functions import \
-                                                 find_output_attribute_indices
-from py_stringsimjoin.utils.helper_functions import \
-                                                 get_output_header_from_tables
-from py_stringsimjoin.utils.helper_functions import get_output_row_from_tables
-from py_stringsimjoin.utils.helper_functions import split_table
-from py_stringsimjoin.utils.validation import validate_attr, \
+from magellan.externals.py_stringsimjoin.filter.filter import Filter
+from magellan.externals.py_stringsimjoin.filter.filter_utils import get_size_lower_bound
+from magellan.externals.py_stringsimjoin.filter.filter_utils import get_size_upper_bound
+from magellan.externals.py_stringsimjoin.index.size_index import SizeIndex
+from magellan.externals.py_stringsimjoin.utils.helper_functions import convert_dataframe_to_list, \
+    find_output_attribute_indices, get_attrs_to_project, \
+    get_num_processes_to_launch, get_output_header_from_tables, \
+    get_output_row_from_tables, remove_redundant_attrs, split_table
+from magellan.externals.py_stringsimjoin.utils.missing_value_handler import \
+    get_pairs_with_missing_value
+from magellan.externals.py_stringsimjoin.utils.validation import validate_attr, \
     validate_key_attr, validate_input_table, validate_threshold, \
     validate_tokenizer, validate_output_attrs, validate_sim_measure_type
 
@@ -45,7 +44,8 @@ class SizeFilter(Filter):
         threshold (float): An attribute to store the threshold value.
     """
 
-    def __init__(self, tokenizer, sim_measure_type, threshold):
+    def __init__(self, tokenizer, sim_measure_type, threshold,
+                 allow_missing=False):
         # check if the input tokenizer is valid
         validate_tokenizer(tokenizer)
 
@@ -58,7 +58,7 @@ class SizeFilter(Filter):
         self.tokenizer = tokenizer
         self.sim_measure_type = sim_measure_type
         self.threshold = threshold
-        super(self.__class__, self).__init__()
+        super(self.__class__, self).__init__(allow_missing)
 
     def filter_pair(self, lstring, rstring):
         """Checks if the input strings get dropped by the size filter.
@@ -69,6 +69,11 @@ class SizeFilter(Filter):
         Returns:
             A flag indicating whether the string pair is dropped (boolean).
         """
+
+        # If one of the inputs is missing, then check the allow_missing flag.
+        # If it is set to True, then pass the pair. Else drop the pair.
+        if pd.isnull(lstring) or pd.isnull(rstring):
+            return (not self.allow_missing)
 
         # check for empty string
         if (not lstring) or (not rstring):
@@ -94,7 +99,7 @@ class SizeFilter(Filter):
                       l_filter_attr, r_filter_attr,
                       l_out_attrs=None, r_out_attrs=None,
                       l_out_prefix='l_', r_out_prefix='r_',
-                      n_jobs=1):
+                      n_jobs=1, show_progress=True):
         """Finds candidate matching pairs of strings from the input tables.
 
         Args:
@@ -128,6 +133,8 @@ class SizeFilter(Filter):
                 Thus for n_jobs = -2, all CPUs but one are used. If (n_cpus + 1 + n_jobs) becomes less than 1,
                 then n_jobs is set to 1.
 
+            show_progress (boolean): flag to indicate if task progress need to be shown (defaults to True).
+
         Returns:
             output table (dataframe)
         """
@@ -154,29 +161,85 @@ class SizeFilter(Filter):
         validate_key_attr(l_key_attr, ltable, 'left table')
         validate_key_attr(r_key_attr, rtable, 'right table')
 
-        if n_jobs == 1:
-            output_table = _filter_tables_split(ltable, rtable,
-                                                l_key_attr, r_key_attr,
-                                                l_filter_attr, r_filter_attr,
-                                                self,
-                                                l_out_attrs, r_out_attrs,
-                                                l_out_prefix, r_out_prefix)
-            output_table.insert(0, '_id', range(0, len(output_table)))
-            return output_table
-        else:
-            rtable_splits = split_table(rtable, n_jobs)
-            results = Parallel(n_jobs=n_jobs)(delayed(_filter_tables_split)(
-                                                  ltable, rtable_split,
-                                                  l_key_attr, r_key_attr,
-                                                  l_filter_attr, r_filter_attr,
-                                                  self,
-                                                  l_out_attrs, r_out_attrs,
-                                                  l_out_prefix, r_out_prefix)
-                                              for rtable_split in rtable_splits)
-            output_table = pd.concat(results)
-            output_table.insert(0, '_id', range(0, len(output_table)))
-            return output_table
+        # convert the filter attributes to string type, in case it is int or float.
+        revert_l_filter_attr_type = False
+        orig_l_filter_attr_type = ltable[l_filter_attr].dtype
+        if (orig_l_filter_attr_type == pd.np.int64 or
+            orig_l_filter_attr_type == pd.np.float64):
+            ltable[l_filter_attr] = ltable[l_filter_attr].astype(str)
+            revert_l_filter_attr_type = True
 
+        revert_r_filter_attr_type = False
+        orig_r_filter_attr_type = rtable[r_filter_attr].dtype
+        if (orig_r_filter_attr_type == pd.np.int64 or
+            orig_r_filter_attr_type == pd.np.float64):
+            rtable[r_filter_attr] = rtable[r_filter_attr].astype(str)
+            revert_r_filter_attr_type = True
+
+        # remove redundant attrs from output attrs.
+        l_out_attrs = remove_redundant_attrs(l_out_attrs, l_key_attr)
+        r_out_attrs = remove_redundant_attrs(r_out_attrs, r_key_attr)
+
+        # get attributes to project.  
+        l_proj_attrs = get_attrs_to_project(l_out_attrs,
+                                            l_key_attr, l_filter_attr)
+        r_proj_attrs = get_attrs_to_project(r_out_attrs,
+                                            r_key_attr, r_filter_attr)
+
+        # do a projection on the input dataframes. Note that this doesn't create
+        # a copy of the dataframes. It only creates a view on original dataframes.
+        ltable_projected = ltable[l_proj_attrs]
+        rtable_projected = rtable[r_proj_attrs]
+
+        # computes the actual number of jobs to launch.
+        n_jobs = get_num_processes_to_launch(n_jobs)
+
+        if n_jobs == 1:
+            output_table = _filter_tables_split(
+                                           ltable_projected, rtable_projected,
+                                           l_key_attr, r_key_attr,
+                                           l_filter_attr, r_filter_attr,
+                                           self,
+                                           l_out_attrs, r_out_attrs,
+                                           l_out_prefix, r_out_prefix,
+                                           show_progress)
+        else:
+            r_splits = split_table(rtable_projected, n_jobs)
+            results = Parallel(n_jobs=n_jobs)(delayed(_filter_tables_split)(
+                                              ltable_projected, r_splits[job_index],
+                                              l_key_attr, r_key_attr,
+                                              l_filter_attr, r_filter_attr,
+                                              self,
+                                              l_out_attrs, r_out_attrs,
+                                              l_out_prefix, r_out_prefix,
+                                      (show_progress and (job_index==n_jobs-1)))
+                                          for job_index in range(n_jobs))
+            output_table = pd.concat(results)
+
+        if self.allow_missing:
+            missing_pairs = get_pairs_with_missing_value(
+                                            ltable_projected, rtable_projected,
+                                            l_key_attr, r_key_attr,
+                                            l_filter_attr, r_filter_attr,
+                                            l_out_attrs, r_out_attrs,
+                                            l_out_prefix, r_out_prefix,
+                                            False, show_progress)
+            output_table = pd.concat([output_table, missing_pairs])
+
+
+        output_table.insert(0, '_id', range(0, len(output_table)))
+
+        # revert the type of filter attributes to their original type, in case
+        # it was converted to string type.
+        if revert_l_filter_attr_type:
+            ltable[l_filter_attr] = ltable[l_filter_attr].astype(
+                                                        orig_l_filter_attr_type)
+
+        if revert_r_filter_attr_type:
+            rtable[r_filter_attr] = rtable[r_filter_attr].astype(
+                                                        orig_r_filter_attr_type)
+
+        return output_table
 
 
 def _filter_tables_split(ltable, rtable,
@@ -184,7 +247,7 @@ def _filter_tables_split(ltable, rtable,
                          l_filter_attr, r_filter_attr,
                          size_filter, 
                          l_out_attrs, r_out_attrs,
-                         l_out_prefix, r_out_prefix):
+                         l_out_prefix, r_out_prefix, show_progress):
     # find column indices of key attr, filter attr and output attrs in ltable
     l_columns = list(ltable.columns.values)
     l_key_attr_index = l_columns.index(l_key_attr)
@@ -212,10 +275,12 @@ def _filter_tables_split(ltable, rtable,
     output_rows = []
     has_output_attributes = (l_out_attrs is not None or
                              r_out_attrs is not None)
-    prog_bar = pyprind.ProgBar(len(rtable))
+
+    if show_progress:
+        prog_bar = pyprind.ProgBar(len(rtable_list))
 
     for r_row in rtable_list:
-        r_string = str(r_row[r_filter_attr_index])
+        r_string = r_row[r_filter_attr_index]
 
         r_num_tokens = len(size_filter.tokenizer.tokenize(r_string))
            
@@ -250,7 +315,8 @@ def _filter_tables_split(ltable, rtable,
 
             output_rows.append(output_row)
 
-        prog_bar.update()
+        if show_progress:
+            prog_bar.update()
 
     output_header = get_output_header_from_tables(l_key_attr, r_key_attr,
                                                   l_out_attrs, r_out_attrs, 

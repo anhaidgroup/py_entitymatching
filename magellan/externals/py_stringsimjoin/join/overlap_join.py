@@ -4,14 +4,17 @@ from magellan.externals.py_stringsimjoin.filter.overlap_filter import OverlapFil
 def overlap_join(ltable, rtable,
                  l_key_attr, r_key_attr,
                  l_join_attr, r_join_attr,
-                 tokenizer, threshold,
+                 tokenizer, threshold, comp_op='>=',
+                 allow_missing=False,
                  l_out_attrs=None, r_out_attrs=None,
                  l_out_prefix='l_', r_out_prefix='r_',
-                 out_sim_score=True, n_jobs=1):
+                 out_sim_score=True, n_jobs=1, show_progress=True):
     """Join two tables using overlap measure.
 
     Finds tuple pairs from left table and right table such that the overlap between
-    the join attributes is greater than or equal to the input threshold.
+    the join attributes satisfies the condition on input threshold. That is, if the comparison
+    operator is '>=', finds tuples pairs whose overlap on the join attributes is
+    greater than or equal to the input threshold.
 
     Args:
         ltable (dataframe): left input table.
@@ -51,14 +54,16 @@ def overlap_join(ltable, rtable,
             Thus for n_jobs = -2, all CPUs but one are used. If (n_cpus + 1 + n_jobs) becomes less than 1,
             then n_jobs is set to 1.
 
+        show_progress (boolean): flag to indicate if task progress need to be shown (defaults to True).
+
     Returns:
         output table (dataframe)
     """
 
-    overlap_filter = OverlapFilter(tokenizer, threshold)
+    overlap_filter = OverlapFilter(tokenizer, threshold, comp_op, allow_missing)
     return overlap_filter.filter_tables(ltable, rtable,
                                         l_key_attr, r_key_attr,
                                         l_join_attr, r_join_attr,
                                         l_out_attrs, r_out_attrs,
                                         l_out_prefix, r_out_prefix,
-                                        out_sim_score, n_jobs)
+                                        out_sim_score, n_jobs, show_progress)

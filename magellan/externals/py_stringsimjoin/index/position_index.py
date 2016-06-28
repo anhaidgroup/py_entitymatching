@@ -19,7 +19,7 @@ class PositionIndex(Index):
     def build(self):
         row_id = 0
         for row in self.table:
-            index_string = str(row[self.index_attr])
+            index_string = row[self.index_attr]
             index_attr_tokens = order_using_token_ordering(
                 self.tokenizer.tokenize(index_string), self.token_ordering)
             num_tokens = len(index_attr_tokens)

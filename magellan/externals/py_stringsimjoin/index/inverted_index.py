@@ -15,7 +15,7 @@ class InvertedIndex(Index):
     def build(self):
         row_id = 0
         for row in self.table:
-            index_string = str(row[self.index_attr])
+            index_string = row[self.index_attr]
             index_attr_tokens = self.tokenizer.tokenize(index_string)
 
             for token in index_attr_tokens:
