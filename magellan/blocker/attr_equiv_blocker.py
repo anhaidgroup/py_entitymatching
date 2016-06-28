@@ -29,29 +29,29 @@ class AttrEquivalenceBlocker(Blocker):
         This is similar to equi-join of two tables.
 
         Args:
-            ltable (pandas dataframe): left input table.
+            ltable (Dataframe): left input table.
 
-            rtable (pandas dataframe): right input table.
+            rtable (Dataframe): right input table.
 
-            l_block_attr (string): blocking attribute in left table.
+            l_block_attr (str): blocking attribute in left table.
 
-            r_block_attr (string): blocking attribute in right table. 
+            r_block_attr (str): blocking attribute in right table. 
 
-            l_output_attrs (list of strings): list of attributes from the left
-                                              table to be included in the
-                                              output candidate set (defaults to None).
+            l_output_attrs (list): list of attribute names from the left
+                                   table to be included in the
+                                   output candidate set (defaults to None).
 
-            r_output_attrs (list of strings): list of attributes from the right
-                                              table to be included in the
-                                              output candidate set (defaults to None).
+            r_output_attrs (list): list of attribute names from the right
+                                   table to be included in the
+                                   output candidate set (defaults to None).
 
-            l_output_prefix (string): prefix to be used for the attribute names
-                                      coming from the left table in the output
-                                      candidate set (defaults to 'ltable\_').
+            l_output_prefix (str): prefix to be used for the attribute names
+                                   coming from the left table in the output
+                                   candidate set (defaults to 'ltable\_').
 
-            r_output_prefix (string): prefix to be used for the attribute names
-                                      coming from the right table in the output
-                                      candidate set (defaults to 'rtable\_').
+            r_output_prefix (str): prefix to be used for the attribute names
+                                   coming from the right table in the output
+                                   candidate set (defaults to 'rtable\_').
 
             verbose (boolean): flag to indicate whether logging should be done
                                (defaults to False).
@@ -172,11 +172,11 @@ class AttrEquivalenceBlocker(Blocker):
         right tuple in the tuple pair.
 
         Args:
-            candset (pandas dataframe): input candidate set of tuple pairs.
+            candset (Dataframe): input candidate set of tuple pairs.
 
-            l_block_attr (string): blocking attribute in left table.
+            l_block_attr (str): blocking attribute in left table.
 
-            r_block_attr (string): blocking attribute in right table. 
+            r_block_attr (str): blocking attribute in right table. 
 
             verbose (boolean): flag to indicate whether logging should be done
                                (defaults to False).
@@ -268,13 +268,13 @@ class AttrEquivalenceBlocker(Blocker):
         """Blocks a tuple pair based on attribute equivalence.
 
         Args:
-            ltuple (pandas series): input left tuple.
+            ltuple (Series): input left tuple.
 
-            rtuple (pandas series): input right tuple.
+            rtuple (Series): input right tuple.
             
-            l_block_attr (string): blocking attribute in left tuple.
+            l_block_attr (str): blocking attribute in left tuple.
 
-            r_block_attr (string): blocking attribute in right tuple.
+            r_block_attr (str): blocking attribute in right tuple.
 
         Returns:
             A status indicating if the tuple pair is blocked, i.e., the values
