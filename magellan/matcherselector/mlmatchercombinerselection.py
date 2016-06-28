@@ -1,5 +1,10 @@
-import numpy as np
+"""
+This module contains functions for ML-matcher combiner selection.
+Note: This is not going to be there for the first release of Magellan.
+"""
+
 import itertools
+import six
 
 from magellan.matcherselector.mlmatcherselection import select_matcher
 from magellan.matcher.ensemblematcher import EnsembleMatcher
@@ -18,7 +23,8 @@ def get_matcher_list(matchers, combiners, weights, threshold):
     matcher_list = []
     matcher_list.extend(matchers)
     for l in ensemble_len:
-        iter_combns = itertools.combinations(xrange(0, len(matchers)), l)
+        iter_combns = itertools.combinations(six.moves.xrange(0,
+                                                              len(matchers)), l)
         for ic in iter_combns:
             for c in combiners:
                 m = [matchers[i] for i in ic]
