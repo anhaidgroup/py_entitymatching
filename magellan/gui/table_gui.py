@@ -10,6 +10,16 @@ logger = logging.getLogger(__name__)
 
 
 def view_table(table, edit_flag=False, show_flag=True):
+    """
+    This function opens up the window to view the table
+    Args:
+        table (DataFrame): Input pandas DataFrame that should be displayed.
+        edit_flag (boolean): Flag to indicate whether editing should be
+            allowed.
+        show_flag (boolean): Flag to indicate whether the window should be
+        displayed
+
+    """
     datatable = QtGui.QTableWidget()
 
     # disable edit
@@ -46,8 +56,10 @@ def view_table(table, edit_flag=False, show_flag=True):
 
 
 
-# edit table
 def edit_table(table, show_flag=True):
+    """
+    Edit table
+    """
     datatable = view_table(table, edit_flag=True, show_flag=show_flag)
     cols = list(table.columns)
     idxv = list(table.index)
@@ -58,8 +70,9 @@ def edit_table(table, show_flag=True):
             val = _cast_val(val, inp)
             table.set_value(idxv[i], cols[j], val)
 
-# need to cast string values from edit window
+
 def _cast_val(v, i):
+    # need to cast string values from edit window
     if v == "None":
         return None
     elif isinstance(i, bool):
