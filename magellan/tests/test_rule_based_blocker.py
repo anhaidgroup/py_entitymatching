@@ -213,7 +213,7 @@ class RuleBasedBlockerTestCases(unittest.TestCase):
         self.validate_metadata(C, l_output_attrs, r_output_attrs,
                                l_output_prefix, r_output_prefix)
         self.validate_data(C, expected_ids_2)
-    """
+    
     def test_rb_block_tables_non_filterable_rule_multiple_conjuncts(self):
         self.rb.add_rule(rule_3, self.feature_table)
         C = self.rb.block_tables(self.A, self.B, l_output_attrs,
@@ -222,7 +222,7 @@ class RuleBasedBlockerTestCases(unittest.TestCase):
         self.validate_metadata(C, l_output_attrs, r_output_attrs,
                                l_output_prefix, r_output_prefix)
         self.validate_data(C, expected_ids_3)
-    """ 
+     
     def test_rb_block_tables_filterable_rule_multiple_conjuncts(self):
         self.rb.add_rule(rule_4, self.feature_table)
         #print('feature_table:', self.feature_table)

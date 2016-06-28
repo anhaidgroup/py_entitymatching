@@ -671,7 +671,7 @@ class RuleBasedBlocker(Blocker):
                 #                   on=[l_output_prefix + l_key, r_output_prefix + r_key])
                 print('candset:', candset)
                 print('c_df:', c_df)
-                candset=pd.concat([candset, c_df]).drop_duplicates().reset_index(drop=True) 
+                candset=pd.concat([candset, c_df]).drop_duplicates([l_output_prefix + l_key, r_output_prefix + r_key]).reset_index(drop=True) 
             else:
                 # candset from the first conjunct of the rule
                 candset = c_df
