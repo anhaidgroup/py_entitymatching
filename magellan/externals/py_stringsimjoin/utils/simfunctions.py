@@ -1,9 +1,5 @@
 """Similarity measure utilities"""
 
-from magellan.externals.py_stringsimjoin.externals.py_stringmatching.simfunctions import \
-    cosine, dice, jaccard, levenshtein
-
-
 def get_sim_function(sim_measure_type):
     """Obtain a similarity function.
 

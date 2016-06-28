@@ -227,6 +227,10 @@ class OverlapBlockerTestCases(unittest.TestCase):
     def test_ob_block_tables_invalid_overlap_size_3(self):
         self.ob.block_tables(self.A, self.B, l_overlap_attr_1, r_overlap_attr_1, overlap_size='1')
 
+    @raises(AssertionError)
+    def test_ob_block_tables_invalid_overlap_size_4(self):
+        self.ob.block_tables(self.A, self.B, l_overlap_attr_1, r_overlap_attr_1, overlap_size=-1)
+
     def test_ob_block_tables(self):
         C = self.ob.block_tables(self.A, self.B, l_overlap_attr_1, r_overlap_attr_1,
                                  l_output_attrs=l_output_attrs, r_output_attrs=r_output_attrs,
