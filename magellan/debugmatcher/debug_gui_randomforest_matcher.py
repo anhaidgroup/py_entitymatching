@@ -4,7 +4,8 @@ import six
 
 import magellan as mg
 from magellan import RFMatcher
-from magellan.debugmatcher.debug_gui_decisiontree_matcher import vis_tuple_debug_dt_matcher
+from magellan.debugmatcher.debug_gui_decisiontree_matcher \
+    import vis_tuple_debug_dt_matcher
 from magellan.debugmatcher.debug_gui_utils import *
 from magellan.gui.debug_gui_base import MainWindowManager
 from magellan.utils.catalog_helper import check_attrs_present
@@ -15,86 +16,137 @@ logger = logging.getLogger(__name__)
 
 def vis_debug_rf(matcher, train, test, exclude_attrs, target_attr):
     """
-    Visual debugger for random forest matcher
+    Visual debugger for Random Forest matcher.
 
-    Parameters
-    ----------
-    matcher : object, RFMatcher object
-    train : MTable, containing training data with "True" labels
-    test : MTable, containing test data with "True labels.
-            The "True" labels are used for evaluation.
-    exclude_attrs : List, attributes to be excluded from train and test,
-        for training and testing.
-
-    target_attr : String, column name in validation_set containing 'True' labels
+    Args:
+        matcher (RFMatcher): The Random Forest matcher that should be debugged.
+        train (DataFrame): The pandas DataFrame that will be used to train the
+            matcher.
+        test (DataFrame): The pandas DataFrame that will be used to test the
+            matcher.
+        exclude_attrs (list): The list of attributes to be excluded from train
+        and test, for training and testing.
+        target_attr (str): The attribute name in the 'train' containing the
+            true labels.
 
     """
+    # Call the wrapper function.
     _vis_debug_rf(matcher, train, test, exclude_attrs, target_attr)
 
 
-def _vis_debug_rf(matcher, train, test, exclude_attrs, target_attr, show_window=True):
+def _vis_debug_rf(matcher, train, test, exclude_attrs, target_attr,
+                  show_window=True):
+    """
+    Wrapper function for debugging the Random Forest matcher visually.
+    """
+    # Validate the input parameters
+    # # We expect the matcher to be of type RfMatcher
     if not isinstance(matcher, RFMatcher):
-        logger.error('Input matcher is not of type Decision Tree matcher')
-        raise AssertionError('Input matcher is not of type Decision Tree matcher')
+        logger.error('Input matcher is not of type '
+                     'Random Forest matcher')
+        raise AssertionError('Input matcher is not of type '
+                             'Random Forest matcher')
 
+    # # We expect the target attribute to be of type string.
     if not isinstance(target_attr, six.string_types):
         logger.error('Target attribute is not of type string')
         raise AssertionError('Target attribute is not of type string')
 
+    # # Check whether the exclude attributes are indeed present in the train
+    #  DataFrame.
     if not check_attrs_present(train, exclude_attrs):
         logger.error('The exclude attrs are not in train table columns')
         raise AssertionError('The exclude attrs are not in the train table columns')
 
+    # # Check whether the target attribute is indeed present in the train
+    #  DataFrame.
     if not check_attrs_present(train, target_attr):
         logger.error('The target attr is not in train table columns')
         raise AssertionError('The target attr is not in the train table columns')
 
+    # # Check whether the exclude attributes are indeed present in the test
+    #  DataFrame.
     if not check_attrs_present(test, exclude_attrs):
         logger.error('The exclude attrs are not in test table columns')
         raise AssertionError('The exclude attrs are not in the test table columns')
 
+
+    # The exclude attributes is expected to be of type list, if not
+    # explicitly convert this into a list.
     if not isinstance(exclude_attrs, list):
         exclude_attrs = [exclude_attrs]
 
+    # Drop the duplicates from the exclude attributes
     exclude_attrs = list_drop_duplicates(exclude_attrs)
 
+    # If the target attribute is not present in the exclude attributes,
+    # then explicitly add it to the exclude attributes.
     if target_attr not in exclude_attrs:
         exclude_attrs.append(target_attr)
 
-    # fit using training data
-    matcher.fit(table=train, exclude_attrs=exclude_attrs, target_attr=target_attr)
+    # Now, fit using training data
+    matcher.fit(table=train, exclude_attrs=exclude_attrs,
+                target_attr=target_attr)
+
+    # Get a column name to store the predictions.
     predict_attr_name = get_name_for_predict_column(test.columns)
+
+    # Predict using the test data
     predicted = matcher.predict(table=test, exclude_attrs=exclude_attrs,
                                 target_attr=predict_attr_name, append=True,
                                 inplace=False)
+
+    # Get the evaluation summary.
     eval_summary = mg.eval_matches(predicted, target_attr, predict_attr_name)
-    metric = get_metric(eval_summary)
-    fp_dataframe = get_dataframe(predicted, eval_summary['false_pos_ls'])
-    fn_dataframe = get_dataframe(predicted, eval_summary['false_neg_ls'])
+
+    # Get metric in a form that can be displayed from the evaluation summary
+    metric = _get_metric(eval_summary)
+
+    # Get false negatives and false positives as a DataFrame
+    fp_dataframe = _get_dataframe(predicted, eval_summary['false_pos_ls'])
+    fn_dataframe = _get_dataframe(predicted, eval_summary['false_neg_ls'])
+
+    # Get the main window application
     app = mg._viewapp
     m = MainWindowManager(matcher, "rf", exclude_attrs, metric, predicted, fp_dataframe,
                           fn_dataframe)
-    if show_window == True:
+
+    # If the show window is true, then display the window.
+    if show_window:
         m.show()
         app.exec_()
 
 
 def vis_tuple_debug_rf_matcher(matcher, t, exclude_attrs):
+    """
+    Visualize a matcher debugging a tuple.
+    """
+    # Get the classifier from the input object
     if isinstance(matcher, RFMatcher):
         clf = matcher.clf
     else:
         clf = matcher
+
+    # Initialize the consolidate node lists and the statuses.
     consol_node_list = []
     consol_status = []
 
-    for e in clf.estimators_:
-        # print t
-        ret_val, node_list = vis_tuple_debug_dt_matcher(e, t, exclude_attrs)
+    # For each estimator (i.e the decision tree) call the decision tree
+    # counter part
+    for estimator in clf.estimators_:
+        # Get the result from debugging the estimator
+        ret_val, node_list = vis_tuple_debug_dt_matcher(estimator, t,
+                                                        exclude_attrs)
+
+        # Update the lists
         consol_status.append(ret_val)
         consol_node_list.append([ret_val, node_list])
+
     ret_val = False
+    # Compute the prob. for match and non-match
     prob_true = float(sum(consol_status)) / len(clf.estimators_)
     prob_false = 1 - prob_true
     if prob_true > prob_false:
         ret_val = True
+    # Finally return the status, and the consolidated node list.
     return ret_val, consol_node_list

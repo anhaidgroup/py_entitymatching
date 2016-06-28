@@ -278,9 +278,9 @@ class RFDebugMatcherTestCases(unittest.TestCase):
         rf.fit(table=feature_vectors, exclude_attrs=['_id', 'ltable_ID', 'rtable_ID', 'labels'],
                target_attr='labels')
 
-        debug_randomforest_matcher(rf, A.ix[1], B.ix[2], feat_table=None,
-                              fv_columns=feature_vectors.columns,
-                              exclude_attrs=['ltable_ID', 'rtable_ID', '_id', 'labels'])
+        debug_randomforest_matcher(rf, A.ix[1], B.ix[2], feature_table=None,
+                                   table_columns=feature_vectors.columns,
+                                   exclude_attrs=['ltable_ID', 'rtable_ID', '_id', 'labels'])
 
 
     def test_debug_rf_matcher_valid_2(self):
@@ -298,6 +298,6 @@ class RFDebugMatcherTestCases(unittest.TestCase):
         rf.fit(table=feature_vectors, exclude_attrs=['_id', 'ltable_ID', 'rtable_ID', 'labels'],
                target_attr='labels')
 
-        debug_randomforest_matcher(rf.clf, A.ix[1], B.ix[2], feat_table=feature_table,
-                              fv_columns=feature_vectors.columns,
-                              exclude_attrs=['ltable_ID', 'rtable_ID', '_id', 'labels'])
+        debug_randomforest_matcher(rf.clf, A.ix[1], B.ix[2], feature_table=feature_table,
+                                   table_columns=feature_vectors.columns,
+                                   exclude_attrs=['ltable_ID', 'rtable_ID', '_id', 'labels'])
