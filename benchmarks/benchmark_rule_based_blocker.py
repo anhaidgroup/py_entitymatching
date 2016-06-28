@@ -9,7 +9,6 @@ import magellan  as mg
 p = mg.get_install_path()
 datasets_path = os.sep.join([p, 'datasets', 'example_datasets'])
 
-"""
 class TimeBlockTablesElectronics:
     timeout = 20000.0
 
@@ -119,7 +118,6 @@ class TimeBlockTablesMovies:
                                  ['movie_name','year','directors','actors','movie_rating','genre','duration'])
         print >> sys.stderr, 'size of C:', len(C)
 
-"""
 class TimeBlockCandsetRestaurants:
     timeout = 600.0
 
@@ -148,7 +146,6 @@ class TimeBlockCandsetRestaurants:
         print >> sys.stderr, 'size of C:', len(self.C)
         print >> sys.stderr, 'size of D:', len(D)
 
-"""
 class TimeBlockCandsetEbooks:
     timeout = 600.0
 
@@ -166,7 +163,7 @@ class TimeBlockCandsetEbooks:
                                  r_output_attrs=['title', 'author', 'publisher', 'date'])
         feature_table = mg.get_features_for_blocking(A,B)
         self.rb = mg.RuleBasedBlocker()
-        self.rb.add_rule(['date_date_lev(ltuple, rtuple) < 0.6'], feature_table)
+        self.rb.add_rule(['date_date_lev_sim(ltuple, rtuple) < 0.6'], feature_table)
 
     def teardown(self):
         del self.C
@@ -176,4 +173,3 @@ class TimeBlockCandsetEbooks:
         D = self.rb.block_candset(self.C)
         print >> sys.stderr, 'size of C:', len(self.C)
         print >> sys.stderr, 'size of D:', len(D)
-"""

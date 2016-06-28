@@ -169,13 +169,13 @@ class RuleBasedBlocker(Blocker):
                                          r_output_prefix, verbose, show_progress, n_jobs)
         elif len(self.rules) > 1:
             # one filterable rule was applied but other rules are left
-            # block the candset by applying other rules
-            rules = self.rules.copy()
-            rules.pop(rule_applied, None)
-            candset = self.block_candset_with_rules(candset, l_df, r_df, l_key, r_key,
+            # block candset by applying other rules and excluding the applied rule 
+            #rules = self.rules.copy()
+            #rules.pop(rule_applied, None)
+            candset = self.block_candset_excluding_rule(candset, l_df, r_df, l_key, r_key,
                                                  l_output_prefix + l_key,
-                                                 r_output_prefix + r_key, rules,
-                                                 show_progress)
+                                                 r_output_prefix + r_key, rule_applied,
+                                                 show_progress, n_jobs)
         
         #print('candset cols: ', candset.columns)                                         
         retain_cols = self.get_attrs_to_retain(l_key, r_key, l_output_attrs_1, r_output_attrs_1,
@@ -192,45 +192,37 @@ class RuleBasedBlocker(Blocker):
         #print('Candset:', candset)
         return candset
 
-    def block_candset_with_rules(self, c_df, l_df, r_df, l_key, r_key,
-                                 fk_ltable, fk_rtable, rules, show_progress):
+    def block_candset_excluding_rule(self, c_df, l_df, r_df, l_key, r_key,
+                                 fk_ltable, fk_rtable, rule_to_exclude,
+                                 show_progress, n_jobs):
 
-        # do blocking
-
-        # # initialize the progress bar
-        if show_progress:
-            bar = pyprind.ProgBar(len(c_df))
-
-        # # create lookup table for faster processing
-        l_dict = {}
-        for k, r in l_df.iterrows():
-            l_dict[k] = r
-
-        r_dict = {}
-        for k, r in r_df.iterrows():
-            r_dict[k] = r
+        # # determine number of processes to launch parallely
+        n_procs = self.get_num_procs(n_jobs, len(c_df)) 
 
         # # list to keep track of valid ids
         valid = []
-        l_id_pos = list(c_df.columns).index(fk_ltable)
-        r_id_pos = list(c_df.columns).index(fk_rtable)
 
-        # # iterate candidate set
-        for row in c_df.itertuples(index=False):
-            # # update progress bar
-            if show_progress:
-                bar.update()
+        global global_rb
+        global_rb = self
+        if n_procs <= 1:
+            # single process
+            valid = _block_candset_excluding_rule_split(c_df, l_df, r_df,
+                                                        l_key, r_key,
+					                fk_ltable, fk_rtable, rule_to_exclude,
+                                                        show_progress)
+        else:
+            # multiprocessing
+            c_splits = pd.np.array_split(c_df, n_procs)
+            valid_splits = Parallel(n_jobs=n_procs)(delayed(_block_candset_excluding_rule_split)(c_splits[i],
+	    						    l_df, r_df,
+                                                            l_key, r_key,
+	    						    fk_ltable, fk_rtable, rule_to_exclude, show_progress and i == len(c_splits) - 1)
+	    						    for i in range(len(c_splits)))
+            valid = sum(valid_splits, [])
 
-            ltuple = l_dict[row[l_id_pos]]
-            rtuple = r_dict[row[r_id_pos]]
+        global_rb = None
 
-            res = self.apply_rules(ltuple, rtuple)
-            if res != True:
-                valid.append(True)
-            else:
-                valid.append(False)
-
-        # construct output table
+        # construct output candset
         if len(c_df) > 0:
             candset = c_df[valid]
         else:
@@ -355,7 +347,7 @@ class RuleBasedBlocker(Blocker):
         # do blocking
 
         # # determine the number of processes to launch parallely
-        n_procs = self.get_num_procs(n_jobs)
+        n_procs = self.get_num_procs(n_jobs, len(l_df) * len(r_df))
 
         candset = None
         global global_rb
@@ -368,9 +360,7 @@ class RuleBasedBlocker(Blocker):
                                           show_progress)
         else:
             # multiprocessing
-            m, n = self.get_split_params(n_procs)
-            # safeguard against very small tables
-            m, n = min(m, len(l_df)), min(n, len(r_df))
+            m, n = self.get_split_params(n_procs, len(l_df), len(r_df))
             l_splits = pd.np.array_split(l_df, m)
             r_splits = pd.np.array_split(r_df, n)
             c_splits = Parallel(n_jobs=m*n)(delayed(_block_tables_split)(l, r,
@@ -422,10 +412,11 @@ class RuleBasedBlocker(Blocker):
                                                                [], [])
         l_df, r_df = l_df[l_proj_attrs], r_df[r_proj_attrs]
 
-        c_df = self.block_candset_with_rules(candset, l_df, r_df, l_key, r_key,
-                                             fk_ltable, fk_rtable, self.rules,
-                                             show_progress) 
+        c_df = self.block_candset_excluding_rule(candset, l_df, r_df, l_key, r_key,
+                                             fk_ltable, fk_rtable, None,
+                                             show_progress, n_jobs) 
 
+     
         # update catalog
         cm.set_candset_properties(c_df, key, fk_ltable, fk_rtable, ltable, rtable)
 
@@ -512,6 +503,16 @@ class RuleBasedBlocker(Blocker):
                 return res
         return False
 
+    def apply_rules_excluding_rule(self, ltuple, rtuple, rule_to_exclude):
+        for rule_name in self.rules.keys():
+            if rule_name != rule_to_exclude:
+                fn = self.rules[rule_name]
+                # here if fn returns true, then the tuple pair must be dropped.
+                res =  fn(ltuple, rtuple)
+                if res == True:
+                    return res
+        return False
+                
     def get_attrs_to_project(self, l_key, r_key, l_output_attrs, r_output_attrs):
         l_proj_attrs = [l_key]
         r_proj_attrs = [r_key]
@@ -730,3 +731,48 @@ def _block_tables_split(l_df, r_df, l_key, r_key,
     # construct candidate set
     candset = pd.DataFrame(valid)
     return candset
+
+def _block_candset_excluding_rule_split(c_df, l_df, r_df, l_key, r_key, fk_ltable,
+                                    fk_rtable, rule_to_exclude, show_progress):
+
+    # do blocking
+
+    # # initialize the progress bar
+    if show_progress:
+        bar = pyprind.ProgBar(len(c_df))
+
+    # # initialize lookup tables for faster processing
+    l_dict = {}
+    r_dict = {}
+
+    # # list to keep track of valid ids
+    valid = []
+
+    l_id_pos = list(c_df.columns).index(fk_ltable)
+    r_id_pos = list(c_df.columns).index(fk_rtable)
+
+    # # iterate candidate set
+    for row in c_df.itertuples(index=False):
+        # # update progress bar
+        if show_progress:
+            bar.update()
+
+        # # get ltuple, try dictionary first, then dataframe
+        row_lid = row[l_id_pos]
+        if row_lid not in l_dict:
+            l_dict[row_lid] = l_df.ix[row_lid]
+        ltuple = l_dict[row_lid]
+
+        # # get rtuple, try dictionary first, then dataframe
+        row_rid = row[r_id_pos]
+        if row_rid not in r_dict:
+            r_dict[row_rid] = r_df.ix[row_rid]
+        rtuple = r_dict[row_rid]
+
+        res = global_rb.apply_rules_excluding_rule(ltuple, rtuple, rule_to_exclude)
+        if res != True:
+            valid.append(True)
+        else:
+            valid.append(False)
+        
+    return valid

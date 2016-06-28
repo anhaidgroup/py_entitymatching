@@ -77,6 +77,11 @@ class AttrEquivalenceBlocker(Blocker):
 			    l_output_attrs, r_output_attrs, l_output_prefix,
 			    r_output_prefix, verbose, show_progress, n_jobs)
 
+        # initialize progress bar
+        if show_progress:
+            # 1. validate, 2. remove NaNs, 3. project, 4: merge, 5: update catalog
+            prog_bar = pyprind.ProgBar(5)
+
         # validate data types of input blocking attributes
         self.validate_types_block_attrs(l_block_attr, r_block_attr)
  
@@ -96,10 +101,18 @@ class AttrEquivalenceBlocker(Blocker):
         cm._validate_metadata_for_table(ltable, l_key, 'ltable', logger, verbose)
         cm._validate_metadata_for_table(rtable, r_key, 'rtable', logger, verbose)
 
+        # # update the progress bar
+        if show_progress:
+            prog_bar.update() # indicating completion of validation
+   
         # do blocking
 
         # # remove nans: should be modified based on missing data policy
         l_df, r_df = rem_nan(ltable, l_block_attr), rem_nan(rtable, r_block_attr)
+
+        # # update the progress bar to indicate completion of NaN removal
+        if show_progress:
+            prog_bar.update()
 
         # # do projection before merge
         l_proj_attrs = self.get_attrs_to_project(l_key, l_block_attr, l_output_attrs)
@@ -107,8 +120,12 @@ class AttrEquivalenceBlocker(Blocker):
         r_proj_attrs = self.get_attrs_to_project(r_key, r_block_attr, r_output_attrs)
         r_df = r_df[r_proj_attrs]
        
+        # # update the progress bar to indicate completion of projection of tables
+        if show_progress:
+            prog_bar.update()
+
         # # determine number of processes to launch parallely
-        n_procs = self.get_num_procs(n_jobs) 
+        n_procs = self.get_num_procs(n_jobs, len(l_df) * len(r_df)) 
         candset = None
         if n_procs <= 1:
             # single process
@@ -118,9 +135,7 @@ class AttrEquivalenceBlocker(Blocker):
 					  l_output_prefix, r_output_prefix)
         else:
             # multiprocessing
-            m, n = self.get_split_params(n_procs)
-            # safeguard against very small tables
-            m, n = min(m, len(l_df)), min(n, len(r_df))
+            m, n = self.get_split_params(n_procs, len(l_df), len(r_df))
             l_splits = pd.np.array_split(l_df, m)
             r_splits = pd.np.array_split(r_df, n)
             c_splits = Parallel(n_jobs=m*n)(delayed(_block_tables_split)(l, r, l_key, r_key,
@@ -130,11 +145,19 @@ class AttrEquivalenceBlocker(Blocker):
 						for l in l_splits for r in r_splits)
             candset = pd.concat(c_splits, ignore_index=True)
 
+        # # update the progress bar to indicate completion of merge
+        if show_progress:
+            prog_bar.update()
+
         # update catalog
         key = get_name_for_key(candset.columns)
         candset = add_key_column(candset, key)
         cm.set_candset_properties(candset, key, l_output_prefix + l_key,
                                   r_output_prefix + r_key, ltable, rtable)
+
+        # # update the progress bar to indicate completion of catalog update
+        if show_progress:
+            prog_bar.update()
 
         # return candidate set
         return candset
@@ -210,7 +233,7 @@ class AttrEquivalenceBlocker(Blocker):
         r_df = rtable.set_index(r_key, drop=False)
 
         # # determine number of processes to launch parallely
-        n_procs = self.get_num_procs(n_jobs) 
+        n_procs = self.get_num_procs(n_jobs, len(candset)) 
 
         valid = []
         if n_procs <= 1:
@@ -219,15 +242,13 @@ class AttrEquivalenceBlocker(Blocker):
 					 l_block_attr, r_block_attr,
 					 fk_ltable, fk_rtable, show_progress)
         else:
-            # safeguard against very small candset
-            n_procs = min(n_procs, len(candset))
             c_splits = pd.np.array_split(candset, n_procs)
-            valid_splits = Parallel(n_jobs=n_procs)(delayed(_block_candset_split)(c,
+            valid_splits = Parallel(n_jobs=n_procs)(delayed(_block_candset_split)(c_splits[i],
 	    						    l_df, r_df,
                                                             l_key, r_key,
 	    						    l_block_attr, r_block_attr,
-	    						    fk_ltable, fk_rtable, show_progress)
-	    						    for c in c_splits)
+	    						    fk_ltable, fk_rtable, show_progress and i == len(c_splits) - 1)
+	    						    for i in range(len(c_splits)))
             valid = sum(valid_splits, [])
 
         # construct output table
@@ -277,13 +298,11 @@ class AttrEquivalenceBlocker(Blocker):
 
     # validate the blocking attributes
     def validate_block_attrs(self, ltable, rtable, l_block_attr, r_block_attr):
-        if not isinstance(l_block_attr, list):
-            l_block_attr = [l_block_attr]
-        assert set(l_block_attr).issubset(ltable.columns) is True, 'Left block attribute is not in the left table'
+        if l_block_attr not in ltable.columns:
+            raise AssertionError('Left block attribute is not in the left table')
 
-        if not isinstance(r_block_attr, list):
-            r_block_attr = [r_block_attr]
-        assert set(r_block_attr).issubset(rtable.columns) is True, 'Right block attribute is not in the right table'
+        if r_block_attr not in rtable.columns:
+            raise AssertionError('Right block attribute is not in the right table')
 
 
 def _block_tables_split(l_df, r_df, l_key, r_key, l_block_attr, r_block_attr,

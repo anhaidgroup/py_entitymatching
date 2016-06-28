@@ -18,7 +18,7 @@ rule_1 = ['name_name_jac_qgm_3_qgm_3(ltuple,rtuple) < 0.3']
 expected_ids_1 = [('a2', 'b3'), ('a2', 'b6'), ('a3', 'b2'), ('a5', 'b5')]
 
 # Levenshtein distance birth_year > 0 - non-filterable rule with single conjunct
-rule_2 = ['birth_year_birth_year_lev(ltuple, rtuple) > 0']
+rule_2 = ['birth_year_birth_year_lev_dist(ltuple, rtuple) > 0']
 expected_ids_2 = [('a2', 'b3'), ('a3', 'b2'), ('a4', 'b1'), ('a4', 'b6'),
                   ('a5', 'b5')]
 
@@ -26,7 +26,7 @@ expected_ids_1_and_2 = [('a2', 'b3'), ('a3', 'b2'), ('a5', 'b5')]
 
 # non-filterable rule with multiple conjuncts
 rule_3 = ['name_name_jac_qgm_3_qgm_3(ltuple, rtuple) < 0.3',
-          'birth_year_birth_year_lev(ltuple, rtuple) > 0']
+          'birth_year_birth_year_lev_dist(ltuple, rtuple) > 0']
 expected_ids_3 = [('a2', 'b3'), ('a2', 'b6'), ('a3', 'b2'), ('a4', 'b1'),
                   ('a4', 'b6'), ('a5', 'b5')]
 
@@ -151,8 +151,8 @@ class RuleBasedBlockerMulticoreTestCases(unittest.TestCase):
         self.validate_metadata(C, l_output_attrs, r_output_attrs,
                                l_output_prefix, r_output_prefix)
         self.validate_data(C, expected_ids_2_and_3)
-    """
-    def test_rb_block_candset(self):
+    
+    def test_rb_block_candset_njobs_2(self):
         rb = mg.RuleBasedBlocker()
         rb.add_rule(rule_1, self.feature_table)
         C = rb.block_tables(self.A, self.B, l_output_attrs,
@@ -161,32 +161,32 @@ class RuleBasedBlockerMulticoreTestCases(unittest.TestCase):
                                l_output_prefix, r_output_prefix)
         self.validate_data(C, expected_ids_1)
         self.rb.add_rule(rule_2, self.feature_table)
-        D = self.rb.block_candset(C)
+        D = self.rb.block_candset(C, n_jobs=2)
         self.validate_metadata_two_candsets(C, D)
         self.validate_data(D, expected_ids_1_and_2)
     
-    def test_rb_block_candset_empty_input(self):
+    def test_rb_block_candset_empty_input_njobs_2(self):
         rb = mg.RuleBasedBlocker()
         rb.add_rule(rule_5, self.feature_table)
         C = rb.block_tables(self.A, self.B)
         self.validate_metadata(C)
         self.validate_data(C)
         self.rb.add_rule(rule_1, self.feature_table)
-        D = self.rb.block_candset(C)
+        D = self.rb.block_candset(C, n_jobs=2)
         self.validate_metadata_two_candsets(C, D)
         self.validate_data(D)
     
-    def test_rb_block_candset_empty_output(self):
+    def test_rb_block_candset_empty_output_njobs_2(self):
         rb = mg.RuleBasedBlocker()
         rb.add_rule(rule_1, self.feature_table)
         C = rb.block_tables(self.A, self.B)
         self.validate_metadata(C)
         self.validate_data(C, expected_ids_1)
         self.rb.add_rule(rule_5, self.feature_table)
-        D = self.rb.block_candset(C)
+        D = self.rb.block_candset(C, n_jobs=2)
         self.validate_metadata_two_candsets(C, D)
         self.validate_data(D)
-    
+    """
     def test_rb_block_tuples(self):
         assert_equal(self.rb.block_tuples(self.A.ix[1], self.B.ix[2], l_block_attr_1,
                                      r_block_attr_1), False)

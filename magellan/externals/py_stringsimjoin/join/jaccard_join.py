@@ -115,6 +115,8 @@ def jaccard_join(ltable, rtable,
                                               l_out_prefix, r_out_prefix,
                                               out_sim_score)
                                           for r_split in r_splits)
+        for r in results:
+            print("size: ", len(r))
         output_table = pd.concat(results)
         output_table.insert(0, '_id', range(0, len(output_table)))
         return output_table

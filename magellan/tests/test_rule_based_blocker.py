@@ -13,12 +13,12 @@ r_output_attrs = ['zipcode', 'birth_year']
 l_output_prefix = 'l_'
 r_output_prefix = 'r_'
 
-# Jaccard 3gram name  < 0.3 - filterable rule with single conjunct
+# filterable rule with single conjunct
 rule_1 = ['name_name_jac_qgm_3_qgm_3(ltuple,rtuple) < 0.3']
 expected_ids_1 = [('a2', 'b3'), ('a2', 'b6'), ('a3', 'b2'), ('a5', 'b5')]
 
-# Levenshtein distance birth_year > 0 - non-filterable rule with single conjunct
-rule_2 = ['birth_year_birth_year_lev(ltuple, rtuple) > 0']
+# non-filterable rule with single conjunct
+rule_2 = ['birth_year_birth_year_lev_dist(ltuple, rtuple) > 0']
 expected_ids_2 = [('a2', 'b3'), ('a3', 'b2'), ('a4', 'b1'), ('a4', 'b6'),
                   ('a5', 'b5')]
 
@@ -26,7 +26,7 @@ expected_ids_1_and_2 = [('a2', 'b3'), ('a3', 'b2'), ('a5', 'b5')]
 
 # non-filterable rule with multiple conjuncts
 rule_3 = ['name_name_jac_qgm_3_qgm_3(ltuple, rtuple) < 0.3',
-          'birth_year_birth_year_lev(ltuple, rtuple) > 0']
+          'birth_year_birth_year_lev_dist(ltuple, rtuple) > 0']
 expected_ids_3 = [('a2', 'b3'), ('a2', 'b6'), ('a3', 'b2'), ('a4', 'b1'),
                   ('a4', 'b6'), ('a5', 'b5')]
 
@@ -234,6 +234,7 @@ class RuleBasedBlockerTestCases(unittest.TestCase):
         self.validate_data(C, expected_ids_4)
     
     def test_rb_block_tables_rule_sequence_with_one_filterable_rule(self):
+        #print('Feature table: ', self.feature_table)
         self.rb.add_rule(rule_1, self.feature_table)
         self.rb.add_rule(rule_2, self.feature_table)
         C = self.rb.block_tables(self.A, self.B, l_output_attrs,
