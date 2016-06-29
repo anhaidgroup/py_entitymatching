@@ -26,7 +26,7 @@ overlap_attr_multi = ['zipcode', 'birth_year']
 expected_ids_1 = [('a2', 'b3'), ('a2', 'b6'), ('a3', 'b2'), ('a5', 'b5')]
 # overlap on [r,l]_overlap_attr_2 with overlap_size=4
 expected_ids_2 = [('a2', 'b3'), ('a3', 'b2')]
-# overlap on birth_year with q_val=3, padding and overlap_size=6
+# overlap on birth_year with q_val=3 and overlap_size= 2 (no padding) or 6 (padding)
 expected_ids_3 = [('a2', 'b3'), ('a3', 'b2'), ('a4', 'b1'), ('a4', 'b6'), ('a5', 'b5')]
 
 class OverlapBlockerTestCases(unittest.TestCase):
@@ -374,7 +374,7 @@ class OverlapBlockerTestCases(unittest.TestCase):
     
     def test_ob_block_tables_wi_qval_non_str_attr(self):
         C = self.ob.block_tables(self.A, self.B, 'birth_year', 'birth_year',
-                                 q_val=3, word_level=False, overlap_size=6)
+                                 q_val=3, word_level=False, overlap_size=2)
         s1 = ['_id', 'ltable_' + l_key, 'rtable_' + r_key]
         s1 = sorted(s1)
         assert_equal(s1, sorted(C.columns))
