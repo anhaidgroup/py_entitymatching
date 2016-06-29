@@ -45,8 +45,8 @@ class BlackBoxBlocker(Blocker):
         l_key, r_key = cm.get_keys_for_ltable_rtable(ltable, rtable, logger, verbose)
 
         # # validate metadata
-        cm.validate_metadata_for_table(ltable, l_key, 'ltable', logger, verbose)
-        cm.validate_metadata_for_table(rtable, r_key, 'rtable', logger, verbose)
+        cm._validate_metadata_for_table(ltable, l_key, 'ltable', logger, verbose)
+        cm._validate_metadata_for_table(rtable, r_key, 'rtable', logger, verbose)
 
         # do blocking
 
@@ -120,8 +120,8 @@ class BlackBoxBlocker(Blocker):
         key, fk_ltable, fk_rtable, ltable, rtable, l_key, r_key = cm.get_metadata_for_candset(candset, logger, verbose)
 
         # # validate metadata
-        cm.validate_metadata_for_candset(candset, key, fk_ltable, fk_rtable, ltable, rtable, l_key, r_key,
-                                         logger, verbose)
+        cm._validate_metadata_for_candset(candset, key, fk_ltable, fk_rtable, ltable, rtable, l_key, r_key,
+                                          logger, verbose)
 
         # do blocking
 

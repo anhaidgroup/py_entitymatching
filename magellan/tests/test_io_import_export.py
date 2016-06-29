@@ -81,21 +81,21 @@ class ReadCSVMetadataTestCases(unittest.TestCase):
         p = os.sep.join([io_datasets_path, 'A_mvals.csv'])
         IM = read_csv_metadata(p, key='ID')
         self.assertEqual(cm.is_dfinfo_present(IM), True)
-        self.assertEqual(cm.has_property(IM, 'key'), False)
+        self.assertEqual(cm.is_property_present_for_df(IM, 'key'), False)
 
     def test_valid_path_wi_invalidmetadata_key_dups(self):
         cm.del_catalog()
         p = os.sep.join([io_datasets_path, 'A_dupid.csv'])
         IM = read_csv_metadata(p, key='ID')
         self.assertEqual(cm.is_dfinfo_present(IM), True)
-        self.assertEqual(cm.has_property(IM, 'key'), False)
+        self.assertEqual(cm.is_property_present_for_df(IM, 'key'), False)
 
     def test_valid_path_wi_invalidmetadata_replace_key(self):
         cm.del_catalog()
         p = os.sep.join([io_datasets_path, 'A_key_zipcode.csv'])
         IM = read_csv_metadata(p, key='ID')
         self.assertEqual(cm.is_dfinfo_present(IM), True)
-        self.assertEqual(cm.has_property(IM, 'key'), True)
+        self.assertEqual(cm.is_property_present_for_df(IM, 'key'), True)
 
     def test_valid_path_candset_with_diff_metadataextn_1(self):
         cm.del_catalog()

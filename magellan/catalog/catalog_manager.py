@@ -1,4 +1,7 @@
 # coding=utf-8
+"""
+This module contains wrapper functions for the catalog.
+"""
 import logging
 
 import pandas as pd
@@ -10,811 +13,1195 @@ from magellan.catalog.catalog import Catalog
 logger = logging.getLogger(__name__)
 
 
-def get_property(df, name):
+def get_property(data_frame, property_name):
     """
-    Get property for a dataframe
+    Gets a property (with the given property name) for a pandas DataFrame from
+    the Catalog.
 
     Args:
-        df (pandas dataframe): Dataframe for which the property should be retrieved
-        name (str): Name of the property that should be retrieved
+        data_frame (DataFrame): DataFrame for which the property should be
+            retrieved.
+        property_name (str): Name of the property that should be retrieved.
 
     Returns:
-        Property value (pandas object) for the given property name
+        A pandas object (typically a string or a pandas DataFrame depending
+        on the property name) is returned.
 
     Raises:
-        AttributeError: If the input dataframe in null
-        KeyError: If the dataframe is not present in the catalog, or the requested property is not
-            present in the catalog
-
+        AssertionError: If the object is not of type pandas DataFrame.
+        AssertionError: If the property name is not of type string.
+        KeyError: If the DataFrame information is not present in the catalog.
+        KeyError: If the requested property for the DataFrame is not present
+            in the catalog.
     """
+    # Validate input parameters
 
-    catalog = Catalog.Instance()
+    # # The input object should be of type pandas DataFrame
+    if not isinstance(data_frame, pd.DataFrame):
+        logger.error('Input object is not of type pandas DataFrame')
+        raise AssertionError('Input object is not of type pandas DataFrame')
 
-    if not isinstance(df, pd.DataFrame):
-        logger.error('Input object is not of type pandas data frame')
-        raise AssertionError('Input object is not of type pandas data frame')
-
-    if not isinstance(name, six.string_types):
+    # # The property name should be of type string
+    if not isinstance(property_name, six.string_types):
         logger.error('Property name is not of type string')
         raise AssertionError('Property name is not of type string')
 
-    # if df is None or pd.isnull(df):
-    #     logger.error('Input dataframe cannot be null')
-    #     raise AttributeError('Input dataframe cannot be null')
+    # Get the catalog instance, this is imported here because this object
+    # used to validate the presence of a DataFrame in the catalog, and the
+    # presence of requested metadata in the catalog.
+    catalog = Catalog.Instance()
 
-    if not catalog.is_df_info_present_in_catalog(df):
-        logger.error('Dataframe information is not present in the catalog')
-        raise KeyError('Dataframe information is not present in the catalog')
+    # Check for the present of input DataFrame in the catalog.
+    if not catalog.is_df_info_present_in_catalog(data_frame):
+        logger.error('DataFrame information is not present in the catalog')
+        raise KeyError('DataFrame information is not present in the catalog')
 
-    if not catalog.is_property_present_for_df(df, name):
+    # Check if the requested property is present in the catalog.
+    if not catalog.is_property_present_for_df(data_frame, property_name):
         logger.error(
-            'Requested metadata ( %s ) for the given dataframe is not present in the catalog' % name)
+            'Requested metadata ( %s ) for the given DataFrame is not '
+            'present in the catalog', property_name)
         raise KeyError(
-            'Requested metadata ( %s ) for the given dataframe is not present in the catalog' % name)
+            'Requested metadata ( %s ) for the given DataFrame is not '
+            'present in the catalog', property_name)
 
-    return catalog.get_property(df, name)
+    # Return the requested property for the input DataFrame
+    return catalog.get_property(data_frame, property_name)
 
 
-def set_property(df, name, value):
+def set_property(data_frame, property_name, property_value):
     """
-    Set property for a dataframe
+    Sets a property (with the given property name) for a pandas DataFrame in
+    the Catalog.
 
     Args:
-        df (pandas dataframe): Dataframe for which the property has to be set
-        name (str): Property name
-        value (pandas object): Property value
+        data_frame (DataFrame): DataFrame for which the property must  be set.
+        property_name (str): Name of the property to be set.
+        property_value (object): Value of the property to be set. This is
+            typically a string (such as key) or pandas DataFrame (such as
+            ltable, rtable).
 
     Returns:
-        status (bool). Returns True if the property was set successfully
+        A boolean value of True is returned if the update was successful.
 
     Raises:
-        AttributeError: If the input dataframe is null
+        AssertionError: If the input object is not of type pandas DataFrame.
+        AssertionError: If the property name is not of type string.
+
+    Note:
+        If the input DataFrame is not present in the catalog, this function
+        will create an entry in the catalog and set the given property.
 
     """
-    catalog = Catalog.Instance()
+    # Validate input parameters
 
-    if not isinstance(df, pd.DataFrame):
+    # # The input object is expected to be of type pandas DataFrame
+    if not isinstance(data_frame, pd.DataFrame):
         logger.error('Input object is not of type pandas data frame')
         raise AssertionError('Input object is not of type pandas data frame')
 
-    if not isinstance(name, six.string_types):
+    # # The property name is expected to be of type string.
+    if not isinstance(property_name, six.string_types):
         logger.error('Property name is not of type string')
         raise AssertionError('Property name is not of type string')
 
-    # if df is None:
-    #     raise AttributeError('Input dataframe cannot be null')
-
-    if not catalog.is_df_info_present_in_catalog(df):
-        catalog.init_properties(df)
-
-    catalog.set_property(df, name, value)
-
-
-def init_properties(df):
+    # Get the catalog instance
     catalog = Catalog.Instance()
-    if not isinstance(df, pd.DataFrame):
-        logger.error('Input object is not of type pandas data frame')
-        raise AssertionError('Input object is not of type pandas data frame')
-    catalog.init_properties(df)
+
+    # Check if the DataFrame information is present in the catalog. If the
+    # information is not present, then initialize an entry for that DataFrame
+    #  in the catalog.
+    if not catalog.is_df_info_present_in_catalog(data_frame):
+        catalog.init_properties(data_frame)
+
+    # Set the property in the catalog, and relay the return value from the
+    # underlying catalog object's function. The return value is typically
+    # True if the update was successful.
+    return catalog.set_property(data_frame, property_name, property_value)
 
 
-def get_all_properties(df):
+def init_properties(data_frame):
     """
-    Get all the properties for a dataframe
+    Initializes properties for a pandas DataFrame in the catalog.
+
+    Specifically, this function creates an entry in the catalog and sets its
+    properties to empty.
 
     Args:
-        df (pandas dataframe): Dataframe for which the properties must be retrieved
+        data_frame (DataFrame): DataFrame for which the properties must be
+            initialized.
 
     Returns:
-        Property dictionary (dict). The keys are property names (str) and the values are property values (pandas object)
-
-    Raises:
-        AttributeError: If the input dataframe is null
-        KeyError: If the information about the input dataframe is not present in the catalog
+        A boolean value of True is returned if the initialization was
+        successful.
 
     """
+    # Validate input parameters
+
+    # # Input object is expected to be of type pandas DataFrame
+    if not isinstance(data_frame, pd.DataFrame):
+        logger.error('Input object is not of type pandas DataFrame')
+        raise AssertionError('Input object is not of type pandas DataFrame')
+
+    # Get the catalog instance
     catalog = Catalog.Instance()
 
-    if not isinstance(df, pd.DataFrame):
-        logger.error('Input object is not of type pandas data frame')
-        raise AssertionError('Input object is not of type pandas data frame')
-
-    if not catalog.is_df_info_present_in_catalog(df):
-        logger.error('Dataframe information is not present in the catalog')
-        raise KeyError('Dataframe information is not present in the catalog')
-
-    return catalog.get_all_properties(df)
+    # Initialize the property in the catalog.
+    # Relay the return value from the underlying catalog object's function.
+    # The return value is typically True if the initialization was successful
+    return catalog.init_properties(data_frame)
 
 
-def del_property(df, name):
+def get_all_properties(data_frame):
     """
-    Delete a property from the catalog
+    Gets all the properties for a pandas DataFrame object from the catalog.
 
     Args:
-        df (pandas dataframe): Input dataframe for which a property must be deleted
-        name (str): Property name
+        data_frame (DataFrame): DataFrame for which the properties must be
+            retrieved.
 
     Returns:
-        status (bool). Returns True if the deletion was successful
+        A dictionary containing properties for the input pandas DataFrame.
 
     Raises:
-        AttributeError: If the input dataframe is null
-        KeyError: If the Dataframe info. is not present or the given property is not present for that dataframe in the
-            catalog
+        AttributeError: If the input object is not of type pandas DataFrame.
+        KeyError: If the information about DataFrame is not present in the
+            catalog.
+
+
     """
+    # Validate input parameters
+    # # The input object is expected to be of type DataFrame
+    if not isinstance(data_frame, pd.DataFrame):
+        logger.error('Input object is not of type pandas DataFrame')
+        raise AssertionError('Input object is not of type pandas DataFrame')
+
+    # Get the catalog instance
     catalog = Catalog.Instance()
 
-    if not isinstance(df, pd.DataFrame):
-        logger.error('Input object is not of type pandas data frame')
-        raise AssertionError('Input object is not of type pandas data frame')
+    # Check if the DataFrame information is present in the catalog. If not
+    # raise an error.
+    if not catalog.is_df_info_present_in_catalog(data_frame):
+        logger.error('DataFrame information is not present in the catalog')
+        raise KeyError('DataFrame information is not present in the catalog')
 
-    if not isinstance(name, six.string_types):
+    # Retrieve the properties for the DataFrame from the catalog and return
+    # it back to the user.
+    return catalog.get_all_properties(data_frame)
+
+
+def del_property(data_frame, property_name):
+    """
+    Deletes a property for a pandas DataFrame from the catalog.
+
+    Args:
+        data_frame (DataFrame): Input DataFrame for which a property must be
+            deleted from the catalog.
+        property_name (str): Name of the property that should be deleted.
+
+    Returns:
+        A boolean value of True is returned if the deletion was successful.
+
+    Raises:
+        AssertionError: If the object is not of type pandas DataFrame.
+        AssertionError: If the property name is not of type string.
+        KeyError: If the DataFrame information is not present in the catalog.
+        KeyError: If the requested property for the DataFrame is not present
+            in the catalog.
+    """
+    # Validate input parameters
+
+    # # The input object should be of type pandas DataFrame
+    if not isinstance(data_frame, pd.DataFrame):
+        logger.error('Input object is not of type pandas DataFrame')
+        raise AssertionError('Input object is not of type pandas DataFrame')
+
+    # # The input property name is expected to be of type string
+    if not isinstance(property_name, six.string_types):
         logger.error('Property name is not of type string')
         raise AssertionError('Property name is not of type string')
 
-    if not catalog.is_df_info_present_in_catalog(df):
-        logger.error('Dataframe information is not present in the catalog')
-        raise KeyError('Dataframe information is not present in the catalog')
+    # Get the catalog instance
+    catalog = Catalog.Instance()
 
-    if not catalog.is_property_present_for_df(df, name):
-        logger.error('Dataframe information is not present in the catalog')
-        raise KeyError('Requested metadata ( %s ) for the given dataframe is '
-                       'not present in the catalog' % name)
+    # Check if the DataFrame information is present in the catalog, if not
+    # raise an error.
+    if not catalog.is_df_info_present_in_catalog(data_frame):
+        logger.error('DataFrame information is not present in the catalog')
+        raise KeyError('DataFrame information is not present in the catalog')
 
-    return catalog.del_property(df, name)
+    # Check if the requested property name to be deleted  is present for the
+    # DataFrame in the catalog, if not raise an error.
+    if not catalog.is_property_present_for_df(data_frame, property_name):
+        logger.error('Requested metadata ( %s ) for the given DataFrame is '
+                     'not present in the catalog', property_name)
+        raise KeyError('Requested metadata ( %s ) for the given DataFrame is '
+                       'not present in the catalog', property_name)
+
+    # Delete the property using the underlying catalog object and relay the
+    # return value. Typically the return value is True if the deletion was
+    # successful
+    return catalog.del_property(data_frame, property_name)
 
 
-def del_all_properties(df):
+def del_all_properties(data_frame):
     """
-    Delete all properties for a dataframe
+    Deletes all properties for a DataFrame from the catalog.
 
     Args:
-        df (pandas dataframe): Input dataframe for which all the properties must be deleted.
+        data_frame (DataFrame): Input DataFrame for which all the properties
+            must be deleted from the catalog.
 
     Returns:
-        status (bool). Returns True if the deletion was successful
+        A boolean of True is returned if the deletion was successful
+        from the catalog.
 
     Raises:
-        AttributeError: If the input dataframe is null
-        KeyError: If the dataframe information is not present in the catalog
+        AssertionError: If the input object is not of type pandas DataFrame.
+        KeyError: If the DataFrame information is not present in the catalog.
+
+    Note:
+        This method's functionality is not as same as init_properties. Here
+        the DataFrame's entry will be removed from the catalog,
+        but init_properties will add (if the DataFrame is not present in the
+        catalog) and initialize its properties to an empty object (
+        specifically, an empty python dictionary).
     """
-    catalog = Catalog.Instance()
-    if not isinstance(df, pd.DataFrame):
+    # Validations of input parameters
+    # # The input object is expected to be of type pandas DataFrame
+    if not isinstance(data_frame, pd.DataFrame):
         logger.error('Input object is not of type pandas data frame')
         raise AssertionError('Input object is not of type pandas data frame')
 
-    if not catalog.is_df_info_present_in_catalog(df):
-        logger.error('Dataframe information is not present in the catalog')
-        raise KeyError('Dataframe information is not present in the catalog')
+    # Get the catalog instance
+    catalog = Catalog.Instance()
 
-    return catalog.del_all_properties(df)
+    # Check if the DataFrame is present in the catalog. If not, raise an error
+    if not catalog.is_df_info_present_in_catalog(data_frame):
+        logger.error('DataFrame information is not present in the catalog')
+        raise KeyError('DataFrame information is not present in the catalog')
+
+    # Call the underlying catalog object's function to delete the properties
+    # and relay its return value
+    return catalog.del_all_properties(data_frame)
 
 
 def get_catalog():
     """
-    Get Catalog information.
-
+    Gets the catalog information for the current session.
 
     Returns:
-        Catalog information in a dictionary format.
-
+        A python dictionary containing the catalog information.
+        Specifically, the dictionary contains id(DataFrame object) as the key
+        and their properties as value.
     """
+    # Get the catalog instance
     catalog = Catalog.Instance()
+    # Call the underlying catalog object's function to get the catalog. Relay
+    # the return value from the delegated function.
     return catalog.get_catalog()
 
 
 def del_catalog():
     """
-    Delete catalog information
+    Deletes the catalog for the current session.
 
     Returns:
-        status (bool). Returns True if the deletion was successful.
+        A boolean value of True is returned if the deletion was successful.
     """
+    # Get the catalog instance
     catalog = Catalog.Instance()
+    # Call the underlying catalog object's function to delete the catalog (a
+    # dict).  Relay the return value from the delegated function.
     return catalog.del_catalog()
 
 
 def is_catalog_empty():
     """
-    Check if the catalog is empty
+    Checks if the catalog is empty.
 
     Returns:
-        result (bool). Returns True if the catalog is empty, else returns False.
+        A boolean value of True is returned if the catalog is empty,
+        else returns False.
 
     """
+    # Get the catalog instance
     catalog = Catalog.Instance()
+
+    # Call the underlying catalog object's function to check if the catalog
+    # is empty.  Relay the return value from the delegated function.
     return catalog.is_catalog_empty()
 
 
-def is_dfinfo_present(df):
+def is_dfinfo_present(data_frame):
     """
-    Check if the dataframe information is present in the catalog
+    Checks whether the DataFrame information is present in the catalog.
 
     Args:
-        df (pandas dataframe): Input dataframe
+        data_frame (DataFrame): DataFrame that should be checked for its
+            presence in the catalog.
 
     Returns:
-        result (bool). Returns True if the dataframe information is present in the catalog, else returns False
+        A boolean value of True is returned if the DataFrame is present in
+        the catalog, else False is returned.
 
     Raises:
-        AttributeError: If the input dataframe is null
+        AssertionError: If the input object is not of type pandas DataFrame.
 
     """
-    catalog = Catalog.Instance()
-    if not isinstance(df, pd.DataFrame):
+    # Validate inputs
+    # We expect the input object to be of type pandas DataFrame
+    if not isinstance(data_frame, pd.DataFrame):
         logger.error('Input object is not of type pandas data frame')
         raise AssertionError('Input object is not of type pandas data frame')
 
-    return catalog.is_df_info_present_in_catalog(df)
+    # Get the catalog instance
+    catalog = Catalog.Instance()
+
+    # Call the underlying catalog object's function to check if the
+    # DataFrame information is present in the catalog.
+    # Relay the return value from the delegated function.
+    return catalog.is_df_info_present_in_catalog(data_frame)
 
 
-def is_property_present_for_df(df, name):
+def is_property_present_for_df(data_frame, property_name):
     """
-    Check if the property is present for the dataframe
+    Checks if the given property is present for the given DataFrame in the
+    catalog.
 
     Args:
-        df (pandas dataframe): Input dataframe
-        name (str): Property name
+        data_frame (DataFrame): DataFrame for which the property must be
+            retrieved.
+        property_name (str): Name of the property that should be checked for
+            its presence for the DataFrame, in the catalog.
 
     Returns:
-        result (bool). Returns True if the property is present for the input dataframe
+        A boolean value of True is returned if the property is present for
+        the given DataFrame.
 
     Raises:
-        AttributeError: If the input dataframe is null
-        KeyError: If the dataframe is not present in the catalog
-
+        AssertionError: If the input object is not of type pandas DataFrame.
+        AssertionError: If the input property name is not of type string.
+        KeyError: If the input DataFrame is not present in the catalog.
     """
+    # Input validations
+
+    # # We expect the input object to be of type pandas DataFrame.
+    if not isinstance(data_frame, pd.DataFrame):
+        logger.error('Input object is not of type pandas DataFrame')
+        raise AssertionError('Input object is not of type pandas DataFrame')
+
+    # # The input property name should be of type string
+    if not isinstance(property_name, six.string_types):
+        logger.error('The property name is not of type string.')
+        raise AssertionError('The property name is not of type string.')
+
+    # Get the catalog instance
     catalog = Catalog.Instance()
-    if not isinstance(df, pd.DataFrame):
-        logger.error('Input object is not of type pandas data frame')
-        raise AssertionError('Input object is not of type pandas data frame')
 
-    if catalog.is_df_info_present_in_catalog(df) is False:
-        logger.error('Dataframe information is not present in the catalog')
-        raise KeyError('Dataframe information is not present in the catalog')
+    # Check if the given DataFrame information is present in the catalog. If
+    # not, raise an error.
+    if catalog.is_df_info_present_in_catalog(data_frame) is False:
+        logger.error('DataFrame information is not present in the catalog')
+        raise KeyError('DataFrame information is not present in the catalog')
 
-    return catalog.is_property_present_for_df(df, name)
+    # Call the underlying catalog object's function to check if the property
+    # is present for the given DataFrame. Relay the return value from that
+    # function.
+    return catalog.is_property_present_for_df(data_frame, property_name)
 
 
 def get_catalog_len():
     """
-    Get the number of entries in the catalog
+    Get the length (i.e the number of entries) in the catalog.
 
     Returns:
-        length (int) of the catalog
+        The number of entries in the catalog as an integer.
 
     """
+    # Get the catalog instance
     catalog = Catalog.Instance()
+    # Call the underlying catalog object's function to get the catalog length.
+    # Relay the return value from that function.
     return catalog.get_catalog_len()
 
 
-def set_properties(df, prop_dict, replace=True):
+def set_properties(data_frame, properties, replace=True):
     """
-    Set properties for a dataframe in the catalog
+    Sets the  properties for a DataFrame in the catalog.
+
     Args:
-        df (pandas dataframe): Input dataframe
-        prop_dict (dict): Property dictionary with keys as property names and values as python objects
-        replace (bool): Flag to indicate whether the input properties can replace the properties in the catalog
+        data_frame (DataFrame): DataFrame for which the properties must be set.
+        properties (dict): A python dictionary with keys as property names and
+            values as python objects (typically strings or DataFrames)
+        replace (Optional[bool]): Flag to indicate whether the  input
+            properties can replace the properties in the catalog. The default
+            value for the flag is True.
+            Specifically, if the DataFrame information is already present in
+            the catalog then the function will check if the replace flag is
+            True. If the flag is set to True, then the function will first
+            delete the existing properties, set it with the given properties.
+            If the flag is False, the function will just return without
+            modifying the existing properties.
+
 
     Returns:
-        status (bool). Returns True if the setting of properties was successful
+        A boolean value of True is returned if the properties were set for
+        the given DataFrame, else returns False.
 
-    Notes:
-        The function is intended to set all the properties in the catalog with the given
-        property dictionary.
-          The replace flag is just a check where the properties will be not be disturbed
-          if they exist already in the
-          catalog
+    Raises:
+        AssertionError: If the input data_frame object is not of type pandas
+            DataFrame.
+        AssertionError: If the input properties object is not of type python
+            dictionary.
 
     """
-    catalog = Catalog.Instance()
-    if not isinstance(df, pd.DataFrame):
-        logger.error('Input object is not of type pandas data frame')
-        raise AssertionError('Input object is not of type pandas data frame')
+    # Validate input parameters
+    # # Input object is expected to be a pandas DataFrame
+    if not isinstance(data_frame, pd.DataFrame):
+        logger.error('Input object is not of type pandas DataFrame')
+        raise AssertionError('Input object is not of type pandas DataFrame')
 
-    if not isinstance(prop_dict, dict):
+    # # Input properties is expected to be of type python dictionary
+    if not isinstance(properties, dict):
         logger.error('The properties should be of type python dictionary')
-        raise AssertionError('The properties should be of type python dictionary')
+        raise AssertionError(
+            'The properties should be of type python dictionary')
 
-    if catalog.is_df_info_present_in_catalog(df) and replace is False:
-        logger.warning(
-            'Properties already exists for df ( %s ). Not replacing it' % str(id(df)))
-        return False
+    # Get the catalog instance
+    catalog = Catalog.Instance()
+    # Check if the the DataFrame information is present in the catalog. If
+    # present, we expect the replace flag to be True. If the flag was set to
+    # False, then warn the user and return False.
+    if catalog.is_df_info_present_in_catalog(data_frame):
+        if not replace:
+            logger.warning(
+                'Properties already exists for df ( %s ). Not replacing it',
+                str(id(data_frame)))
+            return False
+        else:
+            # DataFrame information is present and replace flag is True. We
+            # now reset the properties dictionary for this DataFrame.
+            catalog.init_properties(data_frame)
+    else:
+        # The DataFrame information is not present in the catalog. so
+        # initialize the properties
+        catalog.init_properties(data_frame)
 
-    if not catalog.is_df_info_present_in_catalog(df):
-        catalog.init_properties(df)
+    # Now iterate through the given properties and set for the DataFrame.
+    # Note: Here we don't check the correctness of the input properties (i.e
+    # we do not check if a property 'key' is indeed a key)
+    for property_name, property_value in six.iteritems(properties):
+        catalog.set_property(data_frame, property_name, property_value)
 
-    # for k, v in prop_dict.iteritems():
-    for k, v in six.iteritems(prop_dict):
-        catalog.set_property(df, k, v)
+    # Finally return True, if everything was successful
     return True
 
 
-def has_property(df, prop):
-    catalog = Catalog.Instance()
-    if not isinstance(df, pd.DataFrame):
-        logger.error('Input object is not of type pandas data frame')
-        raise AssertionError('Input object is not of type pandas data frame')
-
-    if not isinstance(prop, six.string_types):
-        logger.error('Property name is not of type string')
-        raise AssertionError('Property name is not of type string')
-
-    if not is_dfinfo_present(df):
-        logger.error('Dataframe is not in the catalog')
-        raise KeyError('Dataframe is not in the catalog')
-
-    p = get_all_properties(df)
-    # return p.has_key(prop)
-    return prop in p
-
-
-def copy_properties(src, tar, update=True):
+def copy_properties(source_data_frame, target_data_frame, replace=True):
     """
-    Copy properties from one dataframe to another
+    Copies properties from a source DataFrame to target DataFrame in the
+    catalog.
+
     Args:
-        src (pandas dataframe): Dataframe from which the properties to be copied from
-        tar (pandas dataframe): Dataframe to which the properties to be copied
-        update (bool): Flag to indicate whether the source properties can replace
-        the tart properties
+        source_data_frame (DataFrame): DataFrame from which the properties
+            to be copied from, in the catalog.
+        target_data_frame (DataFrame): DataFrame to which the properties to be
+            copied to, in the catalog.
+        replace (Optional[bool]): Flag to indicate whether the source
+            DataFrame's  properties can replace the target
+            DataFrame's properties in the catalog. The default value for the
+            flag is True.
+            Specifically, if the target DataFrame's information is already
+            present in the catalog then the function will check if the
+            replace flag is True. If the flag is set to True, then the
+            function will first delete the existing properties and then set
+            it with the source DataFrame properties.
+            If the flag is False, the function will just return without
+            modifying the existing properties.
 
     Returns:
-        status (bool). Returns True if the copying was successful
+        A boolean value of True is returned if the copying was successful.
 
-    Notes:
-        This function internally calls set_properties and get_all_properties
+    Raises:
+        AssertionError: If the input object (source_data_frame) is not of
+            type pandas DataFrame.
+        AssertionError: If the input object (target_data_frame) is not of
+            type pandas DataFrame.
+        KeyError: If the source DataFrame  is not present in the
+            catalog.
 
 
     """
-    # copy catalog information from src to tar
+    # Validate input parameters
+
+    # # The source_data_frame is expected to be of type pandas DataFrame
+    if not isinstance(source_data_frame, pd.DataFrame):
+        logger.error('Input object (source_data_frame) is not of type pandas '
+                     'DataFrame')
+        raise AssertionError(
+            'Input object (source_data_frame) is not of type pandas DataFrame')
+
+    # # The target_data_frame is expected to be of type pandas DataFrame
+    if not isinstance(target_data_frame, pd.DataFrame):
+        logger.error('Input object (target_data_frame) is not of type pandas '
+                     'DataFrame')
+        raise AssertionError('Input object (target_data_frame) is not  of '
+                             'type pandas DataFrame')
+
+    # Get the catalog instance
     catalog = Catalog.Instance()
-    if not isinstance(src, pd.DataFrame):
-        logger.error('Input object (src) is not of type pandas data frame')
-        raise AssertionError('Input object (src) is not of type pandas data frame')
 
-    if not isinstance(tar, pd.DataFrame):
-        logger.error('Input object (tar) is not of type pandas data frame')
-        raise AssertionError('Input object (tar) is not of type pandas data frame')
+    # Check if the source DataFrame information is present in the catalog. If
+    #  not raise an error.
+    if catalog.is_df_info_present_in_catalog(source_data_frame) is False:
+        logger.error(
+            'DataFrame information (source_data_frame) is not present in the '
+            'catalog')
+        raise KeyError(
+            'DataFrame information (source_data_frame) is not present in the '
+            'catalog')
 
-    if catalog.is_df_info_present_in_catalog(src) is False:
-        logger.error('Dataframe information (src) is not present in the catalog')
-        raise KeyError('Dataframe information (src) is not present in the catalog')
+    # Get all properties for the source DataFrame
+    metadata = catalog.get_all_properties(source_data_frame)
 
-    metadata = catalog.get_all_properties(src)
-    return set_properties(tar, metadata, update)  # this initializes tar in the catalog.
+    # Set the properties to the target DataFrame. Specifically, call the set
+    # properties function and relay its return value.
+
+    # Note: There is a redundancy in validating the input parameters. This
+    # might have a slight performance impact, but we don't expect that this
+    # function gets called so often.
+    return set_properties(target_data_frame, metadata,
+                          replace)  # this initializes tar in the catalog.
 
 
 # key related methods
-def get_key(df):
+def get_key(data_frame):
     """
-    Get the key attribute for a dataframe
+    Gets the 'key' property for a DataFrame from the catalog.
 
     Args:
-        df (pandas dataframe): Dataframe for which the key must be retrieved
+        data_frame (DataFrame): DataFrame for which the key must be retrieved
+            from the catalog.
 
     Returns:
-        key (str)
+        A string value containing the key column name is returned (if present).
+
+    Raises:
+        This function calls get_property internally, and get_property
+        raises the following exceptions:
+        AssertionError: If the object is not of type pandas DataFrame.
+        AssertionError: If the property name is not of type string.
+        KeyError: If the DataFrame information is not present in the catalog.
+        KeyError: If the requested property for the DataFrame is not present
+            in the catalog.
 
     """
-    if not isinstance(df, pd.DataFrame):
+    # This function is just a sugar to get the 'key' property for a DataFrame
+    return get_property(data_frame, 'key')
+
+
+def set_key(data_frame, key_attribute):
+    """
+    Sets the 'key' property for a DataFrame in the catalog with the given
+    attribute (i.e column name).
+    Specifically, this function set the the key attribute for the DataFrame
+    if the given attribute satisfies the following two properties:
+        * The key attribute should have unique values.
+        * The key attribute should not have missing values. A missing value
+        is represented as np.NaN.
+
+    Args:
+        data_frame (DataFrame): DataFrame for which the key must be set in
+            the catalog.
+        key_attribute (str): Key attribute (column name) in the DataFrame.
+
+    Returns:
+        A boolean value of True was successful if the given attribute
+        satisfies the conditions for a key and the update was successful.
+
+    Raises:
+        AssertionError: If the input object (data_frame) is not of type
+            pandas DataFrame.
+        AssertionError: If the input key_attribute is not of type string.
+        KeyError: If the given key attribute is not in the DataFrame columns.
+    """
+    # Validate input parameters
+
+    # # We expect the input object (data_frame) to be of type pandas DataFrame
+    if not isinstance(data_frame, pd.DataFrame):
+        logger.error('Input object is not of type pandas DataFrame')
+        raise AssertionError('Input object is not of type pandas DataFrame')
+
+    # # We expect input key attribute to be of type string
+    if not isinstance(key_attribute, six.string_types):
+        logger.error('Input key attribute is not of type string')
+
+    # Check if the key attribute is present as one of the columns in the
+    # DataFrame
+    if not ch.check_attrs_present(data_frame, key_attribute):
+        logger.error('Input key ( %s ) not in the DataFrame', key_attribute)
+        raise KeyError('Input key ( %s ) not in the DataFrame', key_attribute)
+
+    # Check if the key attribute satisfies the conditions to be a key. If
+    # not, just return False.
+    # Note: Currently it is not clear, whether we should return False from
+    # here or raise an exception. As of now resorting to just returning
+    # False, because this function is used by other computation
+    # intensive commands in Magellan and raising an exception might make all
+    # the work done in those commands go in vain (or those commands should
+    # catch the exception correctly, which may be complicated and require
+    # changes to the current code). We need to revisit this
+    # later.
+    if ch.is_key_attribute(data_frame, key_attribute) is False:
+        logger.warning('Attribute (%s ) does not qualify  to be a key; Not '
+                       'setting/replacing the key', key_attribute)
+        return False
+    else:
+        # Set the key property for the input DataFrame
+        return set_property(data_frame, 'key', key_attribute)
+
+
+def get_fk_ltable(data_frame):
+    """
+    Gets foreign key to left table for a DataFrame from the catalog.
+
+     Specifically this function is a sugar function that will get the foreign
+     key to left table using underlying get_property function. This function
+     is typically called on a DataFrame which contains metadata such as foreign
+     key, ltable, foreign key rtable, ltable, rtable.
+
+    Args:
+        data_frame (DataFrame): Input DataFrame for which the foreign key
+            ltable property must be retrieved.
+
+    Returns:
+        A python object, typically a string is returned.
+
+    Raises:
+        This function calls get_property internally, and get_property
+        raises the following exceptions:
+        AssertionError: If the object is not of type pandas DataFrame.
+        AssertionError: If the property name is not of type string.
+        KeyError: If the DataFrame information is not present in the catalog.
+        KeyError: If the requested property for the DataFrame is not present
+            in the catalog.
+
+    """
+    # Call the get_property function and relay the result.
+    return get_property(data_frame, 'fk_ltable')
+
+
+def get_fk_rtable(data_frame):
+    """
+    Gets foreign key to right table for a DataFrame from the catalog.
+
+     Specifically this function is a sugar function that will get the foreign
+     key to right table using underlying get_property function. This function
+     is typically called on a DataFrame which contains metadata such as foreign
+     key, ltable, foreign key rtable, ltable, rtable.
+
+    Args:
+        data_frame (DataFrame): Input DataFrame for which the foreign key
+            rtable property must be retrieved.
+
+    Returns:
+        A python object, typically a string is returned.
+
+    Raises:
+        This function calls get_property internally, and get_property
+        raises the following exceptions:
+        AssertionError: If the object is not of type pandas DataFrame.
+        AssertionError: If the property name is not of type string.
+        KeyError: If the DataFrame information is not present in the catalog.
+        KeyError: If the requested property for the DataFrame is not present
+            in the catalog.
+
+    """
+    # Call the get_property function and relay the result.
+    return get_property(data_frame, 'fk_rtable')
+
+
+def set_fk_ltable(data_frame, fk_ltable):
+    """
+    Sets the foreign key to ltable for a DataFrame in the catalog.
+
+     Specifically this function is a sugar function that will set the foreign
+     key to left table using underlying set_property function. This function
+     is typically called on a DataFrame which contains metadata such as foreign
+     key, ltable, foreign key rtable, ltable, rtable.
+
+    Args:
+        data_frame (DataFrame): Input DataFrame for which the foreign key
+            ltable property must be set.
+        fk_ltable (str): Foreign key to the ltable that must tbe set for the
+            DataFrame in the catalog.
+
+    Returns:
+        status (bool). Returns True if the ltable foreign key
+        attribute was set successfully, else returns False.
+
+    Raises:
+        AssertionError: If the input object (data_frame) is not of type
+        pandas DataFrame.
+        AssertionError: If the input attribute (fk_ltable) is not of type
+        string.
+        AssertionError: If the attribute (fk_ltable) is not in the input
+        DataFrame.
+    """
+    # Validate the input parameters
+    # # We expect the input object to be of type pandas DataFrame
+    if not isinstance(data_frame, pd.DataFrame):
         logger.error('Input object is not of type pandas data frame')
         raise AssertionError('Input object is not of type pandas data frame')
 
-    return get_property(df, 'key')
+    # # We expect the input fk_ltable to be of type string
+    if not isinstance(fk_ltable, six.string_types):
+        logger.error('The input (fk_ltable) is not of type string')
+        raise AssertionError('The input (fk_ltable) is not of type string')
+
+    # # The fk_ltable attribute should be one of the columns in the input
+    # DataFrame
+    if not ch.check_attrs_present(data_frame, fk_ltable):
+        logger.error('Input attr. ( %s ) not in the DataFrame' % fk_ltable)
+        raise KeyError('Input attr. ( %s ) not in the DataFrame' % fk_ltable)
+
+    # Call the set_property function and relay the result.
+    return set_property(data_frame, 'fk_ltable', fk_ltable)
 
 
-def set_key(df, key):
+def validate_and_set_fk_ltable(foreign_data_frame, foreign_key_ltable, ltable,
+                               ltable_key):
     """
-    Set the key attribute for a dataframe
+    Validates and set the foreign key ltable for a DataFrame in the the catalog.
+
+    Specifically, given a DataFrame and a foreign key attribute it checks
+    for the following conditions to be satisfied for the attribute. First it
+    checks that foreign key ltable attribute does not have any missing
+    values. Second it checks that the subset of foreign key values,
+    have unique values in the primary (base) table.
 
     Args:
-        df (pandas dataframe): Dataframe for which the key must be set
-        key (str): Key attribute in the dataframe
+        foreign_data_frame (DataFrame): DataFrame containing the foreign key
+            (typically a candidate set, for example output from blocking two
+            tables).
+        foreign_key_ltable (str): An attribute in the foreign DataFrame
+        ltable (DataFrame): Base DataFrame, in which the foreign key
+            attribute would form the primary key.
+        ltable_key (str): An attribute in the base table
+            (typically a primary key attribute).
 
     Returns:
-        status (bool). Returns True if the key attribute was set successfully,
-        else returns False
+        A boolean value of True will be returned if the validation was
+        successful and the update was successful in the catalog.
+    Raises:
+        AssertionError: If the input foreign DataFrame (foreign_data_frame)
+            is not of type pandas DataFrame.
+        AssertionError: If the foreign key ltable (foreign_key_ltable) is not
+            of type string.
+        AssertionError: If the input ltable (ltable) is not of type pandas
+            DataFrame.
+        AssertionError: If the ltable key (ltable_key) is not of type string.
 
 
     """
 
-    if not isinstance(df, pd.DataFrame):
-        logger.error('Input object is not of type pandas data frame')
-        raise AssertionError('Input object is not of type pandas data frame')
+    # check the foreign key constraint
+    # # Note all the validations are done inside the function
+    # check_fk_constraint
+    status = ch.check_fk_constraint(foreign_data_frame, foreign_key_ltable,
+                                    ltable, ltable_key)
 
-    if not key in df.columns:
-        logger.error('Input key ( %s ) not in the dataframe' % key)
-        raise KeyError('Input key ( %s ) not in the dataframe' % key)
-
-    if ch.is_key_attribute(df, key) is False:
+    # If the validation is successful then set the property
+    if status:
+        return set_property(foreign_data_frame, 'fk_ltable', foreign_key_ltable)
+    else:
+        # else report the error and just return False.
         logger.warning(
-            'Attribute (' + key + ') does not qualify to be a key; '
-                                  'Not setting/replacing the key')
+            'FK constraint for fk_ltable is not satisfied; '
+            'Not setting the fk_ltable')
         return False
-    else:
-        return set_property(df, 'key', key)
 
 
-# def gentle_set_key(df, key):
-#     """
-#     Set the key attribute for a dataframe
-#
-#     Args:
-#         df (pandas dataframe): Dataframe for which the key must be set
-#         key (str): Key attribute in the dataframe
-#
-#     Returns:
-#         status (bool). Returns True if the key attribute was set successfully,
-# else returns False
-#
-#     """
-#
-#     if not isinstance(df, pd.DataFrame):
-#         logger.error('Input object is not of type pandas data frame')
-#         raise AssertionError('Input object is not of type pandas data frame')
-#
-#     if not key in df.columns:
-#         logger.warning('Input key ( %s ) not in the dataframe' %key)
-#         return False
-#
-#     if ch.is_key_attribute(df, key) is False:
-#         logger.warning('Attribute (' + key + ') does not qualify to be a key;
-# Not setting/replacing the key')
-#         return False
-#     else:
-#         return set_property(df, 'key', key)
-
-
-
-def get_fk_ltable(df):
-    if not isinstance(df, pd.DataFrame):
-        logger.error('Input object is not of type pandas data frame')
-        raise AssertionError('Input object is not of type pandas data frame')
-
-    return get_property(df, 'fk_ltable')
-
-
-def get_fk_rtable(df):
-    if not isinstance(df, pd.DataFrame):
-        logger.error('Input object is not of type pandas data frame')
-        raise AssertionError('Input object is not of type pandas data frame')
-
-    return get_property(df, 'fk_rtable')
-
-
-def set_fk_ltable(df, fk_ltable):
+def validate_and_set_fk_rtable(foreign_data_frame, foreign_key_rtable,
+                               rtable, rtable_key):
     """
-    Set foreign key attribute to the left table
+    Validates and set the foreign key ltable for a DataFrame in the the catalog.
+
+    Specifically, given a DataFrame and a foreign key attribute it checks
+    for the following conditions to be satisfied for the attribute. First it
+    checks that foreign key rtable attribute does not have any missing
+    values. Second it checks that the subset of foreign key values,
+    have unique values in the primary (base) table.
+
     Args:
-        df (pandas dataframe): Dataframe for which the foreign key must be set
-        fk_ltable (str): Foreign key attribute in the dataframe
+        foreign_data_frame (DataFrame): DataFrame containing the foreign key
+            (typically a candidate set, for example output from blocking two
+            tables).
+        foreign_key_rtable (str): An attribute in the foreign DataFrame
+        rtable (DataFrame): Base DataFrame, in which the foreign key
+            attribute would form the primary key.
+        rtable_key (str): An attribute in the base table
+            (typically a primary key attribute).
 
     Returns:
-        status (bool). Returns True if the ltable foreign key attribute was set successfully, else returns False
+        A boolean value of True will be returned if the validation was
+        successful and the update was successful in the catalog.
+    Raises:
+        AssertionError: If the input foreign DataFrame (foreign_data_frame)
+            is not of type pandas DataFrame.
+        AssertionError: If the foreign key ltable (foreign_key_ltable) is not
+            of type string.
+        AssertionError: If the input ltable (ltable) is not of type pandas
+            DataFrame.
+        AssertionError: If the ltable key (ltable_key) is not of type string.
+
+
     """
-    if not isinstance(df, pd.DataFrame):
-        logger.error('Input object is not of type pandas data frame')
-        raise AssertionError('Input object is not of type pandas data frame')
 
-    if not fk_ltable in df.columns:
-        logger.error('Input attr. ( %s ) not in the dataframe' % fk_ltable)
-        raise KeyError('Input attr. ( %s ) not in the dataframe' % fk_ltable)
+    # Validate the foreign key constraint
+    # Note: All the basic input validations are done inside the
+    # check_fk_constraint function.
+    status = ch.check_fk_constraint(foreign_data_frame, foreign_key_rtable,
+                                    rtable, rtable_key)
 
-    return set_property(df, 'fk_ltable', fk_ltable)
-
-
-def validate_and_set_fk_ltable(df_foreign, fk_ltable, ltable, l_key):
-    # validations are done inside the check_fk_constraint fn.
-    status = ch.check_fk_constraint(df_foreign, fk_ltable, ltable, l_key)
-    if status == True:
-        return set_property(df_foreign, 'fk_ltable', fk_ltable)
+    # If the validation was successful, then set the property
+    if status:
+        return set_property(foreign_data_frame, 'fk_rtable', foreign_key_rtable)
+    # else just warn and return False
     else:
         logger.warning(
-            'FK constraint for ltable and fk_ltable is not satisfied; Not setting the '
-            'fk_ltable and ltable')
+            'FK constraint for fk_rtable is not satisfied; Not '
+            'setting the fk_rtable and rtable')
         return False
 
 
-def validate_and_set_fk_rtable(df_foreign, fk_rtable, rtable, r_key):
-    # validations are done inside the check_fk_constraint fn.
-    status = ch.check_fk_constraint(df_foreign, fk_rtable, rtable, r_key)
-    if status == True:
-        return set_property(df_foreign, 'fk_rtable', fk_rtable)
-    else:
-        logger.warning(
-            'FK constraint for rtable and fk_rtable is not satisfied; Not setting the fk_rtable and rtable')
-        return False
-
-
-def set_fk_rtable(df, fk_rtable):
+def set_fk_rtable(data_frame, foreign_key_rtable):
     """
-    Set foreign key attribute to the right table
+    Sets the foreign key to rtable for a DataFrame in the catalog.
+
+     Specifically this function is a sugar function that will set the foreign
+     key to right table using underlying set_property function. This function
+     is typically called on a DataFrame which contains metadata such as foreign
+     key, ltable, foreign key rtable, ltable, rtable.
+
     Args:
-        df (pandas dataframe): Dataframe for which the foreign key must be set
-        fk_rtable (str): Foreign key attribute in the dataframe
+        data_frame (DataFrame): Input DataFrame for which the foreign key
+            rtable property must be set.
+        foreign_key_rtable (str): Foreign key to the rtable that must tbe set
+            for the DataFrame in the catalog.
 
     Returns:
-        status (bool). Returns True if the rtable foreign key attribute was set successfully, else returns False
+        status (bool). Returns True if the rtable foreign key
+        attribute was set successfully, else returns False.
+
+    Raises:
+        AssertionError: If the input object (data_frame) is not of type
+        pandas DataFrame.
+        AssertionError: If the input attribute (foreign_key_rtable) is not of
+        type string.
+        AssertionError: If the attribute (fk_ltable) is not in the input
+        DataFrame.
     """
-    if not isinstance(df, pd.DataFrame):
+    # Validate the input parameters
+    # # The input object is expected to be of type pandas DataFrame
+    if not isinstance(data_frame, pd.DataFrame):
         logger.error('Input object is not of type pandas data frame')
         raise AssertionError('Input object is not of type pandas data frame')
 
-    if not fk_rtable in df.columns:
-        logger.error('Input attr. ( %s ) not in the dataframe' % fk_rtable)
-        raise KeyError('Input attr. ( %s ) not in the dataframe' % fk_rtable)
+    # Check if the given attribute is present in the DataFrame
+    if not ch.check_attrs_present(data_frame, foreign_key_rtable):
+        logger.error('Input attr. ( %s ) not in the DataFrame'
+                     % foreign_key_rtable)
+        raise KeyError('Input attr. ( %s ) not in the DataFrame'
+                       % foreign_key_rtable)
 
-    return set_property(df, 'fk_rtable', fk_rtable)
+    # Finally set the property and relay the result
+    return set_property(data_frame, 'fk_rtable', foreign_key_rtable)
 
 
-def get_reqd_metadata_from_catalog(df, reqd_metadata):
+def show_properties(data_frame):
     """
-    Get a list of properties from the catalog
+    Shows properties for a DataFrame that is present in the catalog.
 
     Args:
-        df (pandas dataframe): Dataframe for which the properties must be retrieved
-        reqd_metadata (list): List of properties to be retrieved
-
-    Returns:
-        properties (dict)
-
-    Notes:
-        This is an internal helper function.
-
-
+        data_frame (DataFrame): Input pandas DataFrame for which the
+            properties must be displayed.
     """
-    if not isinstance(df, pd.DataFrame):
-        logger.error('Input object is not of type pandas data frame')
-        raise AssertionError('Input object is not of type pandas data frame')
-
-    if not isinstance(reqd_metadata, list):
-        reqd_metadata = [reqd_metadata]
-
-    metadata = {}
-    d = get_all_properties(df)
-
-    diff_elts = set(reqd_metadata).difference(d)
-    if len(diff_elts) != 0:
-        logger.error('All the required metadata is not present in the catalog')
-        raise AssertionError('All the required metadata is not present in the catalog')
-
-    for m in reqd_metadata:
-        if m in d:
-            metadata[m] = d[m]
-    return metadata
-
-
-def update_reqd_metadata_with_kwargs(metadata, kwargs_dict, reqd_metadata):
-    """
-    Update the metadata with input args
-
-    Args:
-        metadata (dict): Properties dictonary
-        kwargs_dict (dict): Input key-value args
-        reqd_metadata (list): List of properties to be updated.
-
-    Returns:
-        updated properties (dict)
-
-    Notes:
-        This is an internal helper function.
-
-
-    """
-    if not isinstance(metadata, dict):
-        logger.error('Input metdata is not of type dict')
-        raise AssertionError('Input metdata is not of type dict')
-
-    if not isinstance(kwargs_dict, dict):
-        logger.error('Input kwargs_dict is not of type dict')
-        raise AssertionError('Input kwargs_dict is not of type dict')
-
-    if not isinstance(reqd_metadata, list):
-        reqd_metadata = [reqd_metadata]
-
-    diff_elts = set(reqd_metadata).difference(kwargs_dict.keys())
-    if len(diff_elts) != 0:
-        logger.error('All the required metadata is not present in the catalog')
-        raise AssertionError('All the required metadata is not present in the catalog')
-
-    for m in reqd_metadata:
-        if m in kwargs_dict:
-            metadata[m] = kwargs_dict[m]
-    return metadata
-
-
-def get_diff_with_reqd_metadata(metadata, reqd_metadata):
-    """
-    Find what metadata is missing from the required list
-
-    Args:
-        metadata (dict): Property dictionary
-        reqd_metadata (list): List of properties
-
-    Returns:
-        diff list (list) of properties between the property dictionary and the properties
-        list
-
-    Notes:
-        This is an internal helper function
-    """
-    if not isinstance(metadata, dict):
-        logger.error('Input metdata is not of type dict')
-        raise AssertionError('Input metdata is not of type dict')
-
-    k = metadata.keys()
-    if not isinstance(reqd_metadata, list):
-        reqd_metadata = [reqd_metadata]
-    d = set(reqd_metadata).difference(k)
-    return d
-
-
-def is_all_reqd_metadata_present(metadata, reqd_metadata):
-    """
-    Check if all the required metadata are present
-
-    Args:
-        metadata (dict): Property dictionary
-        reqd_metadata (list): List of properties
-
-    Returns:
-        result (bool). Returns True if all the required metadata is present, else returns False
-
-    Notes:
-        This is an internal helper function
-
-    """
-    if not isinstance(metadata, dict):
-        logger.error('Input metdata is not of type dict')
-        raise AssertionError('Input metdata is not of type dict')
-
-    d = get_diff_with_reqd_metadata(metadata, reqd_metadata)
-    if len(d) == 0:
-        return True
-    else:
-        return False
-
-
-def show_properties(df):
-    if not is_dfinfo_present(df):
-        logger.error('Dataframe information is not present in the catalog')
+    # Check if the DataFrame information is present in the catalog. If not
+    # return
+    if not is_dfinfo_present(data_frame):
+        logger.error('DataFrame information is not present in the catalog')
         return
-    metadata = get_all_properties(df)
-    print('id: ' + str(id(df)))
-    for prop, value in six.iteritems(metadata):
-        if isinstance(value, six.string_types):
-            print(prop + ": " + value)
-        else:
-            print(prop + "(obj.id): " + str(id(value)))
+
+    # Delegate it to show properties for the id if an object in the catalog
+    show_properties_for_id(id(data_frame))
+    # # Get the properties for the DataFrame from the catalog
+    # metadata = get_all_properties(data_frame)
+    #
+    # # First print the id for the DataFrame
+    # print('id: ' + str(id(data_frame)))
+    # # For each property name anf value, print the contents to the user
+    # for property_name, property_value in six.iteritems(metadata):
+    #     # If the property value is string print it out
+    #     if isinstance(property_value, six.string_types):
+    #         print(property_name + ": " + property_value)
+    #     # else, print just the id.
+    #     else:
+    #         print(property_name + "(obj.id): " + str(id(property_value)))
 
 
-def show_properties_for_id(obj_id):
+def show_properties_for_id(object_id):
+    """
+    Shows the properties for an object id present in the catalog.
+
+    Specifically, given an object id got from typically executing id(
+    <object>), where the object could be a DataFrame, this function will
+    display the properties present for that object id in the catalog.
+
+    Args:
+        object_id (int): Python identifier of an object.
+
+    """
     catalog = Catalog.Instance()
-    metadata = catalog.get_all_properties_for_id(obj_id)
-    print('id: ' + str(obj_id))
-    for prop, value in six.iteritems(metadata):
-        if isinstance(value, six.string_types):
-            print(prop + ": " + value)
+    metadata = catalog.get_all_properties_for_id(object_id)
+    # First print the id for the DataFrame
+    print('id: ' + str(object_id))
+    # For each property name anf value, print the contents to the user
+    for property_name, property_value in six.iteritems(metadata):
+        # If the property value is string print it out
+        if isinstance(property_value, six.string_types):
+            print(property_name + ": " + property_value)
+        # else, print just the id.
         else:
-            print(prop + "(obj.id): " + str(id(value)))
+            print(property_name + "(obj.id): " + str(id(property_value)))
 
 
-def set_candset_properties(candset, key, fk_ltable, fk_rtable, ltable, rtable):
+def set_candset_properties(candset, key, foreign_key_ltable,
+                           foreign_key_rtable, ltable, rtable):
+    """
+    Sets candidate set properties.
+
+    Specifically, this is a sugar function that sets all the properties for a
+    candidate set such as key, foreign key ltable, foreign key rtable,
+    ltable and rtable. Further, this function does not check the integrity of
+    input properties.
+
+
+
+    Args:
+        candset (DataFrame): Input DataFrame for which the properties must be
+            set.
+        key (str): Key attribute that must be set for the DataFrame in the
+            catalog.
+        foreign_key_ltable (str): Foreign key ltable attribute that must be
+            set for the DataFrame in the catalog.
+        foreign_key_rtable (str): Foreign key rtable attribute that must be
+            set for the DataFrame in the catalog.
+        ltable (DataFrame): DataFrame that must be set as ltable.
+        rtable (DataFrame): DataFrame that must be set as rtable.
+
+    Returns:
+        A boolean value of True is returned if the updates were successful.
+
+    """
+    # set the key
     set_property(candset, 'key', key)
-    set_fk_ltable(candset, fk_ltable)
-    set_fk_rtable(candset, fk_rtable)
+    # set the foreign key attributes
+    set_fk_ltable(candset, foreign_key_ltable)
+    set_fk_rtable(candset, foreign_key_rtable)
+    # set the ltable and rtables
     set_property(candset, 'ltable', ltable)
     set_property(candset, 'rtable', rtable)
+    return True
 
 
-def validate_metadata_for_table(table, key, out_str, lgr, verbose):
+def _validate_metadata_for_table(table, key, output_string, lgr, verbose):
+    """
+    Validates metadata for table (DataFrame)
+
+    """
+    # Validate input parameters
+    # # We expect the input table to be of type pandas DataFrame
     if not isinstance(table, pd.DataFrame):
-        logger.error('Input object is not of type pandas data frame')
-        raise AssertionError('Input object is not of type pandas data frame')
+        logger.error('Input object is not of type pandas DataFrame')
+        raise AssertionError('Input object is not of type pandas DataFrame')
 
-    if not key in table.columns:
-        logger.error('Input key ( %s ) not in the dataframe' % key)
-        raise KeyError('Input key ( %s ) not in the dataframe' % key)
+    # Check the key column is present in the table
+    if not ch.check_attrs_present(table, key):
+        logger.error('Input key ( %s ) not in the DataFrame' % key)
+        raise KeyError('Input key ( %s ) not in the DataFrame' % key)
 
-    ch.log_info(lgr, 'Validating ' + out_str + ' key: ' + str(key), verbose)
-    assert isinstance(key, six.string_types) is True, 'Key attribute must be a string.'
-    assert ch.check_attrs_present(table,
-                                  key) is True, 'Key attribute is not present in the ' + out_str + ' table'
-    assert ch.is_key_attribute(table, key, verbose) == True, 'Attribute ' + str(key) + \
-                                                             ' in the ' + out_str + ' table ' \
-                                                                                    'does not qualify to be the key'
+    # Validate the key
+    ch.log_info(lgr, 'Validating ' + output_string + ' key: ' + str(key),
+                verbose)
+    # We expect the key to be of type string
+    if not isinstance(key, six.string_types):
+        logger.error('Key attribute must be of type string')
+        raise AssertionError('Key attribute must be of type string')
+    if not ch.is_key_attribute(table, key, verbose):
+        logger.error('Attribute %s in the %s table does not '
+                     'qualify to be the key' % (str(key), output_string))
+        raise AssertionError('Attribute %s in the %s table does not '
+                             'qualify to be the key' % (
+                                 str(key), output_string))
     ch.log_info(lgr, '..... Done', verbose)
     return True
 
 
-def validate_metadata_for_candset(candset, key, fk_ltable, fk_rtable, ltable, rtable,
-                                  l_key, r_key,
-                                  lgr, verbose):
+def _validate_metadata_for_candset(candset, key, foreign_key_ltable,
+                                   foreign_key_rtable,
+                                   ltable, rtable,
+                                   ltable_key, rtable_key,
+                                   lgr, verbose):
+    """
+    Validates metadata for a candidate set.
+
+    """
+    # Validate input parameters
+    # # We expect candset to be of type pandas DataFrame
     if not isinstance(candset, pd.DataFrame):
-        logger.error('Input cand.set is not of type pandas data frame')
-        raise AssertionError('Input cand.set is not of type pandas data frame')
+        logger.error('Input candset is not of type pandas DataFrame')
+        raise AssertionError('Input candset is not of type pandas DataFrame')
 
-    if not key in candset.columns:
-        logger.error('Input key ( %s ) not in the dataframe' % key)
-        raise KeyError('Input key ( %s ) not in the dataframe' % key)
+    # Check if the key column is present in the candset
+    if not ch.check_attrs_present(candset, key):
+        logger.error('Input key ( %s ) not in the DataFrame' % key)
+        raise KeyError('Input key ( %s ) not in the DataFrame' % key)
 
-    if not fk_ltable in candset.columns:
-        logger.error('Input fk_ltable ( %s ) not in the dataframe' % fk_ltable)
-        raise KeyError('Input fk_ltable ( %s ) not in the dataframe' % fk_ltable)
+    # Check if the foreign key ltable column is present in the candset
+    if not ch.check_attrs_present(candset, foreign_key_ltable):
+        logger.error('Input foreign_key_ltable ( %s ) not in the DataFrame'
+                     % foreign_key_ltable)
+        raise KeyError(
+            'Input foreign_key_ltable ( %s ) not in the DataFrame'
+            % foreign_key_ltable)
 
-    if not fk_rtable in candset.columns:
-        logger.error('Input fk_rtable ( %s ) not in the dataframe' % fk_rtable)
-        raise KeyError('Input fk_rtable ( %s ) not in the dataframe' % fk_rtable)
+    # Check if the foreign key rtable column is present in the candset
+    if not ch.check_attrs_present(candset, foreign_key_rtable):
+        logger.error(
+            'Input fk_rtable ( %s ) not in the DataFrame' % foreign_key_rtable)
+        raise KeyError(
+            'Input fk_rtable ( %s ) not in the DataFrame' % foreign_key_rtable)
 
+    # We expect the ltable to be of type pandas DataFrame
     if not isinstance(ltable, pd.DataFrame):
         logger.error('Input ltable is not of type pandas data frame')
         raise AssertionError('Input ltable is not of type pandas data frame')
 
+    # We expect the rtable to be of type pandas DataFrame
     if not isinstance(rtable, pd.DataFrame):
         logger.error('Input rtable is not of type pandas data frame')
         raise AssertionError('Input rtable is not of type pandas data frame')
 
-    if not l_key in ltable:
-        logger.error('ltable key ( %s ) not in ltable' % l_key)
-        raise KeyError('ltable key ( %s ) not in ltable' % l_key)
+    # We expect the ltable key to be present in the ltable
+    if not ch.check_attrs_present(ltable, ltable_key):
+        logger.error('ltable key ( %s ) not in ltable' % ltable_key)
+        raise KeyError('ltable key ( %s ) not in ltable' % ltable_key)
 
-    if not r_key in rtable:
-        logger.error('rtable key ( %s ) not in rtable' % r_key)
-        raise KeyError('rtable key ( %s ) not in rtable' % r_key)
+    # We expect the rtable key to be present in the rtable
+    if not ch.check_attrs_present(rtable, rtable_key):
+        logger.error('rtable key ( %s ) not in rtable' % rtable_key)
+        raise KeyError('rtable key ( %s ) not in rtable' % rtable_key)
 
-    validate_metadata_for_table(candset, key, 'cand.set', lgr, verbose)
+    # First validate metadata for the candidate set (as a table)
+    _validate_metadata_for_table(candset, key, 'candset', lgr, verbose)
 
-    ch.log_info(lgr, 'Validating foreign key constraint for left table', verbose)
-    assert ch.check_fk_constraint(candset, fk_ltable, ltable,
-                                  l_key) == True, 'Cand.set does not satisfy foreign key ' \
-                                                  'constraint with the left table'
+    ch.log_info(lgr, 'Validating foreign key constraint for left table',
+                verbose)
+    # Second check foreign key constraints
+    if not ch.check_fk_constraint(candset, foreign_key_ltable,
+                                  ltable, ltable_key):
+        logger.error('Candset does not satisfy foreign key constraint with '
+                     'the left table')
+        raise AssertionError(
+            'Candset does not satisfy foreign key constraint with '
+            'the left table')
+
+    if not ch.check_fk_constraint(candset, foreign_key_rtable,
+                                  rtable, rtable_key):
+        logger.error('Candset does not satisfy foreign key constraint with '
+                     'the right table')
+        raise AssertionError(
+            'Candset does not satisfy foreign key constraint with '
+            'the right table')
+
     ch.log_info(lgr, '..... Done', verbose)
-    ch.log_info(lgr, 'Validating foreign key constraint for right table', verbose)
-    assert ch.check_fk_constraint(candset, fk_rtable, rtable,
-                                  r_key) == True, 'Cand.set does not satisfy foreign key ' \
-                                                  'constraint with the right table'
+    ch.log_info(lgr, 'Validating foreign key constraint for right table',
+                verbose)
     ch.log_info(lgr, '..... Done', verbose)
 
     return True
 
 
+# noinspection PyIncorrectDocstring
 def get_keys_for_ltable_rtable(ltable, rtable, lgr, verbose):
+    """
+    Gets keys for the ltable and rtable.
+    """
+    # We expect the ltable to be of type pandas DataFrame
     if not isinstance(ltable, pd.DataFrame):
         logger.error('Input ltable is not of type pandas data frame')
         raise AssertionError('Input ltable is not of type pandas data frame')
 
+    # We expect the rtable to be of type pandas DataFrame
     if not isinstance(rtable, pd.DataFrame):
         logger.error('Input rtable is not of type pandas data frame')
         raise AssertionError('Input rtable is not of type pandas data frame')
 
     ch.log_info(lgr, 'Required metadata: ltable key, rtable key', verbose)
     ch.log_info(lgr, 'Getting metadata from the catalog', verbose)
-    l_key = get_key(ltable)
-    r_key = get_key(rtable)
+    # Get the ltable key and rtable key from the catalog
+    ltable_key = get_key(ltable)
+    rtable_key = get_key(rtable)
     ch.log_info(lgr, '..... Done', verbose)
-    return l_key, r_key
+    # return the ltable and rtable keys
+    return ltable_key, rtable_key
 
 
+# noinspection PyIncorrectDocstring
 def get_metadata_for_candset(candset, lgr, verbose):
+    """
+    Gets metadata for the candset
+
+    """
+    # Validate input parameters
     if not isinstance(candset, pd.DataFrame):
         logger.error('Input candset is not of type pandas data frame')
         raise AssertionError('Input candset is not of type pandas data frame')
 
     ch.log_info(lgr, 'Getting metadata from the catalog', verbose)
+    # Get the key, foreign keys, ltable, rtable and their keys
+    # # Get key
     key = get_key(candset)
+    # # Get the foreign keys
     fk_ltable = get_fk_ltable(candset)
     fk_rtable = get_fk_rtable(candset)
+    # # Get the base tables
     ltable = get_ltable(candset)
     rtable = get_rtable(candset)
+    # Get the base table keys
     l_key = get_key(ltable)
     r_key = get_key(rtable)
     ch.log_info(lgr, '..... Done', verbose)
+    # Return the metadata
     return key, fk_ltable, fk_rtable, ltable, rtable, l_key, r_key
 
 
+# noinspection PyIncorrectDocstring
 def get_ltable(candset):
+    """
+    Gets the ltable.
+    """
+    # Return the ltable for a candidate set. This function is just a sugar
     return get_property(candset, 'ltable')
 
 
+# noinspection PyIncorrectDocstring
 def get_rtable(candset):
+    """
+    Gets the rtable.
+    """
+    # Return the rtable for a candidate set. This function is just a sugar
+
     return get_property(candset, 'rtable')

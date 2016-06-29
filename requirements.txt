@@ -1,1 +1,2 @@
 PyPrind >= 2.9.3
+py_stringmatching
