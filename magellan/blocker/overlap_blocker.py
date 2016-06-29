@@ -12,12 +12,13 @@ import magellan.catalog.catalog_manager as cm
 from magellan.blocker.blocker import Blocker
 
 # from magellan.externals.py_stringmatching.tokenizers import qgram
-import py_stringmatching.tokenizer as tok
+from py_stringmatching.tokenizer.whitespace_tokenizer import WhitespaceTokenizer
+from py_stringmatching.tokenizer.qgram_tokenizer import QgramTokenizer
+
 from magellan.utils.catalog_helper import log_info, get_name_for_key, \
     add_key_column
 
 from magellan.externals.py_stringsimjoin.filter.overlap_filter import OverlapFilter
-from magellan.externals.py_stringsimjoin.utils.tokenizers import create_qgram_tokenizer, create_delimiter_tokenizer
 
 from magellan.utils.generic_helper import remove_non_ascii, rem_nan
 
@@ -177,10 +178,10 @@ class OverlapBlocker(Blocker):
         # # determine which tokenizer to use
         if word_level == True:
             # # # create a whitespace tokenizer
-            tokenizer = create_delimiter_tokenizer()
+            tokenizer = WhitespaceTokenizer(return_set=True)
         else:
             # # # create a qgram tokenizer 
-            tokenizer = create_qgram_tokenizer(q_val)
+            tokenizer = QgramTokenizer(qval=q_val, return_set=True)
 
         # # create a overlap filter for similarity join
         overlap_filter = OverlapFilter(tokenizer, overlap_size)
@@ -197,10 +198,12 @@ class OverlapBlocker(Blocker):
                                                l_output_prefix, r_output_prefix,
                                                out_sim_score=False,
                                                n_jobs=n_procs)
+        print('candset cols:', candset.columns)
 
         # # retain only the required attributes in the output candidate set 
         retain_cols = self.get_attrs_to_retain(l_key, r_key, l_output_attrs, r_output_attrs,
                                                l_output_prefix, r_output_prefix)
+        print('retain_cols:', retain_cols)
         candset = candset[retain_cols]
 
         # update metadata in the catalog
@@ -322,10 +325,10 @@ class OverlapBlocker(Blocker):
         # # determine which tokenizer to use
         if word_level == True:
             # # # create a whitespace tokenizer
-            tokenizer = create_delimiter_tokenizer()
+            tokenizer = WhitespaceTokenizer(return_set=True)
         else:
             # # # create a qgram tokenizer
-            tokenizer = create_qgram_tokenizer(q_val)
+            tokenizer = QgramTokenizer(qval=q_val, return_set=True)
        
         # # create a filter for overlap similarity join
         overlap_filter = OverlapFilter(tokenizer, overlap_size)
@@ -392,10 +395,10 @@ class OverlapBlocker(Blocker):
         # determine which tokenizer to use
         if word_level == True:
             # # create a whitespace tokenizer
-            tokenizer = create_delimiter_tokenizer()
+            tokenizer = WhitespaceTokenizer(return_set=True)
         else:
             # # create a qgram tokenizer 
-            tokenizer = create_qgram_tokenizer(q_val)
+            tokenizer = QgramTokenizer(qval=q_val, return_set=True)
 
         # create a filter for overlap similarity 
         overlap_filter = OverlapFilter(tokenizer, overlap_size)

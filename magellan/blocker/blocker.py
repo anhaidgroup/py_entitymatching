@@ -103,9 +103,9 @@ class Blocker(object):
 
         ret_cols = [l_output_prefix+l_key, r_output_prefix+r_key]
         if l_output_attrs:
-            ret_cols.extend(l_output_prefix+c for c in l_output_attrs)
+            ret_cols.extend(l_output_prefix+c for c in l_output_attrs if l_output_prefix+c not in ret_cols)
         if r_output_attrs:
-            ret_cols.extend(r_output_prefix+c for c in r_output_attrs)
+            ret_cols.extend(r_output_prefix+c for c in r_output_attrs if r_output_prefix+c not in ret_cols)
 
         return ret_cols
 
