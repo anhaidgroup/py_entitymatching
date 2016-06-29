@@ -30,7 +30,7 @@ class BlackBoxBlocker(Blocker):
         self.validate_types_params_tables(ltable, rtable,
 			                  l_output_attrs, r_output_attrs,
                                           l_output_prefix, r_output_prefix,
-                                          verbose, n_jobs)
+                                          verbose, show_progress, n_jobs)
 
         # validate black box function
         assert self.black_box_function != None, 'Black box function is not set'
@@ -62,10 +62,9 @@ class BlackBoxBlocker(Blocker):
         if r_output_attrs:
             r_output_attrs_1 = [x for x in r_output_attrs if x != r_key]
 
-        # # determine the number fo processes to launch parallely
+        # # determine the number of processes to launch parallely
         n_procs = self.get_num_procs(n_jobs, len(l_df) * len(r_df))
 
-        candset = None
         if n_procs <= 1:
             # single process
             candset = _block_tables_split(l_df, r_df, l_key, r_key,
@@ -74,17 +73,18 @@ class BlackBoxBlocker(Blocker):
                                           self, show_progress)
         else:
             # multiprocessing
-            m, n = self.get_split_params(n_procs)
+            m, n = self.get_split_params(n_procs, len(l_df), len(r_df))
             l_splits = pd.np.array_split(l_df, m)
             r_splits = pd.np.array_split(r_df, n)
-            c_splits = Parallel(n_jobs=n_procs)(delayed(_block_tables_split)(l, r,
+            c_splits = Parallel(n_jobs=m*n)(delayed(_block_tables_split)(l_splits[i], r_splits[j],
                                                 l_key, r_key, 
                                                 l_output_attrs_1, r_output_attrs_1,
                                                 l_output_prefix, r_output_prefix,
-                                                self, show_progress)
-                                                for l in l_splits for r in r_splits)
+                                                self, show_progress and i == len(l_splits) - 1 and j == len(r_splits) - 1)
+                                                for i in range(len(l_splits)) for j in range(len(r_splits)))
             candset = pd.concat(c_splits, ignore_index=True)
 
+        # # determine the attributes to retain in the output candidate set
         retain_cols = self.get_attrs_to_retain(l_key, r_key,
                                                l_output_attrs, r_output_attrs,
                                                l_output_prefix, r_output_prefix)
@@ -143,12 +143,12 @@ class BlackBoxBlocker(Blocker):
         else:
             # multiprocessing
             c_splits = pd.np.array_split(c_df, n_procs)
-            valid_splits = Parallel(n_jobs=n_procs)(delayed(_block_candset_split)(c,
+            valid_splits = Parallel(n_jobs=n_procs)(delayed(_block_candset_split)(c_splits[i],
                                                             l_df, r_df,
                                                             l_key, r_key,
                                                             fk_ltable, fk_rtable,
-                                                            self, show_progress)
-                                                            for c in c_splits)
+                                                            self, show_progress and i == len(c_splits) - 1)
+                                                            for i in range(len(c_splits)))
             valid = sum(valid_splits, [])
  
         # construct output table
@@ -181,7 +181,6 @@ def _block_tables_split(l_df, r_df, l_key, r_key,
     l_dict = {}
     for k, r in l_df.iterrows():
         l_dict[k] = r
-
     r_dict = {}
     for k, r in r_df.iterrows():
         r_dict[k] = r
@@ -197,10 +196,9 @@ def _block_tables_split(l_df, r_df, l_key, r_key,
     # list to keep the tuple pairs that survive blocking
     valid = []
 
-
     # iterate through the two tables
     for l_t in l_df.itertuples(index=False):
-        # # get ltuple from the look up table
+        # # get ltuple from the look up dictionary
         ltuple = l_dict[l_t[l_id_pos]]
         for r_t in r_df.itertuples(index=False):
             # # update the progress bar
@@ -247,7 +245,7 @@ def _block_candset_split(c_df, l_df, r_df, l_key, r_key, fk_ltable, fk_rtable,
     if show_progress:
         bar = pyprind.ProgBar(len(c_df))
 
-    # create lookup table for faster processing
+    # create lookup dictionaries for faster processing
     l_dict = {}
     r_dict = {}
 
