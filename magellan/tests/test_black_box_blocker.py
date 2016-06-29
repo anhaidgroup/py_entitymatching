@@ -7,18 +7,12 @@ import magellan as mg
 import magellan.feature.simfunctions as sim
 
 p = mg.get_install_path()
-path_for_A = os.sep.join([p, 'datasets', 'table_A.csv'])
-path_for_B = os.sep.join([p, 'datasets', 'table_B.csv'])
-l_key = 'ID'
-r_key = 'ID'
+path_a = os.sep.join([p, 'datasets', 'table_A.csv'])
+path_b = os.sep.join([p, 'datasets', 'table_B.csv'])
 l_output_attrs = ['name', 'address']
 r_output_attrs = ['name', 'address']
 l_output_prefix = 'l_'
 r_output_prefix = 'r_'
-
-expected_ids = [('a2', 'b1'), ('a2', 'b3'), ('a2', 'b6'), ('a3', 'b2'),
-                ('a3', 'b6'), ('a4', 'b2'), ('a5', 'b5')]
-expected_ids_2 = [('a2', 'b3'), ('a3', 'b2'), ('a3', 'b6'), ('a5', 'b5')]
 
 def _block_fn(x, y):
     if (sim.monge_elkan(x['name'], y['name']) < 0.6):
@@ -26,18 +20,32 @@ def _block_fn(x, y):
     else:
         return False
 
+# block tables using _block_fn
+expected_ids_1 = [('a2', 'b1'), ('a2', 'b3'), ('a2', 'b6'), ('a3', 'b2'),
+                ('a3', 'b6'), ('a4', 'b2'), ('a5', 'b5')]
+
+# attribute equivalence on 'zipcode'
+expected_ids_zip = [('a1', 'b1'), ('a1', 'b2'), ('a1', 'b6'),
+                    ('a2', 'b3'), ('a2', 'b4'), ('a2', 'b5'),
+                    ('a3', 'b1'), ('a3', 'b2'), ('a3', 'b6'),
+                    ('a4', 'b3'), ('a4', 'b4'), ('a4', 'b5'),
+                    ('a5', 'b3'), ('a5', 'b4'), ('a5', 'b5')]
+
+# block tables using attr equiv on zipcode, then block candset using _block_fn
+expected_ids_2 = [('a2', 'b3'), ('a3', 'b2'), ('a3', 'b6'), ('a5', 'b5')]
+
+# drops all the tuple pairs
 def _evil_block_fn(x, y):
     return True
 
 class BlackBoxBlockerTestCases(unittest.TestCase):
 
     def setUp(self):
-        self.A = mg.read_csv_metadata(path_for_A)
-        mg.set_key(self.A, l_key)
-        self.B = mg.read_csv_metadata(path_for_B)
-        mg.set_key(self.B, r_key)
+        self.A = mg.read_csv_metadata(path_a)
+        mg.set_key(self.A, 'ID')
+        self.B = mg.read_csv_metadata(path_b)
+        mg.set_key(self.B, 'ID')
         self.bb = mg.BlackBoxBlocker()
-        self.ab = mg.AttrEquivalenceBlocker()
         
     def tearDown(self):
         del self.A
@@ -138,153 +146,59 @@ class BlackBoxBlockerTestCases(unittest.TestCase):
 
     def test_bb_block_tables(self):
         self.bb.set_black_box_function(_block_fn)
-        C = self.bb.block_tables(self.A, self.B,
-                                 l_output_attrs=l_output_attrs, r_output_attrs=r_output_attrs,
-                                 l_output_prefix=l_output_prefix, r_output_prefix=r_output_prefix)
-        s1 = ['_id', l_output_prefix + l_key, r_output_prefix + r_key]
-        s1 += [l_output_prefix + x for x in l_output_attrs if x != l_key]
-        s1 += [r_output_prefix + x for x in r_output_attrs if x != r_key]
-        s1 = sorted(s1)
-        assert_equal(s1, sorted(C.columns))
-        assert_equal(mg.get_key(C), '_id')
-        assert_equal(mg.get_property(C, 'fk_ltable'), l_output_prefix + l_key)
-        assert_equal(mg.get_property(C, 'fk_rtable'), r_output_prefix + r_key)
-        C_ids = C[[l_output_prefix + l_key, r_output_prefix + r_key]]
-        actual_ids = sorted(C_ids.set_index([l_output_prefix + l_key, r_output_prefix + r_key]).index.values.tolist())
-        assert_equal(expected_ids, actual_ids)
-
-    def test_bb_block_tables_njobs_2(self):
-        self.bb.set_black_box_function(_block_fn)
-        C = self.bb.block_tables(self.A, self.B,
-                                 l_output_attrs=l_output_attrs, r_output_attrs=r_output_attrs,
-                                 l_output_prefix=l_output_prefix, r_output_prefix=r_output_prefix, n_jobs=2)
-        s1 = ['_id', l_output_prefix + l_key, r_output_prefix + r_key]
-        s1 += [l_output_prefix + x for x in l_output_attrs if x != l_key]
-        s1 += [r_output_prefix + x for x in r_output_attrs if x != r_key]
-        s1 = sorted(s1)
-        assert_equal(s1, sorted(C.columns))
-        assert_equal(mg.get_key(C), '_id')
-        assert_equal(mg.get_property(C, 'fk_ltable'), l_output_prefix + l_key)
-        assert_equal(mg.get_property(C, 'fk_rtable'), r_output_prefix + r_key)
-        C_ids = C[[l_output_prefix + l_key, r_output_prefix + r_key]]
-        actual_ids = sorted(C_ids.set_index([l_output_prefix + l_key, r_output_prefix + r_key]).index.values.tolist())
-        assert_equal(expected_ids, actual_ids)
-
-    def test_bb_block_tables_njobs_all(self):
-        self.bb.set_black_box_function(_block_fn)
-        C = self.bb.block_tables(self.A, self.B,
-                                 l_output_attrs=l_output_attrs, r_output_attrs=r_output_attrs,
-                                 l_output_prefix=l_output_prefix, r_output_prefix=r_output_prefix, n_jobs=-1)
-        s1 = ['_id', l_output_prefix + l_key, r_output_prefix + r_key]
-        s1 += [l_output_prefix + x for x in l_output_attrs if x != l_key]
-        s1 += [r_output_prefix + x for x in r_output_attrs if x != r_key]
-        s1 = sorted(s1)
-        assert_equal(s1, sorted(C.columns))
-        assert_equal(mg.get_key(C), '_id')
-        assert_equal(mg.get_property(C, 'fk_ltable'), l_output_prefix + l_key)
-        assert_equal(mg.get_property(C, 'fk_rtable'), r_output_prefix + r_key)
-        C_ids = C[[l_output_prefix + l_key, r_output_prefix + r_key]]
-        actual_ids = sorted(C_ids.set_index([l_output_prefix + l_key, r_output_prefix + r_key]).index.values.tolist())
-        assert_equal(expected_ids, actual_ids)
+        C = self.bb.block_tables(self.A, self.B, l_output_attrs=l_output_attrs,
+                                 r_output_attrs=r_output_attrs,
+                                 l_output_prefix=l_output_prefix,
+                                 r_output_prefix=r_output_prefix)
+        validate_metadata(C, l_output_attrs, r_output_attrs,
+                          l_output_prefix, r_output_prefix)
+        validate_data(C, expected_ids_1)
 
     def test_bb_block_tables_empty_ltable(self):
         empty_A = pd.DataFrame(columns=self.A.columns)
-        mg.set_key(empty_A, l_key)
+        mg.set_key(empty_A, 'ID')
         self.bb.set_black_box_function(_block_fn)
         C = self.bb.block_tables(empty_A, self.B)
-        s1 = ['_id', 'ltable_' + l_key, 'rtable_' + r_key]
-        s1 = sorted(s1)
-        assert_equal(s1, sorted(C.columns))
-        assert_equal(mg.get_key(C), '_id')
-        assert_equal(mg.get_property(C, 'fk_ltable'), 'ltable_' + l_key)
-        assert_equal(mg.get_property(C, 'fk_rtable'), 'rtable_' + r_key)
-        assert_equal(len(C), 0)
+        validate_metadata(C)
+        validate_data(C)
 
     def test_bb_block_tables_empty_rtable(self):
         empty_B = pd.DataFrame(columns=self.B.columns)
-        mg.set_key(empty_B, r_key)
+        mg.set_key(empty_B, 'ID')
         self.bb.set_black_box_function(_block_fn)
         C = self.bb.block_tables(self.A, empty_B)
-        s1 = ['_id', 'ltable_' + l_key, 'rtable_' + r_key]
-        s1 = sorted(s1)
-        assert_equal(s1, sorted(C.columns))
-        assert_equal(mg.get_key(C), '_id')
-        assert_equal(mg.get_property(C, 'fk_ltable'), 'ltable_' + l_key)
-        assert_equal(mg.get_property(C, 'fk_rtable'), 'rtable_' + r_key)
-        assert_equal(len(C), 0)
+        validate_metadata(C)
+        validate_data(C)
 
     def test_bb_block_tables_wi_no_output_tuples(self):
         self.bb.set_black_box_function(_evil_block_fn)
         C = self.bb.block_tables(self.A, self.B)
-        assert_equal(sorted(C.columns), sorted(['_id', 'ltable_' + l_key,
-                                                'rtable_' + r_key]))
-        assert_equal(mg.get_key(C), '_id')
-        assert_equal(mg.get_property(C, 'fk_ltable'), 'ltable_' + l_key)
-        assert_equal(mg.get_property(C, 'fk_rtable'), 'rtable_' + r_key)
-        assert_equal(len(C),  0)
+        validate_metadata(C)
+        validate_data(C)
 
     def test_bb_block_tables_wi_null_l_output_attrs(self):
         self.bb.set_black_box_function(_block_fn)
-        C = self.bb.block_tables(self.A, self.B,
-                                 l_output_attrs=None,
-                                 r_output_attrs=r_output_attrs)
-        s1 = ['_id', 'ltable_' + l_key, 'rtable_' + r_key]
-        s1 += ['rtable_' + x for x in r_output_attrs if x != r_key]
-        s1 = sorted(s1)
-        assert_equal(s1, sorted(C.columns))
-        assert_equal(mg.get_key(C), '_id')
-        assert_equal(mg.get_property(C, 'fk_ltable'), 'ltable_' + l_key)
-        assert_equal(mg.get_property(C, 'fk_rtable'), 'rtable_' + r_key)
-        C_ids = C[['ltable_' + l_key, 'rtable_' + r_key]]
-        actual_ids = sorted(C_ids.set_index(['ltable_' + l_key, 'rtable_' + r_key]).index.tolist())
-        assert_equal(expected_ids, actual_ids)
+        C = self.bb.block_tables(self.A, self.B, r_output_attrs=r_output_attrs)
+        validate_metadata(C, r_output_attrs=r_output_attrs)
+        validate_data(C, expected_ids_1)
 
     def test_bb_block_tables_wi_null_r_output_attrs(self):
         self.bb.set_black_box_function(_block_fn)
-        C = self.bb.block_tables(self.A, self.B,
-                                 l_output_attrs=l_output_attrs,
-                                 r_output_attrs=None)
-        s1 = ['_id', 'ltable_' + l_key, 'rtable_' + r_key]
-        s1 += ['ltable_' + x for x in l_output_attrs if x != l_key]
-        s1 = sorted(s1)
-        assert_equal(s1, sorted(C.columns))
-        assert_equal(mg.get_key(C), '_id')
-        assert_equal(mg.get_property(C, 'fk_ltable'), 'ltable_' + l_key)
-        assert_equal(mg.get_property(C, 'fk_rtable'), 'rtable_' + r_key)
-        C_ids = C[['ltable_' + l_key, 'rtable_' + r_key]]
-        actual_ids = sorted(C_ids.set_index(['ltable_' + l_key, 'rtable_' + r_key]).index.tolist())
-        assert_equal(expected_ids, actual_ids)
+        C = self.bb.block_tables(self.A, self.B, l_output_attrs)
+        validate_metadata(C, l_output_attrs)
+        validate_data(C, expected_ids_1)
 
     def test_bb_block_tables_wi_empty_l_output_attrs(self):
         self.bb.set_black_box_function(_block_fn)
-        C = self.bb.block_tables(self.A, self.B,
-                                 l_output_attrs=[], r_output_attrs=r_output_attrs)
-        s1 = ['_id', 'ltable_' + l_key, 'rtable_' + r_key]
-        s1 += ['rtable_' + x for x in r_output_attrs if x != r_key]
-        s1 = sorted(s1)
-        assert_equal(s1, sorted(C.columns))
-        assert_equal(mg.get_key(C), '_id')
-        assert_equal(mg.get_property(C, 'fk_ltable'), 'ltable_' + l_key)
-        assert_equal(mg.get_property(C, 'fk_rtable'), 'rtable_' + r_key)
-        C_ids = C[['ltable_' + l_key, 'rtable_' + r_key]]
-        actual_ids = sorted(C_ids.set_index(['ltable_' + l_key, 'rtable_' + r_key]).index.tolist())
-        assert_equal(expected_ids, actual_ids)
+        C = self.bb.block_tables(self.A, self.B, [], r_output_attrs)
+        validate_metadata(C, [], r_output_attrs)
+        validate_data(C, expected_ids_1)
 
     def test_bb_block_tables_wi_empty_r_output_attrs(self):
         self.bb.set_black_box_function(_block_fn)
-        C = self.bb.block_tables(self.A, self.B,
-                                 l_output_attrs=l_output_attrs,
-                                 r_output_attrs=[])
-        s1 = ['_id', 'ltable_' + l_key, 'rtable_' + r_key]
-        s1 += ['ltable_' + x for x in l_output_attrs if x != l_key]
-        s1 = sorted(s1)
-        assert_equal(s1, sorted(C.columns))
-        assert_equal(mg.get_key(C), '_id')
-        assert_equal(mg.get_property(C, 'fk_ltable'), 'ltable_' + l_key)
-        assert_equal(mg.get_property(C, 'fk_rtable'), 'rtable_' + r_key)
-        C_ids = C[['ltable_' + l_key, 'rtable_' + r_key]]
-        actual_ids = sorted(C_ids.set_index(['ltable_' + l_key, 'rtable_' + r_key]).index.tolist())
-        assert_equal(expected_ids, actual_ids)
+        C = self.bb.block_tables(self.A, self.B, l_output_attrs, [])
+        validate_metadata(C, l_output_attrs, [])
+        validate_data(C, expected_ids_1)
 
     @raises(AssertionError)
     def test_bb_block_candset_invalid_candset_1(self):
@@ -330,66 +244,136 @@ class BlackBoxBlockerTestCases(unittest.TestCase):
         self.bb.block_candset(C, show_progress='yes')
 
     def test_bb_block_candset(self):
-        C = self.ab.block_tables(self.A, self.B, 'zipcode', 'zipcode',
-                            l_output_attrs=l_output_attrs, r_output_attrs=r_output_attrs,
-                            l_output_prefix=l_output_prefix, r_output_prefix=r_output_prefix)
+        ab = mg.AttrEquivalenceBlocker()
+        C = ab.block_tables(self.A, self.B, 'zipcode', 'zipcode',
+                            l_output_attrs, r_output_attrs,
+                            l_output_prefix, r_output_prefix)
+        validate_metadata(C, l_output_attrs, r_output_attrs,
+                          l_output_prefix, r_output_prefix)
+        validate_data(C, expected_ids_zip)
         self.bb.set_black_box_function(_block_fn)
         D = self.bb.block_candset(C)
-        assert_equal(sorted(C.columns), sorted(D.columns))
-        assert_equal(mg.get_key(D), '_id')
-        assert_equal(mg.get_property(D, 'fk_ltable'), mg.get_property(C, 'fk_ltable'))
-        assert_equal(mg.get_property(D, 'fk_rtable'), mg.get_property(C, 'fk_rtable'))
-        D_ids = D[[l_output_prefix + l_key, r_output_prefix + r_key]]
-        actual_ids = sorted(D_ids.set_index([l_output_prefix + l_key, r_output_prefix + r_key]).index.tolist())
-        assert_equal(expected_ids_2, actual_ids)
-
-    def test_bb_block_candset_njobs_2(self):
-        C = self.ab.block_tables(self.A, self.B, 'zipcode', 'zipcode',
-                            l_output_attrs=l_output_attrs, r_output_attrs=r_output_attrs,
-                            l_output_prefix=l_output_prefix, r_output_prefix=r_output_prefix)
-        self.bb.set_black_box_function(_block_fn)
-        D = self.bb.block_candset(C, n_jobs=2)
-        assert_equal(sorted(C.columns), sorted(D.columns))
-        assert_equal(mg.get_key(D), '_id')
-        assert_equal(mg.get_property(D, 'fk_ltable'), mg.get_property(C, 'fk_ltable'))
-        assert_equal(mg.get_property(D, 'fk_rtable'), mg.get_property(C, 'fk_rtable'))
-        D_ids = D[[l_output_prefix + l_key, r_output_prefix + r_key]]
-        actual_ids = sorted(D_ids.set_index([l_output_prefix + l_key, r_output_prefix + r_key]).index.tolist())
-        assert_equal(expected_ids_2, actual_ids)
-
-    def test_bb_block_candset_njobs_all(self):
-        C = self.ab.block_tables(self.A, self.B, 'zipcode', 'zipcode',
-                            l_output_attrs=l_output_attrs, r_output_attrs=r_output_attrs,
-                            l_output_prefix=l_output_prefix, r_output_prefix=r_output_prefix)
-        self.bb.set_black_box_function(_block_fn)
-        D = self.bb.block_candset(C, n_jobs=-1)
-        assert_equal(sorted(C.columns), sorted(D.columns))
-        assert_equal(mg.get_key(D), '_id')
-        assert_equal(mg.get_property(D, 'fk_ltable'), mg.get_property(C, 'fk_ltable'))
-        assert_equal(mg.get_property(D, 'fk_rtable'), mg.get_property(C, 'fk_rtable'))
-        D_ids = D[[l_output_prefix + l_key, r_output_prefix + r_key]]
-        actual_ids = sorted(D_ids.set_index([l_output_prefix + l_key, r_output_prefix + r_key]).index.tolist())
-        assert_equal(expected_ids_2, actual_ids)
+        validate_metadata_two_candsets(C, D)
+        validate_data(D, expected_ids_2)
 
     def test_bb_block_candset_empty_input(self):
         self.bb.set_black_box_function(_evil_block_fn)
         C = self.bb.block_tables(self.A, self.B)
-        assert_equal(len(C), 0)
+        validate_metadata(C)
+        validate_data(C)
         self.bb.set_black_box_function(_block_fn)
         D = self.bb.block_candset(C)
-        assert_equal(sorted(D.columns), sorted(C.columns))
-        assert_equal(mg.get_key(C), '_id')
-        assert_equal(mg.get_property(D, 'fk_ltable'), mg.get_property(C, 'fk_ltable'))
-        assert_equal(mg.get_property(D, 'fk_rtable'), mg.get_property(C, 'fk_rtable'))
-        assert_equal(len(D), 0)
+        validate_metadata_two_candsets(C, D)
+        validate_data(D)
 
     def test_bb_block_candset_empty_output(self):
         self.bb.set_black_box_function(_block_fn)
         C = self.bb.block_tables(self.A, self.B)
+        validate_metadata(C)
+        validate_data(C, expected_ids_1)
         self.bb.set_black_box_function(_evil_block_fn)
         D = self.bb.block_candset(C)
-        assert_equal(sorted(D.columns), sorted(C.columns))
-        assert_equal(mg.get_key(D), '_id')
-        assert_equal(mg.get_property(D, 'fk_ltable'), mg.get_property(C, 'fk_ltable'))
-        assert_equal(mg.get_property(D, 'fk_rtable'), mg.get_property(C, 'fk_rtable'))
-        assert_equal(len(D), 0)
+        validate_metadata_two_candsets(C, D)
+        validate_data(D)
+
+    def test_bb_block_tuples(self):
+        self.bb.set_black_box_function(_block_fn)
+        assert_equal(self.bb.block_tuples(self.A.ix[1], self.B.ix[2]),
+                     False)
+        assert_equal(self.bb.block_tuples(self.A.ix[2], self.B.ix[2]),
+                     True)
+
+
+class BlackBoxBlockerMulticoreTestCases(unittest.TestCase):
+
+    def setUp(self):
+        self.A = mg.read_csv_metadata(path_a)
+        mg.set_key(self.A, 'ID')
+        self.B = mg.read_csv_metadata(path_b)
+        mg.set_key(self.B, 'ID')
+        self.bb = mg.BlackBoxBlocker()
+        
+    def tearDown(self):
+        del self.A
+        del self.B
+        del self.bb
+
+    def test_bb_block_tables_njobs_2(self):
+        self.bb.set_black_box_function(_block_fn)
+        C = self.bb.block_tables(self.A, self.B, l_output_attrs=l_output_attrs,
+                                 r_output_attrs=r_output_attrs,
+                                 l_output_prefix=l_output_prefix,
+                                 r_output_prefix=r_output_prefix, n_jobs=2)
+        validate_metadata(C, l_output_attrs, r_output_attrs,
+                          l_output_prefix, r_output_prefix)
+        validate_data(C, expected_ids_1)
+
+    def test_bb_block_tables_njobs_all(self):
+        self.bb.set_black_box_function(_block_fn)
+        C = self.bb.block_tables(self.A, self.B, l_output_attrs=l_output_attrs,
+                                 r_output_attrs=r_output_attrs,
+                                 l_output_prefix=l_output_prefix,
+                                 r_output_prefix=r_output_prefix, n_jobs=-1)
+        validate_metadata(C, l_output_attrs, r_output_attrs,
+                          l_output_prefix, r_output_prefix)
+        validate_data(C, expected_ids_1)
+
+    def test_bb_block_candset_njobs_2(self):
+        ab = mg.AttrEquivalenceBlocker()
+        C = ab.block_tables(self.A, self.B, 'zipcode', 'zipcode',
+                            l_output_attrs, r_output_attrs,
+                            l_output_prefix, r_output_prefix)
+        validate_metadata(C, l_output_attrs, r_output_attrs,
+                          l_output_prefix, r_output_prefix)
+        validate_data(C, expected_ids_zip)
+        self.bb.set_black_box_function(_block_fn)
+        D = self.bb.block_candset(C, n_jobs=2)
+        validate_metadata_two_candsets(C, D)
+        validate_data(D, expected_ids_2)
+
+    def test_bb_block_candset_njobs_all(self):
+        ab = mg.AttrEquivalenceBlocker()
+        C = ab.block_tables(self.A, self.B, 'zipcode', 'zipcode',
+                                 l_output_attrs, r_output_attrs,
+                                 l_output_prefix, r_output_prefix)
+        validate_metadata(C, l_output_attrs, r_output_attrs,
+                          l_output_prefix, r_output_prefix)
+        validate_data(C, expected_ids_zip)
+        self.bb.set_black_box_function(_block_fn)
+        D = self.bb.block_candset(C, n_jobs=-1)
+        validate_metadata_two_candsets(C, D)
+        validate_data(D, expected_ids_2)
+
+
+
+# helper functions for validating the output
+    
+def validate_metadata(C, l_output_attrs=None, r_output_attrs=None,
+                      l_output_prefix='ltable_', r_output_prefix='rtable_',
+                      l_key='ID', r_key='ID'):
+    s1 = ['_id', l_output_prefix + l_key, r_output_prefix + r_key]
+    if l_output_attrs:
+        s1 += [l_output_prefix + x for x in l_output_attrs if x != l_key]
+    if r_output_attrs:
+        s1 += [r_output_prefix + x for x in r_output_attrs if x != r_key]
+    s1 = sorted(s1)
+    assert_equal(s1, sorted(C.columns))
+    assert_equal(mg.get_key(C), '_id')
+    assert_equal(mg.get_property(C, 'fk_ltable'), l_output_prefix + l_key)
+    assert_equal(mg.get_property(C, 'fk_rtable'), r_output_prefix + r_key)
+    
+def validate_data(C, expected_ids=None):
+    if expected_ids:
+        lid = mg.get_property(C, 'fk_ltable')
+        rid = mg.get_property(C, 'fk_rtable')
+        C_ids = C[[lid, rid]].set_index([lid, rid])
+        actual_ids = sorted(C_ids.index.values.tolist())
+        assert_equal(expected_ids, actual_ids)
+    else:
+        assert_equal(len(C), 0)
+    
+def validate_metadata_two_candsets(C, D): 
+    assert_equal(sorted(C.columns), sorted(D.columns))
+    assert_equal(mg.get_key(D), mg.get_key(C))
+    assert_equal(mg.get_property(D, 'fk_ltable'), mg.get_property(C, 'fk_ltable'))
+    assert_equal(mg.get_property(D, 'fk_rtable'), mg.get_property(C, 'fk_rtable'))
