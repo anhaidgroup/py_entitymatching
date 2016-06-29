@@ -14,17 +14,74 @@ from magellan.utils.catalog_helper import log_info, get_name_for_key, add_key_co
 logger = logging.getLogger(__name__)
 
 class BlackBoxBlocker(Blocker):
+    """Blocks two tables, a candset, or a pair of tuples based on a black box
+       function specified by the user.
+    """
+
     def __init__(self, *args, **kwargs):
         super(Blocker, self).__init__(*args, **kwargs)
         self.black_box_function = None
 
     def set_black_box_function(self, function):
+        """Sets black box function to be used for blocking.
+
+        Args:
+            function (function): the black box function to be used for blocking .
+        """
         self.black_box_function = function
 
     def block_tables(self, ltable, rtable,
                      l_output_attrs=None, r_output_attrs=None,
                      l_output_prefix='ltable_', r_output_prefix='rtable_',
-                     verbose=True, show_progress=True, n_jobs=1):
+                     verbose=False, show_progress=True, n_jobs=1):
+        
+        """Blocks two tables based on a black box blocking function specified
+           by the user.
+
+        Finds tuple pairs from left and right tables that survive the black
+        box function. A tuple pair survives the black box blocking function if
+        the function returns False for that pair, otherwise the tuple pair is
+        dropped.
+
+        Args:
+            ltable (DataFrame): left input table.
+
+            rtable (DataFrame): right input table.
+
+            l_output_attrs (list): list of attribute names from the left
+                                   table to be included in the
+                                   output candidate set (defaults to None).
+
+            r_output_attrs (list): list of attribute names from the right
+                                   table to be included in the
+                                   output candidate set (defaults to None).
+
+            l_output_prefix (str): prefix to be used for the attribute names
+                                   coming from the left table in the output
+                                   candidate set (defaults to 'ltable\_').
+
+            r_output_prefix (str): prefix to be used for the attribute names
+                                   coming from the right table in the output
+                                   candidate set (defaults to 'rtable\_').
+
+            verbose (boolean): flag to indicate whether logging should be done
+                               (defaults to False).
+
+            show_progress (boolean): flag to indicate whether progress should
+                                     be displayed to the user (defaults to True).
+
+            n_jobs (int): number of parallel jobs to be used for computation
+                          (defaults to 1).
+                          If -1 all CPUs are used. If 0 or 1, no parallel computation
+                          is used at all, which is useful for debugging.
+                          For n_jobs below -1, (n_cpus + 1 + n_jobs) are used.
+                          Thus, for n_jobs = -2, all CPUS but one are used.
+                          If (n_cpus + 1 + n_jobs) is less than 1, then n_jobs is
+                          set to 1, which means no parallel computation at all.
+
+        Returns:
+            A candidate set of tuple pairs that survived blocking (DataFrame).
+        """
 
         # validate data types of standard input parameters
         self.validate_types_params_tables(ltable, rtable,
@@ -106,6 +163,36 @@ class BlackBoxBlocker(Blocker):
 
     def block_candset(self, candset, verbose=True, show_progress=True, n_jobs=1):
 
+        """Blocks an input candidate set of tuple pairs based on a black box
+           blocking function specified by the user.
+
+        Finds tuple pairs from an input candidate set of tuple pairs that
+        survive the black box function. A tuple pair survives the black box
+        blocking function if the function returns False for that pair,
+        otherwise the tuple pair is dropped.
+
+        Args:
+            candset (DataFrame): input candidate set of tuple pairs.
+
+            verbose (boolean): flag to indicate whether logging should be done
+                               (defaults to False).
+
+            show_progress (boolean): flag to indicate whether progress should
+                                     be displayed to the user (defaults to True).
+
+            n_jobs (int): number of parallel jobs to be used for computation
+                          (defaults to 1).
+                          If -1 all CPUs are used. If 0 or 1, no parallel computation
+                          is used at all, which is useful for debugging.
+                          For n_jobs below -1, (n_cpus + 1 + n_jobs) are used.
+                          Thus, for n_jobs = -2, all CPUS but one are used.
+                          If (n_cpus + 1 + n_jobs) is less than 1, then n_jobs is
+                          set to 1, which means no parallel computation at all.
+
+        Returns:
+            A candidate set of tuple pairs that survived blocking (DataFrame).
+        """
+
         # validate data types of standard input parameters
         self.validate_types_params_candset(candset, verbose, show_progress, n_jobs)
 
@@ -114,7 +201,7 @@ class BlackBoxBlocker(Blocker):
 
         # get and validate metadata
         log_info(logger, 'Required metadata: cand.set key, fk ltable, fk rtable, '
-                                'ltable, rtable, ltable key, rtable key', verbose)
+                         'ltable, rtable, ltable key, rtable key', verbose)
 
         # # get metadata
         key, fk_ltable, fk_rtable, ltable, rtable, l_key, r_key = cm.get_metadata_for_candset(candset, logger, verbose)
@@ -164,9 +251,27 @@ class BlackBoxBlocker(Blocker):
         return c_df
 
     def block_tuples(self, ltuple, rtuple):
+        """Blocks a tuple pair based on a black box blocking function specified
+           by the user.
+
+        Takes a tuple pair as input, applies the black box blocking function to
+        it, and returns True (if the intention is to drop the pair) or False
+        (if the intention is to keep the tuple pair).
+
+        Args:
+            ltuple (Series): input left tuple.
+
+            rtuple (Series): input right tuple.
+            
+        Returns:
+            A status indicating if the tuple pair should be dropped or kept,
+            based on the black box blocking function (boolean).
+        """
+
         # validate black box function
         assert self.black_box_function is not None, 'Black box function is not set'
         return self.black_box_function(ltuple, rtuple)
+
 
 def _block_tables_split(l_df, r_df, l_key, r_key,
                         l_output_attrs, r_output_attrs,

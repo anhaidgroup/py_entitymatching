@@ -29,9 +29,9 @@ class AttrEquivalenceBlocker(Blocker):
         This is similar to equi-join of two tables.
 
         Args:
-            ltable (Dataframe): left input table.
+            ltable (DataFrame): left input table.
 
-            rtable (Dataframe): right input table.
+            rtable (DataFrame): right input table.
 
             l_block_attr (str): blocking attribute in left table.
 
