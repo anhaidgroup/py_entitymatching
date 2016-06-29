@@ -11,7 +11,6 @@ import six
 import magellan.catalog.catalog_manager as cm
 from magellan.blocker.blocker import Blocker
 
-# from magellan.externals.py_stringmatching.tokenizers import qgram
 from py_stringmatching.tokenizer.whitespace_tokenizer import WhitespaceTokenizer
 from py_stringmatching.tokenizer.qgram_tokenizer import QgramTokenizer
 
