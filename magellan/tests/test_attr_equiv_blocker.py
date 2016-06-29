@@ -6,10 +6,8 @@ import unittest
 import magellan as mg
 
 p = mg.get_install_path()
-path_for_A = os.sep.join([p, 'datasets', 'table_A.csv'])
-path_for_B = os.sep.join([p, 'datasets', 'table_B.csv'])
-l_key = 'ID'
-r_key = 'ID'
+path_a = os.sep.join([p, 'datasets', 'table_A.csv'])
+path_b = os.sep.join([p, 'datasets', 'table_B.csv'])
 l_block_attr_1 = 'zipcode'
 l_block_attr_2 = 'birth_year'
 l_block_attr_3 = 'name'
@@ -21,17 +19,27 @@ r_output_attrs = ['zipcode', 'birth_year']
 l_output_prefix = 'l_'
 r_output_prefix = 'r_'
 
-bogus_attr = 'bogus'
-block_attr_multi = ['zipcode', 'birth_year']
+# attribute equivalence on [l|r]_block_attr_1
+expected_ids_1 = [('a1', 'b1'), ('a1', 'b2'), ('a1', 'b6'),
+                  ('a2', 'b3'), ('a2', 'b4'), ('a2', 'b5'),
+                  ('a3', 'b1'), ('a3', 'b2'), ('a3', 'b6'),
+                  ('a4', 'b3'), ('a4', 'b4'), ('a4', 'b5'),
+                  ('a5', 'b3'), ('a5', 'b4'), ('a5', 'b5')]
 
+# attribute equivalence on [l|r]_block_attr_1 \intersection [l|r]_block_attr_2
+expected_ids_2 = [('a2', 'b3'), ('a3', 'b2'), ('a5', 'b5')]
+
+# overlap on birth_year with q_val=3 and overlap_size=2
+expected_ids_3 = [('a2', 'b3'), ('a3', 'b2'), ('a4', 'b1'), ('a4', 'b6'),
+                  ('a5', 'b5')]
 
 class AttrEquivBlockerTestCases(unittest.TestCase):
 
     def setUp(self):
-        self.A = mg.read_csv_metadata(path_for_A)
-        mg.set_key(self.A, l_key)
-        self.B = mg.read_csv_metadata(path_for_B)
-        mg.set_key(self.B, r_key)
+        self.A = mg.read_csv_metadata(path_a)
+        mg.set_key(self.A, 'ID')
+        self.B = mg.read_csv_metadata(path_b)
+        mg.set_key(self.B, 'ID')
         self.ab = mg.AttrEquivalenceBlocker()
         
     def tearDown(self):
@@ -49,7 +57,8 @@ class AttrEquivBlockerTestCases(unittest.TestCase):
 
     @raises(AssertionError)
     def test_ab_block_tables_invalid_ltable_3(self):
-        self.ab.block_tables(pd.DataFrame(), self.B, l_block_attr_1, r_block_attr_1)
+        self.ab.block_tables(pd.DataFrame(), self.B,
+                             l_block_attr_1, r_block_attr_1)
 
     @raises(AssertionError)
     def test_ab_block_tables_invalid_rtable_1(self):
@@ -61,7 +70,8 @@ class AttrEquivBlockerTestCases(unittest.TestCase):
 
     @raises(AssertionError)
     def test_ab_block_tables_invalid_rtable_3(self):
-        self.ab.block_tables(self.A, pd.DataFrame(), l_block_attr_1, r_block_attr_1)
+        self.ab.block_tables(self.A, pd.DataFrame(),
+                             l_block_attr_1, r_block_attr_1)
 
     @raises(AssertionError)
     def test_ab_block_tables_invalid_l_block_attr_1(self):
@@ -77,11 +87,12 @@ class AttrEquivBlockerTestCases(unittest.TestCase):
 
     @raises(AssertionError)
     def test_ab_block_tables_bogus_l_block_attr(self):
-        self.ab.block_tables(self.A, self.B, bogus_attr, r_block_attr_1)
+        self.ab.block_tables(self.A, self.B, 'bogus_attr', r_block_attr_1)
 
     @raises(AssertionError)
     def test_ab_block_tables_multi_l_block_attr(self):
-        self.ab.block_tables(self.A, self.B, block_attr_multi, r_block_attr_1)
+        self.ab.block_tables(self.A, self.B, ['zipcode', 'birth_year'],
+                             r_block_attr_1)
 
     @raises(AssertionError)
     def test_ab_block_tables_invalid_r_block_attr_1(self):
@@ -97,11 +108,12 @@ class AttrEquivBlockerTestCases(unittest.TestCase):
 
     @raises(AssertionError)
     def test_ab_block_tables_bogus_r_block_attr(self):
-        self.ab.block_tables(self.A, self.B, l_block_attr_1, bogus_attr)
+        self.ab.block_tables(self.A, self.B, l_block_attr_1, 'bogus_attr')
 
     @raises(AssertionError)
     def test_ab_block_tables_multi_r_block_attr(self):
-        self.ab.block_tables(self.A, self.B, l_block_attr_1, block_attr_multi)
+        self.ab.block_tables(self.A, self.B, l_block_attr_1,
+                             ['zipcode', 'birth_year'])
 
     @raises(AssertionError)
     def test_ab_block_tables_invalid_l_output_attrs_1(self):
@@ -109,131 +121,156 @@ class AttrEquivBlockerTestCases(unittest.TestCase):
 
     @raises(AssertionError)
     def test_ab_block_tables_invalid_l_output_attrs_2(self):
-        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, 'name')
+        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1,
+                             'name')
 
     @raises(AssertionError)
     def test_ab_block_tables_invalid_l_output_attrs_3(self):
-        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, [1, 2])
+        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1,
+                             [1, 2])
 
     @raises(AssertionError)
     def test_ab_block_tables_bogus_l_output_attrs(self):
-        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, [bogus_attr])
+        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1,
+                             ['bogus_attr'])
 
     @raises(AssertionError)
     def test_ab_block_tables_invalid_r_output_attrs_1(self):
-        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, r_output_attrs=1)
+        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1,
+                             r_output_attrs=1)
 
     @raises(AssertionError)
     def test_ab_block_tables_invalid_r_output_attrs_2(self):
-        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, r_output_attrs='name')
+        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1,
+                             r_output_attrs='name')
 
     @raises(AssertionError)
     def test_ab_block_tables_invalid_r_output_attrs_3(self):
-        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, r_output_attrs=[1, 2])
+        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1,
+                             r_output_attrs=[1, 2])
 
     @raises(AssertionError)
     def test_ab_block_tables_bogus_r_output_attrs(self):
-        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, r_output_attrs=[bogus_attr])
+        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1,
+                             r_output_attrs=['bogus_attr'])
 
     @raises(AssertionError)
     def test_ab_block_tables_invalid_l_output_prefix_1(self):
-        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, l_output_prefix=None)
+        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1,
+                             l_output_prefix=None)
 
     @raises(AssertionError)
     def test_ab_block_tables_invalid_l_output_prefix_2(self):
-        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, l_output_prefix=1)
+        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1,
+                             l_output_prefix=1)
 
     @raises(AssertionError)
     def test_ab_block_tables_invalid_l_output_prefix_3(self):
-        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, l_output_prefix=True)
+        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1,
+                             l_output_prefix=True)
 
     @raises(AssertionError)
     def test_ab_block_tables_invalid_r_output_prefix_1(self):
-        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, r_output_prefix=None)
+        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1,
+                             r_output_prefix=None)
 
     @raises(AssertionError)
     def test_ab_block_tables_invalid_r_output_prefix_2(self):
-        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, r_output_prefix=1)
+        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1,
+                             r_output_prefix=1)
 
     @raises(AssertionError)
     def test_ab_block_tables_invalid_r_output_prefix_3(self):
-        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, r_output_prefix=True)
+        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1,
+                             r_output_prefix=True)
 
     @raises(AssertionError)
     def test_ab_block_tables_invalid_verbose_1(self):
-        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, verbose=None)
+        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1,
+                             verbose=None)
 
     @raises(AssertionError)
     def test_ab_block_tables_invalid_verbose_2(self):
-        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, verbose=1)
+        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1,
+                             verbose=1)
 
     @raises(AssertionError)
     def test_ab_block_tables_invalid_verbose_3(self):
-        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, verbose='yes')
+        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1,
+                             verbose='yes')
+
+    @raises(AssertionError)
+    def test_ab_block_tables_invalid_show_progress_1(self):
+        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1,
+                             show_progress=None)
+
+    @raises(AssertionError)
+    def test_ab_block_tables_invalid_show_progress_2(self):
+        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1,
+                             show_progress=1)
+
+    @raises(AssertionError)
+    def test_ab_block_tables_invalid_show_progress_3(self):
+        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1,
+                             show_progress='yes')
+
+    @raises(AssertionError)
+    def test_ab_block_tables_invalid_njobs_1(self):
+        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1,
+                             n_jobs=None)
+
+    @raises(AssertionError)
+    def test_ab_block_tables_invalid_njobs_2(self):
+        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1,
+                             n_jobs='1')
+
+    @raises(AssertionError)
+    def test_ab_block_tables_invalid_njobs_3(self):
+        self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1,
+                             n_jobs=1.5)
 
     def test_ab_block_tables(self):
-        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, l_output_attrs,
-                            r_output_attrs, l_output_prefix, r_output_prefix)
-        s1 = ['_id', l_output_prefix + l_key, r_output_prefix + r_key]
-        s1 += [l_output_prefix + x for x in l_output_attrs if x != l_key]
-        s1 += [r_output_prefix + x for x in r_output_attrs if x != r_key]
-        s1 = sorted(s1)
-        assert_equal(s1, sorted(C.columns))
-        assert_equal(mg.get_key(C), '_id')
-        assert_equal(mg.get_property(C, 'fk_ltable'), l_output_prefix + l_key)
-        assert_equal(mg.get_property(C, 'fk_rtable'), r_output_prefix + r_key)
-        k1 = pd.np.array(C[l_output_prefix + l_block_attr_1])
-        k2 = pd.np.array(C[r_output_prefix + r_block_attr_1])
-        assert_equal(all(k1 == k2), True)
+        C = self.ab.block_tables(self.A, self.B,
+                                 l_block_attr_1, r_block_attr_1,
+                                 l_output_attrs, r_output_attrs,
+                                 l_output_prefix, r_output_prefix)
+        validate_metadata(C, l_output_attrs, r_output_attrs,
+                          l_output_prefix, r_output_prefix)
+        validate_data(C, expected_ids_1)
 
     def test_ab_block_tables_wi_no_output_tuples(self):
-        C = self.ab.block_tables(self.A, self.B, l_block_attr_3, r_block_attr_3)
-        assert_equal(len(C),  0)
-        assert_equal(sorted(C.columns), sorted(['_id', 'ltable_' + l_key,
-                                                'rtable_' + r_key]))
-        assert_equal(mg.get_key(C), '_id')
-        assert_equal(mg.get_property(C, 'fk_ltable'), 'ltable_' + l_key)
-        assert_equal(mg.get_property(C, 'fk_rtable'), 'rtable_' + r_key)
+        C = self.ab.block_tables(self.A, self.B,
+                                 l_block_attr_3, r_block_attr_3)
+        validate_metadata(C)
+        validate_data(C)
 
     def test_ab_block_tables_wi_null_l_output_attrs(self):
-        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, None, r_output_attrs)
-        s1 = ['_id', 'ltable_' + l_key, 'rtable_' + r_key]
-        s1 += ['rtable_' + x for x in r_output_attrs if x != r_key]
-        s1 = sorted(s1)
-        assert_equal(s1, sorted(C.columns))
-        assert_equal(mg.get_key(C), '_id')
-        assert_equal(mg.get_property(C, 'fk_ltable'), 'ltable_' + l_key)
-        assert_equal(mg.get_property(C, 'fk_rtable'), 'rtable_' + r_key)
+        C = self.ab.block_tables(self.A, self.B,
+                                 l_block_attr_1, r_block_attr_1,
+                                 None, r_output_attrs)
+        validate_metadata(C, r_output_attrs=r_output_attrs)
+        validate_data(C, expected_ids_1)
 
     def test_ab_block_tables_wi_null_r_output_attrs(self):
-        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, l_output_attrs, None)
-        s1 = ['_id', 'ltable_' + l_key, 'rtable_' + r_key]
-        s1 += ['ltable_' + x for x in l_output_attrs if x != l_key]
-        s1 = sorted(s1)
-        assert_equal(s1, sorted(C.columns))
-        assert_equal(mg.get_key(C), '_id')
-        assert_equal(mg.get_property(C, 'fk_ltable'), 'ltable_' + l_key)
-        assert_equal(mg.get_property(C, 'fk_rtable'), 'rtable_' + r_key)
+        C = self.ab.block_tables(self.A, self.B,
+                                 l_block_attr_1, r_block_attr_1,
+                                 l_output_attrs, None)
+        validate_metadata(C, l_output_attrs)
+        validate_data(C, expected_ids_1)
 
     def test_ab_block_tables_wi_empty_l_output_attrs(self):
-        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, [], r_output_attrs)
-        s1 = ['_id', 'ltable_' + l_key, 'rtable_' + r_key]
-        s1 += ['rtable_' + x for x in r_output_attrs if x != r_key]
-        s1 = sorted(s1)
-        assert_equal(s1, sorted(C.columns))
-        assert_equal(mg.get_key(C), '_id')
-        assert_equal(mg.get_property(C, 'fk_ltable'), 'ltable_' + l_key)
-        assert_equal(mg.get_property(C, 'fk_rtable'), 'rtable_' + r_key)
+        C = self.ab.block_tables(self.A, self.B,
+                                 l_block_attr_1, r_block_attr_1,
+                                 [], r_output_attrs)
+        validate_metadata(C, r_output_attrs=r_output_attrs)
+        validate_data(C, expected_ids_1)
 
     def test_ab_block_tables_wi_empty_r_output_attrs(self):
-        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, l_output_attrs, [])
-        s1 = ['_id', 'ltable_' + l_key, 'rtable_' + r_key]
-        s1 += ['ltable_' + x for x in l_output_attrs if x != l_key]
-        s1 = sorted(s1)
-        assert_equal(s1, sorted(C.columns))
-        assert_equal(mg.get_key(C), '_id')
-        assert_equal(mg.get_property(C, 'fk_ltable'), 'ltable_' + l_key)
-        assert_equal(mg.get_property(C, 'fk_rtable'), 'rtable_' + r_key)
+        C = self.ab.block_tables(self.A, self.B,
+                                 l_block_attr_1, r_block_attr_1,
+                                 l_output_attrs, [])
+        validate_metadata(C, l_output_attrs)
+        validate_data(C, expected_ids_1)
 
     @raises(AssertionError)
     def test_ab_block_candset_invalid_candset_1(self):
@@ -249,117 +286,358 @@ class AttrEquivBlockerTestCases(unittest.TestCase):
 
     @raises(AssertionError)
     def test_ab_block_candset_invalid_l_block_attr_1(self):
-        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1)
+        C = self.ab.block_tables(self.A, self.B,
+                                 l_block_attr_1, r_block_attr_1)
         self.ab.block_candset(C, None, r_block_attr_2)
 
     @raises(AssertionError)
     def test_ab_block_candset_invalid_l_block_attr_2(self):
-        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1)
+        C = self.ab.block_tables(self.A, self.B,
+                                 l_block_attr_1, r_block_attr_1)
         self.ab.block_candset(C, 10, r_block_attr_2)
 
     @raises(AssertionError)
     def test_ab_block_candset_invalid_l_block_attr_3(self):
-        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1)
+        C = self.ab.block_tables(self.A, self.B,
+                                 l_block_attr_1, r_block_attr_1)
         self.ab.block_candset(C, True, r_block_attr_2)
 
     @raises(AssertionError)
     def test_ab_block_candset_bogus_l_block_attr(self):
-        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1)
-        self.ab.block_candset(C, bogus_attr, r_block_attr_2)
+        C = self.ab.block_tables(self.A, self.B,
+                                 l_block_attr_1, r_block_attr_1)
+        self.ab.block_candset(C, 'bogus_attr', r_block_attr_2)
 
     @raises(AssertionError)
     def test_ab_block_candset_multi_l_block_attr(self):
-        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1)
-        self.ab.block_candset(C, block_attr_multi, r_block_attr_2)
+        C = self.ab.block_tables(self.A, self.B,
+                                 l_block_attr_1, r_block_attr_1)
+        self.ab.block_candset(C, ['zipcode', 'birth_year'], r_block_attr_2)
 
     @raises(AssertionError)
     def test_ab_block_candset_invalid_r_block_attr_1(self):
-        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1)
+        C = self.ab.block_tables(self.A, self.B,
+                                 l_block_attr_1, r_block_attr_1)
         self.ab.block_candset(C, l_block_attr_2, None)
 
     @raises(AssertionError)
     def test_ab_block_candset_invalid_r_block_attr_2(self):
-        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1)
+        C = self.ab.block_tables(self.A, self.B,
+                                 l_block_attr_1, r_block_attr_1)
         self.ab.block_candset(C, l_block_attr_2, 10)
 
     @raises(AssertionError)
     def test_ab_block_candset_invalid_r_block_attr_3(self):
-        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1)
+        C = self.ab.block_tables(self.A, self.B,
+                                 l_block_attr_1, r_block_attr_1)
         self.ab.block_candset(C, l_block_attr_2, True)
 
     @raises(AssertionError)
     def test_ab_block_candset_bogus_r_block_attr(self):
-        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1)
-        self.ab.block_candset(C, l_block_attr_2, bogus_attr)
+        C = self.ab.block_tables(self.A, self.B,
+                                 l_block_attr_1, r_block_attr_1)
+        self.ab.block_candset(C, l_block_attr_2, 'bogus_attr')
 
     @raises(AssertionError)
     def test_ab_block_candset_multi_r_block_attr(self):
-        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1)
-        self.ab.block_candset(C, l_block_attr_2, block_attr_multi)
+        C = self.ab.block_tables(self.A, self.B,
+                                 l_block_attr_1, r_block_attr_1)
+        self.ab.block_candset(C, l_block_attr_2, ['zipcode', 'birth_year'])
 
     @raises(AssertionError)
     def test_ab_block_candset_invalid_verbose_1(self):
-        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1)
+        C = self.ab.block_tables(self.A, self.B,
+                                 l_block_attr_1, r_block_attr_1)
         self.ab.block_candset(C, l_block_attr_2, r_block_attr_2, None)
 
     @raises(AssertionError)
     def test_ab_block_candset_invalid_verbose_2(self):
-        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1)
+        C = self.ab.block_tables(self.A, self.B,
+                                 l_block_attr_1, r_block_attr_1)
         self.ab.block_candset(C, l_block_attr_2, r_block_attr_2, 1)
 
     @raises(AssertionError)
     def test_ab_block_candset_invalid_verbose_3(self):
-        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1)
+        C = self.ab.block_tables(self.A, self.B,
+                                 l_block_attr_1, r_block_attr_1)
         self.ab.block_candset(C, l_block_attr_2, r_block_attr_2, 'yes')
 
     @raises(AssertionError)
     def test_ab_block_candset_invalid_show_progress_1(self):
-        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1)
-        self.ab.block_candset(C, l_block_attr_2, r_block_attr_2, show_progress=None)
+        C = self.ab.block_tables(self.A, self.B,
+                                 l_block_attr_1, r_block_attr_1)
+        self.ab.block_candset(C, l_block_attr_2, r_block_attr_2,
+                              show_progress=None)
 
     @raises(AssertionError)
     def test_ab_block_candset_invalid_show_progress_2(self):
-        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1)
-        self.ab.block_candset(C, l_block_attr_2, r_block_attr_2, show_progress=1)
+        C = self.ab.block_tables(self.A, self.B,
+                                 l_block_attr_1, r_block_attr_1)
+        self.ab.block_candset(C, l_block_attr_2, r_block_attr_2,
+                              show_progress=1)
 
     @raises(AssertionError)
     def test_ab_block_candset_invalid_show_progress_3(self):
-        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1)
-        self.ab.block_candset(C, l_block_attr_2, r_block_attr_2, show_progress='yes')
+        C = self.ab.block_tables(self.A, self.B,
+                                 l_block_attr_1, r_block_attr_1)
+        self.ab.block_candset(C, l_block_attr_2, r_block_attr_2,
+                              show_progress='yes')
+
+    @raises(AssertionError)
+    def test_ab_block_candset_invalid_njobs_1(self):
+        C = self.ab.block_tables(self.A, self.B,
+                                 l_block_attr_1, r_block_attr_1)
+        self.ab.block_candset(C, l_block_attr_2, r_block_attr_2, n_jobs=None)
+
+    @raises(AssertionError)
+    def test_ab_block_candset_invalid_njobs_2(self):
+        C = self.ab.block_tables(self.A, self.B,
+                                 l_block_attr_1, r_block_attr_1)
+        self.ab.block_candset(C, l_block_attr_2, r_block_attr_2, n_jobs='1')
+
+    @raises(AssertionError)
+    def test_ab_block_candset_invalid_njobs_3(self):
+        C = self.ab.block_tables(self.A, self.B,
+                                 l_block_attr_1, r_block_attr_1)
+        self.ab.block_candset(C, l_block_attr_2, r_block_attr_2, n_jobs=1.5)
 
     def test_ab_block_candset(self):
-        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1, l_output_attrs,
-                            r_output_attrs, l_output_prefix, r_output_prefix)
+        C = self.ab.block_tables(self.A, self.B,
+                                 l_block_attr_1, r_block_attr_1,
+                                 l_output_attrs, r_output_attrs,
+                                 l_output_prefix, r_output_prefix,
+                                 show_progress=False)
+        validate_metadata(C, l_output_attrs, r_output_attrs,
+                          l_output_prefix, r_output_prefix)
+        validate_data(C, expected_ids_1)
         D = self.ab.block_candset(C, l_block_attr_2, r_block_attr_2)
-        assert_equal(sorted(C.columns), sorted(D.columns))
-        assert_equal(mg.get_key(D), '_id')
-        assert_equal(mg.get_property(D, 'fk_ltable'), mg.get_property(C, 'fk_ltable'))
-        assert_equal(mg.get_property(D, 'fk_rtable'), mg.get_property(C, 'fk_rtable'))
-        k1 = pd.np.array(D[l_output_prefix + l_block_attr_2])
-        k2 = pd.np.array(D[r_output_prefix + r_block_attr_2])
-        assert_equal(all(k1 == k2), True)
+        validate_metadata_two_candsets(C, D)
+        validate_data(D, expected_ids_2)
 
     def test_ab_block_candset_empty_input(self):
-        C = self.ab.block_tables(self.A, self.B, l_block_attr_3, r_block_attr_3)
-        assert_equal(len(C),  0)
-        D = self.ab.block_candset(C, l_block_attr_2, r_block_attr_2)
-        assert_equal(len(D),  0)
-        assert_equal(sorted(D.columns), sorted(C.columns))
-        assert_equal(mg.get_key(C), '_id')
-        assert_equal(mg.get_property(D, 'fk_ltable'), mg.get_property(C, 'fk_ltable'))
-        assert_equal(mg.get_property(D, 'fk_rtable'), mg.get_property(C, 'fk_rtable'))
+        C = self.ab.block_tables(self.A, self.B,
+                                 l_block_attr_3, r_block_attr_3,
+                                 show_progress=False)
+        validate_metadata(C)
+        validate_data(C)
+        D = self.ab.block_candset(C, l_block_attr_2, r_block_attr_2,
+                                  show_progress=False)
+        validate_metadata_two_candsets(C, D)
+        validate_data(D)
 
     def test_ab_block_candset_empty_output(self):
-        C = self.ab.block_tables(self.A, self.B, l_block_attr_1, r_block_attr_1)
-        D = self.ab.block_candset(C, l_block_attr_3, r_block_attr_3)
-        assert_equal(len(D),  0)
-        assert_equal(sorted(D.columns), sorted(C.columns))
-        assert_equal(mg.get_key(C), '_id')
-        assert_equal(mg.get_property(D, 'fk_ltable'), mg.get_property(C, 'fk_ltable'))
-        assert_equal(mg.get_property(D, 'fk_rtable'), mg.get_property(C, 'fk_rtable'))
+        C = self.ab.block_tables(self.A, self.B,
+                                 l_block_attr_1, r_block_attr_1,
+                                 show_progress=False)
+        validate_metadata(C)
+        validate_data(C, expected_ids_1)
+        D = self.ab.block_candset(C, l_block_attr_3, r_block_attr_3,
+                                  show_progress=False)
+        validate_metadata_two_candsets(C, D)
+        validate_data(D)
 
     def test_ab_block_tuples(self):
-        assert_equal(self.ab.block_tuples(self.A.ix[1], self.B.ix[2], l_block_attr_1,
-                                     r_block_attr_1), False)
-        assert_equal(self.ab.block_tuples(self.A.ix[2], self.B.ix[2], l_block_attr_1,
-                                     r_block_attr_1), True)
+        assert_equal(self.ab.block_tuples(self.A.ix[1], self.B.ix[2],
+                                          l_block_attr_1, r_block_attr_1),
+                     False)
+        assert_equal(self.ab.block_tuples(self.A.ix[2], self.B.ix[2],
+                                          l_block_attr_1, r_block_attr_1),
+                     True)
+
+
+class AttrEquivBlockerMulticoreTestCases(unittest.TestCase):
+
+    def setUp(self):
+        self.A = mg.read_csv_metadata(path_a)
+        mg.set_key(self.A, 'ID')
+        self.B = mg.read_csv_metadata(path_b)
+        mg.set_key(self.B, 'ID')
+        self.ab = mg.AttrEquivalenceBlocker()
+        
+    def tearDown(self):
+        del self.A
+        del self.B
+        del self.ab
+
+    def test_ab_block_tables_njobs_2(self):
+        C = self.ab.block_tables(self.A, self.B,
+                                 l_block_attr_1, r_block_attr_1,
+                                 l_output_attrs, r_output_attrs,
+                                 l_output_prefix, r_output_prefix, n_jobs=2)
+        validate_metadata(C, l_output_attrs, r_output_attrs,
+                          l_output_prefix, r_output_prefix)
+        validate_data(C, expected_ids_1)
+    
+    def test_ab_block_tables_wi_no_output_tuples_njobs_2(self):
+        C = self.ab.block_tables(self.A, self.B,
+                                 l_block_attr_3, r_block_attr_3, n_jobs=2)
+        validate_metadata(C)
+        validate_data(C)
+
+    def test_ab_block_tables_wi_null_l_output_attrs_njobs_2(self):
+        C = self.ab.block_tables(self.A, self.B,
+                                 l_block_attr_1, r_block_attr_1,
+                                 None, r_output_attrs, n_jobs=2)
+        validate_metadata(C, r_output_attrs=r_output_attrs)
+        validate_data(C, expected_ids_1)
+
+    def test_ab_block_tables_wi_null_r_output_attrs_njobs_2(self):
+        C = self.ab.block_tables(self.A, self.B,
+                                 l_block_attr_1, r_block_attr_1,
+                                 l_output_attrs, None, n_jobs=2)
+        validate_metadata(C, l_output_attrs)
+        validate_data(C, expected_ids_1)
+
+    def test_ab_block_tables_wi_empty_l_output_attrs_njobs_2(self):
+        C = self.ab.block_tables(self.A, self.B,
+                                 l_block_attr_1, r_block_attr_1,
+                                 [], r_output_attrs, n_jobs=2)
+        validate_metadata(C, [], r_output_attrs)
+        validate_data(C, expected_ids_1)
+
+    def test_ab_block_tables_wi_empty_r_output_attrs_njobs_2(self):
+        C = self.ab.block_tables(self.A, self.B,
+                                 l_block_attr_1, r_block_attr_1,
+                                 l_output_attrs, [], n_jobs=2)
+        validate_metadata(C, l_output_attrs, [])
+        validate_data(C, expected_ids_1)
+
+    def test_ab_block_tables_njobs_all(self):
+        C = self.ab.block_tables(self.A, self.B,
+                                 l_block_attr_1, r_block_attr_1,
+                                 l_output_attrs, r_output_attrs,
+                                 l_output_prefix, r_output_prefix, n_jobs=-1)
+        validate_metadata(C, l_output_attrs, r_output_attrs,
+                          l_output_prefix, r_output_prefix)
+        validate_data(C, expected_ids_1)
+
+    def test_ab_block_tables_wi_no_output_tuples_njobs_all(self):
+        C = self.ab.block_tables(self.A, self.B,
+                                 l_block_attr_3, r_block_attr_3, n_jobs=-1)
+        validate_metadata(C)
+        validate_data(C)
+
+    def test_ab_block_tables_wi_null_l_output_attrs_njobs_all(self):
+        C = self.ab.block_tables(self.A, self.B,
+                                 l_block_attr_1, r_block_attr_1,
+                                 None, r_output_attrs, n_jobs=-1)
+        validate_metadata(C, r_output_attrs=r_output_attrs)
+        validate_data(C, expected_ids_1)
+
+    def test_ab_block_tables_wi_null_r_output_attrs_njobs_all(self):
+        C = self.ab.block_tables(self.A, self.B,
+                                 l_block_attr_1, r_block_attr_1,
+                                 l_output_attrs, None, n_jobs=-1)
+        validate_metadata(C, l_output_attrs)
+        validate_data(C, expected_ids_1)
+
+    def test_ab_block_tables_wi_empty_l_output_attrs_njobs_all(self):
+        C = self.ab.block_tables(self.A, self.B,
+                                 l_block_attr_1, r_block_attr_1,
+                                 [], r_output_attrs, n_jobs=-1)
+        validate_metadata(C, [], r_output_attrs)
+        validate_data(C, expected_ids_1)
+
+    def test_ab_block_tables_wi_empty_r_output_attrs_njobs_all(self):
+        C = self.ab.block_tables(self.A, self.B, l_block_attr_1,
+                                 r_block_attr_1, l_output_attrs, [], n_jobs=-1)
+        validate_metadata(C, l_output_attrs, [])
+        validate_data(C, expected_ids_1)
+
+    def test_ab_block_candset_njobs_2(self):
+        C = self.ab.block_tables(self.A, self.B,
+                                 l_block_attr_1, r_block_attr_1,
+                                 l_output_attrs, r_output_attrs,
+                                 l_output_prefix, r_output_prefix)
+        validate_metadata(C, l_output_attrs, r_output_attrs,
+                          l_output_prefix, r_output_prefix)
+        validate_data(C, expected_ids_1)
+        D = self.ab.block_candset(C, l_block_attr_2, r_block_attr_2, n_jobs=2)
+        validate_metadata_two_candsets(C, D)
+        validate_data(D, expected_ids_2)
+
+    def test_ab_block_candset_empty_input_njobs_2(self):
+        C = self.ab.block_tables(self.A, self.B,
+                                 l_block_attr_3, r_block_attr_3)
+        validate_metadata(C)
+        validate_data(C)
+        D = self.ab.block_candset(C, l_block_attr_2, r_block_attr_2,
+                                  show_progress=False, n_jobs=2)
+        validate_metadata_two_candsets(C, D)
+        validate_data(D)
+
+    def test_ab_block_candset_empty_output_njobs_2(self):
+        C = self.ab.block_tables(self.A, self.B,
+                                 l_block_attr_1, r_block_attr_1)
+        validate_metadata(C)
+        validate_data(C, expected_ids_1)
+        D = self.ab.block_candset(C, l_block_attr_3, r_block_attr_3,
+                                  show_progress=False, n_jobs=2)
+        validate_metadata_two_candsets(C, D)
+        validate_data(D)
+
+    def test_ab_block_candset_njobs_all(self):
+        C = self.ab.block_tables(self.A, self.B,
+                                 l_block_attr_1, r_block_attr_1,
+                                 l_output_attrs, r_output_attrs,
+                                 l_output_prefix, r_output_prefix)
+        validate_metadata(C, l_output_attrs, r_output_attrs,
+                          l_output_prefix, r_output_prefix)
+        validate_data(C, expected_ids_1)
+        D = self.ab.block_candset(C, l_block_attr_2, r_block_attr_2, n_jobs=-1)
+        validate_metadata_two_candsets(C, D)
+        validate_data(D, expected_ids_2)
+
+    def test_ab_block_candset_empty_input_njobs_all(self):
+        C = self.ab.block_tables(self.A, self.B,
+                                 l_block_attr_3, r_block_attr_3)
+        validate_metadata(C)
+        validate_data(C)
+        D = self.ab.block_candset(C, l_block_attr_2, r_block_attr_2,
+                                  show_progress=False, n_jobs=-1)
+        validate_metadata_two_candsets(C, D)
+        validate_data(D)
+
+    def test_ab_block_candset_empty_output_njobs_all(self):
+        C = self.ab.block_tables(self.A, self.B,
+                                 l_block_attr_1, r_block_attr_1)
+        validate_metadata(C)
+        validate_data(C, expected_ids_1)
+        D = self.ab.block_candset(C, l_block_attr_3, r_block_attr_3,
+                                  show_progress=False, n_jobs=-1)
+        validate_metadata_two_candsets(C, D)
+        validate_data(D)
+
+
+
+# helper functions for validating the output
+    
+def validate_metadata(C, l_output_attrs=None, r_output_attrs=None,
+                      l_output_prefix='ltable_', r_output_prefix='rtable_',
+                      l_key='ID', r_key='ID'):
+    s1 = ['_id', l_output_prefix + l_key, r_output_prefix + r_key]
+    if l_output_attrs:
+        s1 += [l_output_prefix + x for x in l_output_attrs if x != l_key]
+    if r_output_attrs:
+        s1 += [r_output_prefix + x for x in r_output_attrs if x != r_key]
+    s1 = sorted(s1)
+    assert_equal(s1, sorted(C.columns))
+    assert_equal(mg.get_key(C), '_id')
+    assert_equal(mg.get_property(C, 'fk_ltable'), l_output_prefix + l_key)
+    assert_equal(mg.get_property(C, 'fk_rtable'), r_output_prefix + r_key)
+    
+def validate_data(C, expected_ids=None):
+    if expected_ids:
+        lid = mg.get_property(C, 'fk_ltable')
+        rid = mg.get_property(C, 'fk_rtable')
+        C_ids = C[[lid, rid]].set_index([lid, rid])
+        actual_ids = sorted(C_ids.index.values.tolist())
+        assert_equal(expected_ids, actual_ids)
+    else:
+        assert_equal(len(C), 0)
+    
+def validate_metadata_two_candsets(C, D): 
+    assert_equal(sorted(C.columns), sorted(D.columns))
+    assert_equal(mg.get_key(D), mg.get_key(C))
+    assert_equal(mg.get_property(D, 'fk_ltable'), mg.get_property(C, 'fk_ltable'))
+    assert_equal(mg.get_property(D, 'fk_rtable'), mg.get_property(C, 'fk_rtable'))

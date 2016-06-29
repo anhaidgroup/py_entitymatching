@@ -1,16 +1,20 @@
 import logging
 
+import math
 import pandas as pd
 import six
+import multiprocessing
 
 logger = logging.getLogger(__name__)
 
 class Blocker(object):
-    pass
+    """Blocker base class.
+    """
 
-    def validate_types_tables(self, ltable, rtable, l_block_attr, r_block_attr,
+    def validate_types_params_tables(self, ltable, rtable,
 		       l_output_attrs, r_output_attrs, l_output_prefix,
-		       r_output_prefix, verbose):
+		       r_output_prefix, verbose, show_progress, n_jobs):
+
         if not isinstance(ltable, pd.DataFrame):
             logger.error('Input left table is not of type pandas data frame')
             raise AssertionError('Input left table is not of type pandas data frame')
@@ -18,14 +22,6 @@ class Blocker(object):
         if not isinstance(rtable, pd.DataFrame):
             logger.error('Input right table is not of type pandas data frame')
             raise AssertionError('Input right table is not of type pandas data frame')
-
-        if not isinstance(l_block_attr, six.string_types):
-            logger.error('Blocking attribute name of left table is not of type string')
-            raise AssertionError('Blocking attribute name of left table is not of type string')
-
-        if not isinstance(r_block_attr, six.string_types):
-            logger.error('Blocking attribute name of right table is not of type string')
-            raise AssertionError('Blocking attribute name of right table is not of type string')
 
         if l_output_attrs:
             if not isinstance(l_output_attrs, list):
@@ -57,19 +53,18 @@ class Blocker(object):
             logger.error('Parameter verbose is not of type bool')
             raise AssertionError('Parameter verbose is not of type bool')
 
-    def validate_types_candset(self, candset, l_block_attr, r_block_attr,
-		       	       verbose, show_progress):
+        if not isinstance(show_progress, bool):
+            logger.error('Parameter show_progress is not of type bool')
+            raise AssertionError('Parameter show_progress is not of type bool')
+
+        if not isinstance(n_jobs, int):
+            logger.error('Parameter n_jobs is not of type int')
+            raise AssertionError('Parameter n_jobs is not of type int')
+
+    def validate_types_params_candset(self, candset, verbose, show_progress, n_jobs):
         if not isinstance(candset, pd.DataFrame):
             logger.error('Input candset is not of type pandas data frame')
             raise AssertionError('Input candset is not of type pandas data frame')
-
-        if not isinstance(l_block_attr, six.string_types):
-            logger.error('Left blocking attribute name is not of type string')
-            raise AssertionError('Left blocking attribute name is not of type string')
-
-        if not isinstance(r_block_attr, six.string_types):
-            logger.error('Right blocking attribute name is not of type string')
-            raise AssertionError('Right blocking attribute name is not of type string')
 
         if not isinstance(verbose, bool):
             logger.error('Parameter verbose is not of type bool')
@@ -78,6 +73,10 @@ class Blocker(object):
         if not isinstance(show_progress, bool):
             logger.error('Parameter show_progress is not of type bool')
             raise AssertionError('Parameter show_progress is not of type bool')
+
+        if not isinstance(n_jobs, int):
+            logger.error('Parameter n_jobs is not of type int')
+            raise AssertionError('Parameter n_jobs is not of type int')
 
     def process_output_attrs(self, table, key, attrs, error_str=''):
         if attrs:
@@ -104,13 +103,13 @@ class Blocker(object):
 
         ret_cols = [l_output_prefix+l_key, r_output_prefix+r_key]
         if l_output_attrs:
-            ret_cols.extend(l_output_prefix+c for c in l_output_attrs)
+            ret_cols.extend(l_output_prefix+c for c in l_output_attrs if l_output_prefix+c not in ret_cols)
         if r_output_attrs:
-            ret_cols.extend(r_output_prefix+c for c in r_output_attrs)
+            ret_cols.extend(r_output_prefix+c for c in r_output_attrs if r_output_prefix+c not in ret_cols)
 
         return ret_cols
 
-    def get_proj_attrs(self, key, block_attr, output_attrs):
+    def get_attrs_to_project(self, key, block_attr, output_attrs):
         if not output_attrs:
             output_attrs = []
         if key not in output_attrs:                                             
@@ -118,3 +117,20 @@ class Blocker(object):
         if block_attr not in output_attrs:                                      
             output_attrs.append(block_attr)                                     
         return output_attrs
+
+    def get_split_params(self, n_procs, min_m, min_n):
+        m = int(math.sqrt(n_procs))
+        while n_procs % m != 0:
+            m = m - 1
+        n = int(n_procs / m)
+        # to safeguard against small tables, do not split less than min values
+        return min(m, min_m), min(n, min_n)
+    
+    def get_num_procs(self, n_jobs, min_procs):        
+        # determine number of processes to launch parallely
+        n_cpus = multiprocessing.cpu_count()
+        n_procs = n_jobs
+        if n_jobs < 0:
+            n_procs = n_cpus + 1 + n_jobs
+        # cannot launch less than min_procs to safeguard against small tables
+        return min(n_procs, min_procs)
