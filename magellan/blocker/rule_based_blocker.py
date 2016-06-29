@@ -35,9 +35,7 @@ class RuleBasedBlocker(Blocker):
         self.rule_ft = OrderedDict()
         self.filterable_sim_fns = {'jaccard', 'cosine', 'dice', 'overlap',
                                    'overlap_coefficient'}
-        self.allowed_ops_for_sim_fns = {'<', '<='}
-        self.filterable_dist_fns = {'lev_dist'}
-        self.allowed_ops_for_dist_fns = {'>'}
+        self.allowed_ops = {'<', '<='}
  
         # meta data : should be removed if they are not useful.
         self.rule_source = OrderedDict()
@@ -180,12 +178,15 @@ class RuleBasedBlocker(Blocker):
                                                  r_output_prefix + r_key, rule_applied,
                                                  show_progress, n_jobs)
         
-        #print('candset cols: ', candset.columns)                                         
+        print('candset cols: ', candset.columns)                                         
         retain_cols = self.get_attrs_to_retain(l_key, r_key, l_output_attrs_1, r_output_attrs_1,
                                                l_output_prefix, r_output_prefix)
-        #print('retain_cols: ', retain_cols)
-        candset = candset[retain_cols]
- 
+        print('retain_cols: ', retain_cols)
+        if len(candset) > 0:
+            candset = candset[retain_cols]
+        else:
+            candset = pd.DataFrame(columns=retain_cols)
+
         # update catalog
         key = get_name_for_key(candset.columns)
         candset = add_key_column(candset, key)
@@ -526,7 +527,7 @@ class RuleBasedBlocker(Blocker):
         for rule_name, conjunct_list in six.iteritems(self.rule_str):
             #print('conjunct_list: ', conjunct_list)
             for conjunct in conjunct_list:
-                sim_fn, l_attr, r_attr, l_tok, r_tok, op, th = self.parse_conjunct(conjunct, rule_name)
+                is_auto_gen, sim_fn, l_attr, r_attr, l_tok, r_tok, op, th = self.parse_conjunct(conjunct, rule_name)
                 #print('left_attr: ', l_attr)
                 if l_attr not in l_proj_attrs:
                     l_proj_attrs.append(l_attr)
@@ -556,12 +557,13 @@ class RuleBasedBlocker(Blocker):
         threshold = vals3[1].strip()
         ft_df = feature_table.set_index('feature_name')
         #print('ft_df: ', ft_df.ix[feature_name])
-        return (ft_df.ix[feature_name]['simfunction'],
-               ft_df.ix[feature_name]['left_attribute'],
-               ft_df.ix[feature_name]['right_attribute'],
-               ft_df.ix[feature_name]['left_attr_tokenizer'],
-               ft_df.ix[feature_name]['right_attr_tokenizer'],
-               operator, threshold)
+        return (ft_df.ix[feature_name]['is_auto_generated'],
+                ft_df.ix[feature_name]['simfunction'],
+                ft_df.ix[feature_name]['left_attribute'],
+                ft_df.ix[feature_name]['right_attribute'],
+                ft_df.ix[feature_name]['left_attr_tokenizer'],
+                ft_df.ix[feature_name]['right_attr_tokenizer'],
+                operator, threshold)
 
     def block_tables_with_filters(self, l_df, r_df, l_key, r_key,
                                   l_output_attrs, r_output_attrs,
@@ -596,19 +598,23 @@ class RuleBasedBlocker(Blocker):
         # a conjunct is filterable if it uses
         # a filterable sim function (jaccard, cosine, dice, ...),
         # an allowed operator (<, <=),
-        sim_fn, l_attr, r_attr, l_tok, r_tok, op, th = self.parse_conjunct(conjunct, rule_name)
-        if sim_fn == 'lev_dist' and op == '>':
-            return True
+        is_auto_gen, sim_fn, l_attr, r_attr, l_tok, r_tok, op, th = self.parse_conjunct(conjunct, rule_name)
+        if is_auto_gen != True:
+            print('Conjunct not filterable as the feature is not auto generated')
+            return False
+        if sim_fn == 'lev_dist':
+            if op == '>' or '>=':
+                return True
+            else:
+                print('Conjunct not filterable due to unsupported op', op)
+                return False
         if l_tok != r_tok:
             print('Conjunct not filterable due to tokenizer mismatch', l_tok, r_tok)
             return False
-        if sim_fn not in self.filterable_sim_fns and sim_fn not in self.filterable_dist_fns:
+        if sim_fn not in self.filterable_sim_fns:
             print('Conjunct not filterable due to unsupported sim_fn', sim_fn)
             return False
-        if sim_fn in self.filterable_sim_fns and op not in self.allowed_ops_for_sim_fns:
-            print('Conjunct not filterable due to unsupported op', op)
-            return False
-        if sim_fn in self.filterable_dist_fns and op not in self.allowed_ops_for_dist_fns:
+        if op not in self.allowed_ops:
             print('Conjunct not filterable due to unsupported op', op)
             return False
         # conjunct is filterable
@@ -621,7 +627,8 @@ class RuleBasedBlocker(Blocker):
         candset = None
         conjunct_list = self.rule_str[rule_name]
         for conjunct in conjunct_list:
-            sim_fn, l_attr, r_attr, l_tok, r_tok, op, th = self.parse_conjunct(conjunct, rule_name)
+            is_auto_gen, sim_fn, l_attr, r_attr, l_tok, r_tok, op, th = self.parse_conjunct(conjunct, rule_name)
+
             tokenizer = None
             if l_tok == 'dlm_dc0':
                 print('Choosing whitespace tokenizer')
@@ -650,16 +657,26 @@ class RuleBasedBlocker(Blocker):
             else:
                 logger.info(sim_fn + ' is not filterable, so not applying fitlers to this rule')
                 return None
+         
+            if join_fn == edit_distance_join:
+                comp_op = '<='
+                if op == '>=':
+                    comp_op = '<'
+            else:
+                comp_op = '>='
+                if op == '<=':
+                    comp_op = '>'     
+                
             c_df = None
             #try:
-            if join_fn != edit_distance_join:
-                c_df = join_fn(l_df, r_df, l_key, r_key, l_attr,
-                               r_attr, tokenizer, float(th), '>=', True, l_output_attrs,
+            if join_fn == edit_distance_join:
+                c_df = join_fn(l_df, r_df, l_key, r_key, l_attr, r_attr,
+                               float(th), comp_op, True, l_output_attrs, 
                                r_output_attrs, l_output_prefix,
                                r_output_prefix, False, n_jobs)
             else:
-                c_df = join_fn(l_df, r_df, l_key, r_key, l_attr, r_attr,
-                               float(th), '<=', True, l_output_attrs, 
+                c_df = join_fn(l_df, r_df, l_key, r_key, l_attr,
+                               r_attr, tokenizer, float(th), comp_op, True, l_output_attrs,
                                r_output_attrs, l_output_prefix,
                                r_output_prefix, False, n_jobs)
             #except:    
@@ -667,10 +684,8 @@ class RuleBasedBlocker(Blocker):
             #    return None
             if candset is not None:
                 # union the candset of this conjunct with the existing candset
-                #candset = pd.merge(candset, c_df, how='outer', suffixes=('', ''),
-                #                   on=[l_output_prefix + l_key, r_output_prefix + r_key])
-                print('candset:', candset)
-                print('c_df:', c_df)
+                #print('candset:', candset)
+                #print('c_df:', c_df)
                 candset=pd.concat([candset, c_df]).drop_duplicates([l_output_prefix + l_key, r_output_prefix + r_key]).reset_index(drop=True) 
             else:
                 # candset from the first conjunct of the rule
