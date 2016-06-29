@@ -126,75 +126,31 @@ def _beer_function(x, y):
     else:
         return False
 
-class TimeBlockTablesRestaurants:
+
+class TimeBlockTablesBeer:
     timeout=10000.0
+
     def setup(self):
-        path_for_A = os.sep.join([datasets_path, 'restaurants', 'A.csv'])
-        path_for_B = os.sep.join([datasets_path, 'restaurants', 'B.csv'])
-        self.l_output_attrs = ['NAME', 'PHONENUMBER', 'ADDRESS']
-        self.r_output_attrs = ['NAME', 'PHONENUMBER', 'ADDRESS']
-        self.A = mg.read_csv_metadata(path_for_A)
-        mg.set_key(self.A, 'ID')
-        self.B = mg.read_csv_metadata(path_for_B)
-        mg.set_key(self.B, 'ID')
-        bb.set_black_box_function(_restaurants_function)
+        path_for_A = os.sep.join([datasets_path, 'beer', 'A.csv'])
+        path_for_B = os.sep.join([datasets_path, 'beer', 'B.csv'])
+        try:
+            self.A = mg.read_csv_metadata(path_for_A)
+            mg.set_key(self.A, 'Label')
+            self.B = mg.read_csv_metadata(path_for_B)
+            mg.set_key(self.B, 'Label')
+            bb.set_black_box_function(_beer_function)
+        except AssertionError:
+            print("Dataset \'beer\' not found. Please visit the project "
+                  "website to download the dataset.")
+            raise SystemExit
 
     def time_block_tables(self):
-        C = bb.block_tables(self.A, self.B, self.l_output_attrs, self.r_output_attrs)
-        print >> sys.stderr, 'size of C:', len(C)
-
-    def time_block_tables_njobs_2(self):
-        C = bb.block_tables(self.A, self.B, self.l_output_attrs, self.r_output_attrs, n_jobs=2)
-        print >> sys.stderr, 'size of C:', len(C)
-
-    def time_block_tables_njobs_4(self):
-        C = bb.block_tables(self.A, self.B, self.l_output_attrs, self.r_output_attrs, n_jobs=4)
-        print >> sys.stderr, 'size of C:', len(C)
-
-    def time_block_tables_njobs_all(self):
-        C = bb.block_tables(self.A, self.B, self.l_output_attrs, self.r_output_attrs, n_jobs=-1)
-        print >> sys.stderr, 'size of C:', len(C)
+        bb.block_tables(self.A, self.B, ['ABV'], ['ABV'])
 
     def teardown(self):
         del self.A
         del self.B
-        del self.l_output_attrs
-        del self.r_output_attrs
 
-class TimeBlockCandsetRestaurants:
-    timeout=300.0
-    def setup(self):
-        path_for_A = os.sep.join([datasets_path, 'restaurants', 'A.csv'])
-        path_for_B = os.sep.join([datasets_path, 'restaurants', 'B.csv'])
-        l_output_attrs = ['NAME', 'PHONENUMBER', 'ADDRESS']
-        r_output_attrs = ['NAME', 'PHONENUMBER', 'ADDRESS']
-        A = mg.read_csv_metadata(path_for_A)
-        mg.set_key(A, 'ID')
-        B = mg.read_csv_metadata(path_for_B)
-        mg.set_key(B, 'ID')
-        self.C = ob.block_tables(A, B, 'NAME', 'NAME',
-                                 l_output_attrs=l_output_attrs,
-                                 r_output_attrs=r_output_attrs)
-        bb.set_black_box_function(_restaurants_function)
-
-    def time_block_candset(self):
-        D = bb.block_candset(self.C)
-        print >> sys.stderr, 'size of D:', len(D)
-
-    def time_block_candset_njobs_2(self):
-        D = bb.block_candset(self.C, n_jobs=2)
-        print >> sys.stderr, 'size of D:', len(D)
-
-    def time_block_candset_njobs_4(self):
-        D = bb.block_candset(self.C, n_jobs=4)
-        print >> sys.stderr, 'size of D:', len(D)
-
-    def time_block_candset_njobs_all(self):
-        D = bb.block_candset(self.C, n_jobs=-1)
-        print >> sys.stderr, 'size of D:', len(D)
-
-    def teardown(self):
-        del self.C
 
 class TimeBlockTablesBikes:
     timeout = 10000.0
@@ -203,31 +159,23 @@ class TimeBlockTablesBikes:
         p = mg.get_install_path()
         path_for_A = os.sep.join([datasets_path, 'bikes', 'A.csv'])
         path_for_B = os.sep.join([datasets_path, 'bikes', 'B.csv'])
-        self.A = mg.read_csv_metadata(path_for_A)
-        mg.set_key(self.A, 'id')
-        self.B = mg.read_csv_metadata(path_for_B)
-        mg.set_key(self.B, 'id')
         self.l_output_attrs = ['bike_name', 'city_posted', 'km_driven', 'price',
                                'color', 'model_year']
         self.r_output_attrs = ['bike_name', 'city_posted', 'km_driven', 'price',
                                'color', 'model_year']
-        bb.set_black_box_function(_bikes_function)
+        try:
+            self.A = mg.read_csv_metadata(path_for_A)
+            mg.set_key(self.A, 'id')
+            self.B = mg.read_csv_metadata(path_for_B)
+            mg.set_key(self.B, 'id')
+            bb.set_black_box_function(_bikes_function)
+        except AssertionError:
+            print("Dataset \'bikes\' not found. Please visit the project "
+                  "website to download the dataset.")
+            raise SystemExit
 
     def time_block_tables(self):
-        C = bb.block_tables(self.A, self.B, self.l_output_attrs, self.r_output_attrs)
-        print >> sys.stderr, 'size of C:', len(C)
-
-    def time_block_tables_njobs_2(self):
-        C = bb.block_tables(self.A, self.B, self.l_output_attrs, self.r_output_attrs, n_jobs=2)
-        print >> sys.stderr, 'size of C:', len(C)
-
-    def time_block_tables_njobs_4(self):
-        C = bb.block_tables(self.A, self.B, self.l_output_attrs, self.r_output_attrs, n_jobs=4)
-        print >> sys.stderr, 'size of C:', len(C)
-
-    def time_block_tables_njobs_all(self):
-        C = bb.block_tables(self.A, self.B, self.l_output_attrs, self.r_output_attrs, n_jobs=-1)
-        print >> sys.stderr, 'size of C:', len(C)
+        bb.block_tables(self.A, self.B, self.l_output_attrs, self.r_output_attrs)
 
     def teardown(self):
         del self.A
@@ -235,49 +183,7 @@ class TimeBlockTablesBikes:
         del self.l_output_attrs
         del self.r_output_attrs
 
-class TimeBlockCandsetBikes:
-    timeout = 300.0
 
-    def setup(self):
-        p = mg.get_install_path()
-        path_for_A = os.sep.join([datasets_path, 'bikes', 'A.csv'])
-        path_for_B = os.sep.join([datasets_path, 'bikes', 'B.csv'])
-        A = mg.read_csv_metadata(path_for_A)
-        mg.set_key(A, 'id')
-        B = mg.read_csv_metadata(path_for_B)
-        mg.set_key(B, 'id')
-        l_output_attrs = ['bike_name', 'city_posted', 'km_driven', 'price',
-                          'color', 'model_year']
-        r_output_attrs = ['bike_name', 'city_posted', 'km_driven', 'price',
-                          'color', 'model_year']
-        C = ab.block_tables(A, B, 'city_posted', 'city_posted',
-                            l_output_attrs, r_output_attrs)
-        self.D = ab.block_candset(C, 'model_year', 'model_year')
-        bb.set_black_box_function(_bikes_function)
-
-    def time_block_candset(self):
-        E = bb.block_candset(self.D)
-        print >> sys.stderr, 'size of D:', len(self.D)
-        print >> sys.stderr, 'size of E:', len(E)
-
-    def time_block_candset_njobs_2(self):
-        E = bb.block_candset(self.D, n_jobs=2)
-        print >> sys.stderr, 'size of D:', len(self.D)
-        print >> sys.stderr, 'size of E:', len(E)
-
-    def time_block_candset_njobs_4(self):
-        E = bb.block_candset(self.D, n_jobs=4)
-        print >> sys.stderr, 'size of D:', len(self.D)
-        print >> sys.stderr, 'size of E:', len(E)
-
-    def time_block_candset_njobs_all(self):
-        E = bb.block_candset(self.D, n_jobs=-1)
-        print >> sys.stderr, 'size of D:', len(self.D)
-        print >> sys.stderr, 'size of E:', len(E)
-
-    def teardown(self):
-        del self.D
-"""
 class TimeBlockTablesElectronics:
     timeout = 10000.0
 
@@ -286,23 +192,120 @@ class TimeBlockTablesElectronics:
         path_for_A = os.sep.join([datasets_path, 'electronics', 'A.csv'])
         path_for_B = os.sep.join([datasets_path, 'electronics', 'B.csv'])
         self.A = mg.read_csv_metadata(path_for_A)
-        mg.set_key(self.A, 'ID')
-        self.B = mg.read_csv_metadata(path_for_B)
-        mg.set_key(self.B, 'ID')
-        self.l_output_attrs = ['Brand', 'Amazon_Price']
-        self.r_output_attrs = ['Brand', 'Price']
-        bb.set_black_box_function(_electronics_function)
+        try:
+            mg.set_key(self.A, 'ID')
+            self.B = mg.read_csv_metadata(path_for_B)
+            mg.set_key(self.B, 'ID')
+            self.l_output_attrs = ['Brand', 'Amazon_Price']
+            self.r_output_attrs = ['Brand', 'Price']
+            bb.set_black_box_function(_electronics_function)
+        except AssertionError:
+            print("Dataset \'electronics\' not found. Please visit the project "
+                  "website to download the dataset.")
+            raise SystemExit
 
     def time_block_tables(self):
-        C = bb.block_tables(self.A, self.B, self.l_output_attrs, self.r_output_attrs)
-        print >> sys.stderr, 'size of C:', len(C)
+        bb.block_tables(self.A, self.B, self.l_output_attrs, self.r_output_attrs)
 
     def teardown(self):
         del self.A
         del self.B
         del self.l_output_attrs
         del self.r_output_attrs
-"""
+
+
+class TimeBlockTablesMusic:
+    timeout=10000.0
+
+    def setup(self):
+        path_for_A = os.sep.join([datasets_path, 'music', 'A.csv'])
+        path_for_B = os.sep.join([datasets_path, 'music', 'B.csv'])
+        self.l_output_attrs = ['Album_Name', 'Artist_Name', 'CopyRight',
+                               'Released', 'Song_Name', 'Time']
+        self.r_output_attrs = ['Album_Name', 'Artist_Name', 'Copyright',
+                               'Released', 'Song_Name', 'Time']
+        try:
+            self.A = mg.read_csv_metadata(path_for_A)
+            mg.set_key(self.A, 'Sno')
+            self.B = mg.read_csv_metadata(path_for_B)
+            mg.set_key(self.B, 'Sno')
+            bb.set_black_box_function(_music_function)
+        except AssertionError:
+            print("Dataset \'music\' not found. Please visit the project "
+                  "website to download the dataset.")
+            raise SystemExit
+
+    def time_block_tables(self):
+        bb.block_tables(self.A, self.B, self.l_output_attrs,
+                        self.r_output_attrs)
+
+    def teardown(self):
+        del self.A
+        del self.B
+        del self.l_output_attrs
+        del self.r_output_attrs
+
+
+class TimeBlockTablesRestaurants:
+    timeout=10000.0
+    def setup(self):
+        path_for_A = os.sep.join([datasets_path, 'restaurants', 'A.csv'])
+        path_for_B = os.sep.join([datasets_path, 'restaurants', 'B.csv'])
+        self.l_output_attrs = ['NAME', 'PHONENUMBER', 'ADDRESS']
+        self.r_output_attrs = ['NAME', 'PHONENUMBER', 'ADDRESS']
+        try:
+            self.A = mg.read_csv_metadata(path_for_A)
+            mg.set_key(self.A, 'ID')
+            self.B = mg.read_csv_metadata(path_for_B)
+            mg.set_key(self.B, 'ID')
+            bb.set_black_box_function(_restaurants_function)
+        except AssertionError:
+            print("Dataset \'restaurants\' not found. Please visit the project "
+                  "website to download the dataset.")
+            raise SystemExit
+
+    def time_block_tables(self):
+        bb.block_tables(self.A, self.B, self.l_output_attrs, self.r_output_attrs)
+
+    def teardown(self):
+        del self.A
+        del self.B
+        del self.l_output_attrs
+        del self.r_output_attrs
+
+
+class TimeBlockCandsetBikes:
+    timeout = 300.0
+
+    def setup(self):
+        p = mg.get_install_path()
+        path_for_A = os.sep.join([datasets_path, 'bikes', 'A.csv'])
+        path_for_B = os.sep.join([datasets_path, 'bikes', 'B.csv'])
+        l_output_attrs = ['bike_name', 'city_posted', 'km_driven', 'price',
+                          'color', 'model_year']
+        r_output_attrs = ['bike_name', 'city_posted', 'km_driven', 'price',
+                          'color', 'model_year']
+        try:
+            A = mg.read_csv_metadata(path_for_A)
+            mg.set_key(A, 'id')
+            B = mg.read_csv_metadata(path_for_B)
+            mg.set_key(B, 'id')
+            C = ab.block_tables(A, B, 'city_posted', 'city_posted',
+                                l_output_attrs, r_output_attrs)
+            self.D = ab.block_candset(C, 'model_year', 'model_year')
+            bb.set_black_box_function(_bikes_function)
+        except AssertionError:
+            print("Dataset \'bikes\' not found. Please visit the project "
+                  "website to download the dataset.")
+            raise SystemExit
+
+    def time_block_candset(self):
+        bb.block_candset(self.D)
+
+    def teardown(self):
+        del self.D
+
+
 class TimeBlockCandsetElectronics:
     timeout = 300.0
 
@@ -310,240 +313,50 @@ class TimeBlockCandsetElectronics:
         p = mg.get_install_path()
         path_for_A = os.sep.join([datasets_path, 'electronics', 'A.csv'])
         path_for_B = os.sep.join([datasets_path, 'electronics', 'B.csv'])
-        A = mg.read_csv_metadata(path_for_A)
-        mg.set_key(A, 'ID')
-        B = mg.read_csv_metadata(path_for_B)
-        mg.set_key(B, 'ID')
-        self.C = ab.block_tables(A, B, 'Brand', 'Brand', ['Brand', 'Amazon_Price'],
-                                 ['Brand', 'Price'])
-        bb.set_black_box_function(_electronics_function)
+        try:
+            A = mg.read_csv_metadata(path_for_A)
+            mg.set_key(A, 'ID')
+            B = mg.read_csv_metadata(path_for_B)
+            mg.set_key(B, 'ID')
+            self.C = ab.block_tables(A, B, 'Brand', 'Brand',
+                                     ['Brand', 'Amazon_Price'],
+                                     ['Brand', 'Price'])
+            bb.set_black_box_function(_electronics_function)
+        except AssertionError:
+            print("Dataset \'electronics\' not found. Please visit the project "
+                  "website to download the dataset.")
+            raise SystemExit
 
     def time_block_candset(self):
-        D = bb.block_candset(self.C)
-        print >> sys.stderr, 'size of C:', len(self.C)
-        print >> sys.stderr, 'size of D:', len(D)
-
-    def time_block_candset_njobs_2(self):
-        D = bb.block_candset(self.C, n_jobs=2)
-        print >> sys.stderr, 'size of C:', len(self.C)
-        print >> sys.stderr, 'size of D:', len(D)
-
-    def time_block_candset_njobs_4(self):
-        D = bb.block_candset(self.C, n_jobs=4)
-        print >> sys.stderr, 'size of C:', len(self.C)
-        print >> sys.stderr, 'size of D:', len(D)
-
-    def time_block_candset_njobs_all(self):
-        D = bb.block_candset(self.C, n_jobs=-1)
-        print >> sys.stderr, 'size of C:', len(self.C)
-        print >> sys.stderr, 'size of D:', len(D)
+        bb.block_candset(self.C)
 
     def teardown(self):
         del self.C
-"""
-class TimeBlockTablesMusic:
-    timeout=10000.0
 
+
+class TimeBlockCandsetRestaurants:
+    timeout=300.0
     def setup(self):
-        path_for_A = os.sep.join([datasets_path, 'music', 'A.csv'])
-        path_for_B = os.sep.join([datasets_path, 'music', 'B.csv'])
-        self.l_output_attrs = ['Album_Name', 'Artist_Name', 'CopyRight', 'Released', 'Song_Name', 'Time']
-        self.r_output_attrs = ['Album_Name', 'Artist_Name', 'Copyright', 'Released', 'Song_Name', 'Time']
-        self.A = mg.read_csv_metadata(path_for_A)
-        mg.set_key(self.A, 'Sno')
-        self.B = mg.read_csv_metadata(path_for_B)
-        mg.set_key(self.B, 'Sno')
-        bb.set_black_box_function(_music_function)
-
-    def time_block_tables(self):
-        C = bb.block_tables(self.A, self.B,
-                            self.l_output_attrs,
-                            self.r_output_attrs)
-        print >> sys.stderr, 'size of C:', len(C)
-
-    def teardown(self):
-        del self.A
-        del self.B
-        del self.l_output_attrs
-        del self.r_output_attrs
-
-class TimeBlockTablesBeer:
-    timeout=10000.0
-
-    def setup(self):
-        path_for_A = os.sep.join([datasets_path, 'beer', 'A.csv'])
-        path_for_B = os.sep.join([datasets_path, 'beer', 'B.csv'])
-        self.A = mg.read_csv_metadata(path_for_A)
-        mg.set_key(self.A, 'Label')
-        self.B = mg.read_csv_metadata(path_for_B)
-        mg.set_key(self.B, 'Label')
-        bb.set_black_box_function(_beer_function)
-
-    def time_block_tables(self):
-        C = bb.block_tables(self.A, self.B, ['ABV'], ['ABV'])
-        print >> sys.stderr, 'size of C:', len(C)
-
-    def teardown(self):
-        del self.A
-        del self.B
-
-
-class TimeBlockTablesAnime:
-    def setup(self):
-        path_for_A = os.sep.join([datasets_path, 'anime', 'A.csv'])
-        path_for_B = os.sep.join([datasets_path, 'anime', 'B.csv'])
-        self.l_block_attr = 'Year'
-        self.r_block_attr = 'Year'
-        self.l_output_attrs = ['Title', 'Year', 'Episodes']
-        self.r_output_attrs = ['Title', 'Year', 'Episodes']
-        self.A = mg.read_csv_metadata(path_for_A)
-        mg.set_key(self.A, 'ID')
-        self.B = mg.read_csv_metadata(path_for_B)
-        mg.set_key(self.B, 'ID')
-
-    def time_block_tables(self):
-        ab.block_tables(self.A, self.B, self.l_block_attr,
-                        self.r_block_attr, self.l_output_attrs,
-                        self.r_output_attrs)
-
-    def teardown(self):
-        del self.A
-        del self.B
-        del self.l_block_attr
-        del self.r_block_attr
-        del self.l_output_attrs
-        del self.r_output_attrs
-
-
-class TimeBlockCandsetAnime:
-    def setup(self):
-        path_for_A = os.sep.join([datasets_path, 'anime', 'A.csv'])
-        path_for_B = os.sep.join([datasets_path, 'anime', 'B.csv'])
-        A = mg.read_csv_metadata(path_for_A)
-        mg.set_key(A, 'ID')
-        B = mg.read_csv_metadata(path_for_B)
-        mg.set_key(B, 'ID')
-        self.C = ab.block_tables(A, B, 'Year', 'Year',
-                                 ['Title', 'Year', 'Episodes'],
-                                 ['Title', 'Year', 'Episodes'])
-        self.l_block_attr = 'Episodes'
-        self.r_block_attr = 'Episodes'
+        path_for_A = os.sep.join([datasets_path, 'restaurants', 'A.csv'])
+        path_for_B = os.sep.join([datasets_path, 'restaurants', 'B.csv'])
+        l_output_attrs = ['NAME', 'PHONENUMBER', 'ADDRESS']
+        r_output_attrs = ['NAME', 'PHONENUMBER', 'ADDRESS']
+        try:
+            A = mg.read_csv_metadata(path_for_A)
+            mg.set_key(A, 'ID')
+            B = mg.read_csv_metadata(path_for_B)
+            mg.set_key(B, 'ID')
+            self.C = ob.block_tables(A, B, 'NAME', 'NAME',
+                                     l_output_attrs=l_output_attrs,
+                                     r_output_attrs=r_output_attrs)
+            bb.set_black_box_function(_restaurants_function)
+        except AssertionError:
+            print("Dataset \'restaurants\' not found. Please visit the project "
+                  "website to download the dataset.")
+            raise SystemExit
 
     def time_block_candset(self):
-        ab.block_candset(self.C, self.l_block_attr, self.r_block_attr)
+        bb.block_candset(self.C)
 
     def teardown(self):
         del self.C
-        del self.l_block_attr
-        del self.r_block_attr
-
-
-class TimeBlockTablesBooks:
-    def setup(self):
-        path_for_A = os.sep.join([datasets_path, 'books', 'A.csv'])
-        path_for_B = os.sep.join([datasets_path, 'books', 'B.csv'])
-        self.l_block_attr = 'Author'
-        self.r_block_attr = 'Author'
-        self.l_output_attrs = ['Title', 'Author', 'ISBN13', 'Publisher',
-                               'Publication_Date']
-        self.r_output_attrs = ['Title', 'Author', 'ISBN13', 'Publisher',
-                               'Publication_Date']
-        self.A = mg.read_csv_metadata(path_for_A)
-        mg.set_key(self.A, 'ID')
-        self.B = mg.read_csv_metadata(path_for_B)
-        mg.set_key(self.B, 'ID')
-
-    def time_block_tables(self):
-        ab.block_tables(self.A, self.B, self.l_block_attr,
-                        self.r_block_attr, self.l_output_attrs,
-                        self.r_output_attrs)
-
-    def teardown(self):
-        del self.A
-        del self.B
-        del self.l_block_attr
-        del self.r_block_attr
-        del self.l_output_attrs
-        del self.r_output_attrs
-
-
-class TimeBlockCandsetBooks:
-    def setup(self):
-        path_for_A = os.sep.join([datasets_path, 'books', 'A.csv'])
-        path_for_B = os.sep.join([datasets_path, 'books', 'B.csv'])
-        A = mg.read_csv_metadata(path_for_A)
-        mg.set_key(A, 'ID')
-        B = mg.read_csv_metadata(path_for_B)
-        mg.set_key(B, 'ID')
-        self.C = ab.block_tables(A, B, 'Author', 'Author',
-                                 ['Title', 'Author', 'ISBN13', 'Publisher'],
-                                 ['Title', 'Author', 'ISBN13', 'Publisher'])
-        self.l_block_attr = 'ISBN13'
-        self.r_block_attr = 'ISBN13'
-
-    def time_block_candset(self):
-        ab.block_candset(self.C, self.l_block_attr, self.r_block_attr)
-
-    def teardown(self):
-        del self.C
-        del self.l_block_attr
-        del self.r_block_attr
-
-
-class TimeBlockTablesCitations:
-    def setup(self):
-        path_for_A = os.sep.join([datasets_path, 'citations', 'A.csv'])
-        path_for_B = os.sep.join([datasets_path, 'citations', 'B.csv'])
-        self.l_block_attr = 'year'
-        self.r_block_attr = 'year'
-        self.l_output_attrs = ['title', 'author', 'year', 'ENTRYTYPE']
-        self.r_output_attrs = ['title', 'author', 'year', 'ENTRYTYPE']
-        self.A = mg.read_csv_metadata(path_for_A)
-        mg.set_key(self.A, 'ID')
-        self.B = mg.read_csv_metadata(path_for_B)
-        mg.set_key(self.B, 'ID')
-
-    def time_block_tables(self):
-        ab.block_tables(self.A, self.B, self.l_block_attr,
-                        self.r_block_attr, self.l_output_attrs,
-                        self.r_output_attrs)
-
-    def teardown(self):
-        del self.A
-        del self.B
-        del self.l_block_attr
-        del self.r_block_attr
-        del self.l_output_attrs
-        del self.r_output_attrs
-
-
-class TimeBlockTablesBikes:
-    def setup(self):
-        p = mg.get_install_path()
-        path_for_A = os.sep.join([p, 'datasets', 'example_datasets', 'bikes', 'A.csv'])
-        path_for_B = os.sep.join([p, 'datasets', 'example_datasets', 'bikes', 'B.csv'])
-        l_key = 'id'
-        r_key = 'id'
-        self.A = mg.read_csv_metadata(path_for_A)
-        mg.set_key(self.A, l_key)
-        self.B = mg.read_csv_metadata(path_for_B)
-        mg.set_key(self.B, r_key)
-        self.l_block_attr = 'city_posted'
-        self.r_block_attr = 'city_posted'
-        self.l_output_attrs = ['bike_name', 'city_posted', 'km_driven', 'price',
-                               'color', 'model_year']
-        self.r_output_attrs = ['bike_name', 'city_posted', 'km_driven', 'price',
-                               'color', 'model_year']
-        self.ab = mg.AttrEquivalenceBlocker()
-
-    def time_block_tables(self):
-        self.ab.block_tables(self.A, self.B, self.l_block_attr,
-                             self.r_block_attr, self.l_output_attrs,
-                             self.r_output_attrs, verbose=False)
-
-    def teardown(self):
-        del self.A
-        del self.B
-        del self.ab
-
-"""
