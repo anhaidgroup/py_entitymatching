@@ -1,4 +1,5 @@
 import logging
+from PyQt4 import QtGui
 
 import six
 
@@ -6,7 +7,8 @@ import magellan as mg
 from magellan import RFMatcher
 from magellan.debugmatcher.debug_gui_decisiontree_matcher \
     import vis_tuple_debug_dt_matcher
-from magellan.debugmatcher.debug_gui_utils import *
+from magellan.debugmatcher.debug_gui_utils import _get_metric, \
+    get_name_for_predict_column, _get_dataframe
 from magellan.gui.debug_gui_base import MainWindowManager
 from magellan.utils.catalog_helper import check_attrs_present
 from magellan.utils.generic_helper import list_drop_duplicates
@@ -98,6 +100,9 @@ def _vis_debug_rf(matcher, train, test, exclude_attrs, target_attr,
 
     # Get the evaluation summary.
     eval_summary = mg.eval_matches(predicted, target_attr, predict_attr_name)
+    mg._viewapp = QtGui.QApplication.instance()
+    if mg._viewapp is None:
+        mg._viewapp = QtGui.QApplication([])
 
     # Get metric in a form that can be displayed from the evaluation summary
     metric = _get_metric(eval_summary)
@@ -107,7 +112,9 @@ def _vis_debug_rf(matcher, train, test, exclude_attrs, target_attr,
     fn_dataframe = _get_dataframe(predicted, eval_summary['false_neg_ls'])
 
     # Get the main window application
+
     app = mg._viewapp
+
     m = MainWindowManager(matcher, "rf", exclude_attrs, metric, predicted, fp_dataframe,
                           fn_dataframe)
 
