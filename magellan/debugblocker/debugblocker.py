@@ -607,7 +607,7 @@ def _sort_record_tokens_by_global_order(record_list, order_dict):
         for token in record_list[i]:
             if token in order_dict:
                 tmp_record.append(token)
-        record_list[i] = sorted(tmp_record, key=lambda x: order_dict[x])
+        record_list[i] = sorted(tmp_record, key=lambda x: (order_dict[x], x))
 
 
 # Generate the prefix events of two tables for topk similarity joins.
