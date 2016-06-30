@@ -204,7 +204,7 @@ class AttrEquivalenceBlocker(Blocker):
         self.validate_types_block_attrs(l_block_attr, r_block_attr)
 
         # get and validate metadata
-        log_info(logger, 'Required metadata: cand.set key, fk ltable, ' +
+        log_info(logger, 'Required metadata: cand.set key, fk ltable, ' 
                  'fk rtable, ltable, rtable, ltable key, rtable key',
                  verbose)
 

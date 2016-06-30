@@ -331,11 +331,14 @@ class OverlapBlockerTestCases(unittest.TestCase):
         validate_metadata(C, l_output_attrs, [])
         validate_data(C, expected_ids_1)
 
-    #def test_ob_block_tables_wi_qval_non_str_attr(self):
-    #    C = self.ob.block_tables(self.A, self.B, 'birth_year', 'birth_year',
-    #                             q_val=3, word_level=False, overlap_size=2)
-    #    validate_metadata(C)
-     #   validate_data(C, expected_ids_3)
+
+
+    # def test_ob_block_tables_wi_qval_non_str_attr(self):
+    #     C = self.ob.block_tables(self.A, self.B, 'birth_year', 'birth_year',
+    #                              q_val=3, word_level=False, overlap_size=2)
+    #     validate_metadata(C)
+    #     validate_data(C, expected_ids_3)
+
 
     @raises(AssertionError)
     def test_ob_block_candset_invalid_candset_1(self):
