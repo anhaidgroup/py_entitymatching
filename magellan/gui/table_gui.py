@@ -20,6 +20,11 @@ def view_table(table, edit_flag=False, show_flag=True):
         displayed
 
     """
+    mg._viewapp = QtGui.QApplication.instance()
+    if mg._viewapp is None:
+        mg._viewapp = QtGui.QApplication([])
+    app = mg._viewapp
+
     datatable = QtGui.QTableWidget()
 
     # disable edit
@@ -32,14 +37,17 @@ def view_table(table, edit_flag=False, show_flag=True):
     # set data
     for i in range(len(table.index)):
         for j in range(len(table.columns)):
-            datatable.setItem(i, j, QtGui.QTableWidgetItem(str(table.iat[i, j])))
+            datatable.setItem(i, j,
+                              QtGui.QTableWidgetItem(str(table.iat[i, j])))
 
     list_col = list(table.columns.values)
     datatable.setHorizontalHeaderLabels(list_col)
 
     # set window size
-    width = min((j + 1) * 105, mg._viewapp.desktop().screenGeometry().width() - 50)
-    height = min((i + 1) * 41, mg._viewapp.desktop().screenGeometry().width() - 100)
+
+
+    width = min((j + 1) * 105, app.desktop().screenGeometry().width() - 50)
+    height = min((i + 1) * 41, app.desktop().screenGeometry().width() - 100)
     datatable.resize(width, height)
 
     # set window title
@@ -48,12 +56,14 @@ def view_table(table, edit_flag=False, show_flag=True):
     if show_flag:
         # show window
         datatable.show()
-        mg._viewapp.exec_()
-
+        mg._viewapp = QtGui.QApplication.instance()
+        if mg._viewapp is None:
+            mg._viewapp = QtGui.QApplication([])
+        app = mg._viewapp
+        app.exec_()
 
     if edit_flag:
         return datatable
-
 
 
 def edit_table(table, show_flag=True):
