@@ -162,7 +162,7 @@ class AttrEquivalenceBlocker(Blocker):
         # return candidate set
         return candset
 
-    def block_candset(self, candset, l_block_attr, r_block_attr, verbose=True,
+    def block_candset(self, candset, l_block_attr, r_block_attr, verbose=False,
                       show_progress=True, n_jobs=1):
         """Blocks an input candidate set of tuple pairs based on attribute equivalence.
 

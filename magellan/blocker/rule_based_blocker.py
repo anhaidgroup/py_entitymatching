@@ -26,6 +26,10 @@ logger = logging.getLogger(__name__)
 global_rb = None
 
 class RuleBasedBlocker(Blocker):
+    """Blocks two tables, a candset, or a pair of tuples based on a sequence
+       of blocking rules supplied by the user.
+    """
+
     def __init__(self, *args, **kwargs):
         feature_table = kwargs.pop('feature_table', None)
         self.feature_table = feature_table
@@ -74,6 +78,14 @@ class RuleBasedBlocker(Blocker):
 
 
     def add_rule(self, conjunct_list, feature_table):
+        """Adds a rule to the rule-based blocker.
+
+           Args:
+               conjunct_list (list): a list of conjuncts specifying the rule.
+             
+               feature_table (DataFrame): a dataframe containing all the features
+                                          that are being referenced by the rule.
+        """
 
         if not isinstance(conjunct_list, list):
             conjunct_list = [conjunct_list]
@@ -107,6 +119,12 @@ class RuleBasedBlocker(Blocker):
         return self.rules[rule_name]
 
     def set_feature_table(self, feature_table):
+        """Sets feature table for the rule-based blocker.
+ 
+           Args:
+               feature_table (DataFrame): a dataframe containing features.
+        """
+
         if self.feature_table is not None:
             logger.warning('Feature table is already set, changing it now will not recompile '
                            'existing rules')
@@ -115,7 +133,54 @@ class RuleBasedBlocker(Blocker):
     def block_tables(self, ltable, rtable, l_output_attrs=None, r_output_attrs=None,
                      l_output_prefix='ltable_', r_output_prefix='rtable_',
                      verbose=False, show_progress=True, n_jobs=1):
+        """Blocks two tables based on the sequence of rules supplied by the user.
 
+        Finds tuple pairs from left and right tables that survive the sequence
+        of blocking rules. A tuple pair survives the sequence of blocking rules
+        if none of the rules in the sequence returns True for that pair. If any
+        of the rules returns True, then the pair is blocked.
+
+        Args:
+            ltable (DataFrame): left input table.
+
+            rtable (DataFrame): right input table.
+
+            l_output_attrs (list): list of attribute names from the left
+                                   table to be included in the
+                                   output candidate set (defaults to None).
+
+            r_output_attrs (list): list of attribute names from the right
+                                   table to be included in the
+                                   output candidate set (defaults to None).
+
+            l_output_prefix (str): prefix to be used for the attribute names
+                                   coming from the left table in the output
+                                   candidate set (defaults to 'ltable\_').
+
+            r_output_prefix (str): prefix to be used for the attribute names
+                                   coming from the right table in the output
+                                   candidate set (defaults to 'rtable\_').
+
+            verbose (boolean): flag to indicate whether logging should be done
+                               (defaults to False).
+
+            show_progress (boolean): flag to indicate whether progress should
+                                     be displayed to the user (defaults to True).
+
+            n_jobs (int): number of parallel jobs to be used for computation
+                          (defaults to 1).
+                          If -1 all CPUs are used. If 0 or 1, no parallel computation
+                          is used at all, which is useful for debugging.
+                          For n_jobs below -1, (n_cpus + 1 + n_jobs) are used.
+                          Thus, for n_jobs = -2, all CPUS but one are used.
+                          If (n_cpus + 1 + n_jobs) is less than 1, then n_jobs is
+                          set to 1, which means no parallel computation at all.
+
+        Returns:
+            A candidate set of tuple pairs that survived the sequence of
+            blocking rules (DataFrame).
+        """
+        
         # validate data types of input parameters
         self.validate_types_params_tables(ltable, rtable,
                        l_output_attrs, r_output_attrs, l_output_prefix,
@@ -139,10 +204,6 @@ class RuleBasedBlocker(Blocker):
 
         # do blocking
 
-        # # initialize progress bar
-        if show_progress:
-            bar = pyprind.ProgBar(len(ltable)*len(rtable))
-
         # # set index for convenience
         l_df = ltable.set_index(l_key, drop=False)
         r_df = rtable.set_index(r_key, drop=False)
@@ -156,32 +217,33 @@ class RuleBasedBlocker(Blocker):
             r_output_attrs_1 = [x for x in r_output_attrs if x != r_key]
         
         # # get attributes to project
-        l_proj_attrs, r_proj_attrs = self.get_attrs_to_project(l_key, r_key, l_output_attrs_1, r_output_attrs_1)
+        l_proj_attrs, r_proj_attrs = self.get_attrs_to_project(l_key, r_key,
+                                            l_output_attrs_1, r_output_attrs_1)
         l_df, r_df = l_df[l_proj_attrs], r_df[r_proj_attrs]
       
-        candset, rule_applied = self.block_tables_with_filters(l_df, r_df, l_key, r_key, l_output_attrs_1,
-                                      r_output_attrs_1, l_output_prefix, r_output_prefix, verbose, show_progress, n_jobs)
+        candset, rule_applied = self.block_tables_with_filters(l_df, r_df,
+                               l_key, r_key, l_output_attrs_1,
+                               r_output_attrs_1, l_output_prefix,
+                               r_output_prefix, verbose, show_progress, n_jobs)
 
         if candset is None:
             # no filterable rule was applied
-            print('No filterable rule was applied')
-            candset = self.block_tables_without_filters(l_df, r_df, l_key, r_key, l_output_attrs_1,
-                                         r_output_attrs_1, l_output_prefix,
-                                         r_output_prefix, verbose, show_progress, n_jobs)
+            candset = self.block_tables_without_filters(l_df, r_df, l_key,
+                               r_key, l_output_attrs_1,
+                               r_output_attrs_1, l_output_prefix,
+                               r_output_prefix, verbose, show_progress, n_jobs)
         elif len(self.rules) > 1:
             # one filterable rule was applied but other rules are left
             # block candset by applying other rules and excluding the applied rule 
-            #rules = self.rules.copy()
-            #rules.pop(rule_applied, None)
-            candset = self.block_candset_excluding_rule(candset, l_df, r_df, l_key, r_key,
-                                                 l_output_prefix + l_key,
-                                                 r_output_prefix + r_key, rule_applied,
-                                                 show_progress, n_jobs)
+            candset = self.block_candset_excluding_rule(candset, l_df, r_df,
+                                           l_key, r_key,
+                                           l_output_prefix + l_key,
+                                           r_output_prefix + r_key,
+                                           rule_applied, show_progress, n_jobs)
         
-        print('candset cols: ', candset.columns)                                         
-        retain_cols = self.get_attrs_to_retain(l_key, r_key, l_output_attrs_1, r_output_attrs_1,
+        retain_cols = self.get_attrs_to_retain(l_key, r_key, l_output_attrs_1,
+                                               r_output_attrs_1,
                                                l_output_prefix, r_output_prefix)
-        print('retain_cols: ', retain_cols)
         if len(candset) > 0:
             candset = candset[retain_cols]
         else:
@@ -190,10 +252,10 @@ class RuleBasedBlocker(Blocker):
         # update catalog
         key = get_name_for_key(candset.columns)
         candset = add_key_column(candset, key)
-        cm.set_candset_properties(candset, key, l_output_prefix+l_key, r_output_prefix+r_key, ltable, rtable)
+        cm.set_candset_properties(candset, key, l_output_prefix+l_key,
+                                  r_output_prefix+r_key, ltable, rtable)
 
         # return candidate set
-        #print('Candset:', candset)
         return candset
 
     def block_candset_excluding_rule(self, c_df, l_df, r_df, l_key, r_key,
@@ -235,114 +297,6 @@ class RuleBasedBlocker(Blocker):
         # return candidate set
         return candset
          
-    def block_tables_skd(self, ltable, rtable, l_output_attrs=None, r_output_attrs=None,
-                     l_output_prefix='ltable_', r_output_prefix='rtable_',
-                     verbose=False, show_progress=True, n_jobs=1):
-        #print('feature_table: ', self.feature_table)
-        #print('rules: ', self.rules)
-        #print('rule_source: ', self.rule_source)
-        self.validate_types_params_tables(ltable, rtable,
-		       l_output_attrs, r_output_attrs, l_output_prefix,
-		       r_output_prefix, verbose, show_progress, n_jobs)
-
-        # validate rules
-        assert len(self.rules.keys()) > 0, 'There are no rules to apply'
-
-        # validate input parameters
-        self.validate_output_attrs(ltable, rtable, l_output_attrs, r_output_attrs)
-
-        # get and validate metadata
-        log_info(logger, 'Required metadata: ltable key, rtable key', verbose)
-
-        # # get metadata
-        l_key, r_key = cm.get_keys_for_ltable_rtable(ltable, rtable, logger, verbose)
-
-        # # validate metadata
-        cm._validate_metadata_for_table(ltable, l_key, 'ltable', logger, verbose)
-        cm._validate_metadata_for_table(rtable, r_key, 'rtable', logger, verbose)
-
-
-        # do blocking
-
-        # # initialize progress bar
-        if show_progress:
-            bar = pyprind.ProgBar(len(ltable)*len(rtable))
-
-        # # list to keep track of the tuple pairs that survive blocking
-        valid = []
-
-        #  # set index for convenience
-        l_df = ltable.set_index(l_key, drop=False)
-        r_df = rtable.set_index(r_key, drop=False)
-
-        # # create look up table for faster processing
-        l_dict = {}
-        for k, r in l_df.iterrows():
-            l_dict[k] = r
-
-        r_dict = {}
-        for k, r in r_df.iterrows():
-            r_dict[k] = r
-
-        # # get the position of the id attributes in the tables
-        l_id_pos = list(ltable.columns).index(l_key)
-        r_id_pos = list(rtable.columns).index(r_key)
-
-        # # iterate through the tuples and apply the rules
-        for l_t in ltable.itertuples(index=False):
-            ltuple = l_dict[l_t[l_id_pos]]
-            for r_t in rtable.itertuples(index=False):
-                # # update the progress bar
-                if show_progress:
-                    bar.update()
-
-                rtuple = r_dict[r_t[r_id_pos]]
-                res = self.apply_rules(ltuple, rtuple)
-
-                if res != True:
-                    d = OrderedDict()
-                    # # add ltable and rtable ids
-                    ltable_id = l_output_prefix + l_key
-                    rtable_id = r_output_prefix + r_key
-
-                    d[ltable_id] = ltuple[l_key]
-                    d[rtable_id] = rtuple[r_key]
-
-                    # # add l/r output attributes
-                    if l_output_attrs:
-                        l_out = ltuple[l_output_attrs]
-                        l_out.index = l_output_prefix + l_out.index
-                        d.update(l_out)
-
-                    if r_output_attrs:
-                        r_out = rtuple[r_output_attrs]
-                        r_out.index = r_output_prefix + r_out.index
-                        d.update(r_out)
-
-                    # # add the ordered dict to the list
-                    valid.append(d)
-
-        # construct output table
-        candset = pd.DataFrame(valid)
-        l_output_attrs = self.process_output_attrs(ltable, l_key, l_output_attrs, l_output_prefix)
-        r_output_attrs = self.process_output_attrs(rtable, r_key, r_output_attrs, r_output_prefix)
-
-        retain_cols = self.get_attrs_to_retain(l_key, r_key, l_output_attrs, r_output_attrs,
-                                               l_output_prefix, r_output_prefix)
-
-        if len(candset) > 0:
-            candset = candset[retain_cols]
-        else:
-            candset = pd.DataFrame(columns=retain_cols)
-
-        # update catalog
-        key = get_name_for_key(candset.columns)
-        candset = add_key_column(candset, key)
-        cm.set_candset_properties(candset, key, l_output_prefix+l_key, r_output_prefix+r_key, ltable, rtable)
-
-        # return candidate set
-        return candset
-
     def block_tables_without_filters(self, l_df, r_df, l_key, r_key,
                                      l_output_attrs, r_output_attrs,
                                      l_output_prefix, r_output_prefix,
@@ -360,19 +314,19 @@ class RuleBasedBlocker(Blocker):
             # single process
             candset = _block_tables_split(l_df, r_df, l_key, r_key,
                                           l_output_attrs, r_output_attrs,
-                                          l_output_prefix, r_output_prefix, #self,
+                                          l_output_prefix, r_output_prefix,
                                           show_progress)
         else:
             # multiprocessing
             m, n = self.get_split_params(n_procs, len(l_df), len(r_df))
             l_splits = pd.np.array_split(l_df, m)
             r_splits = pd.np.array_split(r_df, n)
-            c_splits = Parallel(n_jobs=m*n)(delayed(_block_tables_split)(l, r,
+            c_splits = Parallel(n_jobs=m*n)(delayed(_block_tables_split)(l_splits[i], r_splits[j],
                                                 l_key, r_key, 
                                                 l_output_attrs, r_output_attrs,
-                                                l_output_prefix, r_output_prefix, #self,
-                                                show_progress)
-                                                for l in l_splits for r in r_splits)
+                                                l_output_prefix, r_output_prefix,
+                                                show_progress and i == len(l_splits) - 1 and j == len(r_splits) - 1)
+                                                for i in range(len(l_splits)) for j in range(len(r_splits)))
             candset = pd.concat(c_splits, ignore_index=True)
 
         global_rb = None
@@ -382,7 +336,37 @@ class RuleBasedBlocker(Blocker):
 
 
 
-    def block_candset(self, candset, verbose=True, show_progress=True, n_jobs=1):
+    def block_candset(self, candset, verbose=False, show_progress=True, n_jobs=1):
+        """Blocks an input candidate set of tuple pairs based on a sequence of
+           blocking rules supplied by the user..
+
+        Finds tuple pairs from an input candidate set of tuple pairs that
+        survive the sequence of blocking rules. A tuple pair survives the
+        sequence of blocking rules if none of the rules in the sequence returns
+        True for that pair. If any of the rules returns True, then the pair is
+        blocked (dropped).
+
+        Args:
+            candset (DataFrame): input candidate set of tuple pairs.
+
+            verbose (boolean): flag to indicate whether logging should be done
+                               (defaults to False).
+
+            show_progress (boolean): flag to indicate whether progress should
+                                     be displayed to the user (defaults to True).
+
+            n_jobs (int): number of parallel jobs to be used for computation
+                          (defaults to 1).
+                          If -1 all CPUs are used. If 0 or 1, no parallel computation
+                          is used at all, which is useful for debugging.
+                          For n_jobs below -1, (n_cpus + 1 + n_jobs) are used.
+                          Thus, for n_jobs = -2, all CPUS but one are used.
+                          If (n_cpus + 1 + n_jobs) is less than 1, then n_jobs is
+                          set to 1, which means no parallel computation at all.
+
+        Returns:
+            A candidate set of tuple pairs that survived blocking (DataFrame).
+        """
 
         # validate data types of input parameters
         self.validate_types_params_candset(candset, verbose, show_progress, n_jobs)
@@ -427,74 +411,20 @@ class RuleBasedBlocker(Blocker):
         # return candidate set
         return c_df
 
-    def block_candset_skd(self, candset, verbose=True, show_progress=True):
-
-        # validate rules
-        assert len(self.rules.keys()) > 0, 'There are no rules to apply'
-
-        # get and validate metadata
-        log_info(logger, 'Required metadata: cand.set key, fk ltable, fk rtable, '
-                                'ltable, rtable, ltable key, rtable key', verbose)
-
-        # # get metadata
-        key, fk_ltable, fk_rtable, ltable, rtable, l_key, r_key = cm.get_metadata_for_candset(candset, logger, verbose)
-
-        # # validate metadata
-        cm._validate_metadata_for_candset(candset, key, fk_ltable, fk_rtable, ltable, rtable, l_key, r_key,
-                                          logger, verbose)
-
-        # do blocking
-
-        # # initialize the progress bar
-        if show_progress:
-            bar = pyprind.ProgBar(len(candset))
-
-        # # set index for convenience
-        l_df = ltable.set_index(l_key, drop=False)
-        r_df = rtable.set_index(r_key, drop=False)
-
-        # # create lookup table for faster processing
-        l_dict = {}
-        for k, r in l_df.iterrows():
-            l_dict[k] = r
-
-        r_dict = {}
-        for k, r in r_df.iterrows():
-            r_dict[k] = r
-
-        # # list to keep track of valid ids
-        valid = []
-        l_id_pos = list(candset.columns).index(fk_ltable)
-        r_id_pos = list(candset.columns).index(fk_rtable)
-
-        # # iterate candidate set
-        for row in candset.itertuples(index=False):
-            # # update progress bar
-            if show_progress:
-                bar.update()
-
-            ltuple = l_dict[row[l_id_pos]]
-            rtuple = r_dict[row[r_id_pos]]
-
-            res = self.apply_rules(ltuple, rtuple)
-            if res != True:
-                valid.append(True)
-            else:
-                valid.append(False)
-
-        # construct output table
-        if len(candset) > 0:
-            candset = candset[valid]
-        else:
-            candset = pd.DataFrame(columns=candset.columns)
-
-        # update catalog
-        cm.set_candset_properties(candset, key, fk_ltable, fk_rtable, ltable, rtable)
-
-        # return candidate set
-        return candset
-
     def block_tuples(self, ltuple, rtuple):
+        """Blocks a tuple pair based on a sequence of blocking rules supplied
+           by the user.
+
+        Args:
+            ltuple (Series): input left tuple.
+
+            rtuple (Series): input right tuple.
+            
+        Returns:
+            A status indicating if the tuple pair is blocked by applying the
+            sequence of blocking rules (boolean).
+        """
+
         # validate rules
         assert len(self.rules.keys()) > 0, 'There are no rules to apply'
         return self.apply_rules(ltuple, rtuple)
@@ -525,23 +455,16 @@ class RuleBasedBlocker(Blocker):
         if r_output_attrs:
             r_proj_attrs.extend([c for c in r_output_attrs if c not in r_proj_attrs])
         for rule_name, conjunct_list in six.iteritems(self.rule_str):
-            #print('conjunct_list: ', conjunct_list)
             for conjunct in conjunct_list:
                 is_auto_gen, sim_fn, l_attr, r_attr, l_tok, r_tok, op, th = self.parse_conjunct(conjunct, rule_name)
-                #print('left_attr: ', l_attr)
                 if l_attr not in l_proj_attrs:
                     l_proj_attrs.append(l_attr)
-                #print('right_attr: ', r_attr)
                 if r_attr not in r_proj_attrs:
                     r_proj_attrs.append(r_attr)
-        #print('l_proj_attrs: ', l_proj_attrs)    
-        #print('r_proj_attrs: ', r_proj_attrs)
         return l_proj_attrs, r_proj_attrs
 
     def parse_conjunct(self, conjunct, rule_name):
-        #print >> sys.stderr, 'conjunct:', conjunct
-        #print >> sys.stderr, 'conjunct split:', conjunct.split()
-        # @TODO: Make parsing more robust using pyparsing
+        # TODO: Make parsing more robust using pyparsing
         feature_table = self.rule_ft[rule_name]
         vals = conjunct.split('(')
         feature_name = vals[0].strip()
@@ -556,7 +479,6 @@ class RuleBasedBlocker(Blocker):
         operator = vals3[0].strip()
         threshold = vals3[1].strip()
         ft_df = feature_table.set_index('feature_name')
-        #print('ft_df: ', ft_df.ix[feature_name])
         return (ft_df.ix[feature_name]['is_auto_generated'],
                 ft_df.ix[feature_name]['simfunction'],
                 ft_df.ix[feature_name]['left_attribute'],
@@ -571,9 +493,7 @@ class RuleBasedBlocker(Blocker):
                                   show_progress, n_jobs):
         for rule_name in self.rules.keys():
             # first check if a rule is filterable
-            print('Trying first rule: ', rule_name)
             if self.is_rule_filterable(rule_name):
-                print('Rule is filterable: ', rule_name)
                 candset = self.apply_filterable_rule(rule_name, l_df, r_df,
                                                     l_key, r_key, l_output_attrs,
                                                     r_output_attrs, l_output_prefix,
@@ -600,22 +520,22 @@ class RuleBasedBlocker(Blocker):
         # an allowed operator (<, <=),
         is_auto_gen, sim_fn, l_attr, r_attr, l_tok, r_tok, op, th = self.parse_conjunct(conjunct, rule_name)
         if is_auto_gen != True:
-            print('Conjunct not filterable as the feature is not auto generated')
+            # conjunct not filterable as the feature is not auto generated
             return False
         if sim_fn == 'lev_dist':
             if op == '>' or '>=':
                 return True
             else:
-                print('Conjunct not filterable due to unsupported op', op)
+                # conjunct not filterable due to unsupported operator
                 return False
         if l_tok != r_tok:
-            print('Conjunct not filterable due to tokenizer mismatch', l_tok, r_tok)
+            # conjunct not filterable because left and right tokenizers mismatch
             return False
         if sim_fn not in self.filterable_sim_fns:
-            print('Conjunct not filterable due to unsupported sim_fn', sim_fn)
+            # conjunct not filterable due to unsupported sim_fn
             return False
         if op not in self.allowed_ops:
-            print('Conjunct not filterable due to unsupported op', op)
+            # conjunct not filterable due to unsupported operator
             return False
         # conjunct is filterable
         return True
@@ -629,16 +549,12 @@ class RuleBasedBlocker(Blocker):
         for conjunct in conjunct_list:
             is_auto_gen, sim_fn, l_attr, r_attr, l_tok, r_tok, op, th = self.parse_conjunct(conjunct, rule_name)
 
-            tokenizer = None
             if l_tok == 'dlm_dc0':
-                print('Choosing whitespace tokenizer')
                 tokenizer = WhitespaceTokenizer(return_set=True)
             elif l_tok == 'qgm_3':
-                print('Choosing 3gram tokenizer')
                 tokenizer = QgramTokenizer(qval=3, return_set=True)
             elif sim_fn != 'lev_dist':
                 # not supported
-                print('Tokenizer not supported')
                 return None
  
             join_fn = None
@@ -667,25 +583,22 @@ class RuleBasedBlocker(Blocker):
                 if op == '<=':
                     comp_op = '>'     
                 
-            c_df = None
-            #try:
-            if join_fn == edit_distance_join:
-                c_df = join_fn(l_df, r_df, l_key, r_key, l_attr, r_attr,
-                               float(th), comp_op, True, l_output_attrs, 
-                               r_output_attrs, l_output_prefix,
-                               r_output_prefix, False, n_jobs)
-            else:
-                c_df = join_fn(l_df, r_df, l_key, r_key, l_attr,
-                               r_attr, tokenizer, float(th), comp_op, True, l_output_attrs,
-                               r_output_attrs, l_output_prefix,
-                               r_output_prefix, False, n_jobs)
-            #except:    
-            #    logger.warning('Cannot apply filters to rule because ...')
-            #    return None
+            try:
+                if join_fn == edit_distance_join:
+                    c_df = join_fn(l_df, r_df, l_key, r_key, l_attr, r_attr,
+                                   float(th), comp_op, True, l_output_attrs, 
+                                   r_output_attrs, l_output_prefix,
+                                   r_output_prefix, False, n_jobs)
+                else:
+                    c_df = join_fn(l_df, r_df, l_key, r_key, l_attr, r_attr,
+                                   tokenizer, float(th), comp_op, True,
+                                   l_output_attrs, r_output_attrs, l_output_prefix,
+                                   r_output_prefix, False, n_jobs)
+            except:    
+                logger.warning('Cannot apply filters to rule using string similarity join.')
+                return None
             if candset is not None:
                 # union the candset of this conjunct with the existing candset
-                #print('candset:', candset)
-                #print('c_df:', c_df)
                 candset=pd.concat([candset, c_df]).drop_duplicates([l_output_prefix + l_key, r_output_prefix + r_key]).reset_index(drop=True) 
             else:
                 # candset from the first conjunct of the rule
@@ -694,7 +607,7 @@ class RuleBasedBlocker(Blocker):
 
 def _block_tables_split(l_df, r_df, l_key, r_key,
                         l_output_attrs, r_output_attrs,
-                        l_output_prefix, r_output_prefix, #rule_based_blocker,
+                        l_output_prefix, r_output_prefix,
                         show_progress):
 
     # initialize progress bar
@@ -705,7 +618,6 @@ def _block_tables_split(l_df, r_df, l_key, r_key,
     l_dict = {}
     for k, r in l_df.iterrows():
         l_dict[k] = r
-
     r_dict = {}
     for k, r in r_df.iterrows():
         r_dict[k] = r

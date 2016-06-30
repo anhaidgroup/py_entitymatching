@@ -75,38 +75,6 @@ class RuleBasedBlockerTestCases(unittest.TestCase):
         del self.B
         del self.rb
 
-    def validate_metadata(self, C, l_output_attrs=None, r_output_attrs=None,
-                          l_output_prefix='ltable_', r_output_prefix='rtable_',
-                          l_key='ID', r_key='ID'):
-        s1 = ['_id', l_output_prefix + l_key, r_output_prefix + r_key]
-        if l_output_attrs:
-            s1 += [l_output_prefix + x for x in l_output_attrs if x != l_key]
-        if r_output_attrs:
-            s1 += [r_output_prefix + x for x in r_output_attrs if x != r_key]
-        s1 = sorted(s1)
-        assert_equal(s1, sorted(C.columns))
-        assert_equal(mg.get_key(C), '_id')
-        assert_equal(mg.get_property(C, 'fk_ltable'), l_output_prefix + l_key)
-        assert_equal(mg.get_property(C, 'fk_rtable'), r_output_prefix + r_key)
-    
-    def validate_data(self, C, expected_ids=None):
-        #print('Expected ids: ', expected_ids)
-        if expected_ids:
-            lid = mg.get_property(C, 'fk_ltable')
-            rid = mg.get_property(C, 'fk_rtable')
-            C_ids = C[[lid, rid]].set_index([lid, rid])
-            actual_ids = sorted(C_ids.index.values.tolist())
-            #print('Actual ids: ', actual_ids)
-            assert_equal(expected_ids, actual_ids)
-        else:
-            assert_equal(len(C), 0)
-     
-    def validate_metadata_two_candsets(self, C, D): 
-        assert_equal(sorted(C.columns), sorted(D.columns))
-        assert_equal(mg.get_key(D), mg.get_key(C))
-        assert_equal(mg.get_property(D, 'fk_ltable'), mg.get_property(C, 'fk_ltable'))
-        assert_equal(mg.get_property(D, 'fk_rtable'), mg.get_property(C, 'fk_rtable'))
-    
     @raises(AssertionError)
     def test_rb_block_tables_invalid_ltable_1(self):
         self.rb.block_tables(None, self.B)
@@ -220,77 +188,74 @@ class RuleBasedBlockerTestCases(unittest.TestCase):
         C = self.rb.block_tables(self.A, self.B, l_output_attrs,
                                  r_output_attrs, l_output_prefix,
                                  r_output_prefix)
-        self.validate_metadata(C, l_output_attrs, r_output_attrs,
+        validate_metadata(C, l_output_attrs, r_output_attrs,
                                l_output_prefix, r_output_prefix)
-        self.validate_data(C, expected_ids_1)
+        validate_data(C, expected_ids_1)
     
     def test_rb_block_tables_filterable_rule_single_conjunct_2(self):
         self.rb.add_rule(rule_2, self.feature_table)
         C = self.rb.block_tables(self.A, self.B, l_output_attrs,
                                  r_output_attrs, l_output_prefix,
                                  r_output_prefix, show_progress=False)
-        self.validate_metadata(C, l_output_attrs, r_output_attrs,
+        validate_metadata(C, l_output_attrs, r_output_attrs,
                                l_output_prefix, r_output_prefix)
-        self.validate_data(C, expected_ids_2)
+        validate_data(C, expected_ids_2)
     
     def test_rb_block_tables_filterable_rule_multiple_conjuncts_1(self):
         self.rb.add_rule(rule_3, self.feature_table)
         C = self.rb.block_tables(self.A, self.B, l_output_attrs,
                                  r_output_attrs, l_output_prefix,
                                  r_output_prefix, show_progress=False)
-        self.validate_metadata(C, l_output_attrs, r_output_attrs,
+        validate_metadata(C, l_output_attrs, r_output_attrs,
                                l_output_prefix, r_output_prefix)
-        self.validate_data(C, expected_ids_3)
+        validate_data(C, expected_ids_3)
      
     def test_rb_block_tables_filterable_rule_multiple_conjuncts_2(self):
         self.rb.add_rule(rule_4, self.feature_table)
-        #print('feature_table:', self.feature_table)
         C = self.rb.block_tables(self.A, self.B, l_output_attrs,
                                  r_output_attrs, l_output_prefix,
                                  r_output_prefix, show_progress=False)
-        self.validate_metadata(C, l_output_attrs, r_output_attrs,
+        validate_metadata(C, l_output_attrs, r_output_attrs,
                                l_output_prefix, r_output_prefix)
-        self.validate_data(C, expected_ids_4)
+        validate_data(C, expected_ids_4)
     
     def test_rb_block_tables_non_filterable_rule_single_conjunct(self):
         self.rb.add_rule(rule_6, self.feature_table)
         C = self.rb.block_tables(self.A, self.B, l_output_attrs,
                                  r_output_attrs, l_output_prefix,
                                  r_output_prefix)
-        self.validate_metadata(C, l_output_attrs, r_output_attrs,
+        validate_metadata(C, l_output_attrs, r_output_attrs,
                                l_output_prefix, r_output_prefix)
-        self.validate_data(C, expected_ids_6)
+        validate_data(C, expected_ids_6)
 
     def test_rb_block_tables_non_filterable_rule_multiple_conjuncts(self):
         self.rb.add_rule(rule_7, self.feature_table)
         C = self.rb.block_tables(self.A, self.B, l_output_attrs,
                                  r_output_attrs, l_output_prefix,
                                  r_output_prefix)
-        self.validate_metadata(C, l_output_attrs, r_output_attrs,
+        validate_metadata(C, l_output_attrs, r_output_attrs,
                                l_output_prefix, r_output_prefix)
-        self.validate_data(C, expected_ids_7)
+        validate_data(C, expected_ids_7)
 
     def test_rb_block_tables_rule_sequence_with_two_filterable_rules(self):
-        #print('Feature table: ', self.feature_table)
         self.rb.add_rule(rule_1, self.feature_table)
         self.rb.add_rule(rule_2, self.feature_table)
         C = self.rb.block_tables(self.A, self.B, l_output_attrs,
                                  r_output_attrs, l_output_prefix,
                                  r_output_prefix, show_progress=False)
-        self.validate_metadata(C, l_output_attrs, r_output_attrs,
+        validate_metadata(C, l_output_attrs, r_output_attrs,
                                l_output_prefix, r_output_prefix)
-        self.validate_data(C, expected_ids_1_and_2)
+        validate_data(C, expected_ids_1_and_2)
     
     def test_rb_block_tables_rule_sequence_with_one_filterable_rule(self):
-        print('Feature table: ', self.feature_table)
         self.rb.add_rule(rule_1, self.feature_table)
         self.rb.add_rule(rule_6, self.feature_table)
         C = self.rb.block_tables(self.A, self.B, l_output_attrs,
                                  r_output_attrs, l_output_prefix,
                                  r_output_prefix, show_progress=False)
-        self.validate_metadata(C, l_output_attrs, r_output_attrs,
+        validate_metadata(C, l_output_attrs, r_output_attrs,
                                l_output_prefix, r_output_prefix)
-        self.validate_data(C, expected_ids_1_and_6)
+        validate_data(C, expected_ids_1_and_6)
     
     def test_rb_block_tables_rule_sequence_with_no_filterable_rule(self):
         self.rb.add_rule(rule_6, self.feature_table)
@@ -298,46 +263,46 @@ class RuleBasedBlockerTestCases(unittest.TestCase):
         C = self.rb.block_tables(self.A, self.B, l_output_attrs,
                                  r_output_attrs, l_output_prefix,
                                  r_output_prefix)
-        self.validate_metadata(C, l_output_attrs, r_output_attrs,
+        validate_metadata(C, l_output_attrs, r_output_attrs,
                                l_output_prefix, r_output_prefix)
-        self.validate_data(C, expected_ids_6_and_7)
+        validate_data(C, expected_ids_6_and_7)
     
     def test_rb_block_tables_wi_no_output_tuples(self):
         self.rb.add_rule(rule_5, self.feature_table)
         C = self.rb.block_tables(self.A, self.B, show_progress=False)
-        self.validate_metadata(C)
-        self.validate_data(C)
+        validate_metadata(C)
+        validate_data(C)
     
     def test_rb_block_tables_wi_null_l_output_attrs(self):
         self.rb.add_rule(rule_1, self.feature_table)
         C = self.rb.block_tables(self.A, self.B, None, r_output_attrs, show_progress=False)
-        self.validate_metadata(C, None, r_output_attrs)
-        self.validate_data(C, expected_ids_1)
+        validate_metadata(C, None, r_output_attrs)
+        validate_data(C, expected_ids_1)
     
     def test_rb_block_tables_wi_null_r_output_attrs(self):
         self.rb.add_rule(rule_1, self.feature_table)
         C = self.rb.block_tables(self.A, self.B, l_output_attrs, None, show_progress=False)
-        self.validate_metadata(C, l_output_attrs, None)
-        self.validate_data(C, expected_ids_1)
+        validate_metadata(C, l_output_attrs, None)
+        validate_data(C, expected_ids_1)
     
     def test_rb_block_tables_wi_empty_l_output_attrs(self):
         self.rb.add_rule(rule_1, self.feature_table)
         C = self.rb.block_tables(self.A, self.B, [], r_output_attrs, show_progress=False)
-        self.validate_metadata(C, [], r_output_attrs)
-        self.validate_data(C, expected_ids_1)
+        validate_metadata(C, [], r_output_attrs)
+        validate_data(C, expected_ids_1)
     
     def test_rb_block_tables_wi_empty_r_output_attrs(self):
         self.rb.add_rule(rule_1, self.feature_table)
         C = self.rb.block_tables(self.A, self.B, l_output_attrs, [], show_progress=False)
-        self.validate_metadata(C, l_output_attrs, [])
-        self.validate_data(C, expected_ids_1)
+        validate_metadata(C, l_output_attrs, [])
+        validate_data(C, expected_ids_1)
 
     def test_rb_block_tables_supported_sim_fn_unsupported_op_for_filters(self):
         self.rb.set_feature_table(self.feature_table)
         self.rb.add_rule(rule_8, None)
         C = self.rb.block_tables(self.A, self.B, show_progress=False)
-        self.validate_metadata(C)
-        self.validate_data(C)
+        validate_metadata(C)
+        validate_data(C)
    
     def test_rb_block_tables_set_feature_table(self):
         self.rb.set_feature_table(self.feature_table)
@@ -345,9 +310,9 @@ class RuleBasedBlockerTestCases(unittest.TestCase):
         C = self.rb.block_tables(self.A, self.B, l_output_attrs,
                                  r_output_attrs, l_output_prefix,
                                  r_output_prefix, show_progress=False)
-        self.validate_metadata(C, l_output_attrs, r_output_attrs,
+        validate_metadata(C, l_output_attrs, r_output_attrs,
                                l_output_prefix, r_output_prefix)
-        self.validate_data(C, expected_ids_1)
+        validate_data(C, expected_ids_1)
     
     def test_rb_block_tables_set_feature_table_twice(self):
         self.rb.set_feature_table(self.feature_table)
@@ -356,9 +321,9 @@ class RuleBasedBlockerTestCases(unittest.TestCase):
         C = self.rb.block_tables(self.A, self.B, l_output_attrs,
                                  r_output_attrs, l_output_prefix,
                                  r_output_prefix, show_progress=False)
-        self.validate_metadata(C, l_output_attrs, r_output_attrs,
+        validate_metadata(C, l_output_attrs, r_output_attrs,
                                l_output_prefix, r_output_prefix)
-        self.validate_data(C, expected_ids_1)
+        validate_data(C, expected_ids_1)
 
     @raises(AssertionError)
     def test_rb_block_tables_no_feature_table(self):
@@ -434,54 +399,217 @@ class RuleBasedBlockerTestCases(unittest.TestCase):
         rb.add_rule(rule_1, self.feature_table)
         C = rb.block_tables(self.A, self.B, l_output_attrs,
                             r_output_attrs, l_output_prefix, r_output_prefix)
-        self.validate_metadata(C, l_output_attrs, r_output_attrs,
+        validate_metadata(C, l_output_attrs, r_output_attrs,
                                l_output_prefix, r_output_prefix)
-        self.validate_data(C, expected_ids_1)
+        validate_data(C, expected_ids_1)
         self.rb.add_rule(rule_2, self.feature_table)
         D = self.rb.block_candset(C)
-        self.validate_metadata_two_candsets(C, D)
-        self.validate_data(D, expected_ids_1_and_2)
+        validate_metadata_two_candsets(C, D)
+        validate_data(D, expected_ids_1_and_2)
     
     def test_rb_block_candset_empty_input(self):
         rb = mg.RuleBasedBlocker()
         rb.add_rule(rule_5, self.feature_table)
         C = rb.block_tables(self.A, self.B)
-        self.validate_metadata(C)
-        self.validate_data(C)
+        validate_metadata(C)
+        validate_data(C)
         self.rb.add_rule(rule_1, self.feature_table)
         D = self.rb.block_candset(C)
-        self.validate_metadata_two_candsets(C, D)
-        self.validate_data(D)
+        validate_metadata_two_candsets(C, D)
+        validate_data(D)
     
     def test_rb_block_candset_empty_output(self):
         rb = mg.RuleBasedBlocker()
         rb.add_rule(rule_1, self.feature_table)
         C = rb.block_tables(self.A, self.B)
-        self.validate_metadata(C)
-        self.validate_data(C, expected_ids_1)
+        validate_metadata(C)
+        validate_data(C, expected_ids_1)
         self.rb.add_rule(rule_5, self.feature_table)
         D = self.rb.block_candset(C)
-        self.validate_metadata_two_candsets(C, D)
-        self.validate_data(D)
-    """ 
-    def test_rb_block_tuples(self):
-        assert_equal(self.rb.block_tuples(self.A.ix[1], self.B.ix[2], l_block_attr_1,
-                                     r_block_attr_1), False)
-        assert_equal(self.rb.block_tuples(self.A.ix[2], self.B.ix[2], l_block_attr_1,
-                                     r_block_attr_1), True)
+        validate_metadata_two_candsets(C, D)
+        validate_data(D)
      
-    def test_block_tables_name_cos(self):
-        path_a = os.sep.join([p, 'datasets', 'example_datasets', 'electronics', 'A.csv'])
-        path_b = os.sep.join([p, 'datasets', 'example_datasets', 'electronics', 'B.csv'])
-        A = mg.read_csv_metadata(path_a)
-        mg.set_key(A, 'ID')
-        B = mg.read_csv_metadata(path_b)
-        mg.set_key(B, 'ID')
+    def test_rb_block_tuples(self):
+        self.rb.add_rule(rule_1, self.feature_table)
+        assert_equal(self.rb.block_tuples(self.A.ix[1], self.B.ix[2]), False)
+        assert_equal(self.rb.block_tuples(self.A.ix[2], self.B.ix[2]), True)
+
+
+class RuleBasedBlockerMulticoreTestCases(unittest.TestCase):
+
+    def setUp(self):
+        self.A = mg.read_csv_metadata(path_for_A)
+        mg.set_key(self.A, 'ID')
+        self.B = mg.read_csv_metadata(path_for_B)
+        mg.set_key(self.B, 'ID')
+        self.feature_table = mg.get_features_for_blocking(self.A, self.B)
+        self.rb = mg.RuleBasedBlocker()
+        
+    def tearDown(self):
+        del self.A
+        del self.B
+        del self.rb
+
+    def validate_metadata(self, C, l_output_attrs=None, r_output_attrs=None,
+                          l_output_prefix='ltable_', r_output_prefix='rtable_',
+                          l_key='ID', r_key='ID'):
+        s1 = ['_id', l_output_prefix + l_key, r_output_prefix + r_key]
+        if l_output_attrs:
+            s1 += [l_output_prefix + x for x in l_output_attrs if x != l_key]
+        if r_output_attrs:
+            s1 += [r_output_prefix + x for x in r_output_attrs if x != r_key]
+        s1 = sorted(s1)
+        assert_equal(s1, sorted(C.columns))
+        assert_equal(mg.get_key(C), '_id')
+        assert_equal(mg.get_property(C, 'fk_ltable'), l_output_prefix + l_key)
+        assert_equal(mg.get_property(C, 'fk_rtable'), r_output_prefix + r_key)
+    
+    def validate_data(self, C, expected_ids=None):
+        #print('Expected ids: ', expected_ids)
+        if expected_ids:
+            lid = mg.get_property(C, 'fk_ltable')
+            rid = mg.get_property(C, 'fk_rtable')
+            C_ids = C[[lid, rid]].set_index([lid, rid])
+            actual_ids = sorted(C_ids.index.values.tolist())
+            #print('Actual ids: ', actual_ids)
+            assert_equal(expected_ids, actual_ids)
+        else:
+            assert_equal(len(C), 0)
+     
+    def validate_metadata_two_candsets(self, C, D): 
+        assert_equal(sorted(C.columns), sorted(D.columns))
+        assert_equal(mg.get_key(D), mg.get_key(C))
+        assert_equal(mg.get_property(D, 'fk_ltable'), mg.get_property(C, 'fk_ltable'))
+        assert_equal(mg.get_property(D, 'fk_rtable'), mg.get_property(C, 'fk_rtable'))
+
+    def test_rb_block_tables_filterable_rule_single_conjunct_njobs_2(self):
+        self.rb.add_rule(rule_1, self.feature_table)
+        C = self.rb.block_tables(self.A, self.B, l_output_attrs,
+                                 r_output_attrs, l_output_prefix,
+                                 r_output_prefix, n_jobs=2)
+        validate_metadata(C, l_output_attrs, r_output_attrs,
+                               l_output_prefix, r_output_prefix)
+        validate_data(C, expected_ids_1)
+     
+    def test_rb_block_tables_filterable_rule_multiple_conjuncts_njobs_2(self):
+        self.rb.add_rule(rule_4, self.feature_table)
+        #print('feature_table:', self.feature_table)
+        C = self.rb.block_tables(self.A, self.B, l_output_attrs,
+                                 r_output_attrs, l_output_prefix,
+                                 r_output_prefix, show_progress=False, n_jobs=2)
+        validate_metadata(C, l_output_attrs, r_output_attrs,
+                               l_output_prefix, r_output_prefix)
+        validate_data(C, expected_ids_4)
+    
+    def test_rb_block_tables_rule_sequence_with_one_filterable_rule_njobs_2(self):
+        self.rb.add_rule(rule_1, self.feature_table)
+        self.rb.add_rule(rule_2, self.feature_table)
+        C = self.rb.block_tables(self.A, self.B, l_output_attrs,
+                                 r_output_attrs, l_output_prefix,
+                                 r_output_prefix, show_progress=False, n_jobs=2)
+        validate_metadata(C, l_output_attrs, r_output_attrs,
+                               l_output_prefix, r_output_prefix)
+        validate_data(C, expected_ids_1_and_2)
+
+    def test_rb_block_tables_wi_no_output_tuples_njobs_2(self):
+        self.rb.add_rule(rule_5, self.feature_table)
+        C = self.rb.block_tables(self.A, self.B, show_progress=False, n_jobs=2)
+        validate_metadata(C)
+        validate_data(C)
+   
+    def test_rb_block_tables_non_filterable_rule_single_conjunct_njobs_2(self):
+        self.rb.add_rule(rule_2, self.feature_table)
+        C = self.rb.block_tables(self.A, self.B, l_output_attrs,
+                                 r_output_attrs, l_output_prefix,
+                                 r_output_prefix, show_progress=False, n_jobs=2)
+        validate_metadata(C, l_output_attrs, r_output_attrs,
+                               l_output_prefix, r_output_prefix)
+        validate_data(C, expected_ids_2)
+
+     
+    def test_rb_block_tables_non_filterable_rule_multiple_conjuncts_njobs_2(self):
+        self.rb.add_rule(rule_3, self.feature_table)
+        C = self.rb.block_tables(self.A, self.B, l_output_attrs,
+                                 r_output_attrs, l_output_prefix,
+                                 r_output_prefix, show_progress=False, n_jobs=2)
+        validate_metadata(C, l_output_attrs, r_output_attrs,
+                               l_output_prefix, r_output_prefix)
+        validate_data(C, expected_ids_3)
+    
+    def test_rb_block_tables_rule_sequence_with_no_filterable_rule_njobs_2(self):
+        self.rb.add_rule(rule_2, self.feature_table)
+        self.rb.add_rule(rule_3, self.feature_table)
+        C = self.rb.block_tables(self.A, self.B, l_output_attrs,
+                                 r_output_attrs, l_output_prefix,
+                                 r_output_prefix, n_jobs=2)
+        validate_metadata(C, l_output_attrs, r_output_attrs,
+                               l_output_prefix, r_output_prefix)
+        validate_data(C, expected_ids_2_and_3)
+    
+    def test_rb_block_candset_njobs_2(self):
         rb = mg.RuleBasedBlocker()
-        feature_table = mg.get_features_for_blocking(A, B)
-        rb.add_rule(['Name_Name_cos_dlm_dc0_dlm_dc0(ltuple,rtuple) < 0.3'],
-                    feature_table)
-        C = rb.block_tables_skd(A, B, ['Name'], ['Name'], show_progress=True)
-        C.to_csv('elec_name_cos.csv', index=False)
-        print('size of C:', len(C))
-    """
+        rb.add_rule(rule_1, self.feature_table)
+        C = rb.block_tables(self.A, self.B, l_output_attrs,
+                            r_output_attrs, l_output_prefix, r_output_prefix)
+        validate_metadata(C, l_output_attrs, r_output_attrs,
+                               l_output_prefix, r_output_prefix)
+        validate_data(C, expected_ids_1)
+        self.rb.add_rule(rule_2, self.feature_table)
+        D = self.rb.block_candset(C, n_jobs=2)
+        validate_metadata_two_candsets(C, D)
+        validate_data(D, expected_ids_1_and_2)
+    
+    def test_rb_block_candset_empty_input_njobs_2(self):
+        rb = mg.RuleBasedBlocker()
+        rb.add_rule(rule_5, self.feature_table)
+        C = rb.block_tables(self.A, self.B)
+        validate_metadata(C)
+        validate_data(C)
+        self.rb.add_rule(rule_1, self.feature_table)
+        D = self.rb.block_candset(C, n_jobs=2)
+        validate_metadata_two_candsets(C, D)
+        validate_data(D)
+    
+    def test_rb_block_candset_empty_output_njobs_2(self):
+        rb = mg.RuleBasedBlocker()
+        rb.add_rule(rule_1, self.feature_table)
+        C = rb.block_tables(self.A, self.B)
+        validate_metadata(C)
+        validate_data(C, expected_ids_1)
+        self.rb.add_rule(rule_5, self.feature_table)
+        D = self.rb.block_candset(C, n_jobs=2)
+        validate_metadata_two_candsets(C, D)
+        validate_data(D)
+
+# helper functions for validating output
+
+def validate_metadata(C, l_output_attrs=None, r_output_attrs=None,
+                      l_output_prefix='ltable_', r_output_prefix='rtable_',
+                      l_key='ID', r_key='ID'):
+    s1 = ['_id', l_output_prefix + l_key, r_output_prefix + r_key]
+    if l_output_attrs:
+        s1 += [l_output_prefix + x for x in l_output_attrs if x != l_key]
+    if r_output_attrs:
+        s1 += [r_output_prefix + x for x in r_output_attrs if x != r_key]
+    s1 = sorted(s1)
+    assert_equal(s1, sorted(C.columns))
+    assert_equal(mg.get_key(C), '_id')
+    assert_equal(mg.get_property(C, 'fk_ltable'), l_output_prefix + l_key)
+    assert_equal(mg.get_property(C, 'fk_rtable'), r_output_prefix + r_key)
+    
+def validate_data(C, expected_ids=None):
+    if expected_ids:
+        lid = mg.get_property(C, 'fk_ltable')
+        rid = mg.get_property(C, 'fk_rtable')
+        C_ids = C[[lid, rid]].set_index([lid, rid])
+        actual_ids = sorted(C_ids.index.values.tolist())
+        assert_equal(expected_ids, actual_ids)
+    else:
+        assert_equal(len(C), 0)
+     
+def validate_metadata_two_candsets(C, D): 
+    assert_equal(sorted(C.columns), sorted(D.columns))
+    assert_equal(mg.get_key(D), mg.get_key(C))
+    assert_equal(mg.get_property(D, 'fk_ltable'), mg.get_property(C, 'fk_ltable'))
+    assert_equal(mg.get_property(D, 'fk_rtable'), mg.get_property(C, 'fk_rtable'))
+    
