@@ -29,9 +29,9 @@ class AttrEquivalenceBlocker(Blocker):
         This is similar to equi-join of two tables.
 
         Args:
-            ltable (Dataframe): left input table.
+            ltable (DataFrame): left input table.
 
-            rtable (Dataframe): right input table.
+            rtable (DataFrame): right input table.
 
             l_block_attr (str): blocking attribute in left table.
 
@@ -69,7 +69,7 @@ class AttrEquivalenceBlocker(Blocker):
                           set to 1, which means no parallel computation at all.
 
         Returns:
-            A candidate set of tuple pairs that survived blocking (pandas dataframe).
+            A candidate set of tuple pairs that survived blocking (DataFrame).
         """
 
         # validate data types of input parameters
@@ -172,7 +172,7 @@ class AttrEquivalenceBlocker(Blocker):
         right tuple in the tuple pair.
 
         Args:
-            candset (Dataframe): input candidate set of tuple pairs.
+            candset (DataFrame): input candidate set of tuple pairs.
 
             l_block_attr (str): blocking attribute in left table.
 
@@ -194,7 +194,7 @@ class AttrEquivalenceBlocker(Blocker):
                           set to 1, which means no parallel computation at all.
 
         Returns:
-            A candidate set of tuple pairs that survived blocking (pandas dataframe).
+            A candidate set of tuple pairs that survived blocking (DataFrame).
         """
 
         # validate data types of input parameters
