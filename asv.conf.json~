@@ -53,8 +53,7 @@
          "scikit-learn":[],
          "cloudpickle":[],
          "joblib": [],
-	 "pip+py_stringmatching": [],
-         "pip+pyprind": []
+	 "pip+py_stringmatching": []
      },
 
     // The directory (relative to the current directory) that benchmarks are
