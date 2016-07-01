@@ -292,6 +292,6 @@ class DTDebugMatcherTestCases(unittest.TestCase):
         dt = DTMatcher()
         dt.fit(table=feature_vectors, exclude_attrs=['_id', 'ltable_ID', 'rtable_ID', 'labels'],
                target_attr='labels')
-        debug_decisiontree_matcher(dt, A.ix[1], B.ix[2], feat_table=feature_table,
-                              fv_columns=feature_vectors.columns,
-                              exclude_attrs=['ltable_ID', 'rtable_ID', '_id', 'labels'])
+        debug_decisiontree_matcher(dt, A.ix[1], B.ix[2], feature_table=feature_table,
+                                   table_columns=feature_vectors.columns,
+                                   exclude_attrs=['ltable_ID', 'rtable_ID', '_id', 'labels'])

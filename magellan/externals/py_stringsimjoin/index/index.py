@@ -1,0 +1,2 @@
+class Index(object):
+    pass

@@ -11,17 +11,26 @@ import six
 import magellan.catalog.catalog_manager as cm
 from magellan.blocker.blocker import Blocker
 
-# from magellan.externals.py_stringmatching.tokenizers import qgram
-import py_stringmatching.tokenizer as tok
+from py_stringmatching.tokenizer.whitespace_tokenizer import WhitespaceTokenizer
+from py_stringmatching.tokenizer.qgram_tokenizer import QgramTokenizer
+
 from magellan.utils.catalog_helper import log_info, get_name_for_key, \
     add_key_column
 
+from magellan.externals.py_stringsimjoin.filter.overlap_filter import OverlapFilter
+
 from magellan.utils.generic_helper import remove_non_ascii, rem_nan
+
+from functools import partial
 
 logger = logging.getLogger(__name__)
 
 
 class OverlapBlocker(Blocker):
+    """Blocks two tables, a candset, or a pair of tuples based on the overlap
+       of token sets of attribute values.
+    """
+
     def __init__(self):
         self.stop_words = ['a', 'an', 'and', 'are', 'as', 'at',
                            'be', 'by', 'for', 'from',
@@ -37,125 +46,166 @@ class OverlapBlocker(Blocker):
                      overlap_size=1,
                      l_output_attrs=None, r_output_attrs=None,
                      l_output_prefix='ltable_', r_output_prefix='rtable_',
-                     verbose=True, show_progress=True):
-        # validations
+                     verbose=False, show_progress=True, n_jobs=1):
+        """Blocks two tables based on the overlap of token sets of attribute
+           values.
+
+        Finds tuple pairs from left and right tables such that the overlap
+        between (a) the set of tokens obtained by tokenizing the value of
+        attribute l_overlap_attr of a tuple from the left table, and (b) the
+        set of tokens obtained by tokenizing the value of attribute
+        r_overlap_attr of a tuple from the right table, is above a certain
+        threshold.
+
+        Args:
+            ltable (Dataframe): left input table.
+
+            rtable (Dataframe): right input table.
+
+            l_overlap_attr (str): overlap attribute in left table.
+
+            r_overlap_attr (str): overlap attribute in right table. 
+
+            rem_stop_words (boolean): flag to indicate whether stop words
+                                      (e.g., a, an, the) should be removed
+                                      from the token sets of the overlap
+                                      attribute values (defaults to False).
+
+            q_val (int): value of q to use if the overlap attributes values
+                         are to be tokenized as qgrams (defaults to None).
+ 
+            word_level (boolean): flag to indicate whether the overlap
+                                  attributes should be tokenized as words
+                                  (i.e, using whitespace as delimiter)
+                                  (defaults to True).
+
+            overlap_size (int): minimum number of tokens that must overlap
+                                (defaults to 1).
+
+            l_output_attrs (list): list of attribute names from the left
+                                   table to be included in the
+                                   output candidate set (defaults to None).
+
+            r_output_attrs (list): list of attribute names from the right
+                                   table to be included in the
+                                   output candidate set (defaults to None).
+
+            l_output_prefix (str): prefix to be used for the attribute names
+                                   coming from the left table in the output
+                                   candidate set (defaults to 'ltable\_').
+
+            r_output_prefix (str): prefix to be used for the attribute names
+                                   coming from the right table in the output
+                                   candidate set (defaults to 'rtable\_').
+
+            verbose (boolean): flag to indicate whether logging should be done
+                               (defaults to False).
+
+            show_progress (boolean): flag to indicate whether progress should
+                                     be displayed to the user (defaults to True).
+
+            n_jobs (int): number of parallel jobs to be used for computation
+                          (defaults to 1).
+                          If -1 all CPUs are used. If 0 or 1, no parallel computation
+                          is used at all, which is useful for debugging.
+                          For n_jobs below -1, (n_cpus + 1 + n_jobs) are used.
+                          Thus, for n_jobs = -2, all CPUS but one are used.
+                          If (n_cpus + 1 + n_jobs) is less than 1, then n_jobs is
+                          set to 1, which means no parallel computation at all.
+
+        Returns:
+            A candidate set of tuple pairs that survived blocking (DataFrame).
+        """
+
+        # validate data types of standard input parameters
+        self.validate_types_params_tables(ltable, rtable,
+			    l_output_attrs, r_output_attrs, l_output_prefix,
+			    r_output_prefix, verbose, show_progress, n_jobs)
+
+        # validate data types of input parameters specific to overlap blocker
+        self.validate_types_other_params(l_overlap_attr, r_overlap_attr,
+                                         rem_stop_words, q_val,
+                                         word_level, overlap_size)
+ 
+        # validate overlap attributes
         self.validate_overlap_attrs(ltable, rtable, l_overlap_attr,
                                     r_overlap_attr)
+
+        # validate output attributes
         self.validate_output_attrs(ltable, rtable, l_output_attrs,
                                    r_output_attrs)
 
-        # required metadata; keys from ltable and rtable
+        # get and validate required metadata
         log_info(logger, 'Required metadata: ltable key, rtable key', verbose)
 
-        # get metadata
+        # # get metadata
         l_key, r_key = cm.get_keys_for_ltable_rtable(ltable, rtable, logger,
                                                      verbose)
 
+        # # validate metadata
+        cm._validate_metadata_for_table(ltable, l_key, 'ltable', logger, verbose)
+        cm._validate_metadata_for_table(rtable, r_key, 'rtable', logger, verbose)
+
+        # validate word_level and q_val
+        self.validate_word_level_qval(word_level, q_val)  
+
         # do blocking
 
-        if word_level == True and q_val != None:
-            raise SyntaxError(
-                'Parameters word_level and q_val cannot be set together; Note that word_level is '
-                'set to True by default, so explicity set word_level=false to use qgram with the '
-                'specified q_val')
-
-        # #rem nans
+        # # remove nans: should be modified based on missing data policy
         l_df = rem_nan(ltable, l_overlap_attr)
         r_df = rem_nan(rtable, r_overlap_attr)
 
-        # #reset indexes in the dataframe
-        l_df.reset_index(inplace=True, drop=True)
-        r_df.reset_index(inplace=True, drop=True)
+        # # do projection before merge
+        l_proj_attrs = self.get_attrs_to_project(l_key, l_overlap_attr, l_output_attrs)
+        l_df = l_df[l_proj_attrs]
+        r_proj_attrs = self.get_attrs_to_project(r_key, r_overlap_attr, r_output_attrs)
+        r_df = r_df[r_proj_attrs]
 
-        # #create a dummy column with all values set to 1.
-        l_dummy_col_name = self.get_dummy_col_name(l_df.columns)
-        r_dummy_col_name = self.get_dummy_col_name(r_df.columns)
-        l_df[
-            l_dummy_col_name] = 1  # need to fix this - should be a name that does not occur in the col. names
-        r_df[r_dummy_col_name] = 1
-
-        # #case the column to string if required.
+        # # case the column to string if required.
         if l_df.dtypes[l_overlap_attr] != object:
-            logger.warning(
-                'Left overlap attribute is not of type string; coverting to string temporarily')
+            logger.warning('Left overlap attribute is not of type string; converting to string temporarily')
             l_df[l_overlap_attr] = l_df[l_overlap_attr].astype(str)
 
         if r_df.dtypes[r_overlap_attr] != object:
-            logger.warning(
-                'Right overlap attribute is not of type string; coverting to string temporarily')
+            logger.warning('Right overlap attribute is not of type string; converting to string temporarily')
             r_df[r_overlap_attr] = r_df[r_overlap_attr].astype(str)
 
-        l_dict = {}
-        r_dict = {}
+        # # cleanup the tables from non-ascii characters, punctuations, and stop words
+        self.cleanup_table(l_df, l_overlap_attr, rem_stop_words)
+        self.cleanup_table(r_df, r_overlap_attr, rem_stop_words)
 
-        # #create a lookup table for quick access
-        for k, r in l_df.iterrows():
-            l_dict[k] = r
-
-        for k, r in r_df.iterrows():
-            r_dict[k] = r
-
-        l_colvalues_chopped = self.process_table(l_df, l_overlap_attr, q_val,
-                                                 rem_stop_words)
-        zipped_l_colvalues = zip(l_colvalues_chopped,
-                                 range(0, len(l_colvalues_chopped)))
-        appended_l_colidx_values = [self.append_index_values(val[0], val[1]) for
-                                    val in zipped_l_colvalues]
-
-        inv_idx = {}
-        sink = [self.compute_inv_index(t, inv_idx) for c in
-                appended_l_colidx_values for t in c]
-
-        r_colvalues_chopped = self.process_table(r_df, r_overlap_attr, q_val,
-                                                 rem_stop_words)
-        r_idx = 0
-
-        white_list = []
-        if show_progress:
-            bar = pyprind.ProgBar(len(r_colvalues_chopped))
-
-        df_list = []
-        for col_values in r_colvalues_chopped:
-            if show_progress:
-                bar.update()
-
-            qualifying_ltable_indices = self.get_potential_match_indices(
-                col_values, inv_idx, overlap_size)
-            r_row = r_dict[r_idx]
-            r_row_dict = r_row.to_frame().T
-
-            l_rows_dict = l_df.iloc[qualifying_ltable_indices]
-            df = l_rows_dict.merge(r_row_dict, left_on=l_dummy_col_name,
-                                   right_on=r_dummy_col_name,
-                                   suffixes=('_ltable', '_rtable'))
-
-            if len(df) > 0:
-                df_list.append(df)
-            r_idx += 1
-
-        # Construct the output table
-        candset = pd.concat(df_list)
-        l_output_attrs = self.process_output_attrs(ltable, l_key,
-                                                   l_output_attrs, 'left')
-        r_output_attrs = self.process_output_attrs(rtable, r_key,
-                                                   r_output_attrs, 'right')
-
-        # retain_cols = self.get_attrs_to_retain(l_key, r_key, l_output_attrs, r_output_attrs,
-        #                                        l_output_prefix, r_output_prefix)
-        retain_cols, final_cols = self.output_columns(l_key, r_key,
-                                                      list(candset.columns),
-                                                      l_output_attrs,
-                                                      r_output_attrs,
-                                                      l_output_prefix,
-                                                      r_output_prefix)
-
-        if len(candset) > 0:
-            candset = candset[retain_cols]
-            candset.columns = final_cols
+        # # determine which tokenizer to use
+        if word_level == True:
+            # # # create a whitespace tokenizer
+            tokenizer = WhitespaceTokenizer(return_set=True)
         else:
-            candset = pd.DataFrame(columns=final_cols)
+            # # # create a qgram tokenizer 
+            tokenizer = QgramTokenizer(qval=q_val, return_set=True)
 
-        # Update metadata in the catalog
+        # # create a overlap filter for similarity join
+        overlap_filter = OverlapFilter(tokenizer, overlap_size)
+        
+        # # determine number of processes to launch parallely
+        n_procs = self.get_num_procs(n_jobs, len(r_df))
+        if n_procs < 1:
+            n_procs = 1 
+
+        # # perform overlap similarity join
+        candset = overlap_filter.filter_tables(l_df, r_df, l_key, r_key,
+                                               l_overlap_attr, r_overlap_attr,
+                                               l_output_attrs, r_output_attrs,
+                                               l_output_prefix, r_output_prefix,
+                                               out_sim_score=False,
+                                               n_jobs=n_procs)
+        print('candset cols:', candset.columns)
+
+        # # retain only the required attributes in the output candidate set 
+        retain_cols = self.get_attrs_to_retain(l_key, r_key, l_output_attrs, r_output_attrs,
+                                               l_output_prefix, r_output_prefix)
+        print('retain_cols:', retain_cols)
+        candset = candset[retain_cols]
+
+        # update metadata in the catalog
         key = get_name_for_key(candset.columns)
         candset = add_key_column(candset, key)
         cm.set_candset_properties(candset, key, l_output_prefix + l_key,
@@ -165,9 +215,67 @@ class OverlapBlocker(Blocker):
         return candset
 
     def block_candset(self, candset, l_overlap_attr, r_overlap_attr,
-                      rem_stop_words=False, q_val=None, word_level=True,
-                      overlap_size=1,
-                      verbose=True, show_progress=True):
+                      rem_stop_words=False, q_val=None, word_level=True, overlap_size=1,
+                      verbose=False, show_progress=True, n_jobs=1):
+        """Blocks an input candidate set of tuple pairs based on the overlap
+           of token sets of attribute values.
+
+        Finds tuple pairs from an input candidate set of tuple pairs such that
+        the overlap between (a) the set of tokens obtained by tokenizing the
+        value of attribute l_overlap_attr of the left tuple in a tuple pair,
+        and (b) the set of tokens obtained by tokenizing the value of
+        attribute r_overlap_attr of the right tuple in the tuple pair,
+        is above a certain threshold.
+
+        Args:
+            candset (DataFrame): input candidate set of tuple pairs.
+
+            l_overlap_attr (str): overlap attribute in left table.
+
+            r_overlap_attr (str): overlap attribute in right table. 
+
+            rem_stop_words (boolean): flag to indicate whether stop words
+                                      (e.g., a, an, the) should be removed
+                                      from the token sets of the overlap
+                                      attribute values (defaults to False).
+
+            q_val (int): value of q to use if the overlap attributes values
+                         are to be tokenized as qgrams (defaults to None).
+ 
+            word_level (boolean): flag to indicate whether the overlap
+                                  attributes should be tokenized as words
+                                  (i.e, using whitespace as delimiter)
+                                  (defaults to True).
+
+            overlap_size (int): minimum number of tokens that must overlap
+                                (defaults to 1).
+
+            verbose (boolean): flag to indicate whether logging should be done
+                               (defaults to False).
+
+            show_progress (boolean): flag to indicate whether progress should
+                                     be displayed to the user (defaults to True).
+
+            n_jobs (int): number of parallel jobs to be used for computation
+                          (defaults to 1).
+                          If -1 all CPUs are used. If 0 or 1, no parallel computation
+                          is used at all, which is useful for debugging.
+                          For n_jobs below -1, (n_cpus + 1 + n_jobs) are used.
+                          Thus, for n_jobs = -2, all CPUS but one are used.
+                          If (n_cpus + 1 + n_jobs) is less than 1, then n_jobs is
+                          set to 1, which means no parallel computation at all.
+
+        Returns:
+            A candidate set of tuple pairs that survived blocking (DataFrame).
+        """
+
+        # validate data types of standard input parameters
+        self.validate_types_params_candset(candset, verbose, show_progress, n_jobs)
+
+        # validate data types of input parameters specific to overlap blocker
+        self.validate_types_other_params(l_overlap_attr, r_overlap_attr,
+                                         rem_stop_words, q_val,
+                                         word_level, overlap_size)
 
         # get and validate metadata
         log_info(logger,
@@ -187,80 +295,143 @@ class OverlapBlocker(Blocker):
         self.validate_overlap_attrs(ltable, rtable, l_overlap_attr,
                                     r_overlap_attr)
 
+        # validate word_level and q_val
+        self.validate_word_level_qval(word_level, q_val)  
+
         # do blocking
-        # # initialize the progress bar
 
-        if show_progress:
-            bar = pyprind.ProgBar(len(candset))
+        # # remove nans: should be modified based on missing data policy
+        l_df = rem_nan(ltable, l_overlap_attr)
+        r_df = rem_nan(rtable, r_overlap_attr)
 
-        # # set the index for convenience
-        l_df = ltable.set_index(l_key, drop=False)
-        r_df = rtable.set_index(r_key, drop=False)
+        # # do projection before merge
+        l_df = l_df[[l_key, l_overlap_attr]]
+        r_df = r_df[[r_key, r_overlap_attr]]
 
-        # # create lookup table for faster processing
-        l_dict = {}
-        for k, r in l_df.iterrows():
-            l_dict[k] = r
+        # # case the column to string if required.
+        if l_df.dtypes[l_overlap_attr] != object:
+            logger.warning('Left overlap attribute is not of type string; coverting to string temporarily')
+            l_df[l_overlap_attr] = l_df[l_overlap_attr].astype(str)
 
-        r_dict = {}
-        for k, r in r_df.iterrows():
-            r_dict[k] = r
+        if r_df.dtypes[r_overlap_attr] != object:
+            logger.warning('Right overlap attribute is not of type string; coverting to string temporarily')
+            r_df[r_overlap_attr] = r_df[r_overlap_attr].astype(str)
 
-        # # list to keep track of valid ids
-        valid = []
-        l_id_pos = list(candset.columns).index(fk_ltable)
-        r_id_pos = list(candset.columns).index(fk_rtable)
+        # # cleanup the tables from non-ascii characters, punctuations, and stop words
+        self.cleanup_table(l_df, l_overlap_attr, rem_stop_words)
+        self.cleanup_table(r_df, r_overlap_attr, rem_stop_words)
 
-        # # iterate candset
-        for row in candset.itertuples(index=False):
-            # # update progress bar
-            if show_progress:
-                bar.update()
-
-            ltuple = l_dict[row[l_id_pos]]
-            rtuple = r_dict[row[r_id_pos]]
-
-            num_overlap = self.get_token_overlap_bt_two_tuples(ltuple, rtuple,
-                                                               l_overlap_attr,
-                                                               r_overlap_attr,
-                                                               q_val,
-                                                               rem_stop_words)
-
-            if num_overlap >= overlap_size:
-                valid.append(True)
-            else:
-                valid.append(False)
-
-        if len(candset) > 0:
-            candset = candset[valid]
+        # # determine which tokenizer to use
+        if word_level == True:
+            # # # create a whitespace tokenizer
+            tokenizer = WhitespaceTokenizer(return_set=True)
         else:
-            candset = pd.DataFrame(columns=candset.columns)
+            # # # create a qgram tokenizer
+            tokenizer = QgramTokenizer(qval=q_val, return_set=True)
+       
+        # # create a filter for overlap similarity join
+        overlap_filter = OverlapFilter(tokenizer, overlap_size)
 
+        # # determine number of processes to launch parallely
+        n_procs = self.get_num_procs(n_jobs, len(candset)) 
+        if n_procs < 1:
+            n_procs = 1
+
+        # # perform overlap similarity filtering of the candset
+        out_table = overlap_filter.filter_candset(candset, fk_ltable, fk_rtable,
+                                                  l_df, r_df, l_key, r_key,
+                                                  l_overlap_attr, r_overlap_attr,
+                                                  n_jobs=n_procs)
         # update catalog
-        cm.set_candset_properties(candset, key, fk_ltable, fk_rtable, ltable,
-                                  rtable)
+        cm.set_candset_properties(out_table, key, fk_ltable, fk_rtable, ltable, rtable)
 
         # return candidate set
-        return candset
+        return out_table
 
     def block_tuples(self, ltuple, rtuple, l_overlap_attr, r_overlap_attr,
                      rem_stop_words=False, q_val=None, word_level=True,
                      overlap_size=1):
+        """Blocks a tuple pair based on the overlap of token sets of attribute
+           values.
+        
+        Args:
+            ltuple (Series): input left tuple.
 
-        num_overlap = self.get_token_overlap_bt_two_tuples(ltuple, rtuple,
-                                                           l_overlap_attr,
-                                                           r_overlap_attr,
-                                                           q_val,
-                                                           rem_stop_words)
-        if num_overlap < overlap_size:
-            return True
+            rtuple (Series): input right tuple.
+            
+            l_overlap_attr (str): overlap attribute in left tuple.
+
+            r_overlap_attr (str): overlap attribute in right tuple.
+
+            rem_stop_words (boolean): flag to indicate whether stop words
+                                      (e.g., a, an, the) should be removed
+                                      from the token sets of the overlap
+                                      attribute values (defaults to False).
+
+            q_val (int): value of q to use if the overlap attributes values
+                         are to be tokenized as qgrams (defaults to None).
+ 
+            word_level (boolean): flag to indicate whether the overlap
+                                  attributes should be tokenized as words
+                                  (i.e, using whitespace as delimiter)
+                                  (defaults to True).
+
+            overlap_size (int): minimum number of tokens that must overlap
+                                (defaults to 1).
+
+        Returns:
+            A status indicating if the tuple pair is blocked (boolean).
+        """
+        
+        # validate data types of input parameters specific to overlap blocker
+        self.validate_types_other_params(l_overlap_attr, r_overlap_attr,
+                                         rem_stop_words, q_val,
+                                         word_level, overlap_size)
+ 
+        # validate word_level and q_val
+        self.validate_word_level_qval(word_level, q_val)  
+
+        # determine which tokenizer to use
+        if word_level == True:
+            # # create a whitespace tokenizer
+            tokenizer = WhitespaceTokenizer(return_set=True)
         else:
-            return False
+            # # create a qgram tokenizer 
+            tokenizer = QgramTokenizer(qval=q_val, return_set=True)
+
+        # create a filter for overlap similarity 
+        overlap_filter = OverlapFilter(tokenizer, overlap_size)
+
+        return overlap_filter.filter_pair(ltuple[l_overlap_attr], rtuple[r_overlap_attr])
+        
 
     # helper functions
-    # validate the blocking attrs
-    def validate_overlap_attrs(self, ltable, rtable, l_overlap_attr,
-                               r_overlap_attr):
+
+    # validate the data types of input parameters specific to overlap blocker
+    def validate_types_other_params(self, l_overlap_attr, r_overlap_attr,
+                                    rem_stop_words, q_val,
+                                    word_level, overlap_size):
+        if not isinstance(l_overlap_attr, six.string_types):
+            logger.error('Overlap attribute name of left table is not of type string')
+            raise AssertionError('Overlap attribute name of left table is not of type string')
+        if not isinstance(r_overlap_attr, six.string_types):
+            logger.error('Overlap attribute name of right table is not of type string')
+            raise AssertionError('Overlap attribute name of right table is not of type string')
+        if not isinstance(rem_stop_words, bool):
+            logger.error('Parameter rem_stop_words is not of type bool')
+            raise AssertionError('Parameter rem_stop_words is not of type bool')
+        if q_val != None and not isinstance(q_val, int):
+            logger.error('Parameter q_val is not of type int')
+            raise AssertionError('Parameter q_val is not of type int')
+        if not isinstance(word_level, bool):
+            logger.error('Parameter word_level is not of type bool')
+            raise AssertionError('Parameter word_level is not of type bool')
+        if not isinstance(overlap_size, int):
+            logger.error('Parameter overlap_size is not of type int')
+            raise AssertionError('Parameter overlap_size is not of type int')
+
+    # validate the overlap attrs
+    def validate_overlap_attrs(self, ltable, rtable, l_overlap_attr, r_overlap_attr):
         if not isinstance(l_overlap_attr, list):
             l_overlap_attr = [l_overlap_attr]
         assert set(l_overlap_attr).issubset(
@@ -271,63 +442,20 @@ class OverlapBlocker(Blocker):
         assert set(r_overlap_attr).issubset(
             rtable.columns) is True, 'Right block attribute is not in the right table'
 
-    def get_token_overlap_bt_two_tuples(self, l_tuple, r_tuple, l_overlap_attr,
-                                        r_overlap_attr,
-                                        q_val, rem_stop_words):
-        l_val = l_tuple[l_overlap_attr]
-        r_val = r_tuple[r_overlap_attr]
+    # validate word_level and q_val
+    def validate_word_level_qval(self, word_level, q_val):
+        if word_level == True and q_val != None:
+            raise SyntaxError('Parameters word_level and q_val cannot be set together; Note that word_level is '
+                              'set to True by default, so explicity set word_level=false to use qgram with the '
+                              'specified q_val')
 
-        if l_val == None and r_val == None:
-            return 0
-
-        if not isinstance(l_val, six.string_types):
-            l_val = str(l_val)
-
-        if not isinstance(r_val, six.string_types):
-            r_val = str(r_val)
-
-        l_val_lst = set(self.process_val(l_val, q_val, rem_stop_words))
-        r_val_lst = set(self.process_val(r_val, q_val, rem_stop_words))
-
-        return len(l_val_lst.intersection(r_val_lst))
-
-    def process_val(self, val, q_val, rem_stop_words):
-        val = remove_non_ascii(val)
-        val = self.rem_punctuations(val).lower()
-        chopped_vals = val.split()
-        if rem_stop_words == True:
-            chopped_vals = self.rem_stopwords(chopped_vals)
-        if q_val != None:
-            values = ' '.join(chopped_vals)
-            measure = tok.qgram_tokenizer.QgramTokenizer(qval=q_val)
-            chopped_vals = measure.tokenize(values)
-        return list(set(chopped_vals))
-
-    def get_row_dict_with_output_attrs(self, l_tuple, r_tuple, l_key, r_key,
-                                       l_output_attrs, r_output_attrs,
-                                       l_output_prefix, r_output_prefix):
-        d = OrderedDict()
-
-        ltable_id = l_output_prefix + l_key
-        d[ltable_id] = l_tuple[l_key]
-
-        rtable_id = r_output_prefix + r_key
-        d[rtable_id] = r_tuple[r_key]
-
-        # add ltable attrs
-        if l_output_attrs:
-            l_out = l_tuple[l_output_attrs]
-            l_out.index += l_output_prefix
-            d.update(l_out)
-
-        if r_output_attrs:
-            r_out = r_tuple[r_output_attrs]
-            r_out.index += r_output_prefix
-            d.update(r_out)
-
-        return d
-
-    def process_table(self, table, overlap_attr, q_val, rem_stop_words):
+        if word_level == False and q_val == None:
+            raise SyntaxError('Parameters word_level and q_val cannot be unset together; Note that q_val is '
+                              'set to None by default, so if you want to use qgram then '
+                              'explictiy set word_level=False and specify the q_val')
+    
+    # cleanup a table from non-ascii characters, punctuations and stop words
+    def cleanup_table(self, table, overlap_attr, rem_stop_words):
 
         # get overlap_attr column
         attr_col_values = table[overlap_attr]
@@ -350,118 +478,12 @@ class OverlapBlocker(Blocker):
             col_values_chopped = [self.rem_stopwords(val) for val in
                                   col_values_chopped]
 
-        if q_val is not None:
-            values = [' '.join(val) for val in col_values_chopped]
-            col_values_chopped = [qgram(val, q_val) for val in values]
+        values = [' '.join(val) for val in col_values_chopped]
 
-        return col_values_chopped
+        table[overlap_attr] = values
 
     def rem_punctuations(self, s):
         return self.regex_punctuation.sub('', s)
 
     def rem_stopwords(self, lst):
         return [t for t in lst if t not in self.stop_words]
-
-    def append_index_values(self, lst, idx):
-        lst = set(lst)
-        return [(val, idx) for val in lst]
-
-    def compute_inv_index(self, tok_idx, idx):
-        lst = idx.pop(tok_idx[0], None)
-
-        if lst is None:
-            lst = list()
-            lst.append(tok_idx[1])
-            idx[tok_idx[0]] = lst
-        else:
-            lst.append(tok_idx[1])
-            idx[tok_idx[0]] = lst
-
-    def probe_inv_index_for_a_token(self, token, inv_index):
-        return inv_index.get(token, None)
-
-    def probe_inv_index(self, lst, inv_index):
-        return [self.probe_inv_index_for_a_token(tok, inv_index) for tok in lst]
-
-    def get_freq_count(self, lst):
-        p = list()
-        dummy = [p.extend(k) for k in lst if k is not None]
-        d = dict(Counter(p))
-        return d
-
-    def get_qualifying_indices(self, freq_dict, overlap_size):
-        q_indices = []
-        for k, v in freq_dict.iteritems():
-            if v >= overlap_size:
-                q_indices.append(k)
-        return q_indices
-
-    def get_potential_match_indices(self, lst, inv_index, overlap_size):
-        indices = self.probe_inv_index(lst, inv_index)
-        freq_dict = self.get_freq_count(indices)
-        qualifying_indices = self.get_qualifying_indices(freq_dict,
-                                                         overlap_size)
-        return qualifying_indices
-
-    def get_dummy_col_name(self, columns):
-        k = '_dummy_'
-        i = 0
-        # try attribute name of the form "_dummy_, _dummy_0,.. and
-        # return the first available name
-        while True:
-            if k not in columns:
-                break
-            else:
-                k = '_dummy_' + str(i)
-            i += 1
-        return k
-        # get output columns
-
-    def output_columns(self, l_key, r_key, col_names, l_output_attrs,
-                       r_output_attrs, l_output_prefix, r_output_prefix):
-
-        ret_cols = []
-        fin_cols = []
-
-        # retain id columns from merge
-        ret_l_id = [self.retain_names(x, col_names, '_ltable') for x in [l_key]]
-        ret_r_id = [self.retain_names(x, col_names, '_rtable') for x in [r_key]]
-        ret_cols.extend(ret_l_id)
-        ret_cols.extend(ret_r_id)
-
-        # retain output attrs from merge
-        if l_output_attrs:
-            ret_l_col = [self.retain_names(x, col_names, '_ltable') for x in
-                         l_output_attrs]
-            ret_cols.extend(ret_l_col)
-        if r_output_attrs:
-            ret_r_col = [self.retain_names(x, col_names, '_rtable') for x in
-                         r_output_attrs]
-            ret_cols.extend(ret_r_col)
-
-        # final columns in the output
-        fin_l_id = [self.final_names(x, l_output_prefix) for x in [l_key]]
-        fin_r_id = [self.final_names(x, r_output_prefix) for x in [r_key]]
-        fin_cols.extend(fin_l_id)
-        fin_cols.extend(fin_r_id)
-
-        # final output attrs from merge
-        if l_output_attrs:
-            fin_l_col = [self.final_names(x, l_output_prefix) for x in
-                         l_output_attrs]
-            fin_cols.extend(fin_l_col)
-        if r_output_attrs:
-            fin_r_col = [self.final_names(x, r_output_prefix) for x in
-                         r_output_attrs]
-            fin_cols.extend(fin_r_col)
-
-        return ret_cols, fin_cols
-
-    def retain_names(self, x, col_names, suffix):
-        if x in col_names:
-            return x
-        else:
-            return str(x) + suffix
-
-    def final_names(self, x, prefix):
-        return prefix + str(x)

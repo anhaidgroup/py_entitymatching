@@ -53,20 +53,20 @@ def _inv_index(table):
     # Get the stop words listed by user in the file specified by dataset path
     stop_words = _get_stop_words()
 
-    # Extract indices of all string columns (if any) from the input dataframe
+    # Extract indices of all string columns (if any) from the input DataFrame
     str_cols_ix = _get_str_cols_list(table)
 
     inv_index = dict()
     pos = 0
 
-    # For each row in the dataframe of the input table, we will fetch all string values from string column indices
+    # For each row in the DataFrame of the input table, we will fetch all string values from string column indices
     # and will concatenate them. Next step would be to tokenize them using set and remove all the stop words
     # from the list of tokens. Once we have the list of tokens, we will iterate through the list of tokens
     # to identify its position and will create an inverted index.
-    for row in table.itertuples():
+    for row in table.itertuples(index=False):
         str_val = ''
         for list_item in str_cols_ix:
-            str_val += str(row[list_item + 1]).lower() + ' '
+            str_val += str(row[list_item]).lower() + ' '
         str_val = str_val.rstrip()
 
         # tokenize them
@@ -80,7 +80,6 @@ def _inv_index(table):
                 inv_index[token] = [pos]
             else:
                 lst.append(pos)
-                inv_index[token] = lst
         pos += 1
     return inv_index
 
@@ -104,13 +103,13 @@ def _probe_index(table_b, y_param, s_tbl_sz, s_inv_index):
     # (inverted index) that share tokens with x. We will rank these tuples in decreasing order of shared tokens, then
     # take (up to) the top k/2 tuples to be the set P.
 
-    for row in table_b.itertuples():
+    for row in table_b.itertuples(index=False):
         bar.update()
         str_val = ''
 
         # For all string column in the table, fetch all string values and concatenate them
         for list_ix in str_cols_ix:
-            str_val += str(row[list_ix + 1]).lower() + ' '
+            str_val += str(row[list_ix]).lower() + ' '
         str_val = str_val.rstrip()
 
         # Tokenizing the string value and removing stop words before we start probing into inverted index I
@@ -153,8 +152,8 @@ def down_sample(table_a, table_b, size, y_param):
     as representative of A and B as possible.
 
     Args:
-        table_a (dataframe): input table A
-        table_b (dataframe): input table B
+        table_a (DataFrame): input table A
+        table_b (DataFrame): input table B
         size (int): down_sampled size of table B
         y_param (int): down_sampled size of table A should be close to size * y_param
 
@@ -163,7 +162,7 @@ def down_sample(table_a, table_b, size, y_param):
 
     Raises:
         AssertionError :
-        1) If any of the input tables are empty or not a dataframe
+        1) If any of the input tables are empty or not a DataFrame
         2) If size or y parameter is empty or 0 or not a valid integer value
         3) If output sampled tables are empty or not as per user defined
 
@@ -173,12 +172,12 @@ def down_sample(table_a, table_b, size, y_param):
     """
 
     if not isinstance(table_a, pd.DataFrame):
-        logger.error('Input table A is not of type pandas dataframe')
-        raise AssertionError('Input table A is not of type pandas dataframe')
+        logger.error('Input table A is not of type pandas DataFrame')
+        raise AssertionError('Input table A is not of type pandas DataFrame')
 
     if not isinstance(table_b, pd.DataFrame):
-        logger.error('Input table B is not of type pandas dataframe')
-        raise AssertionError('Input table B is not of type pandas dataframe')
+        logger.error('Input table B is not of type pandas DataFrame')
+        raise AssertionError('Input table B is not of type pandas DataFrame')
 
     if len(table_a) == 0 or len(table_b) == 0:
         logger.error('Size of the input table is 0')

@@ -35,27 +35,27 @@ class TokenizerTestCases(unittest.TestCase):
 
     @raises(AssertionError)
     def test_get_single_arg_tokenizers_invalid_1(self):
-        tok.get_single_arg_tokenizers(None, None)
+        tok._get_single_arg_tokenizers(None, None)
 
 
     def test_get_single_arg_tokenizers_valid_2(self):
-        tok.get_single_arg_tokenizers(q=3, dlm_char=' ')
+        tok._get_single_arg_tokenizers(q=3, dlm_char=' ')
 
     def test_get_single_arg_tokenizers_valid_3(self):
-        tok.get_single_arg_tokenizers(q=[], dlm_char=[])
+        tok._get_single_arg_tokenizers(q=[], dlm_char=[])
 
     def test_get_single_arg_tokenizers_valid_4(self):
-        tok.get_single_arg_tokenizers(q=None, dlm_char=[' '])
+        tok._get_single_arg_tokenizers(q=None, dlm_char=[' '])
 
     def test_get_single_arg_tokenizers_valid_5(self):
-        tok.get_single_arg_tokenizers(q=3, dlm_char=None)
+        tok._get_single_arg_tokenizers(q=3, dlm_char=None)
 
     def test_qgram_invalid(self):
-        x = tok.make_tok_qgram(3)
+        x = tok._make_tok_qgram(3)
         self.assertEqual(pd.isnull(x(pd.np.NaN)), True)
 
     def test_qgram_delim(self):
-        x = tok.make_tok_delim(' ')
+        x = tok._make_tok_delim(' ')
         self.assertEqual(pd.isnull(x(pd.np.NaN)), True)
 
     def test_tokqgram_valid(self):
