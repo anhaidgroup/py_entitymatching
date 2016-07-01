@@ -21,10 +21,10 @@ class LabelTableTestCases(unittest.TestCase):
     def _test_label_table(self, table, col_name, label_values):
         _validate_inputs(table, col_name,  verbose=False)
         lbl_table = _init_label_table(table, col_name)
-        mg._viewapp = None
-        from magellan.gui.table_gui import edit_table
-        edit_table(lbl_table, show_flag=False)
-        mg._viewapp = None
+        # mg._viewapp = None
+        # from magellan.gui.table_gui import edit_table
+        # edit_table(lbl_table, show_flag=False)
+        # mg._viewapp = None
 
         new_table = lbl_table.copy()
         cm.copy_properties(table, new_table)
