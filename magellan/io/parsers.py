@@ -66,8 +66,8 @@ def read_csv_metadata(file_path, **kwargs):
 
     # # Check if the given path is valid.
     if not os.path.exists(file_path):
-        logger.error('File does not exist at path %s', file_path)
-        raise AssertionError('File does not exist at path %s', file_path)
+        logger.error('File does not exist at path %s' % file_path)
+        raise AssertionError('File does not exist at path %s' % file_path)
 
     # Check if the user has specified the metadata file's extension.
     extension = kwargs.pop('metadata_extn', None)
@@ -200,8 +200,8 @@ def to_csv_metadata(data_frame, file_path, **kwargs):
             data_frame.to_csv(file_path, **kwargs)
     else:
         # If we cannot write in the given file path, raise an exception.
-        logger.error('Cannot write in the file path %s; Exiting', file_path)
-        raise AssertionError('Cannot write in the file path %s', file_path)
+        logger.error('Cannot write in the file path %s; Exiting' %file_path)
+        raise AssertionError('Cannot write in the file path %s'%file_path)
 
     # repeat the process (as writing the DataFrame) to write the metadata.
 
@@ -216,8 +216,8 @@ def to_csv_metadata(data_frame, file_path, **kwargs):
             _write_metadata(data_frame, metadata_filename)
     else:
         # If we cannot write in the given file path, raise an exception.
-        logger.error('Cannot write in the file path %s; Exiting', file_path)
-        raise AssertionError('Cannot write in the file path %s', file_path)
+        logger.error('Cannot write in the file path %s; Exiting'%file_path)
+        raise AssertionError('Cannot write in the file path %s' %file_path)
 
     return True
 
@@ -343,7 +343,7 @@ def _update_metadata_for_read_cmd(metadata, **kwargs):
                 # but the kwargs sets it to None.
                 logger.warning(
                     '%s key had a value (%s)in file but input arg is set to '
-                    'None', property_name, metadata[property_value])
+                    'None' % (property_name, metadata[property_name]))
                 # Remove the property from the dictionary.
                 metadata.pop(property_name)  # remove the key-value pair
 

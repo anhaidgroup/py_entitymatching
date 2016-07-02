@@ -91,7 +91,8 @@ def extract_feature_vecs(candset, attrs_before=None, feature_table=None,
                         'ltable, rtable, ltable key, rtable key', verbose)
 
     # # Get metadata
-    key, fk_ltable, fk_rtable, ltable, rtable, l_key, r_key = cm.get_metadata_for_candset(
+    key, fk_ltable, fk_rtable, ltable, rtable, l_key, r_key = \
+        cm.get_metadata_for_candset(
         candset, logger, verbose)
 
     # # Validate metadata
