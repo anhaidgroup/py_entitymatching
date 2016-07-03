@@ -197,12 +197,12 @@ class OverlapBlocker(Blocker):
                                                l_output_prefix, r_output_prefix,
                                                out_sim_score=False,
                                                n_jobs=n_procs)
-        print('candset cols:', candset.columns)
+        # print('candset cols:', candset.columns)
 
         # # retain only the required attributes in the output candidate set 
         retain_cols = self.get_attrs_to_retain(l_key, r_key, l_output_attrs, r_output_attrs,
                                                l_output_prefix, r_output_prefix)
-        print('retain_cols:', retain_cols)
+        # print('retain_cols:', retain_cols)
         candset = candset[retain_cols]
 
         # update metadata in the catalog
