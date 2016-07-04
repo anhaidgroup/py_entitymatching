@@ -2,7 +2,6 @@
 import logging
 import os
 import six
-from  sklearn.preprocessing import Imputer
 
 
 
@@ -208,37 +207,3 @@ def print_eval_summary(eval_summary):
     for key, value in six.iteritems(m):
         print(key + " : " + value)
 
-# def impute_table(table, exclude_attrs=None, missing_val='NaN',
-#            strategy='mean', axis=0, val_all_nans=0):
-#     """
-#     Impute table
-#     Args:
-#         table (DataFrame): DataFrame which values should be imputed
-#         exclude_attrs : list of attribute names to be excluded from imputing.
-#         missing_val : String, specifies the missing value format.
-#         strategy : String, on how to impute values. Valid strings: 'mean', 'median', 'most_frequent'
-#         axis : int, 0/1. axis=1 along rows, and axis=0 along columns.
-#         val_all_nans: float. Value fto fill in if all the other values are NaN.
-#     Returns
-#     -------
-#         Imputed DataFrame
-#     """
-#
-#     fv_columns = table.columns
-#     if exclude_attrs is None:
-#         feature_names = fv_columns
-#     else:
-#         cols = [c not in exclude_attrs for c in fv_columns]
-#         feature_names = fv_columns[cols]
-#     # print feature_names
-#     table = table.copy()
-#     tbl = table[feature_names]
-#
-#     t = tbl.values
-#
-#     imp = Imputer(missing_values=missing_val, strategy=strategy, axis=axis)
-#     imp.fit(t)
-#     imp.statistics_[pd.np.isnan(imp.statistics_)] = val_all_nans
-#     t = imp.transform(t)
-#     table[feature_names] = t
-#     return table

@@ -45,10 +45,9 @@ from magellan.feature.autofeaturegen import get_features, get_features_for_block
 from magellan.feature.addfeatures import get_feature_fn, add_feature, \
     add_blackbox_feature, create_feature_table
 from magellan.feature.extractfeatures import extract_feature_vecs
-# from magellan.utils.generic_helper import impute_table
 
 # # matcher related stuff
-from magellan.matcher.matcherutils import train_test_split
+from magellan.matcher.matcherutils import train_test_split, impute_table
 from magellan.matcher.dtmatcher import DTMatcher
 from magellan.matcher.linregmatcher import LinRegMatcher
 from magellan.matcher.logregmatcher import LogRegMatcher
