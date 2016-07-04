@@ -10,7 +10,6 @@ import pandas as pd
 import sklearn.cross_validation as cv
 from  sklearn.preprocessing import Imputer
 
-
 import magellan.catalog.catalog_manager as cm
 import magellan.utils.catalog_helper as ch
 import magellan.utils.generic_helper as gh
@@ -115,8 +114,9 @@ def get_ts():
     # Return the random string.
     return str(t)[::-1]
 
+
 def impute_table(table, exclude_attrs=None, missing_val='NaN',
-           strategy='mean', axis=0, val_all_nans=0, verbose=True):
+                 strategy='mean', axis=0, val_all_nans=0, verbose=True):
     """
     Impute table containing missing values.
     Args:
@@ -160,40 +160,47 @@ def impute_table(table, exclude_attrs=None, missing_val='NaN',
                                       logger, verbose)
 
 
-    # We expect exclude attributes to be of type list. If not convert it into
-    #  a list.
-    if not isinstance(exclude_attrs, list):
-        exclude_attrs = [exclude_attrs]
-
-    # Check if the exclude attributes are present in the input table
-    if not ch.check_attrs_present(table, exclude_attrs):
-        logger.error('The attributes mentioned in exclude_attrs '
-                     'is not present '
-                     'in the input table')
-        raise AssertionError(
-            'The attributes mentioned in exclude_attrs '
-            'is not present '
-            'in the input table')
-
-    # Drop the duplicates from the exclude attributes
-    exclude_attrs = gh.list_drop_duplicates(exclude_attrs)
-
-
     fv_columns = table.columns
-    if exclude_attrs is None:
+
+    if exclude_attrs == None:
         feature_names = fv_columns
+        print('Inside if condition')
     else:
+        print('Inside else condition')
+
+        # Check if the exclude attributes are present in the input table
+        if not ch.check_attrs_present(table, exclude_attrs):
+            logger.error('The attributes mentioned in exclude_attrs '
+                         'is not present '
+                         'in the input table')
+            raise AssertionError(
+                'The attributes mentioned in exclude_attrs '
+                'is not present '
+                'in the input table')
+        # We expect exclude attributes to be of type list. If not convert it into
+        #  a list.
+        if not isinstance(exclude_attrs, list):
+            exclude_attrs = [exclude_attrs]
+
+        # Drop the duplicates from the exclude attributes
+        exclude_attrs = gh.list_drop_duplicates(exclude_attrs)
+
+
         cols = [c not in exclude_attrs for c in fv_columns]
         feature_names = fv_columns[cols]
     # print feature_names
-    table = table.copy()
-    tbl = table[feature_names]
+    table_copy = table.copy()
+    projected_table = table_copy[feature_names]
 
-    t = tbl.values
+    projected_table_values = projected_table.values
 
     imp = Imputer(missing_values=missing_val, strategy=strategy, axis=axis)
-    imp.fit(t)
+    imp.fit(projected_table_values)
     imp.statistics_[pd.np.isnan(imp.statistics_)] = val_all_nans
-    t = imp.transform(t)
-    table[feature_names] = t
-    return table
+    projected_table_values = imp.transform(projected_table_values)
+    table_copy[feature_names] = projected_table_values
+    # Update catalog
+    cm.init_properties(table_copy)
+    cm.copy_properties(table, table_copy)
+
+    return table_copy
