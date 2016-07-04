@@ -43,8 +43,9 @@ from magellan.feature.attributeutils import get_attr_corres, get_attr_types
 from magellan.feature.autofeaturegen import get_features, get_features_for_blocking, \
     get_features_for_matching
 from magellan.feature.addfeatures import get_feature_fn, add_feature, \
-    add_blackbox_feature
+    add_blackbox_feature, create_feature_table
 from magellan.feature.extractfeatures import extract_feature_vecs
+# from magellan.utils.generic_helper import impute_table
 
 # # matcher related stuff
 from magellan.matcher.matcherutils import train_test_split
@@ -59,16 +60,16 @@ from magellan.matcher.svmmatcher import SVMMatcher
 from magellan.matcherselector.mlmatcherselection import select_matcher
 
 # # matcher debugger
-from magellan.debugmatcher.debug_decisiontree_matcher import debug_decisiontree_matcher, \
-    visualize_tree
-from magellan.debugmatcher.debug_randomforest_matcher import debug_randomforest_matcher
-from magellan.debugmatcher.debug_gui_decisiontree_matcher import vis_debug_dt, \
-    vis_tuple_debug_dt_matcher
-from magellan.debugmatcher.debug_gui_randomforest_matcher import vis_debug_rf, \
-    vis_tuple_debug_rf_matcher
+from magellan.debugmatcher.debug_decisiontree_matcher import \
+    debug_decisiontree_matcher, visualize_tree
+from magellan.debugmatcher.debug_randomforest_matcher import \
+    debug_randomforest_matcher
+from magellan.debugmatcher.debug_gui_decisiontree_matcher import vis_debug_dt
+from magellan.debugmatcher.debug_gui_randomforest_matcher import vis_debug_rf
 
 # # evaluation
 from magellan.evaluation.evaluation import eval_matches
+from magellan.utils.generic_helper import print_eval_summary
 
 # # helper functions
 from magellan.utils.generic_helper import get_install_path, load_dataset, \

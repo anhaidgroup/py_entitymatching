@@ -99,6 +99,17 @@ def _get_single_arg_tokenizers(q=[2, 3], dlm_char=[' ']):
         names.extend(qgm_names)
         functions.extend(qgm_fn_list)
 
+    names.append('wspace')
+    functions.append(tok_wspace)
+
+    names.append('alphabetic')
+    functions.append(tok_alphabetic)
+
+    names.append('alphanumeric')
+    functions.append(tok_alphanumeric)
+
+
+
     if dlm_char is not None:
         if not isinstance(dlm_char, list) and isinstance(dlm_char,
                                                          six.string_types):
@@ -211,5 +222,41 @@ def tok_wspace(input_string):
         return input_string
     measure = sm.WhitespaceTokenizer()
     return measure.tokenize(input_string)
+
+def tok_alphabetic(input_string):
+    """
+    This function returns a list of tokens that are maximal sequences of
+    consecutive alphabetical characters.
+    Args:
+        input_string (str): Input string that should be tokenized.
+
+    Returns:
+        A list of tokens, if the input string is not NaN ,
+        else returns NaN.
+
+    """
+    if pd.isnull(input_string):
+        return input_string
+    measure = sm.AlphabeticTokenizer()
+    return measure.tokenize(input_string)
+
+
+def tok_alphanumeric(input_string):
+    """
+    This function returns a list of tokens that are maximal sequences of
+    consecutive alphanumeric characters.
+    Args:
+        input_string (str): Input string that should be tokenized.
+
+    Returns:
+        A list of tokens, if the input string is not NaN ,
+        else returns NaN.
+
+    """
+    if pd.isnull(input_string):
+        return input_string
+    measure = sm.AlphanumericTokenizer()
+    return measure.tokenize(input_string)
+
 
 
