@@ -375,6 +375,9 @@ def _get_feat_lkp_tbl():
     # Features for BOOLEAN type
     lookup_table['BOOL'] = [('exact_match')]
 
+    # Features for un determined type
+    lookup_table['UN_DETERMINED'] = []
+
     # Finally, return the lookup table
     return lookup_table
 
@@ -400,6 +403,8 @@ def _get_features_for_type(column_type):
         features = lookup_table['NUM']
     elif column_type is 'boolean':
         features = lookup_table['BOOL']
+    elif column_type is 'un_determined':
+        features = lookup_table['UN_DETERMINED']
     else:
         raise TypeError('Unknown type')
     return features
@@ -411,7 +416,7 @@ def get_magellan_str_types():
     """
 
     return ['str_eq_1w', 'str_bt_1w_5w', 'str_bt_5w_10w', 'str_gt_10w',
-            'numeric', 'boolean']
+            'numeric', 'boolean', 'un_determined']
 
 
 # convert features from look up table to function objects
