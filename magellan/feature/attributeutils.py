@@ -140,9 +140,10 @@ def _get_type(column):
     if len(type_list) == 0:
         logger.warning('Column %s does not seem to qualify as any atomic type. '
                        'It may contain all NaNs. Currently, setting its type to '
-                       'be numeric.We recommend the users to manually update '
+                       'be un_determined.We recommend the users to manually '
+                       'update '
                        'the returned types or features later. \n' % column.name)
-        return 'numeric'
+        return 'un_determined'
 
     # If the column qualifies to be of more than one type (for instance,
     # in a numeric column, some values may be inferred as strings), then we
