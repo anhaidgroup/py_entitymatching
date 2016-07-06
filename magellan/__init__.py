@@ -30,7 +30,7 @@ from magellan.blocker.rule_based_blocker import RuleBasedBlocker
 # # blocker combiner
 from magellan.blockercombiner.blockercombiner import combine_blocker_outputs_via_union
 
-# # sampling
+# # sampling.rst
 from magellan.sampler.single_table import sample_table
 
 # # labeling
