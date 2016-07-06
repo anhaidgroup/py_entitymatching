@@ -15,7 +15,9 @@ Contents:
     :maxdepth: 3
     :caption: API Reference
 
-    api/getting_data_in_out
+    api/reading_and_writing_data
+    api/loading_and_saving_objects
+    api/handling_metadata
     api/downsampling
     api/blocking
     api/debugging_blocker_output

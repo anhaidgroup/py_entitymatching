@@ -1,4 +1,4 @@
 ======================
 Evaluating the Matches
 ======================
-.. autofunction:: magellan.evaluation.evaluation.eval_matches
+.. autofunction:: magellan.eval_matches
