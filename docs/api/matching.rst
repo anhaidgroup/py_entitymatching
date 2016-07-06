@@ -2,7 +2,8 @@
 Matching
 ========
 .. toctree::
-    :maxdepth: 3
+    :maxdepth: 2
+
    split_data
    supported_matchers
    selecting_matcher
