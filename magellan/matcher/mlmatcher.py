@@ -199,7 +199,7 @@ class MLMatcher(Matcher):
             target_attr (str): Attribute name where the predictions need to
                 stored in the input table (defaults to None).
             append (boolean): A flag to indicate whether the predictions need
-                to be appended in the input DataFrame (defaults to False_.
+                to be appended in the input DataFrame (defaults to False).
             inplace (boolean): A flag to indicate whether the append needs to be
                 done inplace (defaults to True).
 

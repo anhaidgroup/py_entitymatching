@@ -16,6 +16,7 @@ def get_feature_fn(feature_string, tokenizers, similarity_functions):
     an function using tokenizers and similarity functions. This compiled
     function will take in two tuples and return the feature (typically a
     number).
+
     Args:
         feature_string (str): Feature expression to be converted into a
             function.
@@ -28,12 +29,14 @@ def get_feature_fn(feature_string, tokenizers, similarity_functions):
             similarity function names as keys and similarity functions as
             values. The similarity function typically
             takes in a string or two lists and returns a number.
+
     Returns:
         This function returns a dictionary which contains sufficient information
         (such as parsed information, function code) to be added to the
         feature table. The created function is self contained function
         which means that it the tokenizers or sim function that it calls is
         bundled along with the returned function code.
+
     Raises:
         AssertionError: If the input feature string is not of type string.
         AssertionError: If th input object tokenizers is not of type
@@ -187,13 +190,16 @@ def add_feature(feature_table, feature_name, feature_dict):
     Specifically, this function is used in combination with  get_feature_fn.
     First the user creates a dictionary using get_feature_fn, then the user
     uses this function to add it to the feature table.
+
     Args:
         feature_table (DataFrame): A DataFrame containing features.
         feature_names (str): Name that should be given to the feature.
         feature_dict (dictionary): Python dictionary, that is typically
             returned by executing get_feature_fn
+
     Returns:
         A boolean value of True is returned if the addition was successful.
+
     Raises:
         AssertionError: If the input object (feature_table) is not of type
             pandas DataFrame.
@@ -273,14 +279,17 @@ def create_feature_table():
 def add_blackbox_feature(feature_table, feature_name, feature_function):
     """
     Adds black box feature to the feature table.
+
     Args:
         feature_table (DataFrame): Input DataFrame to which the feature must
             be added.
         feature_name (str): Name that should be given to the feature.
         feature_function (Python function): Python function for the black box
             feature.
+
     Returns:
         A boolean value of True is returned if the addition was successful.
+
     Raises:
         AssertionError: If the input object (feature_table) is not of type
             DataFrame.

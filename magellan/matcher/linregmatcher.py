@@ -54,8 +54,8 @@ class LinRegMatcher(MLMatcher):
     """
     Linear regression matcher.
 
-      Args:
-        *args, **kwargs: Arguments to scikit-learn's Linear Regression matcher.
+    Args:
+        *args,**kwargs: Arguments to scikit-learn's Linear Regression matcher.
         name (str): Name that should be given to this matcher.
     """
     def __init__(self, *args, **kwargs):

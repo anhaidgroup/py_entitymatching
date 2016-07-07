@@ -9,8 +9,9 @@ from sklearn.tree import DecisionTreeClassifier
 class DTMatcher(MLMatcher):
     """
     Decision Tree matcher.
+
     Args:
-        *args, **kwargs: Arguments to scikit-learn's Decision Tree classifier.
+        *args,**kwargs: Arguments to scikit-learn's Decision Tree classifier.
         name (str): Name of this matcher (defaults to None).
 
     """
