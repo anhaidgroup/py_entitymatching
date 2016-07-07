@@ -69,7 +69,7 @@ class AttributeUtilsTestCases(unittest.TestCase):
 
     def test_get_type_empty_series(self):
         t = _get_type(pd.Series())
-        self.assertEqual(t, 'numeric')
+        self.assertEqual(t, 'un_determined')
 
     @raises(AssertionError)
     def test_get_type_multiple_types(self):

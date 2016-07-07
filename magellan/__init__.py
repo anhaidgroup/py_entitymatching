@@ -32,6 +32,7 @@ from magellan.blockercombiner.blockercombiner import combine_blocker_outputs_via
 
 # # sampling.rst
 from magellan.sampler.single_table import sample_table
+from magellan.sampler.down_sample import down_sample
 
 # # labeling
 from magellan.labeler.labeler import label_table
