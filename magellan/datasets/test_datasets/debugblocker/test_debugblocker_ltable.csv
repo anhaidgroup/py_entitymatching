@@ -1,0 +1,4 @@
+ID,title,author,publisher,price,desc,genre,year,lang
+0,"intro to database","John Doe","ABC publisher",10.00,"introduction to database",,2010,
+1,"data analysis","Jane Doe","BCD publisher",20.00,"introduction to data analysis",,2015,"ENG"
+2,"Thinking in Java","Johnnie Doe",,10.00,"learn how to program in Java",,2000,"ENG"
