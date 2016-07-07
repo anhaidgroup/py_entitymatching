@@ -3,26 +3,26 @@ Supported Matchers
 ===================
 
 .. autoclass:: magellan.DTMatcher
-    :show-inheritance:
     :inherited-members:
+    :exclude-members: __delattr__, __format__, __getattribute__, __hash__, __reduce__, __reduce_ex__, __repr__, __setattr__, __sizeof__, __str__
 
 .. autoclass:: magellan.RFMatcher
-    :show-inheritance:
     :inherited-members:
+    :exclude-members: __delattr__, __format__, __getattribute__, __hash__, __reduce__, __reduce_ex__, __repr__, __setattr__, __sizeof__, __str__
 
 .. autoclass:: magellan.SVMMatcher
-    :show-inheritance:
     :inherited-members:
+    :exclude-members: __delattr__, __format__, __getattribute__, __hash__, __reduce__, __reduce_ex__, __repr__, __setattr__, __sizeof__, __str__
 
 .. autoclass:: magellan.NBMatcher
-    :show-inheritance:
     :inherited-members:
+    :exclude-members: __delattr__, __format__, __getattribute__, __hash__, __reduce__, __reduce_ex__, __repr__, __setattr__, __sizeof__, __str__
 
 .. autoclass:: magellan.LinRegMatcher
-    :show-inheritance:
     :inherited-members:
+    :exclude-members: __delattr__, __format__, __getattribute__, __hash__, __reduce__, __reduce_ex__, __repr__, __setattr__, __sizeof__, __str__
 
 
 .. autoclass:: magellan.LogRegMatcher
-    :show-inheritance:
     :inherited-members:
+    :exclude-members: __delattr__, __format__, __getattribute__, __hash__, __reduce__, __reduce_ex__, __repr__, __setattr__, __sizeof__, __str__

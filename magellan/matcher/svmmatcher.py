@@ -10,8 +10,9 @@ from sklearn.svm import SVC
 class SVMMatcher(MLMatcher):
     """
     SVM matcher.
+
     Args:
-        *args, **kwargs: Arguments to scikit-learn's SVM
+        *args,**kwargs: Arguments to scikit-learn's SVM
         classifier.
         name (str): Name of this matcher (defaults to None).
 

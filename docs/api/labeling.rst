@@ -1,4 +1,4 @@
 ========
 Labeling
 ========
-.. autofunction:: magellan.labeler.labeler.label_table
+.. autofunction:: magellan.label_table

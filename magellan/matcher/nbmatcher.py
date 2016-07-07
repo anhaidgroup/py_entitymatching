@@ -10,9 +10,10 @@ from sklearn.naive_bayes import GaussianNB
 class NBMatcher(MLMatcher):
     """
     Naive Bayes matcher.
+
     Args:
-        *args, **kwargs: Arguments to scikit-learn's Naive Bayes
-        classifier.
+        *args,**kwargs: Arguments to scikit-learn's Naive Bayes
+         classifier.
         name (str): Name of this matcher (defaults to None).
 
     """
