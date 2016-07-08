@@ -29,9 +29,17 @@ expected_ids_1 = [('a1', 'b1'), ('a1', 'b2'), ('a1', 'b6'),
 # attribute equivalence on [l|r]_block_attr_1 \intersection [l|r]_block_attr_2
 expected_ids_2 = [('a2', 'b3'), ('a3', 'b2'), ('a5', 'b5')]
 
-# overlap on birth_year with q_val=3 and overlap_size=2
-expected_ids_3 = [('a2', 'b3'), ('a3', 'b2'), ('a4', 'b1'), ('a4', 'b6'),
-                  ('a5', 'b5')]
+# attribute equivalence on [l|r]_block_attr_1 with allow_missing = True
+expected_ids_3 = [('a1', 'b1'), ('a1', 'b2'), ('a1', 'b3'), ('a1', 'b4'),
+                  ('a1', 'b5'), ('a1', 'b6'), ('a2', 'b2'), ('a2', 'b3'),
+                  ('a2', 'b4'), ('a2', 'b5'), ('a3', 'b1'), ('a3', 'b2'),
+                  ('a3', 'b4'), ('a3', 'b6'), ('a4', 'b1'), ('a4', 'b2'),
+                  ('a4', 'b3'), ('a4', 'b4'), ('a4', 'b5'), ('a4', 'b6'),
+                  ('a5', 'b2'), ('a5', 'b3'), ('a5', 'b4'), ('a5', 'b5')]
+
+# attribute equivalence on [l|r]_block_attr_1 with allow_missing = False
+expected_ids_4 = [('a2', 'b3'), ('a2', 'b5'), ('a3', 'b1'), ('a3', 'b6'),
+                  ('a5', 'b3'), ('a5', 'b5')]
 
 class AttrEquivBlockerTestCases(unittest.TestCase):
 
@@ -270,6 +278,38 @@ class AttrEquivBlockerTestCases(unittest.TestCase):
                                  l_output_attrs, [])
         validate_metadata(C, l_output_attrs)
         validate_data(C, expected_ids_1)
+
+    def test_ab_block_tables_wi_missing_values_allow_missing(self):
+        path_a = os.sep.join([p, 'datasets', 'test_datasets', 'blocker',
+                              'table_A_wi_missing_vals.csv'])
+        path_b = os.sep.join([p, 'datasets', 'test_datasets', 'blocker',
+                              'table_B_wi_missing_vals.csv'])
+        A = mg.read_csv_metadata(path_a)
+        mg.set_key(A, 'ID')
+        B = mg.read_csv_metadata(path_b)
+        mg.set_key(B, 'ID')
+        C = self.ab.block_tables(A, B, l_block_attr_1, r_block_attr_1,
+                                 l_output_attrs, r_output_attrs,
+                                 l_output_prefix, r_output_prefix, True)
+        validate_metadata(C, l_output_attrs, r_output_attrs,
+                          l_output_prefix, r_output_prefix)
+        validate_data(C, expected_ids_3)
+
+    def test_ab_block_tables_wi_missing_values_disallow_missing(self):
+        path_a = os.sep.join([p, 'datasets', 'test_datasets', 'blocker',
+                              'table_A_wi_missing_vals.csv'])
+        path_b = os.sep.join([p, 'datasets', 'test_datasets', 'blocker',
+                              'table_B_wi_missing_vals.csv'])
+        A = mg.read_csv_metadata(path_a)
+        mg.set_key(A, 'ID')
+        B = mg.read_csv_metadata(path_b)
+        mg.set_key(B, 'ID')
+        C = self.ab.block_tables(A, B, l_block_attr_1, r_block_attr_1,
+                                 l_output_attrs, r_output_attrs,
+                                 l_output_prefix, r_output_prefix)
+        validate_metadata(C, l_output_attrs, r_output_attrs,
+                          l_output_prefix, r_output_prefix)
+        validate_data(C, expected_ids_4)
 
     @raises(AssertionError)
     def test_ab_block_candset_invalid_candset_1(self):

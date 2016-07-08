@@ -110,15 +110,16 @@ class AttrEquivalenceBlocker(Blocker):
 
         # do blocking
 
-        # # remove records with nans in the blocking attribute
-        l_df, r_df = rem_nan(ltable, l_block_attr), rem_nan(rtable, r_block_attr)
-
-        # # do projection before merge
+        # # do projection of required attributes from the tables
         l_proj_attrs = self.get_attrs_to_project(l_key, l_block_attr, l_output_attrs)
-        l_df = ltable[l_proj_attrs]
+        ltable_proj = ltable[l_proj_attrs]
         r_proj_attrs = self.get_attrs_to_project(r_key, r_block_attr, r_output_attrs)
-        r_df = rtable[r_proj_attrs]
-       
+        rtable_proj = rtable[r_proj_attrs]
+
+        # # remove records with nans in the blocking attribute
+        l_df = rem_nan(ltable_proj, l_block_attr)
+        r_df = rem_nan(rtable_proj, r_block_attr)
+
         # # determine number of processes to launch parallely
         n_procs = self.get_num_procs(n_jobs, len(l_df) * len(r_df)) 
 
@@ -142,11 +143,14 @@ class AttrEquivalenceBlocker(Blocker):
 						for l in l_splits for r in r_splits)
             candset = pd.concat(c_splits, ignore_index=True)
 
+        print('Candset (no missing): ', candset)
+
         # if allow_missing flag is True, then compute
         # all pairs with missing value in left table, and
         # all pairs with missing value in right table
         if allow_missing:
-            missing_pairs = self.get_pairs_with_missing_value(ltable, rtable,
+            missing_pairs = self.get_pairs_with_missing_value(ltable_proj,
+                                                              rtable_proj,
                                                               l_key, r_key,
                                                               l_block_attr,
                                                               r_block_attr,
@@ -154,8 +158,11 @@ class AttrEquivalenceBlocker(Blocker):
                                                               r_output_attrs,
                                                               l_output_prefix,
                                                               r_output_prefix)
-            candset = pd.concat([candset, missing_pairs])
+            print('Missing pairs: ', missing_pairs)
+            candset = pd.concat([candset, missing_pairs], ignore_index=True)
 
+        print('Candset (with missing): ', candset)
+        
         # update catalog
         key = get_name_for_key(candset.columns)
         candset = add_key_column(candset, key)
@@ -308,30 +315,31 @@ class AttrEquivalenceBlocker(Blocker):
             raise AssertionError('Right block attribute is not in the right table')
 
 
-    def get_pairs_with_missing_value(ltable, rtable, l_key, r_key,
+    def get_pairs_with_missing_value(self, l_df, r_df, l_key, r_key,
                                      l_block_attr, r_block_attr,
                                      l_output_attrs, r_output_attrs,
-                                     l_output_prefix, r_out_prefix):
+                                     l_output_prefix, r_output_prefix):
    
-        ltable['ones'] = pd.np.ones(len(ltable))
-        rtable['ones'] = pd.np.ones(len(rtable))
-        
-        # find ltable records with missing value in l_block_attr
-        ltable_missing = ltable[pd.isnull(ltable[l_block_attr])]
+        l_df.is_copy, r_df.is_copy = False, False # to avoid setwithcopy warning
+        l_df['ones'] = pd.np.ones(len(l_df))
+        r_df['ones'] = pd.np.ones(len(r_df))
 
-        # find ltable records which do not contain missing value in l_block_attr
-        ltable_not_missing = ltable[pd.notnull(ltable[l_block_attr])]
+        # find ltable records with missing value in l_block_attr
+        l_df_missing = l_df[pd.isnull(l_df[l_block_attr])]
+
+        # find ltable records with no missing value in l_block_attr
+        l_df_no_missing = l_df[pd.notnull(l_df[l_block_attr])]
 
         # find rtable records with missing value in r_block_attr
-        rtable_missing = rtable[pd.isnull(rtable[r_block_attr])]
+        r_df_missing = r_df[pd.isnull(r_df[r_block_attr])]
 
-        missing_pairs_1 = pd.merge(ltable_missing, rtable, left_on='ones',
+        missing_pairs_1 = pd.merge(l_df_missing, r_df, left_on='ones',
                                    right_on='ones', suffixes=('_ltable', '_rtable')) 
 
-        missing_pairs_2 = pd.merge(ltable_not_missing, rtable_missing, left_on='ones',
+        missing_pairs_2 = pd.merge(l_df_no_missing, r_df_missing, left_on='ones',
                                    right_on='ones', suffixes=('_ltable', '_rtable'))
 
-        missing_pairs = pd.concat([missing_pairs_1, missing_pairs_2])
+        missing_pairs = pd.concat([missing_pairs_1, missing_pairs_2], ignore_index=True)
 
         retain_cols, final_cols = _output_columns(l_key, r_key,
                                                   list(missing_pairs.columns),
