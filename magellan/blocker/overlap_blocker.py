@@ -46,7 +46,8 @@ class OverlapBlocker(Blocker):
                      overlap_size=1,
                      l_output_attrs=None, r_output_attrs=None,
                      l_output_prefix='ltable_', r_output_prefix='rtable_',
-                     verbose=False, show_progress=True, n_jobs=1):
+                     allow_missing=False, verbose=False, show_progress=True,
+                     n_jobs=1):
         """Blocks two tables based on the overlap of token sets of attribute
            values.
 
@@ -58,9 +59,9 @@ class OverlapBlocker(Blocker):
         threshold.
 
         Args:
-            ltable (Dataframe): left input table.
+            ltable (DataFrame): left input table.
 
-            rtable (Dataframe): right input table.
+            rtable (DataFrame): right input table.
 
             l_overlap_attr (str): overlap attribute in left table.
 
@@ -120,12 +121,18 @@ class OverlapBlocker(Blocker):
         # validate data types of standard input parameters
         self.validate_types_params_tables(ltable, rtable,
 			    l_output_attrs, r_output_attrs, l_output_prefix,
-			    r_output_prefix, verbose, show_progress, n_jobs)
+			    r_output_prefix, verbose, n_jobs)
 
         # validate data types of input parameters specific to overlap blocker
         self.validate_types_other_params(l_overlap_attr, r_overlap_attr,
                                          rem_stop_words, q_val,
                                          word_level, overlap_size)
+
+        # validate data type of allow_missing
+        self.validate_allow_missing(allow_missing)
+ 
+        # validate data type of show_progress
+        self.validate_show_progress(show_progress)
  
         # validate overlap attributes
         self.validate_overlap_attrs(ltable, rtable, l_overlap_attr,

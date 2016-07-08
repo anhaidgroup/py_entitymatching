@@ -185,6 +185,21 @@ class OverlapBlockerTestCases(unittest.TestCase):
                              r_overlap_attr_1, r_output_prefix=True)
 
     @raises(AssertionError)
+    def test_ob_block_tables_invalid_allow_missing_1(self):
+        self.ob.block_tables(self.A, self.B, l_overlap_attr_1,
+                             r_overlap_attr_1, allow_missing=None)
+
+    @raises(AssertionError)
+    def test_ob_block_tables_invalid_allow_missing_2(self):
+        self.ob.block_tables(self.A, self.B, l_overlap_attr_1,
+                             r_overlap_attr_1, allow_missing=1)
+
+    @raises(AssertionError)
+    def test_ob_block_tables_invalid_allow_missing_3(self):
+        self.ob.block_tables(self.A, self.B, l_overlap_attr_1,
+                             r_overlap_attr_1, allow_missing='yes')
+
+    @raises(AssertionError)
     def test_ob_block_tables_invalid_verbose_1(self):
         self.ob.block_tables(self.A, self.B, l_overlap_attr_1,
                              r_overlap_attr_1, verbose=None)

@@ -184,7 +184,10 @@ class RuleBasedBlocker(Blocker):
         # validate data types of input parameters
         self.validate_types_params_tables(ltable, rtable,
                        l_output_attrs, r_output_attrs, l_output_prefix,
-                       r_output_prefix, verbose, show_progress, n_jobs)
+                       r_output_prefix, verbose, n_jobs)
+
+        # validate data type of show_progress
+        self.validate_show_progress(show_progress)
 
         # validate input parameters
         self.validate_output_attrs(ltable, rtable, l_output_attrs, r_output_attrs)

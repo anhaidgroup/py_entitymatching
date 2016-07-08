@@ -87,7 +87,10 @@ class BlackBoxBlocker(Blocker):
         self.validate_types_params_tables(ltable, rtable,
 			                  l_output_attrs, r_output_attrs,
                                           l_output_prefix, r_output_prefix,
-                                          verbose, show_progress, n_jobs)
+                                          verbose, n_jobs)
+
+        # validate data type of show_progress
+        self.validate_show_progress(show_progress)
 
         # validate black box function
         assert self.black_box_function != None, 'Black box function is not set'
