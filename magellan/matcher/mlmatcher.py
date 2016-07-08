@@ -4,7 +4,7 @@ all the ML-matchers.
 """
 import logging
 
-import numpy as np
+# import numpy as np
 import pandas as pd
 
 import magellan.catalog.catalog_manager as cm
@@ -269,7 +269,7 @@ class MLMatcher(Matcher):
             # Get the values from the DataFrame
             x = x.values
             # Remove the first column ('_id')
-            x = np.delete(x, 0, 1)
+            x = pd.np.delete(x, 0, 1)
         else:
             # Get the values from the DataFrame
             x = x.values
@@ -282,7 +282,7 @@ class MLMatcher(Matcher):
                     'Removing this column for processing')
                 # Get the values from the DataFrame
                 y = y.values
-                y = np.delete(y, 0, 1)
+                y = pd.np.delete(y, 0, 1)
             else:
                 # Get the values from the DataFrame
                 y = y.values

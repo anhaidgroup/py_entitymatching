@@ -5,7 +5,7 @@ import six
 
 
 
-import numpy as np
+# import numpy as np
 import pandas as pd
 
 from magellan.utils.catalog_helper import check_fk_constraint
@@ -72,7 +72,7 @@ def rem_nan(table, attr):
         logger.error('Input attr not in the table columns')
         raise KeyError('Input attr. not in the table columns')
 
-    l = table.index.values[np.where(table[attr].notnull())[0]]
+    l = table.index.values[pd.np.where(table[attr].notnull())[0]]
     return table.ix[l]
 
 

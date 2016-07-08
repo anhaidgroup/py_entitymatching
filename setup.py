@@ -25,22 +25,18 @@ setup(
     2) Iterate and debugmatcher the workflow
     3) Deploy it in production
     """,
-    url='http://github.com/kvpradap/enrique',
-    author='Pradap Konda',
-    author_email='pradap@cs.wisc.edu',
-    license=['MIT'],
+    url='http://github.com/anhaidgroup/magellan',
+    author='UW Magellan',
+    author_email='uwmagellan@gmail.com',
+    license=['BSD'],
     packages=['magellan'],
     install_requires=[
                       'pandas >= 0.16.0',
-                      'numpy >= 1.7.0',
                       'six',
                       'scikit-learn >= 0.16.1',
                       'cloudpickle',
                       'pyparsing >= 2.0.3',
-                      'scipy >= 0.16.0',
-                      'Cython >= 0.23.0',
                       'PyPrind >= 2.9.3',
-                      'pyqt',
                       'joblib'
                       ],
     include_package_data=True,
