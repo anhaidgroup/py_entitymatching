@@ -2,8 +2,9 @@
 This module contains functions for ensembe matcher.
 Note: This is not going to be there in the first version of Magellan.
 """
-import numpy as np
+# import numpy as np
 
+import pandas as pd
 import six
 
 from sklearn.base import BaseEstimator
@@ -39,7 +40,7 @@ class EnsembleSKLearn(BaseEstimator, ClassifierMixin, TransformerMixin):
 
     def _predict(self, X):
         """ Collect results from clf.predict calls. """
-        predictions =  np.asarray([clf.predict(X) for clf in self.clfs_]).T
+        predictions =  pd.np.asarray([clf.predict(X) for clf in self.clfs_]).T
         predicted_labels = self.combiner.combine(predictions)
         return predicted_labels
 
