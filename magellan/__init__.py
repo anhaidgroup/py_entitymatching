@@ -1,10 +1,17 @@
-from PyQt4 import QtGui
 
 from magellan.catalog.catalog import Catalog
 
 __version__ = '0.1.0'
 
 _catalog = Catalog.Instance()
+
+# downsampling related methods
+
+from magellan.sampler.down_sample import down_sample
+# # io related methods
+#
+from magellan.io.parsers import read_csv_metadata, to_csv_metadata
+from magellan.io.pickles import load_object, load_table, save_object, save_table
 #
 # import catalog related methods
 from magellan.catalog.catalog_manager import get_property, get_all_properties, \
@@ -14,12 +21,8 @@ from magellan.catalog.catalog_manager import get_catalog, del_catalog, \
 from magellan.catalog.catalog_manager import is_property_present_for_df, \
     is_dfinfo_present, is_catalog_empty
 from magellan.catalog.catalog_manager import get_key, set_key
-#
-# # io related methods
-#
-from magellan.io.parsers import read_csv_metadata, to_csv_metadata
-from magellan.io.pickles import load_object, load_table, save_object, save_table
-#
+
+
 #
 # # blockers
 from magellan.blocker.attr_equiv_blocker import AttrEquivalenceBlocker
@@ -27,11 +30,15 @@ from magellan.blocker.black_box_blocker import BlackBoxBlocker
 from magellan.blocker.overlap_blocker import OverlapBlocker
 from magellan.blocker.rule_based_blocker import RuleBasedBlocker
 
+# # blocker debugger
+from magellan.debugblocker.debugblocker import debug_blocker
+
 # # blocker combiner
 from magellan.blockercombiner.blockercombiner import combine_blocker_outputs_via_union
 
-# # sampling
+# # sampling.rst
 from magellan.sampler.single_table import sample_table
+
 
 # # labeling
 from magellan.labeler.labeler import label_table

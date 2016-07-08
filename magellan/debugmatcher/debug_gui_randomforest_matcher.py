@@ -27,7 +27,7 @@ def vis_debug_rf(matcher, train, test, exclude_attrs, target_attr):
         test (DataFrame): The pandas DataFrame that will be used to test the
             matcher.
         exclude_attrs (list): The list of attributes to be excluded from train
-        and test, for training and testing.
+            and test, for training and testing.
         target_attr (str): The attribute name in the 'train' containing the
             true labels.
 

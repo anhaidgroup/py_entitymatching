@@ -83,8 +83,10 @@ def get_sim_funs():
 def affine(s1, s2):
     """
     This function computes the affine measure between the two input strings.
+
     Args:
         s1, s2 (input strings):
+
     Returns:
         The affine measure if both the strings are not missing (i.e NaN or
         None), else  returns NaN.
@@ -107,9 +109,11 @@ def hamming_dist(s1, s2):
     """
     This function computes the hamming distance between the two input
     strings.
+
     Args:
         s1, s2 (str): Input strings for which the similarity measure should
             be computed.
+
     Returns:
         The hamming distance if both the strings are not missing (i.e NaN),
         else  returns NaN.
@@ -133,9 +137,11 @@ def hamming_sim(s1, s2):
     """
     This function computes the hamming similarity between the two input
     strings.
+
     Args:
         s1, s2 (str): Input strings for which the similarity measure should
             be computed.
+
     Returns:
         The hamming similarity if both the strings are not missing (i.e NaN),
         else  returns NaN.
@@ -159,9 +165,11 @@ def lev_dist(s1, s2):
     """
     This function computes the Levenshtein distance between the two input
     strings.
+
     Args:
         s1, s2 (str): Input strings for which the similarity measure should
             be computed.
+
     Returns:
         The Levenshtein distance if both the strings are not missing (i.e NaN),
         else  returns NaN.
@@ -185,9 +193,11 @@ def lev_sim(s1, s2):
     """
     This function computes the Levenshtein similarity between the two input
     strings.
+
     Args:
         s1, s2 (str): Input strings for which the similarity measure should
             be computed.
+
     Returns:
         The Levenshtein similarity if both the strings are not missing (i.e
         NaN), else  returns NaN.
@@ -211,9 +221,11 @@ def jaro(s1, s2):
     """
     This function computes the Jaro measure between the two input
     strings.
+
     Args:
         s1, s2 (str): Input strings for which the similarity measure should
             be computed.
+
     Returns:
         The Jaro measure if both the strings are not missing (i.e NaN),
         else  returns NaN.
@@ -237,9 +249,11 @@ def jaro_winkler(s1, s2):
     """
     This function computes the Jaro Winkler measure between the two input
     strings.
+
     Args:
         s1, s2 (str): Input strings for which the similarity measure should
             be computed.
+
     Returns:
         The Jaro Winkler measure if both the strings are not missing (i.e NaN),
         else  returns NaN.
@@ -263,9 +277,11 @@ def needleman_wunsch(s1, s2):
     """
     This function computes the Needleman-Wunsch measure between the two input
     strings.
+
     Args:
         s1, s2 (str): Input strings for which the similarity measure should
             be computed.
+
     Returns:
         The Needleman-Wunsch measure if both the strings are not missing (i.e
         NaN), else  returns NaN.
@@ -290,9 +306,11 @@ def smith_waterman(s1, s2):
     """
     This function computes the Smith-Waterman measure between the two input
     strings.
+
     Args:
         s1, s2 (str): Input strings for which the similarity measure should
             be computed.
+
     Returns:
         The Smith-Waterman measure if both the strings are not missing (i.e
         NaN), else  returns NaN.
@@ -317,9 +335,11 @@ def jaccard(arr1, arr2):
     """
     This function computes the Jaccard measure between the two input
     lists/sets.
+
     Args:
         arr1, arr2 (list or set): Input list or sets for which the Jaccard
         measure should be computed.
+
     Returns:
         The Jaccard measure if both the lists/set are not None and do not have
          any missing tokens (i.e NaN), else  returns NaN.
@@ -345,9 +365,11 @@ def cosine(arr1, arr2):
     """
     This function computes the cosine measure between the two input
     lists/sets.
+
     Args:
         arr1, arr2 (list or set): Input list or sets for which the cosine
         measure should be computed.
+
     Returns:
         The cosine measure if both the lists/set are not None and do not have
          any missing tokens (i.e NaN), else  returns NaN.
@@ -373,9 +395,11 @@ def overlap_coeff(arr1, arr2):
     """
     This function computes the overlap coefficient between the two input
     lists/sets.
+
     Args:
         arr1, arr2 (list or set): Input list or sets for which the overlap
         coefficient should be computed.
+
     Returns:
         The overlap coefficient if both the lists/set are not None and do not
         have any missing tokens (i.e NaN), else  returns NaN.
@@ -400,9 +424,11 @@ def dice(arr1, arr2):
     """
     This function computes the Dice score between the two input
     lists/sets.
+
     Args:
         arr1, arr2 (list or set): Input list or sets for which the Dice
         score should be computed.
+
     Returns:
         The Dice score if both the lists/set are not None and do not
         have any missing tokens (i.e NaN), else  returns NaN.
@@ -463,6 +489,7 @@ def exact_match(d1, d2):
     """
     This function check if two objects are match exactly. Typically the
     objects are string, boolean and ints.
+
     Args:
         d1, d2 (str, boolean, int): Input objects which should checked
         whether they match exactly.
@@ -488,6 +515,7 @@ def exact_match(d1, d2):
 def rel_diff(d1, d2):
     """
     This function computes the relative difference between two numbers
+
     Args:
         d1, d2 (float): Input numbers for which the relative difference must
         be computed.
@@ -518,6 +546,7 @@ def rel_diff(d1, d2):
 def abs_norm(d1, d2):
     """
     This function computes the absolute norm similarity between two numbers
+
     Args:
         d1, d2 (float): Input numbers for which the absolute norm must
         be computed.

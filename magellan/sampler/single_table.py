@@ -1,6 +1,6 @@
 # coding=utf-8
 """
-This module contains sampling related routines for a single table.
+This module contains sampling.rst related routines for a single table.
 """
 import logging
 
@@ -13,7 +13,7 @@ import magellan.utils.catalog_helper as ch
 logger = logging.getLogger(__name__)
 
 
-# sample one table using random sampling
+# sample one table using random sampling.rst
 def sample_table(table, sample_size, replace=False, verbose=False):
     """
     Sample a pandas DataFrame (for labeling purposes).
@@ -22,7 +22,7 @@ def sample_table(table, sample_size, replace=False, verbose=False):
     purposes. This function expects the input DataFrame containing the
     metadata of a candidate set (such as key, fk_ltable, fk_rtable, ltable,
     rtable). Specifically, this function creates a copy of the input
-    DataFrame, samples the data using uniform random sampling (uses 'random'
+    DataFrame, samples the data using uniform random sampling.rst (uses 'random'
     function from numpy to sample) and returns the sampled DataFrame.
     Further, also copies the properties from the input DataFrame to the output
     DataFrame.
@@ -33,7 +33,7 @@ def sample_table(table, sample_size, replace=False, verbose=False):
             key, fk_ltable, fk_rtable, ltable, rtable) in the catalog.
         sample_size (int): Number of samples to be picked up from the input
             DataFrame.
-        replace (boolean): Flag to indicate whether sampling should be done
+        replace (boolean): Flag to indicate whether sampling.rst should be done
             with replacement or not (default value is False).
         verbose (boolean): Flag to indicate whether more detailed information
             about the execution steps should be printed out (default value is

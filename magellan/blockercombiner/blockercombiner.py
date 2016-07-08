@@ -14,8 +14,11 @@ import magellan.utils.generic_helper as gh
 logger = logging.getLogger(__name__)
 
 
-def combine_blocker_outputs_via_union(blocker_output_list, l_prefix='ltable_',
-                                      r_prefix='rtable_', verbose=False):
+def combine_blocker_outputs_via_union(
+        blocker_output_list,
+        l_prefix='ltable_',
+        r_prefix='rtable_',
+        verbose=False):
     """
     Combine multiple blocker outputs by doing an union of their tuple pair ids (
     foreign

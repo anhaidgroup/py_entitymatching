@@ -1,0 +1,4 @@
+book_id,book_title,author,publisher,price,pub_year,language,description,book_genre
+"B001","introduction to data analysis","John Doe","ABC publisher"10.00,2015,English,"introduction to data analysis",
+"B002","Thinking in C","Jane Doe","BCD publisher",15.00,1990,,"learn programming in C++",
+"B003","A brief history of time","Stephen Hawking",,20.00,1988,English,"from Big Bang to black holes",

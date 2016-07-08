@@ -8,8 +8,9 @@ from magellan.matcher.matcherutils import get_ts
 class LogRegMatcher(MLMatcher):
     """
     Logistic Regression matcher.
+
     Args:
-        *args, **kwargs: Arguments to scikit-learn's Logistic Regression
+        *args,**kwargs: Arguments to scikit-learn's Logistic Regression
         classifier.
         name (str): Name of this matcher (defaults to None).
 

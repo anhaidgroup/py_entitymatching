@@ -605,10 +605,13 @@ def set_key(data_frame, key_attribute):
     """
     Sets the 'key' property for a DataFrame in the catalog with the given
     attribute (i.e column name).
+
     Specifically, this function set the the key attribute for the DataFrame
     if the given attribute satisfies the following two properties:
-        * The key attribute should have unique values.
-        * The key attribute should not have missing values. A missing value
+
+        The key attribute should have unique values.
+
+        The key attribute should not have missing values. A missing value
         is represented as np.NaN.
 
     Args:
