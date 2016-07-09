@@ -9,7 +9,7 @@ import six
 
 import magellan.catalog.catalog_manager as cm
 import magellan.utils.catalog_helper as ch
-import magellan.utils.generic_helper as gh
+from magellan.debugmatcher.debug_gui_utils import _get_dataframe, _get_metric
 
 logger = logging.getLogger(__name__)
 
@@ -185,3 +185,128 @@ def eval_matches(data_frame, gold_label_attr, predicted_label_attr):
     accuracy_results['false_neg_num'] = num_false_negatives
     accuracy_results['false_neg_ls'] = false_neg_ls
     return accuracy_results
+
+
+def get_false_positives_as_df(table, eval_summary, verbose=False):
+    """
+    Select only the false positives from the input table and return as a
+    DataFrame based on the evaluation results.
+
+    Args:
+        table (DataFrame): Input table that was used for evaluation.
+        eval_summary (dictionary): Dictionary containing evaluation results,
+            typically from 'eval_matches' command.
+
+    Returns:
+        A pandas DataFrame containing only the False positives from
+        the input table.
+
+
+    """
+    # Validate input parameters
+
+    # # We expect the input candset to be of type pandas DataFrame.
+    if not isinstance(table, pd.DataFrame):
+        logger.error('Input cand.set is not of type dataframe')
+        raise AssertionError('Input cand.set is not of type dataframe')
+
+    # Do metadata checking
+    # # Mention what metadata is required to the user
+    ch.log_info(logger, 'Required metadata: cand.set key, fk ltable, '
+                        'fk rtable, '
+                        'ltable, rtable, ltable key, rtable key', verbose)
+
+    # # Get metadata
+    ch.log_info(logger, 'Getting metadata from catalog', verbose)
+
+    key, fk_ltable, fk_rtable, ltable, rtable, l_key, r_key = \
+        cm.get_metadata_for_candset(
+        table, logger, verbose)
+
+    # # Validate metadata
+    ch.log_info(logger, 'Validating metadata', verbose)
+    cm._validate_metadata_for_candset(table, key, fk_ltable, fk_rtable,
+                                      ltable, rtable, l_key, r_key,
+                                      logger, verbose)
+
+
+    data_frame =  _get_dataframe(table, eval_summary['false_pos_ls'])
+
+    # # Update catalog
+    ch.log_info(logger, 'Updating catalog', verbose)
+
+    cm.init_properties(data_frame)
+    cm.copy_properties(table, data_frame)
+
+    return data_frame
+
+
+def get_false_negatives_as_df(table, eval_summary, verbose=False):
+
+    """
+    Select only the false negatives from the input table and return as a
+    DataFrame based on the evaluation results.
+
+    Args:
+        table (DataFrame): Input table that was used for evaluation.
+        eval_summary (dictionary): Dictionary containing evaluation results,
+            typically from 'eval_matches' command.
+
+    Returns:
+        A pandas DataFrame containing only the false negatives from
+        the input table.
+    """
+    # Validate input parameters
+
+    # # We expect the input candset to be of type pandas DataFrame.
+    if not isinstance(table, pd.DataFrame):
+        logger.error('Input cand.set is not of type dataframe')
+        raise AssertionError('Input cand.set is not of type dataframe')
+
+    # Do metadata checking
+    # # Mention what metadata is required to the user
+    ch.log_info(logger, 'Required metadata: cand.set key, fk ltable, '
+                        'fk rtable, '
+                        'ltable, rtable, ltable key, rtable key', verbose)
+
+    # # Get metadata
+    ch.log_info(logger, 'Getting metadata from the catalog', verbose)
+
+    key, fk_ltable, fk_rtable, ltable, rtable, l_key, r_key = \
+        cm.get_metadata_for_candset(
+        table, logger, verbose)
+
+    # # Validate metadata
+    ch.log_info(logger, 'Validating metadata', verbose)
+    cm._validate_metadata_for_candset(table, key, fk_ltable, fk_rtable,
+                                      ltable, rtable, l_key, r_key,
+                                      logger, verbose)
+
+    data_frame =  _get_dataframe(table, eval_summary['false_neg_ls'])
+
+    # # Update catalog
+    ch.log_info(logger, 'Updating catalog', verbose)
+
+    cm.init_properties(data_frame)
+    cm.copy_properties(table, data_frame)
+
+
+    # # Update catalog
+    ch.log_info(logger, 'Returning the dataframe', verbose)
+
+    return data_frame
+
+
+
+
+def print_eval_summary(eval_summary):
+    """
+    Prints a summary of evaluation results.
+
+    Args:
+        eval_summary (dictionary): Dictionary containing evaluation results,
+            typically from 'eval_matches' command.
+    """
+    m = _get_metric(eval_summary)
+    for key, value in six.iteritems(m):
+        print(key + " : " + value)

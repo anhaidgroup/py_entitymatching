@@ -74,8 +74,9 @@ from magellan.debugmatcher.debug_gui_decisiontree_matcher import vis_debug_dt
 from magellan.debugmatcher.debug_gui_randomforest_matcher import vis_debug_rf
 
 # # evaluation
-from magellan.evaluation.evaluation import eval_matches
-from magellan.utils.generic_helper import print_eval_summary
+from magellan.evaluation.evaluation import eval_matches, \
+    get_false_negatives_as_df, get_false_positives_as_df, print_eval_summary
+
 
 # # helper functions
 from magellan.utils.generic_helper import get_install_path, load_dataset, \
