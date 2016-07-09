@@ -37,7 +37,8 @@ setup(
                       'cloudpickle',
                       'pyparsing >= 2.0.3',
                       'PyPrind >= 2.9.3',
-                      'joblib'
+                      'joblib',
+                      'py_stringmatching'
                       ],
     include_package_data=True,
     zip_safe=False
