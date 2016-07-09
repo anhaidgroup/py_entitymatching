@@ -290,7 +290,6 @@ def get_false_negatives_as_df(table, eval_summary, verbose=False):
     cm.init_properties(data_frame)
     cm.copy_properties(table, data_frame)
 
-
     # # Update catalog
     ch.log_info(logger, 'Returning the dataframe', verbose)
 

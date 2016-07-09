@@ -15,12 +15,15 @@ from magellan.io.pickles import load_object, load_table, save_object, save_table
 #
 # import catalog related methods
 from magellan.catalog.catalog_manager import get_property, get_all_properties, \
-    set_property, del_property, del_all_properties
+    set_property, del_property, del_all_properties, init_properties
 from magellan.catalog.catalog_manager import get_catalog, del_catalog, \
     get_catalog_len, show_properties, show_properties_for_id
 from magellan.catalog.catalog_manager import is_property_present_for_df, \
     is_dfinfo_present, is_catalog_empty
-from magellan.catalog.catalog_manager import get_key, set_key
+from magellan.catalog.catalog_manager import get_key, set_key, set_fk_ltable,\
+    set_fk_rtable, get_ltable, get_rtable, validate_and_set_fk_ltable, \
+    validate_and_set_fk_rtable, set_ltable, set_rtable, get_fk_rtable,  \
+    get_fk_ltable
 
 
 #
@@ -39,6 +42,8 @@ from magellan.blockercombiner.blockercombiner import combine_blocker_outputs_via
 # # sampling.rst
 from magellan.sampler.single_table import sample_table
 
+# #
+from magellan.gui.table_gui import view_table, edit_table
 
 # # labeling
 from magellan.labeler.labeler import label_table
