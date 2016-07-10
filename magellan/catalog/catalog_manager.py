@@ -888,6 +888,8 @@ def set_fk_rtable(data_frame, foreign_key_rtable):
      is typically called on a DataFrame which contains metadata such as foreign
      key, ltable, foreign key rtable, ltable, rtable.
 
+
+
     Args:
         data_frame (DataFrame): Input DataFrame for which the foreign key
             rtable property must be set.
@@ -905,6 +907,7 @@ def set_fk_rtable(data_frame, foreign_key_rtable):
         type string.
         AssertionError: If the attribute (fk_ltable) is not in the input
         DataFrame.
+
     """
     # Validate the input parameters
     # # The input object is expected to be of type pandas DataFrame
@@ -1195,6 +1198,13 @@ def get_metadata_for_candset(candset, lgr, verbose):
 def get_ltable(candset):
     """
     Gets the ltable.
+
+    Args:
+        candset (DataFrame): Input table for which the ltable must be returned.
+
+    Returns:
+        A pandas DataFrame that is pointed by 'ltable' property of the input
+        table.
     """
     # Return the ltable for a candidate set. This function is just a sugar
     return get_property(candset, 'ltable')
@@ -1204,7 +1214,45 @@ def get_ltable(candset):
 def get_rtable(candset):
     """
     Gets the rtable.
+
+    Args:
+        candset (DataFrame): Input table for which the rtable must be returned.
+
+    Returns:
+        A pandas DataFrame that is pointed by 'rtable' property of the input
+        table.
     """
     # Return the rtable for a candidate set. This function is just a sugar
 
     return get_property(candset, 'rtable')
+
+def set_ltable(candset, table):
+    """
+    Sets the ltable.
+
+    Args:
+        candset (DataFrame): Input table for which the ltable must be set.
+        table (DataFrame): Table that must be set as ltable for the input table
+
+    Returns:
+        A Boolean True, if the update was successful.
+    """
+    # Return the ltable for a candidate set. This function is just a sugar
+    return set_property(candset, 'ltable', table)
+
+
+# noinspection PyIncorrectDocstring
+def set_rtable(candset, table):
+    """
+    Sets the ltable.
+
+    Args:
+        candset (DataFrame): Input table for which the rtable must be set.
+        table (DataFrame): Table that must be set as rtable for the input table
+
+    Returns:
+        A Boolean True, if the update was successful.
+    """
+    # Return the rtable for a candidate set. This function is just a sugar
+
+    return set_property(candset, 'rtable', table)

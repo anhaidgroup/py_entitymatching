@@ -10,7 +10,7 @@ import pandas as pd
 
 from magellan.utils.catalog_helper import check_fk_constraint
 import magellan.catalog.catalog_manager as cm
-from magellan.debugmatcher.debug_gui_utils import _get_metric
+from magellan.debugmatcher.debug_gui_utils import _get_metric, _get_dataframe
 
 from magellan.utils import install_path
 from magellan.io.parsers import read_csv_metadata
@@ -202,8 +202,6 @@ def creat_dir_ifnot_exists(dir):
         os.makedirs(dir)
 
 
-def print_eval_summary(eval_summary):
-    m = _get_metric(eval_summary)
-    for key, value in six.iteritems(m):
-        print(key + " : " + value)
+
+
 

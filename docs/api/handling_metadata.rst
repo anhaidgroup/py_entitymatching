@@ -14,3 +14,12 @@ Handling Metadata
 .. autofunction:: magellan.is_catalog_empty
 .. autofunction:: magellan.get_key
 .. autofunction:: magellan.set_key
+.. autofunction:: magellan.get_fk_ltable
+.. autofunction:: magellan.set_fk_ltable
+.. autofunction:: magellan.get_fk_rtable
+.. autofunction:: magellan.set_fk_rtable
+.. autofunction:: magellan.get_ltable
+.. autofunction:: magellan.set_ltable
+.. autofunction:: magellan.get_rtable
+.. autofunction:: magellan.set_rtable
+

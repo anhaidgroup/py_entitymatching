@@ -4,6 +4,8 @@ This module contains functions to extract features using a feature table.
 import logging
 
 import pandas as pd
+import pyprind
+
 
 import magellan.catalog.catalog_manager as cm
 import magellan.utils.catalog_helper as ch
@@ -13,7 +15,8 @@ logger = logging.getLogger(__name__)
 
 
 def extract_feature_vecs(candset, attrs_before=None, feature_table=None,
-                         attrs_after=None, verbose=True):
+                         attrs_after=None, verbose=True,
+                         show_progress=True):
     """
     This function extracts feature vectors from a DataFrame (typically a
     labeled candidate set). Specifically, this function uses the feature
@@ -31,7 +34,10 @@ def extract_feature_vecs(candset, attrs_before=None, feature_table=None,
         attrs_after (list): The list of attributes from the input candset
             that should be added after the feature vectors (defaults to None).
         verbose (boolean): A flag to indicate whether the debug information
-            should be displayed.
+            should be displayed (defaults to True).
+        show_progress (boolean): A flag to indicate whether the progress of
+            extracting feature vectors must be displayed (defaults to True).
+
 
     Returns:
         A DataFrame containing feature vectors is returned. The
@@ -91,35 +97,69 @@ def extract_feature_vecs(candset, attrs_before=None, feature_table=None,
                         'ltable, rtable, ltable key, rtable key', verbose)
 
     # # Get metadata
+    ch.log_info(logger, 'Getting metadata from catalog', verbose)
+
     key, fk_ltable, fk_rtable, ltable, rtable, l_key, r_key = \
         cm.get_metadata_for_candset(
         candset, logger, verbose)
 
     # # Validate metadata
+    ch.log_info(logger, 'Validating metadata', verbose)
     cm._validate_metadata_for_candset(candset, key, fk_ltable, fk_rtable,
                                       ltable, rtable, l_key, r_key,
                                       logger, verbose)
 
     # Extract features
 
-    # # First, get the id_list (fk_ltable, fk_rtable pair
-    id_list = [tuple(tup) for tup in candset[[fk_ltable, fk_rtable]].values]
+
+
+    # id_list = [(row[fk_ltable], row[fk_rtable]) for i, row in
+    #            candset.iterrows()]
+    # id_list = [tuple(tup) for tup in candset[[fk_ltable, fk_rtable]].values]
 
     # # Set index for convenience
     l_df = ltable.set_index(l_key, drop=False)
     r_df = rtable.set_index(r_key, drop=False)
 
+    if show_progress:
+        prog_bar = pyprind.ProgBar(len(candset))
     # # Apply feature functions
-    feat_vals = [apply_feat_fns(l_df.ix[x[0]], r_df.ix[x[1]], feature_table) for
-                 x in id_list]
+    feat_vals = []
+    ch.log_info(logger, 'Applying feature functions', verbose)
+    col_names = list(candset.columns)
+    fk_ltable_idx =  col_names.index(fk_ltable)
+    fk_rtable_idx =  col_names.index(fk_rtable)
+    l_dict = {}
+    r_dict = {}
+
+    for row in candset.itertuples(index=False):
+
+        if show_progress:
+            prog_bar.update()
+        fk_ltable_val = row[fk_ltable_idx]
+        fk_rtable_val = row[fk_rtable_idx]
+
+        if fk_ltable_val not in l_dict:
+            l_dict[fk_ltable_val] = l_df.ix[fk_ltable_val]
+        l_tuple = l_dict[fk_ltable_val]
+
+        if fk_rtable_val not in r_dict:
+            r_dict[fk_rtable_val] = r_df.ix[fk_rtable_val]
+        r_tuple = r_dict[fk_rtable_val]
+
+
+        f = apply_feat_fns(l_tuple, r_tuple, feature_table)
+        feat_vals.append(f)
+
 
     # Construct output table
-    feature_vectors = pd.DataFrame(feat_vals)
-
+    feature_vectors = pd.DataFrame(feat_vals, index=candset.index.values)
     # # Rearrange the feature names in the input feature table order
     feature_names = list(feature_table['feature_name'])
     feature_vectors = feature_vectors[feature_names]
 
+    ch.log_info(logger, 'Constructing output table', verbose)
+    # print(feature_vectors)
     # # Insert attrs_before
     if attrs_before:
         if not isinstance(attrs_before, list):
@@ -146,7 +186,7 @@ def extract_feature_vecs(candset, attrs_before=None, feature_table=None,
             col_pos += 1
 
     # Reset the index
-    feature_vectors.reset_index(inplace=True, drop=True)
+    # feature_vectors.reset_index(inplace=True, drop=True)
 
     # # Update the catalog
     cm.init_properties(feature_vectors)
