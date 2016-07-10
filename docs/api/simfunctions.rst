@@ -1,9 +1,7 @@
-=====================
-Similarity Functions
-=====================
+==============================
+Supported Similarity Functions
+==============================
 
-.. autofunction:: magellan.get_sim_funs_for_blocking
-.. autofunction:: magellan.get_sim_funs_for_matching
 .. autofunction:: magellan.affine
 .. autofunction:: magellan.hamming_dist
 .. autofunction:: magellan.hamming_sim

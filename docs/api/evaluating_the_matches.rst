@@ -1,6 +1,7 @@
-======================
-Evaluating the Matches
-======================
+===============================
+Evaluating the Matching Output
+===============================
+
 .. autofunction:: magellan.eval_matches
 .. autofunction:: magellan.print_eval_summary
 .. autofunction:: magellan.get_false_positives_as_df
