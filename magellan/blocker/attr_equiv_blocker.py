@@ -72,10 +72,13 @@ class AttrEquivalenceBlocker(Blocker):
                           (defaults to 1).
                           If -1 all CPUs are used. If 0 or 1, no parallel computation
                           is used at all, which is useful for debugging.
-                          For n_jobs below -1, (n_cpus + 1 + n_jobs) are used.
-                          Thus, for n_jobs = -2, all CPUS but one are used.
-                          If (n_cpus + 1 + n_jobs) is less than 1, then n_jobs is
-                          set to 1, which means no parallel computation at all.
+                          For n_jobs below -1, (n_cpus + 1 + n_jobs) are used
+                          (where n_cpus are the total number of CPUs in the
+                           machine).
+                          Thus, for n_jobs = -2, all CPUs but one are used.
+                          If (n_cpus + 1 + n_jobs) is less than 1, then no
+                          parallel computation is used (i.e., equivalent to the
+                          default).
 
         Returns:
             A candidate set of tuple pairs that survived blocking (DataFrame).
@@ -203,10 +206,13 @@ class AttrEquivalenceBlocker(Blocker):
                           (defaults to 1).
                           If -1 all CPUs are used. If 0 or 1, no parallel computation
                           is used at all, which is useful for debugging.
-                          For n_jobs below -1, (n_cpus + 1 + n_jobs) are used.
-                          Thus, for n_jobs = -2, all CPUS but one are used.
-                          If (n_cpus + 1 + n_jobs) is less than 1, then n_jobs is
-                          set to 1, which means no parallel computation at all.
+                          For n_jobs below -1, (n_cpus + 1 + n_jobs) are used
+                          (where n_cpus are the total number of CPUs in the
+                           machine).
+                          Thus, for n_jobs = -2, all CPUs but one are used.
+                          If (n_cpus + 1 + n_jobs) is less than 1, then no
+                          parallel computation is used (i.e., equivalent to the
+                          default).
 
         Returns:
             A candidate set of tuple pairs that survived blocking (DataFrame).
