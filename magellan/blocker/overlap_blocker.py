@@ -18,6 +18,7 @@ from magellan.utils.catalog_helper import log_info, get_name_for_key, \
     add_key_column
 
 from magellan.externals.py_stringsimjoin.filter.overlap_filter import OverlapFilter
+from magellan.externals.py_stringsimjoin.join.overlap_join import overlap_join
 
 from magellan.utils.generic_helper import remove_non_ascii, rem_nan
 
@@ -158,15 +159,11 @@ class OverlapBlocker(Blocker):
 
         # do blocking
 
-        # # remove nans: should be modified based on missing data policy
-        l_df = rem_nan(ltable, l_overlap_attr)
-        r_df = rem_nan(rtable, r_overlap_attr)
-
         # # do projection before merge
         l_proj_attrs = self.get_attrs_to_project(l_key, l_overlap_attr, l_output_attrs)
-        l_df = l_df[l_proj_attrs]
+        l_df = ltable[l_proj_attrs]
         r_proj_attrs = self.get_attrs_to_project(r_key, r_overlap_attr, r_output_attrs)
-        r_df = r_df[r_proj_attrs]
+        r_df = rtable[r_proj_attrs]
 
         # # case the column to string if required.
         if l_df.dtypes[l_overlap_attr] != object:
@@ -189,21 +186,13 @@ class OverlapBlocker(Blocker):
             # # # create a qgram tokenizer 
             tokenizer = QgramTokenizer(qval=q_val, return_set=True)
 
-        # # create a overlap filter for similarity join
-        overlap_filter = OverlapFilter(tokenizer, overlap_size)
-        
-        # # determine number of processes to launch parallely
-        n_procs = self.get_num_procs(n_jobs, len(r_df))
-        if n_procs < 1:
-            n_procs = 1 
-
         # # perform overlap similarity join
-        candset = overlap_filter.filter_tables(l_df, r_df, l_key, r_key,
-                                               l_overlap_attr, r_overlap_attr,
-                                               l_output_attrs, r_output_attrs,
-                                               l_output_prefix, r_output_prefix,
-                                               out_sim_score=False,
-                                               n_jobs=n_procs)
+        candset = overlap_join(l_df, r_df, l_key, r_key, l_overlap_attr,
+                               r_overlap_attr, tokenizer, overlap_size, '>=',
+                               allow_missing, l_output_attrs, r_output_attrs,
+                               l_output_prefix, r_output_prefix, False, n_jobs,
+                               show_progress)
+
         # print('candset cols:', candset.columns)
 
         # # retain only the required attributes in the output candidate set 
@@ -467,30 +456,27 @@ class OverlapBlocker(Blocker):
         # get overlap_attr column
         attr_col_values = table[overlap_attr]
 
-        # remove non-ascii chars
-        attr_col_values = [remove_non_ascii(val) for val in attr_col_values]
+        values = []
+        for val in attr_col_values:
+            if pd.isnull(val):
+                values.append(val)
+            else:
+               # remove non-ascii chars
+               val_no_non_ascii = remove_non_ascii(val)
+               # remove punctuations
+               val_no_punctuations = self.rem_punctuations(val)
+               # chop the attribute values and convert into a set
+               val_chopped = list(set(val.split()))
+               # remove stop words
+               val_chopped_no_stopwords = self.rem_stopwords(val_chopped)
+               val_joined = ' '.join(val_chopped_no_stopwords)
+               values.append(val_joined)
 
-        # remove special characters
-        attr_col_values = [self.rem_punctuations(val).lower() for val in
-                           attr_col_values]
-
-        # chop the attribute values
-        col_values_chopped = [val.split() for val in attr_col_values]
-
-        # convert the chopped values into a set
-        col_values_chopped = [list(set(val)) for val in col_values_chopped]
-
-        # remove stop words
-        if rem_stop_words == True:
-            col_values_chopped = [self.rem_stopwords(val) for val in
-                                  col_values_chopped]
-
-        values = [' '.join(val) for val in col_values_chopped]
-
+        table.is_copy = False 
         table[overlap_attr] = values
 
     def rem_punctuations(self, s):
-        return self.regex_punctuation.sub('', s)
+        return self.regex_punctuation.sub('', s).lower()
 
     def rem_stopwords(self, lst):
         return [t for t in lst if t not in self.stop_words]
