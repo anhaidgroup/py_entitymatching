@@ -387,19 +387,19 @@ class AttrEquivBlockerTestCases(unittest.TestCase):
     def test_ab_block_candset_invalid_verbose_1(self):
         C = self.ab.block_tables(self.A, self.B,
                                  l_block_attr_1, r_block_attr_1)
-        self.ab.block_candset(C, l_block_attr_2, r_block_attr_2, None)
+        self.ab.block_candset(C, l_block_attr_2, r_block_attr_2, verbose=None)
 
     @raises(AssertionError)
     def test_ab_block_candset_invalid_verbose_2(self):
         C = self.ab.block_tables(self.A, self.B,
                                  l_block_attr_1, r_block_attr_1)
-        self.ab.block_candset(C, l_block_attr_2, r_block_attr_2, 1)
+        self.ab.block_candset(C, l_block_attr_2, r_block_attr_2, verbose=1)
 
     @raises(AssertionError)
     def test_ab_block_candset_invalid_verbose_3(self):
         C = self.ab.block_tables(self.A, self.B,
                                  l_block_attr_1, r_block_attr_1)
-        self.ab.block_candset(C, l_block_attr_2, r_block_attr_2, 'yes')
+        self.ab.block_candset(C, l_block_attr_2, r_block_attr_2, verbose='yes')
 
     @raises(AssertionError)
     def test_ab_block_candset_invalid_show_progress_1(self):

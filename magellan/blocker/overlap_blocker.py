@@ -100,6 +100,15 @@ class OverlapBlocker(Blocker):
                                    coming from the right table in the output
                                    candidate set (defaults to 'rtable\_').
 
+            allow_missing (boolean): flag to indicate whether tuple pairs with 
+                                     missing value in at least one of the
+                                     blocking attributes should be included in
+                                     the output candidate set (defaults to
+                                     False). If this flag is set to True, a
+                                     tuple in ltable with missing value in the
+                                     blocking attribute will be matched with
+                                     every tuple in rtable and vice versa.
+
             verbose (boolean): flag to indicate whether logging should be done
                                (defaults to False).
 
@@ -211,7 +220,8 @@ class OverlapBlocker(Blocker):
         return candset
 
     def block_candset(self, candset, l_overlap_attr, r_overlap_attr,
-                      rem_stop_words=False, q_val=None, word_level=True, overlap_size=1,
+                      rem_stop_words=False, q_val=None, word_level=True,
+                      overlap_size=1, allow_missing=False,
                       verbose=False, show_progress=True, n_jobs=1):
         """Blocks an input candidate set of tuple pairs based on the overlap
            of token sets of attribute values.
@@ -245,6 +255,15 @@ class OverlapBlocker(Blocker):
 
             overlap_size (int): minimum number of tokens that must overlap
                                 (defaults to 1).
+
+            allow_missing (boolean): flag to indicate whether tuple pairs with 
+                                     missing value in at least one of the
+                                     blocking attributes should be included in
+                                     the output candidate set (defaults to
+                                     False). If this flag is set to True, a
+                                     tuple pair with missing value in either
+                                     blocking attribute will be retained in the
+                                     output candidate set.
 
             verbose (boolean): flag to indicate whether logging should be done
                                (defaults to False).
@@ -346,7 +365,7 @@ class OverlapBlocker(Blocker):
 
     def block_tuples(self, ltuple, rtuple, l_overlap_attr, r_overlap_attr,
                      rem_stop_words=False, q_val=None, word_level=True,
-                     overlap_size=1):
+                     overlap_size=1, allow_missing=False):
         """Blocks a tuple pair based on the overlap of token sets of attribute
            values.
         
@@ -374,6 +393,15 @@ class OverlapBlocker(Blocker):
 
             overlap_size (int): minimum number of tokens that must overlap
                                 (defaults to 1).
+
+            allow_missing (boolean): flag to indicate whether a tuple pair with 
+                                     missing value in at least one of the
+                                     blocking attributes should be blocked
+                                     (defaults to False). If this flag is set
+                                     to True, the pair will be kept if either
+                                     ltuple has missing value in l_block_attr
+                                     or rtuple has misisngvalue in r_block_attr
+                                     or both.
 
         Returns:
             A status indicating if the tuple pair is blocked (boolean).

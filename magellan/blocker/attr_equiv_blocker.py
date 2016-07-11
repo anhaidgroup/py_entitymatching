@@ -143,8 +143,6 @@ class AttrEquivalenceBlocker(Blocker):
 						for l in l_splits for r in r_splits)
             candset = pd.concat(c_splits, ignore_index=True)
 
-        print('Candset (no missing): ', candset)
-
         # if allow_missing flag is True, then compute
         # all pairs with missing value in left table, and
         # all pairs with missing value in right table
@@ -158,11 +156,8 @@ class AttrEquivalenceBlocker(Blocker):
                                                               r_output_attrs,
                                                               l_output_prefix,
                                                               r_output_prefix)
-            print('Missing pairs: ', missing_pairs)
             candset = pd.concat([candset, missing_pairs], ignore_index=True)
 
-        print('Candset (with missing): ', candset)
-        
         # update catalog
         key = get_name_for_key(candset.columns)
         candset = add_key_column(candset, key)
@@ -172,8 +167,9 @@ class AttrEquivalenceBlocker(Blocker):
         # return candidate set
         return candset
 
-    def block_candset(self, candset, l_block_attr, r_block_attr, verbose=False,
-                      show_progress=True, n_jobs=1):
+    def block_candset(self, candset, l_block_attr, r_block_attr,
+                      allow_missing=False, verbose=False, show_progress=True,
+                      n_jobs=1):
         """Blocks an input candidate set of tuple pairs based on attribute equivalence.
 
         Finds tuple pairs from an input candidate set of tuple pairs
@@ -187,6 +183,15 @@ class AttrEquivalenceBlocker(Blocker):
             l_block_attr (str): blocking attribute in left table.
 
             r_block_attr (str): blocking attribute in right table. 
+
+            allow_missing (boolean): flag to indicate whether tuple pairs with 
+                                     missing value in at least one of the
+                                     blocking attributes should be included in
+                                     the output candidate set (defaults to
+                                     False). If this flag is set to True, a
+                                     tuple pair with missing value in either
+                                     blocking attribute will be retained in the
+                                     output candidate set.
 
             verbose (boolean): flag to indicate whether logging should be done
                                (defaults to False).
@@ -274,7 +279,8 @@ class AttrEquivalenceBlocker(Blocker):
         # return the output table
         return out_table
 
-    def block_tuples(self, ltuple, rtuple, l_block_attr, r_block_attr):
+    def block_tuples(self, ltuple, rtuple, l_block_attr, r_block_attr,
+                     allow_missing=False):
         """Blocks a tuple pair based on attribute equivalence.
 
         Args:
@@ -285,6 +291,15 @@ class AttrEquivalenceBlocker(Blocker):
             l_block_attr (str): blocking attribute in left tuple.
 
             r_block_attr (str): blocking attribute in right tuple.
+
+            allow_missing (boolean): flag to indicate whether a tuple pair with 
+                                     missing value in at least one of the
+                                     blocking attributes should be blocked
+                                     (defaults to False). If this flag is set
+                                     to True, the pair will be kept if either
+                                     ltuple has missing value in l_block_attr
+                                     or rtuple has misisngvalue in r_block_attr
+                                     or both.
 
         Returns:
             A status indicating if the tuple pair is blocked, i.e., the values
