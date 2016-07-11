@@ -298,7 +298,7 @@ class AttrEquivalenceBlocker(Blocker):
                                      (defaults to False). If this flag is set
                                      to True, the pair will be kept if either
                                      ltuple has missing value in l_block_attr
-                                     or rtuple has misisngvalue in r_block_attr
+                                     or rtuple has missing value in r_block_attr
                                      or both.
 
         Returns:
