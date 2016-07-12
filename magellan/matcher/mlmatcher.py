@@ -95,11 +95,11 @@ class MLMatcher(Matcher):
         None. This is done to support both the interfaces in a single function.
 
         Args:
-            x (DataFrame): Input feature vectors given as pandas DataFrame (
-                defaults to None).
-            y (DatFrame): Input target attribute given as pandas
+            x (DataFrame): The input feature vectors given as pandas
+             DataFrame (defaults to None).
+            y (DatFrame): The input target attribute given as pandas
                 DataFrame with a single column (defaults to None).
-            table (DataFrame): Input pandas DataFrame containing feature
+            table (DataFrame): The input pandas DataFrame containing feature
                 vectors and target attribute (defaults to None).
             exclude_attrs (list): The list of attributes that should be
                 excluded from the input table to get the feature vectors.
@@ -190,14 +190,14 @@ class MLMatcher(Matcher):
 
 
         Args:
-            x (DataFrame): Input pandas DataFrame containing only feature
+            x (DataFrame): The input pandas DataFrame containing only feature
                 vectors (defaults to None).
-            table (DataFrame): Input pandas DataFrame containing feature
+            table (DataFrame): The input pandas DataFrame containing feature
                 vectors, and may be other attributes (defaults to None).
-            exclude_attrs (list): List of attributes to be excluded from the
+            exclude_attrs (list): A list of attributes to be excluded from the
                 input table to get the feature vectors (defaults to None).
-            target_attr (string): Attribute name where the predictions need to
-                stored in the input table (defaults to None).
+            target_attr (string): The attribute name where the predictions
+                need to stored in the input table (defaults to None).
             append (boolean): A flag to indicate whether the predictions need
                 to be appended in the input DataFrame (defaults to False).
             inplace (boolean): A flag to indicate whether the append needs to be

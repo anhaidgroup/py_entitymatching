@@ -17,9 +17,13 @@ def get_attr_types(data_frame):
     statistics of the attributes. These attribute types can be str_eq_1w,
     str_bt_1w_5w, str_bt_5w_10w, str_gt_10w, boolean or numeric.
 
+    The types roughly capture whether the attribute is of type string,
+    boolean or numeric. Further, with in the string type the subtypes are
+    capture the average number of tokens in the column values.
+
     Args:
-        data_frame (DataFrame): Input DataFrame for which types of attributes
-            (types of columns) must be determined.
+        data_frame (DataFrame): The input DataFrame for which types of
+         attributes (types of columns) must be determined.
 
     Returns:
         A Python dictionary is returned containing the attribute types.
@@ -59,8 +63,10 @@ def get_attr_types(data_frame):
 def get_attr_corres(data_frame_a, data_frame_b):
     """
     This function gets the attribute correspondences between the attributes
-    of data_frame_a and data_frame_b. We need to get the correspondences so
-    that we can generate features based those correspondences.
+    of data_frame_a and data_frame_b.
+
+    The user may need to get the correspondences so
+    that he/she can generate features based those correspondences.
 
     Args:
         data_frame_a,data_frame_b (DataFrame): Input DataFrames for which

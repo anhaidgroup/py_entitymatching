@@ -23,11 +23,13 @@ def split_train_test(labeled_data, train_proportion=0.5,
     This function splits the input data into train and test.
 
     Specifically, this function is just a wrapper of scikit-learn's
-    train_test_split function. This function also takes care to metadata to
-    be copied properly to train and test splits.
+    train_test_split function.
+
+    This function also takes care of copying the metadata from the input
+    table to train and test splits.
 
     Args:
-        labeled_data (DataFrame): Input pandas DataFrame that needs to be
+        labeled_data (DataFrame): The input pandas DataFrame that needs to be
             split into train and test.
         train_proportion (float): A number between 0 and 1, indicating the
             proportion of tuples that should be included in the train split (

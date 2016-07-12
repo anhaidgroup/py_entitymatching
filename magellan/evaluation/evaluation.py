@@ -23,7 +23,7 @@ def eval_matches(data_frame, gold_label_attr, predicted_label_attr):
     results such as precision, recall and F1.
 
     Args:
-        data_frame (DataFrame): Input pandas DataFrame containing "gold"
+        data_frame (DataFrame): The input pandas DataFrame containing "gold"
             labels and "predicted" labels.
         gold_label_attr (string): An attribute in the input DataFrame containing
             "gold" labels.
@@ -193,9 +193,10 @@ def get_false_positives_as_df(table, eval_summary, verbose=False):
     DataFrame based on the evaluation results.
 
     Args:
-        table (DataFrame): Input table that was used for evaluation.
-        eval_summary (dictionary): Dictionary containing evaluation results,
-            typically from 'eval_matches' command.
+        table (DataFrame): The input table (pandas DataFrame) that was used for
+            evaluation.
+        eval_summary (dictionary): A Python dictionary containing evaluation
+            results, typically from 'eval_matches' command.
 
     Returns:
         A pandas DataFrame containing only the False positives from
@@ -252,9 +253,10 @@ def get_false_negatives_as_df(table, eval_summary, verbose=False):
     DataFrame based on the evaluation results.
 
     Args:
-        table (DataFrame): Input table that was used for evaluation.
-        eval_summary (dictionary): Dictionary containing evaluation results,
-            typically from 'eval_matches' command.
+        table (DataFrame): The input table (pandas DataFrame) that was used for
+            evaluation.
+        eval_summary (dictionary): A Python dictionary containing evaluation
+            results, typically from 'eval_matches' command.
 
     Returns:
         A pandas DataFrame containing only the false negatives from
@@ -313,7 +315,7 @@ def print_eval_summary(eval_summary):
 
     Args:
         eval_summary (dictionary): Dictionary containing evaluation results,
-            typically from 'eval_matches' command.
+            typically from 'eval_matches' function.
     """
     m = _get_metric(eval_summary)
     for key, value in six.iteritems(m):

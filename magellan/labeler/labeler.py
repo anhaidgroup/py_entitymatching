@@ -26,17 +26,20 @@ def label_table(table, label_column_name, verbose=False):
     properties from the input DataFrame to the output DataFrame.
 
     Args:
-        table (DataFrame): Input DataFrame to be labeled. Specifically,
+        table (DataFrame): The input DataFrame to be labeled.
+            Specifically,
             a DataFrame containing the metadata of a candidate set (such as
             key, fk_ltable, fk_rtable, ltable, rtable) in the catalog.
-        label_column_name (string): Column name to be given for the labels
+        label_column_name (string): The column name to be given for the labels
             entered by the user.
-        verbose (boolean): Flag to indicate whether more detailed information
+        verbose (boolean): A flag to indicate whether more detailed information
             about the execution steps should be printed out (default value is
             False).
 
     Returns:
-        A new DataFrame with the labels entered by the user. Further,
+        A new DataFrame with the labels entered by the user.
+
+        Further,
         this function sets the output DataFrame's properties same as input
         DataFrame.
 

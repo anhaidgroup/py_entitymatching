@@ -168,7 +168,7 @@ def debug_decisiontree_matcher(decision_tree, tuple_1, tuple_2, feature_table,
     displays the path that the feature vector takes in the decision tree.
 
     Args:
-        decision_tree (DTMatcher or Decision Tree Classifier): The input
+        decision_tree (DTMatcher): The input
             decision tree object that should be debugged.
         tuple_1,tuple_2 (Series): Input tuples that should be debugged.
         feature_table (DataFrame): Feature table containing the functions

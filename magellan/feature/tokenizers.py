@@ -24,9 +24,9 @@ def get_tokenizers_for_blocking(q=[2, 3], dlm_char=[' ']):
     blocking purposes (typically in rule-based blocking).
 
     Args:
-        q (list): List of integers (i.e q value) for which the q-gram
-        tokenizer must be generated (defaults to [2, 3]).
-        dlm_char (list): List of characters (i.e delmiter character) for
+        q (list): The list of integers (i.e q value) for which the q-gram
+            tokenizer must be generated (defaults to [2, 3]).
+        dlm_char (list): The list of characters (i.e delimiter character) for
             which the delimiter tokenizer must be generated (defaults to [' ']).
 
     Returns:
@@ -52,9 +52,9 @@ def get_tokenizers_for_matching(q=[2, 3], dlm_char=[' ']):
     matching purposes.
 
     Args:
-        q (list): List of integers (i.e q value) for which the q-gram
-        tokenizer must be generated (defaults to [2, 3]).
-        dlm_char (list): List of characters (i.e delmiter character) for
+        q (list): The list of integers (i.e q value) for which the q-gram
+            tokenizer must be generated (defaults to [2, 3]).
+        dlm_char (list): The list of characters (i.e delimiter character) for
             which the delimiter tokenizer must be generated (defaults to [' ']).
 
     Returns:
@@ -63,7 +63,6 @@ def get_tokenizers_for_matching(q=[2, 3], dlm_char=[' ']):
 
     Raises:
         AssertionError: If both q and dlm_char are set to None.
-
     """
 
     if q is None and dlm_char is None:

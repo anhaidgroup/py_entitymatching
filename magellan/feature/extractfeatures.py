@@ -26,7 +26,7 @@ def extract_feature_vecs(candset, attrs_before=None, feature_table=None,
     metadata) tuples to generate features.
 
     Args:
-        candset (DataFrame): Input pandas DataFrame for which the features
+        candset (DataFrame): The input pandas DataFrame for which the features
             vectors should be generated.
         attrs_before (list): The list of attributes from the input candset,
             that should added before the feature vectors (defaults to None).

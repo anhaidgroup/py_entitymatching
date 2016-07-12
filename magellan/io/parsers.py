@@ -13,39 +13,41 @@ logger = logging.getLogger(__name__)
 
 def read_csv_metadata(file_path, **kwargs):
     """
-    Read a CSV (comma-separated) file into a pandas DataFrame, and update the
-    catalog with the metadata.
+    Read a CSV (comma-separated values) file into a pandas DataFrame
+    and update the catalog with the metadata.
 
     Specifically, this function first reads the CSV file from the given file
-    path into a pandas DataFrame. This function uses 'read_csv' method from
+    path into a pandas DataFrame. It uses 'read_csv' method from
     pandas to read the CSV file into a pandas DataFrame. Then, it will
     update the catalog with the metadata. There are three ways to update the
     metadata: (1) using a metadata file, (2) using the key-value
-    parameters, and (3) using both metadata file and parameters.
+    parameters supplied in the function, and (3) using both metadata file and
+    key-value parameters.
 
     To update the metadata in the catalog using the metadata file,
     the function will look for a file in the same directorywith  same file name
-    but with a  specific extension. This extension  can be given by the user
-    (using metadata_extn parameter), with the default  value being
-    '.metadata'. If the metadata  file is  present, the function with read
-    and update the catalog. If  the metadata file is not present,
-    the function will issue a warning that the metadata file is not present
-    and will read the CSV file into a pandas DataFrame.
+    but with a  specific extension. This extension can be optionally given by
+    the user (with the default  value being
+    '.metadata'). If the metadata  file is  present, the function with read
+    and update the catalog appropriately. If  the metadata file is not present,
+    the function will issue a warning that the metadata file is not present.
 
     The metadata information can also be given as parameters to the function
     (see decription of arguments for more details). If given, the function
     will update the catalog with the given information.
 
     Further, the metadata can partly occur in the metdata file or given
-    as parameters. If the same metadata is given in both the metadata file
+    as parameters. The function will take a union of them and update the
+    catalog appropriately.
+    If the same metadata is given in both the metadata file
     and the function, then the metadata in the function takes precendence over
     the metadata given in the file.
 
 
     Args:
-        file_path (string): The location of the file containing the CSV file.
+        file_path (string): The CSV file path.
 
-        kwargs (dictionary): A python dictionary containing key-value
+        kwargs (dictionary): A Python dictionary containing key-value
             arguments. There are a few key-value pairs that are specific to
             read_csv_metadata and
             all the other key-value pairs are passed to pandas read_csv method.
@@ -137,22 +139,22 @@ def read_csv_metadata(file_path, **kwargs):
 
 def to_csv_metadata(data_frame, file_path, **kwargs):
     """
-    Write the DataFrame contents to a CSV file, and the DataFrame's metadata
-    (to a separate file).
+    Writes the DataFrame contents to a CSV file and the DataFrame's metadata
+    (to a separate text file).
 
-    This function writes the DataFrame contents to a CSV file as given in
-    the file path. It uses 'to_csv' method from pandas to write
+    This function writes the DataFrame contents to a CSV file in
+    the given file path. It uses 'to_csv' method from pandas to write
     the CSV file. The metadata contents are written to the same directory
     derived from the file path but with the different extension. This
     extension can be optionally given by the user (with the default value
     set to .metadata).
 
     Args:
-        data_frame (DataFrame): DataFrame that should be written to disk
-        file_path (string):  File path to which the DataFrame contents
+        data_frame (DataFrame): The DataFrame that should be written to disk.
+        file_path (string):  The file path to which the DataFrame contents
             to be written. Metadata is written with the same file name with the
             extension given by the user (defaults to .metadata).
-        kwargs (dict):  A python dictionary containing key-value pairs.
+        kwargs (dictionary):  A Python dictionary containing key-value pairs.
             There is one key-value pair that is specific to
             to_csv_metadata: metadata_extn. All the other key-value pairs
             are passed to pandas to_csv function.

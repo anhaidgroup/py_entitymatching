@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 # sample one table using random sampling.rst
 def sample_table(table, sample_size, replace=False, verbose=False):
     """
-    Sample a pandas DataFrame (for labeling purposes).
+    Samples a pandas DataFrame (for labeling purposes).
 
     This function samples a DataFrame, typically used for labeling
     purposes. This function expects the input DataFrame containing the
@@ -28,14 +28,16 @@ def sample_table(table, sample_size, replace=False, verbose=False):
     DataFrame.
 
     Args:
-        table (DataFrame): Input DataFrame to be sampled. Specifically,
+        table (DataFrame): The input DataFrame to be sampled.
+            Specifically,
             a DataFrame containing the metadata of a candidate set (such as
             key, fk_ltable, fk_rtable, ltable, rtable) in the catalog.
-        sample_size (int): Number of samples to be picked up from the input
+        sample_size (int): The number of samples to be picked up from the input
             DataFrame.
-        replace (boolean): Flag to indicate whether sampling.rst should be done
+        replace (boolean): A flag to indicate whether sampling.rst should be
+        done
             with replacement or not (default value is False).
-        verbose (boolean): Flag to indicate whether more detailed information
+        verbose (boolean): A flag to indicate whether more detailed information
             about the execution steps should be printed out (default value is
             False).
 

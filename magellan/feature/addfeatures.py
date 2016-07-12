@@ -15,19 +15,17 @@ def get_feature_fn(feature_string, tokenizers, similarity_functions):
 
     Specifically, this function uses the feature string, parses it and
     compiles it into an function using the given tokenizers and similarity
-    functions. This
-    compiled
-    function will take in two tuples and return the feature value (typically a
-    number).
+    functions. This compiled function will take in two tuples and return a
+    feature value (typically a number).
 
     Args:
-        feature_string (string): Feature expression to be converted into a
-            function.
-        tokenizers (dictionary): A python dictionary containing tokenizers.
+        feature_string (string): A feature expression
+            to be converted into a function.
+        tokenizers (dictionary): A Python dictionary containing tokenizers.
             Specifically, the dictionary contains tokenizer names as keys and
             tokenizer functions as values. The tokenizer function typically
             takes in a string and returns a list of tokens.
-        similarity_functions (dictionary): A python dictionary containing
+        similarity_functions (dictionary): A Python dictionary containing
             similarity functions. Specifically, the dictionary contains
             similarity function names as keys and similarity functions as
             values. The similarity function typically
@@ -213,8 +211,8 @@ def add_feature(feature_table, feature_name, feature_dict):
 
     Args:
         feature_table (DataFrame): A DataFrame containing features.
-        feature_names (string): Name that should be given to the feature.
-        feature_dict (dictionary): Python dictionary, that is typically
+        feature_names (string): The name that should be given to the feature.
+        feature_dict (dictionary): A Python dictionary, that is typically
             returned by executing get_feature_fn.
 
     Returns:
@@ -301,10 +299,10 @@ def add_blackbox_feature(feature_table, feature_name, feature_function):
     Adds a black box feature to the feature table.
 
     Args:
-        feature_table (DataFrame): Input DataFrame to which the feature must
-            be added.
-        feature_name (string): Name that should be given to the feature.
-        feature_function (Python function): Python function for the black box
+        feature_table (DataFrame): The input DataFrame (typically a feature
+            table) to which the feature must be added.
+        feature_name (string): The name that should be given to the feature.
+        feature_function (Python function): A Python function for the black box
             feature.
 
     Returns:

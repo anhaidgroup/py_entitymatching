@@ -60,48 +60,48 @@ class OverlapBlocker(Blocker):
         threshold.
 
         Args:
-            ltable (DataFrame): left input table.
+            ltable (DataFrame): The left input table.
 
-            rtable (DataFrame): right input table.
+            rtable (DataFrame): The right input table.
 
-            l_overlap_attr (str): overlap attribute in left table.
+            l_overlap_attr (str): The overlap attribute in left table.
 
-            r_overlap_attr (str): overlap attribute in right table. 
+            r_overlap_attr (str): The overlap attribute in right table.
 
-            rem_stop_words (boolean): flag to indicate whether stop words
+            rem_stop_words (boolean): A flag to indicate whether stop words
                                       (e.g., a, an, the) should be removed
                                       from the token sets of the overlap
                                       attribute values (defaults to False).
 
-            q_val (int): value of q to use if the overlap attributes values
+            q_val (int): The value of q to use if the overlap attributes values
                          are to be tokenized as qgrams (defaults to None).
  
-            word_level (boolean): flag to indicate whether the overlap
+            word_level (boolean): A flag to indicate whether the overlap
                                   attributes should be tokenized as words
                                   (i.e, using whitespace as delimiter)
                                   (defaults to True).
 
-            overlap_size (int): minimum number of tokens that must overlap
+            overlap_size (int): The minimum number of tokens that must overlap
                                 (defaults to 1).
 
-            l_output_attrs (list): list of attribute names from the left
+            l_output_attrs (list): A list of attribute names from the left
                                    table to be included in the
                                    output candidate set (defaults to None).
 
-            r_output_attrs (list): list of attribute names from the right
+            r_output_attrs (list): A list of attribute names from the right
                                    table to be included in the
                                    output candidate set (defaults to None).
 
-            l_output_prefix (str): prefix to be used for the attribute names
+            l_output_prefix (str): The prefix to be used for the attribute names
                                    coming from the left table in the output
                                    candidate set (defaults to 'ltable\_').
 
-            r_output_prefix (str): prefix to be used for the attribute names
+            r_output_prefix (str): The prefix to be used for the attribute names
                                    coming from the right table in the output
                                    candidate set (defaults to 'rtable\_').
 
-            allow_missing (boolean): flag to indicate whether tuple pairs with 
-                                     missing value in at least one of the
+            allow_missing (boolean): A flag to indicate whether tuple pairs
+                                     with missing value in at least one of the
                                      blocking attributes should be included in
                                      the output candidate set (defaults to
                                      False). If this flag is set to True, a
@@ -109,23 +109,20 @@ class OverlapBlocker(Blocker):
                                      blocking attribute will be matched with
                                      every tuple in rtable and vice versa.
 
-            verbose (boolean): flag to indicate whether logging should be done
+            verbose (boolean): A flag to indicate whether logging should be done
                                (defaults to False).
 
-            show_progress (boolean): flag to indicate whether progress should
+            show_progress (boolean): A flag to indicate whether progress should
                                      be displayed to the user (defaults to True).
 
-            n_jobs (int): number of parallel jobs to be used for computation
-                          (defaults to 1).
-                          If -1 all CPUs are used. If 0 or 1, no parallel computation
-                          is used at all, which is useful for debugging.
-                          For n_jobs below -1, (n_cpus + 1 + n_jobs) are used 
-                          (where n_cpus are the total number of CPUs in the
-                           machine).
-                          Thus, for n_jobs = -2, all CPUs but one are used.
-                          If (n_cpus + 1 + n_jobs) is less than 1, then no
-                          parallel computation is used (i.e., equivalent to the
-                          default).
+            n_jobs (int): The number of parallel jobs to be used for computation
+                (defaults to 1). If -1 all CPUs are used. If 0 or 1,
+                no parallel computation is used at all, which is useful for
+                debugging. For n_jobs below -1, (n_cpus + 1 + n_jobs) are
+                used (where n_cpus are the total number of CPUs in the
+                machine).Thus, for n_jobs = -2, all CPUs but one are used.
+                If (n_cpus + 1 + n_jobs) is less than 1, then no parallel
+                computation is used (i.e., equivalent to the default).
 
         Returns:
             A candidate set of tuple pairs that survived blocking (DataFrame).
@@ -237,30 +234,30 @@ class OverlapBlocker(Blocker):
         is above a certain threshold.
 
         Args:
-            candset (DataFrame): input candidate set of tuple pairs.
+            candset (DataFrame): The input candidate set of tuple pairs.
 
-            l_overlap_attr (str): overlap attribute in left table.
+            l_overlap_attr (str): The overlap attribute in left table.
 
-            r_overlap_attr (str): overlap attribute in right table. 
+            r_overlap_attr (str): The overlap attribute in right table.
 
-            rem_stop_words (boolean): flag to indicate whether stop words
+            rem_stop_words (boolean): A flag to indicate whether stop words
                                       (e.g., a, an, the) should be removed
                                       from the token sets of the overlap
                                       attribute values (defaults to False).
 
-            q_val (int): value of q to use if the overlap attributes values
+            q_val (int): The value of q to use if the overlap attributes values
                          are to be tokenized as qgrams (defaults to None).
  
-            word_level (boolean): flag to indicate whether the overlap
+            word_level (boolean): A flag to indicate whether the overlap
                                   attributes should be tokenized as words
                                   (i.e, using whitespace as delimiter)
                                   (defaults to True).
 
-            overlap_size (int): minimum number of tokens that must overlap
+            overlap_size (int): The minimum number of tokens that must overlap
                                 (defaults to 1).
 
-            allow_missing (boolean): flag to indicate whether tuple pairs with 
-                                     missing value in at least one of the
+            allow_missing (boolean): A flag to indicate whether tuple pairs
+                                     with missing value in at least one of the
                                      blocking attributes should be included in
                                      the output candidate set (defaults to
                                      False). If this flag is set to True, a
@@ -268,23 +265,20 @@ class OverlapBlocker(Blocker):
                                      blocking attribute will be retained in the
                                      output candidate set.
 
-            verbose (boolean): flag to indicate whether logging should be done
+            verbose (boolean): A flag to indicate whether logging should be done
                                (defaults to False).
 
-            show_progress (boolean): flag to indicate whether progress should
+            show_progress (boolean): A flag to indicate whether progress should
                                      be displayed to the user (defaults to True).
 
-            n_jobs (int): number of parallel jobs to be used for computation
-                          (defaults to 1).
-                          If -1 all CPUs are used. If 0 or 1, no parallel computation
-                          is used at all, which is useful for debugging.
-                          For n_jobs below -1, (n_cpus + 1 + n_jobs) are used
-                          (where n_cpus is the total number of CPUs in the
-                           machine).
-                          Thus, for n_jobs = -2, all CPUS but one are used.
-                          If (n_cpus + 1 + n_jobs) is less than 1, then no
-                          parallel computation is used (i.e., equivalent to the
-                          default).
+            n_jobs (int): The number of parallel jobs to be used for computation
+                (defaults to 1). If -1 all CPUs are used. If 0 or 1,
+                no parallel computation is used at all, which is useful for
+                debugging. For n_jobs below -1, (n_cpus + 1 + n_jobs) are
+                used (where n_cpus are the total number of CPUs in the
+                machine).Thus, for n_jobs = -2, all CPUs but one are used.
+                If (n_cpus + 1 + n_jobs) is less than 1, then no parallel
+                computation is used (i.e., equivalent to the default).
 
         Returns:
             A candidate set of tuple pairs that survived blocking (DataFrame).
@@ -376,32 +370,32 @@ class OverlapBlocker(Blocker):
            values.
         
         Args:
-            ltuple (Series): input left tuple.
+            ltuple (Series): The input left tuple.
 
-            rtuple (Series): input right tuple.
+            rtuple (Series): The input right tuple.
             
-            l_overlap_attr (str): overlap attribute in left tuple.
+            l_overlap_attr (str): The overlap attribute in left tuple.
 
-            r_overlap_attr (str): overlap attribute in right tuple.
+            r_overlap_attr (str): The overlap attribute in right tuple.
 
-            rem_stop_words (boolean): flag to indicate whether stop words
+            rem_stop_words (boolean): A flag to indicate whether stop words
                                       (e.g., a, an, the) should be removed
                                       from the token sets of the overlap
                                       attribute values (defaults to False).
 
-            q_val (int): value of q to use if the overlap attributes values
+            q_val (int): A value of q to use if the overlap attributes values
                          are to be tokenized as qgrams (defaults to None).
  
-            word_level (boolean): flag to indicate whether the overlap
+            word_level (boolean): A flag to indicate whether the overlap
                                   attributes should be tokenized as words
                                   (i.e, using whitespace as delimiter)
                                   (defaults to True).
 
-            overlap_size (int): minimum number of tokens that must overlap
+            overlap_size (int): The minimum number of tokens that must overlap
                                 (defaults to 1).
 
-            allow_missing (boolean): flag to indicate whether a tuple pair with 
-                                     missing value in at least one of the
+            allow_missing (boolean): A flag to indicate whether a tuple pair
+                                     with missing value in at least one of the
                                      blocking attributes should be blocked
                                      (defaults to False). If this flag is set
                                      to True, the pair will be kept if either

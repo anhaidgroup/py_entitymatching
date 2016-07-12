@@ -22,10 +22,11 @@ def debug_randomforest_matcher(random_forest, tuple_1, tuple_2,
 
     Specifically, this function takes in two tuples, gets the feature vector
     using the feature table and finally passes it to the random forest  and
-    displays the path that the feature vector takes in the decision tree.
+    displays the path that the feature vector takes in each of the decision
+    trees that make up the random forest matcher.
 
     Args:
-        random_forest (RFMatcher or RandomForestClassifier): The input
+        random_forest (RFMatcher): The input
             random forest object that should be debugged.
         tuple_1,tuple_2 (Series): Input tuples that should be debugged.
         feature_table (DataFrame): Feature table containing the functions

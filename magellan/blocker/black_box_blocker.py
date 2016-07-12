@@ -44,43 +44,40 @@ class BlackBoxBlocker(Blocker):
         dropped.
 
         Args:
-            ltable (DataFrame): left input table.
+            ltable (DataFrame): The left input table.
 
-            rtable (DataFrame): right input table.
+            rtable (DataFrame): The right input table.
 
-            l_output_attrs (list): list of attribute names from the left
+            l_output_attrs (list): A list of attribute names from the left
                                    table to be included in the
                                    output candidate set (defaults to None).
 
-            r_output_attrs (list): list of attribute names from the right
+            r_output_attrs (list): A list of attribute names from the right
                                    table to be included in the
                                    output candidate set (defaults to None).
 
-            l_output_prefix (str): prefix to be used for the attribute names
+            l_output_prefix (str): The prefix to be used for the attribute names
                                    coming from the left table in the output
                                    candidate set (defaults to 'ltable\_').
 
-            r_output_prefix (str): prefix to be used for the attribute names
+            r_output_prefix (str): The prefix to be used for the attribute names
                                    coming from the right table in the output
                                    candidate set (defaults to 'rtable\_').
 
-            verbose (boolean): flag to indicate whether logging should be done
+            verbose (boolean): A flag to indicate whether logging should be done
                                (defaults to False).
 
-            show_progress (boolean): flag to indicate whether progress should
+            show_progress (boolean): A flag to indicate whether progress should
                                      be displayed to the user (defaults to True).
 
-            n_jobs (int): number of parallel jobs to be used for computation
-                          (defaults to 1).
-                          If -1 all CPUs are used. If 0 or 1, no parallel computation
-                          is used at all, which is useful for debugging.
-                          For n_jobs below -1, (n_cpus + 1 + n_jobs) are used
-                          (where n_cpus is the total number of CPUs in the
-                           machine).
-                          Thus, for n_jobs = -2, all CPUs but one are used.
-                          If (n_cpus + 1 + n_jobs) is less than 1, then no
-                          parallel computation is used (i.e., equivalent to the
-                          default).
+            n_jobs (int): The number of parallel jobs to be used for computation
+                (defaults to 1). If -1 all CPUs are used. If 0 or 1,
+                no parallel computation is used at all, which is useful for
+                debugging. For n_jobs below -1, (n_cpus + 1 + n_jobs) are
+                used (where n_cpus are the total number of CPUs in the
+                machine).Thus, for n_jobs = -2, all CPUs but one are used.
+                If (n_cpus + 1 + n_jobs) is less than 1, then no parallel
+                computation is used (i.e., equivalent to the default).
 
         Returns:
             A candidate set of tuple pairs that survived blocking (DataFrame).
@@ -178,25 +175,22 @@ class BlackBoxBlocker(Blocker):
         otherwise the tuple pair is dropped.
 
         Args:
-            candset (DataFrame): input candidate set of tuple pairs.
+            candset (DataFrame): The input candidate set of tuple pairs.
 
-            verbose (boolean): flag to indicate whether logging should be done
+            verbose (boolean): A flag to indicate whether logging should be done
                                (defaults to False).
 
-            show_progress (boolean): flag to indicate whether progress should
+            show_progress (boolean): A flag to indicate whether progress should
                                      be displayed to the user (defaults to True).
 
-            n_jobs (int): number of parallel jobs to be used for computation
-                          (defaults to 1).
-                          If -1 all CPUs are used. If 0 or 1, no parallel computation
-                          is used at all, which is useful for debugging.
-                          For n_jobs below -1, (n_cpus + 1 + n_jobs) are used
-                          (where n_cpus is the total number of CPUs in the
-                           machine).
-                          Thus, for n_jobs = -2, all CPUs but one are used.
-                          If (n_cpus + 1 + n_jobs) is less than 1, then no
-                          parallel computation is used (i.e., equivalent to the
-                          default).
+            n_jobs (int): The number of parallel jobs to be used for computation
+                (defaults to 1). If -1 all CPUs are used. If 0 or 1,
+                no parallel computation is used at all, which is useful for
+                debugging. For n_jobs below -1, (n_cpus + 1 + n_jobs) are
+                used (where n_cpus are the total number of CPUs in the
+                machine).Thus, for n_jobs = -2, all CPUs but one are used.
+                If (n_cpus + 1 + n_jobs) is less than 1, then no parallel
+                computation is used (i.e., equivalent to the default).
 
         Returns:
             A candidate set of tuple pairs that survived blocking (DataFrame).

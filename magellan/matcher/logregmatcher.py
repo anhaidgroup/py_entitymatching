@@ -10,9 +10,12 @@ class LogRegMatcher(MLMatcher):
     Logistic Regression matcher.
 
     Args:
-        *args,**kwargs: Arguments to scikit-learn's Logistic Regression
-        classifier.
-        name (str): Name of this matcher (defaults to None).
+        *args,**kwargs: THe Arguments to scikit-learn's Logistic Regression
+            classifier.
+        name (str): The name of this matcher (defaults to None). If the
+            matcher name is None, the class automatically generates a string
+            and assigns it as the name.
+
 
     """
     def __init__(self, *args, **kwargs):

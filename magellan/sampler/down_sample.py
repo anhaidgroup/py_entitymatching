@@ -157,9 +157,9 @@ def down_sample(table_a, table_b, size, y_param):
     as representative of A and B as possible.
 
     Args:
-        table_a, table_b (DataFrame): Input tables A and B.
+        table_a, table_b (DataFrame): The input tables A and B.
         size (int): The size of table B that should be down sampled to.
-        y_param (int): Parameter to control the down sample size of table A.
+        y_param (int): The parameter to control the down sample size of table A.
             Specifically, the down sampled size of table A should be close to
             size * y_param.
 

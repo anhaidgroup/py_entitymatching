@@ -27,13 +27,13 @@ def get_features(ltable, rtable, l_attr_types, r_attr_types,
     features for this correspondence.
 
     Args:
-        ltable,rtable (DataFrame): Input pandas DataFrames for which the
+        ltable,rtable (DataFrame): The pandas DataFrames for which the
             features must be generated.
-        l_attr_types,r_attr_types (dictionary): Attribute types for the input
-            DataFrames.Typically this is generated using the
+        l_attr_types,r_attr_types (dictionary): The attribute types for the
+            input DataFrames.Typically this is generated using the
             function get_attr_types.
-        attr_corres (dictionary): Attribute correspondences between the input
-            DataFrames.
+        attr_corres (dictionary): The attribute correspondences between the
+            input DataFrames.
         tok_funcs (dictionary): A Python dictionary containing tokenizer
             functions.
         sim_funcs (dictionary): A Python dictionary containing similarity
@@ -163,10 +163,10 @@ def get_features(ltable, rtable, l_attr_types, r_attr_types,
 def get_features_for_blocking(ltable, rtable):
     """
     This function automatically generates features that can be used for
-    rule-based blocking purposes.
+     blocking purposes.
 
     Args:
-        ltable,rtable (DataFrame): Input pandas DataFrames for which the
+        ltable,rtable (DataFrame): The pandas DataFrames for which the
             features to be generated.
 
     Returns:
@@ -252,7 +252,7 @@ def get_features_for_matching(ltable, rtable):
     matching purposes.
 
     Args:
-        ltable,rtable (DataFrame): Input pandas DataFrames for which the
+        ltable,rtable (DataFrame): The pandas DataFrames for which the
             features to be generated.
 
     Returns:
