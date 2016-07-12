@@ -123,10 +123,10 @@ def load_object(file_path):
 # noinspection PyProtectedMember
 def save_table(data_frame, file_path, metadata_ext='.pklmetadata'):
     """
-    Save a DataFrame to disk along with its metadata.
+    Save a DataFrame to disk along with its metadata in a pickle format.
 
     This function saves a  DataFrame to disk along with its metadata from
-    tha catalog.
+    the catalog.
 
     Specifically, this function saves the DataFrame in the given
     file path, and saves the metadata in the same directory (as the
@@ -151,7 +151,7 @@ def save_table(data_frame, file_path, metadata_ext='.pklmetadata'):
     Note:
         This function is bit different from to_csv_metadata, where the
         DataFrame is stored in a CSV file format. The CSV file format can be
-        viewed with a text editor. But save_table is stored in a
+        viewed using a text editor. But save_table is stored in a
         special format, which cannot be viewed with a text editor.
         The reason we have save_table is, for larger DataFrames it is
         efficient to pickle the DataFrame to disk than writing the DataFrame
@@ -254,7 +254,7 @@ def save_table(data_frame, file_path, metadata_ext='.pklmetadata'):
 # noinspection PyProtectedMember
 def load_table(file_path, metadata_ext='.pklmetadata'):
     """
-    Loads a DataFrame from a file along with its metadata.
+    Loads a pickled DataFrame from a file along with its metadata.
 
     This function loads a DataFrame from a file stored in a pickle format.
 

@@ -28,8 +28,8 @@ logger = logging.getLogger(__name__)
 
 
 class OverlapBlocker(Blocker):
-    """Blocks two tables, a candset, or a pair of tuples based on the overlap
-       of token sets of attribute values.
+    """
+    Blocks  based on the overlap of token sets of attribute values.
     """
 
     def __init__(self):

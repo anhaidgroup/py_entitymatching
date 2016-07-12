@@ -15,8 +15,8 @@ logger = logging.getLogger(__name__)
 
 def get_property(data_frame, property_name):
     """
-    Gets a property (with the given property name) for a pandas DataFrame from
-    the Catalog.
+    Gets the value of a property (with the given property name) for a pandas
+    DataFrame from the catalog.
 
     Args:
         data_frame (DataFrame): The DataFrame for which the property should be
@@ -72,8 +72,8 @@ def get_property(data_frame, property_name):
 
 def set_property(data_frame, property_name, property_value):
     """
-    Sets a property (with the given property name) for a pandas DataFrame in
-    the Catalog.
+    Sets the value of a property (with the given property name) for a pandas
+    DataFrame in the catalog.
 
     Args:
         data_frame (DataFrame): The DataFrame for which the property must  be
@@ -585,7 +585,7 @@ def copy_properties(source_data_frame, target_data_frame, replace=True):
 # key related methods
 def get_key(data_frame):
     """
-    Gets the 'key' property for a DataFrame from the catalog.
+    Gets the value of 'key' property for a DataFrame from the catalog.
 
     Args:
         data_frame (DataFrame): The DataFrame for which the key must be
@@ -603,8 +603,8 @@ def get_key(data_frame):
 
 def set_key(data_frame, key_attribute):
     """
-    Sets the 'key' property for a DataFrame in the catalog with the given
-    attribute (i.e column name).
+    Sets the value of 'key' property for a DataFrame in the catalog with the
+    given attribute (i.e column name).
 
     Specifically, this function set the the key attribute for the DataFrame
     if the given attribute satisfies the following two properties:
@@ -672,7 +672,8 @@ def set_key(data_frame, key_attribute):
 
 def get_fk_ltable(data_frame):
     """
-    Gets the foreign key to left table for a DataFrame from the catalog.
+    Gets the foreign key to left table for a DataFrame from the
+    catalog.
 
     Specifically this function is a sugar function that will get the foreign
     key to left table using underlying get_property function. This function

@@ -146,7 +146,7 @@ def _probe_index(table_b, y_param, s_tbl_sz, s_inv_index):
 # down sample of two tables : based on sanjib's index based solution
 def down_sample(table_a, table_b, size, y_param):
     """
-    This function down samples 2 DataFrames A and B.
+    This function down samples 2 tables A and B.
 
     Specifically, first it randomly selects size tuples
     from the table B to be table B'. Next, it builds an inverted index (

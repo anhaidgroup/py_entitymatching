@@ -24,8 +24,8 @@ global_rb = None
 
 
 class RuleBasedBlocker(Blocker):
-    """Blocks two tables, a candset, or a pair of tuples based on a sequence
-       of blocking rules supplied by the user.
+    """
+    Blocks  based on a sequence of blocking rules supplied by the user.
     """
 
     def __init__(self, *args, **kwargs):
@@ -134,7 +134,8 @@ class RuleBasedBlocker(Blocker):
                      r_output_attrs=None,
                      l_output_prefix='ltable_', r_output_prefix='rtable_',
                      verbose=False, show_progress=True, n_jobs=1):
-        """Blocks two tables based on the sequence of rules supplied by the user.
+        """
+        Blocks two tables based on the sequence of rules supplied by the user.
 
         Finds tuple pairs from left and right tables that survive the sequence
         of blocking rules. A tuple pair survives the sequence of blocking rules
@@ -364,8 +365,9 @@ class RuleBasedBlocker(Blocker):
 
     def block_candset(self, candset, verbose=False, show_progress=True,
                       n_jobs=1):
-        """Blocks an input candidate set of tuple pairs based on a sequence of
-           blocking rules supplied by the user.
+        """
+        Blocks an input candidate set of tuple pairs based on a sequence of
+        blocking rules supplied by the user.
 
         Finds tuple pairs from an input candidate set of tuple pairs that
         survive the sequence of blocking rules. A tuple pair survives the
@@ -443,8 +445,9 @@ class RuleBasedBlocker(Blocker):
         return c_df
 
     def block_tuples(self, ltuple, rtuple):
-        """Blocks a tuple pair based on a sequence of blocking rules supplied
-           by the user.
+        """
+        Blocks a tuple pair based on a sequence of blocking rules supplied
+        by the user.
 
         Args:
             ltuple (Series): The input left tuple.

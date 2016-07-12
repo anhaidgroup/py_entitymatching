@@ -60,7 +60,7 @@ def get_sim_funs_for_blocking():
 def get_sim_funs_for_matching():
     """
     This function returns the similarity functions that can be used for
-    blocking purposes.
+    matching purposes.
 
     Returns:
 

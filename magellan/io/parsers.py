@@ -25,9 +25,9 @@ def read_csv_metadata(file_path, **kwargs):
     key-value parameters.
 
     To update the metadata in the catalog using the metadata file,
-    the function will look for a file in the same directorywith  same file name
+    the function will look for a file in the same directory with  same file name
     but with a  specific extension. This extension can be optionally given by
-    the user (with the default  value being
+    the user (with the default value set to
     '.metadata'). If the metadata  file is  present, the function with read
     and update the catalog appropriately. If  the metadata file is not present,
     the function will issue a warning that the metadata file is not present.
@@ -36,7 +36,7 @@ def read_csv_metadata(file_path, **kwargs):
     (see decription of arguments for more details). If given, the function
     will update the catalog with the given information.
 
-    Further, the metadata can partly occur in the metdata file or given
+    Further, the metadata can partly occur in the metdata file and given
     as parameters. The function will take a union of them and update the
     catalog appropriately.
     If the same metadata is given in both the metadata file

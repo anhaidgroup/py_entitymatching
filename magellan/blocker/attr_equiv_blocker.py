@@ -14,7 +14,8 @@ logger = logging.getLogger(__name__)
 
 
 class AttrEquivalenceBlocker(Blocker):
-    """Blocks two tables, a candset, or a pair of tuples based on attribute equivalence.
+    """
+    Blocks based on the equivalence of attribute values.
     """
 
     def block_tables(self, ltable, rtable, l_block_attr, r_block_attr,

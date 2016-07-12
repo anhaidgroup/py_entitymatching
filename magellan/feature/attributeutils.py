@@ -60,16 +60,16 @@ def get_attr_types(data_frame):
     return attribute_type_dict
 
 
-def get_attr_corres(data_frame_a, data_frame_b):
+def get_attr_corres(table_a, table_b):
     """
     This function gets the attribute correspondences between the attributes
-    of data_frame_a and data_frame_b.
+    of table_a and table_b.
 
     The user may need to get the correspondences so
     that he/she can generate features based those correspondences.
 
     Args:
-        data_frame_a,data_frame_b (DataFrame): Input DataFrames for which
+        table_a,table_b (DataFrame): Input DataFrames for which
             the attribute correspondences must be obtained.
 
     Returns:
@@ -79,51 +79,51 @@ def get_attr_corres(data_frame_a, data_frame_b):
         Specifically, this returns a dictionary with three keys:
 
         corres: points to the list correspondences as tuples. Each
-        correspondence is a tuple with two attributes: one from data_frame_a
-        and the other from data_frame_b.
+        correspondence is a tuple with two attributes: one from table_a
+        and the other from table_b.
 
-        ltable: points to data_frame_a.
+        ltable: points to table_a.
 
-        rtable: points to data_frame_b.
+        rtable: points to table_b.
 
         Currently, 'corres' contains only pairs of attributes with exact
-        names in data_frame_a and data_frame_b.
+        names in table_a and table_b.
 
     Raises:
-        AssertionError: If the input object (data_frame_a) is not of type
+        AssertionError: If the input object (table_a) is not of type
             pandas DataFrame.
-        AssertionError: If the input object (data_frame_b) is not of type
+        AssertionError: If the input object (table_b) is not of type
             pandas DataFrame.
     """
     # Validate input parameters
-    # # We expect the input object (data_frame_a) to be of type pandas
+    # # We expect the input object (table_a) to be of type pandas
     # DataFrame
-    if not isinstance(data_frame_a, pd.DataFrame):
-        logger.error('Input data_frame_a is not of type pandas DataFrame')
-        raise AssertionError('Input data_frame_b is not of type pandas '
+    if not isinstance(table_a, pd.DataFrame):
+        logger.error('Input table_a is not of type pandas DataFrame')
+        raise AssertionError('Input table_b is not of type pandas '
                              'DataFrame')
-    # # We expect the input object (data_frame_b) to be of type pandas
+    # # We expect the input object (table_b) to be of type pandas
     # DataFrame
-    if not isinstance(data_frame_b, pd.DataFrame):
-        logger.error('Input data_frame_b is not of type pandas DataFrame')
-        raise AssertionError('Input data_frame_b is not of type pandas '
+    if not isinstance(table_b, pd.DataFrame):
+        logger.error('Input table_b is not of type pandas DataFrame')
+        raise AssertionError('Input table_b is not of type pandas '
                              'DataFrame')
 
     # Initialize the correspondence list
     correspondence_list = []
-    # Check for each column in data_frame_a, if column exists in data_frame_b,
+    # Check for each column in table_a, if column exists in table_b,
     # If so, add it to the correspondence list.
     # Note: This may not be the fastest way to implement this. We could
     # refactor this later.
-    for column in data_frame_a.columns:
-        if column in data_frame_b.columns:
+    for column in table_a.columns:
+        if column in table_b.columns:
             correspondence_list.append((column, column))
     # Initialize a correspondence dictionary.
     correspondence_dict = dict()
     # Fill the corres, ltable and rtable.
     correspondence_dict['corres'] = correspondence_list
-    correspondence_dict['ltable'] = data_frame_a
-    correspondence_dict['rtable'] = data_frame_b
+    correspondence_dict['ltable'] = table_a
+    correspondence_dict['rtable'] = table_b
     # Finally, return the correspondence dictionary
     return correspondence_dict
 

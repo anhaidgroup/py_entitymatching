@@ -14,8 +14,8 @@ from magellan.utils.catalog_helper import log_info, get_name_for_key, add_key_co
 logger = logging.getLogger(__name__)
 
 class BlackBoxBlocker(Blocker):
-    """Blocks two tables, a candset, or a pair of tuples based on a black box
-       function specified by the user.
+    """
+    Blocks based on a black box function specified by the user.
     """
 
     def __init__(self, *args, **kwargs):
@@ -35,8 +35,9 @@ class BlackBoxBlocker(Blocker):
                      l_output_prefix='ltable_', r_output_prefix='rtable_',
                      verbose=False, show_progress=True, n_jobs=1):
         
-        """Blocks two tables based on a black box blocking function specified
-           by the user.
+        """
+        Blocks two tables based on a black box blocking function specified
+        by the user.
 
         Finds tuple pairs from left and right tables that survive the black
         box function. A tuple pair survives the black box blocking function if
@@ -166,8 +167,9 @@ class BlackBoxBlocker(Blocker):
 
     def block_candset(self, candset, verbose=True, show_progress=True, n_jobs=1):
 
-        """Blocks an input candidate set of tuple pairs based on a black box
-           blocking function specified by the user.
+        """
+        Blocks an input candidate set of tuple pairs based on a black box
+        blocking function specified by the user.
 
         Finds tuple pairs from an input candidate set of tuple pairs that
         survive the black box function. A tuple pair survives the black box
@@ -254,8 +256,9 @@ class BlackBoxBlocker(Blocker):
         return c_df
 
     def block_tuples(self, ltuple, rtuple):
-        """Blocks a tuple pair based on a black box blocking function specified
-           by the user.
+        """
+        Blocks a tuple pair based on a black box blocking function specified
+        by the user.
 
         Takes a tuple pair as input, applies the black box blocking function to
         it, and returns True (if the intention is to drop the pair) or False

@@ -23,7 +23,7 @@ def extract_feature_vecs(candset, attrs_before=None, feature_table=None,
 
     Specifically, this function uses the feature
     table, and the ltable and rtable (that is present in the candset's
-    metadata) tuples to generate features.
+    metadata) tuples to extract feature vectors.
 
     Args:
         candset (DataFrame): The input pandas DataFrame for which the features
