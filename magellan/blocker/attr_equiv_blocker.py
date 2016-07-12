@@ -20,7 +20,7 @@ class AttrEquivalenceBlocker(Blocker):
     def block_tables(self, ltable, rtable, l_block_attr, r_block_attr,
                      l_output_attrs=None, r_output_attrs=None,
                      l_output_prefix='ltable_', r_output_prefix='rtable_',
-                     verbose=False, show_progress=True, n_jobs=1):
+                     allow_missing=False, verbose=False, n_jobs=1):
         """Blocks two tables based on attribute equivalence.
 
         Finds tuple pairs from left and right tables such that the value of
@@ -53,6 +53,15 @@ class AttrEquivalenceBlocker(Blocker):
                                    coming from the right table in the output
                                    candidate set (defaults to 'rtable\_').
 
+            allow_missing (boolean): flag to indicate whether tuple pairs with 
+                                     missing value in at least one of the
+                                     blocking attributes should be included in
+                                     the output candidate set (defaults to
+                                     False). If this flag is set to True, a
+                                     tuple in ltable with missing value in the
+                                     blocking attribute will be matched with
+                                     every tuple in rtable and vice versa.
+
             verbose (boolean): flag to indicate whether logging should be done
                                (defaults to False).
 
@@ -63,10 +72,13 @@ class AttrEquivalenceBlocker(Blocker):
                           (defaults to 1).
                           If -1 all CPUs are used. If 0 or 1, no parallel computation
                           is used at all, which is useful for debugging.
-                          For n_jobs below -1, (n_cpus + 1 + n_jobs) are used.
-                          Thus, for n_jobs = -2, all CPUS but one are used.
-                          If (n_cpus + 1 + n_jobs) is less than 1, then n_jobs is
-                          set to 1, which means no parallel computation at all.
+                          For n_jobs below -1, (n_cpus + 1 + n_jobs) are used
+                          (where n_cpus are the total number of CPUs in the
+                           machine).
+                          Thus, for n_jobs = -2, all CPUs but one are used.
+                          If (n_cpus + 1 + n_jobs) is less than 1, then no
+                          parallel computation is used (i.e., equivalent to the
+                          default).
 
         Returns:
             A candidate set of tuple pairs that survived blocking (DataFrame).
@@ -75,15 +87,13 @@ class AttrEquivalenceBlocker(Blocker):
         # validate data types of input parameters
         self.validate_types_params_tables(ltable, rtable,
 			    l_output_attrs, r_output_attrs, l_output_prefix,
-			    r_output_prefix, verbose, show_progress, n_jobs)
-
-        # initialize progress bar
-        if show_progress:
-            # 1. validate, 2. remove NaNs, 3. project, 4: merge, 5: update catalog
-            prog_bar = pyprind.ProgBar(5)
+			    r_output_prefix, verbose, n_jobs)
 
         # validate data types of input blocking attributes
         self.validate_types_block_attrs(l_block_attr, r_block_attr)
+
+        # validate data type of allow_missing
+        self.validate_allow_missing(allow_missing)
  
         # validate input parameters
         self.validate_block_attrs(ltable, rtable, l_block_attr, r_block_attr)
@@ -101,38 +111,28 @@ class AttrEquivalenceBlocker(Blocker):
         cm._validate_metadata_for_table(ltable, l_key, 'ltable', logger, verbose)
         cm._validate_metadata_for_table(rtable, r_key, 'rtable', logger, verbose)
 
-        # # update the progress bar
-        if show_progress:
-            prog_bar.update() # indicating completion of validation
-   
         # do blocking
 
-        # # remove nans: should be modified based on missing data policy
-        l_df, r_df = rem_nan(ltable, l_block_attr), rem_nan(rtable, r_block_attr)
-
-        # # update the progress bar to indicate completion of NaN removal
-        if show_progress:
-            prog_bar.update()
-
-        # # do projection before merge
+        # # do projection of required attributes from the tables
         l_proj_attrs = self.get_attrs_to_project(l_key, l_block_attr, l_output_attrs)
-        l_df = l_df[l_proj_attrs]
+        ltable_proj = ltable[l_proj_attrs]
         r_proj_attrs = self.get_attrs_to_project(r_key, r_block_attr, r_output_attrs)
-        r_df = r_df[r_proj_attrs]
-       
-        # # update the progress bar to indicate completion of projection of tables
-        if show_progress:
-            prog_bar.update()
+        rtable_proj = rtable[r_proj_attrs]
+
+        # # remove records with nans in the blocking attribute
+        l_df = rem_nan(ltable_proj, l_block_attr)
+        r_df = rem_nan(rtable_proj, r_block_attr)
 
         # # determine number of processes to launch parallely
         n_procs = self.get_num_procs(n_jobs, len(l_df) * len(r_df)) 
-        candset = None
+
         if n_procs <= 1:
             # single process
             candset = _block_tables_split(l_df, r_df, l_key, r_key,
 					  l_block_attr, r_block_attr,
 					  l_output_attrs, r_output_attrs,
-					  l_output_prefix, r_output_prefix)
+					  l_output_prefix, r_output_prefix,
+                                          allow_missing)
         else:
             # multiprocessing
             m, n = self.get_split_params(n_procs, len(l_df), len(r_df))
@@ -141,13 +141,25 @@ class AttrEquivalenceBlocker(Blocker):
             c_splits = Parallel(n_jobs=m*n)(delayed(_block_tables_split)(l, r, l_key, r_key,
 						l_block_attr, r_block_attr,
 						l_output_attrs, r_output_attrs,
-						l_output_prefix, r_output_prefix)
+						l_output_prefix, r_output_prefix,
+                                                allow_missing)
 						for l in l_splits for r in r_splits)
             candset = pd.concat(c_splits, ignore_index=True)
 
-        # # update the progress bar to indicate completion of merge
-        if show_progress:
-            prog_bar.update()
+        # if allow_missing flag is True, then compute
+        # all pairs with missing value in left table, and
+        # all pairs with missing value in right table
+        if allow_missing:
+            missing_pairs = self.get_pairs_with_missing_value(ltable_proj,
+                                                              rtable_proj,
+                                                              l_key, r_key,
+                                                              l_block_attr,
+                                                              r_block_attr,
+                                                              l_output_attrs,
+                                                              r_output_attrs,
+                                                              l_output_prefix,
+                                                              r_output_prefix)
+            candset = pd.concat([candset, missing_pairs], ignore_index=True)
 
         # update catalog
         key = get_name_for_key(candset.columns)
@@ -155,15 +167,12 @@ class AttrEquivalenceBlocker(Blocker):
         cm.set_candset_properties(candset, key, l_output_prefix + l_key,
                                   r_output_prefix + r_key, ltable, rtable)
 
-        # # update the progress bar to indicate completion of catalog update
-        if show_progress:
-            prog_bar.update()
-
         # return candidate set
         return candset
 
-    def block_candset(self, candset, l_block_attr, r_block_attr, verbose=False,
-                      show_progress=True, n_jobs=1):
+    def block_candset(self, candset, l_block_attr, r_block_attr,
+                      allow_missing=False, verbose=False, show_progress=True,
+                      n_jobs=1):
         """Blocks an input candidate set of tuple pairs based on attribute equivalence.
 
         Finds tuple pairs from an input candidate set of tuple pairs
@@ -178,6 +187,15 @@ class AttrEquivalenceBlocker(Blocker):
 
             r_block_attr (str): blocking attribute in right table. 
 
+            allow_missing (boolean): flag to indicate whether tuple pairs with 
+                                     missing value in at least one of the
+                                     blocking attributes should be included in
+                                     the output candidate set (defaults to
+                                     False). If this flag is set to True, a
+                                     tuple pair with missing value in either
+                                     blocking attribute will be retained in the
+                                     output candidate set.
+
             verbose (boolean): flag to indicate whether logging should be done
                                (defaults to False).
 
@@ -188,10 +206,13 @@ class AttrEquivalenceBlocker(Blocker):
                           (defaults to 1).
                           If -1 all CPUs are used. If 0 or 1, no parallel computation
                           is used at all, which is useful for debugging.
-                          For n_jobs below -1, (n_cpus + 1 + n_jobs) are used.
-                          Thus, for n_jobs = -2, all CPUS but one are used.
-                          If (n_cpus + 1 + n_jobs) is less than 1, then n_jobs is
-                          set to 1, which means no parallel computation at all.
+                          For n_jobs below -1, (n_cpus + 1 + n_jobs) are used
+                          (where n_cpus are the total number of CPUs in the
+                           machine).
+                          Thus, for n_jobs = -2, all CPUs but one are used.
+                          If (n_cpus + 1 + n_jobs) is less than 1, then no
+                          parallel computation is used (i.e., equivalent to the
+                          default).
 
         Returns:
             A candidate set of tuple pairs that survived blocking (DataFrame).
@@ -264,7 +285,8 @@ class AttrEquivalenceBlocker(Blocker):
         # return the output table
         return out_table
 
-    def block_tuples(self, ltuple, rtuple, l_block_attr, r_block_attr):
+    def block_tuples(self, ltuple, rtuple, l_block_attr, r_block_attr,
+                     allow_missing=False):
         """Blocks a tuple pair based on attribute equivalence.
 
         Args:
@@ -275,6 +297,15 @@ class AttrEquivalenceBlocker(Blocker):
             l_block_attr (str): blocking attribute in left tuple.
 
             r_block_attr (str): blocking attribute in right tuple.
+
+            allow_missing (boolean): flag to indicate whether a tuple pair with 
+                                     missing value in at least one of the
+                                     blocking attributes should be blocked
+                                     (defaults to False). If this flag is set
+                                     to True, the pair will be kept if either
+                                     ltuple has missing value in l_block_attr
+                                     or rtuple has missing value in r_block_attr
+                                     or both.
 
         Returns:
             A status indicating if the tuple pair is blocked, i.e., the values
@@ -305,10 +336,48 @@ class AttrEquivalenceBlocker(Blocker):
             raise AssertionError('Right block attribute is not in the right table')
 
 
+    def get_pairs_with_missing_value(self, l_df, r_df, l_key, r_key,
+                                     l_block_attr, r_block_attr,
+                                     l_output_attrs, r_output_attrs,
+                                     l_output_prefix, r_output_prefix):
+   
+        l_df.is_copy, r_df.is_copy = False, False # to avoid setwithcopy warning
+        l_df['ones'] = pd.np.ones(len(l_df))
+        r_df['ones'] = pd.np.ones(len(r_df))
+
+        # find ltable records with missing value in l_block_attr
+        l_df_missing = l_df[pd.isnull(l_df[l_block_attr])]
+
+        # find ltable records with no missing value in l_block_attr
+        l_df_no_missing = l_df[pd.notnull(l_df[l_block_attr])]
+
+        # find rtable records with missing value in r_block_attr
+        r_df_missing = r_df[pd.isnull(r_df[r_block_attr])]
+
+        missing_pairs_1 = pd.merge(l_df_missing, r_df, left_on='ones',
+                                   right_on='ones', suffixes=('_ltable', '_rtable')) 
+
+        missing_pairs_2 = pd.merge(l_df_no_missing, r_df_missing, left_on='ones',
+                                   right_on='ones', suffixes=('_ltable', '_rtable'))
+
+        missing_pairs = pd.concat([missing_pairs_1, missing_pairs_2], ignore_index=True)
+
+        retain_cols, final_cols = _output_columns(l_key, r_key,
+                                                  list(missing_pairs.columns),
+				                  l_output_attrs, r_output_attrs,
+					          l_output_prefix, r_output_prefix)
+        missing_pairs = missing_pairs[retain_cols]
+        missing_pairs.columns = final_cols
+        return missing_pairs
+        
 def _block_tables_split(l_df, r_df, l_key, r_key, l_block_attr, r_block_attr,
-			l_output_attrs, r_output_attrs, l_output_prefix, r_output_prefix):
-    candset = pd.merge(l_df, r_df, left_on=l_block_attr, right_on=r_block_attr,
-		       suffixes=('_ltable', '_rtable'))
+			l_output_attrs, r_output_attrs, l_output_prefix,
+                        r_output_prefix, allow_missing):
+
+    # perform an inner join of the two data frames with no missing values
+    candset = pd.merge(l_df, r_df, left_on=l_block_attr,
+                       right_on=r_block_attr, suffixes=('_ltable', '_rtable'))
+
     retain_cols, final_cols = _output_columns(l_key, r_key, list(candset.columns),
 				              l_output_attrs, r_output_attrs,
 					      l_output_prefix, r_output_prefix)

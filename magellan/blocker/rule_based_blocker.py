@@ -171,10 +171,13 @@ class RuleBasedBlocker(Blocker):
                           (defaults to 1).
                           If -1 all CPUs are used. If 0 or 1, no parallel computation
                           is used at all, which is useful for debugging.
-                          For n_jobs below -1, (n_cpus + 1 + n_jobs) are used.
-                          Thus, for n_jobs = -2, all CPUS but one are used.
-                          If (n_cpus + 1 + n_jobs) is less than 1, then n_jobs is
-                          set to 1, which means no parallel computation at all.
+                          For n_jobs below -1, (n_cpus + 1 + n_jobs) are used 
+                          (where n_cpus is the total number of CPUs in the 
+                           machine).
+                          Thus, for n_jobs = -2, all CPUs but one are used.
+                          If (n_cpus + 1 + n_jobs) is less than 1, then no
+                          parallel computation is used (i.e., equivalent to the
+                          default).
 
         Returns:
             A candidate set of tuple pairs that survived the sequence of
@@ -184,7 +187,10 @@ class RuleBasedBlocker(Blocker):
         # validate data types of input parameters
         self.validate_types_params_tables(ltable, rtable,
                        l_output_attrs, r_output_attrs, l_output_prefix,
-                       r_output_prefix, verbose, show_progress, n_jobs)
+                       r_output_prefix, verbose, n_jobs)
+
+        # validate data type of show_progress
+        self.validate_show_progress(show_progress)
 
         # validate input parameters
         self.validate_output_attrs(ltable, rtable, l_output_attrs, r_output_attrs)
@@ -338,7 +344,7 @@ class RuleBasedBlocker(Blocker):
 
     def block_candset(self, candset, verbose=False, show_progress=True, n_jobs=1):
         """Blocks an input candidate set of tuple pairs based on a sequence of
-           blocking rules supplied by the user..
+           blocking rules supplied by the user.
 
         Finds tuple pairs from an input candidate set of tuple pairs that
         survive the sequence of blocking rules. A tuple pair survives the
@@ -359,10 +365,13 @@ class RuleBasedBlocker(Blocker):
                           (defaults to 1).
                           If -1 all CPUs are used. If 0 or 1, no parallel computation
                           is used at all, which is useful for debugging.
-                          For n_jobs below -1, (n_cpus + 1 + n_jobs) are used.
-                          Thus, for n_jobs = -2, all CPUS but one are used.
-                          If (n_cpus + 1 + n_jobs) is less than 1, then n_jobs is
-                          set to 1, which means no parallel computation at all.
+                          For n_jobs below -1, (n_cpus + 1 + n_jobs) are used
+                          (where n_cpus is the total number of CPUs in the 
+                           machine).
+                          Thus, for n_jobs = -2, all CPUs but one are used.
+                          If (n_cpus + 1 + n_jobs) is less than 1, then no
+                          parallel computation is used (i.e., equivalent to the
+                          default).
 
         Returns:
             A candidate set of tuple pairs that survived blocking (DataFrame).

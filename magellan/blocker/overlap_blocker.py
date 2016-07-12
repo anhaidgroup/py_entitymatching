@@ -18,6 +18,7 @@ from magellan.utils.catalog_helper import log_info, get_name_for_key, \
     add_key_column
 
 from magellan.externals.py_stringsimjoin.filter.overlap_filter import OverlapFilter
+from magellan.externals.py_stringsimjoin.join.overlap_join import overlap_join
 
 from magellan.utils.generic_helper import remove_non_ascii, rem_nan
 
@@ -46,7 +47,8 @@ class OverlapBlocker(Blocker):
                      overlap_size=1,
                      l_output_attrs=None, r_output_attrs=None,
                      l_output_prefix='ltable_', r_output_prefix='rtable_',
-                     verbose=False, show_progress=True, n_jobs=1):
+                     allow_missing=False, verbose=False, show_progress=True,
+                     n_jobs=1):
         """Blocks two tables based on the overlap of token sets of attribute
            values.
 
@@ -58,9 +60,9 @@ class OverlapBlocker(Blocker):
         threshold.
 
         Args:
-            ltable (Dataframe): left input table.
+            ltable (DataFrame): left input table.
 
-            rtable (Dataframe): right input table.
+            rtable (DataFrame): right input table.
 
             l_overlap_attr (str): overlap attribute in left table.
 
@@ -98,6 +100,15 @@ class OverlapBlocker(Blocker):
                                    coming from the right table in the output
                                    candidate set (defaults to 'rtable\_').
 
+            allow_missing (boolean): flag to indicate whether tuple pairs with 
+                                     missing value in at least one of the
+                                     blocking attributes should be included in
+                                     the output candidate set (defaults to
+                                     False). If this flag is set to True, a
+                                     tuple in ltable with missing value in the
+                                     blocking attribute will be matched with
+                                     every tuple in rtable and vice versa.
+
             verbose (boolean): flag to indicate whether logging should be done
                                (defaults to False).
 
@@ -108,10 +119,13 @@ class OverlapBlocker(Blocker):
                           (defaults to 1).
                           If -1 all CPUs are used. If 0 or 1, no parallel computation
                           is used at all, which is useful for debugging.
-                          For n_jobs below -1, (n_cpus + 1 + n_jobs) are used.
-                          Thus, for n_jobs = -2, all CPUS but one are used.
-                          If (n_cpus + 1 + n_jobs) is less than 1, then n_jobs is
-                          set to 1, which means no parallel computation at all.
+                          For n_jobs below -1, (n_cpus + 1 + n_jobs) are used 
+                          (where n_cpus are the total number of CPUs in the
+                           machine).
+                          Thus, for n_jobs = -2, all CPUs but one are used.
+                          If (n_cpus + 1 + n_jobs) is less than 1, then no
+                          parallel computation is used (i.e., equivalent to the
+                          default).
 
         Returns:
             A candidate set of tuple pairs that survived blocking (DataFrame).
@@ -120,12 +134,18 @@ class OverlapBlocker(Blocker):
         # validate data types of standard input parameters
         self.validate_types_params_tables(ltable, rtable,
 			    l_output_attrs, r_output_attrs, l_output_prefix,
-			    r_output_prefix, verbose, show_progress, n_jobs)
+			    r_output_prefix, verbose, n_jobs)
 
         # validate data types of input parameters specific to overlap blocker
         self.validate_types_other_params(l_overlap_attr, r_overlap_attr,
                                          rem_stop_words, q_val,
                                          word_level, overlap_size)
+
+        # validate data type of allow_missing
+        self.validate_allow_missing(allow_missing)
+ 
+        # validate data type of show_progress
+        self.validate_show_progress(show_progress)
  
         # validate overlap attributes
         self.validate_overlap_attrs(ltable, rtable, l_overlap_attr,
@@ -151,15 +171,11 @@ class OverlapBlocker(Blocker):
 
         # do blocking
 
-        # # remove nans: should be modified based on missing data policy
-        l_df = rem_nan(ltable, l_overlap_attr)
-        r_df = rem_nan(rtable, r_overlap_attr)
-
         # # do projection before merge
         l_proj_attrs = self.get_attrs_to_project(l_key, l_overlap_attr, l_output_attrs)
-        l_df = l_df[l_proj_attrs]
+        l_df = ltable[l_proj_attrs]
         r_proj_attrs = self.get_attrs_to_project(r_key, r_overlap_attr, r_output_attrs)
-        r_df = r_df[r_proj_attrs]
+        r_df = rtable[r_proj_attrs]
 
         # # case the column to string if required.
         if l_df.dtypes[l_overlap_attr] != object:
@@ -182,21 +198,13 @@ class OverlapBlocker(Blocker):
             # # # create a qgram tokenizer 
             tokenizer = QgramTokenizer(qval=q_val, return_set=True)
 
-        # # create a overlap filter for similarity join
-        overlap_filter = OverlapFilter(tokenizer, overlap_size)
-        
-        # # determine number of processes to launch parallely
-        n_procs = self.get_num_procs(n_jobs, len(r_df))
-        if n_procs < 1:
-            n_procs = 1 
-
         # # perform overlap similarity join
-        candset = overlap_filter.filter_tables(l_df, r_df, l_key, r_key,
-                                               l_overlap_attr, r_overlap_attr,
-                                               l_output_attrs, r_output_attrs,
-                                               l_output_prefix, r_output_prefix,
-                                               out_sim_score=False,
-                                               n_jobs=n_procs)
+        candset = overlap_join(l_df, r_df, l_key, r_key, l_overlap_attr,
+                               r_overlap_attr, tokenizer, overlap_size, '>=',
+                               allow_missing, l_output_attrs, r_output_attrs,
+                               l_output_prefix, r_output_prefix, False, n_jobs,
+                               show_progress)
+
         # print('candset cols:', candset.columns)
 
         # # retain only the required attributes in the output candidate set 
@@ -215,7 +223,8 @@ class OverlapBlocker(Blocker):
         return candset
 
     def block_candset(self, candset, l_overlap_attr, r_overlap_attr,
-                      rem_stop_words=False, q_val=None, word_level=True, overlap_size=1,
+                      rem_stop_words=False, q_val=None, word_level=True,
+                      overlap_size=1, allow_missing=False,
                       verbose=False, show_progress=True, n_jobs=1):
         """Blocks an input candidate set of tuple pairs based on the overlap
            of token sets of attribute values.
@@ -250,6 +259,15 @@ class OverlapBlocker(Blocker):
             overlap_size (int): minimum number of tokens that must overlap
                                 (defaults to 1).
 
+            allow_missing (boolean): flag to indicate whether tuple pairs with 
+                                     missing value in at least one of the
+                                     blocking attributes should be included in
+                                     the output candidate set (defaults to
+                                     False). If this flag is set to True, a
+                                     tuple pair with missing value in either
+                                     blocking attribute will be retained in the
+                                     output candidate set.
+
             verbose (boolean): flag to indicate whether logging should be done
                                (defaults to False).
 
@@ -260,10 +278,13 @@ class OverlapBlocker(Blocker):
                           (defaults to 1).
                           If -1 all CPUs are used. If 0 or 1, no parallel computation
                           is used at all, which is useful for debugging.
-                          For n_jobs below -1, (n_cpus + 1 + n_jobs) are used.
+                          For n_jobs below -1, (n_cpus + 1 + n_jobs) are used
+                          (where n_cpus is the total number of CPUs in the
+                           machine).
                           Thus, for n_jobs = -2, all CPUS but one are used.
-                          If (n_cpus + 1 + n_jobs) is less than 1, then n_jobs is
-                          set to 1, which means no parallel computation at all.
+                          If (n_cpus + 1 + n_jobs) is less than 1, then no
+                          parallel computation is used (i.e., equivalent to the
+                          default).
 
         Returns:
             A candidate set of tuple pairs that survived blocking (DataFrame).
@@ -350,7 +371,7 @@ class OverlapBlocker(Blocker):
 
     def block_tuples(self, ltuple, rtuple, l_overlap_attr, r_overlap_attr,
                      rem_stop_words=False, q_val=None, word_level=True,
-                     overlap_size=1):
+                     overlap_size=1, allow_missing=False):
         """Blocks a tuple pair based on the overlap of token sets of attribute
            values.
         
@@ -378,6 +399,15 @@ class OverlapBlocker(Blocker):
 
             overlap_size (int): minimum number of tokens that must overlap
                                 (defaults to 1).
+
+            allow_missing (boolean): flag to indicate whether a tuple pair with 
+                                     missing value in at least one of the
+                                     blocking attributes should be blocked
+                                     (defaults to False). If this flag is set
+                                     to True, the pair will be kept if either
+                                     ltuple has missing value in l_block_attr
+                                     or rtuple has missing value in r_block_attr
+                                     or both.
 
         Returns:
             A status indicating if the tuple pair is blocked (boolean).
@@ -460,30 +490,27 @@ class OverlapBlocker(Blocker):
         # get overlap_attr column
         attr_col_values = table[overlap_attr]
 
-        # remove non-ascii chars
-        attr_col_values = [remove_non_ascii(val) for val in attr_col_values]
+        values = []
+        for val in attr_col_values:
+            if pd.isnull(val):
+                values.append(val)
+            else:
+               # remove non-ascii chars
+               val_no_non_ascii = remove_non_ascii(val)
+               # remove punctuations
+               val_no_punctuations = self.rem_punctuations(val)
+               # chop the attribute values and convert into a set
+               val_chopped = list(set(val.split()))
+               # remove stop words
+               val_chopped_no_stopwords = self.rem_stopwords(val_chopped)
+               val_joined = ' '.join(val_chopped_no_stopwords)
+               values.append(val_joined)
 
-        # remove special characters
-        attr_col_values = [self.rem_punctuations(val).lower() for val in
-                           attr_col_values]
-
-        # chop the attribute values
-        col_values_chopped = [val.split() for val in attr_col_values]
-
-        # convert the chopped values into a set
-        col_values_chopped = [list(set(val)) for val in col_values_chopped]
-
-        # remove stop words
-        if rem_stop_words == True:
-            col_values_chopped = [self.rem_stopwords(val) for val in
-                                  col_values_chopped]
-
-        values = [' '.join(val) for val in col_values_chopped]
-
+        table.is_copy = False 
         table[overlap_attr] = values
 
     def rem_punctuations(self, s):
-        return self.regex_punctuation.sub('', s)
+        return self.regex_punctuation.sub('', s).lower()
 
     def rem_stopwords(self, lst):
         return [t for t in lst if t not in self.stop_words]

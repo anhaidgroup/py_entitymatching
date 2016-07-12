@@ -30,6 +30,12 @@ expected_ids_3 = [('a2', 'b3'), ('a3', 'b2'), ('a4', 'b1'), ('a4', 'b6'),
 # block tables on [l|r]_overlap_attr_2, block candset on [l|r]overlap_attr_3
 expected_ids_2_and_3 = [('a2', 'b3'), ('a3', 'b2')]
 
+# overlap on [r,l]_overlap_attr_1, overlap_size=1 on tables with missing values
+expected_ids_4 = [('a1', 'b4'), ('a2', 'b3'), ('a2', 'b4'), ('a2', 'b6'),
+                  ('a3', 'b2'), ('a3', 'b4'), ('a4', 'b1'), ('a4', 'b2'),
+                  ('a4', 'b3'), ('a4', 'b4'), ('a4', 'b5'), ('a4', 'b6'),
+                  ('a5', 'b4'), ('a5', 'b5')]
+
 class OverlapBlockerTestCases(unittest.TestCase):
 
     def setUp(self):
@@ -185,6 +191,21 @@ class OverlapBlockerTestCases(unittest.TestCase):
                              r_overlap_attr_1, r_output_prefix=True)
 
     @raises(AssertionError)
+    def test_ob_block_tables_invalid_allow_missing_1(self):
+        self.ob.block_tables(self.A, self.B, l_overlap_attr_1,
+                             r_overlap_attr_1, allow_missing=None)
+
+    @raises(AssertionError)
+    def test_ob_block_tables_invalid_allow_missing_2(self):
+        self.ob.block_tables(self.A, self.B, l_overlap_attr_1,
+                             r_overlap_attr_1, allow_missing=1)
+
+    @raises(AssertionError)
+    def test_ob_block_tables_invalid_allow_missing_3(self):
+        self.ob.block_tables(self.A, self.B, l_overlap_attr_1,
+                             r_overlap_attr_1, allow_missing='yes')
+
+    @raises(AssertionError)
     def test_ob_block_tables_invalid_verbose_1(self):
         self.ob.block_tables(self.A, self.B, l_overlap_attr_1,
                              r_overlap_attr_1, verbose=None)
@@ -331,14 +352,38 @@ class OverlapBlockerTestCases(unittest.TestCase):
         validate_metadata(C, l_output_attrs, [])
         validate_data(C, expected_ids_1)
 
+    def test_ob_block_tables_wi_qval_non_str_attr(self):
+         C = self.ob.block_tables(self.A, self.B, 'birth_year', 'birth_year',
+                                  q_val=3, word_level=False, overlap_size=6)
+         validate_metadata(C)
+         validate_data(C, expected_ids_3)
 
+    def test_ob_block_tables_wi_missing_values_allow_missing(self):
+        path_a = os.sep.join([p, 'datasets', 'test_datasets', 'blocker',
+                              'table_A_wi_missing_vals.csv'])
+        path_b = os.sep.join([p, 'datasets', 'test_datasets', 'blocker',
+                              'table_B_wi_missing_vals.csv'])
+        A = mg.read_csv_metadata(path_a)
+        mg.set_key(A, 'ID')
+        B = mg.read_csv_metadata(path_b)
+        mg.set_key(B, 'ID')
+        C = self.ob.block_tables(A, B, l_overlap_attr_1, r_overlap_attr_1,
+                                 allow_missing=True)
+        validate_metadata(C)
+        validate_data(C, expected_ids_4)
 
-    # def test_ob_block_tables_wi_qval_non_str_attr(self):
-    #     C = self.ob.block_tables(self.A, self.B, 'birth_year', 'birth_year',
-    #                              q_val=3, word_level=False, overlap_size=2)
-    #     validate_metadata(C)
-    #     validate_data(C, expected_ids_3)
-
+    def test_ob_block_tables_wi_missing_values_disallow_missing(self):
+        path_a = os.sep.join([p, 'datasets', 'test_datasets', 'blocker',
+                              'table_A_wi_missing_vals.csv'])
+        path_b = os.sep.join([p, 'datasets', 'test_datasets', 'blocker',
+                              'table_B_wi_missing_vals.csv'])
+        A = mg.read_csv_metadata(path_a)
+        mg.set_key(A, 'ID')
+        B = mg.read_csv_metadata(path_b)
+        mg.set_key(B, 'ID')
+        C = self.ob.block_tables(A, B, l_overlap_attr_1, r_overlap_attr_1)
+        validate_metadata(C)
+        validate_data(C, expected_ids_1)
 
     @raises(AssertionError)
     def test_ob_block_candset_invalid_candset_1(self):

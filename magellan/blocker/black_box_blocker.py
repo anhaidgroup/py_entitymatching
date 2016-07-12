@@ -74,10 +74,13 @@ class BlackBoxBlocker(Blocker):
                           (defaults to 1).
                           If -1 all CPUs are used. If 0 or 1, no parallel computation
                           is used at all, which is useful for debugging.
-                          For n_jobs below -1, (n_cpus + 1 + n_jobs) are used.
-                          Thus, for n_jobs = -2, all CPUS but one are used.
-                          If (n_cpus + 1 + n_jobs) is less than 1, then n_jobs is
-                          set to 1, which means no parallel computation at all.
+                          For n_jobs below -1, (n_cpus + 1 + n_jobs) are used
+                          (where n_cpus is the total number of CPUs in the
+                           machine).
+                          Thus, for n_jobs = -2, all CPUs but one are used.
+                          If (n_cpus + 1 + n_jobs) is less than 1, then no
+                          parallel computation is used (i.e., equivalent to the
+                          default).
 
         Returns:
             A candidate set of tuple pairs that survived blocking (DataFrame).
@@ -87,7 +90,10 @@ class BlackBoxBlocker(Blocker):
         self.validate_types_params_tables(ltable, rtable,
 			                  l_output_attrs, r_output_attrs,
                                           l_output_prefix, r_output_prefix,
-                                          verbose, show_progress, n_jobs)
+                                          verbose, n_jobs)
+
+        # validate data type of show_progress
+        self.validate_show_progress(show_progress)
 
         # validate black box function
         assert self.black_box_function != None, 'Black box function is not set'
@@ -184,10 +190,13 @@ class BlackBoxBlocker(Blocker):
                           (defaults to 1).
                           If -1 all CPUs are used. If 0 or 1, no parallel computation
                           is used at all, which is useful for debugging.
-                          For n_jobs below -1, (n_cpus + 1 + n_jobs) are used.
-                          Thus, for n_jobs = -2, all CPUS but one are used.
-                          If (n_cpus + 1 + n_jobs) is less than 1, then n_jobs is
-                          set to 1, which means no parallel computation at all.
+                          For n_jobs below -1, (n_cpus + 1 + n_jobs) are used
+                          (where n_cpus is the total number of CPUs in the
+                           machine).
+                          Thus, for n_jobs = -2, all CPUs but one are used.
+                          If (n_cpus + 1 + n_jobs) is less than 1, then no
+                          parallel computation is used (i.e., equivalent to the
+                          default).
 
         Returns:
             A candidate set of tuple pairs that survived blocking (DataFrame).

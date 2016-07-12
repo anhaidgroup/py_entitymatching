@@ -13,7 +13,7 @@ class Blocker(object):
 
     def validate_types_params_tables(self, ltable, rtable,
 		       l_output_attrs, r_output_attrs, l_output_prefix,
-		       r_output_prefix, verbose, show_progress, n_jobs):
+		       r_output_prefix, verbose, n_jobs):
 
         if not isinstance(ltable, pd.DataFrame):
             logger.error('Input left table is not of type pandas data frame')
@@ -53,13 +53,19 @@ class Blocker(object):
             logger.error('Parameter verbose is not of type bool')
             raise AssertionError('Parameter verbose is not of type bool')
 
+        if not isinstance(n_jobs, int):
+            logger.error('Parameter n_jobs is not of type int')
+            raise AssertionError('Parameter n_jobs is not of type int')
+
+    def validate_show_progress(self, show_progress):
         if not isinstance(show_progress, bool):
             logger.error('Parameter show_progress is not of type bool')
             raise AssertionError('Parameter show_progress is not of type bool')
 
-        if not isinstance(n_jobs, int):
-            logger.error('Parameter n_jobs is not of type int')
-            raise AssertionError('Parameter n_jobs is not of type int')
+    def validate_allow_missing(self, allow_missing):
+        if not isinstance(allow_missing, bool):
+            logger.error('Parameter allow_missing is not of type bool')
+            raise AssertionError('Parameter allow_missing is not of type bool')
 
     def validate_types_params_candset(self, candset, verbose, show_progress, n_jobs):
         if not isinstance(candset, pd.DataFrame):
