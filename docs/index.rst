@@ -17,7 +17,6 @@ Contents:
 
     api/reading_and_writing_data
     api/loading_and_saving_objects
-    api/handling_metadata
     api/downsampling
     api/blocking
     api/debugging_blocker_output
@@ -28,6 +27,7 @@ Contents:
     api/matching
     api/debugging_matcher
     api/evaluating_the_matches
+    api/handling_metadata
 
 
 
