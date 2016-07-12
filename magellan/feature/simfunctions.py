@@ -42,8 +42,16 @@ _global_sim_fns = pd.DataFrame({'function_name': sim_function_names,
 
 def get_sim_funs_for_blocking():
     """
-    This function returns the similarity functions that can be used for
+    This function gets the similarity functions that can be used for
     blocking purposes.
+
+    Returns:
+
+        A Python dictionary containing the similarity functions.
+
+
+        Specifically, the key is the similarity function name and the value
+        is the actual similary function.
 
     """
     return get_sim_funs()
@@ -53,6 +61,13 @@ def get_sim_funs_for_matching():
     """
     This function returns the similarity functions that can be used for
     blocking purposes.
+
+    Returns:
+
+        A Python dictionary containing the similarity functions.
+
+        Specifically, the key is the similarity function name and the value
+        is the actual similarity function.
 
     """
     return get_sim_funs()
@@ -85,7 +100,8 @@ def affine(s1, s2):
     This function computes the affine measure between the two input strings.
 
     Args:
-        s1, s2 (input strings):
+        s1,s2 (string ): Input strings for which the similarity measure
+            should be computed.
 
     Returns:
         The affine measure if both the strings are not missing (i.e NaN or
@@ -111,7 +127,7 @@ def hamming_dist(s1, s2):
     strings.
 
     Args:
-        s1, s2 (str): Input strings for which the similarity measure should
+        s1,s2 (string): Input strings for which the similarity measure should
             be computed.
 
     Returns:
@@ -139,7 +155,7 @@ def hamming_sim(s1, s2):
     strings.
 
     Args:
-        s1, s2 (str): Input strings for which the similarity measure should
+        s1,s2 (string): Input strings for which the similarity measure should
             be computed.
 
     Returns:
@@ -167,7 +183,7 @@ def lev_dist(s1, s2):
     strings.
 
     Args:
-        s1, s2 (str): Input strings for which the similarity measure should
+        s1,s2 (string): Input strings for which the similarity measure should
             be computed.
 
     Returns:
@@ -195,7 +211,7 @@ def lev_sim(s1, s2):
     strings.
 
     Args:
-        s1, s2 (str): Input strings for which the similarity measure should
+        s1,s2 (string): Input strings for which the similarity measure should
             be computed.
 
     Returns:
@@ -223,7 +239,7 @@ def jaro(s1, s2):
     strings.
 
     Args:
-        s1, s2 (str): Input strings for which the similarity measure should
+        s1,s2 (string): Input strings for which the similarity measure should
             be computed.
 
     Returns:
@@ -251,7 +267,7 @@ def jaro_winkler(s1, s2):
     strings.
 
     Args:
-        s1, s2 (str): Input strings for which the similarity measure should
+        s1,s2 (string): Input strings for which the similarity measure should
             be computed.
 
     Returns:
@@ -279,7 +295,7 @@ def needleman_wunsch(s1, s2):
     strings.
 
     Args:
-        s1, s2 (str): Input strings for which the similarity measure should
+        s1,s2 (string): Input strings for which the similarity measure should
             be computed.
 
     Returns:
@@ -308,7 +324,7 @@ def smith_waterman(s1, s2):
     strings.
 
     Args:
-        s1, s2 (str): Input strings for which the similarity measure should
+        s1,s2 (string): Input strings for which the similarity measure should
             be computed.
 
     Returns:
@@ -337,7 +353,7 @@ def jaccard(arr1, arr2):
     lists/sets.
 
     Args:
-        arr1, arr2 (list or set): Input list or sets for which the Jaccard
+        arr1,arr2 (list or set): Input list or sets for which the Jaccard
         measure should be computed.
 
     Returns:
@@ -367,7 +383,7 @@ def cosine(arr1, arr2):
     lists/sets.
 
     Args:
-        arr1, arr2 (list or set): Input list or sets for which the cosine
+        arr1,arr2 (list or set): Input list or sets for which the cosine
         measure should be computed.
 
     Returns:
@@ -397,7 +413,7 @@ def overlap_coeff(arr1, arr2):
     lists/sets.
 
     Args:
-        arr1, arr2 (list or set): Input list or sets for which the overlap
+        arr1,arr2 (list or set): Input list or sets for which the overlap
         coefficient should be computed.
 
     Returns:
@@ -426,7 +442,7 @@ def dice(arr1, arr2):
     lists/sets.
 
     Args:
-        arr1, arr2 (list or set): Input list or sets for which the Dice
+        arr1,arr2 (list or set): Input list or sets for which the Dice
         score should be computed.
 
     Returns:
@@ -458,7 +474,7 @@ def monge_elkan(arr1, arr2):
     secondary function to compute the similarity score.
 
     Args:
-        arr1, arr2 (list or set): Input list or sets for which the Monge-Elkan
+        arr1,arr2 (list or set): Input list or sets for which the Monge-Elkan
         measure should be computed.
 
     Returns:
@@ -491,7 +507,7 @@ def exact_match(d1, d2):
     objects are string, boolean and ints.
 
     Args:
-        d1, d2 (str, boolean, int): Input objects which should checked
+        d1,d2 (str, boolean, int): Input objects which should checked
         whether they match exactly.
 
     Returns:
@@ -517,8 +533,8 @@ def rel_diff(d1, d2):
     This function computes the relative difference between two numbers
 
     Args:
-        d1, d2 (float): Input numbers for which the relative difference must
-        be computed.
+        d1,d2 (float): Input numbers for which the relative difference must
+          be computed.
 
     Returns:
         A float value of relative difference between the input numbers (if
@@ -548,8 +564,8 @@ def abs_norm(d1, d2):
     This function computes the absolute norm similarity between two numbers
 
     Args:
-        d1, d2 (float): Input numbers for which the absolute norm must
-        be computed.
+        d1,d2 (float): Input numbers for which the absolute norm must
+            be computed.
 
     Returns:
         A float value of absolute norm between the input numbers (if

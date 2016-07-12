@@ -32,7 +32,7 @@ def combine_blocker_outputs_via_union(
 
     This function makes some assumptions about the input DataFrames. First,
     each DataFrame is expected to contain the following metadata in the
-    catalog: (1) key,fk_ltable, fk_rtable, ltable, and rtable. Second,
+    catalog: key, fk_ltable, fk_rtable, ltable, and rtable. Second,
     all the DataFrames must be a result of blocking from the same underlying
     tables. Concretely the ltable and rtable properties must refer to the
     same DataFrame across all the input tables. Third, all the input
@@ -41,7 +41,7 @@ def combine_blocker_outputs_via_union(
     ltable or rtable, the attribute names must be prefixed with the given
     l_prefix and r_prefix in the function. As an example, the schema of an
     input DataFrame may look like this: _id, ltable_ID, rtable_ID,
-    ltable_name, rtable_name
+    ltable_name, rtable_name.
 
     The input DataFrames may contain different attribute lists and it begs
     the question how to combine them. Currently Magellan takes an union

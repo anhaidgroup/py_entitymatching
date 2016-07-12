@@ -83,7 +83,7 @@ class MLMatcher(Matcher):
     def fit(self, x=None, y=None, table=None, exclude_attrs=None,
             target_attr=None):
         """
-        Fit interface for the matchers.
+        Fit interface for the matcher.
 
         Specifically, there are two ways the user can call the fit method.
         First, interface similar to scikit-learn where the feature vectors
@@ -103,7 +103,7 @@ class MLMatcher(Matcher):
                 vectors and target attribute (defaults to None).
             exclude_attrs (list): The list of attributes that should be
                 excluded from the input table to get the feature vectors.
-            target_attr (str): The target attribute in the input table.
+            target_attr (string): The target attribute in the input table.
         """
         # Check if x and y is given, then call a function that handles
         # sk-learn like interface input.
@@ -177,7 +177,7 @@ class MLMatcher(Matcher):
     def predict(self, x=None, table=None, exclude_attrs=None, target_attr=None,
                 append=False, inplace=True):
         """
-        Predict interface for the matchers.
+        Predict interface for the matcher.
 
         Specifically, there are two ways the user can call the predict method.
         First, interface similar to scikit-learn where the feature vectors
@@ -196,7 +196,7 @@ class MLMatcher(Matcher):
                 vectors, and may be other attributes (defaults to None).
             exclude_attrs (list): List of attributes to be excluded from the
                 input table to get the feature vectors (defaults to None).
-            target_attr (str): Attribute name where the predictions need to
+            target_attr (string): Attribute name where the predictions need to
                 stored in the input table (defaults to None).
             append (boolean): A flag to indicate whether the predictions need
                 to be appended in the input DataFrame (defaults to False).

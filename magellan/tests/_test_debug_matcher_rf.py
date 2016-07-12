@@ -43,7 +43,7 @@ class VisRFDebugMatcherTestCases(unittest.TestCase):
                                                attrs_after='labels')
 
         rf = RFMatcher()
-        train_test = mu.train_test_split(feature_vectors)
+        train_test = mu.split_train_test(feature_vectors)
 
         train = train_test['train']
         test = train_test['test']
@@ -139,7 +139,7 @@ class VisRFDebugMatcherTestCases(unittest.TestCase):
                                                attrs_after='labels')
 
         rf = RFMatcher()
-        train_test = mu.train_test_split(feature_vectors)
+        train_test = mu.split_train_test(feature_vectors)
 
         train = train_test['train']
         test = train_test['test']
@@ -161,7 +161,7 @@ class VisRFDebugMatcherTestCases(unittest.TestCase):
                                                attrs_after='labels')
 
         rf = RFMatcher()
-        train_test = mu.train_test_split(feature_vectors)
+        train_test = mu.split_train_test(feature_vectors)
 
         train = train_test['train']
         test = train_test['test']
@@ -183,7 +183,7 @@ class VisRFDebugMatcherTestCases(unittest.TestCase):
                                                attrs_after='labels')
 
         rf = RFMatcher()
-        train_test = mu.train_test_split(feature_vectors)
+        train_test = mu.split_train_test(feature_vectors)
 
         train = train_test['train']
         test = train_test['test']
@@ -206,7 +206,7 @@ class VisRFDebugMatcherTestCases(unittest.TestCase):
                                                attrs_after='labels')
 
         rf = RFMatcher()
-        train_test = mu.train_test_split(feature_vectors)
+        train_test = mu.split_train_test(feature_vectors)
 
         train = train_test['train']
         test = train_test['test']
@@ -228,7 +228,7 @@ class VisRFDebugMatcherTestCases(unittest.TestCase):
                                                attrs_after='_predicted')
 
         rf = RFMatcher()
-        train_test = mu.train_test_split(feature_vectors)
+        train_test = mu.split_train_test(feature_vectors)
 
         train = train_test['train']
         test = train_test['test']

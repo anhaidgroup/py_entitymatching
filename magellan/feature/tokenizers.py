@@ -30,7 +30,7 @@ def get_tokenizers_for_blocking(q=[2, 3], dlm_char=[' ']):
             which the delimiter tokenizer must be generated (defaults to [' ']).
 
     Returns:
-        A python dictionary with tokenizer name as the key and tokenizer
+        A Python dictionary with tokenizer name as the key and tokenizer
         function as the value.
 
     Raises:
@@ -58,7 +58,7 @@ def get_tokenizers_for_matching(q=[2, 3], dlm_char=[' ']):
             which the delimiter tokenizer must be generated (defaults to [' ']).
 
     Returns:
-        A python dictionary with tokenizer name as the key and tokenizer
+        A Python dictionary with tokenizer name as the key and tokenizer
         function as the value.
 
     Raises:
@@ -171,8 +171,9 @@ def tok_qgram(input_string, q):
     """
     This function splits the input string into a list of q-grams. Note that,
     by default the input strings are padded and then tokenized.
+
     Args:
-        input_string (str): Input string that should be tokenized.
+        input_string (string): Input string that should be tokenized.
         q (int): q-val that should be used to tokenize the input string.
 
     Returns:
@@ -191,9 +192,10 @@ def tok_delim(input_string, d):
     """
     This function splits the input string into a list of tokens
     (based on the delimiter).
+
     Args:
-        input_string (str): Input string that should be tokenized.
-        d (str): Delimiter string.
+        input_string (string): Input string that should be tokenized.
+        d (string): Delimiter string.
 
     Returns:
         A list of tokens, if the input string is not NaN ,
@@ -210,8 +212,9 @@ def tok_wspace(input_string):
     """
     This function splits the input string into a list of tokens
     (based on the white space).
+
     Args:
-        input_string (str): Input string that should be tokenized.
+        input_string (string): Input string that should be tokenized.
 
     Returns:
         A list of tokens, if the input string is not NaN ,
@@ -227,8 +230,9 @@ def tok_alphabetic(input_string):
     """
     This function returns a list of tokens that are maximal sequences of
     consecutive alphabetical characters.
+
     Args:
-        input_string (str): Input string that should be tokenized.
+        input_string (string): Input string that should be tokenized.
 
     Returns:
         A list of tokens, if the input string is not NaN ,
@@ -245,8 +249,9 @@ def tok_alphanumeric(input_string):
     """
     This function returns a list of tokens that are maximal sequences of
     consecutive alphanumeric characters.
+
     Args:
-        input_string (str): Input string that should be tokenized.
+        input_string (string): Input string that should be tokenized.
 
     Returns:
         A list of tokens, if the input string is not NaN ,

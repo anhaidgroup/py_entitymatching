@@ -22,7 +22,7 @@ def sample_table(table, sample_size, replace=False, verbose=False):
     purposes. This function expects the input DataFrame containing the
     metadata of a candidate set (such as key, fk_ltable, fk_rtable, ltable,
     rtable). Specifically, this function creates a copy of the input
-    DataFrame, samples the data using uniform random sampling.rst (uses 'random'
+    DataFrame, samples the data using uniform random sampling(uses 'random'
     function from numpy to sample) and returns the sampled DataFrame.
     Further, also copies the properties from the input DataFrame to the output
     DataFrame.
@@ -40,7 +40,9 @@ def sample_table(table, sample_size, replace=False, verbose=False):
             False).
 
     Returns:
-        A new DataFrame with 'sample_size' number of rows. Further,
+        A new DataFrame with 'sample_size' number of rows.
+
+        Further,
         this function sets the output DataFrame's properties same as input
         DataFrame.
 
@@ -50,7 +52,7 @@ def sample_table(table, sample_size, replace=False, verbose=False):
         AssertionError: If the sample_size is greater than the input
             DataFrame size.
 
-    Notes:
+    Note:
         As mentioned in the above description, the output DataFrame is
         updated (in the catalog) with the properties from the input
         DataFrame. A subtle point to note here is, when the replace flag is

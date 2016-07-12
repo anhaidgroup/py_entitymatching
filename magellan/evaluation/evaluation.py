@@ -25,13 +25,13 @@ def eval_matches(data_frame, gold_label_attr, predicted_label_attr):
     Args:
         data_frame (DataFrame): Input pandas DataFrame containing "gold"
             labels and "predicted" labels.
-        gold_label_attr (str): An attribute in the input DataFrame containing
+        gold_label_attr (string): An attribute in the input DataFrame containing
             "gold" labels.
-        predicted_label_attr (str): An attribute in the input DataFrame
+        predicted_label_attr (string): An attribute in the input DataFrame
             containing "predicted" labels.
 
     Returns:
-        A python dictionary containing the accuracy measures such as
+        A Python dictionary containing the accuracy measures such as
         precision, recall, F1.
 
     Raises:
@@ -201,6 +201,10 @@ def get_false_positives_as_df(table, eval_summary, verbose=False):
         A pandas DataFrame containing only the False positives from
         the input table.
 
+        Further,
+        this function sets the output DataFrame's properties same as input
+        DataFrame.
+
 
     """
     # Validate input parameters
@@ -255,6 +259,11 @@ def get_false_negatives_as_df(table, eval_summary, verbose=False):
     Returns:
         A pandas DataFrame containing only the false negatives from
         the input table.
+
+        Further,
+        this function sets the output DataFrame's properties same as input
+        DataFrame.
+
     """
     # Validate input parameters
 

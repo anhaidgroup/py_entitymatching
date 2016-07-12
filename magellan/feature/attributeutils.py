@@ -11,21 +11,24 @@ logger = logging.getLogger(__name__)
 
 def get_attr_types(data_frame):
     """
-    This function gets the attribute types for a DataFrame. Specifically,
-    this function gets the attribute types based on the statistics of the
-    attributes. These attribute types can be str_eq_1w, str_bt_1w_5w,
-    str_bt_5w_10w, str_gt_10w, boolean or numeric.
+    This function gets the attribute types for a DataFrame.
+
+    Specifically this function gets the attribute types based on the
+    statistics of the attributes. These attribute types can be str_eq_1w,
+    str_bt_1w_5w, str_bt_5w_10w, str_gt_10w, boolean or numeric.
 
     Args:
         data_frame (DataFrame): Input DataFrame for which types of attributes
             (types of columns) must be determined.
 
     Returns:
-        A dictionary is returned containing the attribute types.
+        A Python dictionary is returned containing the attribute types.
+
         Specifically, in the dictionary a key is an attribute name, a value
-        is the type of that attribute. Further, the dictionary will
-        have a  key _table, and the value of that should be a pointer to
-        the input DataFrame.
+        is the type of that attribute.
+
+        Further, the dictionary will have a  key _table, and the value of
+        that should be a pointer to the input DataFrame.
 
     Raises:
         AssertionError: If the input object (data_frame) is not of type
@@ -60,16 +63,21 @@ def get_attr_corres(data_frame_a, data_frame_b):
     that we can generate features based those correspondences.
 
     Args:
-        data_frame_a, data_frame_b (DataFrame): Input DataFrames for which
+        data_frame_a,data_frame_b (DataFrame): Input DataFrames for which
             the attribute correspondences must be obtained.
 
     Returns:
-        A dictionary is returned containing the attribute correspondences.
+        A Python dictionary is returned containing the attribute
+        correspondences.
+
         Specifically, this returns a dictionary with three keys:
+
         corres: points to the list correspondences as tuples. Each
         correspondence is a tuple with two attributes: one from data_frame_a
         and the other from data_frame_b.
+
         ltable: points to data_frame_a.
+
         rtable: points to data_frame_b.
 
         Currently, 'corres' contains only pairs of attributes with exact

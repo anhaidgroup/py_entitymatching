@@ -36,7 +36,7 @@ def label_table(table, label_column_name, verbose=False):
             False).
 
     Returns:
-        A new ataFrame with the labels entered by the user. Further,
+        A new DataFrame with the labels entered by the user. Further,
         this function sets the output DataFrame's properties same as input
         DataFrame.
 

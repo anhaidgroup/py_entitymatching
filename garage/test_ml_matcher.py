@@ -14,7 +14,7 @@ fpath_f = os.sep.join([feat_datasets_path, 'feat_vecs.csv'])
 A = read_csv_metadata(fpath_a, key='id')
 B = read_csv_metadata(fpath_b, key='id')
 feature_vectors = read_csv_metadata(fpath_f, ltable=A, rtable=B)
-train_test = mu.train_test_split(feature_vectors)
+train_test = mu.split_train_test(feature_vectors)
 train, test = train_test['train'], train_test['test']
 dt = DTMatcher(name='DecisionTree')
 dt.fit(table=train, exclude_attrs=['ltable.id', 'rtable.id', '_id', 'gold'], target_attr='gold')

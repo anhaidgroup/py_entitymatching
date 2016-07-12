@@ -29,7 +29,7 @@ def vis_debug_dt(matcher, train, test, exclude_attrs, target_attr):
             matcher.
         exclude_attrs (list): The list of attributes to be excluded from train
             and test, for training and testing.
-        target_attr (str): The attribute name in the 'train' containing the
+        target_attr (string): The attribute name in the 'train' containing the
             true labels.
 
     """

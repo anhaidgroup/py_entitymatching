@@ -19,7 +19,7 @@ feature_vectors = mg.extract_feature_vecs(C, feature_table=feature_table,
 
 
 rf = mg.RFMatcher()
-train_test = mg.train_test_split(feature_vectors)
+train_test = mg.split_train_test(feature_vectors)
 
 train = train_test['train']
 test = train_test['test']

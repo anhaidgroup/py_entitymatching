@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 def save_object(object_to_save, file_path):
     """
-    Save python objects to disk.
+    Save Python objects to disk.
 
     This function is can to be used to save Magellan objects such as
     rule-based blocker, feature table, etc. A user would like to store

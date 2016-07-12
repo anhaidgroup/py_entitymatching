@@ -12,15 +12,15 @@ logger = logging.getLogger(__name__)
 
 
 def debug_blocker(ltable, rtable, candidate_set, output_size=200,
-                  attr_corres=None, verbose=True):
+                  attr_corres=None, verbose=False):
     """
-    Debug the blocker.
+    This function debugs the blocker output and reports a list of potential
+    matches that are discarded by a blocker (or a blocker sequence).
 
-    Debug the blocker in an entity matching task. This function
-    basically takes input the two tables for matching and the
-    candidate set by the blocker, and produces a list of tuple
-    pairs which are rejected by the blocker but with high potential
-    of being true matches.
+    Specifically,  this function takes in the two input tables for
+    matching and the candidate set returned by a blocker (or a blocker
+    sequence), and produces a list of tuple pairs which are rejected by the
+    blocker but with high potential of being true matches.
 
     Args:
         ltable (DataFrame): one table for entity matching.
@@ -46,8 +46,8 @@ def debug_blocker(ltable, rtable, candidate_set, output_size=200,
             out. The default value is False.
 
     Returns:
-        A dataframe with 'output_size' number of rows. Each row in the
-        dataframe is a tuple pair which has potential of being a true
+        A pandas DataFrame with 'output_size' number of rows. Each row in the
+        DataFrame is a tuple pair which has potential of being a true
         match, but is rejected by the blocker (meaning that the tuple
         pair is in the Cartesian product of ltable and rtable subtracted
         by the candidate set).

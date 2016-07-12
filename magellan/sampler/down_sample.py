@@ -2,16 +2,17 @@
 """
 This module contains sampling related routines
 """
-import os
-
-from random import randint
-import math
 import logging
+import math
+import os
 import random
+from random import randint
+
 import pandas as pd
 import pyprind
-from magellan.utils.generic_helper import get_install_path
+
 import magellan.catalog.catalog_manager as cm
+from magellan.utils.generic_helper import get_install_path
 
 logger = logging.getLogger(__name__)
 
@@ -145,29 +146,32 @@ def _probe_index(table_b, y_param, s_tbl_sz, s_inv_index):
 # down sample of two tables : based on sanjib's index based solution
 def down_sample(table_a, table_b, size, y_param):
     """
-    This is down sample table function that down samples 2 tables A and B. First it randomly selects size tuples
-    from the table B to be table B'. First step is to build an inverted index (token, tuple_id) on table A - say I.
-    For each tuple x ∈ B', the algorithm finds a set P of k/2 tuples from A (inverted index) that match x,
-    and a set Q of k/2 tuples randomly selected from A \ P. The idea is for A' and B' to share some matches yet be
+    This function down samples 2 DataFrames A and B.
+
+    Specifically, first it randomly selects size tuples
+    from the table B to be table B'. Next, it builds an inverted index (
+    token, tuple_id) on table A - say I. For each tuple x ∈ B', the algorithm
+    finds a set P of k/2 tuples from A (inverted index) that match x,
+    and a set Q of k/2 tuples randomly selected from A \ P.
+    The idea is for A' and B' to share some matches yet be
     as representative of A and B as possible.
 
     Args:
-        table_a (DataFrame): input table A
-        table_b (DataFrame): input table B
-        size (int): down_sampled size of table B
-        y_param (int): down_sampled size of table A should be close to size * y_param
+        table_a, table_b (DataFrame): Input tables A and B.
+        size (int): The size of table B that should be down sampled to.
+        y_param (int): Parameter to control the down sample size of table A.
+            Specifically, the down sampled size of table A should be close to
+            size * y_param.
 
     Returns:
-        down sampled tables A and B
+        Down sampled tables A and B as pandas DataFrames.
 
     Raises:
-        AssertionError :
-        1) If any of the input tables are empty or not a DataFrame
-        2) If size or y parameter is empty or 0 or not a valid integer value
-        3) If output sampled tables are empty or not as per user defined
-
-    Example:
-        C, D = mg.down_sample(A, B, b_size, y_param)
+        AssertionError: If any of the input tables are empty or not a DataFrame.
+        AssertionError: If size or y parameter is empty or 0 or not a valid
+            integer value.
+        AssertionError: If output sampled tables are empty or not as per user
+            defined.
 
     """
 
@@ -184,11 +188,14 @@ def down_sample(table_a, table_b, size, y_param):
         raise AssertionError('Size of the input table is 0')
 
     if size == 0 or y_param == 0:
-        logger.error('size or y cannot be zero (3rd and 4th parameter of downsample)')
-        raise AssertionError('size or y_param cannot be zero (3rd and 4th parameter of downsample)')
+        logger.error(
+            'size or y cannot be zero (3rd and 4th parameter of downsample)')
+        raise AssertionError(
+            'size or y_param cannot be zero (3rd and 4th parameter of downsample)')
 
     if len(table_b) < size:
-        logger.warning('Size of table B is less than b_size parameter - using entire table B')
+        logger.warning(
+            'Size of table B is less than b_size parameter - using entire table B')
 
     # Inverted index built on table A will consist of all tuples in such P's and Q's - central idea is to have
     # good coverage in the down sampled A' and B'.
@@ -196,7 +203,8 @@ def down_sample(table_a, table_b, size, y_param):
 
     # Randomly select size tuples from table B to be B'
     b_sample_size = min(math.floor(size), len(table_b))
-    b_tbl_indices = list(pd.np.random.choice(len(table_b), b_sample_size, replace=False))
+    b_tbl_indices = list(
+        pd.np.random.choice(len(table_b), b_sample_size, replace=False))
 
     # Probe inverted index to find all tuples in A that share tokens with tuples in B'.
     s_tbl_indices = _probe_index(table_b.ix[b_tbl_indices], y_param,

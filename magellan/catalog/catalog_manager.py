@@ -509,7 +509,7 @@ def copy_properties(source_data_frame, target_data_frame, replace=True):
             to be copied from, in the catalog.
         target_data_frame (DataFrame): DataFrame to which the properties to be
             copied to, in the catalog.
-        replace (Optional[bool]): Flag to indicate whether the source
+        replace (boolean): Flag to indicate whether the source
             DataFrame's  properties can replace the target
             DataFrame's properties in the catalog. The default value for the
             flag is True.
@@ -588,15 +588,8 @@ def get_key(data_frame):
     Returns:
         A string value containing the key column name is returned (if present).
 
-    Raises:
-        This function calls get_property internally, and get_property
-        raises the following exceptions:
-        AssertionError: If the object is not of type pandas DataFrame.
-        AssertionError: If the property name is not of type string.
-        KeyError: If the DataFrame information is not present in the catalog.
-        KeyError: If the requested property for the DataFrame is not present
-            in the catalog.
-
+    Note:
+        This function internally calls get_property function.
     """
     # This function is just a sugar to get the 'key' property for a DataFrame
     return get_property(data_frame, 'key')
@@ -621,7 +614,7 @@ def set_key(data_frame, key_attribute):
         key_attribute (string): Key attribute (column name) in the DataFrame.
 
     Returns:
-        A Boolean value of True was successful if the given attribute
+        A Boolean value of True is returned, if the given attribute
         satisfies the conditions for a key and the update was successful.
 
     Raises:
@@ -629,6 +622,10 @@ def set_key(data_frame, key_attribute):
             pandas DataFrame.
         AssertionError: If the input key_attribute is not of type string.
         KeyError: If the given key attribute is not in the DataFrame columns.
+
+    Note:
+        This function internally calls set_property function.
+
     """
     # Validate input parameters
 
@@ -670,10 +667,11 @@ def get_fk_ltable(data_frame):
     """
     Gets foreign key to left table for a DataFrame from the catalog.
 
-     Specifically this function is a sugar function that will get the foreign
-     key to left table using underlying get_property function. This function
-     is typically called on a DataFrame which contains metadata such as foreign
-     key, ltable, foreign key rtable, ltable, rtable.
+    Specifically this function is a sugar function that will get the foreign
+    key to left table using underlying get_property function. This function
+    is typically called on a DataFrame which contains metadata such as
+    fk_ltable, fk_rtable, ltable, rtable.
+
 
     Args:
         data_frame (DataFrame): Input DataFrame for which the foreign key
@@ -682,14 +680,8 @@ def get_fk_ltable(data_frame):
     Returns:
         A Python object, typically a string is returned.
 
-    Raises:
-        This function calls get_property internally, and get_property
-        raises the following exceptions:
-        AssertionError: If the object is not of type pandas DataFrame.
-        AssertionError: If the property name is not of type string.
-        KeyError: If the DataFrame information is not present in the catalog.
-        KeyError: If the requested property for the DataFrame is not present
-            in the catalog.
+    Note:
+        This function internally calls get_property function.
 
     """
     # Call the get_property function and relay the result.
@@ -700,10 +692,10 @@ def get_fk_rtable(data_frame):
     """
     Gets foreign key to right table for a DataFrame from the catalog.
 
-     Specifically this function is a sugar function that will get the foreign
-     key to right table using underlying get_property function. This function
-     is typically called on a DataFrame which contains metadata such as foreign
-     key, ltable, foreign key rtable, ltable, rtable.
+    Specifically this function is a sugar function that will get the foreign
+    key to right table using underlying get_property function. This function
+    is typically called on a DataFrame which contains metadata such as
+    fk_ltable, fk_rtable, ltable, rtable.
 
     Args:
         data_frame (DataFrame): Input DataFrame for which the foreign key
@@ -712,14 +704,8 @@ def get_fk_rtable(data_frame):
     Returns:
         A Python object, typically a string is returned.
 
-    Raises:
-        This function calls get_property internally, and get_property
-        raises the following exceptions:
-        AssertionError: If the object is not of type pandas DataFrame.
-        AssertionError: If the property name is not of type string.
-        KeyError: If the DataFrame information is not present in the catalog.
-        KeyError: If the requested property for the DataFrame is not present
-            in the catalog.
+    Note:
+        This function internally calls get_property function.
 
     """
     # Call the get_property function and relay the result.
@@ -730,10 +716,10 @@ def set_fk_ltable(data_frame, fk_ltable):
     """
     Sets the foreign key to ltable for a DataFrame in the catalog.
 
-     Specifically this function is a sugar function that will set the foreign
-     key to left table using underlying set_property function. This function
-     is typically called on a DataFrame which contains metadata such as foreign
-     key, ltable, foreign key rtable, ltable, rtable.
+    Specifically this function is a sugar function that will set the foreign
+    key to left table using underlying set_property function. This function
+    is typically called on a DataFrame which contains metadata such as
+    fk_ltable, fk_rtable, ltable, rtable.
 
     Args:
         data_frame (DataFrame): Input DataFrame for which the foreign key
@@ -742,16 +728,19 @@ def set_fk_ltable(data_frame, fk_ltable):
             DataFrame in the catalog.
 
     Returns:
-        status (bool). Returns True if the ltable foreign key
-        attribute was set successfully, else returns False.
+        A Boolean value of True is returned if the ltable foreign key
+        attribute was set successfully.
 
     Raises:
         AssertionError: If the input object (data_frame) is not of type
-        pandas DataFrame.
+            pandas DataFrame.
         AssertionError: If the input attribute (fk_ltable) is not of type
-        string.
+            string.
         AssertionError: If the attribute (fk_ltable) is not in the input
-        DataFrame.
+            DataFrame.
+    Note:
+        This function internally calls set_property function.
+
     """
     # Validate the input parameters
     # # We expect the input object to be of type pandas DataFrame
@@ -884,10 +873,10 @@ def set_fk_rtable(data_frame, foreign_key_rtable):
     """
     Sets the foreign key to rtable for a DataFrame in the catalog.
 
-     Specifically this function is a sugar function that will set the foreign
-     key to right table using underlying set_property function. This function
-     is typically called on a DataFrame which contains metadata such as foreign
-     key, ltable, foreign key rtable, ltable, rtable.
+    Specifically this function is a sugar function that will set the foreign
+    key to right table using underlying set_property function. This function
+    is typically called on a DataFrame which contains metadata such as
+    fk_ltable, fk_rtable, ltable, rtable.
 
 
 
@@ -903,11 +892,11 @@ def set_fk_rtable(data_frame, foreign_key_rtable):
 
     Raises:
         AssertionError: If the input object (data_frame) is not of type
-        pandas DataFrame.
+          pandas DataFrame.
         AssertionError: If the input attribute (foreign_key_rtable) is not of
-        type string.
+            type string.
         AssertionError: If the attribute (fk_ltable) is not in the input
-        DataFrame.
+            DataFrame.
 
     """
     # Validate the input parameters
@@ -915,6 +904,12 @@ def set_fk_rtable(data_frame, foreign_key_rtable):
     if not isinstance(data_frame, pd.DataFrame):
         logger.error('Input object is not of type pandas data frame')
         raise AssertionError('Input object is not of type pandas data frame')
+
+    if not isinstance(foreign_key_rtable, six.string_types):
+        logger.error('Input (foreign key ltable) is not of type pandas data '
+                     'frame')
+        raise AssertionError('Input (foreign key rtable) is not of type pandas '
+                             'data frame')
 
     # Check if the given attribute is present in the DataFrame
     if not ch.check_attrs_present(data_frame, foreign_key_rtable):
@@ -1206,6 +1201,8 @@ def get_ltable(candset):
     Returns:
         A pandas DataFrame that is pointed by 'ltable' property of the input
         table.
+    Note:
+        This function internally calls get_property function.
     """
     # Return the ltable for a candidate set. This function is just a sugar
     return get_property(candset, 'ltable')
@@ -1222,6 +1219,9 @@ def get_rtable(candset):
     Returns:
         A pandas DataFrame that is pointed by 'rtable' property of the input
         table.
+
+    Note:
+        This function internally calls get_property function.
     """
     # Return the rtable for a candidate set. This function is just a sugar
 
@@ -1237,6 +1237,9 @@ def set_ltable(candset, table):
 
     Returns:
         A Boolean True, if the update was successful.
+
+    Note:
+        This function internally calls set_property function.
     """
     # Return the ltable for a candidate set. This function is just a sugar
     return set_property(candset, 'ltable', table)
@@ -1253,6 +1256,9 @@ def set_rtable(candset, table):
 
     Returns:
         A Boolean True, if the update was successful.
+
+    Note:
+        This function internally calls set_property function.
     """
     # Return the rtable for a candidate set. This function is just a sugar
 

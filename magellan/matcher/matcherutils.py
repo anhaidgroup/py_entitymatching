@@ -17,7 +17,7 @@ import magellan.utils.generic_helper as gh
 logger = logging.getLogger(__name__)
 
 
-def train_test_split(labeled_data, train_proportion=0.5,
+def split_train_test(labeled_data, train_proportion=0.5,
                      random_state=None, verbose=True):
     """
     This function splits the input data into train and test.
@@ -38,11 +38,17 @@ def train_test_split(labeled_data, train_proportion=0.5,
             should be displayed.
 
     Returns:
-        The command returns a dictionary with two keys: train, and test.
-        The value for the key 'train' is an MTable containing tuples
+
+        A Python dictionary containing two keys - train and test.
+
+        The value for the key 'train' is a pandas DataFrame containing tuples
         allocated from the input table based on train_proportion.
-        Similarly, the value for the key 'test' is an MTable containing
+
+        Similarly, the value for the key 'test' is a pandas DataFrame containing
         tuples for evaluation.
+
+        This function sets the output DataFrames (train, test) properties
+        same as the input DataFrame.
 
     """
     # Validate input parameters

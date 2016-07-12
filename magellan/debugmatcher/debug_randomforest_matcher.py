@@ -17,7 +17,9 @@ def debug_randomforest_matcher(random_forest, tuple_1, tuple_2,
                                exclude_attrs=None):
 
     """
-    This function is used to debug a random forest, using two input tuples.
+    This function is used to debug a random forest matcher using two input
+    tuples.
+
     Specifically, this function takes in two tuples, gets the feature vector
     using the feature table and finally passes it to the random forest  and
     displays the path that the feature vector takes in the decision tree.

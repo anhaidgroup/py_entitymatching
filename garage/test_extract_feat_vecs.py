@@ -65,7 +65,7 @@ print('Hi')
 # mg.set_property(labeled_data,'rtable', B)
 # mg.set_key(labeled_data, '_id')
 #
-# train_test = mg.train_test_split(labeled_data, train_proportion=0.001)
+# train_test = mg.split_train_test(labeled_data, train_proportion=0.001)
 # train = train_test['train']
 # test = train_test['test']
 # mg.to_csv_metadata(labeled_data, './labeled_data.csv')

@@ -15,7 +15,7 @@ from magellan.io.pickles import load_object, load_table, save_object, save_table
 #
 # import catalog related methods
 from magellan.catalog.catalog_manager import get_property, get_all_properties, \
-    set_property, del_property, del_all_properties, init_properties
+    set_property, del_property, del_all_properties, init_properties, copy_properties
 from magellan.catalog.catalog_manager import get_catalog, del_catalog, \
     get_catalog_len, show_properties, show_properties_for_id
 from magellan.catalog.catalog_manager import is_property_present_for_df, \
@@ -59,7 +59,7 @@ from magellan.feature.addfeatures import get_feature_fn, add_feature, \
 from magellan.feature.extractfeatures import extract_feature_vecs
 
 # # matcher related stuff
-from magellan.matcher.matcherutils import train_test_split, impute_table
+from magellan.matcher.matcherutils import split_train_test, impute_table
 from magellan.matcher.dtmatcher import DTMatcher
 from magellan.matcher.linregmatcher import LinRegMatcher
 from magellan.matcher.logregmatcher import LogRegMatcher

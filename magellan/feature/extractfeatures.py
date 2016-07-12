@@ -15,11 +15,13 @@ logger = logging.getLogger(__name__)
 
 
 def extract_feature_vecs(candset, attrs_before=None, feature_table=None,
-                         attrs_after=None, verbose=True,
+                         attrs_after=None, verbose=False,
                          show_progress=True):
     """
     This function extracts feature vectors from a DataFrame (typically a
-    labeled candidate set). Specifically, this function uses the feature
+    labeled candidate set).
+
+    Specifically, this function uses the feature
     table, and the ltable and rtable (that is present in the candset's
     metadata) tuples to generate features.
 
@@ -34,17 +36,22 @@ def extract_feature_vecs(candset, attrs_before=None, feature_table=None,
         attrs_after (list): The list of attributes from the input candset
             that should be added after the feature vectors (defaults to None).
         verbose (boolean): A flag to indicate whether the debug information
-            should be displayed (defaults to True).
+            should be displayed (defaults to False).
         show_progress (boolean): A flag to indicate whether the progress of
             extracting feature vectors must be displayed (defaults to True).
 
 
     Returns:
-        A DataFrame containing feature vectors is returned. The
-        DataFrame will have metadata such as ltable and rtable, pointing to the
-        same ltable and rtable as the input candset. Also, the output
+        A pandas DataFrame containing feature vectors is returned.
+
+        The DataFrame will have metadata such as ltable and rtable, pointing
+        to the same ltable and rtable as the input candset.
+
+        Also, the output
         DataFrame will have three columns: key, foreign key ltable, foreign
         key rtable copied from input candset to the output DataFrame.
+
+
 
     Raises:
         AssertionError: If the input object (candset) is not of type pandas

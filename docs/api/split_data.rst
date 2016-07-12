@@ -1,4 +1,4 @@
 ==================================
 Splitting Data into Train and Test
 ==================================
-.. autofunction:: magellan.train_test_split
+.. autofunction:: magellan.split_train_test
