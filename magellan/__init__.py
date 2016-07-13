@@ -75,8 +75,10 @@ from magellan.debugmatcher.debug_decisiontree_matcher import \
     debug_decisiontree_matcher, visualize_tree
 from magellan.debugmatcher.debug_randomforest_matcher import \
     debug_randomforest_matcher
-from magellan.debugmatcher.debug_gui_decisiontree_matcher import vis_debug_dt
-from magellan.debugmatcher.debug_gui_randomforest_matcher import vis_debug_rf
+from magellan.debugmatcher.debug_gui_decisiontree_matcher import \
+    vis_debug_dt, vis_tuple_debug_dt_matcher
+from magellan.debugmatcher.debug_gui_randomforest_matcher import \
+    vis_debug_rf, vis_tuple_debug_rf_matcher
 
 # # evaluation
 from magellan.evaluation.evaluation import eval_matches, \
