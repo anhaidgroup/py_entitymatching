@@ -34,9 +34,9 @@ class AttrEquivalenceBlocker(Blocker):
 
             rtable (DataFrame): The right input table.
 
-            l_block_attr (str): The blocking attribute in left table.
+            l_block_attr (string): The blocking attribute in left table.
 
-            r_block_attr (str): The blocking attribute in right table.
+            r_block_attr (string): The blocking attribute in right table.
 
             l_output_attrs (list): A list of attribute names from the left
                                    table to be included in the
@@ -46,11 +46,11 @@ class AttrEquivalenceBlocker(Blocker):
                                    table to be included in the
                                    output candidate set (defaults to None).
 
-            l_output_prefix (str): The prefix to be used for the attribute names
+            l_output_prefix (string): The prefix to be used for the attribute names
                                    coming from the left table in the output
                                    candidate set (defaults to 'ltable\_').
 
-            r_output_prefix (str): The prefix to be used for the attribute names
+            r_output_prefix (string): The prefix to be used for the attribute names
                                    coming from the right table in the output
                                    candidate set (defaults to 'rtable\_').
 
@@ -184,9 +184,9 @@ class AttrEquivalenceBlocker(Blocker):
         Args:
             candset (DataFrame): The input candidate set of tuple pairs.
 
-            l_block_attr (str): The blocking attribute in left table.
+            l_block_attr (string): The blocking attribute in left table.
 
-            r_block_attr (str): The blocking attribute in right table.
+            r_block_attr (string): The blocking attribute in right table.
 
             allow_missing (boolean): A flag to indicate whether tuple pairs
                                      with missing value in at least one of the
@@ -298,9 +298,9 @@ class AttrEquivalenceBlocker(Blocker):
 
             rtuple (Series): The input right tuple.
             
-            l_block_attr (str): The blocking attribute in left tuple.
+            l_block_attr (string): The blocking attribute in left tuple.
 
-            r_block_attr (str): The blocking attribute in right tuple.
+            r_block_attr (string): The blocking attribute in right tuple.
 
             allow_missing (boolean): A flag to indicate whether a tuple pair
                                      with missing value in at least one of the

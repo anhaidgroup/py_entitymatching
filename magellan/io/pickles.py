@@ -19,14 +19,14 @@ logger = logging.getLogger(__name__)
 
 def save_object(object_to_save, file_path):
     """
-    Save a Python object to disk.
+    Saves a Python object to disk.
 
     This function is intended to be used to save Magellan objects such as
     rule-based blocker, feature vectors, etc.
 
     A user would like to store
     Magellan objects to disk, when he/she wants to save the workflow and
-    resume it later. This function provides a way to save the required such
+    resume it later. This function provides a way to save the required
     objects to disk.
 
     Args:
@@ -123,7 +123,7 @@ def load_object(file_path):
 # noinspection PyProtectedMember
 def save_table(data_frame, file_path, metadata_ext='.pklmetadata'):
     """
-    Save a DataFrame to disk along with its metadata in a pickle format.
+    Saves a DataFrame to disk along with its metadata in a pickle format.
 
     This function saves a  DataFrame to disk along with its metadata from
     the catalog.
@@ -149,7 +149,7 @@ def save_table(data_frame, file_path, metadata_ext='.pklmetadata'):
 
 
     Note:
-        This function is bit different from to_csv_metadata, where the
+        This function is a bit different from to_csv_metadata, where the
         DataFrame is stored in a CSV file format. The CSV file format can be
         viewed using a text editor. But save_table is stored in a
         special format, which cannot be viewed with a text editor.
@@ -266,8 +266,9 @@ def load_table(file_path, metadata_ext='.pklmetadata'):
     Args:
         file_path (string): The file path to load the file from.
         metadata_ext (string): The metadata file extension (with the default
-        value set to '.pklmetadata') that should be used generate metadata
-        file name.
+         value set to '.pklmetadata') that should be used to generate metadata
+         file name.
+
     Returns:
         If the loading is successful, the function will return a pandas
         DataFrame read from the file. The catalog will be updated with the
@@ -280,7 +281,7 @@ def load_table(file_path, metadata_ext='.pklmetadata'):
     Note:
         This function is different from read_csv_metadata in two aspects.
         First, this function currently does not support reading in candidate
-        set tables, where the there are more metadata such as ltable,
+        set tables, where there are more metadata such as ltable,
         rtable than just 'key', and conceptually the user is expected to
         provide ltable and rtable information while calling this function. (
         this support will be added shortly). Second, this function loads the

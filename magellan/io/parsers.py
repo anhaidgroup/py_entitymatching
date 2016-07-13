@@ -13,13 +13,13 @@ logger = logging.getLogger(__name__)
 
 def read_csv_metadata(file_path, **kwargs):
     """
-    Read a CSV (comma-separated values) file into a pandas DataFrame
+    Reads a CSV (comma-separated values) file into a pandas DataFrame
     and update the catalog with the metadata.
 
     Specifically, this function first reads the CSV file from the given file
     path into a pandas DataFrame. It uses 'read_csv' method from
-    pandas to read the CSV file into a pandas DataFrame. Then, it will
-    update the catalog with the metadata. There are three ways to update the
+    pandas to read the CSV file into a pandas DataFrame. Then, it
+    updates the catalog with the metadata. There are three ways to update the
     metadata: (1) using a metadata file, (2) using the key-value
     parameters supplied in the function, and (3) using both metadata file and
     key-value parameters.
@@ -28,19 +28,19 @@ def read_csv_metadata(file_path, **kwargs):
     the function will look for a file in the same directory with  same file name
     but with a  specific extension. This extension can be optionally given by
     the user (with the default value set to
-    '.metadata'). If the metadata  file is  present, the function with read
+    '.metadata'). If the metadata  file is  present, the function will read
     and update the catalog appropriately. If  the metadata file is not present,
     the function will issue a warning that the metadata file is not present.
 
     The metadata information can also be given as parameters to the function
-    (see decription of arguments for more details). If given, the function
+    (see description of arguments for more details). If given, the function
     will update the catalog with the given information.
 
     Further, the metadata can partly occur in the metdata file and given
     as parameters. The function will take a union of them and update the
     catalog appropriately.
     If the same metadata is given in both the metadata file
-    and the function, then the metadata in the function takes precendence over
+    and the function, then the metadata in the function takes precedence over
     the metadata given in the file.
 
 
@@ -59,7 +59,7 @@ def read_csv_metadata(file_path, **kwargs):
             CSV file.
 
     Returns:
-        A pandas DataFrame read from the given CSV file.
+        A pandas DataFrame read from the input CSV file.
 
     Raises:
         AssertionError: If the input file path is not of type string.
@@ -152,7 +152,8 @@ def to_csv_metadata(data_frame, file_path, **kwargs):
     Args:
         data_frame (DataFrame): The DataFrame that should be written to disk.
         file_path (string):  The file path to which the DataFrame contents
-            to be written. Metadata is written with the same file name with the
+            should be written. Metadata is written with the same file name
+            with the
             extension given by the user (defaults to .metadata).
         kwargs (dictionary):  A Python dictionary containing key-value pairs.
             There is one key-value pair that is specific to

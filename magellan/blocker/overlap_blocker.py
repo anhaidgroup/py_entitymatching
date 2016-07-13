@@ -64,9 +64,9 @@ class OverlapBlocker(Blocker):
 
             rtable (DataFrame): The right input table.
 
-            l_overlap_attr (str): The overlap attribute in left table.
+            l_overlap_attr (string): The overlap attribute in left table.
 
-            r_overlap_attr (str): The overlap attribute in right table.
+            r_overlap_attr (string): The overlap attribute in right table.
 
             rem_stop_words (boolean): A flag to indicate whether stop words
                                       (e.g., a, an, the) should be removed
@@ -92,11 +92,11 @@ class OverlapBlocker(Blocker):
                                    table to be included in the
                                    output candidate set (defaults to None).
 
-            l_output_prefix (str): The prefix to be used for the attribute names
+            l_output_prefix (string): The prefix to be used for the attribute names
                                    coming from the left table in the output
                                    candidate set (defaults to 'ltable\_').
 
-            r_output_prefix (str): The prefix to be used for the attribute names
+            r_output_prefix (string): The prefix to be used for the attribute names
                                    coming from the right table in the output
                                    candidate set (defaults to 'rtable\_').
 
@@ -236,9 +236,9 @@ class OverlapBlocker(Blocker):
         Args:
             candset (DataFrame): The input candidate set of tuple pairs.
 
-            l_overlap_attr (str): The overlap attribute in left table.
+            l_overlap_attr (string): The overlap attribute in left table.
 
-            r_overlap_attr (str): The overlap attribute in right table.
+            r_overlap_attr (string): The overlap attribute in right table.
 
             rem_stop_words (boolean): A flag to indicate whether stop words
                                       (e.g., a, an, the) should be removed
@@ -374,9 +374,9 @@ class OverlapBlocker(Blocker):
 
             rtuple (Series): The input right tuple.
             
-            l_overlap_attr (str): The overlap attribute in left tuple.
+            l_overlap_attr (string): The overlap attribute in left tuple.
 
-            r_overlap_attr (str): The overlap attribute in right tuple.
+            r_overlap_attr (string): The overlap attribute in right tuple.
 
             rem_stop_words (boolean): A flag to indicate whether stop words
                                       (e.g., a, an, the) should be removed

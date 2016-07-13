@@ -155,11 +155,11 @@ class RuleBasedBlocker(Blocker):
                                    table to be included in the
                                    output candidate set (defaults to None).
 
-            l_output_prefix (str): The prefix to be used for the attribute names
+            l_output_prefix (string): The prefix to be used for the attribute names
                                    coming from the left table in the output
                                    candidate set (defaults to 'ltable\_').
 
-            r_output_prefix (str): The prefix to be used for the attribute names
+            r_output_prefix (string): The prefix to be used for the attribute names
                                    coming from the right table in the output
                                    candidate set (defaults to 'rtable\_').
 
