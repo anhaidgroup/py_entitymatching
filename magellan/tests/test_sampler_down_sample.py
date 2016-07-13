@@ -12,7 +12,7 @@ from magellan.sampler.down_sample import _inv_index, _probe_index, down_sample, 
 import magellan.catalog.catalog_manager as cm
 from magellan.io.parsers import read_csv_metadata
 
-datasets_path = os.sep.join([get_install_path(), 'datasets', 'test_datasets'])
+datasets_path = os.sep.join([get_install_path(), 'tests', 'test_datasets'])
 path_a = os.sep.join([datasets_path, 'restA.csv'])
 path_b = os.sep.join([datasets_path, 'restB.csv'])
 

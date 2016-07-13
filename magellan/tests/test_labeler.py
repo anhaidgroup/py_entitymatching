@@ -10,7 +10,7 @@ import magellan.catalog.catalog_manager as cm
 from magellan.io.parsers import read_csv_metadata
 from magellan.labeler.labeler import _post_process_labelled_table, _init_label_table, _validate_inputs, label_table
 
-datasets_path = os.sep.join([get_install_path(), 'datasets', 'test_datasets'])
+datasets_path = os.sep.join([get_install_path(), 'tests', 'test_datasets'])
 path_a = os.sep.join([datasets_path, 'A.csv'])
 path_b = os.sep.join([datasets_path, 'B.csv'])
 path_c = os.sep.join([datasets_path, 'C.csv'])

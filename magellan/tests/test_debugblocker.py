@@ -12,9 +12,9 @@ from magellan.io.parsers import read_csv_metadata
 import magellan.debugblocker.debugblocker as db
 
 
-datasets_path = os.sep.join([get_install_path(), 'datasets', 'test_datasets'])
-catalog_datasets_path = os.sep.join([get_install_path(), 'datasets', 'test_datasets', 'catalog'])
-debugblocker_datasets_path = os.sep.join([get_install_path(), 'datasets', 'test_datasets', 'debugblocker'])
+datasets_path = os.sep.join([get_install_path(), 'tests', 'test_datasets'])
+catalog_datasets_path = os.sep.join([get_install_path(), 'tests', 'test_datasets', 'catalog'])
+debugblocker_datasets_path = os.sep.join([get_install_path(), 'tests', 'test_datasets', 'debugblocker'])
 path_a = os.sep.join([datasets_path, 'A.csv'])
 path_b = os.sep.join([datasets_path, 'B.csv'])
 path_c = os.sep.join([datasets_path, 'C.csv'])

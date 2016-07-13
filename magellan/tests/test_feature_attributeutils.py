@@ -13,7 +13,7 @@ from magellan.feature.attributeutils import get_attr_corres, get_attr_types, _ge
 
 import magellan.catalog.catalog_manager as cm
 
-datasets_path = os.sep.join([get_install_path(), 'datasets', 'test_datasets'])
+datasets_path = os.sep.join([get_install_path(), 'tests', 'test_datasets'])
 path_a = os.sep.join([datasets_path, 'A.csv'])
 path_b = os.sep.join([datasets_path, 'B.csv'])
 

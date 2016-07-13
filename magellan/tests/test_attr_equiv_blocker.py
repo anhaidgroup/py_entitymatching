@@ -6,8 +6,8 @@ import unittest
 import magellan as mg
 
 p = mg.get_install_path()
-path_a = os.sep.join([p, 'datasets', 'table_A.csv'])
-path_b = os.sep.join([p, 'datasets', 'table_B.csv'])
+path_a = os.sep.join([p, 'tests', 'test_datasets', 'A.csv'])
+path_b = os.sep.join([p, 'tests', 'test_datasets', 'B.csv'])
 l_block_attr_1 = 'zipcode'
 l_block_attr_2 = 'birth_year'
 l_block_attr_3 = 'name'
@@ -280,9 +280,9 @@ class AttrEquivBlockerTestCases(unittest.TestCase):
         validate_data(C, expected_ids_1)
 
     def test_ab_block_tables_wi_missing_values_allow_missing(self):
-        path_a = os.sep.join([p, 'datasets', 'test_datasets', 'blocker',
+        path_a = os.sep.join([p, 'tests', 'test_datasets', 'blocker',
                               'table_A_wi_missing_vals.csv'])
-        path_b = os.sep.join([p, 'datasets', 'test_datasets', 'blocker',
+        path_b = os.sep.join([p, 'tests', 'test_datasets', 'blocker',
                               'table_B_wi_missing_vals.csv'])
         A = mg.read_csv_metadata(path_a)
         mg.set_key(A, 'ID')
@@ -296,9 +296,9 @@ class AttrEquivBlockerTestCases(unittest.TestCase):
         validate_data(C, expected_ids_3)
 
     def test_ab_block_tables_wi_missing_values_disallow_missing(self):
-        path_a = os.sep.join([p, 'datasets', 'test_datasets', 'blocker',
+        path_a = os.sep.join([p, 'tests', 'test_datasets', 'blocker',
                               'table_A_wi_missing_vals.csv'])
-        path_b = os.sep.join([p, 'datasets', 'test_datasets', 'blocker',
+        path_b = os.sep.join([p, 'tests', 'test_datasets', 'blocker',
                               'table_B_wi_missing_vals.csv'])
         A = mg.read_csv_metadata(path_a)
         mg.set_key(A, 'ID')

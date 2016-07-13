@@ -6,8 +6,8 @@ import unittest
 import magellan as mg
 
 p = mg.get_install_path()
-path_for_A = os.sep.join([p, 'datasets', 'table_A.csv'])
-path_for_B = os.sep.join([p, 'datasets', 'table_B.csv'])
+path_for_A = os.sep.join([p, 'tests', 'test_datasets', 'A.csv'])
+path_for_B = os.sep.join([p, 'tests', 'test_datasets', 'B.csv'])
 l_output_attrs = ['zipcode', 'birth_year']
 r_output_attrs = ['zipcode', 'birth_year']
 l_output_prefix = 'l_'

@@ -7,8 +7,8 @@ import magellan as mg
 import magellan.feature.simfunctions as sim
 
 p = mg.get_install_path()
-path_a = os.sep.join([p, 'datasets', 'table_A.csv'])
-path_b = os.sep.join([p, 'datasets', 'table_B.csv'])
+path_a = os.sep.join([p, 'tests', 'test_datasets', 'A.csv'])
+path_b = os.sep.join([p, 'tests', 'test_datasets', 'B.csv'])
 l_output_attrs = ['name', 'address']
 r_output_attrs = ['name', 'address']
 l_output_prefix = 'l_'

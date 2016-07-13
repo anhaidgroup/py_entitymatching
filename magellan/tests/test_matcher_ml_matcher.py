@@ -17,12 +17,13 @@ import magellan.matcher.matcherutils as mu
 import magellan.catalog.catalog_manager as cm
 from magellan.utils.generic_helper import get_install_path, list_diff
 
-datasets_path = os.sep.join([get_install_path(), 'datasets', 'test_datasets'])
+datasets_path = os.sep.join([get_install_path(), 'tests', 'test_datasets'])
 path_a = os.sep.join([datasets_path, 'A.csv'])
 path_b = os.sep.join([datasets_path, 'B.csv'])
 path_c = os.sep.join([datasets_path, 'C.csv'])
 
-feat_datasets_path = os.sep.join([get_install_path(), 'datasets', 'test_datasets', 'matcherselector'])
+feat_datasets_path = os.sep.join([get_install_path(), 'tests', 'test_datasets',
+                                  'matcherselector'])
 fpath_a = os.sep.join([feat_datasets_path, 'DBLP_demo.csv'])
 fpath_b = os.sep.join([feat_datasets_path, 'ACM_demo.csv'])
 fpath_c = os.sep.join([feat_datasets_path, 'dblp_acm_demo_labels.csv'])

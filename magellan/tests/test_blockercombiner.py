@@ -10,8 +10,9 @@ import magellan.catalog.catalog_manager as cm
 from magellan.io.parsers import read_csv_metadata, to_csv_metadata
 from magellan.blockercombiner.blockercombiner import combine_blocker_outputs_via_union
 
-datasets_path = os.sep.join([get_install_path(), 'datasets', 'test_datasets'])
-bc_datasets_path = os.sep.join([get_install_path(), 'datasets', 'test_datasets', 'blockercombiner'])
+datasets_path = os.sep.join([get_install_path(), 'tests', 'test_datasets'])
+bc_datasets_path = os.sep.join([get_install_path(), 'tests', 'test_datasets',
+                                'blockercombiner'])
 path_a = os.sep.join([datasets_path, 'A.csv'])
 path_b = os.sep.join([datasets_path, 'B.csv'])
 path_c = os.sep.join([datasets_path, 'C.csv'])

@@ -9,12 +9,14 @@ from nose.tools import *
 from magellan.io.parsers import read_csv_metadata, to_csv_metadata, _get_metadata_from_file
 from magellan.utils.generic_helper import get_install_path, del_files_in_dir, creat_dir_ifnot_exists
 import magellan.catalog.catalog_manager as cm
-datasets_path = os.sep.join([get_install_path(), 'datasets', 'test_datasets'])
-io_datasets_path = os.sep.join([get_install_path(), 'datasets', 'test_datasets', 'io'])
+datasets_path = os.sep.join([get_install_path(), 'tests', 'test_datasets'])
+io_datasets_path = os.sep.join([get_install_path(), 'tests', 'test_datasets',
+                                'io'])
 path_a = os.sep.join([datasets_path, 'A.csv'])
 path_b = os.sep.join([datasets_path, 'B.csv'])
 path_c = os.sep.join([datasets_path, 'C.csv'])
-sndbx_path = os.sep.join([os.sep.join([get_install_path(), 'datasets', 'test_datasets']), 'sandbox'])
+sndbx_path = os.sep.join([os.sep.join([get_install_path(), 'tests',
+                                       'test_datasets']), 'sandbox'])
 
 class ReadCSVMetadataTestCases(unittest.TestCase):
     def test_valid_path_wi_valid_metadata(self):
