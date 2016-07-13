@@ -7,6 +7,8 @@ import six
 from joblib import Parallel, delayed
 from py_stringmatching.tokenizer.qgram_tokenizer import QgramTokenizer
 from py_stringmatching.tokenizer.whitespace_tokenizer import WhitespaceTokenizer
+import cloudpickle as cp
+import pickle
 
 import magellan.catalog.catalog_manager as cm
 from magellan.blocker.blocker import Blocker
@@ -20,7 +22,7 @@ from magellan.utils.catalog_helper import log_info, get_name_for_key, add_key_co
 
 logger = logging.getLogger(__name__)
 
-global_rb = None
+#global_rb = None
 
 
 class RuleBasedBlocker(Blocker):
@@ -288,14 +290,17 @@ class RuleBasedBlocker(Blocker):
         # # list to keep track of valid ids
         valid = []
 
-        global global_rb
-        global_rb = self
+        #global global_rb
+        #global_rb = self
+
+        pickled_fn = cp.dumps(self.apply_rules_excluding_rule)
+ 
         if n_procs <= 1:
             # single process
             valid = _block_candset_excluding_rule_split(c_df, l_df, r_df,
                                                         l_key, r_key,
                                                         fk_ltable, fk_rtable,
-                                                        rule_to_exclude,
+                                                        rule_to_exclude, pickled_fn,
                                                         show_progress)
         else:
             # multiprocessing
@@ -306,13 +311,13 @@ class RuleBasedBlocker(Blocker):
                                                              l_key, r_key,
                                                              fk_ltable,
                                                              fk_rtable,
-                                                             rule_to_exclude,
+                                                             rule_to_exclude, pickled_fn,
                                                              show_progress and i == len(
                                                                  c_splits) - 1)
                 for i in range(len(c_splits)))
             valid = sum(valid_splits, [])
 
-        global_rb = None
+        #global_rb = None
 
         # construct output candset
         if len(c_df) > 0:
@@ -334,13 +339,17 @@ class RuleBasedBlocker(Blocker):
         n_procs = self.get_num_procs(n_jobs, len(l_df) * len(r_df))
 
         candset = None
-        global global_rb
-        global_rb = self
+
+        #global global_rb
+        #global_rb = self
+
+        pickled_fn = cp.dumps(self.apply_rules)
+
         if n_procs <= 1:
             # single process
             candset = _block_tables_split(l_df, r_df, l_key, r_key,
                                           l_output_attrs, r_output_attrs,
-                                          l_output_prefix, r_output_prefix,
+                                          l_output_prefix, r_output_prefix, pickled_fn,
                                           show_progress)
         else:
             # multiprocessing
@@ -351,14 +360,14 @@ class RuleBasedBlocker(Blocker):
                 delayed(_block_tables_split)(l_splits[i], r_splits[j],
                                              l_key, r_key,
                                              l_output_attrs, r_output_attrs,
-                                             l_output_prefix, r_output_prefix,
+                                             l_output_prefix, r_output_prefix, pickled_fn,
                                              show_progress and i == len(
                                                  l_splits) - 1 and j == len(
                                                  r_splits) - 1)
                 for i in range(len(l_splits)) for j in range(len(r_splits)))
             candset = pd.concat(c_splits, ignore_index=True)
 
-        global_rb = None
+        #global_rb = None
 
         # return candidate set
         return candset
@@ -656,7 +665,7 @@ class RuleBasedBlocker(Blocker):
 
 def _block_tables_split(l_df, r_df, l_key, r_key,
                         l_output_attrs, r_output_attrs,
-                        l_output_prefix, r_output_prefix,
+                        l_output_prefix, r_output_prefix, pickled_fn,
                         show_progress):
     # initialize progress bar
     if show_progress:
@@ -694,8 +703,10 @@ def _block_tables_split(l_df, r_df, l_key, r_key,
             rtuple = r_dict[r_t[r_id_pos]]
 
             # # apply the rules to the tuple pair
-            res = global_rb.apply_rules(ltuple, rtuple)
-            # res = rule_based_blocker.apply_rules(ltuple, rtuple)
+            #res = global_rb.apply_rules(ltuple, rtuple)
+
+            fn = pickle.loads(pickled_fn)
+            res = fn(ltuple, rtuple)
 
             if res != True:
                 # # this tuple pair survives blocking
@@ -725,7 +736,7 @@ def _block_tables_split(l_df, r_df, l_key, r_key,
 
 def _block_candset_excluding_rule_split(c_df, l_df, r_df, l_key, r_key,
                                         fk_ltable,
-                                        fk_rtable, rule_to_exclude,
+                                        fk_rtable, rule_to_exclude, pickled_fn,
                                         show_progress):
     # do blocking
 
@@ -761,8 +772,12 @@ def _block_candset_excluding_rule_split(c_df, l_df, r_df, l_key, r_key,
             r_dict[row_rid] = r_df.ix[row_rid]
         rtuple = r_dict[row_rid]
 
-        res = global_rb.apply_rules_excluding_rule(ltuple, rtuple,
-                                                   rule_to_exclude)
+        #res = global_rb.apply_rules_excluding_rule(ltuple, rtuple,
+        #                                           rule_to_exclude)
+        
+        fn = pickle.loads(pickled_fn)
+        res = fn(ltuple, rtuple, rule_to_exclude)
+ 
         if res != True:
             valid.append(True)
         else:
