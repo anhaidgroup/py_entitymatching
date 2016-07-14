@@ -2,7 +2,11 @@ from functools import partial
 
 import pandas as pd
 import six
-from PyQt4 import QtGui, QtCore
+try:
+    from PyQt4 import QtGui, QtCore
+except ImportError:
+    raise ImportError('PyQt4 is not installed. Please install PyQt4 to use '
+                      'GUI related functions in Magellan.')
 
 import magellan as mg
 

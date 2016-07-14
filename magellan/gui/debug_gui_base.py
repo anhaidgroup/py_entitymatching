@@ -1,6 +1,11 @@
 from collections import OrderedDict
 
-from PyQt4 import QtGui, QtCore
+
+try:
+    from PyQt4 import QtGui, QtCore
+except ImportError:
+    raise ImportError('PyQt4 is not installed. Please install PyQt4 to use '
+                      'GUI related functions in Magellan.')
 
 import magellan as mg
 import magellan.catalog.catalog_manager as cm

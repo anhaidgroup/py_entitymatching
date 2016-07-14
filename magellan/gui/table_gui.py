@@ -1,6 +1,6 @@
 import logging
 # from builtins import str
-from PyQt4 import QtGui
+
 import six
 
 import magellan as mg
@@ -20,6 +20,12 @@ def view_table(table, edit_flag=False, show_flag=True):
         displayed
 
     """
+    try:
+        from PyQt4 import QtGui
+    except ImportError:
+        raise ImportError('PyQt4 is not installed. Please install PyQt4 to use '
+                      'GUI related functions in Magellan.')
+
     mg._viewapp = QtGui.QApplication.instance()
     if mg._viewapp is None:
         mg._viewapp = QtGui.QApplication([])
@@ -70,6 +76,12 @@ def edit_table(table, show_flag=True):
     """
     Edit table
     """
+    try:
+        from PyQt4 import QtGui
+    except ImportError:
+        raise ImportError('PyQt4 is not installed. Please install PyQt4 to use '
+                      'GUI related functions in Magellan.')
+
     datatable = view_table(table, edit_flag=True, show_flag=show_flag)
     cols = list(table.columns)
     idxv = list(table.index)
