@@ -60,7 +60,7 @@ class DataFrameTableView(QtGui.QTableWidget):
                         button.clicked.connect(
                             partial(self.controller.handle_debug_button, i))
                     else:
-                        if pd.isnull(self.dataframe.iloc(i, j - 2)):
+                        if pd.isnull(self.dataframe.iloc[i, j - 2]):
                             self.setItem(i, j, QtGui.QTableWidgetItem(""))
                         else:
                             self.setItem(i, j, QtGui.QTableWidgetItem(

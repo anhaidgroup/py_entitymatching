@@ -75,17 +75,24 @@ from magellan.debugmatcher.debug_decisiontree_matcher import \
     debug_decisiontree_matcher, visualize_tree
 from magellan.debugmatcher.debug_randomforest_matcher import \
     debug_randomforest_matcher
-from magellan.debugmatcher.debug_gui_decisiontree_matcher import vis_debug_dt
-from magellan.debugmatcher.debug_gui_randomforest_matcher import vis_debug_rf
+from magellan.debugmatcher.debug_gui_decisiontree_matcher import \
+    vis_debug_dt, vis_tuple_debug_dt_matcher
+from magellan.debugmatcher.debug_gui_randomforest_matcher import \
+    vis_debug_rf, vis_tuple_debug_rf_matcher
 
 # # evaluation
 from magellan.evaluation.evaluation import eval_matches, \
     get_false_negatives_as_df, get_false_positives_as_df, print_eval_summary
 
 
-# # helper functions
+# # generic helper functions
 from magellan.utils.generic_helper import get_install_path, load_dataset, \
     add_output_attributes
+
+# # pandas helper functions
+from magellan.utils.pandas_helper import filter_rows, project_cols, \
+    mutate_col, rename_col, preserve_metadata, drop_cols
+
 
 # global vars
 _block_t = None

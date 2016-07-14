@@ -7,7 +7,6 @@ import magellan.catalog.catalog_manager as cm
 from  magellan.gui.gui_utils import DictTableViewWithLabel, \
     DataFrameTableViewWithLabel, TreeViewWithLabel
 
-
 class MainWindowManager(QtGui.QWidget):
     """
     This class defines the main window manager
@@ -232,3 +231,4 @@ class DebugWindowManager(QtGui.QWidget):
         layout.addWidget(splitter2)
         # Set the layout correctly.
         self.setLayout(layout)
+
