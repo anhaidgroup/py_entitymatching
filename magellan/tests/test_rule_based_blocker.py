@@ -399,6 +399,22 @@ class RuleBasedBlockerTestCases(unittest.TestCase):
         validate_metadata(C)
         validate_data(C)
     
+    def test_rb_block_tables_rule_wi_lev_dist_geq_op(self):
+        # rule should return an empty set
+        test_rule = ['birth_year_birth_year_lev_dist(ltuple, rtuple) >= 0']
+        self.rb.add_rule(test_rule, self.feature_table)
+        C = self.rb.block_tables(self.A, self.B, show_progress=False)
+        validate_metadata(C)
+        validate_data(C)
+
+    def test_rb_block_tables_rule_wi_th_not_supported_by_py_stringsimjoin(self):
+        # rule is correct, should return an empty set
+        test_rule = ['birth_year_birth_year_lev_dist(ltuple, rtuple) > -1']
+        self.rb.add_rule(test_rule, self.feature_table)
+        C = self.rb.block_tables(self.A, self.B, show_progress=False)
+        validate_metadata(C)
+        validate_data(C)
+    
     @raises(AssertionError)
     def test_rb_block_candset_invalid_candset_1(self):
         self.rb.block_candset(None)

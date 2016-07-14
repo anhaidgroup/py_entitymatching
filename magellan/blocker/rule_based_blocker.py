@@ -45,17 +45,14 @@ class RuleBasedBlocker(Blocker):
 
         super(Blocker, self).__init__(*args, **kwargs)
 
-    def create_rule(self, conjunct_list, feature_table=None):
-        if feature_table is None and self.feature_table is None:
-            logger.error('Either feature table should be given as parameter ' +
-                         'or use set_feature_table to set the feature table')
-            raise AssertionError('Either feature table should be given as ' +
-                                 'parameter or use set_feature_table to set ' +
-                                 'the feature table')
-
-        # set the rule name
-        name = '_rule_' + str(self.rule_cnt)
-        self.rule_cnt += 1
+    def _create_rule(self, conjunct_list, feature_table, rule_name):
+        if rule_name is None:
+            # set the rule name automatically
+            name = '_rule_' + str(self.rule_cnt)
+            self.rule_cnt += 1
+        else:
+            # use the rule name supplied by the user
+            name = rule_name
 
         # create function string
         fn_str = 'def ' + name + '(ltuple, rtuple):\n'
@@ -75,21 +72,48 @@ class RuleBasedBlocker(Blocker):
 
         return feat_dict[name], name, fn_str
 
-    def add_rule(self, conjunct_list, feature_table):
+    def add_rule(self, conjunct_list, feature_table=None, rule_name=None):
         """Adds a rule to the rule-based blocker.
 
            Args:
                conjunct_list (list): A list of conjuncts specifying the rule.
              
                feature_table (DataFrame): A DataFrame containing all the
-                                          features
-                                          that are being referenced by the rule.
+                                          features that are being referenced by
+                                          the rule (defaults to None). If the
+                                          feature_table is not supplied here,
+                                          then it must have been specified
+                                          during the creation of the rule-based
+                                          blocker or using set_feature_table
+                                          function. Otherwise an AssertionError
+                                          will be raised and the rule will not
+                                          be added to the rule-based blocker.
+
+               rule_name (string): A string specifying the name of the rule to
+                                   be added (defaults to None). If the
+                                   rule_name is not specified then a name will
+                                   be automatically chosen. If there is already
+                                   a rule with the specified rule_name, then
+                                   an AssertionError will be raised and the
+                                   rule will not be added to the rule-based
+                                   blocker.
         """
+
+        if rule_name is not None and rule_name in self.rules.keys():
+            logger.error('A rule with the specified rule_name already exists.')
+            raise AssertionError('A rule with the specified rule_name already exists.')
+
+        if feature_table is None and self.feature_table is None:
+            logger.error('Either feature table should be given as parameter ' +
+                         'or use set_feature_table to set the feature table.')
+            raise AssertionError('Either feature table should be given as ' +
+                                 'parameter or use set_feature_table to set ' +
+                                 'the feature table.')
 
         if not isinstance(conjunct_list, list):
             conjunct_list = [conjunct_list]
 
-        fn, name, fn_str = self.create_rule(conjunct_list, feature_table)
+        fn, name, fn_str = self._create_rule(conjunct_list, feature_table, rule_name)
 
         self.rules[name] = fn
         self.rule_source[name] = fn_str
