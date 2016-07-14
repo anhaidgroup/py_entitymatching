@@ -17,7 +17,6 @@ from magellan.externals.py_stringsimjoin.join.dice_join import dice_join
 from magellan.externals.py_stringsimjoin.join.edit_distance_join import edit_distance_join
 from magellan.externals.py_stringsimjoin.join.jaccard_join import jaccard_join
 from magellan.externals.py_stringsimjoin.join.overlap_coefficient_join import overlap_coefficient_join
-from magellan.externals.py_stringsimjoin.join.overlap_join import overlap_join
 from magellan.utils.catalog_helper import log_info, get_name_for_key, add_key_column
 
 logger = logging.getLogger(__name__)
@@ -37,8 +36,7 @@ class RuleBasedBlocker(Blocker):
 
         self.rule_str = OrderedDict()
         self.rule_ft = OrderedDict()
-        self.filterable_sim_fns = {'jaccard', 'cosine', 'dice', 'overlap',
-                                   'overlap_coefficient'}
+        self.filterable_sim_fns = {'jaccard', 'cosine', 'dice', 'overlap_coeff'}
         self.allowed_ops = {'<', '<='}
 
         # meta data : should be removed if they are not useful.
@@ -233,7 +231,7 @@ class RuleBasedBlocker(Blocker):
                                                                l_output_attrs_1,
                                                                r_output_attrs_1)
         l_df, r_df = l_df[l_proj_attrs], r_df[r_proj_attrs]
-
+        
         candset, rule_applied = self.block_tables_with_filters(l_df, r_df,
                                                                l_key, r_key,
                                                                l_output_attrs_1,
@@ -574,7 +572,7 @@ class RuleBasedBlocker(Blocker):
             # conjunct not filterable as the feature is not auto generated
             return False
         if sim_fn == 'lev_dist':
-            if op == '>' or '>=':
+            if op == '>' or op == '>=':
                 return True
             else:
                 # conjunct not filterable due to unsupported operator
@@ -605,27 +603,17 @@ class RuleBasedBlocker(Blocker):
                 tokenizer = WhitespaceTokenizer(return_set=True)
             elif l_tok == 'qgm_3':
                 tokenizer = QgramTokenizer(qval=3, return_set=True)
-            elif sim_fn != 'lev_dist':
-                # not supported
-                return None
 
-            join_fn = None
             if sim_fn == 'jaccard':
                 join_fn = jaccard_join
             elif sim_fn == 'cosine':
                 join_fn = cosine_join
             elif sim_fn == 'dice':
-                join_fn == dice_join
-            elif sim_fn == 'overlap':
-                join_fn = overlap_join
-            elif sim_fn == 'overlap_coefficient':
+                join_fn = dice_join
+            elif sim_fn == 'overlap_coeff':
                 join_fn = overlap_coefficient_join
             elif sim_fn == 'lev_dist':
                 join_fn = edit_distance_join
-            else:
-                logger.info(
-                    sim_fn + ' is not filterable, so not applying fitlers to this rule')
-                return None
 
             if join_fn == edit_distance_join:
                 comp_op = '<='

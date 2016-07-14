@@ -279,6 +279,19 @@ class AttrEquivBlockerTestCases(unittest.TestCase):
         validate_metadata(C, l_output_attrs)
         validate_data(C, expected_ids_1)
 
+    def test_ab_block_tables_wi_empty_output_attrs(self):
+        C = self.ab.block_tables(self.A, self.B,
+                                 l_block_attr_1, r_block_attr_1, [], [])
+        validate_metadata(C)
+        validate_data(C, expected_ids_1)
+
+    def test_ab_block_tables_wi_block_attr_not_in_output_attrs(self):
+        C = self.ab.block_tables(self.A, self.B,
+                                 l_block_attr_1, r_block_attr_1,
+                                 ['birth_year'], ['birth_year'])
+        validate_metadata(C, ['birth_year'], ['birth_year'])
+        validate_data(C, expected_ids_1)
+
     def test_ab_block_tables_wi_missing_values_allow_missing(self):
         path_a = os.sep.join([p, 'tests', 'test_datasets', 'blocker',
                               'table_A_wi_missing_vals.csv'])

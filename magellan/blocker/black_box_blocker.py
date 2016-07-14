@@ -6,6 +6,8 @@ import sys
 import pandas as pd
 import pyprind
 from joblib import Parallel, delayed
+import cloudpickle as cp
+import pickle
 
 from magellan.blocker.blocker import Blocker
 import magellan.catalog.catalog_manager as cm
@@ -126,12 +128,14 @@ class BlackBoxBlocker(Blocker):
         # # determine the number of processes to launch parallely
         n_procs = self.get_num_procs(n_jobs, len(l_df) * len(r_df))
 
+        pickled_fn = cp.dumps(self.black_box_function)
+
         if n_procs <= 1:
             # single process
             candset = _block_tables_split(l_df, r_df, l_key, r_key,
                                           l_output_attrs_1, r_output_attrs_1,
                                           l_output_prefix, r_output_prefix,
-                                          self, show_progress)
+                                          pickled_fn, show_progress)
         else:
             # multiprocessing
             m, n = self.get_split_params(n_procs, len(l_df), len(r_df))
@@ -141,7 +145,7 @@ class BlackBoxBlocker(Blocker):
                                                 l_key, r_key, 
                                                 l_output_attrs_1, r_output_attrs_1,
                                                 l_output_prefix, r_output_prefix,
-                                                self, show_progress and i == len(l_splits) - 1 and j == len(r_splits) - 1)
+                                                pickled_fn, show_progress and i == len(l_splits) - 1 and j == len(r_splits) - 1)
                                                 for i in range(len(l_splits)) for j in range(len(r_splits)))
             candset = pd.concat(c_splits, ignore_index=True)
 
@@ -282,7 +286,7 @@ class BlackBoxBlocker(Blocker):
 def _block_tables_split(l_df, r_df, l_key, r_key,
                         l_output_attrs, r_output_attrs,
                         l_output_prefix, r_output_prefix,
-                        black_box_blocker, show_progress):
+                        black_box_function_pickled, show_progress):
 
     # initialize progress bar
     if show_progress:
@@ -307,6 +311,8 @@ def _block_tables_split(l_df, r_df, l_key, r_key,
     # list to keep the tuple pairs that survive blocking
     valid = []
 
+    black_box_function = pickle.loads(black_box_function_pickled)
+
     # iterate through the two tables
     for l_t in l_df.itertuples(index=False):
         # # get ltuple from the look up dictionary
@@ -320,7 +326,7 @@ def _block_tables_split(l_df, r_df, l_key, r_key,
             rtuple = r_dict[r_t[r_id_pos]]
 
             # # apply the black box function to the tuple pair
-            res = black_box_blocker.black_box_function(ltuple, rtuple)
+            res = black_box_function(ltuple, rtuple)
 
             if res != True:
                 # # this tuple pair survives blocking

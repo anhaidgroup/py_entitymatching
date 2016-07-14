@@ -116,13 +116,14 @@ class Blocker(object):
         return ret_cols
 
     def get_attrs_to_project(self, key, block_attr, output_attrs):
-        if not output_attrs:
-            output_attrs = []
-        if key not in output_attrs:                                             
-            output_attrs.append(key)                                            
-        if block_attr not in output_attrs:                                      
-            output_attrs.append(block_attr)                                     
-        return output_attrs
+        proj_attrs = []
+        if output_attrs is not None:
+            proj_attrs.extend(output_attrs)
+        if key not in proj_attrs:                                             
+            proj_attrs.append(key)                                            
+        if block_attr not in proj_attrs:                                      
+            proj_attrs.append(block_attr)                                     
+        return proj_attrs
 
     def get_split_params(self, n_procs, min_m, min_n):
         m = int(math.sqrt(n_procs))
