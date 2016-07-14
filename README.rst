@@ -13,9 +13,10 @@ cumbersome and difficult. So often users just give up and roll their own
 ad-hoc solutions instead. This is obviously a major bottleneck that prevents
 the deployment of matching in practice. To solve the above problems, 
 Magellan aims to provide a set of commands that help the user to
-* Come up with a EM workflow
-* Iterate and debugmatcher the workflow
-* Deploy it in production 
+ 
+ * Come up with a EM workflow
+ * Iterate and debugmatcher the workflow
+ * Deploy it in production 
 
 
 The package is free, open-source, and BSD-licensed.
