@@ -33,7 +33,7 @@ if __name__ == "__main__":
         LONG_DESCRIPTION = f.read()
 
     setuptools.setup(
-        name='py_stringsimjoin',
+        name='magellan',
         version='0.1.0',
         description='Python library for end to end Entity Matching.',
         long_description=LONG_DESCRIPTION,
