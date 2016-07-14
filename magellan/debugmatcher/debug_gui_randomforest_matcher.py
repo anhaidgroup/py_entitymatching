@@ -1,5 +1,5 @@
 import logging
-from PyQt4 import QtGui
+
 
 import six
 
@@ -9,7 +9,6 @@ from magellan.debugmatcher.debug_gui_decisiontree_matcher \
     import vis_tuple_debug_dt_matcher
 from magellan.debugmatcher.debug_gui_utils import _get_metric, \
     get_name_for_predict_column, _get_dataframe
-from magellan.gui.debug_gui_base import MainWindowManager
 from magellan.utils.catalog_helper import check_attrs_present
 from magellan.utils.generic_helper import list_drop_duplicates
 
@@ -41,6 +40,14 @@ def _vis_debug_rf(matcher, train, test, exclude_attrs, target_attr,
     """
     Wrapper function for debugging the Random Forest matcher visually.
     """
+    try:
+        from PyQt4 import QtGui
+        from magellan.gui.debug_gui_base import MainWindowManager
+    except ImportError:
+        raise ImportError('PyQt4 is not installed. Please install PyQt4 to use '
+                      'GUI related functions in Magellan.')
+
+
     # Validate the input parameters
     # # We expect the matcher to be of type RfMatcher
     if not isinstance(matcher, RFMatcher):

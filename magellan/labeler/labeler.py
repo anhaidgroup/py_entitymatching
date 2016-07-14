@@ -59,6 +59,12 @@ def label_table(table, label_column_name, verbose=False):
     labeled_table = _init_label_table(table, label_column_name)
 
     # Invoke the GUI
+    try:
+        from PyQt4 import QtGui
+    except ImportError:
+        raise ImportError('PyQt4 is not installed. Please install PyQt4 to use '
+                      'GUI related functions in Magellan.')
+
     from magellan.gui.table_gui import edit_table
     edit_table(labeled_table)
 
