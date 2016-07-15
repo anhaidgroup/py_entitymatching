@@ -140,7 +140,12 @@ def _make_tok_delim(d):
             return s
         # Remove non ascii  characters. Note: This should be fixed in the
         # next version.
-        s = remove_non_ascii(s)
+        #s = remove_non_ascii(s)
+        if not (isinstance(s, six.string_types) or isinstance(s, bytes)):
+            s = str(s)
+        else:
+            if isinstance(s, bytes):
+                s = s.decode('utf-8')
 
         # Initialize the tokenizer measure object
         measure = sm.DelimiterTokenizer(delim_set=[d])
@@ -160,6 +165,12 @@ def _make_tok_qgram(q):
         # check if the input is of type base string
         if pd.isnull(s):
             return s
+        if not (isinstance(s, six.string_types) or isinstance(s, bytes)):
+            s = str(s)
+        else:
+            if isinstance(s, bytes):
+                s = s.decode('utf-8')
+
         measure = sm.QgramTokenizer(qval=q)
         return measure.tokenize(s)
     return tok_qgram
@@ -183,7 +194,16 @@ def tok_qgram(input_string, q):
 
     if pd.isnull(input_string):
         return input_string
+
+
+    if not (isinstance(input_string, six.string_types) or isinstance(input_string, bytes)):
+        input_string = str(input_string)
+    else:
+        if isinstance(input_string, bytes):
+            input_string = input_string.decode('utf-8')
+
     measure = sm.QgramTokenizer(qval=q)
+
     return measure.tokenize(input_string)
 
 
@@ -204,6 +224,11 @@ def tok_delim(input_string, d):
 
     if pd.isnull(input_string):
         return input_string
+    if not (isinstance(input_string, six.string_types) or isinstance(input_string, bytes)):
+        input_string = str(input_string)
+    else:
+        if isinstance(input_string, bytes):
+            input_string = input_string.decode('utf-8')
     measure = sm.DelimiterTokenizer(delim_set=[d])
     return measure.tokenize(input_string)
 
@@ -222,6 +247,12 @@ def tok_wspace(input_string):
     """
     if pd.isnull(input_string):
         return input_string
+    
+    if not (isinstance(input_string, six.string_types) or isinstance(input_string, bytes)):
+        input_string = str(input_string)
+    else:
+        if isinstance(input_string, bytes):
+            input_string = input_string.decode('utf-8')
     measure = sm.WhitespaceTokenizer()
     return measure.tokenize(input_string)
 
@@ -241,6 +272,13 @@ def tok_alphabetic(input_string):
     if pd.isnull(input_string):
         return input_string
     measure = sm.AlphabeticTokenizer()
+
+    if not (isinstance(input_string, six.string_types) or isinstance(input_string, bytes)):
+        input_string = str(input_string)
+    else:
+        if isinstance(input_string, bytes):
+            input_string = input_string.decode('utf-8')
+    
     return measure.tokenize(input_string)
 
 
@@ -259,8 +297,11 @@ def tok_alphanumeric(input_string):
     """
     if pd.isnull(input_string):
         return input_string
+    
+    if not (isinstance(input_string, six.string_types) or isinstance(input_string, bytes)):
+        input_string = str(input_string)
+    else:
+        if isinstance(input_string, bytes):
+            input_string = input_string.decode('utf-8')
     measure = sm.AlphanumericTokenizer()
     return measure.tokenize(input_string)
-
-
-
