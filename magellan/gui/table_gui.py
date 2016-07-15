@@ -104,8 +104,10 @@ def _cast_val(v, i):
     elif isinstance(i, int):
         return int(v)
     elif isinstance(i, six.string_types):
-        v = remove_non_ascii(str(v))
-        return str(v)
+        # if isinstance(i, bytes):
+        #     v = v.decode('utf-8')
+        # # v = remove_non_ascii(str(v))
+        return unicode(v)
     elif isinstance(i, object):
         return v
     else:

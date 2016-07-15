@@ -172,9 +172,8 @@ def impute_table(table, exclude_attrs=None, missing_val='NaN',
 
     if exclude_attrs == None:
         feature_names = fv_columns
-        print('Inside if condition')
+
     else:
-        print('Inside else condition')
 
         # Check if the exclude attributes are present in the input table
         if not ch.check_attrs_present(table, exclude_attrs):
