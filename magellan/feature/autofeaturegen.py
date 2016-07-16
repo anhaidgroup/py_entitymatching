@@ -132,7 +132,7 @@ def get_features(ltable, rtable, l_attr_types, r_attr_types,
 
         # Generate a feature only if the attribute types are same
         if l_attr_type != r_attr_type:
-            logger.warning('Magellan types: %s type (%s) and %s type (%s) '
+            logger.info('Magellan types: %s type (%s) and %s type (%s) '
                            'are different.'
                            'If you want to set them to be same and '
                            'generate features, '
