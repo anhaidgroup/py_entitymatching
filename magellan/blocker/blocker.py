@@ -84,14 +84,6 @@ class Blocker(object):
             logger.error('Parameter n_jobs is not of type int')
             raise AssertionError('Parameter n_jobs is not of type int')
 
-    def process_output_attrs(self, table, key, attrs, error_str=''):
-        if attrs:
-            if not isinstance(attrs, list):
-                attrs = [attrs]
-            assert set(attrs).issubset(table.columns) == True, 'Output are not in ' + error_str + ' table'
-            attrs = [x for x in attrs if x not in [key]]
-        return attrs
-
     def validate_output_attrs(self, ltable, rtable, l_output_attrs, r_output_attrs):
         if l_output_attrs:
             if not isinstance(l_output_attrs, list):

@@ -97,6 +97,9 @@ class RuleBasedBlocker(Blocker):
                                    an AssertionError will be raised and the
                                    rule will not be added to the rule-based
                                    blocker.
+            
+            Returns:
+                The name of the rule added (string).
         """
 
         if rule_name is not None and rule_name in self.rules.keys():
@@ -123,21 +126,48 @@ class RuleBasedBlocker(Blocker):
         else:
             self.rule_ft[name] = self.feature_table
 
+        return name
+
     def delete_rule(self, rule_name):
+        """Deletes a rule from the rule-based blocker.
+
+           Args:
+               rule_name (string): Name of the rule to be deleted.
+        """
         assert rule_name in self.rules.keys(), 'Rule name not in current set of rules'
 
         del self.rules[rule_name]
         del self.rule_source[rule_name]
+        del self.rule_str[rule_name]
+        del self.rule_ft[rule_name]
+
         return True
 
     def view_rule(self, rule_name):
+        """Prints the source code of the function corresponding to a rule.
+
+           Args:
+               rule_name (string): Name of the rule to be viewed.
+        """
         assert rule_name in self.rules.keys(), 'Rule name not in current set of rules'
         print(self.rule_source[rule_name])
 
     def get_rule_names(self):
+        """Returns the names of all the rules in the rule-based blocker.
+
+           Returns:
+               A list of names of all the rules in the rule-based blocker (list).
+        """
         return self.rules.keys()
 
     def get_rule(self, rule_name):
+        """Returns the function corresponding to a rule.
+
+           Args:
+               rule_name (string): Name of the rule.
+           Returns:
+               A function object corresponding to the specified rule.
+        """
         assert rule_name in self.rules.keys(), 'Rule name not in current set of rules'
         return self.rules[rule_name]
 
@@ -145,7 +175,7 @@ class RuleBasedBlocker(Blocker):
         """Sets feature table for the rule-based blocker.
  
            Args:
-               feature_table (DataFrame): a dataframe containing features.
+               feature_table (DataFrame): A DataFrame containing features.
         """
 
         if self.feature_table is not None:

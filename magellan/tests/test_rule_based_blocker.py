@@ -510,6 +510,38 @@ class RuleBasedBlockerTestCases(unittest.TestCase):
         assert_equal(self.rb.block_tuples(self.A.ix[1], self.B.ix[2]), False)
         assert_equal(self.rb.block_tuples(self.A.ix[2], self.B.ix[2]), True)
 
+    def test_rb_add_rule_user_supplied_rule_name(self):
+        rule_name = self.rb.add_rule(rule_1, self.feature_table, 'myrule')
+        assert_equal(rule_name, 'myrule')
+        # view rule source
+        self.rb.view_rule(rule_name)
+        # get rule fn
+        self.rb.get_rule(rule_name)
+        # see if rule exists in the set of rules
+        rule_names = self.rb.get_rule_names()
+        assert_equal(rule_name in rule_names, True)
+        
+    @raises(AssertionError)
+    def test_rb_add_rule_twice(self):
+        rule_name = self.rb.add_rule(rule_1, self.feature_table, 'myrule')
+        assert_equal(rule_name, 'myrule')
+        # see if rule exists in the set of rules
+        rule_names = self.rb.get_rule_names()
+        assert_equal(rule_name in rule_names, True)
+        rule_name = self.rb.add_rule(rule_1, self.feature_table, 'myrule')
+        
+    def test_rb_delete_rule(self):
+        rule_name = self.rb.add_rule(rule_1, self.feature_table)
+        rule_names = self.rb.get_rule_names()
+        assert_equal(rule_name in rule_names, True)
+        self.rb.delete_rule(rule_name)
+        rule_names = self.rb.get_rule_names()
+        assert_equal(rule_name in rule_names, False)
+        
+    @raises(AssertionError)
+    def test_rb_delete_non_existing_rule(self):
+        self.rb.delete_rule('bogus_rule')
+        
 
 class RuleBasedBlockerMulticoreTestCases(unittest.TestCase):
 
