@@ -12,16 +12,10 @@ import pickle
 
 import magellan.catalog.catalog_manager as cm
 from magellan.blocker.blocker import Blocker
-from magellan.externals.py_stringsimjoin.join.cosine_join import cosine_join
-from magellan.externals.py_stringsimjoin.join.dice_join import dice_join
-from magellan.externals.py_stringsimjoin.join.edit_distance_join import edit_distance_join
-from magellan.externals.py_stringsimjoin.join.jaccard_join import jaccard_join
-from magellan.externals.py_stringsimjoin.join.overlap_coefficient_join import overlap_coefficient_join
+import py_stringsimjoin as ssj
 from magellan.utils.catalog_helper import log_info, get_name_for_key, add_key_column
 
 logger = logging.getLogger(__name__)
-
-#global_rb = None
 
 
 class RuleBasedBlocker(Blocker):
@@ -39,7 +33,6 @@ class RuleBasedBlocker(Blocker):
         self.filterable_sim_fns = {'jaccard', 'cosine', 'dice', 'overlap_coeff'}
         self.allowed_ops = {'<', '<='}
 
-        # meta data : should be removed if they are not useful.
         self.rule_source = OrderedDict()
         self.rule_cnt = 0
 
@@ -342,8 +335,6 @@ class RuleBasedBlocker(Blocker):
         # # list to keep track of valid ids
         valid = []
 
-        #global global_rb
-        #global_rb = self
 
         pickled_fn = cp.dumps(self.apply_rules_excluding_rule)
  
@@ -369,8 +360,6 @@ class RuleBasedBlocker(Blocker):
                 for i in range(len(c_splits)))
             valid = sum(valid_splits, [])
 
-        #global_rb = None
-
         # construct output candset
         if len(c_df) > 0:
             candset = c_df[valid]
@@ -391,9 +380,6 @@ class RuleBasedBlocker(Blocker):
         n_procs = self.get_num_procs(n_jobs, len(l_df) * len(r_df))
 
         candset = None
-
-        #global global_rb
-        #global_rb = self
 
         pickled_fn = cp.dumps(self.apply_rules)
 
@@ -418,8 +404,6 @@ class RuleBasedBlocker(Blocker):
                                                  r_splits) - 1)
                 for i in range(len(l_splits)) for j in range(len(r_splits)))
             candset = pd.concat(c_splits, ignore_index=True)
-
-        #global_rb = None
 
         # return candidate set
         return candset
@@ -659,17 +643,17 @@ class RuleBasedBlocker(Blocker):
                 tokenizer = QgramTokenizer(qval=3, return_set=True)
 
             if sim_fn == 'jaccard':
-                join_fn = jaccard_join
+                join_fn = ssj.jaccard_join
             elif sim_fn == 'cosine':
-                join_fn = cosine_join
+                join_fn = ssj.cosine_join
             elif sim_fn == 'dice':
-                join_fn = dice_join
+                join_fn = ssj.dice_join
             elif sim_fn == 'overlap_coeff':
-                join_fn = overlap_coefficient_join
+                join_fn = ssj.overlap_coefficient_join
             elif sim_fn == 'lev_dist':
-                join_fn = edit_distance_join
+                join_fn = ssj.edit_distance_join
 
-            if join_fn == edit_distance_join:
+            if join_fn == ssj.edit_distance_join:
                 comp_op = '<='
                 if op == '>=':
                     comp_op = '<'
@@ -678,22 +662,20 @@ class RuleBasedBlocker(Blocker):
                 if op == '<=':
                     comp_op = '>'
 
-            try:
-                if join_fn == edit_distance_join:
-                    c_df = join_fn(l_df, r_df, l_key, r_key, l_attr, r_attr,
-                                   float(th), comp_op, True, l_output_attrs,
-                                   r_output_attrs, l_output_prefix,
-                                   r_output_prefix, False, n_jobs)
-                else:
-                    c_df = join_fn(l_df, r_df, l_key, r_key, l_attr, r_attr,
-                                   tokenizer, float(th), comp_op, True,
-                                   l_output_attrs, r_output_attrs,
-                                   l_output_prefix,
-                                   r_output_prefix, False, n_jobs)
-            except:
-                logger.warning(
-                    'Cannot apply filters to rule using string similarity join.')
-                return None
+            ssj.dataframe_column_to_str(l_df, l_attr, inplace=True) 
+            ssj.dataframe_column_to_str(r_df, r_attr, inplace=True)
+ 
+            if join_fn == ssj.edit_distance_join:
+                c_df = join_fn(l_df, r_df, l_key, r_key, l_attr, r_attr,
+                               float(th), comp_op, True, l_output_attrs,
+                               r_output_attrs, l_output_prefix,
+                               r_output_prefix, False, n_jobs)
+            else:
+                c_df = join_fn(l_df, r_df, l_key, r_key, l_attr, r_attr,
+                               tokenizer, float(th), comp_op, True, True,
+                               l_output_attrs, r_output_attrs,
+                               l_output_prefix,
+                               r_output_prefix, False, n_jobs)
             if candset is not None:
                 # union the candset of this conjunct with the existing candset
                 candset = pd.concat([candset, c_df]).drop_duplicates(
@@ -745,8 +727,6 @@ def _block_tables_split(l_df, r_df, l_key, r_key,
             rtuple = r_dict[r_t[r_id_pos]]
 
             # # apply the rules to the tuple pair
-            #res = global_rb.apply_rules(ltuple, rtuple)
-
             fn = pickle.loads(pickled_fn)
             res = fn(ltuple, rtuple)
 
@@ -814,9 +794,6 @@ def _block_candset_excluding_rule_split(c_df, l_df, r_df, l_key, r_key,
             r_dict[row_rid] = r_df.ix[row_rid]
         rtuple = r_dict[row_rid]
 
-        #res = global_rb.apply_rules_excluding_rule(ltuple, rtuple,
-        #                                           rule_to_exclude)
-        
         fn = pickle.loads(pickled_fn)
         res = fn(ltuple, rtuple, rule_to_exclude)
  

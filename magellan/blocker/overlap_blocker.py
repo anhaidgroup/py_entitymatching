@@ -17,12 +17,11 @@ from py_stringmatching.tokenizer.qgram_tokenizer import QgramTokenizer
 from magellan.utils.catalog_helper import log_info, get_name_for_key, \
     add_key_column
 
-from magellan.externals.py_stringsimjoin.filter.overlap_filter import OverlapFilter
-from magellan.externals.py_stringsimjoin.join.overlap_join import overlap_join
+import py_stringsimjoin as ssj
+from py_stringsimjoin.filter.overlap_filter import OverlapFilter
+from py_stringsimjoin.join.overlap_join import overlap_join
 
-from magellan.utils.generic_helper import remove_non_ascii, rem_nan
-
-from functools import partial
+from magellan.utils.generic_helper import remove_non_ascii
 
 logger = logging.getLogger(__name__)
 
@@ -174,18 +173,15 @@ class OverlapBlocker(Blocker):
         r_proj_attrs = self.get_attrs_to_project(r_key, r_overlap_attr, r_output_attrs)
         r_df = rtable[r_proj_attrs]
 
-        # # case the column to string if required.
-        if l_df.dtypes[l_overlap_attr] != object:
-            logger.warning('Left overlap attribute is not of type string; converting to string temporarily')
-            l_df[l_overlap_attr] = l_df[l_overlap_attr].astype(str)
-
-        if r_df.dtypes[r_overlap_attr] != object:
-            logger.warning('Right overlap attribute is not of type string; converting to string temporarily')
-            r_df[r_overlap_attr] = r_df[r_overlap_attr].astype(str)
+        # # case the column to string if required. 
+        ssj.dataframe_column_to_str(l_df, l_overlap_attr, inplace=True) 
+        ssj.dataframe_column_to_str(r_df, r_overlap_attr, inplace=True) 
 
         # # cleanup the tables from non-ascii characters, punctuations, and stop words
-        self.cleanup_table(l_df, l_overlap_attr, rem_stop_words)
-        self.cleanup_table(r_df, r_overlap_attr, rem_stop_words)
+        if not l_df.empty:
+            self.cleanup_table(l_df, l_overlap_attr, rem_stop_words)
+        if not r_df.empty:
+            self.cleanup_table(r_df, r_overlap_attr, rem_stop_words)
 
         # # determine which tokenizer to use
         if word_level == True:
@@ -202,12 +198,9 @@ class OverlapBlocker(Blocker):
                                l_output_prefix, r_output_prefix, False, n_jobs,
                                show_progress)
 
-        # print('candset cols:', candset.columns)
-
         # # retain only the required attributes in the output candidate set 
         retain_cols = self.get_attrs_to_retain(l_key, r_key, l_output_attrs, r_output_attrs,
                                                l_output_prefix, r_output_prefix)
-        # print('retain_cols:', retain_cols)
         candset = candset[retain_cols]
 
         # update metadata in the catalog
@@ -315,22 +308,13 @@ class OverlapBlocker(Blocker):
 
         # do blocking
 
-        # # remove nans: should be modified based on missing data policy
-        l_df = rem_nan(ltable, l_overlap_attr)
-        r_df = rem_nan(rtable, r_overlap_attr)
-
         # # do projection before merge
-        l_df = l_df[[l_key, l_overlap_attr]]
-        r_df = r_df[[r_key, r_overlap_attr]]
+        l_df = ltable[[l_key, l_overlap_attr]]
+        r_df = rtable[[r_key, r_overlap_attr]]
 
-        # # case the column to string if required.
-        if l_df.dtypes[l_overlap_attr] != object:
-            logger.warning('Left overlap attribute is not of type string; coverting to string temporarily')
-            l_df[l_overlap_attr] = l_df[l_overlap_attr].astype(str)
-
-        if r_df.dtypes[r_overlap_attr] != object:
-            logger.warning('Right overlap attribute is not of type string; coverting to string temporarily')
-            r_df[r_overlap_attr] = r_df[r_overlap_attr].astype(str)
+        # # case the overlap attribute to string if required.
+        ssj.dataframe_column_to_str(l_df, l_overlap_attr, inplace=True) 
+        ssj.dataframe_column_to_str(r_df, r_overlap_attr, inplace=True) 
 
         # # cleanup the tables from non-ascii characters, punctuations, and stop words
         self.cleanup_table(l_df, l_overlap_attr, rem_stop_words)
@@ -345,18 +329,14 @@ class OverlapBlocker(Blocker):
             tokenizer = QgramTokenizer(qval=q_val, return_set=True)
        
         # # create a filter for overlap similarity join
-        overlap_filter = OverlapFilter(tokenizer, overlap_size)
-
-        # # determine number of processes to launch parallely
-        n_procs = self.get_num_procs(n_jobs, len(candset)) 
-        if n_procs < 1:
-            n_procs = 1
+        overlap_filter = OverlapFilter(tokenizer, overlap_size,
+                                       allow_missing=allow_missing)
 
         # # perform overlap similarity filtering of the candset
         out_table = overlap_filter.filter_candset(candset, fk_ltable, fk_rtable,
                                                   l_df, r_df, l_key, r_key,
                                                   l_overlap_attr, r_overlap_attr,
-                                                  n_jobs=n_procs)
+                                                  n_jobs)
         # update catalog
         cm.set_candset_properties(out_table, key, fk_ltable, fk_rtable, ltable, rtable)
 
@@ -423,10 +403,15 @@ class OverlapBlocker(Blocker):
             # # create a qgram tokenizer 
             tokenizer = QgramTokenizer(qval=q_val, return_set=True)
 
-        # create a filter for overlap similarity 
-        overlap_filter = OverlapFilter(tokenizer, overlap_size)
+        # # cleanup the tuples from non-ascii characters, punctuations, and stop words
+        l_val = self.cleanup_tuple_val(ltuple[l_overlap_attr], rem_stop_words)
+        r_val = self.cleanup_tuple_val(rtuple[r_overlap_attr], rem_stop_words)
 
-        return overlap_filter.filter_pair(ltuple[l_overlap_attr], rtuple[r_overlap_attr])
+        # create a filter for overlap similarity 
+        overlap_filter = OverlapFilter(tokenizer, overlap_size,
+                                       allow_missing=allow_missing)
+
+        return overlap_filter.filter_pair(l_val, r_val)
         
 
     # helper functions
@@ -492,9 +477,9 @@ class OverlapBlocker(Blocker):
                # remove non-ascii chars
                val_no_non_ascii = remove_non_ascii(val)
                # remove punctuations
-               val_no_punctuations = self.rem_punctuations(val)
+               val_no_punctuations = self.rem_punctuations(val_no_non_ascii)
                # chop the attribute values and convert into a set
-               val_chopped = list(set(val.split()))
+               val_chopped = list(set(val_no_punctuations.split()))
                # remove stop words
                val_chopped_no_stopwords = self.rem_stopwords(val_chopped)
                val_joined = ' '.join(val_chopped_no_stopwords)
@@ -502,6 +487,21 @@ class OverlapBlocker(Blocker):
 
         table.is_copy = False 
         table[overlap_attr] = values
+
+    # cleanup a tuple from non-ascii characters, punctuations and stop words
+    def cleanup_tuple_val(self, val, rem_stop_words):
+        if pd.isnull(val):
+            return val
+        # remove non-ascii chars
+        val_no_non_ascii = remove_non_ascii(val)
+        # remove punctuations
+        val_no_punctuations = self.rem_punctuations(val_no_non_ascii)
+        # chop the attribute values and convert into a set
+        val_chopped = list(set(val_no_punctuations.split()))
+        # remove stop words
+        val_chopped_no_stopwords = self.rem_stopwords(val_chopped)
+        val_joined = ' '.join(val_chopped_no_stopwords)
+        return val_joined
 
     def rem_punctuations(self, s):
         return self.regex_punctuation.sub('', s).lower()
