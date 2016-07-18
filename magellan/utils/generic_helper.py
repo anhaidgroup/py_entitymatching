@@ -4,12 +4,13 @@ import os
 import six
 
 
-import numpy as np
+
+# import numpy as np
 import pandas as pd
 
 from magellan.utils.catalog_helper import check_fk_constraint
 import magellan.catalog.catalog_manager as cm
-
+from magellan.debugmatcher.debug_gui_utils import _get_metric, _get_dataframe
 
 from magellan.utils import install_path
 from magellan.io.parsers import read_csv_metadata
@@ -71,7 +72,7 @@ def rem_nan(table, attr):
         logger.error('Input attr not in the table columns')
         raise KeyError('Input attr. not in the table columns')
 
-    l = table.index.values[np.where(table[attr].notnull())[0]]
+    l = table.index.values[pd.np.where(table[attr].notnull())[0]]
     return table.ix[l]
 
 
@@ -199,3 +200,8 @@ def del_files_in_dir(dir):
 def creat_dir_ifnot_exists(dir):
     if not os.path.exists(dir):
         os.makedirs(dir)
+
+
+
+
+

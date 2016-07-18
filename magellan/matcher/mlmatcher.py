@@ -4,7 +4,7 @@ all the ML-matchers.
 """
 import logging
 
-import numpy as np
+# import numpy as np
 import pandas as pd
 
 import magellan.catalog.catalog_manager as cm
@@ -83,7 +83,7 @@ class MLMatcher(Matcher):
     def fit(self, x=None, y=None, table=None, exclude_attrs=None,
             target_attr=None):
         """
-        Fit interface for the matchers.
+        Fit interface for the matcher.
 
         Specifically, there are two ways the user can call the fit method.
         First, interface similar to scikit-learn where the feature vectors
@@ -95,15 +95,15 @@ class MLMatcher(Matcher):
         None. This is done to support both the interfaces in a single function.
 
         Args:
-            x (DataFrame): Input feature vectors given as pandas DataFrame (
-                defaults to None).
-            y (DatFrame): Input target attribute given as pandas
+            x (DataFrame): The input feature vectors given as pandas
+             DataFrame (defaults to None).
+            y (DatFrame): The input target attribute given as pandas
                 DataFrame with a single column (defaults to None).
-            table (DataFrame): Input pandas DataFrame containing feature
+            table (DataFrame): The input pandas DataFrame containing feature
                 vectors and target attribute (defaults to None).
             exclude_attrs (list): The list of attributes that should be
                 excluded from the input table to get the feature vectors.
-            target_attr (str): The target attribute in the input table.
+            target_attr (string): The target attribute in the input table.
         """
         # Check if x and y is given, then call a function that handles
         # sk-learn like interface input.
@@ -177,7 +177,7 @@ class MLMatcher(Matcher):
     def predict(self, x=None, table=None, exclude_attrs=None, target_attr=None,
                 append=False, inplace=True):
         """
-        Predict interface for the matchers.
+        Predict interface for the matcher.
 
         Specifically, there are two ways the user can call the predict method.
         First, interface similar to scikit-learn where the feature vectors
@@ -190,16 +190,16 @@ class MLMatcher(Matcher):
 
 
         Args:
-            x (DataFrame): Input pandas DataFrame containing only feature
+            x (DataFrame): The input pandas DataFrame containing only feature
                 vectors (defaults to None).
-            table (DataFrame): Input pandas DataFrame containing feature
+            table (DataFrame): The input pandas DataFrame containing feature
                 vectors, and may be other attributes (defaults to None).
-            exclude_attrs (list): List of attributes to be excluded from the
+            exclude_attrs (list): A list of attributes to be excluded from the
                 input table to get the feature vectors (defaults to None).
-            target_attr (str): Attribute name where the predictions need to
-                stored in the input table (defaults to None).
+            target_attr (string): The attribute name where the predictions
+                need to stored in the input table (defaults to None).
             append (boolean): A flag to indicate whether the predictions need
-                to be appended in the input DataFrame (defaults to False_.
+                to be appended in the input DataFrame (defaults to False).
             inplace (boolean): A flag to indicate whether the append needs to be
                 done inplace (defaults to True).
 
@@ -269,7 +269,7 @@ class MLMatcher(Matcher):
             # Get the values from the DataFrame
             x = x.values
             # Remove the first column ('_id')
-            x = np.delete(x, 0, 1)
+            x = pd.np.delete(x, 0, 1)
         else:
             # Get the values from the DataFrame
             x = x.values
@@ -282,7 +282,7 @@ class MLMatcher(Matcher):
                     'Removing this column for processing')
                 # Get the values from the DataFrame
                 y = y.values
-                y = np.delete(y, 0, 1)
+                y = pd.np.delete(y, 0, 1)
             else:
                 # Get the values from the DataFrame
                 y = y.values

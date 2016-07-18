@@ -6,6 +6,8 @@ import sys
 import pandas as pd
 import pyprind
 from joblib import Parallel, delayed
+import cloudpickle as cp
+import pickle
 
 from magellan.blocker.blocker import Blocker
 import magellan.catalog.catalog_manager as cm
@@ -14,8 +16,8 @@ from magellan.utils.catalog_helper import log_info, get_name_for_key, add_key_co
 logger = logging.getLogger(__name__)
 
 class BlackBoxBlocker(Blocker):
-    """Blocks two tables, a candset, or a pair of tuples based on a black box
-       function specified by the user.
+    """
+    Blocks based on a black box function specified by the user.
     """
 
     def __init__(self, *args, **kwargs):
@@ -35,8 +37,9 @@ class BlackBoxBlocker(Blocker):
                      l_output_prefix='ltable_', r_output_prefix='rtable_',
                      verbose=False, show_progress=True, n_jobs=1):
         
-        """Blocks two tables based on a black box blocking function specified
-           by the user.
+        """
+        Blocks two tables based on a black box blocking function specified
+        by the user.
 
         Finds tuple pairs from left and right tables that survive the black
         box function. A tuple pair survives the black box blocking function if
@@ -44,40 +47,40 @@ class BlackBoxBlocker(Blocker):
         dropped.
 
         Args:
-            ltable (DataFrame): left input table.
+            ltable (DataFrame): The left input table.
 
-            rtable (DataFrame): right input table.
+            rtable (DataFrame): The right input table.
 
-            l_output_attrs (list): list of attribute names from the left
+            l_output_attrs (list): A list of attribute names from the left
                                    table to be included in the
                                    output candidate set (defaults to None).
 
-            r_output_attrs (list): list of attribute names from the right
+            r_output_attrs (list): A list of attribute names from the right
                                    table to be included in the
                                    output candidate set (defaults to None).
 
-            l_output_prefix (str): prefix to be used for the attribute names
+            l_output_prefix (string): The prefix to be used for the attribute names
                                    coming from the left table in the output
                                    candidate set (defaults to 'ltable\_').
 
-            r_output_prefix (str): prefix to be used for the attribute names
+            r_output_prefix (string): The prefix to be used for the attribute names
                                    coming from the right table in the output
                                    candidate set (defaults to 'rtable\_').
 
-            verbose (boolean): flag to indicate whether logging should be done
+            verbose (boolean): A flag to indicate whether logging should be done
                                (defaults to False).
 
-            show_progress (boolean): flag to indicate whether progress should
+            show_progress (boolean): A flag to indicate whether progress should
                                      be displayed to the user (defaults to True).
 
-            n_jobs (int): number of parallel jobs to be used for computation
-                          (defaults to 1).
-                          If -1 all CPUs are used. If 0 or 1, no parallel computation
-                          is used at all, which is useful for debugging.
-                          For n_jobs below -1, (n_cpus + 1 + n_jobs) are used.
-                          Thus, for n_jobs = -2, all CPUS but one are used.
-                          If (n_cpus + 1 + n_jobs) is less than 1, then n_jobs is
-                          set to 1, which means no parallel computation at all.
+            n_jobs (int): The number of parallel jobs to be used for computation
+                (defaults to 1). If -1 all CPUs are used. If 0 or 1,
+                no parallel computation is used at all, which is useful for
+                debugging. For n_jobs below -1, (n_cpus + 1 + n_jobs) are
+                used (where n_cpus are the total number of CPUs in the
+                machine).Thus, for n_jobs = -2, all CPUs but one are used.
+                If (n_cpus + 1 + n_jobs) is less than 1, then no parallel
+                computation is used (i.e., equivalent to the default).
 
         Returns:
             A candidate set of tuple pairs that survived blocking (DataFrame).
@@ -87,7 +90,10 @@ class BlackBoxBlocker(Blocker):
         self.validate_types_params_tables(ltable, rtable,
 			                  l_output_attrs, r_output_attrs,
                                           l_output_prefix, r_output_prefix,
-                                          verbose, show_progress, n_jobs)
+                                          verbose, n_jobs)
+
+        # validate data type of show_progress
+        self.validate_show_progress(show_progress)
 
         # validate black box function
         assert self.black_box_function != None, 'Black box function is not set'
@@ -122,12 +128,16 @@ class BlackBoxBlocker(Blocker):
         # # determine the number of processes to launch parallely
         n_procs = self.get_num_procs(n_jobs, len(l_df) * len(r_df))
 
+        # # pickle the black-box function before passing it as an arg to
+        # # _block_tables_split to be executed by each child process
+        black_box_function_pkl = cp.dumps(self.black_box_function)
+
         if n_procs <= 1:
             # single process
             candset = _block_tables_split(l_df, r_df, l_key, r_key,
                                           l_output_attrs_1, r_output_attrs_1,
                                           l_output_prefix, r_output_prefix,
-                                          self, show_progress)
+                                          black_box_function_pkl, show_progress)
         else:
             # multiprocessing
             m, n = self.get_split_params(n_procs, len(l_df), len(r_df))
@@ -137,7 +147,8 @@ class BlackBoxBlocker(Blocker):
                                                 l_key, r_key, 
                                                 l_output_attrs_1, r_output_attrs_1,
                                                 l_output_prefix, r_output_prefix,
-                                                self, show_progress and i == len(l_splits) - 1 and j == len(r_splits) - 1)
+                                                black_box_function_pkl,
+                                                show_progress and i == len(l_splits) - 1 and j == len(r_splits) - 1)
                                                 for i in range(len(l_splits)) for j in range(len(r_splits)))
             candset = pd.concat(c_splits, ignore_index=True)
 
@@ -145,8 +156,6 @@ class BlackBoxBlocker(Blocker):
         retain_cols = self.get_attrs_to_retain(l_key, r_key,
                                                l_output_attrs, r_output_attrs,
                                                l_output_prefix, r_output_prefix)
-        #print "Candset columns: ", candset.columns
-        #print "Attributes to retain: ", retain_cols
         if len(candset) > 0:
             candset = candset[retain_cols]
         else:
@@ -163,8 +172,9 @@ class BlackBoxBlocker(Blocker):
 
     def block_candset(self, candset, verbose=True, show_progress=True, n_jobs=1):
 
-        """Blocks an input candidate set of tuple pairs based on a black box
-           blocking function specified by the user.
+        """
+        Blocks an input candidate set of tuple pairs based on a black box
+        blocking function specified by the user.
 
         Finds tuple pairs from an input candidate set of tuple pairs that
         survive the black box function. A tuple pair survives the black box
@@ -172,22 +182,22 @@ class BlackBoxBlocker(Blocker):
         otherwise the tuple pair is dropped.
 
         Args:
-            candset (DataFrame): input candidate set of tuple pairs.
+            candset (DataFrame): The input candidate set of tuple pairs.
 
-            verbose (boolean): flag to indicate whether logging should be done
+            verbose (boolean): A flag to indicate whether logging should be done
                                (defaults to False).
 
-            show_progress (boolean): flag to indicate whether progress should
+            show_progress (boolean): A flag to indicate whether progress should
                                      be displayed to the user (defaults to True).
 
-            n_jobs (int): number of parallel jobs to be used for computation
-                          (defaults to 1).
-                          If -1 all CPUs are used. If 0 or 1, no parallel computation
-                          is used at all, which is useful for debugging.
-                          For n_jobs below -1, (n_cpus + 1 + n_jobs) are used.
-                          Thus, for n_jobs = -2, all CPUS but one are used.
-                          If (n_cpus + 1 + n_jobs) is less than 1, then n_jobs is
-                          set to 1, which means no parallel computation at all.
+            n_jobs (int): The number of parallel jobs to be used for computation
+                (defaults to 1). If -1 all CPUs are used. If 0 or 1,
+                no parallel computation is used at all, which is useful for
+                debugging. For n_jobs below -1, (n_cpus + 1 + n_jobs) are
+                used (where n_cpus are the total number of CPUs in the
+                machine).Thus, for n_jobs = -2, all CPUs but one are used.
+                If (n_cpus + 1 + n_jobs) is less than 1, then no parallel
+                computation is used (i.e., equivalent to the default).
 
         Returns:
             A candidate set of tuple pairs that survived blocking (DataFrame).
@@ -222,11 +232,16 @@ class BlackBoxBlocker(Blocker):
         # # determine the number of processes to launch parallely
         n_procs = self.get_num_procs(n_jobs, len(c_df))
 
+        # # pickle the black-box function before passing it as an arg to
+        # # _block_candset_split to be executed by each child process
+        black_box_function_pkl = cp.dumps(self.black_box_function)
+
         valid = []
         if n_procs <= 1:
             # single process
             valid = _block_candset_split(c_df, l_df, r_df, l_key, r_key,
-                                         fk_ltable, fk_rtable, self, show_progress)
+                                         fk_ltable, fk_rtable,
+                                         black_box_function_pkl, show_progress)
         else:
             # multiprocessing
             c_splits = pd.np.array_split(c_df, n_procs)
@@ -234,7 +249,8 @@ class BlackBoxBlocker(Blocker):
                                                             l_df, r_df,
                                                             l_key, r_key,
                                                             fk_ltable, fk_rtable,
-                                                            self, show_progress and i == len(c_splits) - 1)
+                                                            black_box_function_pkl,
+                                                            show_progress and i == len(c_splits) - 1)
                                                             for i in range(len(c_splits)))
             valid = sum(valid_splits, [])
  
@@ -251,8 +267,9 @@ class BlackBoxBlocker(Blocker):
         return c_df
 
     def block_tuples(self, ltuple, rtuple):
-        """Blocks a tuple pair based on a black box blocking function specified
-           by the user.
+        """
+        Blocks a tuple pair based on a black box blocking function specified
+        by the user.
 
         Takes a tuple pair as input, applies the black box blocking function to
         it, and returns True (if the intention is to drop the pair) or False
@@ -276,7 +293,7 @@ class BlackBoxBlocker(Blocker):
 def _block_tables_split(l_df, r_df, l_key, r_key,
                         l_output_attrs, r_output_attrs,
                         l_output_prefix, r_output_prefix,
-                        black_box_blocker, show_progress):
+                        black_box_function_pkl, show_progress):
 
     # initialize progress bar
     if show_progress:
@@ -301,6 +318,9 @@ def _block_tables_split(l_df, r_df, l_key, r_key,
     # list to keep the tuple pairs that survive blocking
     valid = []
 
+    # unpickle the black box function
+    black_box_function = pickle.loads(black_box_function_pkl)
+
     # iterate through the two tables
     for l_t in l_df.itertuples(index=False):
         # # get ltuple from the look up dictionary
@@ -314,7 +334,7 @@ def _block_tables_split(l_df, r_df, l_key, r_key,
             rtuple = r_dict[r_t[r_id_pos]]
 
             # # apply the black box function to the tuple pair
-            res = black_box_blocker.black_box_function(ltuple, rtuple)
+            res = black_box_function(ltuple, rtuple)
 
             if res != True:
                 # # this tuple pair survives blocking
@@ -344,7 +364,7 @@ def _block_tables_split(l_df, r_df, l_key, r_key,
     return candset
 
 def _block_candset_split(c_df, l_df, r_df, l_key, r_key, fk_ltable, fk_rtable,
-                         black_box_blocker, show_progress):
+                         black_box_function_pkl, show_progress):
 
     # initialize the progress bar
     if show_progress:
@@ -360,6 +380,9 @@ def _block_candset_split(c_df, l_df, r_df, l_key, r_key, fk_ltable, fk_rtable,
     # find positions of the ID attributes of the two tables in the candset
     l_id_pos = list(c_df.columns).index(fk_ltable)
     r_id_pos = list(c_df.columns).index(fk_rtable)
+
+    # unpickle the black box function
+    black_box_function = pickle.loads(black_box_function_pkl)
 
     # iterate candidate set
     for row in c_df.itertuples(index=False):
@@ -380,7 +403,7 @@ def _block_candset_split(c_df, l_df, r_df, l_key, r_key, fk_ltable, fk_rtable,
         rtuple = r_dict[row_rkey]
 
         # # apply the black box function to the tuple pair
-        res = black_box_blocker.black_box_function(ltuple, rtuple)
+        res = black_box_function(ltuple, rtuple)
         if res != True:
             valid.append(True)
         else:

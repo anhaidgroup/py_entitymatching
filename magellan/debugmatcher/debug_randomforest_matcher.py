@@ -17,20 +17,25 @@ def debug_randomforest_matcher(random_forest, tuple_1, tuple_2,
                                exclude_attrs=None):
 
     """
-    This function is used to debug a random forest, using two input tuples.
+    This function is used to debug a random forest matcher using two input
+    tuples.
+
     Specifically, this function takes in two tuples, gets the feature vector
     using the feature table and finally passes it to the random forest  and
-    displays the path that the feature vector takes in the decision tree.
+    displays the path that the feature vector takes in each of the decision
+    trees that make up the random forest matcher.
+
     Args:
-        random_forest (RFMatcher or RandomForestClassifier): The input
+        random_forest (RFMatcher): The input
             random forest object that should be debugged.
-        tuple_1, tuple_2 (Series): Input tuples that should be debugged.
+        tuple_1,tuple_2 (Series): Input tuples that should be debugged.
         feature_table (DataFrame): Feature table containing the functions
             for the features.
         table_columns (list): List of all columns that will be outputted
             after generation of feature vectors.
         exclude_attrs (list): List of attributes that should be removed from
             the table columns.
+
     Raises:
         AssertionError: If the input feature table is not of type pandas
             DataFrame.

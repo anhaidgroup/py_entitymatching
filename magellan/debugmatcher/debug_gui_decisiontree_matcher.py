@@ -2,7 +2,7 @@ from collections import OrderedDict
 import logging
 
 import six
-from PyQt4 import QtGui
+
 import pandas as pd
 
 import magellan as mg
@@ -10,7 +10,7 @@ from magellan.evaluation.evaluation import eval_matches
 from magellan import DTMatcher
 from magellan.debugmatcher.debug_gui_utils import _get_code_vis, _get_metric,\
     _get_dataframe, _get_dbg_fn_vis, get_name_for_predict_column
-from magellan.gui.debug_gui_base import MainWindowManager
+
 import magellan.utils.catalog_helper as ch
 import magellan.utils.generic_helper as gh
 
@@ -28,8 +28,8 @@ def vis_debug_dt(matcher, train, test, exclude_attrs, target_attr):
         test (DataFrame): The pandas DataFrame that will be used to test the
             matcher.
         exclude_attrs (list): The list of attributes to be excluded from train
-        and test, for training and testing.
-        target_attr (str): The attribute name in the 'train' containing the
+            and test, for training and testing.
+        target_attr (string): The attribute name in the 'train' containing the
             true labels.
 
     """
@@ -42,6 +42,15 @@ def _vis_debug_dt(matcher, train, test, exclude_attrs, target_attr,
     """
     Wrapper function for debugging the Random Forest matcher visually.
     """
+
+    try:
+        from PyQt4 import QtGui
+        from magellan.gui.debug_gui_base import MainWindowManager
+    except ImportError:
+        raise ImportError('PyQt4 is not installed. Please install PyQt4 to use '
+                      'GUI related functions in Magellan.')
+
+
     # Validate the input parameters
     # # We expect the matcher to be of type DTMatcher
     if not isinstance(matcher, DTMatcher):
@@ -109,6 +118,7 @@ def _vis_debug_dt(matcher, train, test, exclude_attrs, target_attr,
     # Get false negatives and false positives as a DataFrame
     fp_dataframe = _get_dataframe(predicted, eval_summary['false_pos_ls'])
     fn_dataframe = _get_dataframe(predicted, eval_summary['false_neg_ls'])
+
 
 
     mg._viewapp = QtGui.QApplication.instance()

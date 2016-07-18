@@ -42,8 +42,16 @@ _global_sim_fns = pd.DataFrame({'function_name': sim_function_names,
 
 def get_sim_funs_for_blocking():
     """
-    This function returns the similarity functions that can be used for
+    This function gets the similarity functions that can be used for
     blocking purposes.
+
+    Returns:
+
+        A Python dictionary containing the similarity functions.
+
+
+        Specifically, the key is the similarity function name and the value
+        is the actual similary function.
 
     """
     return get_sim_funs()
@@ -52,7 +60,14 @@ def get_sim_funs_for_blocking():
 def get_sim_funs_for_matching():
     """
     This function returns the similarity functions that can be used for
-    blocking purposes.
+    matching purposes.
+
+    Returns:
+
+        A Python dictionary containing the similarity functions.
+
+        Specifically, the key is the similarity function name and the value
+        is the actual similarity function.
 
     """
     return get_sim_funs()
@@ -83,8 +98,11 @@ def get_sim_funs():
 def affine(s1, s2):
     """
     This function computes the affine measure between the two input strings.
+
     Args:
-        s1, s2 (input strings):
+        s1,s2 (string ): The input strings for which the similarity measure
+            should be computed.
+
     Returns:
         The affine measure if both the strings are not missing (i.e NaN or
         None), else  returns NaN.
@@ -94,22 +112,30 @@ def affine(s1, s2):
     if pd.isnull(s1) or pd.isnull(s2):
         return pd.np.NaN
     # Remove non-ascii characters. This will be fixed in the next version
-    if isinstance(s1, six.string_types):
-        s1 = gh.remove_non_ascii(s1)
-    if isinstance(s2, six.string_types):
-        s2 = gh.remove_non_ascii(s2)
+    # if isinstance(s1, six.string_types):
+    #     s1 = gh.remove_non_ascii(s1)
+    # if isinstance(s2, six.string_types):
+    #     s2 = gh.remove_non_ascii(s2)
     # Create the similarity measure object
     measure = sm.Affine()
+    if not(isinstance(s1, six.string_types) or isinstance(s1, bytes)):
+        s1 = str(s1)
+
+    if not(isinstance(s2, six.string_types) or isinstance(s2, bytes)):
+        s2 = str(s2)
+
     # Call the function to compute the similarity
-    return measure.get_raw_score(str(s1), str(s2))
+    return measure.get_raw_score(s1, s2)
 
 def hamming_dist(s1, s2):
     """
     This function computes the hamming distance between the two input
     strings.
+
     Args:
-        s1, s2 (str): Input strings for which the similarity measure should
+        s1,s2 (string): The input strings for which the similarity measure should
             be computed.
+
     Returns:
         The hamming distance if both the strings are not missing (i.e NaN),
         else  returns NaN.
@@ -119,23 +145,33 @@ def hamming_dist(s1, s2):
         return pd.np.NaN
     if pd.isnull(s1) or pd.isnull(s2):
         return pd.np.NaN
-    if isinstance(s1, six.string_types):
-        s1 = gh.remove_non_ascii(s1)
-    if isinstance(s2, six.string_types):
-        s2 = gh.remove_non_ascii(s2)
+    # if isinstance(s1, six.string_types):
+    #     s1 = gh.remove_non_ascii(s1)
+    # if isinstance(s2, six.string_types):
+    #     s2 = gh.remove_non_ascii(s2)
     # Create the similarity measure object
     measure = sm.HammingDistance()
+
+    if not(isinstance(s1, six.string_types) or isinstance(s1, bytes)):
+        s1 = str(s1)
+
+    if not(isinstance(s2, six.string_types) or isinstance(s2, bytes)):
+        s2 = str(s2)
+
+
     # Call the function to compute the distance
-    return measure.get_raw_score(str(s1), str(s2))
+    return measure.get_raw_score(s1, s2)
 
 
 def hamming_sim(s1, s2):
     """
     This function computes the hamming similarity between the two input
     strings.
+
     Args:
-        s1, s2 (str): Input strings for which the similarity measure should
+        s1,s2 (string): The input strings for which the similarity measure should
             be computed.
+
     Returns:
         The hamming similarity if both the strings are not missing (i.e NaN),
         else  returns NaN.
@@ -145,23 +181,31 @@ def hamming_sim(s1, s2):
         return pd.np.NaN
     if pd.isnull(s1) or pd.isnull(s2):
         return pd.np.NaN
-    if isinstance(s1, six.string_types):
-        s1 = gh.remove_non_ascii(s1)
-    if isinstance(s2, six.string_types):
-        s2 = gh.remove_non_ascii(s2)
+    # if isinstance(s1, six.string_types):
+    #     s1 = gh.remove_non_ascii(s1)
+    # if isinstance(s2, six.string_types):
+    #     s2 = gh.remove_non_ascii(s2)
     # Create the similarity measure object
     measure = sm.HammingDistance()
+    if not(isinstance(s1, six.string_types) or isinstance(s1, bytes)):
+        s1 = str(s1)
+
+    if not(isinstance(s2, six.string_types) or isinstance(s2, bytes)):
+        s2 = str(s2)
+
     # Call the function to compute the similarity score.
-    return measure.get_sim_score(str(s1), str(s2))
+    return measure.get_sim_score(s1, s2)
 
 
 def lev_dist(s1, s2):
     """
     This function computes the Levenshtein distance between the two input
     strings.
+
     Args:
-        s1, s2 (str): Input strings for which the similarity measure should
+        s1,s2 (string): The input strings for which the similarity measure should
             be computed.
+
     Returns:
         The Levenshtein distance if both the strings are not missing (i.e NaN),
         else  returns NaN.
@@ -171,23 +215,31 @@ def lev_dist(s1, s2):
         return pd.np.NaN
     if pd.isnull(s1) or pd.isnull(s2):
         return pd.np.NaN
-    if isinstance(s1, six.string_types):
-        s1 = gh.remove_non_ascii(s1)
-    if isinstance(s2, six.string_types):
-        s2 = gh.remove_non_ascii(s2)
+    # if isinstance(s1, six.string_types):
+    #     s1 = gh.remove_non_ascii(s1)
+    # if isinstance(s2, six.string_types):
+    #     s2 = gh.remove_non_ascii(s2)
     # Create the similarity measure object
     measure = sm.Levenshtein()
+    if not(isinstance(s1, six.string_types) or isinstance(s1, bytes)):
+        s1 = str(s1)
+
+    if not(isinstance(s2, six.string_types) or isinstance(s2, bytes)):
+        s2 = str(s2)
+
     # Call the function to compute the distance measure.
-    return measure.get_raw_score(str(s1), str(s2))
+    return measure.get_raw_score(s1, s2)
 
 
 def lev_sim(s1, s2):
     """
     This function computes the Levenshtein similarity between the two input
     strings.
+
     Args:
-        s1, s2 (str): Input strings for which the similarity measure should
+        s1,s2 (string): The input strings for which the similarity measure should
             be computed.
+
     Returns:
         The Levenshtein similarity if both the strings are not missing (i.e
         NaN), else  returns NaN.
@@ -197,23 +249,31 @@ def lev_sim(s1, s2):
         return pd.np.NaN
     if pd.isnull(s1) or pd.isnull(s2):
         return pd.np.NaN
-    if isinstance(s1, six.string_types):
-        s1 = gh.remove_non_ascii(s1)
-    if isinstance(s2, six.string_types):
-        s2 = gh.remove_non_ascii(s2)
+    # if isinstance(s1, six.string_types):
+    #     s1 = gh.remove_non_ascii(s1)
+    # if isinstance(s2, six.string_types):
+    #     s2 = gh.remove_non_ascii(s2)
     # Create the similarity measure object
     measure = sm.Levenshtein()
+    if not(isinstance(s1, six.string_types) or isinstance(s1, bytes)):
+        s1 = str(s1)
+
+    if not(isinstance(s2, six.string_types) or isinstance(s2, bytes)):
+        s2 = str(s2)
+
     # Call the function to compute the similarity measure
-    return measure.get_sim_score(str(s1), str(s2))
+    return measure.get_sim_score(s1, s2)
 
 
 def jaro(s1, s2):
     """
     This function computes the Jaro measure between the two input
     strings.
+
     Args:
-        s1, s2 (str): Input strings for which the similarity measure should
+        s1,s2 (string): The input strings for which the similarity measure should
             be computed.
+
     Returns:
         The Jaro measure if both the strings are not missing (i.e NaN),
         else  returns NaN.
@@ -223,23 +283,31 @@ def jaro(s1, s2):
         return pd.np.NaN
     if pd.isnull(s1) or pd.isnull(s2):
         return pd.np.NaN
-    if isinstance(s1, six.string_types):
-        s1 = gh.remove_non_ascii(s1)
-    if isinstance(s2, six.string_types):
-        s2 = gh.remove_non_ascii(s2)
+    # if isinstance(s1, six.string_types):
+    #     s1 = gh.remove_non_ascii(s1)
+    # if isinstance(s2, six.string_types):
+    #     s2 = gh.remove_non_ascii(s2)
     # Create the similarity measure object
     measure = sm.Jaro()
+    if not(isinstance(s1, six.string_types) or isinstance(s1, bytes)):
+        s1 = str(s1)
+
+    if not(isinstance(s2, six.string_types) or isinstance(s2, bytes)):
+        s2 = str(s2)
+
     # Call the function to compute the similarity measure
-    return measure.get_raw_score(str(s1), str(s2))
+    return measure.get_raw_score(s1, s2)
 
 
 def jaro_winkler(s1, s2):
     """
     This function computes the Jaro Winkler measure between the two input
     strings.
+
     Args:
-        s1, s2 (str): Input strings for which the similarity measure should
+        s1,s2 (string): The input strings for which the similarity measure should
             be computed.
+
     Returns:
         The Jaro Winkler measure if both the strings are not missing (i.e NaN),
         else  returns NaN.
@@ -249,23 +317,31 @@ def jaro_winkler(s1, s2):
         return pd.np.NaN
     if pd.isnull(s1) or pd.isnull(s2):
         return pd.np.NaN
-    if isinstance(s1, six.string_types):
-        s1 = gh.remove_non_ascii(s1)
-    if isinstance(s2, six.string_types):
-        s2 = gh.remove_non_ascii(s2)
+    # if isinstance(s1, six.string_types):
+    #     s1 = gh.remove_non_ascii(s1)
+    # if isinstance(s2, six.string_types):
+    #     s2 = gh.remove_non_ascii(s2)
     # Create the similarity measure object
     measure = sm.JaroWinkler()
+    if not(isinstance(s1, six.string_types) or isinstance(s1, bytes)):
+        s1 = str(s1)
+
+    if not(isinstance(s2, six.string_types) or isinstance(s2, bytes)):
+        s2 = str(s2)
+
     # Call the function to compute the similarity measure
-    return measure.get_raw_score(str(s1), str(s2))
+    return measure.get_raw_score(s1, s2)
 
 
 def needleman_wunsch(s1, s2):
     """
     This function computes the Needleman-Wunsch measure between the two input
     strings.
+
     Args:
-        s1, s2 (str): Input strings for which the similarity measure should
+        s1,s2 (string): The input strings for which the similarity measure should
             be computed.
+
     Returns:
         The Needleman-Wunsch measure if both the strings are not missing (i.e
         NaN), else  returns NaN.
@@ -276,23 +352,31 @@ def needleman_wunsch(s1, s2):
         return pd.np.NaN
     if pd.isnull(s1) or pd.isnull(s2):
         return pd.np.NaN
-    if isinstance(s1, six.string_types):
-        s1 = gh.remove_non_ascii(s1)
-    if isinstance(s2, six.string_types):
-        s2 = gh.remove_non_ascii(s2)
+    # if isinstance(s1, six.string_types):
+    #     s1 = gh.remove_non_ascii(s1)
+    # if isinstance(s2, six.string_types):
+    #     s2 = gh.remove_non_ascii(s2)
     # Create the similarity measure object
     measure = sm.NeedlemanWunsch()
+    if not(isinstance(s1, six.string_types) or isinstance(s1, bytes)):
+        s1 = str(s1)
+
+    if not(isinstance(s2, six.string_types) or isinstance(s2, bytes)):
+        s2 = str(s2)
+
     # Call the function to compute the similarity measure
-    return measure.get_raw_score(str(s1), str(s2))
+    return measure.get_raw_score(s1, s2)
 
 
 def smith_waterman(s1, s2):
     """
     This function computes the Smith-Waterman measure between the two input
     strings.
+
     Args:
-        s1, s2 (str): Input strings for which the similarity measure should
+        s1,s2 (string): The input strings for which the similarity measure should
             be computed.
+
     Returns:
         The Smith-Waterman measure if both the strings are not missing (i.e
         NaN), else  returns NaN.
@@ -302,14 +386,20 @@ def smith_waterman(s1, s2):
         return pd.np.NaN
     if pd.isnull(s1) or pd.isnull(s2):
         return pd.np.NaN
-    if isinstance(s1, six.string_types):
-        s1 = gh.remove_non_ascii(s1)
-    if isinstance(s2, six.string_types):
-        s2 = gh.remove_non_ascii(s2)
+    # if isinstance(s1, six.string_types):
+    #     s1 = gh.remove_non_ascii(s1)
+    # if isinstance(s2, six.string_types):
+    #     s2 = gh.remove_non_ascii(s2)
     # Create the similarity measure object
     measure = sm.SmithWaterman()
+    if not(isinstance(s1, six.string_types) or isinstance(s1, bytes)):
+        s1 = str(s1)
+
+    if not(isinstance(s2, six.string_types) or isinstance(s2, bytes)):
+        s2 = str(s2)
+
     # Call the function to compute the similarity measure
-    return measure.get_raw_score(str(s1), str(s2))
+    return measure.get_raw_score(s1, s2)
 
 
 # Token-based measures
@@ -317,12 +407,14 @@ def jaccard(arr1, arr2):
     """
     This function computes the Jaccard measure between the two input
     lists/sets.
+
     Args:
-        arr1, arr2 (list or set): Input list or sets for which the Jaccard
+        arr1,arr2 (list or set): The input list or sets for which the Jaccard
         measure should be computed.
+
     Returns:
         The Jaccard measure if both the lists/set are not None and do not have
-         any missing tokens (i.e NaN), else  returns NaN.
+        any missing tokens (i.e NaN), else  returns NaN.
     """
 
     if arr1 is None or arr2 is None:
@@ -345,12 +437,14 @@ def cosine(arr1, arr2):
     """
     This function computes the cosine measure between the two input
     lists/sets.
+
     Args:
-        arr1, arr2 (list or set): Input list or sets for which the cosine
+        arr1,arr2 (list or set): The input list or sets for which the cosine
         measure should be computed.
+
     Returns:
         The cosine measure if both the lists/set are not None and do not have
-         any missing tokens (i.e NaN), else  returns NaN.
+        any missing tokens (i.e NaN), else  returns NaN.
     """
 
     if arr1 is None or arr2 is None:
@@ -373,9 +467,11 @@ def overlap_coeff(arr1, arr2):
     """
     This function computes the overlap coefficient between the two input
     lists/sets.
+
     Args:
-        arr1, arr2 (list or set): Input list or sets for which the overlap
-        coefficient should be computed.
+        arr1,arr2 (list or set): The input list or sets for which the overlap
+            coefficient should be computed.
+
     Returns:
         The overlap coefficient if both the lists/set are not None and do not
         have any missing tokens (i.e NaN), else  returns NaN.
@@ -400,9 +496,11 @@ def dice(arr1, arr2):
     """
     This function computes the Dice score between the two input
     lists/sets.
+
     Args:
-        arr1, arr2 (list or set): Input list or sets for which the Dice
-        score should be computed.
+        arr1,arr2 (list or set): The input list or sets for which the Dice
+            score should be computed.
+
     Returns:
         The Dice score if both the lists/set are not None and do not
         have any missing tokens (i.e NaN), else  returns NaN.
@@ -432,8 +530,8 @@ def monge_elkan(arr1, arr2):
     secondary function to compute the similarity score.
 
     Args:
-        arr1, arr2 (list or set): Input list or sets for which the Monge-Elkan
-        measure should be computed.
+        arr1,arr2 (list or set): The input list or sets for which the
+            Monge-Elkan measure should be computed.
 
     Returns:
         The Monge-Elkan measure if both the lists/set are not None and do not
@@ -463,9 +561,10 @@ def exact_match(d1, d2):
     """
     This function check if two objects are match exactly. Typically the
     objects are string, boolean and ints.
+
     Args:
-        d1, d2 (str, boolean, int): Input objects which should checked
-        whether they match exactly.
+        d1,d2 (str, boolean, int): The input objects which should checked
+            whether they match exactly.
 
     Returns:
         A value of 1 is returned if they match exactly,
@@ -488,9 +587,10 @@ def exact_match(d1, d2):
 def rel_diff(d1, d2):
     """
     This function computes the relative difference between two numbers
+
     Args:
-        d1, d2 (float): Input numbers for which the relative difference must
-        be computed.
+        d1,d2 (float): The input numbers for which the relative difference
+         must be computed.
 
     Returns:
         A float value of relative difference between the input numbers (if
@@ -518,9 +618,10 @@ def rel_diff(d1, d2):
 def abs_norm(d1, d2):
     """
     This function computes the absolute norm similarity between two numbers
+
     Args:
-        d1, d2 (float): Input numbers for which the absolute norm must
-        be computed.
+        d1,d2 (float): Input numbers for which the absolute norm must
+            be computed.
 
     Returns:
         A float value of absolute norm between the input numbers (if

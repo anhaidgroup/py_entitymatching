@@ -1,7 +1,7 @@
 import os
 from nose.tools import *
 import unittest
-import numpy as np
+# import numpy as np
 import pandas as pd
 
 import magellan as mg
@@ -12,9 +12,9 @@ from magellan.io.parsers import read_csv_metadata
 import magellan.debugblocker.debugblocker as db
 
 
-datasets_path = os.sep.join([get_install_path(), 'datasets', 'test_datasets'])
-catalog_datasets_path = os.sep.join([get_install_path(), 'datasets', 'test_datasets', 'catalog'])
-debugblocker_datasets_path = os.sep.join([get_install_path(), 'datasets', 'test_datasets', 'debugblocker'])
+datasets_path = os.sep.join([get_install_path(), 'tests', 'test_datasets'])
+catalog_datasets_path = os.sep.join([get_install_path(), 'tests', 'test_datasets', 'catalog'])
+debugblocker_datasets_path = os.sep.join([get_install_path(), 'tests', 'test_datasets', 'debugblocker'])
 path_a = os.sep.join([datasets_path, 'A.csv'])
 path_b = os.sep.join([datasets_path, 'B.csv'])
 path_c = os.sep.join([datasets_path, 'C.csv'])
@@ -365,7 +365,7 @@ class DebugblockerTestCases(unittest.TestCase):
         self.assertEqual(actual_prefix_events, expected_prefix_events)
 
     def test_replace_nan_to_empty_1(self):
-        field = np.nan
+        field = pd.np.nan
         self.assertEqual(db._replace_nan_to_empty(field), '')
 
     def test_replace_nan_to_empty_2(self):
@@ -457,7 +457,7 @@ class DebugblockerTestCases(unittest.TestCase):
         self.assertEqual(actual_ret_column, expected_ret_column)
 
     def test_get_tokenized_column_2(self):
-        column = ['hello world', np.nan, 'how are you',
+        column = ['hello world', pd.np.nan, 'how are you',
                   '', 'this is a blocking debugger']
         actual_ret_column = db._get_tokenized_column(column)
         expected_ret_column = [['hello', 'world'], [''],
@@ -494,7 +494,8 @@ class DebugblockerTestCases(unittest.TestCase):
         self.assertEqual(actual_record_list, expected_record_list)
 
     def test_get_tokenized_table_3(self):
-        table = [[1, 'abc abc asdf', '123-3456-7890', np.nan, '', '135 east  abc  st'],
+        table = [[1, 'abc abc asdf', '123-3456-7890', pd.np.nan, '',
+                  '135 east  abc  st'],
                  [2, 'aaa bbb', '000-111-2222', '', '', '246  west abc st'],
                  [3, 'cc dd', '123-123-1231', 'cc', 'unknown', ' 246 west def st']]
         dataframe = pd.DataFrame(table)
@@ -531,7 +532,7 @@ class DebugblockerTestCases(unittest.TestCase):
         self.assertEqual(B_wlist, expected_B_wlist)
 
     def test_get_feature_weight_3(self):
-        table = [[''], [np.nan]]
+        table = [[''], [pd.np.nan]]
         dataframe = pd.DataFrame(table)
         weight_list = db._get_feature_weight(dataframe)
         self.assertEqual(weight_list, [0.0])
@@ -779,8 +780,8 @@ class DebugblockerTestCases(unittest.TestCase):
         expected_record = [0, 0.33333333333333331, 2, 'B002',
                            'Thinking in Java',
                            'learn how to program in Java', 2000, 'ENG',
-                           'Johnnie Doe', np.nan, 'Thinking in C',
-                           'learn programming in C++', '1990', np.nan,
+                           'Johnnie Doe', pd.np.nan, 'Thinking in C',
+                           'learn programming in C++', '1990', pd.np.nan,
                            'Jane Doe', 'BCD publisher']
         self.assertEqual(expected_record[2], ret_record[2])
         self.assertEqual(expected_record[3], ret_record[3])

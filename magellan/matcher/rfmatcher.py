@@ -10,10 +10,15 @@ from sklearn.ensemble import RandomForestClassifier
 class RFMatcher(MLMatcher):
     """
     Random Forest matcher.
+
     Args:
-        *args, **kwargs: Arguments to scikit-learn's Random Forest
+        *args,**kwargs: The arguments to scikit-learn's Random Forest
         classifier.
-        name (str): Name of this matcher (defaults to None).
+
+        name (str): The name of this matcher (defaults to None). If the
+            matcher name is None, the class automatically generates a string
+            and assigns it as the name.
+
 
     """
     def __init__(self, *args, **kwargs):

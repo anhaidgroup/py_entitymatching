@@ -15,16 +15,17 @@ logger = logging.getLogger(__name__)
 
 def get_property(data_frame, property_name):
     """
-    Gets a property (with the given property name) for a pandas DataFrame from
-    the Catalog.
+    Gets the value of a property (with the given property name) for a pandas
+    DataFrame from the catalog.
 
     Args:
-        data_frame (DataFrame): DataFrame for which the property should be
+        data_frame (DataFrame): The DataFrame for which the property should be
             retrieved.
-        property_name (str): Name of the property that should be retrieved.
+        property_name (string): The name of the property that should be
+            retrieved.
 
     Returns:
-        A pandas object (typically a string or a pandas DataFrame depending
+        A Python object (typically a string or a pandas DataFrame depending
         on the property name) is returned.
 
     Raises:
@@ -71,18 +72,19 @@ def get_property(data_frame, property_name):
 
 def set_property(data_frame, property_name, property_value):
     """
-    Sets a property (with the given property name) for a pandas DataFrame in
-    the Catalog.
+    Sets the value of a property (with the given property name) for a pandas
+    DataFrame in the catalog.
 
     Args:
-        data_frame (DataFrame): DataFrame for which the property must  be set.
-        property_name (str): Name of the property to be set.
-        property_value (object): Value of the property to be set. This is
+        data_frame (DataFrame): The DataFrame for which the property must  be
+            set.
+        property_name (string): The name of the property to be set.
+        property_value (object): The value of the property to be set. This is
             typically a string (such as key) or pandas DataFrame (such as
             ltable, rtable).
 
     Returns:
-        A boolean value of True is returned if the update was successful.
+        A Boolean value of True is returned if the update was successful.
 
     Raises:
         AssertionError: If the input object is not of type pandas DataFrame.
@@ -132,7 +134,7 @@ def init_properties(data_frame):
             initialized.
 
     Returns:
-        A boolean value of True is returned if the initialization was
+        A Boolean value of True is returned if the initialization was
         successful.
 
     """
@@ -195,12 +197,13 @@ def del_property(data_frame, property_name):
     Deletes a property for a pandas DataFrame from the catalog.
 
     Args:
-        data_frame (DataFrame): Input DataFrame for which a property must be
+        data_frame (DataFrame): The input DataFrame for which a property must be
             deleted from the catalog.
-        property_name (str): Name of the property that should be deleted.
+
+        property_name (string): The name of the property that should be deleted.
 
     Returns:
-        A boolean value of True is returned if the deletion was successful.
+        A Boolean value of True is returned if the deletion was successful.
 
     Raises:
         AssertionError: If the object is not of type pandas DataFrame.
@@ -265,7 +268,7 @@ def del_all_properties(data_frame):
         the DataFrame's entry will be removed from the catalog,
         but init_properties will add (if the DataFrame is not present in the
         catalog) and initialize its properties to an empty object (
-        specifically, an empty python dictionary).
+        specifically, an empty Python dictionary).
     """
     # Validations of input parameters
     # # The input object is expected to be of type pandas DataFrame
@@ -291,8 +294,10 @@ def get_catalog():
     Gets the catalog information for the current session.
 
     Returns:
-        A python dictionary containing the catalog information.
-        Specifically, the dictionary contains id(DataFrame object) as the key
+        A Python dictionary containing the catalog information.
+
+        Specifically, the dictionary contains the Python identifier of a
+        DataFrame (obtained by id(DataFrame object)) as the key
         and their properties as value.
     """
     # Get the catalog instance
@@ -307,7 +312,7 @@ def del_catalog():
     Deletes the catalog for the current session.
 
     Returns:
-        A boolean value of True is returned if the deletion was successful.
+        A Boolean value of True is returned if the deletion was successful.
     """
     # Get the catalog instance
     catalog = Catalog.Instance()
@@ -321,7 +326,7 @@ def is_catalog_empty():
     Checks if the catalog is empty.
 
     Returns:
-        A boolean value of True is returned if the catalog is empty,
+        A Boolean value of True is returned if the catalog is empty,
         else returns False.
 
     """
@@ -338,11 +343,11 @@ def is_dfinfo_present(data_frame):
     Checks whether the DataFrame information is present in the catalog.
 
     Args:
-        data_frame (DataFrame): DataFrame that should be checked for its
+        data_frame (DataFrame): The DataFrame that should be checked for its
             presence in the catalog.
 
     Returns:
-        A boolean value of True is returned if the DataFrame is present in
+        A Boolean value of True is returned if the DataFrame is present in
         the catalog, else False is returned.
 
     Raises:
@@ -370,13 +375,13 @@ def is_property_present_for_df(data_frame, property_name):
     catalog.
 
     Args:
-        data_frame (DataFrame): DataFrame for which the property must be
-            retrieved.
-        property_name (str): Name of the property that should be checked for
-            its presence for the DataFrame, in the catalog.
+        data_frame (DataFrame): The DataFrame for which the property must be
+            checked for.
+        property_name (string): The name of the property that should be
+        checked for its presence for the DataFrame, in the catalog.
 
     Returns:
-        A boolean value of True is returned if the property is present for
+        A Boolean value of True is returned if the property is present for
         the given DataFrame.
 
     Raises:
@@ -432,8 +437,8 @@ def set_properties(data_frame, properties, replace=True):
 
     Args:
         data_frame (DataFrame): DataFrame for which the properties must be set.
-        properties (dict): A python dictionary with keys as property names and
-            values as python objects (typically strings or DataFrames)
+        properties (dict): A Python dictionary with keys as property names and
+            values as Python objects (typically strings or DataFrames)
         replace (Optional[bool]): Flag to indicate whether the  input
             properties can replace the properties in the catalog. The default
             value for the flag is True.
@@ -446,13 +451,13 @@ def set_properties(data_frame, properties, replace=True):
 
 
     Returns:
-        A boolean value of True is returned if the properties were set for
+        A Boolean value of True is returned if the properties were set for
         the given DataFrame, else returns False.
 
     Raises:
         AssertionError: If the input data_frame object is not of type pandas
             DataFrame.
-        AssertionError: If the input properties object is not of type python
+        AssertionError: If the input properties object is not of type Python
             dictionary.
 
     """
@@ -462,11 +467,11 @@ def set_properties(data_frame, properties, replace=True):
         logger.error('Input object is not of type pandas DataFrame')
         raise AssertionError('Input object is not of type pandas DataFrame')
 
-    # # Input properties is expected to be of type python dictionary
+    # # Input properties is expected to be of type Python dictionary
     if not isinstance(properties, dict):
-        logger.error('The properties should be of type python dictionary')
+        logger.error('The properties should be of type Python dictionary')
         raise AssertionError(
-            'The properties should be of type python dictionary')
+            'The properties should be of type Python dictionary')
 
     # Get the catalog instance
     catalog = Catalog.Instance()
@@ -504,24 +509,26 @@ def copy_properties(source_data_frame, target_data_frame, replace=True):
     catalog.
 
     Args:
-        source_data_frame (DataFrame): DataFrame from which the properties
+        source_data_frame (DataFrame): The DataFrame from which the properties
             to be copied from, in the catalog.
-        target_data_frame (DataFrame): DataFrame to which the properties to be
-            copied to, in the catalog.
-        replace (Optional[bool]): Flag to indicate whether the source
+        target_data_frame (DataFrame): The DataFrame to which the properties
+            to be copied to, in the catalog.
+        replace (boolean): A flag to indicate whether the source
             DataFrame's  properties can replace the target
             DataFrame's properties in the catalog. The default value for the
             flag is True.
+
             Specifically, if the target DataFrame's information is already
             present in the catalog then the function will check if the
             replace flag is True. If the flag is set to True, then the
             function will first delete the existing properties and then set
             it with the source DataFrame properties.
+
             If the flag is False, the function will just return without
             modifying the existing properties.
 
     Returns:
-        A boolean value of True is returned if the copying was successful.
+        A Boolean value of True is returned if the copying was successful.
 
     Raises:
         AssertionError: If the input object (source_data_frame) is not of
@@ -578,24 +585,17 @@ def copy_properties(source_data_frame, target_data_frame, replace=True):
 # key related methods
 def get_key(data_frame):
     """
-    Gets the 'key' property for a DataFrame from the catalog.
+    Gets the value of 'key' property for a DataFrame from the catalog.
 
     Args:
-        data_frame (DataFrame): DataFrame for which the key must be retrieved
-            from the catalog.
+        data_frame (DataFrame): The DataFrame for which the key must be
+            retrieved from the catalog.
 
     Returns:
         A string value containing the key column name is returned (if present).
 
-    Raises:
-        This function calls get_property internally, and get_property
-        raises the following exceptions:
-        AssertionError: If the object is not of type pandas DataFrame.
-        AssertionError: If the property name is not of type string.
-        KeyError: If the DataFrame information is not present in the catalog.
-        KeyError: If the requested property for the DataFrame is not present
-            in the catalog.
-
+    Note:
+        This function internally calls get_property function.
     """
     # This function is just a sugar to get the 'key' property for a DataFrame
     return get_property(data_frame, 'key')
@@ -603,21 +603,25 @@ def get_key(data_frame):
 
 def set_key(data_frame, key_attribute):
     """
-    Sets the 'key' property for a DataFrame in the catalog with the given
-    attribute (i.e column name).
+    Sets the value of 'key' property for a DataFrame in the catalog with the
+    given attribute (i.e column name).
+
     Specifically, this function set the the key attribute for the DataFrame
     if the given attribute satisfies the following two properties:
-        * The key attribute should have unique values.
-        * The key attribute should not have missing values. A missing value
+
+        The key attribute should have unique values.
+
+        The key attribute should not have missing values. A missing value
         is represented as np.NaN.
 
     Args:
-        data_frame (DataFrame): DataFrame for which the key must be set in
+        data_frame (DataFrame): The DataFrame for which the key must be set in
             the catalog.
-        key_attribute (str): Key attribute (column name) in the DataFrame.
+        key_attribute (string): The key attribute (column name) in the
+            DataFrame.
 
     Returns:
-        A boolean value of True was successful if the given attribute
+        A Boolean value of True is returned, if the given attribute
         satisfies the conditions for a key and the update was successful.
 
     Raises:
@@ -625,6 +629,10 @@ def set_key(data_frame, key_attribute):
             pandas DataFrame.
         AssertionError: If the input key_attribute is not of type string.
         KeyError: If the given key attribute is not in the DataFrame columns.
+
+    Note:
+        This function internally calls set_property function.
+
     """
     # Validate input parameters
 
@@ -664,28 +672,24 @@ def set_key(data_frame, key_attribute):
 
 def get_fk_ltable(data_frame):
     """
-    Gets foreign key to left table for a DataFrame from the catalog.
+    Gets the foreign key to left table for a DataFrame from the
+    catalog.
 
-     Specifically this function is a sugar function that will get the foreign
-     key to left table using underlying get_property function. This function
-     is typically called on a DataFrame which contains metadata such as foreign
-     key, ltable, foreign key rtable, ltable, rtable.
+    Specifically this function is a sugar function that will get the foreign
+    key to left table using underlying get_property function. This function
+    is typically called on a DataFrame which contains metadata such as
+    fk_ltable, fk_rtable, ltable, rtable.
+
 
     Args:
-        data_frame (DataFrame): Input DataFrame for which the foreign key
+        data_frame (DataFrame): The input DataFrame for which the foreign key
             ltable property must be retrieved.
 
     Returns:
-        A python object, typically a string is returned.
+        A Python object, typically a string is returned.
 
-    Raises:
-        This function calls get_property internally, and get_property
-        raises the following exceptions:
-        AssertionError: If the object is not of type pandas DataFrame.
-        AssertionError: If the property name is not of type string.
-        KeyError: If the DataFrame information is not present in the catalog.
-        KeyError: If the requested property for the DataFrame is not present
-            in the catalog.
+    Note:
+        This function internally calls get_property function.
 
     """
     # Call the get_property function and relay the result.
@@ -694,28 +698,22 @@ def get_fk_ltable(data_frame):
 
 def get_fk_rtable(data_frame):
     """
-    Gets foreign key to right table for a DataFrame from the catalog.
+    Gets the foreign key to right table for a DataFrame from the catalog.
 
-     Specifically this function is a sugar function that will get the foreign
-     key to right table using underlying get_property function. This function
-     is typically called on a DataFrame which contains metadata such as foreign
-     key, ltable, foreign key rtable, ltable, rtable.
+    Specifically this function is a sugar function that will get the foreign
+    key to right table using get_property function. This function
+    is typically called on a DataFrame which contains metadata such as
+    fk_ltable, fk_rtable, ltable, rtable.
 
     Args:
-        data_frame (DataFrame): Input DataFrame for which the foreign key
+        data_frame (DataFrame): The input DataFrame for which the foreign key
             rtable property must be retrieved.
 
     Returns:
-        A python object, typically a string is returned.
+        A Python object, (typically a string) is returned.
 
-    Raises:
-        This function calls get_property internally, and get_property
-        raises the following exceptions:
-        AssertionError: If the object is not of type pandas DataFrame.
-        AssertionError: If the property name is not of type string.
-        KeyError: If the DataFrame information is not present in the catalog.
-        KeyError: If the requested property for the DataFrame is not present
-            in the catalog.
+    Note:
+        This function internally calls get_property function.
 
     """
     # Call the get_property function and relay the result.
@@ -726,28 +724,31 @@ def set_fk_ltable(data_frame, fk_ltable):
     """
     Sets the foreign key to ltable for a DataFrame in the catalog.
 
-     Specifically this function is a sugar function that will set the foreign
-     key to left table using underlying set_property function. This function
-     is typically called on a DataFrame which contains metadata such as foreign
-     key, ltable, foreign key rtable, ltable, rtable.
+    Specifically this function is a sugar function that will set the foreign
+    key to the left table using set_property function. This function
+    is typically called on a DataFrame which contains metadata such as
+    fk_ltable, fk_rtable, ltable, rtable.
 
     Args:
-        data_frame (DataFrame): Input DataFrame for which the foreign key
+        data_frame (DataFrame): The input DataFrame for which the foreign key
             ltable property must be set.
-        fk_ltable (str): Foreign key to the ltable that must tbe set for the
-            DataFrame in the catalog.
+        fk_ltable (string): The attribute that must ne set as the foreign key
+        to the ltable in the catalog.
 
     Returns:
-        status (bool). Returns True if the ltable foreign key
-        attribute was set successfully, else returns False.
+        A Boolean value of True is returned if the foreign key to ltable was
+        set successfully.
 
     Raises:
         AssertionError: If the input object (data_frame) is not of type
-        pandas DataFrame.
+            pandas DataFrame.
         AssertionError: If the input attribute (fk_ltable) is not of type
-        string.
+            string.
         AssertionError: If the attribute (fk_ltable) is not in the input
-        DataFrame.
+            DataFrame.
+    Note:
+        This function internally calls set_property function.
+
     """
     # Validate the input parameters
     # # We expect the input object to be of type pandas DataFrame
@@ -785,14 +786,14 @@ def validate_and_set_fk_ltable(foreign_data_frame, foreign_key_ltable, ltable,
         foreign_data_frame (DataFrame): DataFrame containing the foreign key
             (typically a candidate set, for example output from blocking two
             tables).
-        foreign_key_ltable (str): An attribute in the foreign DataFrame
+        foreign_key_ltable (string): An attribute in the foreign DataFrame
         ltable (DataFrame): Base DataFrame, in which the foreign key
             attribute would form the primary key.
-        ltable_key (str): An attribute in the base table
+        ltable_key (string): An attribute in the base table
             (typically a primary key attribute).
 
     Returns:
-        A boolean value of True will be returned if the validation was
+        A Boolean value of True will be returned if the validation was
         successful and the update was successful in the catalog.
     Raises:
         AssertionError: If the input foreign DataFrame (foreign_data_frame)
@@ -838,14 +839,14 @@ def validate_and_set_fk_rtable(foreign_data_frame, foreign_key_rtable,
         foreign_data_frame (DataFrame): DataFrame containing the foreign key
             (typically a candidate set, for example output from blocking two
             tables).
-        foreign_key_rtable (str): An attribute in the foreign DataFrame
+        foreign_key_rtable (string): An attribute in the foreign DataFrame
         rtable (DataFrame): Base DataFrame, in which the foreign key
             attribute would form the primary key.
-        rtable_key (str): An attribute in the base table
+        rtable_key (string): An attribute in the base table
             (typically a primary key attribute).
 
     Returns:
-        A boolean value of True will be returned if the validation was
+        A Boolean value of True will be returned if the validation was
         successful and the update was successful in the catalog.
     Raises:
         AssertionError: If the input foreign DataFrame (foreign_data_frame)
@@ -880,34 +881,43 @@ def set_fk_rtable(data_frame, foreign_key_rtable):
     """
     Sets the foreign key to rtable for a DataFrame in the catalog.
 
-     Specifically this function is a sugar function that will set the foreign
-     key to right table using underlying set_property function. This function
-     is typically called on a DataFrame which contains metadata such as foreign
-     key, ltable, foreign key rtable, ltable, rtable.
+    Specifically this function is a sugar function that will set the foreign
+    key to right table using set_property function. This function
+    is typically called on a DataFrame which contains metadata such as
+    fk_ltable, fk_rtable, ltable, rtable.
+
+
 
     Args:
-        data_frame (DataFrame): Input DataFrame for which the foreign key
+        data_frame (DataFrame): The input DataFrame for which the foreign key
             rtable property must be set.
-        foreign_key_rtable (str): Foreign key to the rtable that must tbe set
-            for the DataFrame in the catalog.
+        foreign_key_rtable (string): The attribute that must be set as
+            foreign key to rtable in the catalog.
 
     Returns:
-        status (bool). Returns True if the rtable foreign key
-        attribute was set successfully, else returns False.
+        A Boolean value of True is returned if the foreign key to rtable was
+            set successfully.
 
     Raises:
         AssertionError: If the input object (data_frame) is not of type
-        pandas DataFrame.
+          pandas DataFrame.
         AssertionError: If the input attribute (foreign_key_rtable) is not of
-        type string.
+            type string.
         AssertionError: If the attribute (fk_ltable) is not in the input
-        DataFrame.
+            DataFrame.
+
     """
     # Validate the input parameters
     # # The input object is expected to be of type pandas DataFrame
     if not isinstance(data_frame, pd.DataFrame):
         logger.error('Input object is not of type pandas data frame')
         raise AssertionError('Input object is not of type pandas data frame')
+
+    if not isinstance(foreign_key_rtable, six.string_types):
+        logger.error('Input (foreign key ltable) is not of type pandas data '
+                     'frame')
+        raise AssertionError('Input (foreign key rtable) is not of type pandas '
+                             'data frame')
 
     # Check if the given attribute is present in the DataFrame
     if not ch.check_attrs_present(data_frame, foreign_key_rtable):
@@ -922,10 +932,10 @@ def set_fk_rtable(data_frame, foreign_key_rtable):
 
 def show_properties(data_frame):
     """
-    Shows properties for a DataFrame that is present in the catalog.
+    Prints the properties for a DataFrame that is present in the catalog.
 
     Args:
-        data_frame (DataFrame): Input pandas DataFrame for which the
+        data_frame (DataFrame): The input pandas DataFrame for which the
             properties must be displayed.
     """
     # Check if the DataFrame information is present in the catalog. If not
@@ -960,7 +970,8 @@ def show_properties_for_id(object_id):
     display the properties present for that object id in the catalog.
 
     Args:
-        object_id (int): Python identifier of an object.
+        object_id (int): The Python identifier of an object (typically a
+        pandas DataFrame).
 
     """
     catalog = Catalog.Instance()
@@ -992,17 +1003,17 @@ def set_candset_properties(candset, key, foreign_key_ltable,
     Args:
         candset (DataFrame): Input DataFrame for which the properties must be
             set.
-        key (str): Key attribute that must be set for the DataFrame in the
+        key (string): Key attribute that must be set for the DataFrame in the
             catalog.
-        foreign_key_ltable (str): Foreign key ltable attribute that must be
+        foreign_key_ltable (string): Foreign key ltable attribute that must be
             set for the DataFrame in the catalog.
-        foreign_key_rtable (str): Foreign key rtable attribute that must be
+        foreign_key_rtable (string): Foreign key rtable attribute that must be
             set for the DataFrame in the catalog.
         ltable (DataFrame): DataFrame that must be set as ltable.
         rtable (DataFrame): DataFrame that must be set as rtable.
 
     Returns:
-        A boolean value of True is returned if the updates were successful.
+        A Boolean value of True is returned if the updates were successful.
 
     """
     # set the key
@@ -1191,7 +1202,17 @@ def get_metadata_for_candset(candset, lgr, verbose):
 # noinspection PyIncorrectDocstring
 def get_ltable(candset):
     """
-    Gets the ltable.
+    Gets the ltable for a DataFrame from the catalog.
+
+    Args:
+        candset (DataFrame): The input table for which the ltable must be
+            returned.
+
+    Returns:
+        A pandas DataFrame that is pointed by 'ltable' property of the input
+        table.
+    Note:
+        This function internally calls get_property function.
     """
     # Return the ltable for a candidate set. This function is just a sugar
     return get_property(candset, 'ltable')
@@ -1200,8 +1221,57 @@ def get_ltable(candset):
 # noinspection PyIncorrectDocstring
 def get_rtable(candset):
     """
-    Gets the rtable.
+    Gets the rtable for a DataFrame from the catalog.
+
+    Args:
+        candset (DataFrame): Input table for which the rtable must be returned.
+
+    Returns:
+        A pandas DataFrame that is pointed by 'rtable' property of the input
+        table.
+
+    Note:
+        This function internally calls get_property function.
     """
     # Return the rtable for a candidate set. This function is just a sugar
 
     return get_property(candset, 'rtable')
+
+def set_ltable(candset, table):
+    """
+    Sets the ltable for a DataFrame in the catalog.
+
+    Args:
+        candset (DataFrame): The input table for which the ltable must be set.
+        table (DataFrame): The table (typically a pandas DataFrame) that must
+            be set as ltable for the input DataFrame.
+
+    Returns:
+        A Boolean value of True is returned, if the update was successful.
+
+    Note:
+        This function internally calls set_property function.
+    """
+    # Return the ltable for a candidate set. This function is just a sugar
+    return set_property(candset, 'ltable', table)
+
+
+# noinspection PyIncorrectDocstring
+def set_rtable(candset, table):
+    """
+    Sets the rtable for a DataFrame in the catalog.
+
+    Args:
+        candset (DataFrame): The input table for which the rtable must be set.
+        table (DataFrame): The table that must be set as rtable for the input
+            DataFrame.
+
+    Returns:
+        A Boolean value of True is returned, if the update was successful.
+
+    Note:
+        This function internally calls set_property function.
+    """
+    # Return the rtable for a candidate set. This function is just a sugar
+
+    return set_property(candset, 'rtable', table)

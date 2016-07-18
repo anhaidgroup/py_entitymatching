@@ -18,26 +18,30 @@ def get_features(ltable, rtable, l_attr_types, r_attr_types,
                  attr_corres, tok_funcs, sim_funcs):
     """
     This function will automatically generate a set of features based on the
-    input tables. Specifically, this function this function will go through the
-    correspondences. For each correspondence , it examines the types of the
-    involved attributes, then apply the appropriate tokenizers and sim
-    functions to generate all appropriate features for this correspondence.
+    attributes of the input tables.
+
+    Specifically, this function will go through the attribute
+    correspondences between the input tables. For each correspondence ,
+    it examines the types of the involved attributes, then apply the
+    appropriate tokenizers and sim functions to generate all appropriate
+    features for this correspondence.
 
     Args:
-        ltable, rtable (DataFrame): Input pandas DataFrames for which the
+        ltable,rtable (DataFrame): The pandas DataFrames for which the
             features must be generated.
-        l_attr_types, r_attr_types (dictionary): Attribute types for the input
-            DataFrames.Typically this is generated using the
+        l_attr_types,r_attr_types (dictionary): The attribute types for the
+            input DataFrames.Typically this is generated using the
             function get_attr_types.
-        attr_corres (dictionary): Attribute correspondences between the input
-            DataFrames.
-        tok_funcs (dictionary): A python dictionary containing tokenizer
+        attr_corres (dictionary): The attribute correspondences between the
+            input DataFrames.
+        tok_funcs (dictionary): A Python dictionary containing tokenizer
             functions.
-        sim_funcs (dictionary): A python dictionary containing similarity
+        sim_funcs (dictionary): A Python dictionary containing similarity
             functions.
 
     Returns:
         A pandas DataFrame containing automatically generated features.
+
         Specifically, the DataFrame contains the following attributes:
         'feature_name', 'left_attribute', 'right_attribute',
         'left_attr_tokenizer', 'right_attr_tokenizer', 'simfunction',
@@ -128,7 +132,7 @@ def get_features(ltable, rtable, l_attr_types, r_attr_types,
 
         # Generate a feature only if the attribute types are same
         if l_attr_type != r_attr_type:
-            logger.warning('Magellan types: %s type (%s) and %s type (%s) '
+            logger.info('Magellan types: %s type (%s) and %s type (%s) '
                            'are different.'
                            'If you want to set them to be same and '
                            'generate features, '
@@ -159,27 +163,52 @@ def get_features(ltable, rtable, l_attr_types, r_attr_types,
 def get_features_for_blocking(ltable, rtable):
     """
     This function automatically generates features that can be used for
-    rule-based blocking purposes.
+     blocking purposes.
 
     Args:
-        ltable, rtable (DataFrame): Input pandas DataFrames for which the
+        ltable,rtable (DataFrame): The pandas DataFrames for which the
             features to be generated.
 
     Returns:
         A pandas DataFrame containing automatically generated features.
+
+        Specifically, the DataFrame contains the following attributes:
+        'feature_name', 'left_attribute', 'right_attribute',
+        'left_attr_tokenizer', 'right_attr_tokenizer', 'simfunction',
+        'function', 'function_source', 'is_auto_generated'.
+
+
         Further, this function also sets the following global varaibles:
-        _block_t, _block_s, _atypes1, _atypes2, _block_c. The variable
-        _block_t contains the tokenizers used and _block_s contains the
-        similarity functions used for creating features. The variables
-        _atypes1, _atypes2 contain the attribute types for ltable and rtable
-        respectively. The variable _block_c contain the attribute
-        correspondence between the two input tables.
+        _block_t,
+        _block_s,
+        _atypes1,
+        _atypes2,
+        _block_c.
+
+        The variable_block_t contains the tokenizers used and  _block_s
+        contains the similarity functions used for creating features.
+
+        The variables _atypes1, _atypes2 contain the attribute types for
+        ltable and rtable respectively. The variable _block_c contain the
+        attribute correspondence between the two input tables.
 
     Raises:
         AssertionError: If the input object (ltable) is not of type pandas
             DataFrame.
         AssertionError: If the input object (rtable) is not of type pandas
             DataFrame.
+    Note:
+        In the output DataFrame, two
+        attributes demand some explanation: (1)function, and (2)
+        is_auto_generated. The function, points to the actual python function
+        that implements feature. Specifically, the function takes in two
+        tuples (one from each input table) and returns a numeric value. The
+        attribute is_auto_generated contains either True or False. The flag
+        is True only if the feature is automatically generated by Magellan.
+        This is important because this flag is used to make some assumptions
+        about the semantics of the similarity function used and use that
+        information for scaling purposes.
+
     """
     # Validate input parameters
     # # We expect the ltable to be of type pandas DataFrame
@@ -223,24 +252,43 @@ def get_features_for_matching(ltable, rtable):
     matching purposes.
 
     Args:
-        ltable, rtable (DataFrame): Input pandas DataFrames for which the
+        ltable,rtable (DataFrame): The pandas DataFrames for which the
             features to be generated.
 
     Returns:
         A pandas DataFrame containing automatically generated features.
+
         Further, this function also sets the following global varaibles:
-        _match_t, _match_s, _atypes1, _atypes2, _match_c. The variable
-        _match_t contains the tokenizers used and _match_s contains the
-        similarity functions used for creating features. The variables
-        _atypes1, _atypes2 contain the attribute types for ltable and rtable
-        respectively. The variable _match_c contain the attribute
-        correspondence between the two input tables.
+        _block_t,
+        _block_s,
+        _atypes1,
+        _atypes2,
+        _block_c.
+
+        The variable_block_t contains the tokenizers used and  _block_s
+        contains the similarity functions used for creating features.
+
+        The variables _atypes1, _atypes2 contain the attribute types for
+        ltable and rtable respectively. The variable _block_c contain the
+        attribute correspondence between the two input tables.
 
     Raises:
         AssertionError: If the input object (ltable) is not of type pandas
             DataFrame.
         AssertionError: If the input object (rtable) is not of type pandas
             DataFrame.
+    Note:
+        In the output DataFrame, two
+        attributes demand some explanation: (1)function, and (2)
+        is_auto_generated. The function, points to the actual python function
+        that implements feature. Specifically, the function takes in two
+        tuples (one from each input table) and returns a numeric value. The
+        attribute is_auto_generated contains either True or False. The flag
+        is True only if the feature is automatically generated by Magellan.
+        This is important because this flag is used to make some assumptions
+        about the semantics of the similarity function used and use that
+        information for scaling purposes.
+
     """
     # Validate input parameters
     # # We expect the ltable to be of type pandas DataFrame
@@ -375,6 +423,9 @@ def _get_feat_lkp_tbl():
     # Features for BOOLEAN type
     lookup_table['BOOL'] = [('exact_match')]
 
+    # Features for un determined type
+    lookup_table['UN_DETERMINED'] = []
+
     # Finally, return the lookup table
     return lookup_table
 
@@ -400,6 +451,8 @@ def _get_features_for_type(column_type):
         features = lookup_table['NUM']
     elif column_type is 'boolean':
         features = lookup_table['BOOL']
+    elif column_type is 'un_determined':
+        features = lookup_table['UN_DETERMINED']
     else:
         raise TypeError('Unknown type')
     return features
@@ -411,7 +464,7 @@ def get_magellan_str_types():
     """
 
     return ['str_eq_1w', 'str_bt_1w_5w', 'str_bt_5w_10w', 'str_gt_10w',
-            'numeric', 'boolean']
+            'numeric', 'boolean', 'un_determined']
 
 
 # convert features from look up table to function objects

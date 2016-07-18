@@ -1,25 +1,31 @@
-from PyQt4 import QtGui
 
 from magellan.catalog.catalog import Catalog
 
 __version__ = '0.1.0'
 
 _catalog = Catalog.Instance()
-#
-# import catalog related methods
-from magellan.catalog.catalog_manager import get_property, get_all_properties, \
-    set_property, del_property, del_all_properties
-from magellan.catalog.catalog_manager import get_catalog, del_catalog, \
-    get_catalog_len, show_properties, show_properties_for_id
-from magellan.catalog.catalog_manager import is_property_present_for_df, \
-    is_dfinfo_present, is_catalog_empty
-from magellan.catalog.catalog_manager import get_key, set_key
-#
+
+# downsampling related methods
+
+from magellan.sampler.down_sample import down_sample
 # # io related methods
 #
 from magellan.io.parsers import read_csv_metadata, to_csv_metadata
 from magellan.io.pickles import load_object, load_table, save_object, save_table
 #
+# import catalog related methods
+from magellan.catalog.catalog_manager import get_property, get_all_properties, \
+    set_property, del_property, del_all_properties, init_properties, copy_properties
+from magellan.catalog.catalog_manager import get_catalog, del_catalog, \
+    get_catalog_len, show_properties, show_properties_for_id
+from magellan.catalog.catalog_manager import is_property_present_for_df, \
+    is_dfinfo_present, is_catalog_empty
+from magellan.catalog.catalog_manager import get_key, set_key, set_fk_ltable,\
+    set_fk_rtable, get_ltable, get_rtable, validate_and_set_fk_ltable, \
+    validate_and_set_fk_rtable, set_ltable, set_rtable, get_fk_rtable,  \
+    get_fk_ltable
+
+
 #
 # # blockers
 from magellan.blocker.attr_equiv_blocker import AttrEquivalenceBlocker
@@ -27,11 +33,17 @@ from magellan.blocker.black_box_blocker import BlackBoxBlocker
 from magellan.blocker.overlap_blocker import OverlapBlocker
 from magellan.blocker.rule_based_blocker import RuleBasedBlocker
 
+# # blocker debugger
+from magellan.debugblocker.debugblocker import debug_blocker
+
 # # blocker combiner
 from magellan.blockercombiner.blockercombiner import combine_blocker_outputs_via_union
 
-# # sampling
+# # sampling.rst
 from magellan.sampler.single_table import sample_table
+
+# #
+from magellan.gui.table_gui import view_table, edit_table
 
 # # labeling
 from magellan.labeler.labeler import label_table
@@ -43,11 +55,11 @@ from magellan.feature.attributeutils import get_attr_corres, get_attr_types
 from magellan.feature.autofeaturegen import get_features, get_features_for_blocking, \
     get_features_for_matching
 from magellan.feature.addfeatures import get_feature_fn, add_feature, \
-    add_blackbox_feature
+    add_blackbox_feature, create_feature_table
 from magellan.feature.extractfeatures import extract_feature_vecs
 
 # # matcher related stuff
-from magellan.matcher.matcherutils import train_test_split
+from magellan.matcher.matcherutils import split_train_test, impute_table
 from magellan.matcher.dtmatcher import DTMatcher
 from magellan.matcher.linregmatcher import LinRegMatcher
 from magellan.matcher.logregmatcher import LogRegMatcher
@@ -59,20 +71,30 @@ from magellan.matcher.svmmatcher import SVMMatcher
 from magellan.matcherselector.mlmatcherselection import select_matcher
 
 # # matcher debugger
-from magellan.debugmatcher.debug_decisiontree_matcher import debug_decisiontree_matcher, \
-    visualize_tree
-from magellan.debugmatcher.debug_randomforest_matcher import debug_randomforest_matcher
-from magellan.debugmatcher.debug_gui_decisiontree_matcher import vis_debug_dt, \
-    vis_tuple_debug_dt_matcher
-from magellan.debugmatcher.debug_gui_randomforest_matcher import vis_debug_rf, \
-    vis_tuple_debug_rf_matcher
+from magellan.debugmatcher.debug_decisiontree_matcher import \
+    debug_decisiontree_matcher, visualize_tree
+from magellan.debugmatcher.debug_randomforest_matcher import \
+    debug_randomforest_matcher
+
+from magellan.debugmatcher.debug_gui_decisiontree_matcher import \
+    vis_debug_dt, vis_tuple_debug_dt_matcher
+
+from magellan.debugmatcher.debug_gui_randomforest_matcher import \
+    vis_debug_rf, vis_tuple_debug_rf_matcher
 
 # # evaluation
-from magellan.evaluation.evaluation import eval_matches
+from magellan.evaluation.evaluation import eval_matches, \
+    get_false_negatives_as_df, get_false_positives_as_df, print_eval_summary
 
-# # helper functions
+
+# # generic helper functions
 from magellan.utils.generic_helper import get_install_path, load_dataset, \
     add_output_attributes
+
+# # pandas helper functions
+from magellan.utils.pandas_helper import filter_rows, project_cols, \
+    mutate_col, rename_col, preserve_metadata, drop_cols
+
 
 # global vars
 _block_t = None

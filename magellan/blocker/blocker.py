@@ -13,7 +13,7 @@ class Blocker(object):
 
     def validate_types_params_tables(self, ltable, rtable,
 		       l_output_attrs, r_output_attrs, l_output_prefix,
-		       r_output_prefix, verbose, show_progress, n_jobs):
+		       r_output_prefix, verbose, n_jobs):
 
         if not isinstance(ltable, pd.DataFrame):
             logger.error('Input left table is not of type pandas data frame')
@@ -53,13 +53,19 @@ class Blocker(object):
             logger.error('Parameter verbose is not of type bool')
             raise AssertionError('Parameter verbose is not of type bool')
 
+        if not isinstance(n_jobs, int):
+            logger.error('Parameter n_jobs is not of type int')
+            raise AssertionError('Parameter n_jobs is not of type int')
+
+    def validate_show_progress(self, show_progress):
         if not isinstance(show_progress, bool):
             logger.error('Parameter show_progress is not of type bool')
             raise AssertionError('Parameter show_progress is not of type bool')
 
-        if not isinstance(n_jobs, int):
-            logger.error('Parameter n_jobs is not of type int')
-            raise AssertionError('Parameter n_jobs is not of type int')
+    def validate_allow_missing(self, allow_missing):
+        if not isinstance(allow_missing, bool):
+            logger.error('Parameter allow_missing is not of type bool')
+            raise AssertionError('Parameter allow_missing is not of type bool')
 
     def validate_types_params_candset(self, candset, verbose, show_progress, n_jobs):
         if not isinstance(candset, pd.DataFrame):
@@ -77,14 +83,6 @@ class Blocker(object):
         if not isinstance(n_jobs, int):
             logger.error('Parameter n_jobs is not of type int')
             raise AssertionError('Parameter n_jobs is not of type int')
-
-    def process_output_attrs(self, table, key, attrs, error_str=''):
-        if attrs:
-            if not isinstance(attrs, list):
-                attrs = [attrs]
-            assert set(attrs).issubset(table.columns) == True, 'Output are not in ' + error_str + ' table'
-            attrs = [x for x in attrs if x not in [key]]
-        return attrs
 
     def validate_output_attrs(self, ltable, rtable, l_output_attrs, r_output_attrs):
         if l_output_attrs:
@@ -110,13 +108,14 @@ class Blocker(object):
         return ret_cols
 
     def get_attrs_to_project(self, key, block_attr, output_attrs):
-        if not output_attrs:
-            output_attrs = []
-        if key not in output_attrs:                                             
-            output_attrs.append(key)                                            
-        if block_attr not in output_attrs:                                      
-            output_attrs.append(block_attr)                                     
-        return output_attrs
+        proj_attrs = []
+        if output_attrs is not None:
+            proj_attrs.extend(output_attrs)
+        if key not in proj_attrs:                                             
+            proj_attrs.append(key)                                            
+        if block_attr not in proj_attrs:                                      
+            proj_attrs.append(block_attr)                                     
+        return proj_attrs
 
     def get_split_params(self, n_procs, min_m, min_n):
         m = int(math.sqrt(n_procs))

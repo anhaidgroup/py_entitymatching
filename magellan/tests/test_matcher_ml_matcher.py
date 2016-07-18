@@ -17,12 +17,13 @@ import magellan.matcher.matcherutils as mu
 import magellan.catalog.catalog_manager as cm
 from magellan.utils.generic_helper import get_install_path, list_diff
 
-datasets_path = os.sep.join([get_install_path(), 'datasets', 'test_datasets'])
+datasets_path = os.sep.join([get_install_path(), 'tests', 'test_datasets'])
 path_a = os.sep.join([datasets_path, 'A.csv'])
 path_b = os.sep.join([datasets_path, 'B.csv'])
 path_c = os.sep.join([datasets_path, 'C.csv'])
 
-feat_datasets_path = os.sep.join([get_install_path(), 'datasets', 'test_datasets', 'matcherselector'])
+feat_datasets_path = os.sep.join([get_install_path(), 'tests', 'test_datasets',
+                                  'matcherselector'])
 fpath_a = os.sep.join([feat_datasets_path, 'DBLP_demo.csv'])
 fpath_b = os.sep.join([feat_datasets_path, 'ACM_demo.csv'])
 fpath_c = os.sep.join([feat_datasets_path, 'dblp_acm_demo_labels.csv'])
@@ -49,7 +50,7 @@ class MLMatcherTestCases(unittest.TestCase):
         A = read_csv_metadata(path_a)
         B = read_csv_metadata(path_b, key='ID')
         C = read_csv_metadata(path_c, ltable=A, rtable=B)
-        result = mu.train_test_split(C)
+        result = mu.split_train_test(C)
         train = result['train']
         test = result['test']
         self.assertEqual(len(train)+len(test), len(C))
@@ -68,13 +69,13 @@ class MLMatcherTestCases(unittest.TestCase):
 
     @raises(AssertionError)
     def test_train_test_split_invalid_df(self):
-        mu.train_test_split(None)
+        mu.split_train_test(None)
 
     def test_ml_matcher_valid_1(self):
         A = read_csv_metadata(fpath_a, key='id')
         B = read_csv_metadata(fpath_b, key='id')
         feature_vectors = read_csv_metadata(fpath_f, ltable=A, rtable=B)
-        train_test = mu.train_test_split(feature_vectors)
+        train_test = mu.split_train_test(feature_vectors)
         train, test = train_test['train'], train_test['test']
         dt = DTMatcher(name='DecisionTree')
         dt.fit(table=train, exclude_attrs=['ltable.id', 'rtable.id', '_id'], target_attr='gold')
@@ -91,7 +92,7 @@ class MLMatcherTestCases(unittest.TestCase):
         A = read_csv_metadata(fpath_a, key='id')
         B = read_csv_metadata(fpath_b, key='id')
         feature_vectors = read_csv_metadata(fpath_f, ltable=A, rtable=B)
-        train_test = mu.train_test_split(feature_vectors)
+        train_test = mu.split_train_test(feature_vectors)
         train, test = train_test['train'], train_test['test']
         dt = DTMatcher(name='DecisionTree')
 
@@ -116,7 +117,7 @@ class MLMatcherTestCases(unittest.TestCase):
         A = read_csv_metadata(fpath_a, key='id')
         B = read_csv_metadata(fpath_b, key='id')
         feature_vectors = read_csv_metadata(fpath_f, ltable=A, rtable=B)
-        train_test = mu.train_test_split(feature_vectors)
+        train_test = mu.split_train_test(feature_vectors)
         train, test = train_test['train'], train_test['test']
         dt = DTMatcher(name='DecisionTree')
         train.drop('ltable.id', axis=1, inplace=True)
@@ -139,7 +140,7 @@ class MLMatcherTestCases(unittest.TestCase):
         A = read_csv_metadata(fpath_a, key='id')
         B = read_csv_metadata(fpath_b, key='id')
         feature_vectors = read_csv_metadata(fpath_f, ltable=A, rtable=B)
-        train_test = mu.train_test_split(feature_vectors)
+        train_test = mu.split_train_test(feature_vectors)
         train, test = train_test['train'], train_test['test']
         dt = DTMatcher(name='DecisionTree')
         train.drop('ltable.id', axis=1, inplace=True)
@@ -154,7 +155,7 @@ class MLMatcherTestCases(unittest.TestCase):
         A = read_csv_metadata(fpath_a, key='id')
         B = read_csv_metadata(fpath_b, key='id')
         feature_vectors = read_csv_metadata(fpath_f, ltable=A, rtable=B)
-        train_test = mu.train_test_split(feature_vectors)
+        train_test = mu.split_train_test(feature_vectors)
         train, test = train_test['train'], train_test['test']
         dt = DTMatcher(name='DecisionTree')
         train.drop('ltable.id', axis=1, inplace=True)
@@ -167,7 +168,7 @@ class MLMatcherTestCases(unittest.TestCase):
         A = read_csv_metadata(fpath_a, key='id')
         B = read_csv_metadata(fpath_b, key='id')
         feature_vectors = read_csv_metadata(fpath_f, ltable=A, rtable=B)
-        train_test = mu.train_test_split(feature_vectors)
+        train_test = mu.split_train_test(feature_vectors)
         train, test = train_test['train'], train_test['test']
         dt = DTMatcher(name='DecisionTree')
         dt.fit(table=train, exclude_attrs=['ltable.id', 'rtable.id', '_id', 'gold'], target_attr='gold')
@@ -186,7 +187,7 @@ class MLMatcherTestCases(unittest.TestCase):
         A = read_csv_metadata(fpath_a, key='id')
         B = read_csv_metadata(fpath_b, key='id')
         feature_vectors = read_csv_metadata(fpath_f, ltable=A, rtable=B)
-        train_test = mu.train_test_split(feature_vectors)
+        train_test = mu.split_train_test(feature_vectors)
         train, test = train_test['train'], train_test['test']
         dt = DTMatcher(name='DecisionTree')
         dt.fit(x=train, table=train)
@@ -197,7 +198,7 @@ class MLMatcherTestCases(unittest.TestCase):
         A = read_csv_metadata(fpath_a, key='id')
         B = read_csv_metadata(fpath_b, key='id')
         feature_vectors = read_csv_metadata(fpath_f, ltable=A, rtable=B)
-        train_test = mu.train_test_split(feature_vectors)
+        train_test = mu.split_train_test(feature_vectors)
         train, test = train_test['train'], train_test['test']
         dt = DTMatcher(name='DecisionTree')
         dt.fit(table=train, exclude_attrs=['ltable.id', 'rtable.id', '_id', 'gold'], target_attr='gold')
@@ -209,7 +210,7 @@ class MLMatcherTestCases(unittest.TestCase):
         A = read_csv_metadata(fpath_a, key='id')
         B = read_csv_metadata(fpath_b, key='id')
         feature_vectors = read_csv_metadata(fpath_f, ltable=A, rtable=B)
-        train_test = mu.train_test_split(feature_vectors)
+        train_test = mu.split_train_test(feature_vectors)
         train, test = train_test['train'], train_test['test']
         dt = DTMatcher(name='DecisionTree')
         train.drop('ltable.id', axis=1, inplace=True)
@@ -233,7 +234,7 @@ class MLMatcherTestCases(unittest.TestCase):
         A = read_csv_metadata(fpath_a, key='id')
         B = read_csv_metadata(fpath_b, key='id')
         feature_vectors = read_csv_metadata(fpath_f, ltable=A, rtable=B)
-        train_test = mu.train_test_split(feature_vectors)
+        train_test = mu.split_train_test(feature_vectors)
         train, test = train_test['train'], train_test['test']
         dt = DTMatcher(name='DecisionTree')
         train.drop('ltable.id', axis=1, inplace=True)
@@ -262,7 +263,7 @@ class MLMatcherTestCases(unittest.TestCase):
         A = read_csv_metadata(fpath_a, key='id')
         B = read_csv_metadata(fpath_b, key='id')
         feature_vectors = read_csv_metadata(fpath_f, ltable=A, rtable=B)
-        train_test = mu.train_test_split(feature_vectors)
+        train_test = mu.split_train_test(feature_vectors)
         train, test = train_test['train'], train_test['test']
         dt = DTMatcher(name='DecisionTree')
         train.drop('ltable.id', axis=1, inplace=True)
@@ -284,7 +285,7 @@ class MLMatcherTestCases(unittest.TestCase):
         A = read_csv_metadata(fpath_a, key='id')
         B = read_csv_metadata(fpath_b, key='id')
         feature_vectors = read_csv_metadata(fpath_f, ltable=A, rtable=B)
-        train_test = mu.train_test_split(feature_vectors)
+        train_test = mu.split_train_test(feature_vectors)
         train, test = train_test['train'], train_test['test']
         dt = DTMatcher(name='DecisionTree')
         train.drop('ltable.id', axis=1, inplace=True)
@@ -318,7 +319,7 @@ class MLMatcherTestCases(unittest.TestCase):
         A = read_csv_metadata(fpath_a, key='id')
         B = read_csv_metadata(fpath_b, key='id')
         feature_vectors = read_csv_metadata(fpath_f, ltable=A, rtable=B)
-        train_test = mu.train_test_split(feature_vectors)
+        train_test = mu.split_train_test(feature_vectors)
         train, test = train_test['train'], train_test['test']
         dt = DTMatcher(name='DecisionTree')
 
@@ -337,7 +338,7 @@ class MLMatcherTestCases(unittest.TestCase):
         A = read_csv_metadata(fpath_a, key='id')
         B = read_csv_metadata(fpath_b, key='id')
         feature_vectors = read_csv_metadata(fpath_f, ltable=A, rtable=B)
-        train_test = mu.train_test_split(feature_vectors)
+        train_test = mu.split_train_test(feature_vectors)
         train, test = train_test['train'], train_test['test']
         dt = DTMatcher(name='DecisionTree')
 

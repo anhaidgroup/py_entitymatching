@@ -14,7 +14,7 @@ from magellan.feature.addfeatures import add_feature, add_blackbox_feature, get_
 
 import magellan.catalog.catalog_manager as cm
 
-datasets_path = os.sep.join([get_install_path(), 'datasets', 'test_datasets'])
+datasets_path = os.sep.join([get_install_path(), 'tests', 'test_datasets'])
 path_a = os.sep.join([datasets_path, 'A.csv'])
 path_b = os.sep.join([datasets_path, 'B.csv'])
 

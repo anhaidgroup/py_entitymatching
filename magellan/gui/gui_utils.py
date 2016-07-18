@@ -2,7 +2,11 @@ from functools import partial
 
 import pandas as pd
 import six
-from PyQt4 import QtGui, QtCore
+try:
+    from PyQt4 import QtGui, QtCore
+except ImportError:
+    raise ImportError('PyQt4 is not installed. Please install PyQt4 to use '
+                      'GUI related functions in Magellan.')
 
 import magellan as mg
 
@@ -60,7 +64,7 @@ class DataFrameTableView(QtGui.QTableWidget):
                         button.clicked.connect(
                             partial(self.controller.handle_debug_button, i))
                     else:
-                        if pd.isnull(self.dataframe.iloc(i, j - 2)):
+                        if pd.isnull(self.dataframe.iloc[i, j - 2]):
                             self.setItem(i, j, QtGui.QTableWidgetItem(""))
                         else:
                             self.setItem(i, j, QtGui.QTableWidgetItem(

@@ -3,7 +3,6 @@
 import collections
 import logging
 import os
-
 import pandas as pd
 import six
 
@@ -14,33 +13,43 @@ logger = logging.getLogger(__name__)
 
 def read_csv_metadata(file_path, **kwargs):
     """
-    Read CSV (comma-separated) file into DataFrame, and update the
-    catalog with the metadata read from the same file name with an extension
-    specified by the user (with the default value set to '.metadata') or the
-    metadata given as key-value arguments.
+    Reads a CSV (comma-separated values) file into a pandas DataFrame
+    and update the catalog with the metadata.
 
-    Reads the CSV file from the given file path into a pandas DataFrame.
-    This function uses 'read_csv' method from pandas to read the CSV file into a
-    pandas DataFrame. Further it looks for a file with  same file name but
-    with a specific extension. This extension can be given by the user,
-    with the default value being '.metadata'. If the metadata  file is
-    present, the function with read and update the catalog. If
-    the metadata file is not present, the function will issue a warning
-    that the metadata file is not present and will
-    read the CSV file into a pandas DataFrame.
+    Specifically, this function first reads the CSV file from the given file
+    path into a pandas DataFrame. It uses 'read_csv' method from
+    pandas to read the CSV file into a pandas DataFrame. Then, it
+    updates the catalog with the metadata. There are three ways to update the
+    metadata: (1) using a metadata file, (2) using the key-value
+    parameters supplied in the function, and (3) using both metadata file and
+    key-value parameters.
+
+    To update the metadata in the catalog using the metadata file,
+    the function will look for a file in the same directory with  same file name
+    but with a  specific extension. This extension can be optionally given by
+    the user (with the default value set to
+    '.metadata'). If the metadata  file is  present, the function will read
+    and update the catalog appropriately. If  the metadata file is not present,
+    the function will issue a warning that the metadata file is not present.
 
     The metadata information can also be given as parameters to the function
-    (see decription of arguments for more details). If given, the function
-    will update the catalog with the given information. Further,
-    the metadata given in the function takes precendence over the metadata
-    given in the file.
+    (see description of arguments for more details). If given, the function
+    will update the catalog with the given information.
+
+    Further, the metadata can partly occur in the metdata file and given
+    as parameters. The function will take a union of them and update the
+    catalog appropriately.
+    If the same metadata is given in both the metadata file
+    and the function, then the metadata in the function takes precedence over
+    the metadata given in the file.
 
 
     Args:
-        file_path (string): CSV file path.
+        file_path (string): The CSV file path.
 
-        kwargs (dict): A python dictionary containing key-value arguments. There
-            are a few key-value pairs that are specific to read_csv_metadata and
+        kwargs (dictionary): A Python dictionary containing key-value
+            arguments. There are a few key-value pairs that are specific to
+            read_csv_metadata and
             all the other key-value pairs are passed to pandas read_csv method.
             The keys that are specific to read_csv_metadata are: (1)
             metadata_extn, (2) key, (3) fk_ltable, (4) fk_rtable, (5) ltable,
@@ -50,7 +59,7 @@ def read_csv_metadata(file_path, **kwargs):
             CSV file.
 
     Returns:
-        A pandas DataFrame read from the given CSV file.
+        A pandas DataFrame read from the input CSV file.
 
     Raises:
         AssertionError: If the input file path is not of type string.
@@ -66,8 +75,8 @@ def read_csv_metadata(file_path, **kwargs):
 
     # # Check if the given path is valid.
     if not os.path.exists(file_path):
-        logger.error('File does not exist at path %s', file_path)
-        raise AssertionError('File does not exist at path %s', file_path)
+        logger.error('File does not exist at path %s' % file_path)
+        raise AssertionError('File does not exist at path %s' % file_path)
 
     # Check if the user has specified the metadata file's extension.
     extension = kwargs.pop('metadata_extn', None)
@@ -110,6 +119,14 @@ def read_csv_metadata(file_path, **kwargs):
     if key is not None:
         cm.set_key(data_frame, key)
 
+    fk_ltable = metadata.pop('fk_ltable', None)
+    if fk_ltable is not None:
+        cm.set_fk_ltable(data_frame, fk_ltable)
+
+    fk_rtable = metadata.pop('fk_rtable', None)
+    if fk_ltable is not None:
+        cm.set_fk_rtable(data_frame, fk_rtable)
+
     # Update the catalog with other properties.
     for property_name, property_value in six.iteritems(metadata):
         cm.set_property(data_frame, property_name, property_value)
@@ -122,30 +139,31 @@ def read_csv_metadata(file_path, **kwargs):
 
 def to_csv_metadata(data_frame, file_path, **kwargs):
     """
-    Write the DataFrame contents to a CSV file, and its metadata to a
-    separate file (with the same file name but a different extension).
+    Writes the DataFrame contents to a CSV file and the DataFrame's metadata
+    (to a separate text file).
 
-    This function writes the DataFrame contents to a CSV file as given in
-    the file path. This function uses 'to_csv' method from pandas to write
+    This function writes the DataFrame contents to a CSV file in
+    the given file path. It uses 'to_csv' method from pandas to write
     the CSV file. The metadata contents are written to the same directory
     derived from the file path but with the different extension. This
-    extension can be optionally given by the user.
+    extension can be optionally given by the user (with the default value
+    set to .metadata).
 
     Args:
-        data_frame (DataFrame): Data frame to written to disk
-        file_path (string):  File path where the DataFrame contents to be
-        written.
-            Metadata is written with the same file name with the
+        data_frame (DataFrame): The DataFrame that should be written to disk.
+        file_path (string):  The file path to which the DataFrame contents
+            should be written. Metadata is written with the same file name
+            with the
             extension given by the user (defaults to .metadata).
-        kwargs (dict):  A python dictionary containing key-value pairs.
+        kwargs (dictionary):  A Python dictionary containing key-value pairs.
             There is one key-value pair that is specific to
-            to_csv_metadata: metadata_extn,  and all the other key-value pairs
-            are passed to pandas to_csv method.
+            to_csv_metadata: metadata_extn. All the other key-value pairs
+            are passed to pandas to_csv function.
             Here the metadata_extn is the metadata
             extension (with the default value set to '.metadata'), with which
             the metadata file must be written.
     Returns:
-        A boolean value of True is returned if the files were written
+        A Boolean value of True is returned if the files were written
         successfully.
 
     Raises:
@@ -200,8 +218,8 @@ def to_csv_metadata(data_frame, file_path, **kwargs):
             data_frame.to_csv(file_path, **kwargs)
     else:
         # If we cannot write in the given file path, raise an exception.
-        logger.error('Cannot write in the file path %s; Exiting', file_path)
-        raise AssertionError('Cannot write in the file path %s', file_path)
+        logger.error('Cannot write in the file path %s; Exiting' % file_path)
+        raise AssertionError('Cannot write in the file path %s' % file_path)
 
     # repeat the process (as writing the DataFrame) to write the metadata.
 
@@ -216,8 +234,8 @@ def to_csv_metadata(data_frame, file_path, **kwargs):
             _write_metadata(data_frame, metadata_filename)
     else:
         # If we cannot write in the given file path, raise an exception.
-        logger.error('Cannot write in the file path %s; Exiting', file_path)
-        raise AssertionError('Cannot write in the file path %s', file_path)
+        logger.error('Cannot write in the file path %s; Exiting' % file_path)
+        raise AssertionError('Cannot write in the file path %s' % file_path)
 
     return True
 
@@ -343,7 +361,7 @@ def _update_metadata_for_read_cmd(metadata, **kwargs):
                 # but the kwargs sets it to None.
                 logger.warning(
                     '%s key had a value (%s)in file but input arg is set to '
-                    'None', property_name, metadata[property_value])
+                    'None' % (property_name, metadata[property_name]))
                 # Remove the property from the dictionary.
                 metadata.pop(property_name)  # remove the key-value pair
 

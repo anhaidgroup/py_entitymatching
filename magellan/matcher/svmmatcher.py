@@ -10,10 +10,14 @@ from sklearn.svm import SVC
 class SVMMatcher(MLMatcher):
     """
     SVM matcher.
+
     Args:
-        *args, **kwargs: Arguments to scikit-learn's SVM
-        classifier.
-        name (str): Name of this matcher (defaults to None).
+        *args,**kwargs: The arguments to scikit-learn's SVM
+         classifier.
+        name (str): The name of this matcher (defaults to None). If the
+            matcher name is None, the class automatically generates a string
+            and assigns it as the name.
+
 
     """
     def __init__(self, *args, **kwargs):

@@ -19,22 +19,25 @@ logger = logging.getLogger(__name__)
 
 def save_object(object_to_save, file_path):
     """
-    Save python objects to disk.
+    Saves a Python object to disk.
 
-    This function is expected to be used to save Magellan objects such as
-    rule-based blocker, feature table, etc. An user would like to store
+    This function is intended to be used to save Magellan objects such as
+    rule-based blocker, feature vectors, etc.
+
+    A user would like to store
     Magellan objects to disk, when he/she wants to save the workflow and
-    resume it later or store the result of a computation intensive commands
-    such as blockers. This function provides a way to save the required such
+    resume it later. This function provides a way to save the required
     objects to disk.
 
     Args:
-        object_to_save (Python object): Python object to save. This can be
-            Magellan objects such as blockers, matchers, etc.
-        file_path (string): File path to store the objects.
+        object_to_save (Python object): The Python object to save. This can be
+            a rule-based blocker, feature vectors, etc.
+
+        file_path (string): The file path where the object must be stored.
+
 
     Returns:
-        A boolean value of True is returned, if the saving was successful.
+        A Boolean value of True is returned, if the saving was successful.
 
     Raises:
         AssertionError: If the file path is not of type string.
@@ -78,13 +81,13 @@ def save_object(object_to_save, file_path):
 
 def load_object(file_path):
     """
-    Load Python objects from disk.
+    Loads a Python object from disk.
 
-    This function expected to load Magellan objects from disk such as
-    blockers, matchers, etc.
+    This function loads Magellan objects from disk such as
+    blockers, matchers, feature table, etc.
 
     Args:
-        file_path (string): File path to load object from.
+        file_path (string): The file path to load the object from.
 
     Returns:
         A Python object read from the file path.
@@ -93,10 +96,7 @@ def load_object(file_path):
         AssertionError: If the file path is not of type string.
         AssertionError: If a file does not exist at the given file path.
 
-    Examples:
 
-    See Also:
-        save_object
     """
     # Validate input parameters
 
@@ -123,32 +123,35 @@ def load_object(file_path):
 # noinspection PyProtectedMember
 def save_table(data_frame, file_path, metadata_ext='.pklmetadata'):
     """
-    Save the DataFrame to disk along with the metadata.
+    Saves a DataFrame to disk along with its metadata in a pickle format.
 
-    This function saves the DataFrame to disk along with the metadata from
-    tha catalog. Specifically, this function saves the DataFrame in the given
-    file_path, and saves the metadata in the same directory (as the
-    file_path) but with a different extension. This extension can be given
-    by the user, if not a default extension of 'pklmetadata' is used.
+    This function saves a  DataFrame to disk along with its metadata from
+    the catalog.
+
+    Specifically, this function saves the DataFrame in the given
+    file path, and saves the metadata in the same directory (as the
+    file path) but with a different extension. This extension can be
+    optionally given by the user (with the default value set to
+    '.pklmetadata').
 
     Args:
-        data_frame (DataFrame): DataFrame that should be saved
-        file_path (string): File path where the DataFrame must be stored
-        metadata_ext (string): Metadata extension that should be used while
+        data_frame (DataFrame): The DataFrame that should be saved.
+
+        file_path (string): The file path where the DataFrame must be stored.
+
+        metadata_ext (string): The metadata extension that should be used while
             storing the metadata information. The default value is
             '.pklmetadata'.
 
     Returns:
-        A boolean value of True is returned if the DataFrame is successfully
+        A Boolean value of True is returned if the DataFrame is successfully
         saved.
 
-    See Also:
-        save_object, to_csv_metadata.
 
-    Notes:
-        This function is bit different from to_csv_metadata, where the
+    Note:
+        This function is a bit different from to_csv_metadata, where the
         DataFrame is stored in a CSV file format. The CSV file format can be
-        viewed with a text editor. But save_table is stored in a
+        viewed using a text editor. But save_table is stored in a
         special format, which cannot be viewed with a text editor.
         The reason we have save_table is, for larger DataFrames it is
         efficient to pickle the DataFrame to disk than writing the DataFrame
@@ -251,38 +254,39 @@ def save_table(data_frame, file_path, metadata_ext='.pklmetadata'):
 # noinspection PyProtectedMember
 def load_table(file_path, metadata_ext='.pklmetadata'):
     """
-    Load DataFrame from file, along with its metadata (if present).
+    Loads a pickled DataFrame from a file along with its metadata.
 
-    This function loads a DataFrame from the file stored in a pickle format.
+    This function loads a DataFrame from a file stored in a pickle format.
+
     Further, this function looks for a metadata file with the same file name
     but with a different extension (given by the user). If the metadata file
     is present, the function will update the metadata for that DataFrame in
     the catalog.
 
     Args:
-        file_path (string): File path to load the file from
-        metadata_ext (string): Metadata file extension (with the default value
-            set to '.pklmetadata')
+        file_path (string): The file path to load the file from.
+        metadata_ext (string): The metadata file extension (with the default
+         value set to '.pklmetadata') that should be used to generate metadata
+         file name.
+
     Returns:
-        If the loading is successful, the function returns a pandas DataFrame
-        read from the file. The catalog will be updated with the metadata
-        read from the metadata file (if the file was present).
+        If the loading is successful, the function will return a pandas
+        DataFrame read from the file. The catalog will be updated with the
+        metadata read from the metadata file (if the file was present).
 
     Raises:
-        AssertionError: If the file path is not of type string
-        AssertionError: If the metadata extension is not of type string
+        AssertionError: If the file path is not of type string.
+        AssertionError: If the metadata extension is not of type string.
 
-    Notes:
+    Note:
         This function is different from read_csv_metadata in two aspects.
         First, this function currently does not support reading in candidate
-        set tables, where the there are more metadata such as ltable,
+        set tables, where there are more metadata such as ltable,
         rtable than just 'key', and conceptually the user is expected to
-        provide ltable and rtable info. while invoking this function. (
+        provide ltable and rtable information while calling this function. (
         this support will be added shortly). Second, this function loads the
         table stored in a pickle format.
 
-    See Also:
-        to_csv_metadata, save_object, read_csv_metadata
     """
     # Validate input parameters
 

@@ -14,33 +14,36 @@ import magellan.utils.generic_helper as gh
 logger = logging.getLogger(__name__)
 
 
-def combine_blocker_outputs_via_union(blocker_output_list, l_prefix='ltable_',
-                                      r_prefix='rtable_', verbose=False):
+def combine_blocker_outputs_via_union(
+        blocker_output_list,
+        l_prefix='ltable_',
+        r_prefix='rtable_',
+        verbose=False):
     """
     Combine multiple blocker outputs by doing an union of their tuple pair ids (
     foreign
     key ltable, foreign key rtable).
 
-    This function combines multiple blocker outputs via union. Specifically,
-    this function takes in a list of DataFrames (candidate sets, typically the
+    This function combines multiple blocker outputs via union.
+
+    Specifically, this function takes in a list of DataFrames (candidate
+    sets, typically the
     output from blockers) and returns a consolidated DataFrame. The output
     DataFrame contains the union of tuple pair ids (foreign key ltable,
     foreign key rtable) and other attributes from the input list of DataFrames.
 
     This function makes some assumptions about the input DataFrames. First,
     each DataFrame is expected to contain the following metadata in the
-    catalog: (1) key,fk_ltable, fk_rtable, ltable, and rtable. Second,
+    catalog: key, fk_ltable, fk_rtable, ltable, and rtable. Second,
     all the DataFrames must be a result of blocking from the same underlying
     tables. Concretely the ltable and rtable properties must refer to the
     same DataFrame across all the input tables. Third, all the input
     DataFrames must have the same fk_ltable and fk_rtable properties.
     Finally, in each input DataFrame, for the attributes included from the
     ltable or rtable, the attribute names must be prefixed with the given
-    l_prefix and r_prefix in the function. As an example, the schema of an
-    input DataFrame may look like this: _id, ltable_ID, rtable_ID,
-    ltable_name, rtable_name
+    l_prefix and r_prefix in the function.
 
-    The input DataFrames may contain different attribute lists and it begs
+    The input DataFrames may contain different attribute lists and it demands
     the question how to combine them. Currently Magellan takes an union
     of attribute names that has prefix l_prefix or r_prefix. across
     input tables. After taking the union, for each tuple id pair included
@@ -53,17 +56,15 @@ def combine_blocker_outputs_via_union(blocker_output_list, l_prefix='ltable_',
     present in other candidate sets so it is not clear about how to
     combine them. One possibility is include label in output for all
     tuple id pairs, but set as NaN for the values not present. Currently
-    magellan does not include such columns and addressing it will be part
+    mMgellan does not include such columns and addressing it will be part
     of future work.
 
     Args:
-        blocker_output_list (list of DataFrames): List of DataFrames that
-            should be combined. Refer notes section for a detailed
-            description of the assumptions made by the function about the
-            input list  of blocker outputs.
-        l_prefix (str): Prefix given to the attributes from the ltable.
-        r_prefix (str): Prefix given to the attributes from the rtable.
-        verbose (boolean): Flag to indicate whether more detailed information
+        blocker_output_list (list of DataFrames): The list of DataFrames that
+            should be combined.
+        l_prefix (str): The prefix given to the attributes from the ltable.
+        r_prefix (str): The prefix given to the attributes from the rtable.
+        verbose (boolean): A flag to indicate whether more detailed information
             about the execution steps should be printed out (default value is
             False).
 

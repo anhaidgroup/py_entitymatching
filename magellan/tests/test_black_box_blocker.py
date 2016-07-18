@@ -7,8 +7,8 @@ import magellan as mg
 import magellan.feature.simfunctions as sim
 
 p = mg.get_install_path()
-path_a = os.sep.join([p, 'datasets', 'table_A.csv'])
-path_b = os.sep.join([p, 'datasets', 'table_B.csv'])
+path_a = os.sep.join([p, 'tests', 'test_datasets', 'A.csv'])
+path_b = os.sep.join([p, 'tests', 'test_datasets', 'B.csv'])
 l_output_attrs = ['name', 'address']
 r_output_attrs = ['name', 'address']
 l_output_prefix = 'l_'
@@ -298,8 +298,39 @@ class BlackBoxBlockerMulticoreTestCases(unittest.TestCase):
         del self.B
         del self.bb
 
-    def test_bb_block_tables_njobs_2(self):
+    def test_bb_block_tables_wi_global_black_box_fn_njobs_2(self):
         self.bb.set_black_box_function(_block_fn)
+        C = self.bb.block_tables(self.A, self.B, l_output_attrs=l_output_attrs,
+                                 r_output_attrs=r_output_attrs,
+                                 l_output_prefix=l_output_prefix,
+                                 r_output_prefix=r_output_prefix, n_jobs=2)
+        validate_metadata(C, l_output_attrs, r_output_attrs,
+                          l_output_prefix, r_output_prefix)
+        validate_data(C, expected_ids_1)
+
+    def test_bb_block_tables_wi_local_black_box_fn_njobs_2(self):
+        def block_fn(x, y):                                                           
+            if (sim.monge_elkan(x['name'], y['name']) < 0.6):                           
+                return True                                                             
+            else:                                                                       
+                return False  
+        self.bb.set_black_box_function(block_fn)
+        C = self.bb.block_tables(self.A, self.B, l_output_attrs=l_output_attrs,
+                                 r_output_attrs=r_output_attrs,
+                                 l_output_prefix=l_output_prefix,
+                                 r_output_prefix=r_output_prefix, n_jobs=2)
+        validate_metadata(C, l_output_attrs, r_output_attrs,
+                          l_output_prefix, r_output_prefix)
+        validate_data(C, expected_ids_1)
+
+    def test_bb_block_tables_wi_class_black_box_fn_njobs_2(self):
+        class dummy:
+            def block_fn(self, x, y):                                                           
+                if (sim.monge_elkan(x['name'], y['name']) < 0.6):                           
+                    return True                                                             
+                else:                                                                       
+                    return False  
+        self.bb.set_black_box_function(dummy().block_fn)
         C = self.bb.block_tables(self.A, self.B, l_output_attrs=l_output_attrs,
                                  r_output_attrs=r_output_attrs,
                                  l_output_prefix=l_output_prefix,

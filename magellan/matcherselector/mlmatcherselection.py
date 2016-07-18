@@ -20,12 +20,14 @@ def select_matcher(matchers, x=None, y=None, table=None, exclude_attrs=None,
     """
     This function selects a matcher from a given list of matchers based on a
     given metric.
+    
     Specifically, this function internally uses scikit-learn's
     cross validation function to select a matcher. There are two ways the
     user can call the fit method. First, interface similar to scikit-learn
     where the feature vectors and target attribute given as projected DataFrame.
     Second, give the DataFrame and explicitly specify the feature vectors
     (by specifying the attributes to be excluded) and the target attribute
+
     A point to note is all the input parameters have a default value of
     None. This is done to support both the interfaces in a single function.
 
@@ -39,9 +41,9 @@ def select_matcher(matchers, x=None, y=None, table=None, exclude_attrs=None,
             vectors and target attribute (defaults to None).
         exclude_attrs (list): The list of attributes that should be
             excluded from the input table to get the feature vectors.
-        target_attr (str): The target attribute in the input table (defaults
+        target_attr (string): The target attribute in the input table (defaults
             to None).
-        metric (str): The metric based on which the matchers must be
+        metric (string): The metric based on which the matchers must be
             selected. The string can be one of 'precision', 'recall',
             'f1' (defaults to 'precision').
         k (int): The k value for cross-validation (defaults to 5).
@@ -49,7 +51,8 @@ def select_matcher(matchers, x=None, y=None, table=None, exclude_attrs=None,
             used for splitting the data into folds (defaults to None).
 
     Returns:
-        A dictionary containing two keys: selected matcher and the cv_stats.
+        A dictionary containing two keys - selected matcher and the cv_stats.
+
         The selected matcher has a value that is a matcher (MLMatcher) object
         and cv_stats has a value that is a dictionary containing
         cross-validation statistics.

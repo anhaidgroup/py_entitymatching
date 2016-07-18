@@ -16,7 +16,8 @@ from magellan.matcher.svmmatcher import SVMMatcher
 
 import magellan.catalog.catalog_manager as cm
 
-datasets_path = os.sep.join([get_install_path(), 'datasets', 'test_datasets', 'matcherselector'])
+datasets_path = os.sep.join([get_install_path(), 'tests', 'test_datasets',
+                             'matcherselector'])
 path_a = os.sep.join([datasets_path, 'DBLP_demo.csv'])
 path_b = os.sep.join([datasets_path, 'ACM_demo.csv'])
 path_c = os.sep.join([datasets_path, 'dblp_acm_demo_labels.csv'])
