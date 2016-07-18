@@ -6,6 +6,8 @@ import sys
 import pandas as pd
 import pyprind
 from joblib import Parallel, delayed
+import cloudpickle as cp
+import pickle
 
 from magellan.blocker.blocker import Blocker
 import magellan.catalog.catalog_manager as cm
@@ -126,12 +128,16 @@ class BlackBoxBlocker(Blocker):
         # # determine the number of processes to launch parallely
         n_procs = self.get_num_procs(n_jobs, len(l_df) * len(r_df))
 
+        # # pickle the black-box function before passing it as an arg to
+        # # _block_tables_split to be executed by each child process
+        black_box_function_pkl = cp.dumps(self.black_box_function)
+
         if n_procs <= 1:
             # single process
             candset = _block_tables_split(l_df, r_df, l_key, r_key,
                                           l_output_attrs_1, r_output_attrs_1,
                                           l_output_prefix, r_output_prefix,
-                                          self, show_progress)
+                                          black_box_function_pkl, show_progress)
         else:
             # multiprocessing
             m, n = self.get_split_params(n_procs, len(l_df), len(r_df))
@@ -141,7 +147,8 @@ class BlackBoxBlocker(Blocker):
                                                 l_key, r_key, 
                                                 l_output_attrs_1, r_output_attrs_1,
                                                 l_output_prefix, r_output_prefix,
-                                                self, show_progress and i == len(l_splits) - 1 and j == len(r_splits) - 1)
+                                                black_box_function_pkl,
+                                                show_progress and i == len(l_splits) - 1 and j == len(r_splits) - 1)
                                                 for i in range(len(l_splits)) for j in range(len(r_splits)))
             candset = pd.concat(c_splits, ignore_index=True)
 
@@ -149,8 +156,6 @@ class BlackBoxBlocker(Blocker):
         retain_cols = self.get_attrs_to_retain(l_key, r_key,
                                                l_output_attrs, r_output_attrs,
                                                l_output_prefix, r_output_prefix)
-        #print "Candset columns: ", candset.columns
-        #print "Attributes to retain: ", retain_cols
         if len(candset) > 0:
             candset = candset[retain_cols]
         else:
@@ -227,11 +232,16 @@ class BlackBoxBlocker(Blocker):
         # # determine the number of processes to launch parallely
         n_procs = self.get_num_procs(n_jobs, len(c_df))
 
+        # # pickle the black-box function before passing it as an arg to
+        # # _block_candset_split to be executed by each child process
+        black_box_function_pkl = cp.dumps(self.black_box_function)
+
         valid = []
         if n_procs <= 1:
             # single process
             valid = _block_candset_split(c_df, l_df, r_df, l_key, r_key,
-                                         fk_ltable, fk_rtable, self, show_progress)
+                                         fk_ltable, fk_rtable,
+                                         black_box_function_pkl, show_progress)
         else:
             # multiprocessing
             c_splits = pd.np.array_split(c_df, n_procs)
@@ -239,7 +249,8 @@ class BlackBoxBlocker(Blocker):
                                                             l_df, r_df,
                                                             l_key, r_key,
                                                             fk_ltable, fk_rtable,
-                                                            self, show_progress and i == len(c_splits) - 1)
+                                                            black_box_function_pkl,
+                                                            show_progress and i == len(c_splits) - 1)
                                                             for i in range(len(c_splits)))
             valid = sum(valid_splits, [])
  
@@ -282,7 +293,7 @@ class BlackBoxBlocker(Blocker):
 def _block_tables_split(l_df, r_df, l_key, r_key,
                         l_output_attrs, r_output_attrs,
                         l_output_prefix, r_output_prefix,
-                        black_box_blocker, show_progress):
+                        black_box_function_pkl, show_progress):
 
     # initialize progress bar
     if show_progress:
@@ -307,6 +318,9 @@ def _block_tables_split(l_df, r_df, l_key, r_key,
     # list to keep the tuple pairs that survive blocking
     valid = []
 
+    # unpickle the black box function
+    black_box_function = pickle.loads(black_box_function_pkl)
+
     # iterate through the two tables
     for l_t in l_df.itertuples(index=False):
         # # get ltuple from the look up dictionary
@@ -320,7 +334,7 @@ def _block_tables_split(l_df, r_df, l_key, r_key,
             rtuple = r_dict[r_t[r_id_pos]]
 
             # # apply the black box function to the tuple pair
-            res = black_box_blocker.black_box_function(ltuple, rtuple)
+            res = black_box_function(ltuple, rtuple)
 
             if res != True:
                 # # this tuple pair survives blocking
@@ -350,7 +364,7 @@ def _block_tables_split(l_df, r_df, l_key, r_key,
     return candset
 
 def _block_candset_split(c_df, l_df, r_df, l_key, r_key, fk_ltable, fk_rtable,
-                         black_box_blocker, show_progress):
+                         black_box_function_pkl, show_progress):
 
     # initialize the progress bar
     if show_progress:
@@ -366,6 +380,9 @@ def _block_candset_split(c_df, l_df, r_df, l_key, r_key, fk_ltable, fk_rtable,
     # find positions of the ID attributes of the two tables in the candset
     l_id_pos = list(c_df.columns).index(fk_ltable)
     r_id_pos = list(c_df.columns).index(fk_rtable)
+
+    # unpickle the black box function
+    black_box_function = pickle.loads(black_box_function_pkl)
 
     # iterate candidate set
     for row in c_df.itertuples(index=False):
@@ -386,7 +403,7 @@ def _block_candset_split(c_df, l_df, r_df, l_key, r_key, fk_ltable, fk_rtable,
         rtuple = r_dict[row_rkey]
 
         # # apply the black box function to the tuple pair
-        res = black_box_blocker.black_box_function(ltuple, rtuple)
+        res = black_box_function(ltuple, rtuple)
         if res != True:
             valid.append(True)
         else:

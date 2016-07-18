@@ -64,7 +64,7 @@ if __name__ == "__main__":
         ],
         packages=packages,
         install_requires=[
-            'dummy_package1', # this internally installs other
+            'py_stringsimjoin', # this internally installs other
             # dependencies such as py_stringmatching, joblib, pyprind
             'cloudpickle',
             'pyparsing',

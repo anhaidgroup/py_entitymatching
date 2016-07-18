@@ -84,14 +84,6 @@ class Blocker(object):
             logger.error('Parameter n_jobs is not of type int')
             raise AssertionError('Parameter n_jobs is not of type int')
 
-    def process_output_attrs(self, table, key, attrs, error_str=''):
-        if attrs:
-            if not isinstance(attrs, list):
-                attrs = [attrs]
-            assert set(attrs).issubset(table.columns) == True, 'Output are not in ' + error_str + ' table'
-            attrs = [x for x in attrs if x not in [key]]
-        return attrs
-
     def validate_output_attrs(self, ltable, rtable, l_output_attrs, r_output_attrs):
         if l_output_attrs:
             if not isinstance(l_output_attrs, list):
@@ -116,13 +108,14 @@ class Blocker(object):
         return ret_cols
 
     def get_attrs_to_project(self, key, block_attr, output_attrs):
-        if not output_attrs:
-            output_attrs = []
-        if key not in output_attrs:                                             
-            output_attrs.append(key)                                            
-        if block_attr not in output_attrs:                                      
-            output_attrs.append(block_attr)                                     
-        return output_attrs
+        proj_attrs = []
+        if output_attrs is not None:
+            proj_attrs.extend(output_attrs)
+        if key not in proj_attrs:                                             
+            proj_attrs.append(key)                                            
+        if block_attr not in proj_attrs:                                      
+            proj_attrs.append(block_attr)                                     
+        return proj_attrs
 
     def get_split_params(self, n_procs, min_m, min_n):
         m = int(math.sqrt(n_procs))

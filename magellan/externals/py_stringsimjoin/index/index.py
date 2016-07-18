@@ -1,2 +1,0 @@
-class Index(object):
-    pass
