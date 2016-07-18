@@ -29,7 +29,7 @@ expected_ids_1 = [('a1', 'b1'), ('a1', 'b2'), ('a1', 'b6'),
 # attribute equivalence on [l|r]_block_attr_1 \intersection [l|r]_block_attr_2
 expected_ids_2 = [('a2', 'b3'), ('a3', 'b2'), ('a5', 'b5')]
 
-# attribute equivalence on [l|r]_block_attr_1 with allow_missing = True
+# attr equiv on [l|r]_block_attr_1 in tables with missing vals, allow_missing = True
 expected_ids_3 = [('a1', 'b1'), ('a1', 'b2'), ('a1', 'b3'), ('a1', 'b4'),
                   ('a1', 'b5'), ('a1', 'b6'), ('a2', 'b2'), ('a2', 'b3'),
                   ('a2', 'b4'), ('a2', 'b5'), ('a3', 'b1'), ('a3', 'b2'),
@@ -37,9 +37,13 @@ expected_ids_3 = [('a1', 'b1'), ('a1', 'b2'), ('a1', 'b3'), ('a1', 'b4'),
                   ('a4', 'b3'), ('a4', 'b4'), ('a4', 'b5'), ('a4', 'b6'),
                   ('a5', 'b2'), ('a5', 'b3'), ('a5', 'b4'), ('a5', 'b5')]
 
-# attribute equivalence on [l|r]_block_attr_1 with allow_missing = False
+# attr equiv on [l|r]_block_attr_1 in tables with missing vals, allow_missing = False
 expected_ids_4 = [('a2', 'b3'), ('a2', 'b5'), ('a3', 'b1'), ('a3', 'b6'),
                   ('a5', 'b3'), ('a5', 'b5')]
+
+# expected_ids_4 \intersection attr equiv on [l|r]_block_attr_2 in tables with
+# missing vals, allow_missing = True
+expected_ids_5 = [('a2', 'b3'), ('a2', 'b5'), ('a5', 'b5')]
 
 class AttrEquivBlockerTestCases(unittest.TestCase):
 
@@ -485,6 +489,40 @@ class AttrEquivBlockerTestCases(unittest.TestCase):
         validate_metadata_two_candsets(C, D)
         validate_data(D)
 
+    def test_ab_block_candset_wi_missing_values_allow_missing(self):
+        path_a = os.sep.join([p, 'tests', 'test_datasets', 'blocker',
+                              'table_A_wi_missing_vals.csv'])
+        path_b = os.sep.join([p, 'tests', 'test_datasets', 'blocker',
+                              'table_B_wi_missing_vals.csv'])
+        A = mg.read_csv_metadata(path_a)
+        mg.set_key(A, 'ID')
+        B = mg.read_csv_metadata(path_b)
+        mg.set_key(B, 'ID')
+        C = self.ab.block_tables(A, B, l_block_attr_1, r_block_attr_1)
+        validate_metadata(C)
+        validate_data(C, expected_ids_4)
+        D = self.ab.block_candset(C, l_block_attr_2, r_block_attr_2,
+                                  allow_missing=True)
+        validate_metadata_two_candsets(C, D)
+        validate_data(D, expected_ids_5)
+
+    def test_ab_block_candset_wi_missing_values_disallow_missing(self):
+        path_a = os.sep.join([p, 'tests', 'test_datasets', 'blocker',
+                              'table_A_wi_missing_vals.csv'])
+        path_b = os.sep.join([p, 'tests', 'test_datasets', 'blocker',
+                              'table_B_wi_missing_vals.csv'])
+        A = mg.read_csv_metadata(path_a)
+        mg.set_key(A, 'ID')
+        B = mg.read_csv_metadata(path_b)
+        mg.set_key(B, 'ID')
+        C = self.ab.block_tables(A, B, l_block_attr_1, r_block_attr_1)
+        validate_metadata(C)
+        validate_data(C, expected_ids_4)
+        D = self.ab.block_candset(C, l_block_attr_2, r_block_attr_2)
+        validate_metadata_two_candsets(C, D)
+        validate_data(D, [('a5','b5')])
+
+
     def test_ab_block_tuples(self):
         assert_equal(self.ab.block_tuples(self.A.ix[1], self.B.ix[2],
                                           l_block_attr_1, r_block_attr_1),
@@ -492,6 +530,51 @@ class AttrEquivBlockerTestCases(unittest.TestCase):
         assert_equal(self.ab.block_tuples(self.A.ix[2], self.B.ix[2],
                                           l_block_attr_1, r_block_attr_1),
                      True)
+
+    def test_ab_block_tuples_wi_missing_values_allow_missing(self):
+        path_a = os.sep.join([p, 'tests', 'test_datasets', 'blocker',
+                              'table_A_wi_missing_vals.csv'])
+        path_b = os.sep.join([p, 'tests', 'test_datasets', 'blocker',
+                              'table_B_wi_missing_vals.csv'])
+        A = mg.read_csv_metadata(path_a)
+        mg.set_key(A, 'ID')
+        B = mg.read_csv_metadata(path_b)
+        mg.set_key(B, 'ID')
+        assert_equal(self.ab.block_tuples(A.ix[0], B.ix[0], l_block_attr_1,
+                                          r_block_attr_1, allow_missing=True),
+                     False)
+        assert_equal(self.ab.block_tuples(A.ix[1], B.ix[2], l_block_attr_1,
+                                          r_block_attr_1, allow_missing=True),
+                     False)
+        assert_equal(self.ab.block_tuples(A.ix[2], B.ix[1], l_block_attr_1,
+                                          r_block_attr_1, allow_missing=True),
+                     False)
+        assert_equal(self.ab.block_tuples(A.ix[0], B.ix[1], l_block_attr_1,
+                                          r_block_attr_1, allow_missing=True),
+                     False)
+        assert_equal(self.ab.block_tuples(A.ix[2], B.ix[2], l_block_attr_1,
+                                          r_block_attr_1, allow_missing=True),
+                     True)
+
+    def test_ab_block_tuples_wi_missing_values_disallow_missing(self):
+        path_a = os.sep.join([p, 'tests', 'test_datasets', 'blocker',
+                              'table_A_wi_missing_vals.csv'])
+        path_b = os.sep.join([p, 'tests', 'test_datasets', 'blocker',
+                              'table_B_wi_missing_vals.csv'])
+        A = mg.read_csv_metadata(path_a)
+        mg.set_key(A, 'ID')
+        B = mg.read_csv_metadata(path_b)
+        mg.set_key(B, 'ID')
+        assert_equal(self.ab.block_tuples(A.ix[0], B.ix[0], l_block_attr_1,
+                                          r_block_attr_1), True)
+        assert_equal(self.ab.block_tuples(A.ix[1], B.ix[2], l_block_attr_1,
+                                          r_block_attr_1), False)
+        assert_equal(self.ab.block_tuples(A.ix[2], B.ix[1], l_block_attr_1,
+                                          r_block_attr_1), True)
+        assert_equal(self.ab.block_tuples(A.ix[0], B.ix[1], l_block_attr_1,
+                                          r_block_attr_1), True)
+        assert_equal(self.ab.block_tuples(A.ix[2], B.ix[2], l_block_attr_1,
+                                          r_block_attr_1), True)
 
 
 class AttrEquivBlockerMulticoreTestCases(unittest.TestCase):

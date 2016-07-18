@@ -336,14 +336,15 @@ class RuleBasedBlocker(Blocker):
         valid = []
 
 
-        pickled_fn = cp.dumps(self.apply_rules_excluding_rule)
+        apply_rules_excluding_rule_pkl = cp.dumps(self.apply_rules_excluding_rule)
  
         if n_procs <= 1:
             # single process
             valid = _block_candset_excluding_rule_split(c_df, l_df, r_df,
                                                         l_key, r_key,
                                                         fk_ltable, fk_rtable,
-                                                        rule_to_exclude, pickled_fn,
+                                                        rule_to_exclude,
+                                                        apply_rules_excluding_rule_pkl,
                                                         show_progress)
         else:
             # multiprocessing
@@ -354,7 +355,8 @@ class RuleBasedBlocker(Blocker):
                                                              l_key, r_key,
                                                              fk_ltable,
                                                              fk_rtable,
-                                                             rule_to_exclude, pickled_fn,
+                                                             rule_to_exclude,
+                                                             apply_rules_excluding_rule_pkl,
                                                              show_progress and i == len(
                                                                  c_splits) - 1)
                 for i in range(len(c_splits)))
@@ -381,14 +383,14 @@ class RuleBasedBlocker(Blocker):
 
         candset = None
 
-        pickled_fn = cp.dumps(self.apply_rules)
+        apply_rules_pkl = cp.dumps(self.apply_rules)
 
         if n_procs <= 1:
             # single process
             candset = _block_tables_split(l_df, r_df, l_key, r_key,
                                           l_output_attrs, r_output_attrs,
-                                          l_output_prefix, r_output_prefix, pickled_fn,
-                                          show_progress)
+                                          l_output_prefix, r_output_prefix,
+                                          apply_rules_pkl, show_progress)
         else:
             # multiprocessing
             m, n = self.get_split_params(n_procs, len(l_df), len(r_df))
@@ -398,7 +400,8 @@ class RuleBasedBlocker(Blocker):
                 delayed(_block_tables_split)(l_splits[i], r_splits[j],
                                              l_key, r_key,
                                              l_output_attrs, r_output_attrs,
-                                             l_output_prefix, r_output_prefix, pickled_fn,
+                                             l_output_prefix, r_output_prefix,
+                                             apply_rules_pkl,
                                              show_progress and i == len(
                                                  l_splits) - 1 and j == len(
                                                  r_splits) - 1)
@@ -689,7 +692,7 @@ class RuleBasedBlocker(Blocker):
 
 def _block_tables_split(l_df, r_df, l_key, r_key,
                         l_output_attrs, r_output_attrs,
-                        l_output_prefix, r_output_prefix, pickled_fn,
+                        l_output_prefix, r_output_prefix, apply_rules_pkl,
                         show_progress):
     # initialize progress bar
     if show_progress:
@@ -714,6 +717,9 @@ def _block_tables_split(l_df, r_df, l_key, r_key,
     # list to keep the tuple pairs that survive blocking
     valid = []
 
+    # unpickle the apply_rules function
+    apply_rules = pickle.loads(apply_rules_pkl)
+
     # iterate through the two tables
     for l_t in l_df.itertuples(index=False):
         # # get ltuple from the look up table
@@ -727,8 +733,7 @@ def _block_tables_split(l_df, r_df, l_key, r_key,
             rtuple = r_dict[r_t[r_id_pos]]
 
             # # apply the rules to the tuple pair
-            fn = pickle.loads(pickled_fn)
-            res = fn(ltuple, rtuple)
+            res = apply_rules(ltuple, rtuple)
 
             if res != True:
                 # # this tuple pair survives blocking
@@ -758,7 +763,8 @@ def _block_tables_split(l_df, r_df, l_key, r_key,
 
 def _block_candset_excluding_rule_split(c_df, l_df, r_df, l_key, r_key,
                                         fk_ltable,
-                                        fk_rtable, rule_to_exclude, pickled_fn,
+                                        fk_rtable, rule_to_exclude,
+                                        apply_rules_excluding_rule_pkl,
                                         show_progress):
     # do blocking
 
@@ -775,6 +781,9 @@ def _block_candset_excluding_rule_split(c_df, l_df, r_df, l_key, r_key,
 
     l_id_pos = list(c_df.columns).index(fk_ltable)
     r_id_pos = list(c_df.columns).index(fk_rtable)
+
+    # # unpickle the apply_rules_excluding_rule function
+    apply_rules_excluding_rule = pickle.loads(apply_rules_excluding_rule_pkl)
 
     # # iterate candidate set
     for row in c_df.itertuples(index=False):
@@ -794,8 +803,7 @@ def _block_candset_excluding_rule_split(c_df, l_df, r_df, l_key, r_key,
             r_dict[row_rid] = r_df.ix[row_rid]
         rtuple = r_dict[row_rid]
 
-        fn = pickle.loads(pickled_fn)
-        res = fn(ltuple, rtuple, rule_to_exclude)
+        res = apply_rules_excluding_rule(ltuple, rtuple, rule_to_exclude)
  
         if res != True:
             valid.append(True)

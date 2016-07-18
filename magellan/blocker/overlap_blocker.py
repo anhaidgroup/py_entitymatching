@@ -173,7 +173,8 @@ class OverlapBlocker(Blocker):
         r_proj_attrs = self.get_attrs_to_project(r_key, r_overlap_attr, r_output_attrs)
         r_df = rtable[r_proj_attrs]
 
-        # # case the column to string if required. 
+        # # case the column to string if required.
+        l_df.is_copy, r_df.is_copy  = False, False # to avoid setwithcopy warning 
         ssj.dataframe_column_to_str(l_df, l_overlap_attr, inplace=True) 
         ssj.dataframe_column_to_str(r_df, r_overlap_attr, inplace=True) 
 
@@ -313,6 +314,7 @@ class OverlapBlocker(Blocker):
         r_df = rtable[[r_key, r_overlap_attr]]
 
         # # case the overlap attribute to string if required.
+        l_df.is_copy, r_df.is_copy  = False, False # to avoid setwithcopy warning 
         ssj.dataframe_column_to_str(l_df, l_overlap_attr, inplace=True) 
         ssj.dataframe_column_to_str(r_df, r_overlap_attr, inplace=True) 
 

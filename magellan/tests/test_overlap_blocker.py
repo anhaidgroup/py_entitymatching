@@ -598,7 +598,7 @@ class OverlapBlockerTestCases(unittest.TestCase):
                                           l_overlap_attr_1, r_overlap_attr_1,
                                           q_val=3, word_level=False),
                      False)
-        assert_equal(self.ob.block_tuples(self.A.ix[2], self.B.ix[2],
+        assert_equal(self.ob.block_tuples(self.A.ix[0], self.B.ix[0],
                                           l_overlap_attr_1, r_overlap_attr_1,
                                           q_val=3, word_level=False),
                      True)
