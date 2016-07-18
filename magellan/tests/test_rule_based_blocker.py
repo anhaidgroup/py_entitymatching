@@ -4,6 +4,9 @@ import pandas as pd
 import unittest
 
 import magellan as mg
+from magellan.feature.simfunctions import get_sim_funs_for_blocking
+from magellan.feature.tokenizers import get_tokenizers_for_blocking
+from magellan.feature.addfeatures import add_feature, get_feature_fn
 
 p = mg.get_install_path()
 path_for_A = os.sep.join([p, 'tests', 'test_datasets', 'A.csv'])
@@ -13,18 +16,18 @@ r_output_attrs = ['zipcode', 'birth_year']
 l_output_prefix = 'l_'
 r_output_prefix = 'r_'
 
-# filterable rule with single conjunct
+# filterable rule with single conjunct using Jaccard sim_fn, 3g tokenization
 rule_1 = ['name_name_jac_qgm_3_qgm_3(ltuple,rtuple) < 0.3']
 expected_ids_1 = [('a2', 'b3'), ('a2', 'b6'), ('a3', 'b2'), ('a5', 'b5')]
 
-# another filterable rule with single conjunct
+# filterable rule with single conjunct using edit distance function
 rule_2 = ['birth_year_birth_year_lev_dist(ltuple, rtuple) > 0']
 expected_ids_2 = [('a2', 'b3'), ('a3', 'b2'), ('a4', 'b1'), ('a4', 'b6'),
                   ('a5', 'b5')]
 
 expected_ids_1_and_2 = [('a2', 'b3'), ('a3', 'b2'), ('a5', 'b5')]
 
-# filterable rule with multiple conjuncts
+# filterable rule with multiple conjuncts - (Jaccard, 3g) & (edit dist)
 rule_3 = ['name_name_jac_qgm_3_qgm_3(ltuple, rtuple) < 0.3',
           'birth_year_birth_year_lev_dist(ltuple, rtuple) > 0']
 expected_ids_3 = [('a2', 'b3'), ('a2', 'b6'), ('a3', 'b2'), ('a4', 'b1'),
@@ -33,7 +36,7 @@ expected_ids_3 = [('a2', 'b3'), ('a2', 'b6'), ('a3', 'b2'), ('a4', 'b1'),
 expected_ids_2_and_3 = [('a2', 'b3'), ('a3', 'b2'), ('a4', 'b1'), ('a4', 'b6'),
                         ('a5', 'b5')]
 
-# another filterable rule with multiple conjuncts
+# filterable rule with multiple conjuncts - (Jaccard, 3g) & (cosine, ws)
 rule_4 = ['name_name_jac_qgm_3_qgm_3(ltuple,rtuple) < 0.3',
           'name_name_cos_dlm_dc0_dlm_dc0(ltuple, rtuple) < 0.25']
 expected_ids_4 = [('a2', 'b3'), ('a2', 'b6'), ('a3', 'b2'), ('a5', 'b5')]
@@ -57,8 +60,11 @@ expected_ids_7 = [('a2', 'b1'), ('a2', 'b3'), ('a2', 'b6'), ('a3', 'b2'),
 expected_ids_6_and_7 = [('a2', 'b1'), ('a2', 'b3'), ('a2', 'b6'), ('a3', 'b2'),
                        ('a3', 'b6'), ('a4', 'b2'), ('a5', 'b5')]
 
-# rule with supported sim_fn but unsupported operator (returns empty set)
+# rule with supported sim_fn but unsupported op for filters (returns empty set)
 rule_8 = ['name_name_jac_dlm_dc0_dlm_dc0(ltuple,rtuple) >= 0']
+
+# rule with supported sim_fn but unsupported op (returns empty set)
+rule_9 = ['zipcode_zipcode_lev_dist(ltuple,rtuple) <= 2']
 
 class RuleBasedBlockerTestCases(unittest.TestCase):
 
@@ -297,9 +303,16 @@ class RuleBasedBlockerTestCases(unittest.TestCase):
         validate_metadata(C, l_output_attrs, [])
         validate_data(C, expected_ids_1)
 
-    def test_rb_block_tables_supported_sim_fn_unsupported_op_for_filters(self):
+    def test_rb_block_tables_supported_sim_fn_unsupported_op_for_filters_1(self):
         self.rb.set_feature_table(self.feature_table)
         self.rb.add_rule(rule_8, None)
+        C = self.rb.block_tables(self.A, self.B, show_progress=False)
+        validate_metadata(C)
+        validate_data(C)
+   
+    def test_rb_block_tables_supported_sim_fn_unsupported_op_for_filters_2(self):
+        self.rb.set_feature_table(self.feature_table)
+        self.rb.add_rule(rule_9, None)
         C = self.rb.block_tables(self.A, self.B, show_progress=False)
         validate_metadata(C)
         validate_data(C)
@@ -338,7 +351,62 @@ class RuleBasedBlockerTestCases(unittest.TestCase):
         C = self.rb.block_tables(self.A, self.B, l_output_attrs,
                                  r_output_attrs, l_output_prefix,
                                  r_output_prefix, show_progress=False)
+
+    def test_rb_block_tables_rule_wi_no_auto_gen_feature(self):
+        feature_string = "jaccard(qgm_3(ltuple['name']), qgm_3(rtuple['name']))"
+        f_dict = get_feature_fn(feature_string, get_tokenizers_for_blocking(),
+                                get_sim_funs_for_blocking())
+        add_feature(self.feature_table, 'test', f_dict)
+        test_rule = ['test(ltuple, rtuple) < 0.3'] # same as rule_1
+        self.rb.add_rule(test_rule, self.feature_table)
+        C = self.rb.block_tables(self.A, self.B, show_progress=False)
+        validate_metadata(C)
+        validate_data(C, expected_ids_1)
     
+    def test_rb_block_tables_rule_wi_diff_tokenizers(self):
+        feature_string = "jaccard(qgm_3(ltuple['address']), dlm_dc0(rtuple['address']))"
+        f_dict = get_feature_fn(feature_string, get_tokenizers_for_blocking(),
+                                get_sim_funs_for_blocking())
+        f_dict['is_auto_generated'] = True
+        add_feature(self.feature_table, 'test', f_dict)
+        test_rule = ['test(ltuple, rtuple) <= 1'] # should return an empty set
+        self.rb.add_rule(test_rule, self.feature_table)
+        C = self.rb.block_tables(self.A, self.B, show_progress=False)
+        validate_metadata(C)
+        validate_data(C)
+    
+    def test_rb_block_tables_rule_wi_dice_sim_fn(self):
+        feature_string = "dice(dlm_dc0(ltuple['name']), dlm_dc0(rtuple['name']))"
+        f_dict = get_feature_fn(feature_string, get_tokenizers_for_blocking(),
+                                get_sim_funs_for_blocking())
+        f_dict['is_auto_generated'] = True
+        add_feature(self.feature_table, 'test', f_dict)
+        test_rule = ['test(ltuple, rtuple) <= 1'] # should return an empty set
+        self.rb.add_rule(test_rule, self.feature_table)
+        C = self.rb.block_tables(self.A, self.B, show_progress=False)
+        validate_metadata(C)
+        validate_data(C)
+    
+    def test_rb_block_tables_rule_wi_overlap_coeff_sim_fn(self):
+        feature_string = "overlap_coeff(dlm_dc0(ltuple['name']), dlm_dc0(rtuple['name']))"
+        f_dict = get_feature_fn(feature_string, get_tokenizers_for_blocking(),
+                                get_sim_funs_for_blocking())
+        f_dict['is_auto_generated'] = True
+        add_feature(self.feature_table, 'test', f_dict)
+        test_rule = ['test(ltuple, rtuple) <= 1'] # should return an empty set
+        self.rb.add_rule(test_rule, self.feature_table)
+        C = self.rb.block_tables(self.A, self.B, show_progress=False)
+        validate_metadata(C)
+        validate_data(C)
+    
+    def test_rb_block_tables_rule_wi_lev_dist_geq_op(self):
+        # rule should return an empty set
+        test_rule = ['birth_year_birth_year_lev_dist(ltuple, rtuple) >= 0']
+        self.rb.add_rule(test_rule, self.feature_table)
+        C = self.rb.block_tables(self.A, self.B, show_progress=False)
+        validate_metadata(C)
+        validate_data(C)
+
     @raises(AssertionError)
     def test_rb_block_candset_invalid_candset_1(self):
         self.rb.block_candset(None)
@@ -434,6 +502,38 @@ class RuleBasedBlockerTestCases(unittest.TestCase):
         assert_equal(self.rb.block_tuples(self.A.ix[1], self.B.ix[2]), False)
         assert_equal(self.rb.block_tuples(self.A.ix[2], self.B.ix[2]), True)
 
+    def test_rb_add_rule_user_supplied_rule_name(self):
+        rule_name = self.rb.add_rule(rule_1, self.feature_table, 'myrule')
+        assert_equal(rule_name, 'myrule')
+        # view rule source
+        self.rb.view_rule(rule_name)
+        # get rule fn
+        self.rb.get_rule(rule_name)
+        # see if rule exists in the set of rules
+        rule_names = self.rb.get_rule_names()
+        assert_equal(rule_name in rule_names, True)
+        
+    @raises(AssertionError)
+    def test_rb_add_rule_twice(self):
+        rule_name = self.rb.add_rule(rule_1, self.feature_table, 'myrule')
+        assert_equal(rule_name, 'myrule')
+        # see if rule exists in the set of rules
+        rule_names = self.rb.get_rule_names()
+        assert_equal(rule_name in rule_names, True)
+        rule_name = self.rb.add_rule(rule_1, self.feature_table, 'myrule')
+        
+    def test_rb_delete_rule(self):
+        rule_name = self.rb.add_rule(rule_1, self.feature_table)
+        rule_names = self.rb.get_rule_names()
+        assert_equal(rule_name in rule_names, True)
+        self.rb.delete_rule(rule_name)
+        rule_names = self.rb.get_rule_names()
+        assert_equal(rule_name in rule_names, False)
+        
+    @raises(AssertionError)
+    def test_rb_delete_non_existing_rule(self):
+        self.rb.delete_rule('bogus_rule')
+        
 
 class RuleBasedBlockerMulticoreTestCases(unittest.TestCase):
 
@@ -449,38 +549,6 @@ class RuleBasedBlockerMulticoreTestCases(unittest.TestCase):
         del self.A
         del self.B
         del self.rb
-
-    def validate_metadata(self, C, l_output_attrs=None, r_output_attrs=None,
-                          l_output_prefix='ltable_', r_output_prefix='rtable_',
-                          l_key='ID', r_key='ID'):
-        s1 = ['_id', l_output_prefix + l_key, r_output_prefix + r_key]
-        if l_output_attrs:
-            s1 += [l_output_prefix + x for x in l_output_attrs if x != l_key]
-        if r_output_attrs:
-            s1 += [r_output_prefix + x for x in r_output_attrs if x != r_key]
-        s1 = sorted(s1)
-        assert_equal(s1, sorted(C.columns))
-        assert_equal(mg.get_key(C), '_id')
-        assert_equal(mg.get_property(C, 'fk_ltable'), l_output_prefix + l_key)
-        assert_equal(mg.get_property(C, 'fk_rtable'), r_output_prefix + r_key)
-    
-    def validate_data(self, C, expected_ids=None):
-        #print('Expected ids: ', expected_ids)
-        if expected_ids:
-            lid = mg.get_property(C, 'fk_ltable')
-            rid = mg.get_property(C, 'fk_rtable')
-            C_ids = C[[lid, rid]].set_index([lid, rid])
-            actual_ids = sorted(C_ids.index.values.tolist())
-            #print('Actual ids: ', actual_ids)
-            assert_equal(expected_ids, actual_ids)
-        else:
-            assert_equal(len(C), 0)
-     
-    def validate_metadata_two_candsets(self, C, D): 
-        assert_equal(sorted(C.columns), sorted(D.columns))
-        assert_equal(mg.get_key(D), mg.get_key(C))
-        assert_equal(mg.get_property(D, 'fk_ltable'), mg.get_property(C, 'fk_ltable'))
-        assert_equal(mg.get_property(D, 'fk_rtable'), mg.get_property(C, 'fk_rtable'))
 
     def test_rb_block_tables_filterable_rule_single_conjunct_njobs_2(self):
         self.rb.add_rule(rule_1, self.feature_table)
@@ -501,16 +569,6 @@ class RuleBasedBlockerMulticoreTestCases(unittest.TestCase):
                                l_output_prefix, r_output_prefix)
         validate_data(C, expected_ids_4)
     
-    def test_rb_block_tables_rule_sequence_with_one_filterable_rule_njobs_2(self):
-        self.rb.add_rule(rule_1, self.feature_table)
-        self.rb.add_rule(rule_2, self.feature_table)
-        C = self.rb.block_tables(self.A, self.B, l_output_attrs,
-                                 r_output_attrs, l_output_prefix,
-                                 r_output_prefix, show_progress=False, n_jobs=2)
-        validate_metadata(C, l_output_attrs, r_output_attrs,
-                               l_output_prefix, r_output_prefix)
-        validate_data(C, expected_ids_1_and_2)
-
     def test_rb_block_tables_wi_no_output_tuples_njobs_2(self):
         self.rb.add_rule(rule_5, self.feature_table)
         C = self.rb.block_tables(self.A, self.B, show_progress=False, n_jobs=2)
@@ -518,33 +576,53 @@ class RuleBasedBlockerMulticoreTestCases(unittest.TestCase):
         validate_data(C)
    
     def test_rb_block_tables_non_filterable_rule_single_conjunct_njobs_2(self):
-        self.rb.add_rule(rule_2, self.feature_table)
+        self.rb.add_rule(rule_6, self.feature_table)
         C = self.rb.block_tables(self.A, self.B, l_output_attrs,
                                  r_output_attrs, l_output_prefix,
                                  r_output_prefix, show_progress=False, n_jobs=2)
-        validate_metadata(C, l_output_attrs, r_output_attrs,
-                               l_output_prefix, r_output_prefix)
-        validate_data(C, expected_ids_2)
+        validate_metadata(C, l_output_attrs, r_output_attrs, l_output_prefix,
+                          r_output_prefix)
+        validate_data(C, expected_ids_6)
 
      
     def test_rb_block_tables_non_filterable_rule_multiple_conjuncts_njobs_2(self):
-        self.rb.add_rule(rule_3, self.feature_table)
+        self.rb.add_rule(rule_7, self.feature_table)
         C = self.rb.block_tables(self.A, self.B, l_output_attrs,
                                  r_output_attrs, l_output_prefix,
                                  r_output_prefix, show_progress=False, n_jobs=2)
         validate_metadata(C, l_output_attrs, r_output_attrs,
-                               l_output_prefix, r_output_prefix)
-        validate_data(C, expected_ids_3)
+                          l_output_prefix, r_output_prefix)
+        validate_data(C, expected_ids_7)
     
-    def test_rb_block_tables_rule_sequence_with_no_filterable_rule_njobs_2(self):
+    def test_rb_block_tables_rule_sequence_with_two_filterable_rules_njobs_2(self):
+        self.rb.add_rule(rule_1, self.feature_table)
         self.rb.add_rule(rule_2, self.feature_table)
-        self.rb.add_rule(rule_3, self.feature_table)
+        C = self.rb.block_tables(self.A, self.B, l_output_attrs,
+                                 r_output_attrs, l_output_prefix,
+                                 r_output_prefix, show_progress=False, n_jobs=2)
+        validate_metadata(C, l_output_attrs, r_output_attrs,
+                          l_output_prefix, r_output_prefix)
+        validate_data(C, expected_ids_1_and_2)
+
+    def test_rb_block_tables_rule_sequence_with_one_filterable_rules_njobs_2(self):
+        self.rb.add_rule(rule_1, self.feature_table)
+        self.rb.add_rule(rule_6, self.feature_table)
+        C = self.rb.block_tables(self.A, self.B, l_output_attrs,
+                                 r_output_attrs, l_output_prefix,
+                                 r_output_prefix, show_progress=False, n_jobs=2)
+        validate_metadata(C, l_output_attrs, r_output_attrs,
+                          l_output_prefix, r_output_prefix)
+        validate_data(C, expected_ids_1_and_6)
+
+    def test_rb_block_tables_rule_sequence_with_no_filterable_rule_njobs_2(self):
+        self.rb.add_rule(rule_6, self.feature_table)
+        self.rb.add_rule(rule_7, self.feature_table)
         C = self.rb.block_tables(self.A, self.B, l_output_attrs,
                                  r_output_attrs, l_output_prefix,
                                  r_output_prefix, n_jobs=2)
         validate_metadata(C, l_output_attrs, r_output_attrs,
-                               l_output_prefix, r_output_prefix)
-        validate_data(C, expected_ids_2_and_3)
+                          l_output_prefix, r_output_prefix)
+        validate_data(C, expected_ids_6_and_7)
     
     def test_rb_block_candset_njobs_2(self):
         rb = mg.RuleBasedBlocker()

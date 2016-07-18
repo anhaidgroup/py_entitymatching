@@ -242,17 +242,13 @@ class AttrEquivalenceBlocker(Blocker):
 
         # do blocking
 
-        # # remove nans: should be modified based on missing data policy
-        l_df, r_df = rem_nan(ltable, l_block_attr), rem_nan(rtable,
-                                                            r_block_attr)
-
         # # do projection before merge
-        l_df = l_df[[l_key, l_block_attr]]
-        r_df = r_df[[r_key, r_block_attr]]
+        l_df = ltable[[l_key, l_block_attr]]
+        r_df = rtable[[r_key, r_block_attr]]
 
         # # set index for convenience
-        l_df = ltable.set_index(l_key, drop=False)
-        r_df = rtable.set_index(r_key, drop=False)
+        l_df = l_df.set_index(l_key, drop=False)
+        r_df = r_df.set_index(r_key, drop=False)
 
         # # determine number of processes to launch parallely
         n_procs = self.get_num_procs(n_jobs, len(candset))
@@ -261,8 +257,8 @@ class AttrEquivalenceBlocker(Blocker):
         if n_procs <= 1:
             # single process
             valid = _block_candset_split(candset, l_df, r_df, l_key, r_key,
-                                         l_block_attr, r_block_attr,
-                                         fk_ltable, fk_rtable, show_progress)
+                                         l_block_attr, r_block_attr, fk_ltable,
+                                         fk_rtable, allow_missing, show_progress)
         else:
             c_splits = pd.np.array_split(candset, n_procs)
             valid_splits = Parallel(n_jobs=n_procs)(
@@ -270,7 +266,7 @@ class AttrEquivalenceBlocker(Blocker):
                                               l_df, r_df,
                                               l_key, r_key,
                                               l_block_attr, r_block_attr,
-                                              fk_ltable, fk_rtable,
+                                              fk_ltable, fk_rtable, allow_missing,
                                               show_progress and i == len(
                                                   c_splits) - 1)
                 for i in range(len(c_splits)))
@@ -316,7 +312,18 @@ class AttrEquivalenceBlocker(Blocker):
             of l_block_attr in ltuple and r_block_attr in rtuple are different
             (boolean).
         """
-        return ltuple[l_block_attr] != rtuple[r_block_attr]
+        l_val, r_val = ltuple[l_block_attr], rtuple[r_block_attr]
+        if allow_missing:
+            if pd.isnull(l_val) or pd.isnull(r_val) or l_val == r_val:
+                return False
+            else:
+                return True
+        else:
+            if pd.notnull(l_val) and pd.notnull(r_val) and l_val == r_val:
+                return False
+            else:
+                return True
+
 
     # ------------------------------------------------------------
     # utility functions specific to attribute equivalence blocking
@@ -402,9 +409,9 @@ def _block_tables_split(l_df, r_df, l_key, r_key, l_block_attr, r_block_attr,
     return candset
 
 
-def _block_candset_split(c_df, l_df, r_df, l_key, r_key, l_block_attr,
-                         r_block_attr,
-                         fk_ltable, fk_rtable, show_progress):
+def _block_candset_split(c_df, l_df, r_df, l_key, r_key,
+                         l_block_attr, r_block_attr, fk_ltable, fk_rtable,
+                         allow_missing, show_progress):
     # initialize progress bar
     if show_progress:
         prog_bar = pyprind.ProgBar(len(c_df))
@@ -439,10 +446,16 @@ def _block_candset_split(c_df, l_df, r_df, l_key, r_key, l_block_attr,
             r_dict[row_rkey] = r_df.ix[row_rkey, r_block_attr]
         r_val = r_dict[row_rkey]
 
-        if l_val == r_val:
-            valid.append(True)
+        if allow_missing:
+            if pd.isnull(l_val) or pd.isnull(r_val) or l_val == r_val:
+                valid.append(True)
+            else:
+                valid.append(False)
         else:
-            valid.append(False)
+            if pd.notnull(l_val) and pd.notnull(r_val) and l_val == r_val:
+                valid.append(True)
+            else:
+                valid.append(False)
 
     return valid
 

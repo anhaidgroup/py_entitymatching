@@ -7,20 +7,15 @@ import six
 from joblib import Parallel, delayed
 from py_stringmatching.tokenizer.qgram_tokenizer import QgramTokenizer
 from py_stringmatching.tokenizer.whitespace_tokenizer import WhitespaceTokenizer
+import cloudpickle as cp
+import pickle
 
 import magellan.catalog.catalog_manager as cm
 from magellan.blocker.blocker import Blocker
-from magellan.externals.py_stringsimjoin.join.cosine_join import cosine_join
-from magellan.externals.py_stringsimjoin.join.dice_join import dice_join
-from magellan.externals.py_stringsimjoin.join.edit_distance_join import edit_distance_join
-from magellan.externals.py_stringsimjoin.join.jaccard_join import jaccard_join
-from magellan.externals.py_stringsimjoin.join.overlap_coefficient_join import overlap_coefficient_join
-from magellan.externals.py_stringsimjoin.join.overlap_join import overlap_join
+import py_stringsimjoin as ssj
 from magellan.utils.catalog_helper import log_info, get_name_for_key, add_key_column
 
 logger = logging.getLogger(__name__)
-
-global_rb = None
 
 
 class RuleBasedBlocker(Blocker):
@@ -35,27 +30,22 @@ class RuleBasedBlocker(Blocker):
 
         self.rule_str = OrderedDict()
         self.rule_ft = OrderedDict()
-        self.filterable_sim_fns = {'jaccard', 'cosine', 'dice', 'overlap',
-                                   'overlap_coefficient'}
+        self.filterable_sim_fns = {'jaccard', 'cosine', 'dice', 'overlap_coeff'}
         self.allowed_ops = {'<', '<='}
 
-        # meta data : should be removed if they are not useful.
         self.rule_source = OrderedDict()
         self.rule_cnt = 0
 
         super(Blocker, self).__init__(*args, **kwargs)
 
-    def create_rule(self, conjunct_list, feature_table=None):
-        if feature_table is None and self.feature_table is None:
-            logger.error('Either feature table should be given as parameter ' +
-                         'or use set_feature_table to set the feature table')
-            raise AssertionError('Either feature table should be given as ' +
-                                 'parameter or use set_feature_table to set ' +
-                                 'the feature table')
-
-        # set the rule name
-        name = '_rule_' + str(self.rule_cnt)
-        self.rule_cnt += 1
+    def _create_rule(self, conjunct_list, feature_table, rule_name):
+        if rule_name is None:
+            # set the rule name automatically
+            name = '_rule_' + str(self.rule_cnt)
+            self.rule_cnt += 1
+        else:
+            # use the rule name supplied by the user
+            name = rule_name
 
         # create function string
         fn_str = 'def ' + name + '(ltuple, rtuple):\n'
@@ -75,21 +65,51 @@ class RuleBasedBlocker(Blocker):
 
         return feat_dict[name], name, fn_str
 
-    def add_rule(self, conjunct_list, feature_table):
+    def add_rule(self, conjunct_list, feature_table=None, rule_name=None):
         """Adds a rule to the rule-based blocker.
 
            Args:
                conjunct_list (list): A list of conjuncts specifying the rule.
              
                feature_table (DataFrame): A DataFrame containing all the
-                                          features
-                                          that are being referenced by the rule.
+                                          features that are being referenced by
+                                          the rule (defaults to None). If the
+                                          feature_table is not supplied here,
+                                          then it must have been specified
+                                          during the creation of the rule-based
+                                          blocker or using set_feature_table
+                                          function. Otherwise an AssertionError
+                                          will be raised and the rule will not
+                                          be added to the rule-based blocker.
+
+               rule_name (string): A string specifying the name of the rule to
+                                   be added (defaults to None). If the
+                                   rule_name is not specified then a name will
+                                   be automatically chosen. If there is already
+                                   a rule with the specified rule_name, then
+                                   an AssertionError will be raised and the
+                                   rule will not be added to the rule-based
+                                   blocker.
+            
+            Returns:
+                The name of the rule added (string).
         """
+
+        if rule_name is not None and rule_name in self.rules.keys():
+            logger.error('A rule with the specified rule_name already exists.')
+            raise AssertionError('A rule with the specified rule_name already exists.')
+
+        if feature_table is None and self.feature_table is None:
+            logger.error('Either feature table should be given as parameter ' +
+                         'or use set_feature_table to set the feature table.')
+            raise AssertionError('Either feature table should be given as ' +
+                                 'parameter or use set_feature_table to set ' +
+                                 'the feature table.')
 
         if not isinstance(conjunct_list, list):
             conjunct_list = [conjunct_list]
 
-        fn, name, fn_str = self.create_rule(conjunct_list, feature_table)
+        fn, name, fn_str = self._create_rule(conjunct_list, feature_table, rule_name)
 
         self.rules[name] = fn
         self.rule_source[name] = fn_str
@@ -99,21 +119,48 @@ class RuleBasedBlocker(Blocker):
         else:
             self.rule_ft[name] = self.feature_table
 
+        return name
+
     def delete_rule(self, rule_name):
+        """Deletes a rule from the rule-based blocker.
+
+           Args:
+               rule_name (string): Name of the rule to be deleted.
+        """
         assert rule_name in self.rules.keys(), 'Rule name not in current set of rules'
 
         del self.rules[rule_name]
         del self.rule_source[rule_name]
+        del self.rule_str[rule_name]
+        del self.rule_ft[rule_name]
+
         return True
 
     def view_rule(self, rule_name):
+        """Prints the source code of the function corresponding to a rule.
+
+           Args:
+               rule_name (string): Name of the rule to be viewed.
+        """
         assert rule_name in self.rules.keys(), 'Rule name not in current set of rules'
         print(self.rule_source[rule_name])
 
     def get_rule_names(self):
+        """Returns the names of all the rules in the rule-based blocker.
+
+           Returns:
+               A list of names of all the rules in the rule-based blocker (list).
+        """
         return self.rules.keys()
 
     def get_rule(self, rule_name):
+        """Returns the function corresponding to a rule.
+
+           Args:
+               rule_name (string): Name of the rule.
+           Returns:
+               A function object corresponding to the specified rule.
+        """
         assert rule_name in self.rules.keys(), 'Rule name not in current set of rules'
         return self.rules[rule_name]
 
@@ -121,7 +168,7 @@ class RuleBasedBlocker(Blocker):
         """Sets feature table for the rule-based blocker.
  
            Args:
-               feature_table (DataFrame): a dataframe containing features.
+               feature_table (DataFrame): A DataFrame containing features.
         """
 
         if self.feature_table is not None:
@@ -231,7 +278,7 @@ class RuleBasedBlocker(Blocker):
                                                                l_output_attrs_1,
                                                                r_output_attrs_1)
         l_df, r_df = l_df[l_proj_attrs], r_df[r_proj_attrs]
-
+        
         candset, rule_applied = self.block_tables_with_filters(l_df, r_df,
                                                                l_key, r_key,
                                                                l_output_attrs_1,
@@ -288,14 +335,16 @@ class RuleBasedBlocker(Blocker):
         # # list to keep track of valid ids
         valid = []
 
-        global global_rb
-        global_rb = self
+
+        apply_rules_excluding_rule_pkl = cp.dumps(self.apply_rules_excluding_rule)
+ 
         if n_procs <= 1:
             # single process
             valid = _block_candset_excluding_rule_split(c_df, l_df, r_df,
                                                         l_key, r_key,
                                                         fk_ltable, fk_rtable,
                                                         rule_to_exclude,
+                                                        apply_rules_excluding_rule_pkl,
                                                         show_progress)
         else:
             # multiprocessing
@@ -307,12 +356,11 @@ class RuleBasedBlocker(Blocker):
                                                              fk_ltable,
                                                              fk_rtable,
                                                              rule_to_exclude,
+                                                             apply_rules_excluding_rule_pkl,
                                                              show_progress and i == len(
                                                                  c_splits) - 1)
                 for i in range(len(c_splits)))
             valid = sum(valid_splits, [])
-
-        global_rb = None
 
         # construct output candset
         if len(c_df) > 0:
@@ -334,14 +382,15 @@ class RuleBasedBlocker(Blocker):
         n_procs = self.get_num_procs(n_jobs, len(l_df) * len(r_df))
 
         candset = None
-        global global_rb
-        global_rb = self
+
+        apply_rules_pkl = cp.dumps(self.apply_rules)
+
         if n_procs <= 1:
             # single process
             candset = _block_tables_split(l_df, r_df, l_key, r_key,
                                           l_output_attrs, r_output_attrs,
                                           l_output_prefix, r_output_prefix,
-                                          show_progress)
+                                          apply_rules_pkl, show_progress)
         else:
             # multiprocessing
             m, n = self.get_split_params(n_procs, len(l_df), len(r_df))
@@ -352,13 +401,12 @@ class RuleBasedBlocker(Blocker):
                                              l_key, r_key,
                                              l_output_attrs, r_output_attrs,
                                              l_output_prefix, r_output_prefix,
+                                             apply_rules_pkl,
                                              show_progress and i == len(
                                                  l_splits) - 1 and j == len(
                                                  r_splits) - 1)
                 for i in range(len(l_splits)) for j in range(len(r_splits)))
             candset = pd.concat(c_splits, ignore_index=True)
-
-        global_rb = None
 
         # return candidate set
         return candset
@@ -565,7 +613,7 @@ class RuleBasedBlocker(Blocker):
             # conjunct not filterable as the feature is not auto generated
             return False
         if sim_fn == 'lev_dist':
-            if op == '>' or '>=':
+            if op == '>' or op == '>=':
                 return True
             else:
                 # conjunct not filterable due to unsupported operator
@@ -596,29 +644,19 @@ class RuleBasedBlocker(Blocker):
                 tokenizer = WhitespaceTokenizer(return_set=True)
             elif l_tok == 'qgm_3':
                 tokenizer = QgramTokenizer(qval=3, return_set=True)
-            elif sim_fn != 'lev_dist':
-                # not supported
-                return None
 
-            join_fn = None
             if sim_fn == 'jaccard':
-                join_fn = jaccard_join
+                join_fn = ssj.jaccard_join
             elif sim_fn == 'cosine':
-                join_fn = cosine_join
+                join_fn = ssj.cosine_join
             elif sim_fn == 'dice':
-                join_fn == dice_join
-            elif sim_fn == 'overlap':
-                join_fn = overlap_join
-            elif sim_fn == 'overlap_coefficient':
-                join_fn = overlap_coefficient_join
+                join_fn = ssj.dice_join
+            elif sim_fn == 'overlap_coeff':
+                join_fn = ssj.overlap_coefficient_join
             elif sim_fn == 'lev_dist':
-                join_fn = edit_distance_join
-            else:
-                logger.info(
-                    sim_fn + ' is not filterable, so not applying fitlers to this rule')
-                return None
+                join_fn = ssj.edit_distance_join
 
-            if join_fn == edit_distance_join:
+            if join_fn == ssj.edit_distance_join:
                 comp_op = '<='
                 if op == '>=':
                     comp_op = '<'
@@ -627,22 +665,20 @@ class RuleBasedBlocker(Blocker):
                 if op == '<=':
                     comp_op = '>'
 
-            try:
-                if join_fn == edit_distance_join:
-                    c_df = join_fn(l_df, r_df, l_key, r_key, l_attr, r_attr,
-                                   float(th), comp_op, True, l_output_attrs,
-                                   r_output_attrs, l_output_prefix,
-                                   r_output_prefix, False, n_jobs)
-                else:
-                    c_df = join_fn(l_df, r_df, l_key, r_key, l_attr, r_attr,
-                                   tokenizer, float(th), comp_op, True,
-                                   l_output_attrs, r_output_attrs,
-                                   l_output_prefix,
-                                   r_output_prefix, False, n_jobs)
-            except:
-                logger.warning(
-                    'Cannot apply filters to rule using string similarity join.')
-                return None
+            ssj.dataframe_column_to_str(l_df, l_attr, inplace=True) 
+            ssj.dataframe_column_to_str(r_df, r_attr, inplace=True)
+ 
+            if join_fn == ssj.edit_distance_join:
+                c_df = join_fn(l_df, r_df, l_key, r_key, l_attr, r_attr,
+                               float(th), comp_op, True, l_output_attrs,
+                               r_output_attrs, l_output_prefix,
+                               r_output_prefix, False, n_jobs)
+            else:
+                c_df = join_fn(l_df, r_df, l_key, r_key, l_attr, r_attr,
+                               tokenizer, float(th), comp_op, True, True,
+                               l_output_attrs, r_output_attrs,
+                               l_output_prefix,
+                               r_output_prefix, False, n_jobs)
             if candset is not None:
                 # union the candset of this conjunct with the existing candset
                 candset = pd.concat([candset, c_df]).drop_duplicates(
@@ -656,7 +692,7 @@ class RuleBasedBlocker(Blocker):
 
 def _block_tables_split(l_df, r_df, l_key, r_key,
                         l_output_attrs, r_output_attrs,
-                        l_output_prefix, r_output_prefix,
+                        l_output_prefix, r_output_prefix, apply_rules_pkl,
                         show_progress):
     # initialize progress bar
     if show_progress:
@@ -681,6 +717,9 @@ def _block_tables_split(l_df, r_df, l_key, r_key,
     # list to keep the tuple pairs that survive blocking
     valid = []
 
+    # unpickle the apply_rules function
+    apply_rules = pickle.loads(apply_rules_pkl)
+
     # iterate through the two tables
     for l_t in l_df.itertuples(index=False):
         # # get ltuple from the look up table
@@ -694,8 +733,7 @@ def _block_tables_split(l_df, r_df, l_key, r_key,
             rtuple = r_dict[r_t[r_id_pos]]
 
             # # apply the rules to the tuple pair
-            res = global_rb.apply_rules(ltuple, rtuple)
-            # res = rule_based_blocker.apply_rules(ltuple, rtuple)
+            res = apply_rules(ltuple, rtuple)
 
             if res != True:
                 # # this tuple pair survives blocking
@@ -726,6 +764,7 @@ def _block_tables_split(l_df, r_df, l_key, r_key,
 def _block_candset_excluding_rule_split(c_df, l_df, r_df, l_key, r_key,
                                         fk_ltable,
                                         fk_rtable, rule_to_exclude,
+                                        apply_rules_excluding_rule_pkl,
                                         show_progress):
     # do blocking
 
@@ -742,6 +781,9 @@ def _block_candset_excluding_rule_split(c_df, l_df, r_df, l_key, r_key,
 
     l_id_pos = list(c_df.columns).index(fk_ltable)
     r_id_pos = list(c_df.columns).index(fk_rtable)
+
+    # # unpickle the apply_rules_excluding_rule function
+    apply_rules_excluding_rule = pickle.loads(apply_rules_excluding_rule_pkl)
 
     # # iterate candidate set
     for row in c_df.itertuples(index=False):
@@ -761,8 +803,8 @@ def _block_candset_excluding_rule_split(c_df, l_df, r_df, l_key, r_key,
             r_dict[row_rid] = r_df.ix[row_rid]
         rtuple = r_dict[row_rid]
 
-        res = global_rb.apply_rules_excluding_rule(ltuple, rtuple,
-                                                   rule_to_exclude)
+        res = apply_rules_excluding_rule(ltuple, rtuple, rule_to_exclude)
+ 
         if res != True:
             valid.append(True)
         else:
