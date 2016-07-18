@@ -626,21 +626,21 @@ class DebugblockerTestCases(unittest.TestCase):
         A = []
         B = []
         C = []
-        db.debug_blocker(A, B, C)
+        db.debug_blocker(C, A, B)
 
     @raises(AssertionError)
     def test_debugblocker_2(self):
         A = read_csv_metadata(path_a)
         B = []
         C = []
-        db.debug_blocker(A, B, C)
+        db.debug_blocker(C, A, B)
 
     @raises(AssertionError)
     def test_debugblocker_3(self):
         A = read_csv_metadata(path_a)
         B = read_csv_metadata(path_b)
         C = None
-        db.debug_blocker(A, B, C)
+        db.debug_blocker(C, A, B)
 
     @raises(AssertionError)
     def test_debugblocker_4(self):
@@ -648,7 +648,7 @@ class DebugblockerTestCases(unittest.TestCase):
         B = read_csv_metadata(path_b)
         C = read_csv_metadata(path_c, ltable=A, rtable=B)
         output_size = '200'
-        db.debug_blocker(A, B, C, output_size)
+        db.debug_blocker(C, A, B, output_size)
 
     @raises(AssertionError)
     def test_debugblocker_5(self):
@@ -656,7 +656,7 @@ class DebugblockerTestCases(unittest.TestCase):
         B = read_csv_metadata(path_b)
         C = read_csv_metadata(path_c, ltable=A, rtable=B)
         attr_corres = set()
-        db.debug_blocker(A, B, C, 200, attr_corres)
+        db.debug_blocker(C, A, B, 200, attr_corres)
 
     def test_debugblocker_6(self):
         A = read_csv_metadata(path_a, key='ID')
@@ -666,7 +666,7 @@ class DebugblockerTestCases(unittest.TestCase):
                               fk_rtable='rtable_ID',
                               key='_id')
         attr_corres = []
-        db.debug_blocker(A, B, C, 200, attr_corres)
+        db.debug_blocker(C, A, B, 200, attr_corres)
 
     @raises(AssertionError)
     def test_debugblocker_7(self):
@@ -677,7 +677,7 @@ class DebugblockerTestCases(unittest.TestCase):
                               fk_rtable='rtable_ID',
                               key='_id')
         attr_corres = [('ID', 'ID'), ['ID', 'ID']]
-        db.debug_blocker(A, B, C, 200, attr_corres)
+        db.debug_blocker(C, A, B, 200, attr_corres)
 
     @raises(AssertionError)
     def test_debugblocker_8(self):
@@ -689,21 +689,21 @@ class DebugblockerTestCases(unittest.TestCase):
                               key='_id')
         attr_corres = [('ID', 'ID')]
         verbose = 'true'
-        db.debug_blocker(A, B, C, 200, attr_corres, verbose)
+        db.debug_blocker(C, A, B, 200, attr_corres, verbose)
 
     @raises(AssertionError)
     def test_debugblocker_9(self):
         A = pd.DataFrame([])
         B = read_csv_metadata(path_b)
         C = pd.DataFrame([])
-        db.debug_blocker(A, B, C)
+        db.debug_blocker(C, A, B)
 
     @raises(AssertionError)
     def test_debugblocker_10(self):
         A = read_csv_metadata(path_a)
         B = pd.DataFrame([])
         C = pd.DataFrame([])
-        db.debug_blocker(A, B, C)
+        db.debug_blocker(C, A, B)
 
     @raises(AssertionError)
     def test_debugblocker_11(self):
@@ -711,7 +711,7 @@ class DebugblockerTestCases(unittest.TestCase):
         B = read_csv_metadata(path_b)
         C = pd.DataFrame([])
         output_size = 0
-        db.debug_blocker(A, B, C, output_size)
+        db.debug_blocker(C, A, B, output_size)
 
     @raises(AssertionError)
     def test_debugblocker_12(self):
@@ -730,7 +730,7 @@ class DebugblockerTestCases(unittest.TestCase):
         cm.set_candset_properties(cand_set, '_id', 'ltable_ID',
                                   'rtable_ID', ltable, rtable)
 
-        db.debug_blocker(ltable, rtable, cand_set)
+        db.debug_blocker(cand_set, ltable, rtable)
 
     def test_debugblocker_13(self):
         A = read_csv_metadata(path_a, key='ID')
@@ -739,7 +739,7 @@ class DebugblockerTestCases(unittest.TestCase):
                               fk_ltable='ltable_ID', fk_rtable='rtable_ID',
                               key='_id')
 
-        actual_ret_table = db.debug_blocker(A, B, C)
+        actual_ret_table = db.debug_blocker(C, A, B)
         test_file_path = os.sep.join(
             [debugblocker_datasets_path, 'test_debugblocker_13_out.csv'])
         expected_ret_table = read_csv_metadata(test_file_path,
@@ -767,7 +767,7 @@ class DebugblockerTestCases(unittest.TestCase):
                        ('year', 'pub_year'), ('lang', 'language'),
                        ('author', 'author'), ('publisher', 'publisher')]
         output_size = 1
-        ret_dataframe = db.debug_blocker(ltable, rtable, cand_set,
+        ret_dataframe = db.debug_blocker(cand_set, ltable, rtable,
                                          output_size, attr_corres)
         expected_columns = ['_id', 'similarity', 'ltable_ID', 'rtable_book_id',
                             'ltable_title', 'ltable_desc', 'ltable_year',
@@ -795,7 +795,7 @@ class DebugblockerTestCases(unittest.TestCase):
                               fk_rtable='rtable_ID',
                               key='_id')
         attr_corres = [('ID', 'ID'), ('birth_year', 'birth_year')]
-        db.debug_blocker(A, B, C, 200, attr_corres)
+        db.debug_blocker(C, A, B, 200, attr_corres)
 
 
 def read_record_list(path):
