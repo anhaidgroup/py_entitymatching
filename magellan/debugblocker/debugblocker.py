@@ -50,9 +50,8 @@ def debug_blocker(candidate_set, ltable, rtable, output_size=200,
         DataFrame is a tuple pair which has potential of being a true
         match, but is rejected by the blocker (meaning that the tuple
         pair is in the Cartesian product of ltable and rtable subtracted
-        by the candidate set). The schema of the returned DataFrame will
-        be a SUBSET of the input table schema (after field correspondence)
-        and only contain fields that are useful for determining similar
+        by the candidate set). The fields in the returned DataFrame are
+        from ltable and rtable, which are useful for determining similar
         tuple pairs.
 
     Raises:
