@@ -11,7 +11,7 @@ import magellan.catalog.catalog_manager as cm
 logger = logging.getLogger(__name__)
 
 
-def debug_blocker(ltable, rtable, candidate_set, output_size=200,
+def debug_blocker(candidate_set, ltable, rtable, output_size=200,
                   attr_corres=None, verbose=False):
     """
     This function debugs the blocker output and reports a list of potential
@@ -50,7 +50,9 @@ def debug_blocker(ltable, rtable, candidate_set, output_size=200,
         DataFrame is a tuple pair which has potential of being a true
         match, but is rejected by the blocker (meaning that the tuple
         pair is in the Cartesian product of ltable and rtable subtracted
-        by the candidate set).
+        by the candidate set). The fields in the returned DataFrame are
+        from ltable and rtable, which are useful for determining similar
+        tuple pairs.
 
     Raises:
         AssertionError: If ltable, rtable or candidate_set is not of type
