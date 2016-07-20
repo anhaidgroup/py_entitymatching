@@ -61,10 +61,10 @@ def get_property(data_frame, property_name):
     if not catalog.is_property_present_for_df(data_frame, property_name):
         logger.error(
             'Requested metadata ( %s ) for the given DataFrame is not '
-            'present in the catalog', property_name)
+            'present in the catalog' % property_name)
         raise KeyError(
             'Requested metadata ( %s ) for the given DataFrame is not '
-            'present in the catalog', property_name)
+            'present in the catalog' % property_name)
 
     # Return the requested property for the input DataFrame
     return catalog.get_property(data_frame, property_name)
@@ -237,9 +237,9 @@ def del_property(data_frame, property_name):
     # DataFrame in the catalog, if not raise an error.
     if not catalog.is_property_present_for_df(data_frame, property_name):
         logger.error('Requested metadata ( %s ) for the given DataFrame is '
-                     'not present in the catalog', property_name)
+                     'not present in the catalog' %property_name)
         raise KeyError('Requested metadata ( %s ) for the given DataFrame is '
-                       'not present in the catalog', property_name)
+                       'not present in the catalog' %property_name)
 
     # Delete the property using the underlying catalog object and relay the
     # return value. Typically the return value is True if the deletion was
@@ -481,8 +481,8 @@ def set_properties(data_frame, properties, replace=True):
     if catalog.is_df_info_present_in_catalog(data_frame):
         if not replace:
             logger.warning(
-                'Properties already exists for df ( %s ). Not replacing it',
-                str(id(data_frame)))
+                'Properties already exists for df ( %s ). Not replacing it'
+                %str(id(data_frame)))
             return False
         else:
             # DataFrame information is present and replace flag is True. We
@@ -648,8 +648,8 @@ def set_key(data_frame, key_attribute):
     # Check if the key attribute is present as one of the columns in the
     # DataFrame
     if not ch.check_attrs_present(data_frame, key_attribute):
-        logger.error('Input key ( %s ) not in the DataFrame', key_attribute)
-        raise KeyError('Input key ( %s ) not in the DataFrame', key_attribute)
+        logger.error('Input key ( %s ) not in the DataFrame' % key_attribute)
+        raise KeyError('Input key ( %s ) not in the DataFrame' % key_attribute)
 
     # Check if the key attribute satisfies the conditions to be a key. If
     # not, just return False.
@@ -663,7 +663,7 @@ def set_key(data_frame, key_attribute):
     # later.
     if ch.is_key_attribute(data_frame, key_attribute) is False:
         logger.warning('Attribute (%s ) does not qualify  to be a key; Not '
-                       'setting/replacing the key', key_attribute)
+                       'setting/replacing the key' % key_attribute)
         return False
     else:
         # Set the key property for the input DataFrame
