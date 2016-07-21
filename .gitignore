@@ -76,3 +76,4 @@ html/
 *.png
 
 notebooks/integration_tests/bdata/
+garage/

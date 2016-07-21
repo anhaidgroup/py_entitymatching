@@ -66,9 +66,9 @@ if __name__ == "__main__":
         install_requires=[
             'py_stringsimjoin', # this internally installs other
             # dependencies such as py_stringmatching, joblib, pyprind
-            'cloudpickle',
-            'pyparsing',
-            'scikit-learn'
+            'cloudpickle >= 0.2.1',
+            'pyparsing >= 2.1.4',
+            'scikit-learn >= 0.17.1'
         ],
         include_package_data=True,
         zip_safe=False
