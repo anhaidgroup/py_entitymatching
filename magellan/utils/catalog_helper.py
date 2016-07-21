@@ -98,8 +98,8 @@ def does_contain_missing_vals(df, attr):
         logger.error('Input attr. is not of type string')
         raise AssertionError('Input attr. is not of type string')
 
-    # nan_flag = (sum(df[attr].isnull()) != 0)
-    nan_flag = not any(pd.isnull(df[attr]))
+    nan_flag = (sum(df[attr].isnull()) != 0)
+    # nan_flag = not any(pd.isnull(df[attr]))
     if not nan_flag:
         return False
     else:
@@ -136,8 +136,8 @@ def is_key_attribute(df, attr, verbose=False):
             return False
 
         # check if there are missing or null values
-        # nan_flag = sum(df[attr].isnull()) == 0
-        nan_flag = not any(pd.isnull(df[attr]))
+        nan_flag = sum(df[attr].isnull()) == 0
+        # nan_flag = not any(pd.isnull(df[attr]))
         if not nan_flag:
             if verbose:
                 logger.warning('Attribute ' + attr + ' contains missing values')
