@@ -21,7 +21,7 @@ def label_table(table, label_column_name, verbose=False):
     of a candidate set (such as key, fk_ltable, fk_rtable, ltable, rtable).
     This function creates a copy of the input DataFrame, adds label column
     at the end of the DataFrame, fills the column values with 0, invokes a
-    GUI for the user to enter labels (0/1, 0:non-match, 1:match) and finally
+    GUI for the user to enter labels (0/1, 0: non-match, 1: match) and finally
     returns the labeled DataFrame. Further, this function also copies the
     properties from the input DataFrame to the output DataFrame.
 

@@ -146,19 +146,20 @@ def _probe_index(table_b, y_param, s_tbl_sz, s_inv_index):
 # down sample of two tables : based on sanjib's index based solution
 def down_sample(table_a, table_b, size, y_param):
     """
-    This function down samples two tables A and B.
+    This function down samples two tables A and B into smaller tables A' and
+    B' respectively.
 
     Specifically, first it randomly selects 'size' tuples
-    from the table B to be table B'. Next, it builds an inverted index (
-    token, tuple_id) on table A - say I. For each tuple x ∈ B', the algorithm
-    finds a set P of k/2 tuples from A (inverted index) that match x,
+    from the table B to be table B'. Next, it builds an inverted index I (
+    token, tuple_id) on table A. For each tuple x ∈ B', the algorithm
+    finds a set P of k/2 tuples from I that match x,
     and a set Q of k/2 tuples randomly selected from A - P.
     The idea is for A' and B' to share some matches yet be
     as representative of A and B as possible.
 
     Args:
         table_a,table_b (DataFrame): The input tables A and B.
-        size (int): The size of table B that should be down sampled to.
+        size (int): The size that table B should be down sampled to.
         y_param (int): The parameter to control the down sample size of table A.
             Specifically, the down sampled size of table A should be close to
             size * y_param.

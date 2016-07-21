@@ -16,13 +16,13 @@ logger = logging.getLogger(__name__)
 # sample one table using random sampling.rst
 def sample_table(table, sample_size, replace=False, verbose=False):
     """
-    Samples a pandas DataFrame (for labeling purposes).
+    Samples a candidate set of tuple pairs (for labeling purposes).
 
     This function samples a DataFrame, typically used for labeling
     purposes. This function expects the input DataFrame containing the
     metadata of a candidate set (such as key, fk_ltable, fk_rtable, ltable,
     rtable). Specifically, this function creates a copy of the input
-    DataFrame, samples the data using uniform random sampling(uses 'random'
+    DataFrame, samples the data using uniform random sampling (uses 'random'
     function from numpy to sample) and returns the sampled DataFrame.
     Further, also copies the properties from the input DataFrame to the output
     DataFrame.
@@ -32,14 +32,12 @@ def sample_table(table, sample_size, replace=False, verbose=False):
             Specifically,
             a DataFrame containing the metadata of a candidate set (such as
             key, fk_ltable, fk_rtable, ltable, rtable) in the catalog.
-        sample_size (int): The number of samples to be picked up from the input
+        sample_size (int): The number of samples to be picked from the input
             DataFrame.
-        replace (boolean): A flag to indicate whether sampling.rst should be
-        done
-            with replacement or not (default value is False).
+        replace (boolean): A flag to indicate whether sampling should be
+            done with replacement or not (defaults to False).
         verbose (boolean): A flag to indicate whether more detailed information
-            about the execution steps should be printed out (default value is
-            False).
+            about the execution steps should be printed out (defaults to False).
 
     Returns:
         A new DataFrame with 'sample_size' number of rows.

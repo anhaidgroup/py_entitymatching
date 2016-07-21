@@ -20,11 +20,8 @@ def combine_blocker_outputs_via_union(
         r_prefix='rtable_',
         verbose=False):
     """
-    Combine multiple blocker outputs by doing an union of their tuple pair ids (
-    foreign
-    key ltable, foreign key rtable).
-
-    This function combines multiple blocker outputs via union.
+    Combines multiple blocker outputs by doing a union of their tuple pair
+    ids (foreign key ltable, foreign key rtable).
 
     Specifically, this function takes in a list of DataFrames (candidate
     sets, typically the
@@ -44,8 +41,8 @@ def combine_blocker_outputs_via_union(
     l_prefix and r_prefix in the function.
 
     The input DataFrames may contain different attribute lists and it demands
-    the question how to combine them. Currently Magellan takes an union
-    of attribute names that has prefix l_prefix or r_prefix. across
+    the question of how to combine them. Currently Magellan takes an union
+    of attribute names that has prefix l_prefix or r_prefix across
     input tables. After taking the union, for each tuple id pair included
     in output, the attribute values (for union-ed attribute names) are
     probed from ltable/rtable and included in the output.
@@ -54,16 +51,16 @@ def combine_blocker_outputs_via_union(
     added by user (say label for some reason), then that column will not
     be present in the output. The reason is, the same column may not be
     present in other candidate sets so it is not clear about how to
-    combine them. One possibility is include label in output for all
+    combine them. One possibility is to include label in output for all
     tuple id pairs, but set as NaN for the values not present. Currently
-    mMgellan does not include such columns and addressing it will be part
+    Magellan does not include such columns and addressing it will be part
     of future work.
 
     Args:
         blocker_output_list (list of DataFrames): The list of DataFrames that
             should be combined.
-        l_prefix (str): The prefix given to the attributes from the ltable.
-        r_prefix (str): The prefix given to the attributes from the rtable.
+        l_prefix (string): The prefix given to the attributes from the ltable.
+        r_prefix (string): The prefix given to the attributes from the rtable.
         verbose (boolean): A flag to indicate whether more detailed information
             about the execution steps should be printed out (default value is
             False).
@@ -75,8 +72,8 @@ def combine_blocker_outputs_via_union(
     Raises:
         AssertionError: If the l_prefix is not of type string.
         AssertionError: If the r_prefix is not of type string.
-        AssertionError: If the length of the input DataFrame list if 0.
-        AssertionError: If the input blocker output list is not a list of
+        AssertionError: If the length of the input DataFrame list is 0.
+        AssertionError: If the input blocker_output_list is not a list of
             DataFrames.
         AssertionError: If the ltables are different across the input list of
             DataFrames.

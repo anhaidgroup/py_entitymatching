@@ -162,8 +162,9 @@ def get_features(ltable, rtable, l_attr_types, r_attr_types,
 
 def get_features_for_blocking(ltable, rtable):
     """
+
     This function automatically generates features that can be used for
-     blocking purposes.
+    blocking purposes.
 
     Args:
         ltable,rtable (DataFrame): The pandas DataFrames for which the
