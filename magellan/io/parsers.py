@@ -14,31 +14,31 @@ logger = logging.getLogger(__name__)
 def read_csv_metadata(file_path, **kwargs):
     """
     Reads a CSV (comma-separated values) file into a pandas DataFrame
-    and update the catalog with the metadata.
+    and update the catalog with the metadata. The CSV files typically contain
+    data for the input tables or a candidate set.
 
     Specifically, this function first reads the CSV file from the given file
-    path into a pandas DataFrame. It uses 'read_csv' method from
-    pandas to read the CSV file into a pandas DataFrame. Then, it
-    updates the catalog with the metadata. There are three ways to update the
-    metadata: (1) using a metadata file, (2) using the key-value
-    parameters supplied in the function, and (3) using both metadata file and
-    key-value parameters.
+    path into a pandas DataFrame, by using pandas' in-built 'read_csv'
+    method. Then, it updates the catalog with the metadata. There are three
+    ways to update the metadata: (1) using a metadata file, (2) using the
+    key-value parameters supplied in the function, and (3) using both
+    metadata file and key-value parameters.
 
     To update the metadata in the catalog using the metadata file,
     the function will look for a file in the same directory with  same file name
     but with a  specific extension. This extension can be optionally given by
-    the user (with the default value set to
-    '.metadata'). If the metadata  file is  present, the function will read
-    and update the catalog appropriately. If  the metadata file is not present,
-    the function will issue a warning that the metadata file is not present.
+    the user (defaults to '.metadata'). If the metadata  file is  present,
+    the function will read and update the catalog appropriately. If  the
+    metadata file is not present, the function will issue a warning that the
+    metadata file is not present.
 
     The metadata information can also be given as parameters to the function
     (see description of arguments for more details). If given, the function
     will update the catalog with the given information.
 
-    Further, the metadata can partly occur in the metdata file and given
-    as parameters. The function will take a union of them and update the
-    catalog appropriately.
+    Further, the metadata can partly reside in the metdata file and partly as
+    supplied parameters. The function will take a union of the two and
+    update the catalog appropriately.
     If the same metadata is given in both the metadata file
     and the function, then the metadata in the function takes precedence over
     the metadata given in the file.
@@ -49,11 +49,17 @@ def read_csv_metadata(file_path, **kwargs):
 
         kwargs (dictionary): A Python dictionary containing key-value
             arguments. There are a few key-value pairs that are specific to
-            read_csv_metadata and
-            all the other key-value pairs are passed to pandas read_csv method.
+            read_csv_metadata and  all the other key-value pairs are passed
+            to pandas read_csv method.
             The keys that are specific to read_csv_metadata are: (1)
-            metadata_extn, (2) key, (3) fk_ltable, (4) fk_rtable, (5) ltable,
-            and (6) rtable. Here the metadata_extn is the expected metadata
+            'metadata_extn' (metadata extension), (2) 'key' (key
+            attribute), (3) 'fk_ltable' (foreign key to ltable),
+            (4) 'fk_rtable' (foreign key to rtable), (5) 'ltable' (left
+            table), and (6) 'rtable' (right table).
+            The keys: 'key', 'metadata_extn' are applicable to all
+            tables, and the keys: 'fk_ltable', 'fk_rtable', 'ltable'
+            and 'rtable' are applicable only to candidate sets.
+            Here the metadata_extn is the expected metadata
             extension (with the default value set to '.metadata'), and all
             the others are metadata related to the DataFrame read from the
             CSV file.
@@ -153,14 +159,13 @@ def to_csv_metadata(data_frame, file_path, **kwargs):
         data_frame (DataFrame): The DataFrame that should be written to disk.
         file_path (string):  The file path to which the DataFrame contents
             should be written. Metadata is written with the same file name
-            with the
-            extension given by the user (defaults to .metadata).
+            with the extension given by the user (defaults to '.metadata').
         kwargs (dictionary):  A Python dictionary containing key-value pairs.
             There is one key-value pair that is specific to
             to_csv_metadata: metadata_extn. All the other key-value pairs
             are passed to pandas to_csv function.
             Here the metadata_extn is the metadata
-            extension (with the default value set to '.metadata'), with which
+            extension (defaults to '.metadata'), with which
             the metadata file must be written.
     Returns:
         A Boolean value of True is returned if the files were written

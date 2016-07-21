@@ -33,7 +33,7 @@ def save_object(object_to_save, file_path):
         object_to_save (Python object): The Python object to save. This can be
             a rule-based blocker, feature vectors, etc.
 
-        file_path (string): The file path where the object must be stored.
+        file_path (string): The file path where the object must be saved.
 
 
     Returns:
@@ -131,8 +131,7 @@ def save_table(data_frame, file_path, metadata_ext='.pklmetadata'):
     Specifically, this function saves the DataFrame in the given
     file path, and saves the metadata in the same directory (as the
     file path) but with a different extension. This extension can be
-    optionally given by the user (with the default value set to
-    '.pklmetadata').
+    optionally given by the user (defaults to '.pklmetadata').
 
     Args:
         data_frame (DataFrame): The DataFrame that should be saved.
@@ -151,8 +150,8 @@ def save_table(data_frame, file_path, metadata_ext='.pklmetadata'):
     Note:
         This function is a bit different from to_csv_metadata, where the
         DataFrame is stored in a CSV file format. The CSV file format can be
-        viewed using a text editor. But save_table is stored in a
-        special format, which cannot be viewed with a text editor.
+        viewed using a text editor. But a DataFrame stored using 'save_table' is
+        stored in a special format, which cannot be viewed with a text editor.
         The reason we have save_table is, for larger DataFrames it is
         efficient to pickle the DataFrame to disk than writing the DataFrame
         in CSV format.
@@ -259,15 +258,14 @@ def load_table(file_path, metadata_ext='.pklmetadata'):
     This function loads a DataFrame from a file stored in a pickle format.
 
     Further, this function looks for a metadata file with the same file name
-    but with a different extension (given by the user). If the metadata file
-    is present, the function will update the metadata for that DataFrame in
-    the catalog.
+    but with an extension given by the user (defaults to '.pklmetadata'. If the
+    metadata file is present, the function will update the metadata for that
+    DataFrame in the catalog.
 
     Args:
         file_path (string): The file path to load the file from.
-        metadata_ext (string): The metadata file extension (with the default
-         value set to '.pklmetadata') that should be used to generate metadata
-         file name.
+        metadata_ext (string): The metadata file extension (defaults to
+            '.pklmetadata') that should be used to generate metadata file name.
 
     Returns:
         If the loading is successful, the function will return a pandas
