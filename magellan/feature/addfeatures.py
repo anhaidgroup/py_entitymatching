@@ -14,7 +14,7 @@ def get_feature_fn(feature_string, tokenizers, similarity_functions):
     This function creates a feature in a declarative manner.
 
     Specifically, this function uses the feature string, parses it and
-    compiles it into an function using the given tokenizers and similarity
+    compiles it into a function using the given tokenizers and similarity
     functions. This compiled function will take in two tuples and return a
     feature value (typically a number).
 
@@ -29,18 +29,18 @@ def get_feature_fn(feature_string, tokenizers, similarity_functions):
             similarity functions. Specifically, the dictionary contains
             similarity function names as keys and similarity functions as
             values. The similarity function typically
-            takes in a string or two lists and returns a number.
+            takes in a string or two lists of tokens and returns a number.
 
     Returns:
 
         This function returns a Python dictionary which contains sufficient
-        information (such as parsed information, function code) to be added
+        information (such as attributes, tokenizers, function code) to be added
         to the feature table.
 
         Specifically the Python dictionary contains the following keys:
         'left_attribute', 'right_attribute',
         'left_attr_tokenizer',
-        'right_attr_tokenizer', 'simfunction', 'function',
+        'right_attr_tokenizer', 'simfunction', 'function', and
         'function_source'.
 
         For all the keys except the 'function' and 'function_source' the
@@ -50,16 +50,21 @@ def get_feature_fn(feature_string, tokenizers, similarity_functions):
         and 'function_source' will have the Python function's source in
         string format.
 
-        The created function is self contained function
-        which means that it the tokenizers or sim function that it calls is
+        The created function is a self-contained function
+        which means that the tokenizers and sim functions that it calls are
         bundled along with the returned function code.
 
     Raises:
-        AssertionError: If the input feature string is not of type string.
-        AssertionError: If th input object tokenizers is not of type
+        AssertionError: If the input `feature_string` is not of type string.
+        AssertionError: If th input `tokenizers` is not of type
             dictionary.
-        AssertionError: If the input object similarity_functions is not of
+        AssertionError: If the input `similarity_functions` is not of
             type dictionary.
+    See Also:
+        :meth:`magellan.get_sim_funs_for_blocking`,
+        :meth:`magellan.get_tokenizers_for_blocking`,
+        :meth:`magellan.get_sim_funs_for_matching`,
+        :meth:`magellan.get_tokenizers_for_matching`
     """
     # Validate input parameters
     # # We expect the input feature string to be of type string
@@ -205,32 +210,33 @@ def add_feature(feature_table, feature_name, feature_dict):
     """
     Adds a feature to the feature table.
 
-    Specifically, this function is used in combination with  get_feature_fn.
-    First the user creates a dictionary using get_feature_fn, then the user
-    uses this function to add it to the feature table.
+    Specifically, this function is used in combination with
+    :meth:`~magellan.get_feature_fn`.
+    First the user creates a dictionary using :meth:`~magellan.get_feature_fn`,
+    then the user uses this function to add feature_dict to the feature table.
 
     Args:
         feature_table (DataFrame): A DataFrame containing features.
-        feature_names (string): The name that should be given to the feature.
+        feature_name (string): The name that should be given to the feature.
         feature_dict (dictionary): A Python dictionary, that is typically
-            returned by executing get_feature_fn.
+            returned by executing :meth:`~magellan.get_feature_fn`.
 
     Returns:
         A Boolean value of True is returned if the addition was successful.
 
     Raises:
-        AssertionError: If the input object (feature_table) is not of type
+        AssertionError: If the input `feature_table` is not of type
             pandas DataFrame.
-        AssertionError: If the input object (feature_name) is not of type
+        AssertionError: If the `feature_name` is not of type
             string.
-        AssertionError: If the input object (feature_dict) is not of type
+        AssertionError: If the `feature_dict` is not of type
             Python dictionary.
-        AssertionError: If the feature_table does not have necessary columns
+        AssertionError: If the `feature_table` does not have necessary columns
             such as 'feature_name', 'left_attribute', 'right_attribute',
             'left_attr_tokenizer',
-            'right_attr_tokenizer', 'simfunction', 'function',
+            'right_attr_tokenizer', 'simfunction', 'function', and
             'function_source' in the DataFrame.
-        AssertionError: If the feature name is already present in the feature
+        AssertionError: If the `feature_name` is already present in the feature
             table.
     """
     # Validate input parameters
@@ -309,17 +315,17 @@ def add_blackbox_feature(feature_table, feature_name, feature_function):
         A Boolean value of True is returned if the addition was successful.
 
     Raises:
-        AssertionError: If the input object (feature_table) is not of type
+        AssertionError: If the input `feature_table` is not of type
             DataFrame.
-        AssertionError: If the input object (feature_name) is not of type
+        AssertionError: If the input `feature_name` is not of type
             string.
-        AssertionError: If the feature_table does not have necessary columns
+        AssertionError: If the `feature_table` does not have necessary columns
             such as 'feature_name', 'left_attribute', 'right_attribute',
             'left_attr_tokenizer',
-            'right_attr_tokenizer', 'simfunction', 'function',
+            'right_attr_tokenizer', 'simfunction', 'function', and
             'function_source' in the DataFrame.
-        AssertionError: If the feature name is already present in the feature
-            table.
+        AssertionError: If the `feature_name` is already present in the
+            feature table.
     """
     # Validate input parameters
     # # We expect the feature_table to be of type pandas DataFrame

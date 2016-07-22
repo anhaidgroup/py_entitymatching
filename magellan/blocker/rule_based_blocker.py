@@ -93,6 +93,13 @@ class RuleBasedBlocker(Blocker):
             
             Returns:
                 The name of the rule added (string).
+
+            Raises:
+                AssertionError: If the `rule_name` already exists.
+
+                AssertionError: If the `feature_table` is not a valid value
+                 parameter.
+
         """
 
         if rule_name is not None and rule_name in self.rules.keys():
@@ -210,8 +217,8 @@ class RuleBasedBlocker(Blocker):
                                    coming from the right table in the output
                                    candidate set (defaults to 'rtable\_').
 
-            verbose (boolean): A flag to indicate whether logging should be done
-                               (defaults to False).
+            verbose (boolean): A flag to indicate whether the debug
+                information  should be logged (defaults to False).
 
             show_progress (boolean): A flag to indicate whether progress should
                                      be displayed to the user (defaults to True).
@@ -228,6 +235,33 @@ class RuleBasedBlocker(Blocker):
         Returns:
             A candidate set of tuple pairs that survived the sequence of
             blocking rules (DataFrame).
+
+        Raises:
+            AssertionError: If the input `ltable` is not of type pandas
+                DataFrame.
+            AssertionError: If the input `rtable` is not of type pandas
+                DataFrame.
+            AssertionError: If the input `l_output_attrs` is not of type of
+                list.
+            AssertionError: If the input `r_output_attrs` is not of type of
+                list.
+            AssertionError: If the values in `l_output_attrs` is not of type
+                string.
+            AssertionError: If the values in `r_output_attrs` is not of type
+                string.
+            AssertionError: If the input `l_output_prefix` is not of type
+                string.
+            AssertionError: If the input `r_output_prefix` is not of type
+                string.
+            AssertionError: If the input `verbose` is not of type
+                boolean.
+            AssertionError: If the input `show_progress` is not of type
+                boolean.
+            AssertionError: If the input `n_jobs` is not of type
+                int.
+            AssertionError: If the `l_out_attrs` are not in the ltable.
+            AssertionError: If the `r_out_attrs` are not in the rtable.
+            AssertionError: If there are no rules to apply.
         """
 
         # validate data types of input parameters
@@ -425,10 +459,8 @@ class RuleBasedBlocker(Blocker):
 
         Args:
             candset (DataFrame): The input candidate set of tuple pairs.
-
-            verbose (boolean): A flag to indicate whether logging should be done
-                               (defaults to False).
-
+            verbose (boolean): A flag to indicate whether the debug
+                information  should be logged (defaults to False).
             show_progress (boolean): A flag to indicate whether progress should
                                      be displayed to the user (defaults to True).
 
@@ -443,6 +475,18 @@ class RuleBasedBlocker(Blocker):
 
         Returns:
             A candidate set of tuple pairs that survived blocking (DataFrame).
+
+        Raises:
+            AssertionError: If the input `candset` is not of type pandas
+                DataFrame.
+            AssertionError: If the input `verbose` is not of type
+                boolean.
+            AssertionError: If the input `n_jobs` is not of type
+                int.
+            AssertionError: If the input `show_progress` is not of type boolean.
+            AssertionError: If the `l_block_attr` is not in the ltable columns.
+            AssertionError: If the `r_block_attr` is not in the rtable columns.
+            AssertionError: If there are no rules to apply.
         """
 
         # validate data types of input parameters

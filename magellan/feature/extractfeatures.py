@@ -21,16 +21,16 @@ def extract_feature_vecs(candset, attrs_before=None, feature_table=None,
     This function extracts feature vectors from a DataFrame (typically a
     labeled candidate set).
 
-    Specifically, this function uses the feature
-    table, and the ltable and rtable (that is present in the candset's
-    metadata) tuples to extract feature vectors.
+    Specifically, this function uses feature
+    table, ltable and rtable (that is present in the `candset`'s
+    metadata) to extract feature vectors.
 
     Args:
-        candset (DataFrame): The input pandas DataFrame for which the features
-            vectors should be generated.
+        candset (DataFrame): The input candidate set for which the features
+            vectors should be extracted.
         attrs_before (list): The list of attributes from the input candset,
-            that should added before the feature vectors (defaults to None).
-        feature_table (DataFrame): A pandas DataFrame containing a list of
+            that should be added before the feature vectors (defaults to None).
+        feature_table (DataFrame): A DataFrame containing a list of
             features that should be used to compute the feature vectors (
             defaults to None).
         attrs_after (list): The list of attributes from the input candset
@@ -42,25 +42,26 @@ def extract_feature_vecs(candset, attrs_before=None, feature_table=None,
 
 
     Returns:
-        A pandas DataFrame containing feature vectors is returned.
+        A pandas DataFrame containing feature vectors.
 
-        The DataFrame will have metadata such as ltable and rtable, pointing
+        The DataFrame will have metadata ltable and rtable, pointing
         to the same ltable and rtable as the input candset.
 
         Also, the output
         DataFrame will have three columns: key, foreign key ltable, foreign
-        key rtable copied from input candset to the output DataFrame.
+        key rtable copied from input candset to the output DataFrame. These
+        three columns precede the columns mentioned in `attrs_before`.
 
 
 
     Raises:
-        AssertionError: If the input object (candset) is not of type pandas
+        AssertionError: If the input `candset` is not of type pandas
             DataFrame.
-        AssertionError: If the input list (attrs_before) has attributes that
+        AssertionError: If the input `attrs_before` has attributes that
             are not present in the input candset.
-        AssertionError: If the input list (attrs_after) has attribtues that
+        AssertionError: If the input `attrs_after` has attribtues that
             are not present in the input candset.
-        AssertionError: If the feature table is set to None.
+        AssertionError: If the `feature_table` is set to None.
 
     """
     # Validate input parameters

@@ -42,7 +42,7 @@ _global_sim_fns = pd.DataFrame({'function_name': sim_function_names,
 
 def get_sim_funs_for_blocking():
     """
-    This function gets the similarity functions that can be used for
+    This function returns the similarity functions that can be used for
     blocking purposes.
 
     Returns:
@@ -129,7 +129,7 @@ def affine(s1, s2):
 
 def hamming_dist(s1, s2):
     """
-    This function computes the hamming distance between the two input
+    This function computes the Hamming distance between the two input
     strings.
 
     Args:
@@ -137,7 +137,7 @@ def hamming_dist(s1, s2):
             be computed.
 
     Returns:
-        The hamming distance if both the strings are not missing (i.e NaN),
+        The Hamming distance if both the strings are not missing (i.e NaN),
         else  returns NaN.
     """
 
@@ -165,7 +165,7 @@ def hamming_dist(s1, s2):
 
 def hamming_sim(s1, s2):
     """
-    This function computes the hamming similarity between the two input
+    This function computes the Hamming similarity between the two input
     strings.
 
     Args:
@@ -173,7 +173,7 @@ def hamming_sim(s1, s2):
             be computed.
 
     Returns:
-        The hamming similarity if both the strings are not missing (i.e NaN),
+        The Hamming similarity if both the strings are not missing (i.e NaN),
         else  returns NaN.
     """
 
@@ -410,7 +410,7 @@ def jaccard(arr1, arr2):
 
     Args:
         arr1,arr2 (list or set): The input list or sets for which the Jaccard
-        measure should be computed.
+            measure should be computed.
 
     Returns:
         The Jaccard measure if both the lists/set are not None and do not have
@@ -440,7 +440,7 @@ def cosine(arr1, arr2):
 
     Args:
         arr1,arr2 (list or set): The input list or sets for which the cosine
-        measure should be computed.
+         measure should be computed.
 
     Returns:
         The cosine measure if both the lists/set are not None and do not have
@@ -469,11 +469,11 @@ def overlap_coeff(arr1, arr2):
     lists/sets.
 
     Args:
-        arr1,arr2 (list or set): The input list or sets for which the overlap
+        arr1,arr2 (list or set): The input lists or sets for which the overlap
             coefficient should be computed.
 
     Returns:
-        The overlap coefficient if both the lists/set are not None and do not
+        The overlap coefficient if both the lists/sets are not None and do not
         have any missing tokens (i.e NaN), else  returns NaN.
     """
 

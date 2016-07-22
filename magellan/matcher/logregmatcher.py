@@ -12,7 +12,7 @@ class LogRegMatcher(MLMatcher):
     Args:
         *args,**kwargs: THe Arguments to scikit-learn's Logistic Regression
             classifier.
-        name (str): The name of this matcher (defaults to None). If the
+        name (string): The name of this matcher (defaults to None). If the
             matcher name is None, the class automatically generates a string
             and assigns it as the name.
 

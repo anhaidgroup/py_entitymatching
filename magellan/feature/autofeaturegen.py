@@ -30,8 +30,8 @@ def get_features(ltable, rtable, l_attr_types, r_attr_types,
         ltable,rtable (DataFrame): The pandas DataFrames for which the
             features must be generated.
         l_attr_types,r_attr_types (dictionary): The attribute types for the
-            input DataFrames.Typically this is generated using the
-            function get_attr_types.
+            input DataFrames. Typically this is generated using the
+            function 'get_attr_types'.
         attr_corres (dictionary): The attribute correspondences between the
             input DataFrames.
         tok_funcs (dictionary): A Python dictionary containing tokenizer
@@ -41,29 +41,36 @@ def get_features(ltable, rtable, l_attr_types, r_attr_types,
 
     Returns:
         A pandas DataFrame containing automatically generated features.
-
         Specifically, the DataFrame contains the following attributes:
         'feature_name', 'left_attribute', 'right_attribute',
         'left_attr_tokenizer', 'right_attr_tokenizer', 'simfunction',
         'function', 'function_source', 'is_auto_generated'.
 
     Raises:
-        AssertionError: If the input object (ltable) is not of type pandas
+        AssertionError: If the input ltable is not of type pandas
             DataFrame.
-        AssertionError: If the input object (rtable) is not of type pandas
+        AssertionError: If the input rtable is not of type pandas
             DataFrame.
-        AssertionError: If the input object (l_attr_types) is not of type
+        AssertionError: If the input l_attr_types is not of type
             python dictionary.
-        AssertionError: If the input object (r_attr_types) is not of type
+        AssertionError: If the input r_attr_types is not of type
             python dictionary.
-        AssertionError: If the input object (attr_corres) is not of type
+        AssertionError: If the input attr_corres is not of type
             python dictionary.
-        AssertionError: If the input object (sim_funcs) is not of type
+        AssertionError: If the input sim_funcs is not of type
             python dictionary.
-        AssertionError: If the input object (tok_funcs) is not of type
+        AssertionError: If the input tok_funcs is not of type
             python dictionary.
         AssertionError: If the ltable and rtable order is same as mentioned
             in the l_attr_types/r_attr_types and attr_corres.
+
+    See Also:
+     :meth:`magellan.get_attr_corres`, :meth:`magellan.get_attr_types`,
+     :meth:`magellan.get_sim_funs_for_blocking`,
+     :meth:`magellan.get_tokenizers_for_blocking`,
+     :meth:`magellan.get_sim_funs_for_matching`,
+     :meth:`magellan.get_tokenizers_for_matching`
+
 
     Note:
         In the output DataFrame, two
@@ -168,7 +175,7 @@ def get_features_for_blocking(ltable, rtable):
 
     Args:
         ltable,rtable (DataFrame): The pandas DataFrames for which the
-            features to be generated.
+            features are to be generated.
 
     Returns:
         A pandas DataFrame containing automatically generated features.
@@ -176,39 +183,40 @@ def get_features_for_blocking(ltable, rtable):
         Specifically, the DataFrame contains the following attributes:
         'feature_name', 'left_attribute', 'right_attribute',
         'left_attr_tokenizer', 'right_attr_tokenizer', 'simfunction',
-        'function', 'function_source', 'is_auto_generated'.
+        'function', 'function_source', and 'is_auto_generated'.
 
 
-        Further, this function also sets the following global varaibles:
-        _block_t,
-        _block_s,
-        _atypes1,
-        _atypes2,
-        _block_c.
+        Further, this function also sets the following global variables:
+        _block_t, _block_s, _atypes1, _atypes2, and _block_c.
 
-        The variable_block_t contains the tokenizers used and  _block_s
+        The variable _block_t contains the tokenizers used and  _block_s
         contains the similarity functions used for creating features.
 
-        The variables _atypes1, _atypes2 contain the attribute types for
-        ltable and rtable respectively. The variable _block_c contain the
-        attribute correspondence between the two input tables.
+        The variables _atypes1, and  _atypes2 contain the attribute types for
+        ltable and rtable respectively. The variable _block_c contains the
+        attribute correspondences between the two input tables.
 
     Raises:
-        AssertionError: If the input object (ltable) is not of type pandas
+        AssertionError: If the input (ltable) is not of type pandas
             DataFrame.
-        AssertionError: If the input object (rtable) is not of type pandas
+        AssertionError: If the input (rtable) is not of type pandas
             DataFrame.
     Note:
         In the output DataFrame, two
-        attributes demand some explanation: (1)function, and (2)
-        is_auto_generated. The function, points to the actual python function
-        that implements feature. Specifically, the function takes in two
+        attributes demand some explanation: (1) function, and (2)
+        is_auto_generated. The function, points to the actual Python function
+        that implements the feature. Specifically, the function takes in two
         tuples (one from each input table) and returns a numeric value. The
         attribute is_auto_generated contains either True or False. The flag
         is True only if the feature is automatically generated by Magellan.
         This is important because this flag is used to make some assumptions
         about the semantics of the similarity function used and use that
         information for scaling purposes.
+
+    See Also:
+     :meth:`magellan.get_attr_corres`, :meth:`magellan.get_attr_types`,
+     :meth:`magellan.get_sim_funs_for_blocking`
+     :meth:`magellan.get_tokenizers_for_blocking`
 
     """
     # Validate input parameters
@@ -238,7 +246,7 @@ def get_features_for_blocking(ltable, rtable):
                                  tok_funcs, sim_funcs)
 
     # Export important variables to global name space
-    mg._block_t = tok_funcs
+    mg._match_t = tok_funcs
     mg._block_s = sim_funcs
     mg._atypes1 = attr_types_ltable
     mg._atypes2 = attr_types_rtable
@@ -254,41 +262,48 @@ def get_features_for_matching(ltable, rtable):
 
     Args:
         ltable,rtable (DataFrame): The pandas DataFrames for which the
-            features to be generated.
+            features are to be generated.
 
     Returns:
         A pandas DataFrame containing automatically generated features.
 
-        Further, this function also sets the following global varaibles:
-        _block_t,
-        _block_s,
-        _atypes1,
-        _atypes2,
-        _block_c.
+        Specifically, the DataFrame contains the following attributes:
+        'feature_name', 'left_attribute', 'right_attribute',
+        'left_attr_tokenizer', 'right_attr_tokenizer', 'simfunction',
+        'function', 'function_source', and 'is_auto_generated'.
 
-        The variable_block_t contains the tokenizers used and  _block_s
+
+        Further, this function also sets the following global variables:
+        _match_t, _match_s, _atypes1, _atypes2, and _match_c.
+
+        The variable _match_t contains the tokenizers used and  _match_s
         contains the similarity functions used for creating features.
 
-        The variables _atypes1, _atypes2 contain the attribute types for
-        ltable and rtable respectively. The variable _block_c contain the
-        attribute correspondence between the two input tables.
+        The variables _atypes1, and  _atypes2 contain the attribute types for
+        ltable and rtable respectively. The variable _match_c contains the
+        attribute correspondences between the two input tables.
 
     Raises:
-        AssertionError: If the input object (ltable) is not of type pandas
+        AssertionError: If the input (ltable) is not of type pandas
             DataFrame.
-        AssertionError: If the input object (rtable) is not of type pandas
+        AssertionError: If the input (rtable) is not of type pandas
             DataFrame.
     Note:
         In the output DataFrame, two
-        attributes demand some explanation: (1)function, and (2)
-        is_auto_generated. The function, points to the actual python function
-        that implements feature. Specifically, the function takes in two
+        attributes demand some explanation: (1) function, and (2)
+        is_auto_generated. The function, points to the actual Python function
+        that implements the feature. Specifically, the function takes in two
         tuples (one from each input table) and returns a numeric value. The
         attribute is_auto_generated contains either True or False. The flag
         is True only if the feature is automatically generated by Magellan.
         This is important because this flag is used to make some assumptions
         about the semantics of the similarity function used and use that
         information for scaling purposes.
+
+    See Also:
+     :meth:`magellan.get_attr_corres`, :meth:`magellan.get_attr_types`,
+     :meth:`magellan.get_sim_funs_for_matching`
+     :meth:`magellan.get_tokenizers_for_matching`
 
     """
     # Validate input parameters

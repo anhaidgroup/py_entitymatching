@@ -27,7 +27,7 @@ def get_tokenizers_for_blocking(q=[2, 3], dlm_char=[' ']):
         q (list): The list of integers (i.e q value) for which the q-gram
             tokenizer must be generated (defaults to [2, 3]).
         dlm_char (list): The list of characters (i.e delimiter character) for
-            which the delimiter tokenizer must be generated (defaults to [' ']).
+            which the delimiter tokenizer must be generated (defaults to [` ']).
 
     Returns:
         A Python dictionary with tokenizer name as the key and tokenizer
@@ -55,7 +55,7 @@ def get_tokenizers_for_matching(q=[2, 3], dlm_char=[' ']):
         q (list): The list of integers (i.e q value) for which the q-gram
             tokenizer must be generated (defaults to [2, 3]).
         dlm_char (list): The list of characters (i.e delimiter character) for
-            which the delimiter tokenizer must be generated (defaults to [' ']).
+            which the delimiter tokenizer must be generated (defaults to [` ']).
 
     Returns:
         A Python dictionary with tokenizer name as the key and tokenizer

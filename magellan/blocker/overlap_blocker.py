@@ -2,25 +2,19 @@
 import logging
 import re
 import string
-from collections import OrderedDict, Counter
 
 import pandas as pd
-import pyprind
-import six
-
-import magellan.catalog.catalog_manager as cm
-from magellan.blocker.blocker import Blocker
-
-from py_stringmatching.tokenizer.whitespace_tokenizer import WhitespaceTokenizer
-from py_stringmatching.tokenizer.qgram_tokenizer import QgramTokenizer
-
-from magellan.utils.catalog_helper import log_info, get_name_for_key, \
-    add_key_column
-
 import py_stringsimjoin as ssj
+import six
+from py_stringmatching.tokenizer.qgram_tokenizer import QgramTokenizer
+from py_stringmatching.tokenizer.whitespace_tokenizer import WhitespaceTokenizer
 from py_stringsimjoin.filter.overlap_filter import OverlapFilter
 from py_stringsimjoin.join.overlap_join import overlap_join
 
+import magellan.catalog.catalog_manager as cm
+from magellan.blocker.blocker import Blocker
+from magellan.utils.catalog_helper import log_info, get_name_for_key, \
+    add_key_column
 from magellan.utils.generic_helper import remove_non_ascii
 
 logger = logging.getLogger(__name__)
@@ -48,8 +42,9 @@ class OverlapBlocker(Blocker):
                      l_output_prefix='ltable_', r_output_prefix='rtable_',
                      allow_missing=False, verbose=False, show_progress=True,
                      n_jobs=1):
-        """Blocks two tables based on the overlap of token sets of attribute
-           values.
+        """
+        Blocks two tables based on the overlap of token sets of attribute
+         values.
 
         Finds tuple pairs from left and right tables such that the overlap
         between (a) the set of tokens obtained by tokenizing the value of
@@ -68,37 +63,31 @@ class OverlapBlocker(Blocker):
             r_overlap_attr (string): The overlap attribute in right table.
 
             rem_stop_words (boolean): A flag to indicate whether stop words
-                                      (e.g., a, an, the) should be removed
-                                      from the token sets of the overlap
-                                      attribute values (defaults to False).
+             (e.g., a, an, the) should be removed from the token sets of the
+             overlap attribute values (defaults to False).
 
-            q_val (int): The value of q to use if the overlap attributes values
-                         are to be tokenized as qgrams (defaults to None).
- 
+            q_val (int): The value of q to use if the overlap attributes
+             values are to be tokenized as qgrams (defaults to None).
+
             word_level (boolean): A flag to indicate whether the overlap
-                                  attributes should be tokenized as words
-                                  (i.e, using whitespace as delimiter)
-                                  (defaults to True).
+             attributes should be tokenized as words (i.e, using whitespace
+             as delimiter) (defaults to True).
 
-            overlap_size (int): The minimum number of tokens that must overlap
-                                (defaults to 1).
-
+            overlap_size (int): The minimum number of tokens that must
+             overlap (defaults to 1).
             l_output_attrs (list): A list of attribute names from the left
-                                   table to be included in the
-                                   output candidate set (defaults to None).
-
+                table to be included in the output candidate set (defaults
+                to None).
             r_output_attrs (list): A list of attribute names from the right
-                                   table to be included in the
-                                   output candidate set (defaults to None).
+                table to be included in the output candidate set  (defaults
+                to None).
 
             l_output_prefix (string): The prefix to be used for the attribute names
                                    coming from the left table in the output
                                    candidate set (defaults to 'ltable\_').
-
             r_output_prefix (string): The prefix to be used for the attribute names
                                    coming from the right table in the output
                                    candidate set (defaults to 'rtable\_').
-
             allow_missing (boolean): A flag to indicate whether tuple pairs
                                      with missing value in at least one of the
                                      blocking attributes should be included in
@@ -108,29 +97,82 @@ class OverlapBlocker(Blocker):
                                      blocking attribute will be matched with
                                      every tuple in rtable and vice versa.
 
-            verbose (boolean): A flag to indicate whether logging should be done
-                               (defaults to False).
+            verbose (boolean): A flag to indicate whether the debug
+                information should be logged (defaults to False).
 
             show_progress (boolean): A flag to indicate whether progress should
-                                     be displayed to the user (defaults to True).
-
-            n_jobs (int): The number of parallel jobs to be used for computation
-                (defaults to 1). If -1 all CPUs are used. If 0 or 1,
-                no parallel computation is used at all, which is useful for
-                debugging. For n_jobs below -1, (n_cpus + 1 + n_jobs) are
-                used (where n_cpus are the total number of CPUs in the
-                machine).Thus, for n_jobs = -2, all CPUs but one are used.
-                If (n_cpus + 1 + n_jobs) is less than 1, then no parallel
-                computation is used (i.e., equivalent to the default).
+                be displayed to the user (defaults to True).
 
         Returns:
             A candidate set of tuple pairs that survived blocking (DataFrame).
+        Raises:
+            AssertionError: If the input `ltable` is not of type pandas
+                DataFrame.
+
+            AssertionError: If the input `rtable` is not of type pandas
+                DataFrame.
+
+            AssertionError: If the input `l_overlap_attr` is not of type string.
+
+            AssertionError: If the input `r_overlap_attr` is not of type string.
+
+            AssertionError: If the input `l_output_attrs` is not of type of
+             list.
+
+            AssertionError: If the input `r_output_attrs` is not of type of
+             list.
+
+            AssertionError: If the values in `l_output_attrs` is not of type
+             string.
+
+            AssertionError: If the values in `r_output_attrs` is not of type
+             string.
+
+            AssertionError: If the input `l_output_prefix` is not of type
+             string.
+
+            AssertionError: If the input `r_output_prefix` is not of type
+             string.
+
+            AssertionError: If the input `q_val` is not of type int.
+
+            AssertionError: If the input `word_level` is not of type boolean.
+
+            AssertionError: If the input `overlap_size` is not of type int.
+
+            AssertionError: If the input `verbose` is not of type
+             boolean.
+
+            AssertionError: If the input `allow_missing` is not of type boolean.
+
+            AssertionError: If the input `show_progress` is not of type
+             boolean.
+
+            AssertionError: If the input `n_jobs` is not of type
+             int.
+
+            AssertionError: If the `l_overlap_attr` is not in the ltable
+             columns.
+
+            AssertionError: If the `r_block_attr` is not in the rtable columns.
+
+            AssertionError: If the `l_output_attrs` are not in the ltable.
+
+            AssertionError: If the `r_output_attrs` are not in the rtable.
+
+            SyntaxError: If the `q_val` is set to a valid value and
+                `word_level` is set to True.
+
+            SyntaxError: If the `q_val` is set to None and
+                `word_level` is set to False.
+
         """
 
         # validate data types of standard input parameters
         self.validate_types_params_tables(ltable, rtable,
-			    l_output_attrs, r_output_attrs, l_output_prefix,
-			    r_output_prefix, verbose, n_jobs)
+                                          l_output_attrs, r_output_attrs,
+                                          l_output_prefix,
+                                          r_output_prefix, verbose, n_jobs)
 
         # validate data types of input parameters specific to overlap blocker
         self.validate_types_other_params(l_overlap_attr, r_overlap_attr,
@@ -139,10 +181,10 @@ class OverlapBlocker(Blocker):
 
         # validate data type of allow_missing
         self.validate_allow_missing(allow_missing)
- 
+
         # validate data type of show_progress
         self.validate_show_progress(show_progress)
- 
+
         # validate overlap attributes
         self.validate_overlap_attrs(ltable, rtable, l_overlap_attr,
                                     r_overlap_attr)
@@ -159,24 +201,28 @@ class OverlapBlocker(Blocker):
                                                      verbose)
 
         # # validate metadata
-        cm._validate_metadata_for_table(ltable, l_key, 'ltable', logger, verbose)
-        cm._validate_metadata_for_table(rtable, r_key, 'rtable', logger, verbose)
+        cm._validate_metadata_for_table(ltable, l_key, 'ltable', logger,
+                                        verbose)
+        cm._validate_metadata_for_table(rtable, r_key, 'rtable', logger,
+                                        verbose)
 
         # validate word_level and q_val
-        self.validate_word_level_qval(word_level, q_val)  
+        self.validate_word_level_qval(word_level, q_val)
 
         # do blocking
 
         # # do projection before merge
-        l_proj_attrs = self.get_attrs_to_project(l_key, l_overlap_attr, l_output_attrs)
+        l_proj_attrs = self.get_attrs_to_project(l_key, l_overlap_attr,
+                                                 l_output_attrs)
         l_df = ltable[l_proj_attrs]
-        r_proj_attrs = self.get_attrs_to_project(r_key, r_overlap_attr, r_output_attrs)
+        r_proj_attrs = self.get_attrs_to_project(r_key, r_overlap_attr,
+                                                 r_output_attrs)
         r_df = rtable[r_proj_attrs]
 
         # # case the column to string if required.
-        l_df.is_copy, r_df.is_copy  = False, False # to avoid setwithcopy warning 
-        ssj.dataframe_column_to_str(l_df, l_overlap_attr, inplace=True) 
-        ssj.dataframe_column_to_str(r_df, r_overlap_attr, inplace=True) 
+        l_df.is_copy, r_df.is_copy = False, False  # to avoid setwithcopy warning
+        ssj.dataframe_column_to_str(l_df, l_overlap_attr, inplace=True)
+        ssj.dataframe_column_to_str(r_df, r_overlap_attr, inplace=True)
 
         # # cleanup the tables from non-ascii characters, punctuations, and stop words
         if not l_df.empty:
@@ -200,7 +246,8 @@ class OverlapBlocker(Blocker):
                                show_progress)
 
         # # retain only the required attributes in the output candidate set 
-        retain_cols = self.get_attrs_to_retain(l_key, r_key, l_output_attrs, r_output_attrs,
+        retain_cols = self.get_attrs_to_retain(l_key, r_key, l_output_attrs,
+                                               r_output_attrs,
                                                l_output_prefix, r_output_prefix)
         candset = candset[retain_cols]
 
@@ -259,8 +306,8 @@ class OverlapBlocker(Blocker):
                                      blocking attribute will be retained in the
                                      output candidate set.
 
-            verbose (boolean): A flag to indicate whether logging should be done
-                               (defaults to False).
+            verbose (boolean): A flag to indicate whether the debug information 
+                should be logged (defaults to False).
 
             show_progress (boolean): A flag to indicate whether progress should
                                      be displayed to the user (defaults to True).
@@ -276,10 +323,34 @@ class OverlapBlocker(Blocker):
 
         Returns:
             A candidate set of tuple pairs that survived blocking (DataFrame).
+
+        Raises:
+            AssertionError: If the input `candset` is not of type pandas
+                DataFrame.
+            AssertionError: If the input `l_overlap_attr` is not of type string.
+            AssertionError: If the input `r_rtable_attr` is not of type string.
+            AssertionError: If the input `q_val` is not of type int.
+            AssertionError: If the input `word_level` is not of type boolean.
+            AssertionError: If the input `overlap_size` is not of type int.
+            AssertionError: If the input `verbose` is not of type
+                boolean.
+            AssertionError: If the input `allow_missing` is not of type boolean.
+            AssertionError: If the input `show_progress` is not of type
+                boolean.
+            AssertionError: If the input `n_jobs` is not of type
+                int.
+            AssertionError: If the `l_overlap_attr` is not in the ltable
+                columns.
+            AssertionError: If the `r_block_attr` is not in the rtable columns.
+            SyntaxError: If the `q_val` is set to a valid value and
+                `word_level` is set to True.
+            SyntaxError: If the `q_val` is set to None and
+                `word_level` is set to False.
         """
 
         # validate data types of standard input parameters
-        self.validate_types_params_candset(candset, verbose, show_progress, n_jobs)
+        self.validate_types_params_candset(candset, verbose, show_progress,
+                                           n_jobs)
 
         # validate data types of input parameters specific to overlap blocker
         self.validate_types_other_params(l_overlap_attr, r_overlap_attr,
@@ -305,7 +376,7 @@ class OverlapBlocker(Blocker):
                                     r_overlap_attr)
 
         # validate word_level and q_val
-        self.validate_word_level_qval(word_level, q_val)  
+        self.validate_word_level_qval(word_level, q_val)
 
         # do blocking
 
@@ -314,9 +385,9 @@ class OverlapBlocker(Blocker):
         r_df = rtable[[r_key, r_overlap_attr]]
 
         # # case the overlap attribute to string if required.
-        l_df.is_copy, r_df.is_copy  = False, False # to avoid setwithcopy warning 
-        ssj.dataframe_column_to_str(l_df, l_overlap_attr, inplace=True) 
-        ssj.dataframe_column_to_str(r_df, r_overlap_attr, inplace=True) 
+        l_df.is_copy, r_df.is_copy = False, False  # to avoid setwithcopy warning
+        ssj.dataframe_column_to_str(l_df, l_overlap_attr, inplace=True)
+        ssj.dataframe_column_to_str(r_df, r_overlap_attr, inplace=True)
 
         # # cleanup the tables from non-ascii characters, punctuations, and stop words
         self.cleanup_table(l_df, l_overlap_attr, rem_stop_words)
@@ -329,7 +400,7 @@ class OverlapBlocker(Blocker):
         else:
             # # # create a qgram tokenizer
             tokenizer = QgramTokenizer(qval=q_val, return_set=True)
-       
+
         # # create a filter for overlap similarity join
         overlap_filter = OverlapFilter(tokenizer, overlap_size,
                                        allow_missing=allow_missing)
@@ -337,10 +408,12 @@ class OverlapBlocker(Blocker):
         # # perform overlap similarity filtering of the candset
         out_table = overlap_filter.filter_candset(candset, fk_ltable, fk_rtable,
                                                   l_df, r_df, l_key, r_key,
-                                                  l_overlap_attr, r_overlap_attr,
+                                                  l_overlap_attr,
+                                                  r_overlap_attr,
                                                   n_jobs)
         # update catalog
-        cm.set_candset_properties(out_table, key, fk_ltable, fk_rtable, ltable, rtable)
+        cm.set_candset_properties(out_table, key, fk_ltable, fk_rtable, ltable,
+                                  rtable)
 
         # return candidate set
         return out_table
@@ -388,14 +461,14 @@ class OverlapBlocker(Blocker):
         Returns:
             A status indicating if the tuple pair is blocked (boolean).
         """
-        
+
         # validate data types of input parameters specific to overlap blocker
         self.validate_types_other_params(l_overlap_attr, r_overlap_attr,
                                          rem_stop_words, q_val,
                                          word_level, overlap_size)
- 
+
         # validate word_level and q_val
-        self.validate_word_level_qval(word_level, q_val)  
+        self.validate_word_level_qval(word_level, q_val)
 
         # determine which tokenizer to use
         if word_level == True:
@@ -414,7 +487,6 @@ class OverlapBlocker(Blocker):
                                        allow_missing=allow_missing)
 
         return overlap_filter.filter_pair(l_val, r_val)
-        
 
     # helper functions
 
@@ -423,11 +495,15 @@ class OverlapBlocker(Blocker):
                                     rem_stop_words, q_val,
                                     word_level, overlap_size):
         if not isinstance(l_overlap_attr, six.string_types):
-            logger.error('Overlap attribute name of left table is not of type string')
-            raise AssertionError('Overlap attribute name of left table is not of type string')
+            logger.error(
+                'Overlap attribute name of left table is not of type string')
+            raise AssertionError(
+                'Overlap attribute name of left table is not of type string')
         if not isinstance(r_overlap_attr, six.string_types):
-            logger.error('Overlap attribute name of right table is not of type string')
-            raise AssertionError('Overlap attribute name of right table is not of type string')
+            logger.error(
+                'Overlap attribute name of right table is not of type string')
+            raise AssertionError(
+                'Overlap attribute name of right table is not of type string')
         if not isinstance(rem_stop_words, bool):
             logger.error('Parameter rem_stop_words is not of type bool')
             raise AssertionError('Parameter rem_stop_words is not of type bool')
@@ -442,7 +518,8 @@ class OverlapBlocker(Blocker):
             raise AssertionError('Parameter overlap_size is not of type int')
 
     # validate the overlap attrs
-    def validate_overlap_attrs(self, ltable, rtable, l_overlap_attr, r_overlap_attr):
+    def validate_overlap_attrs(self, ltable, rtable, l_overlap_attr,
+                               r_overlap_attr):
         if not isinstance(l_overlap_attr, list):
             l_overlap_attr = [l_overlap_attr]
         assert set(l_overlap_attr).issubset(
@@ -456,15 +533,17 @@ class OverlapBlocker(Blocker):
     # validate word_level and q_val
     def validate_word_level_qval(self, word_level, q_val):
         if word_level == True and q_val != None:
-            raise SyntaxError('Parameters word_level and q_val cannot be set together; Note that word_level is '
-                              'set to True by default, so explicity set word_level=false to use qgram with the '
-                              'specified q_val')
+            raise SyntaxError(
+                'Parameters word_level and q_val cannot be set together; Note that word_level is '
+                'set to True by default, so explicity set word_level=false to use qgram with the '
+                'specified q_val')
 
         if word_level == False and q_val == None:
-            raise SyntaxError('Parameters word_level and q_val cannot be unset together; Note that q_val is '
-                              'set to None by default, so if you want to use qgram then '
-                              'explictiy set word_level=False and specify the q_val')
-    
+            raise SyntaxError(
+                'Parameters word_level and q_val cannot be unset together; Note that q_val is '
+                'set to None by default, so if you want to use qgram then '
+                'explictiy set word_level=False and specify the q_val')
+
     # cleanup a table from non-ascii characters, punctuations and stop words
     def cleanup_table(self, table, overlap_attr, rem_stop_words):
 
@@ -476,18 +555,18 @@ class OverlapBlocker(Blocker):
             if pd.isnull(val):
                 values.append(val)
             else:
-               # remove non-ascii chars
-               val_no_non_ascii = remove_non_ascii(val)
-               # remove punctuations
-               val_no_punctuations = self.rem_punctuations(val_no_non_ascii)
-               # chop the attribute values and convert into a set
-               val_chopped = list(set(val_no_punctuations.split()))
-               # remove stop words
-               val_chopped_no_stopwords = self.rem_stopwords(val_chopped)
-               val_joined = ' '.join(val_chopped_no_stopwords)
-               values.append(val_joined)
+                # remove non-ascii chars
+                val_no_non_ascii = remove_non_ascii(val)
+                # remove punctuations
+                val_no_punctuations = self.rem_punctuations(val_no_non_ascii)
+                # chop the attribute values and convert into a set
+                val_chopped = list(set(val_no_punctuations.split()))
+                # remove stop words
+                val_chopped_no_stopwords = self.rem_stopwords(val_chopped)
+                val_joined = ' '.join(val_chopped_no_stopwords)
+                values.append(val_joined)
 
-        table.is_copy = False 
+        table.is_copy = False
         table[overlap_attr] = values
 
     # cleanup a tuple from non-ascii characters, punctuations and stop words

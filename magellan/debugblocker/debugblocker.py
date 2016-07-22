@@ -28,7 +28,7 @@ def debug_blocker(candset, ltable, rtable, output_size=200,
         ltable,rtable (DataFrame): The input DataFrames that are used to
             generate the blocker output.
         output_size (int): The number of tuple pairs that will be
-            returned. The default value is 200.
+            returned (defaults to 200).
         attr_corres (list): A list of attribute correspondence tuples.
             When ltable and rtable have different schemas, or the same
             schema but different words describing the attributes, the
@@ -40,10 +40,9 @@ def debug_blocker(candset, ltable, rtable, output_size=200,
             attribute correspondence list will be called. But we highly
             recommend the users manually specify the attribute
             correspondences, unless the schemas of ltable and rtable are
-            identical.
-        verbose (boolean): A flag to indicate whether more detailed
-            information about the execution steps should be printed
-            out. The default value is False.
+            identical (defaults to None).
+        verbose (boolean):  A flag to indicate whether the debug information
+         should be logged (defaults to False).
 
     Returns:
         A pandas DataFrame with 'output_size' number of rows. Each row in the

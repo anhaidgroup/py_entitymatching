@@ -63,20 +63,51 @@ class AttrEquivalenceBlocker(Blocker):
                                      blocking attribute will be matched with
                                      every tuple in rtable and vice versa.
 
-            verbose (boolean): A flag to indicate whether logging should be done
-                               (defaults to False).
+            verbose (boolean): A flag to indicate whether the debug information
+                should be logged (defaults to False).
+
 
             n_jobs (int): The number of parallel jobs to be used for computation
                 (defaults to 1). If -1 all CPUs are used. If 0 or 1,
                 no parallel computation is used at all, which is useful for
                 debugging. For n_jobs below -1, (n_cpus + 1 + n_jobs) are
-                used (where n_cpus are the total number of CPUs in the
-                machine).Thus, for n_jobs = -2, all CPUs but one are used.
+                used (where n_cpus is the total number of CPUs in the
+                machine). Thus, for n_jobs = -2, all CPUs but one are used.
                 If (n_cpus + 1 + n_jobs) is less than 1, then no parallel
                 computation is used (i.e., equivalent to the default).
 
         Returns:
             A candidate set of tuple pairs that survived blocking (DataFrame).
+
+        Raises:
+            AssertionError: If the input `ltable` is not of type pandas
+                DataFrame.
+            AssertionError: If the input `rtable` is not of type pandas
+                DataFrame.
+            AssertionError: If the input `l_block_attr` is not of type string.
+            AssertionError: If the input `r_block_attr` is not of type string.
+            AssertionError: If the input `l_output_attrs` is not of type of
+                list.
+            AssertionError: If the input `r_output_attrs` is not of type of
+                list.
+            AssertionError: If the values in `l_output_attrs` is not of type
+                string.
+            AssertionError: If the values in `r_output_attrs` is not of type
+                string.
+            AssertionError: If the input `l_output_prefix` is not of type
+                string.
+            AssertionError: If the input `r_output_prefix` is not of type
+                string.
+            AssertionError: If the input `verbose` is not of type
+                boolean.
+            AssertionError: If the input `allow_missing` is not of type boolean.
+            AssertionError: If the input `n_jobs` is not of type
+                int.
+            AssertionError: If the `l_block_attr` is not in the ltable columns.
+            AssertionError: If the `r_block_attr` is not in the rtable columns.
+            AssertionError: If the `l_out_attrs` are not in the ltable.
+            AssertionError: If the `r_out_attrs` are not in the rtable.
+
         """
 
         # validate data types of input parameters
@@ -197,8 +228,8 @@ class AttrEquivalenceBlocker(Blocker):
                                      blocking attribute will be retained in the
                                      output candidate set.
 
-            verbose (boolean): A flag to indicate whether logging should be done
-                               (defaults to False).
+            verbose (boolean): A flag to indicate whether the debug
+                information should be logged (defaults to False).
 
             show_progress (boolean): A flag to indicate whether progress should
                                      be displayed to the user (defaults to True).
@@ -207,13 +238,25 @@ class AttrEquivalenceBlocker(Blocker):
                 (defaults to 1). If -1 all CPUs are used. If 0 or 1,
                 no parallel computation is used at all, which is useful for
                 debugging. For n_jobs below -1, (n_cpus + 1 + n_jobs) are
-                used (where n_cpus are the total number of CPUs in the
-                machine).Thus, for n_jobs = -2, all CPUs but one are used.
+                used (where n_cpus is the total number of CPUs in the
+                machine). Thus, for n_jobs = -2, all CPUs but one are used.
                 If (n_cpus + 1 + n_jobs) is less than 1, then no parallel
                 computation is used (i.e., equivalent to the default).
 
         Returns:
             A candidate set of tuple pairs that survived blocking (DataFrame).
+
+        Raises:
+            AssertionError: If the input `candset` is not of type pandas
+                DataFrame.
+            AssertionError: If the input `l_block_attr` is not of type string.
+            AssertionError: If the input `r_block_attr` is not of type string.
+            AssertionError: If the input `verbose` is not of type
+                boolean.
+            AssertionError: If the input `n_jobs` is not of type
+                int.
+            AssertionError: If the `l_block_attr` is not in the ltable columns.
+            AssertionError: If the `r_block_attr` is not in the rtable columns.
         """
 
         # validate data types of input parameters

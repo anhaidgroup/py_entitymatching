@@ -19,23 +19,25 @@ def get_attr_types(data_frame):
 
     The types roughly capture whether the attribute is of type string,
     boolean or numeric. Further, with in the string type the subtypes are
-    capture the average number of tokens in the column values.
+    capture the average number of tokens in the column values. For example,
+    str_bt_1w_5w means the average number of tokens in that column is
+    greater than one word but less than 5 words.
 
     Args:
         data_frame (DataFrame): The input DataFrame for which types of
-         attributes (types of columns) must be determined.
+         attributes must be determined.
 
     Returns:
         A Python dictionary is returned containing the attribute types.
 
-        Specifically, in the dictionary a key is an attribute name, a value
+        Specifically, in the dictionary key is an attribute name, value
         is the type of that attribute.
 
         Further, the dictionary will have a  key _table, and the value of
         that should be a pointer to the input DataFrame.
 
     Raises:
-        AssertionError: If the input object (data_frame) is not of type
+        AssertionError: If the input data_frame is not of type
             pandas DataFrame.
 
     """
@@ -60,70 +62,71 @@ def get_attr_types(data_frame):
     return attribute_type_dict
 
 
-def get_attr_corres(table_a, table_b):
+def get_attr_corres(ltable, rtable):
     """
     This function gets the attribute correspondences between the attributes
-    of table_a and table_b.
+    of ltable and rtable.
 
     The user may need to get the correspondences so
     that he/she can generate features based those correspondences.
 
     Args:
-        table_a,table_b (DataFrame): Input DataFrames for which
+        ltable,rtable (DataFrame): Input DataFrames for which
             the attribute correspondences must be obtained.
 
     Returns:
         A Python dictionary is returned containing the attribute
         correspondences.
 
-        Specifically, this returns a dictionary with three keys:
+        Specifically, this returns a dictionary with the following key-value
+        pairs:
 
         corres: points to the list correspondences as tuples. Each
-        correspondence is a tuple with two attributes: one from table_a
-        and the other from table_b.
+        correspondence is a tuple with two attributes: one from ltable
+        and the other from rtable.
 
-        ltable: points to table_a.
+        ltable: points to ltable.
 
-        rtable: points to table_b.
+        rtable: points to rtable.
 
         Currently, 'corres' contains only pairs of attributes with exact
-        names in table_a and table_b.
+        names in ltable and rtable.
 
     Raises:
-        AssertionError: If the input object (table_a) is not of type
+        AssertionError: If the input ltable is not of type
             pandas DataFrame.
-        AssertionError: If the input object (table_b) is not of type
+        AssertionError: If the input rtable is not of type
             pandas DataFrame.
     """
     # Validate input parameters
-    # # We expect the input object (table_a) to be of type pandas
+    # # We expect the input object (ltable) to be of type pandas
     # DataFrame
-    if not isinstance(table_a, pd.DataFrame):
-        logger.error('Input table_a is not of type pandas DataFrame')
-        raise AssertionError('Input table_b is not of type pandas '
+    if not isinstance(ltable, pd.DataFrame):
+        logger.error('Input ltable is not of type pandas DataFrame')
+        raise AssertionError('Input rtable is not of type pandas '
                              'DataFrame')
-    # # We expect the input object (table_b) to be of type pandas
+    # # We expect the input object (rtable) to be of type pandas
     # DataFrame
-    if not isinstance(table_b, pd.DataFrame):
-        logger.error('Input table_b is not of type pandas DataFrame')
-        raise AssertionError('Input table_b is not of type pandas '
+    if not isinstance(rtable, pd.DataFrame):
+        logger.error('Input rtable is not of type pandas DataFrame')
+        raise AssertionError('Input rtable is not of type pandas '
                              'DataFrame')
 
     # Initialize the correspondence list
     correspondence_list = []
-    # Check for each column in table_a, if column exists in table_b,
+    # Check for each column in ltable, if column exists in rtable,
     # If so, add it to the correspondence list.
     # Note: This may not be the fastest way to implement this. We could
     # refactor this later.
-    for column in table_a.columns:
-        if column in table_b.columns:
+    for column in ltable.columns:
+        if column in rtable.columns:
             correspondence_list.append((column, column))
     # Initialize a correspondence dictionary.
     correspondence_dict = dict()
     # Fill the corres, ltable and rtable.
     correspondence_dict['corres'] = correspondence_list
-    correspondence_dict['ltable'] = table_a
-    correspondence_dict['rtable'] = table_b
+    correspondence_dict['ltable'] = ltable
+    correspondence_dict['rtable'] = rtable
     # Finally, return the correspondence dictionary
     return correspondence_dict
 

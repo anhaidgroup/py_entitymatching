@@ -13,9 +13,9 @@ class NBMatcher(MLMatcher):
 
     Args:
         *args,**kwargs: The arguments to scikit-learn's Naive Bayes
-         classifier.
+             classifier.
 
-        name (str): The name of this matcher (defaults to None). If the
+        name (string): The name of this matcher (defaults to None). If the
             matcher name is None, the class automatically generates a string
             and assigns it as the name.
 

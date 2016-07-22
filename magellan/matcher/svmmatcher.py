@@ -13,10 +13,10 @@ class SVMMatcher(MLMatcher):
 
     Args:
         *args,**kwargs: The arguments to scikit-learn's SVM
-         classifier.
-        name (str): The name of this matcher (defaults to None). If the
-            matcher name is None, the class automatically generates a string
-            and assigns it as the name.
+            classifier.
+        name (string): The name of this matcher (defaults to None). If the
+             matcher name is None, the class automatically generates a string
+             and assigns it as the name.
 
 
     """
