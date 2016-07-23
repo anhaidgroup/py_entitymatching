@@ -54,15 +54,15 @@ def debug_blocker(candset, ltable, rtable, output_size=200,
         tuple pairs.
 
     Raises:
-        AssertionError: If ltable, rtable or candset is not of type
+        AssertionError: If `ltable`, `rtable` or `candset` is not of type
             pandas DataFrame.
-        AssertionError: If ltable or rtable is empty (size of 0).
-        AssertionError: If the output size parameter is less than or equal
+        AssertionError: If `ltable` or `rtable` is empty (size of 0).
+        AssertionError: If the output `size` parameter is less than or equal
             to 0.
-        AssertionError: If the attribute correspondence list is not in the
-            correct format (a list of tuples).
-        AssertionError: If the attribute correspondence cannot be built
-            correctly.
+        AssertionError: If the attribute correspondence (`attr_corres`) list is
+            not in the correct format (a list of tuples).
+        AssertionError: If the attribute correspondence (`attr_corres`)
+            cannot be built correctly.
     """
     # Check input types.
     _validate_types(ltable, rtable, candset, output_size,

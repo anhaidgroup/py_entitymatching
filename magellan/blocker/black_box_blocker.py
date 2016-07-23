@@ -85,31 +85,31 @@ class BlackBoxBlocker(Blocker):
         Returns:
             A candidate set of tuple pairs that survived blocking (DataFrame).
         Raises:
-            AssertionError: If the input `ltable` is not of type pandas
+            AssertionError: If `ltable` is not of type pandas
                 DataFrame.
-            AssertionError: If the input `rtable` is not of type pandas
+            AssertionError: If `rtable` is not of type pandas
                 DataFrame.
-            AssertionError: If the input `l_output_attrs` is not of type of
+            AssertionError: If `l_output_attrs` is not of type of
                 list.
-            AssertionError: If the input `r_output_attrs` is not of type of
+            AssertionError: If `r_output_attrs` is not of type of
                 list.
-            AssertionError: If the values in `l_output_attrs` is not of type
+            AssertionError: If values in `l_output_attrs` is not of type
                 string.
-            AssertionError: If the values in `r_output_attrs` is not of type
+            AssertionError: If values in `r_output_attrs` is not of type
                 string.
-            AssertionError: If the input `l_output_prefix` is not of type
+            AssertionError: If `l_output_prefix` is not of type
                 string.
-            AssertionError: If the input `r_output_prefix` is not of type
+            AssertionError: If `r_output_prefix` is not of type
                 string.
-            AssertionError: If the input `verbose` is not of type
+            AssertionError: If `verbose` is not of type
                 boolean.
 
-            AssertionError: If the input `show_progress` is not of type boolean.
+            AssertionError: If `show_progress` is not of type boolean.
 
-            AssertionError: If the input `n_jobs` is not of type
+            AssertionError: If `n_jobs` is not of type
                 int.
-            AssertionError: If the `l_out_attrs` are not in the ltable.
-            AssertionError: If the `r_out_attrs` are not in the rtable.
+            AssertionError: If `l_out_attrs` are not in the ltable.
+            AssertionError: If `r_out_attrs` are not in the rtable.
         """
 
         # validate data types of standard input parameters
@@ -229,15 +229,15 @@ class BlackBoxBlocker(Blocker):
             A candidate set of tuple pairs that survived blocking (DataFrame).
 
         Raises:
-            AssertionError: If the input `candset` is not of type pandas
+            AssertionError: If `candset` is not of type pandas
                 DataFrame.
-            AssertionError: If the input `verbose` is not of type
+            AssertionError: If `verbose` is not of type
                 boolean.
-            AssertionError: If the input `n_jobs` is not of type
+            AssertionError: If `n_jobs` is not of type
                 int.
-            AssertionError: If the input `show_progress` is not of type boolean.
-            AssertionError: If the `l_block_attr` is not in the ltable columns.
-            AssertionError: If the `r_block_attr` is not in the rtable columns.
+            AssertionError: If `show_progress` is not of type boolean.
+            AssertionError: If `l_block_attr` is not in the ltable columns.
+            AssertionError: If `r_block_attr` is not in the rtable columns.
 
 
         """

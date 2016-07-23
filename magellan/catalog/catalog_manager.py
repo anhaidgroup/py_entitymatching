@@ -29,10 +29,11 @@ def get_property(data_frame, property_name):
         on the property name) is returned.
 
     Raises:
-        AssertionError: If the object is not of type pandas DataFrame.
-        AssertionError: If the property name is not of type string.
-        KeyError: If the DataFrame information is not present in the catalog.
-        KeyError: If the requested property for the DataFrame is not present
+        AssertionError: If `data_frame` is not of type pandas
+         DataFrame.
+        AssertionError: If `property_name` is not of type string.
+        KeyError: If `data_frame` information is not present in the catalog.
+        KeyError: If requested property for the `data_frame` is not present
             in the catalog.
     """
     # Validate input parameters
@@ -87,8 +88,9 @@ def set_property(data_frame, property_name, property_value):
         A Boolean value of True is returned if the update was successful.
 
     Raises:
-        AssertionError: If the input object is not of type pandas DataFrame.
-        AssertionError: If the property name is not of type string.
+        AssertionError: If `data_frame` is not of type pandas
+         DataFrame.
+        AssertionError: If `property_name` is not of type string.
 
     Note:
         If the input DataFrame is not present in the catalog, this function
@@ -206,10 +208,10 @@ def del_property(data_frame, property_name):
         A Boolean value of True is returned if the deletion was successful.
 
     Raises:
-        AssertionError: If the object is not of type pandas DataFrame.
-        AssertionError: If the property name is not of type string.
-        KeyError: If the DataFrame information is not present in the catalog.
-        KeyError: If the requested property for the DataFrame is not present
+        AssertionError: If `data_frame` is not of type pandas DataFrame.
+        AssertionError: If `property_name` is not of type string.
+        KeyError: If `data_frame` information is not present in the catalog.
+        KeyError: If requested property for the DataFrame is not present
             in the catalog.
     """
     # Validate input parameters
@@ -260,7 +262,7 @@ def del_all_properties(data_frame):
         from the catalog.
 
     Raises:
-        AssertionError: If the input object is not of type pandas DataFrame.
+        AssertionError: If the `data_frame` is not of type pandas DataFrame.
         KeyError: If the DataFrame information is not present in the catalog.
 
     Note:
@@ -351,7 +353,8 @@ def is_dfinfo_present(data_frame):
         the catalog, else False is returned.
 
     Raises:
-        AssertionError: If the input object is not of type pandas DataFrame.
+        AssertionError: If `data_frame` is not of type pandas
+         DataFrame.
 
     """
     # Validate inputs
@@ -385,9 +388,10 @@ def is_property_present_for_df(data_frame, property_name):
         the given DataFrame.
 
     Raises:
-        AssertionError: If the input object is not of type pandas DataFrame.
-        AssertionError: If the input property name is not of type string.
-        KeyError: If the input DataFrame is not present in the catalog.
+        AssertionError: If `data_frame` is not of type pandas
+         DataFrame.
+        AssertionError: If `property_name` is not of type string.
+        KeyError: If `data_frame` is not present in the catalog.
     """
     # Input validations
 
@@ -531,11 +535,11 @@ def copy_properties(source_data_frame, target_data_frame, replace=True):
         A Boolean value of True is returned if the copying was successful.
 
     Raises:
-        AssertionError: If the input object (source_data_frame) is not of
+        AssertionError: If `source_data_frame` is not of
             type pandas DataFrame.
-        AssertionError: If the input object (target_data_frame) is not of
+        AssertionError: If `target_data_frame` is not of
             type pandas DataFrame.
-        KeyError: If the source DataFrame  is not present in the
+        KeyError: If source DataFrame is not present in the
             catalog.
 
 
@@ -594,8 +598,9 @@ def get_key(data_frame):
     Returns:
         A string value containing the key column name is returned (if present).
 
-    Note:
-        This function internally calls get_property function.
+    See Also:
+        :meth:`~magellan.get_property`
+
     """
     # This function is just a sugar to get the 'key' property for a DataFrame
     return get_property(data_frame, 'key')
@@ -625,13 +630,14 @@ def set_key(data_frame, key_attribute):
         satisfies the conditions for a key and the update was successful.
 
     Raises:
-        AssertionError: If the input object (data_frame) is not of type
+        AssertionError: If `data_frame` is not of type
             pandas DataFrame.
-        AssertionError: If the input key_attribute is not of type string.
-        KeyError: If the given key attribute is not in the DataFrame columns.
+        AssertionError: If `key_attribute` is not of type string.
+        KeyError: If given `key_attribute` is not in the DataFrame columns.
 
-    Note:
-        This function internally calls set_property function.
+    See Also:
+        :meth:`~magellan.set_property`
+
 
     """
     # Validate input parameters
@@ -676,9 +682,9 @@ def get_fk_ltable(data_frame):
     catalog.
 
     Specifically this function is a sugar function that will get the foreign
-    key to left table using underlying get_property function. This function
-    is typically called on a DataFrame which contains metadata such as
-    fk_ltable, fk_rtable, ltable, rtable.
+    key to left table using underlying :meth:`~magellan.get_property` function.
+    This function is typically called on a DataFrame which contains metadata
+    such as fk_ltable, fk_rtable, ltable, rtable.
 
 
     Args:
@@ -688,8 +694,8 @@ def get_fk_ltable(data_frame):
     Returns:
         A Python object, typically a string is returned.
 
-    Note:
-        This function internally calls get_property function.
+    See Also:
+        :meth:`~magellan.get_property`
 
     """
     # Call the get_property function and relay the result.
@@ -701,8 +707,8 @@ def get_fk_rtable(data_frame):
     Gets the foreign key to right table for a DataFrame from the catalog.
 
     Specifically this function is a sugar function that will get the foreign
-    key to right table using get_property function. This function
-    is typically called on a DataFrame which contains metadata such as
+    key to right table using :meth:`magellan.get_property` function. This
+    function is typically called on a DataFrame which contains metadata such as
     fk_ltable, fk_rtable, ltable, rtable.
 
     Args:
@@ -712,9 +718,8 @@ def get_fk_rtable(data_frame):
     Returns:
         A Python object, (typically a string) is returned.
 
-    Note:
-        This function internally calls get_property function.
-
+    See Also:
+        :meth:`~magellan.get_property`
     """
     # Call the get_property function and relay the result.
     return get_property(data_frame, 'fk_rtable')
@@ -725,8 +730,8 @@ def set_fk_ltable(data_frame, fk_ltable):
     Sets the foreign key to ltable for a DataFrame in the catalog.
 
     Specifically this function is a sugar function that will set the foreign
-    key to the left table using set_property function. This function
-    is typically called on a DataFrame which contains metadata such as
+    key to the left table using :meth:`magellan.set_property` function. This
+    function is typically called on a DataFrame which contains metadata such as
     fk_ltable, fk_rtable, ltable, rtable.
 
     Args:
@@ -740,14 +745,15 @@ def set_fk_ltable(data_frame, fk_ltable):
         set successfully.
 
     Raises:
-        AssertionError: If the input object (data_frame) is not of type
+        AssertionError: If `data_frame` is not of type
             pandas DataFrame.
-        AssertionError: If the input attribute (fk_ltable) is not of type
+        AssertionError: If `fk_ltable` is not of type
             string.
-        AssertionError: If the attribute (fk_ltable) is not in the input
+        AssertionError: If `fk_ltable` is not in the input
             DataFrame.
-    Note:
-        This function internally calls set_property function.
+
+    See Also:
+        :meth:`~magellan.set_property`
 
     """
     # Validate the input parameters
@@ -899,12 +905,15 @@ def set_fk_rtable(data_frame, foreign_key_rtable):
             set successfully.
 
     Raises:
-        AssertionError: If the input object (data_frame) is not of type
+        AssertionError: If `data_frame` is not of type
           pandas DataFrame.
-        AssertionError: If the input attribute (foreign_key_rtable) is not of
+        AssertionError: If `foreign_key_rtable` is not of
             type string.
-        AssertionError: If the attribute (fk_ltable) is not in the input
+        AssertionError: If `fk_rtable` is not in the input
             DataFrame.
+
+    See Also:
+        :meth:`~magellan.set_property`
 
     """
     # Validate the input parameters
@@ -971,7 +980,7 @@ def show_properties_for_id(object_id):
 
     Args:
         object_id (int): The Python identifier of an object (typically a
-        pandas DataFrame).
+         pandas DataFrame).
 
     """
     catalog = Catalog.Instance()
@@ -1211,8 +1220,9 @@ def get_ltable(candset):
     Returns:
         A pandas DataFrame that is pointed by 'ltable' property of the input
         table.
-    Note:
-        This function internally calls get_property function.
+
+    See Also:
+        :meth:`~magellan.get_property`
     """
     # Return the ltable for a candidate set. This function is just a sugar
     return get_property(candset, 'ltable')
@@ -1230,8 +1240,8 @@ def get_rtable(candset):
         A pandas DataFrame that is pointed by 'rtable' property of the input
         table.
 
-    Note:
-        This function internally calls get_property function.
+    See Also:
+        :meth:`~magellan.get_property`
     """
     # Return the rtable for a candidate set. This function is just a sugar
 
@@ -1249,8 +1259,8 @@ def set_ltable(candset, table):
     Returns:
         A Boolean value of True is returned, if the update was successful.
 
-    Note:
-        This function internally calls set_property function.
+    See Also:
+        :meth:`~magellan.set_property`
     """
     # Return the ltable for a candidate set. This function is just a sugar
     return set_property(candset, 'ltable', table)
@@ -1269,8 +1279,8 @@ def set_rtable(candset, table):
     Returns:
         A Boolean value of True is returned, if the update was successful.
 
-    Note:
-        This function internally calls set_property function.
+    See Also:
+        :meth:`~magellan.set_property`
     """
     # Return the rtable for a candidate set. This function is just a sugar
 

@@ -40,8 +40,11 @@ def save_object(object_to_save, file_path):
         A Boolean value of True is returned, if the saving was successful.
 
     Raises:
-        AssertionError: If the file path is not of type string.
-        AssertionError: If we cannot write in the given file path.
+        AssertionError: If `file_path` is not of type string.
+        AssertionError: If a file cannot be written in the given `file_path`.
+
+    See Also:
+        :meth:`~load_object`
 
     """
     # Validate input parameters
@@ -93,8 +96,11 @@ def load_object(file_path):
         A Python object read from the file path.
 
     Raises:
-        AssertionError: If the file path is not of type string.
-        AssertionError: If a file does not exist at the given file path.
+        AssertionError: If `file_path` is not of type string.
+        AssertionError: If a file does not exist at the given `file_path`.
+
+    See Also:
+        :meth:`~save_object`
 
 
     """
@@ -146,6 +152,15 @@ def save_table(data_frame, file_path, metadata_ext='.pklmetadata'):
         A Boolean value of True is returned if the DataFrame is successfully
         saved.
 
+    Raises:
+        AssertionError: If `data_frame` is not of type pandas
+         DataFrame.
+        AssertionError: If `file_path` is not of type string.
+        AssertionError: If `metadata_ext` is not of type string.
+        AssertionError: If a file cannot written in the given `file_path`.
+
+    See Also:
+        :meth:`~magellan.load_table`
 
     Note:
         This function is a bit different from to_csv_metadata, where the
@@ -273,8 +288,11 @@ def load_table(file_path, metadata_ext='.pklmetadata'):
         metadata read from the metadata file (if the file was present).
 
     Raises:
-        AssertionError: If the file path is not of type string.
-        AssertionError: If the metadata extension is not of type string.
+        AssertionError: If `file_path` is not of type string.
+        AssertionError: If `metadata_ext` is not of type string.
+
+    See Also:
+        :meth:`~magellan.save_table`
 
     Note:
         This function is different from read_csv_metadata in two aspects.

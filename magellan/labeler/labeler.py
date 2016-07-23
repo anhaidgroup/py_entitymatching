@@ -37,16 +37,14 @@ def label_table(table, label_column_name, verbose=False):
             False).
 
     Returns:
-        A new DataFrame with the labels entered by the user.
-
-        Further,
+        A new DataFrame with the labels entered by the user. Further,
         this function sets the output DataFrame's properties same as input
         DataFrame.
 
     Raises:
-        AssertionError: If the input table is not of type pandas DataFrame.
-        AssertionError: If the input column name is not of type string.
-        AssertionError: If the label column name is already present in the
+        AssertionError: If `table` is not of type pandas DataFrame.
+        AssertionError: If `label_column_name` is not of type string.
+        AssertionError: If the `label_column_name` is already present in the
             input table.
 
     """

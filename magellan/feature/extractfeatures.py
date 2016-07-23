@@ -55,13 +55,13 @@ def extract_feature_vecs(candset, attrs_before=None, feature_table=None,
 
 
     Raises:
-        AssertionError: If the input `candset` is not of type pandas
+        AssertionError: If `candset` is not of type pandas
             DataFrame.
-        AssertionError: If the input `attrs_before` has attributes that
+        AssertionError: If `attrs_before` has attributes that
             are not present in the input candset.
-        AssertionError: If the input `attrs_after` has attribtues that
+        AssertionError: If `attrs_after` has attribtues that
             are not present in the input candset.
-        AssertionError: If the `feature_table` is set to None.
+        AssertionError: If `feature_table` is set to None.
 
     """
     # Validate input parameters

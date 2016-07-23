@@ -35,15 +35,15 @@ def eval_matches(data_frame, gold_label_attr, predicted_label_attr):
         precision, recall, F1.
 
     Raises:
-        AssertionError: If the input object (data_frame) is not of type
+        AssertionError: If `data_frame` is not of type
             pandas DataFrame.
-        AssertionError: If the input attribute (gold_label_attr) is not of
+        AssertionError: If `gold_label_attr` is not of
             type string.
-        AssertionError: If the input attribute (predicted_label_attr) is not of
+        AssertionError: If `predicted_label_attr` is not of
             type string.
-        AssertionError: If the input attribute (gold_label_attr) is not in
+        AssertionError: If the `gold_label_attr` is not in
             the input dataFrame.
-        AssertionError: If the input attribute (predicted_label_attr) is not in
+        AssertionError: If the `predicted_label_attr` is not in
             the input dataFrame.
     """
     # Validate input parameters

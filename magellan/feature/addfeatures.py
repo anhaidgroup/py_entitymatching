@@ -55,8 +55,8 @@ def get_feature_fn(feature_string, tokenizers, similarity_functions):
         bundled along with the returned function code.
 
     Raises:
-        AssertionError: If the input `feature_string` is not of type string.
-        AssertionError: If th input `tokenizers` is not of type
+        AssertionError: If `feature_string` is not of type string.
+        AssertionError: If the input `tokenizers` is not of type
             dictionary.
         AssertionError: If the input `similarity_functions` is not of
             type dictionary.
@@ -227,9 +227,9 @@ def add_feature(feature_table, feature_name, feature_dict):
     Raises:
         AssertionError: If the input `feature_table` is not of type
             pandas DataFrame.
-        AssertionError: If the `feature_name` is not of type
+        AssertionError: If `feature_name` is not of type
             string.
-        AssertionError: If the `feature_dict` is not of type
+        AssertionError: If `feature_dict` is not of type
             Python dictionary.
         AssertionError: If the `feature_table` does not have necessary columns
             such as 'feature_name', 'left_attribute', 'right_attribute',

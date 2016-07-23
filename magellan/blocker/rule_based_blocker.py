@@ -95,9 +95,9 @@ class RuleBasedBlocker(Blocker):
                 The name of the rule added (string).
 
             Raises:
-                AssertionError: If the `rule_name` already exists.
+                AssertionError: If `rule_name` already exists.
 
-                AssertionError: If the `feature_table` is not a valid value
+                AssertionError: If `feature_table` is not a valid value
                  parameter.
 
         """
@@ -227,7 +227,7 @@ class RuleBasedBlocker(Blocker):
                 (defaults to 1). If -1 all CPUs are used. If 0 or 1,
                 no parallel computation is used at all, which is useful for
                 debugging. For n_jobs below -1, (n_cpus + 1 + n_jobs) are
-                used (where n_cpus are the total number of CPUs in the
+                used (where n_cpus is the total number of CPUs in the
                 machine).Thus, for n_jobs = -2, all CPUs but one are used.
                 If (n_cpus + 1 + n_jobs) is less than 1, then no parallel
                 computation is used (i.e., equivalent to the default).
@@ -237,13 +237,13 @@ class RuleBasedBlocker(Blocker):
             blocking rules (DataFrame).
 
         Raises:
-            AssertionError: If the input `ltable` is not of type pandas
+            AssertionError: If `ltable` is not of type pandas
                 DataFrame.
-            AssertionError: If the input `rtable` is not of type pandas
+            AssertionError: If `rtable` is not of type pandas
                 DataFrame.
-            AssertionError: If the input `l_output_attrs` is not of type of
+            AssertionError: If `l_output_attrs` is not of type of
                 list.
-            AssertionError: If the input `r_output_attrs` is not of type of
+            AssertionError: If `r_output_attrs` is not of type of
                 list.
             AssertionError: If the values in `l_output_attrs` is not of type
                 string.
@@ -253,14 +253,14 @@ class RuleBasedBlocker(Blocker):
                 string.
             AssertionError: If the input `r_output_prefix` is not of type
                 string.
-            AssertionError: If the input `verbose` is not of type
+            AssertionError: If `verbose` is not of type
                 boolean.
-            AssertionError: If the input `show_progress` is not of type
+            AssertionError: If `show_progress` is not of type
                 boolean.
-            AssertionError: If the input `n_jobs` is not of type
+            AssertionError: If `n_jobs` is not of type
                 int.
-            AssertionError: If the `l_out_attrs` are not in the ltable.
-            AssertionError: If the `r_out_attrs` are not in the rtable.
+            AssertionError: If `l_out_attrs` are not in the ltable.
+            AssertionError: If `r_out_attrs` are not in the rtable.
             AssertionError: If there are no rules to apply.
         """
 
@@ -477,15 +477,15 @@ class RuleBasedBlocker(Blocker):
             A candidate set of tuple pairs that survived blocking (DataFrame).
 
         Raises:
-            AssertionError: If the input `candset` is not of type pandas
+            AssertionError: If `candset` is not of type pandas
                 DataFrame.
-            AssertionError: If the input `verbose` is not of type
+            AssertionError: If `verbose` is not of type
                 boolean.
-            AssertionError: If the input `n_jobs` is not of type
+            AssertionError: If `n_jobs` is not of type
                 int.
-            AssertionError: If the input `show_progress` is not of type boolean.
-            AssertionError: If the `l_block_attr` is not in the ltable columns.
-            AssertionError: If the `r_block_attr` is not in the rtable columns.
+            AssertionError: If `show_progress` is not of type boolean.
+            AssertionError: If `l_block_attr` is not in the ltable columns.
+            AssertionError: If `r_block_attr` is not in the rtable columns.
             AssertionError: If there are no rules to apply.
         """
 

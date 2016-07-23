@@ -37,7 +37,7 @@ def get_attr_types(data_frame):
         that should be a pointer to the input DataFrame.
 
     Raises:
-        AssertionError: If the input data_frame is not of type
+        AssertionError: If `data_frame` is not of type
             pandas DataFrame.
 
     """
@@ -93,9 +93,9 @@ def get_attr_corres(ltable, rtable):
         names in ltable and rtable.
 
     Raises:
-        AssertionError: If the input ltable is not of type
+        AssertionError: If `ltable` is not of type
             pandas DataFrame.
-        AssertionError: If the input rtable is not of type
+        AssertionError: If `rtable` is not of type
             pandas DataFrame.
     """
     # Validate input parameters

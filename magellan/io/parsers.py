@@ -68,9 +68,11 @@ def read_csv_metadata(file_path, **kwargs):
         A pandas DataFrame read from the input CSV file.
 
     Raises:
-        AssertionError: If the input file path is not of type string.
-        AssertionError: If a file does not exist in the given file path.
-
+        AssertionError: If `file_path` is not of type string.
+        AssertionError: If a file does not exist in the
+            given `file_path`.
+    See Also:
+        :meth:`~magellan.to_csv_metadata`
     """
     # Validate the input parameters.
 
@@ -172,10 +174,15 @@ def to_csv_metadata(data_frame, file_path, **kwargs):
         successfully.
 
     Raises:
-        AssertionError: If the input DataFrame is not of type pandas DataFrame.
-        AssertionError: If the file_path is not of type string.
-        AssertionError: If the DataFrame cannot be written to the given file
-            path.
+        AssertionError: If `data_frame` is not of type  pandas
+            DataFrame.
+        AssertionError: If `file_path` is not of type string.
+        AssertionError: If DataFrame cannot be written to the given
+         `file_path`.
+
+    See Also:
+        :meth:`~magellan.read_csv_metadata`
+
     """
     # Validate input parameters
 

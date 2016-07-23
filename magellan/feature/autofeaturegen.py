@@ -47,22 +47,22 @@ def get_features(ltable, rtable, l_attr_types, r_attr_types,
         'function', 'function_source', 'is_auto_generated'.
 
     Raises:
-        AssertionError: If the input ltable is not of type pandas
+        AssertionError: If `ltable` is not of type pandas
             DataFrame.
-        AssertionError: If the input rtable is not of type pandas
+        AssertionError: If `rtable` is not of type pandas
             DataFrame.
-        AssertionError: If the input l_attr_types is not of type
+        AssertionError: If `l_attr_types` is not of type
             python dictionary.
-        AssertionError: If the input r_attr_types is not of type
+        AssertionError: If `r_attr_types` is not of type
             python dictionary.
-        AssertionError: If the input attr_corres is not of type
+        AssertionError: If `attr_corres` is not of type
             python dictionary.
-        AssertionError: If the input sim_funcs is not of type
+        AssertionError: If `sim_funcs` is not of type
             python dictionary.
-        AssertionError: If the input tok_funcs is not of type
+        AssertionError: If `tok_funcs` is not of type
             python dictionary.
-        AssertionError: If the ltable and rtable order is same as mentioned
-            in the l_attr_types/r_attr_types and attr_corres.
+        AssertionError: If the `ltable` and `rtable` order is same as mentioned
+            in the `l_attr_types`/`r_attr_types` and `attr_corres`.
 
     See Also:
      :meth:`magellan.get_attr_corres`, :meth:`magellan.get_attr_types`,
@@ -197,9 +197,9 @@ def get_features_for_blocking(ltable, rtable):
         attribute correspondences between the two input tables.
 
     Raises:
-        AssertionError: If the input (ltable) is not of type pandas
+        AssertionError: If `ltable` is not of type pandas
             DataFrame.
-        AssertionError: If the input (rtable) is not of type pandas
+        AssertionError: If `rtable` is not of type pandas
             DataFrame.
     Note:
         In the output DataFrame, two
@@ -284,9 +284,9 @@ def get_features_for_matching(ltable, rtable):
         attribute correspondences between the two input tables.
 
     Raises:
-        AssertionError: If the input (ltable) is not of type pandas
+        AssertionError: If `ltable` is not of type pandas
             DataFrame.
-        AssertionError: If the input (rtable) is not of type pandas
+        AssertionError: If `rtable` is not of type pandas
             DataFrame.
     Note:
         In the output DataFrame, two

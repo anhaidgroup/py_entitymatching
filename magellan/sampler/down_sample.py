@@ -149,7 +149,7 @@ def down_sample(table_a, table_b, size, y_param):
     This function down samples two tables A and B into smaller tables A' and
     B' respectively.
 
-    Specifically, first it randomly selects 'size' tuples
+    Specifically, first it randomly selects `size` tuples
     from the table B to be table B'. Next, it builds an inverted index I (
     token, tuple_id) on table A. For each tuple x ∈ B', the algorithm
     finds a set P of k/2 tuples from I that match x,
@@ -168,9 +168,10 @@ def down_sample(table_a, table_b, size, y_param):
         Down sampled tables A and B as pandas DataFrames.
 
     Raises:
-        AssertionError: If any of the input tables are empty or not a DataFrame.
-        AssertionError: If size or y parameter is empty or 0 or not a valid
-            integer value.
+        AssertionError: If any of the input tables (`table_a`, `table_b`) are
+         empty or not a DataFrame.
+        AssertionError: If `size` or `y_param` is empty or 0 or not a
+         valid integer value.
     """
 
     if not isinstance(table_a, pd.DataFrame):

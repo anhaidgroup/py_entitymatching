@@ -70,18 +70,18 @@ def combine_blocker_outputs_via_union(
         all the blocker lists.
 
     Raises:
-        AssertionError: If the l_prefix is not of type string.
-        AssertionError: If the r_prefix is not of type string.
+        AssertionError: If `l_prefix` is not of type string.
+        AssertionError: If `r_prefix` is not of type string.
         AssertionError: If the length of the input DataFrame list is 0.
-        AssertionError: If the input blocker_output_list is not a list of
+        AssertionError: If `blocker_output_list` is not a list of
             DataFrames.
         AssertionError: If the ltables are different across the input list of
             DataFrames.
         AssertionError: If the rtables are different across the input list of
             DataFrames.
-        AssertionError: If the fk_ltable values are different across the
+        AssertionError: If the `fk_ltable` values are different across the
             input list of DataFrames.
-        AssertionError: If the fk_rtable values are different across the
+        AssertionError: If the `fk_rtable` values are different across the
             input list of DataFrames.
     """
 

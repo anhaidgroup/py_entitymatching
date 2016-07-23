@@ -47,9 +47,9 @@ def sample_table(table, sample_size, replace=False, verbose=False):
         DataFrame.
 
     Raises:
-        AssertionError: If the input table is not of type pandas DataFrame.
-        AssertionError: If the input DataFrame size is 0.
-        AssertionError: If the sample_size is greater than the input
+        AssertionError: If `table` is not of type pandas DataFrame.
+        AssertionError: If the size of `table` is 0.
+        AssertionError: If the `sample_size` is greater than the input
             DataFrame size.
 
     Note:
