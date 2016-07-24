@@ -3,6 +3,6 @@ Matching
 ========
 .. toctree::
 
-   split_data
+   splitting_data_into_train_test
    supported_matchers
    selecting_matcher

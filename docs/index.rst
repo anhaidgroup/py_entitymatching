@@ -9,7 +9,7 @@ Contents:
     :caption: Getting Started
 
     installation
-    tutorial
+    how_to_guide
 
 .. toctree::
     :maxdepth: 3
@@ -21,13 +21,13 @@ Contents:
     api/downsampling
     api/blocking
     api/debugging_blocker_output
-    api/combining_blocker_output
+    api/combining_blocker_outputs
     api/sampling
     api/labeling
     api/handling_features
     api/matching
     api/debugging_matcher
-    api/evaluating_the_matches
+    api/evaluating_the_matching_output
 
 
 

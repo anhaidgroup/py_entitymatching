@@ -5,8 +5,8 @@ Handling Features
 .. toctree::
     :maxdepth: 2
 
-    auto_feature_generation
-    add_remove_features
-    extract_feature_vectors
-    simfunctions
-    tokenizers
+    creating_the_features_automatically
+    creating_the_features_manually
+    extracting_feature_vectors
+    supported_similarity_functions
+    supported_tokenizers
