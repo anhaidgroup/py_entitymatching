@@ -34,7 +34,7 @@ def get_tokenizers_for_blocking(q=[2, 3], dlm_char=[' ']):
         function as the value.
 
     Raises:
-        AssertionError: If both q and dlm_char are set to None.
+        AssertionError: If both `q` and `dlm_char` are set to None.
 
     """
     # Validate inputs
@@ -62,7 +62,7 @@ def get_tokenizers_for_matching(q=[2, 3], dlm_char=[' ']):
         function as the value.
 
     Raises:
-        AssertionError: If both q and dlm_char are set to None.
+        AssertionError: If both `q` and `dlm_char` are set to None.
     """
 
     if q is None and dlm_char is None:
