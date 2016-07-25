@@ -521,13 +521,11 @@ def copy_properties(source_data_frame, target_data_frame, replace=True):
             DataFrame's  properties can replace the target
             DataFrame's properties in the catalog. The default value for the
             flag is True.
-
             Specifically, if the target DataFrame's information is already
             present in the catalog then the function will check if the
             replace flag is True. If the flag is set to True, then the
             function will first delete the existing properties and then set
             it with the source DataFrame properties.
-
             If the flag is False, the function will just return without
             modifying the existing properties.
 
@@ -738,7 +736,7 @@ def set_fk_ltable(data_frame, fk_ltable):
         data_frame (DataFrame): The input DataFrame for which the foreign key
             ltable property must be set.
         fk_ltable (string): The attribute that must ne set as the foreign key
-        to the ltable in the catalog.
+            to the ltable in the catalog.
 
     Returns:
         A Boolean value of True is returned if the foreign key to ltable was

@@ -90,6 +90,7 @@ def load_object(file_path):
     blockers, matchers, feature table, etc.
 
     Args:
+
         file_path (string): The file path to load the object from.
 
     Returns:
