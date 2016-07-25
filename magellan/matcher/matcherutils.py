@@ -127,23 +127,28 @@ def impute_table(table, exclude_attrs=None, missing_val='NaN',
                  strategy='mean', axis=0, val_all_nans=0, verbose=True):
     """
     Impute table containing missing values.
+
     Args:
-        table (DataFrame): DataFrame which values should be imputed
+        table (DataFrame): DataFrame which values should be imputed.
         exclude_attrs (List) : list of attribute names to be excluded from
             imputing (defaults to None).
-        missing_val (str or int):  The placeholder for the missing values.
-            All occurrences of `missing_values` will be imputed. For missing values encoded as np.nan,
-            use the string value "NaN" (defaults to 'NaN').
-        strategy (str): String that specifies on how to impute values. Valid
-        strings: 'mean', 'median', 'most_frequent' (defaults to 'mean').
-        axis (int):  axis=1 along rows, and axis=0 along columns (defaults to 0).
+        missing_val (string or int):  The placeholder for the missing values.
+            All occurrences of `missing_values` will be imputed.
+            For missing values encoded as np.nan, use the string value 'NaN'
+            (defaults to 'NaN').
+        strategy (string): String that specifies on how to impute values. Valid
+            strings: 'mean', 'median', 'most_frequent' (defaults to 'mean').
+        axis (int):  axis=1 along rows, and axis=0 along columns  (defaults
+            to 0).
         val_all_nans (float): Value to fill in if all the values in the column
             are NaN.
+
     Returns:
-        Imputed DataFrame
+        Imputed DataFrame.
+
 
     Raises:
-        AssertionError: If the input table is not of type pandas DataFrame
+        AssertionError: If `table` is not of type pandas DataFrame.
 
     """
     # Validate input paramaters
