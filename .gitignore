@@ -75,5 +75,5 @@ html/
 *.dot
 *.png
 
-notebooks/integration_tests/bdata/
+notebooks/how-to-guides/bdata/
 garage/
