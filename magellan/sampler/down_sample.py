@@ -92,7 +92,7 @@ def _probe_index(table_b, y_param, s_tbl_sz, s_inv_index):
 
     """
 
-    y_pos = math.floor(y_param / 2)
+    y_pos = math.ceil(y_param / 2)
     h_table = set()
     stop_words = _get_stop_words()
     str_cols_ix = _get_str_cols_list(table_b)
@@ -115,30 +115,47 @@ def _probe_index(table_b, y_param, s_tbl_sz, s_inv_index):
 
         # Tokenizing the string value and removing stop words before we start probing into inverted index I
         str_val = set(str_val.split())
-        str_val = str_val.difference(stop_words)
+        # str_val = str_val.difference(stop_words)
 
         # For each token in the set, we will probe the token into inverted index I to get set of y/2 positive matches
+        ids_dict = {}
         match = set()
         for token in str_val:
             ids = s_inv_index.get(token, None)
             if ids is not None:
-                match.update(ids)
+                for id in ids:
+                    if id not in ids_dict:
+                        ids_dict[id] = 1
+                    else:
+                        ids_dict[id] = ids_dict[id] + 1
+
+                        # match.update(ids)
 
         # Pick y/2 elements from match
-        k = min(y_pos, len(match))
-        match = list(match)
+        m = min(y_pos, len(ids_dict))
+        # match = list(match)
         smpl_pos_neg = set()
 
-        while len(smpl_pos_neg) < k:
-            num = random.choice(match)
-            smpl_pos_neg.add(num)
+        num_pos = 0
+        sorted_key_values = [(k, v) for v, k in sorted(
+            [(v, k) for k, v in ids_dict.items()], reverse=True
+        )]
+        for t in sorted_key_values:
+            if num_pos >= m:
+                break
+            smpl_pos_neg.add(t[0])
+            num_pos += 1
+
+        # while len(smpl_pos_neg) < k:
+        #     num = random.choice(match)
+        #     smpl_pos_neg.add(num)
 
         # Remaining y_param/2 items are selected here randomly. This is to get better coverage from both the input
         # tables
         while len(smpl_pos_neg) < y_param:
             rand_item_num = randint(0, s_tbl_sz - 1)
             smpl_pos_neg.add(rand_item_num)
-        h_table.update(smpl_pos_neg)
+            h_table.update(smpl_pos_neg)
 
     return h_table
 
@@ -176,11 +193,13 @@ def down_sample(table_a, table_b, size, y_param):
 
     if not isinstance(table_a, pd.DataFrame):
         logger.error('Input table A is not of type pandas DataFrame')
-        raise AssertionError('Input table A is not of type pandas DataFrame')
+        raise AssertionError(
+            'Input table A is not of type pandas DataFrame')
 
     if not isinstance(table_b, pd.DataFrame):
         logger.error('Input table B is not of type pandas DataFrame')
-        raise AssertionError('Input table B is not of type pandas DataFrame')
+        raise AssertionError(
+            'Input table B is not of type pandas DataFrame')
 
     if len(table_a) == 0 or len(table_b) == 0:
         logger.error('Size of the input table is 0')
