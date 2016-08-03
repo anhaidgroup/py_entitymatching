@@ -18,7 +18,7 @@ path_b = os.sep.join([datasets_path, 'restB.csv'])
 
 class DownSampleTestCases(unittest.TestCase):
     def setUp(self):
-        self.A = read_csv_metadata(path_a)
+        self.A = read_csv_metadata(path_a, key='ID')
         self.B = read_csv_metadata(path_b, key='ID')
 
     def tearDown(self):

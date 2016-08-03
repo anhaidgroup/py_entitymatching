@@ -8,6 +8,7 @@ import math
 import os
 import random
 from random import randint
+from magellan.utils.catalog_helper import log_info
 
 
 import pandas as pd
@@ -87,14 +88,14 @@ def _inv_index(table):
     return inv_index
 
 
-def _probe_index(table_b, y_param, s_tbl_sz, s_inv_index):
+def _probe_index(table_b, y_param, s_tbl_sz, s_inv_index, show_progress=True):
     """
     This is probe index function that probes the second table into inverted index to get
     good coverage in the down sampled output
 
     """
 
-    y_pos = math.ceil(y_param / 2)
+    y_pos = math.ceil(y_param / 2.0)
     h_table = set()
     stop_words = _get_stop_words()
     str_cols_ix = _get_str_cols_list(table_b)
@@ -163,7 +164,8 @@ def _probe_index(table_b, y_param, s_tbl_sz, s_inv_index):
 
 
 # down sample of two tables : based on sanjib's index based solution
-def down_sample(table_a, table_b, size, y_param):
+def down_sample(table_a, table_b, size, y_param, show_progress=True,
+                verbose=False):
     """
     This function down samples two tables A and B into smaller tables A' and
     B' respectively.
@@ -182,6 +184,10 @@ def down_sample(table_a, table_b, size, y_param):
         y_param (int): The parameter to control the down sample size of table A.
             Specifically, the down sampled size of table A should be close to
             size * y_param.
+        show_progress (boolean): A flag to indicate whether a progress bar
+            should be displayed.
+        verbose (boolean): A flag to indicate whether the debug information
+         should be displayed.
 
     Returns:
         Down sampled tables A and B as pandas DataFrames.
@@ -216,6 +222,19 @@ def down_sample(table_a, table_b, size, y_param):
     if len(table_b) < size:
         logger.warning(
             'Size of table B is less than b_size parameter - using entire table B')
+
+    # get and validate required metadata
+    log_info(logger, 'Required metadata: ltable key, rtable key', verbose)
+
+    # # get metadata
+    l_key, r_key = cm.get_keys_for_ltable_rtable(table_a, table_b, logger,
+                                                 verbose)
+
+    # # validate metadata
+    cm._validate_metadata_for_table(table_a, l_key, 'ltable', logger,
+                                    verbose)
+    cm._validate_metadata_for_table(table_b, r_key, 'rtable', logger,
+                                    verbose)
 
     # Inverted index built on table A will consist of all tuples in such P's and Q's - central idea is to have
     # good coverage in the down sampled A' and B'.
