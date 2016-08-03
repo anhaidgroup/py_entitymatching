@@ -2,11 +2,13 @@
 """
 This module contains sampling related routines
 """
+from __future__ import division
 import logging
 import math
 import os
 import random
 from random import randint
+
 
 import pandas as pd
 import pyprind
@@ -72,7 +74,7 @@ def _inv_index(table):
 
         # tokenize them
         str_val = set(str_val.split())
-        str_val = str_val.difference(stop_words)
+        #str_val = str_val.difference(stop_words)
 
         # building inverted index I from set of tokens
         for token in str_val:
@@ -222,7 +224,7 @@ def down_sample(table_a, table_b, size, y_param):
     # Randomly select size tuples from table B to be B'
     b_sample_size = min(math.floor(size), len(table_b))
     b_tbl_indices = list(
-        pd.np.random.choice(len(table_b), b_sample_size, replace=False))
+        pd.np.random.choice(len(table_b), int(b_sample_size), replace=False))
 
     # Probe inverted index to find all tuples in A that share tokens with tuples in B'.
     s_tbl_indices = _probe_index(table_b.ix[b_tbl_indices], y_param,
