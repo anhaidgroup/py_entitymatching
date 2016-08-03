@@ -118,7 +118,7 @@ def _probe_index(table_b, y_param, s_tbl_sz, s_inv_index, show_progress=True):
 
         # Tokenizing the string value and removing stop words before we start probing into inverted index I
         str_val = set(str_val.split())
-        # str_val = str_val.difference(stop_words)
+        str_val = str_val.difference(stop_words)
 
         # For each token in the set, we will probe the token into inverted index I to get set of y/2 positive matches
         ids_dict = {}
@@ -226,15 +226,15 @@ def down_sample(table_a, table_b, size, y_param, show_progress=True,
     # get and validate required metadata
     log_info(logger, 'Required metadata: ltable key, rtable key', verbose)
 
-    # # get metadata
-    l_key, r_key = cm.get_keys_for_ltable_rtable(table_a, table_b, logger,
-                                                 verbose)
-
-    # # validate metadata
-    cm._validate_metadata_for_table(table_a, l_key, 'ltable', logger,
-                                    verbose)
-    cm._validate_metadata_for_table(table_b, r_key, 'rtable', logger,
-                                    verbose)
+    # # # get metadata
+    # l_key, r_key = cm.get_keys_for_ltable_rtable(table_a, table_b, logger,
+    #                                              verbose)
+    #
+    # # # validate metadata
+    # cm._validate_metadata_for_table(table_a, l_key, 'ltable', logger,
+    #                                 verbose)
+    # cm._validate_metadata_for_table(table_b, r_key, 'rtable', logger,
+    #                                 verbose)
 
     # Inverted index built on table A will consist of all tuples in such P's and Q's - central idea is to have
     # good coverage in the down sampled A' and B'.
@@ -247,13 +247,15 @@ def down_sample(table_a, table_b, size, y_param, show_progress=True,
 
     # Probe inverted index to find all tuples in A that share tokens with tuples in B'.
     s_tbl_indices = _probe_index(table_b.ix[b_tbl_indices], y_param,
-                                 len(table_a), s_inv_index)
+                                 len(table_a), s_inv_index, show_progress)
     s_tbl_indices = list(s_tbl_indices)
     l_sampled = table_a.iloc[list(s_tbl_indices)]
     r_sampled = table_b.iloc[list(b_tbl_indices)]
 
     # update catalog
-    cm.copy_properties(table_a, l_sampled)
-    cm.copy_properties(table_b, r_sampled)
+    if cm.is_dfinfo_present(table_a):
+        cm.copy_properties(table_a, l_sampled)
+    if cm.is_dfinfo_present(table_b):
+        cm.copy_properties(table_b, r_sampled)
 
     return l_sampled, r_sampled
