@@ -157,7 +157,7 @@ def _probe_index(table_b, y_param, s_tbl_sz, s_inv_index):
         while len(smpl_pos_neg) < y_param:
             rand_item_num = randint(0, s_tbl_sz - 1)
             smpl_pos_neg.add(rand_item_num)
-            h_table.update(smpl_pos_neg)
+        h_table.update(smpl_pos_neg)
 
     return h_table
 
