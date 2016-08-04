@@ -51,6 +51,7 @@ install:
   - conda install --yes setuptools nose numpy pip coverage scipy pandas pyparsing six scikit-learn Cython pyqt cloudpickle joblib
   - pip install pyprind
   - pip install py_stringmatching
+  - pip install py_stringsimjoin
   - python setup.py install
 
 build: false

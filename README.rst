@@ -1,7 +1,8 @@
-Magellan
-========
+py_entitymatching
+=================
 
-EM is a critical problem and will become even more critical. Lot of EM research, but has focused mostly
+Entity matching (EM) is a critical problem and will become even more critical.
+Lot of EM research, but has focused mostly
 on matching algorithms. Focus mostly on maximizing some performance factors 
 such as accuracy, time, money, etc. Currently there is very little help for 
 users. For many of these steps, there is little or no work, so no solution. 
@@ -24,10 +25,10 @@ The package is free, open-source, and BSD-licensed.
 Important links
 ===============
 
-* Project Homepage: https://sites.google.com/site/anhaidgroup/projects/magellan
-* Code repository: https://github.com/anhaidgroup/magellan
-* Issue Tracker: https://github.com/anhaidgroup/magellan/issues
-* Mailing List: https://groups.google.com/forum/#!forum/magellan
+* Project Homepage: https://sites.google.com/site/anhaidgroup/projects/py_entitymatching
+* Code repository: https://github.com/anhaidgroup/py_entitymatching
+* Issue Tracker: https://github.com/anhaidgroup/py_entitymatching/issues
+* Mailing List: https://groups.google.com/forum/#!forum/py_entitymatching
 
 Platforms
 =========

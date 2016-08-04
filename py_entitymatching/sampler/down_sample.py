@@ -100,14 +100,16 @@ def _probe_index(table_b, y_param, s_tbl_sz, s_inv_index, show_progress=True):
     str_cols_ix = _get_str_cols_list(table_b)
 
     # Progress Bar
-    bar = pyprind.ProgBar(len(table_b))
+    if show_progress:
+        bar = pyprind.ProgBar(len(table_b))
 
     # For each tuple x ∈ B', we will probe inverted index I built in the previous step to find all tuples in A
     # (inverted index) that share tokens with x. We will rank these tuples in decreasing order of shared tokens, then
     # take (up to) the top k/2 tuples to be the set P.
 
     for row in table_b.itertuples(index=False):
-        bar.update()
+        if show_progress:
+            bar.update()
         str_val = ''
 
         # For all string column in the table, fetch all string values and concatenate them
