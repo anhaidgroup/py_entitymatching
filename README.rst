@@ -13,7 +13,7 @@ deciphering their different data formats, import/export commands. too
 cumbersome and difficult. So often users just give up and roll their own 
 ad-hoc solutions instead. This is obviously a major bottleneck that prevents
 the deployment of matching in practice. To solve the above problems, 
-Magellan aims to provide a set of commands that help the user to
+py_entitymatching aims to provide a set of commands that help the user to
  
 * Come up with a EM workflow
 * Iterate and debugmatcher the workflow
@@ -33,4 +33,4 @@ Important links
 Platforms
 =========
 
-Magellan has been tested on Linux, OS X and Windows.
+py_entitymatching has been tested on Linux, OS X and Windows.
