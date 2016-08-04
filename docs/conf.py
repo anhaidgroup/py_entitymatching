@@ -66,7 +66,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Magellan'
+project = u'py_entitymatching'
 copyright = u'2016, anhaidgroup'
 author = u'anhaidgroup'
 
@@ -243,7 +243,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'Magellan.tex', u'Magellan Documentation',
+    (master_doc, 'py_entitymatching.tex', u'py_entitymatching Documentation',
      u'anhaidgroup', 'manual'),
 ]
 
@@ -273,7 +273,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'magellan', u'Magellan Documentation',
+    (master_doc, 'py_entitymatching', u'py_entitymatching Documentation',
      [author], 1)
 ]
 
@@ -287,8 +287,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'Magellan', u'Magellan Documentation',
-     author, 'Magellan', 'One line description of project.',
+    (master_doc, 'py_entitymatching', u'py_entitymatching Documentation',
+     author, 'py_entitymatching', 'One line description of project.',
      'Miscellaneous'),
 ]
 

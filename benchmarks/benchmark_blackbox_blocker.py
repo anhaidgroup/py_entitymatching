@@ -4,7 +4,7 @@
 import os
 import sys
 
-import magellan  as mg
+import py_entitymatching  as mg
 
 p = mg.get_install_path()
 datasets_path = os.sep.join([p, 'datasets', 'example_datasets'])

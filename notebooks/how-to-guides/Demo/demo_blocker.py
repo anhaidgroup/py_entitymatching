@@ -1,6 +1,6 @@
 # coding=utf-8
-import magellan.catalog.catalog_manager as cm
-from magellan.blocker.attr_equiv_blocker import AttrEquivalenceBlocker
+import py_entitymatching.catalog.catalog_manager as cm
+from py_entitymatching.blocker.attr_equiv_blocker import AttrEquivalenceBlocker
 
 class MyBlocker(AttrEquivalenceBlocker):
     def __init__(self, *args, **kwargs):
