@@ -3,8 +3,8 @@
 
 import os
 
-import magellan as mg
-from magellan.utils.generic_helper import get_install_path
+import py_entitymatching as em
+from py_entitymatching.utils.generic_helper import get_install_path
 
 import sys
 
@@ -21,8 +21,8 @@ class TimeDownSampleRestaurants:
         path_for_a = os.sep.join([DATASET_PATH, 'restaurants', 'A.csv'])
         path_for_b = os.sep.join([DATASET_PATH, 'restaurants', 'B.csv'])
         try:
-            self.A = mg.read_csv_metadata(path_for_a)
-            self.B = mg.read_csv_metadata(path_for_b)
+            self.A = em.read_csv_metadata(path_for_a)
+            self.B = em.read_csv_metadata(path_for_b)
             self.size = 500
             self.y_param = 2
         except AssertionError:
@@ -30,7 +30,7 @@ class TimeDownSampleRestaurants:
             raise SystemExit
 
     def time_down_sample_tables(self):
-        mg.down_sample(self.A, self.B, self.size, self.y_param)
+        em.down_sample(self.A, self.B, self.size, self.y_param)
 
     def teardown(self):
         del self.A
@@ -44,8 +44,8 @@ class TimeDownSampleElectronics:
         path_for_a = os.sep.join([DATASET_PATH, 'electronics', 'A.csv'])
         path_for_b = os.sep.join([DATASET_PATH, 'electronics', 'B.csv'])
         try:
-            self.A = mg.read_csv_metadata(path_for_a)
-            self.B = mg.read_csv_metadata(path_for_b)
+            self.A = em.read_csv_metadata(path_for_a)
+            self.B = em.read_csv_metadata(path_for_b)
             self.size = 500
             self.y_param = 5
         except AssertionError:
@@ -53,7 +53,7 @@ class TimeDownSampleElectronics:
             raise SystemExit
 
     def time_down_sample_tables(self):
-        mg.down_sample(self.A, self.B, self.size, self.y_param)
+        em.down_sample(self.A, self.B, self.size, self.y_param)
 
     def teardown(self):
         del self.A
@@ -67,8 +67,8 @@ class TimeDownSampleAnime:
         path_for_a = os.sep.join([DATASET_PATH, 'anime', 'A.csv'])
         path_for_b = os.sep.join([DATASET_PATH, 'anime', 'B.csv'])
         try:
-            self.A = mg.read_csv_metadata(path_for_a)
-            self.B = mg.read_csv_metadata(path_for_b)
+            self.A = em.read_csv_metadata(path_for_a)
+            self.B = em.read_csv_metadata(path_for_b)
             self.size = 1000
             self.y_param = 1
         except AssertionError:
@@ -76,7 +76,7 @@ class TimeDownSampleAnime:
             raise SystemExit
 
     def time_down_sample_tables(self):
-        mg.down_sample(self.A, self.B, self.size, self.y_param)
+        em.down_sample(self.A, self.B, self.size, self.y_param)
 
     def teardown(self):
         del self.A
@@ -90,8 +90,8 @@ class TimeDownSampleBooks:
         path_for_a = os.sep.join([DATASET_PATH, 'books', 'A.csv'])
         path_for_b = os.sep.join([DATASET_PATH, 'books', 'B.csv'])
         try:
-            self.A = mg.read_csv_metadata(path_for_a)
-            self.B = mg.read_csv_metadata(path_for_b)
+            self.A = em.read_csv_metadata(path_for_a)
+            self.B = em.read_csv_metadata(path_for_b)
             self.size = 2000
             self.y_param = 2
         except AssertionError:
@@ -99,7 +99,7 @@ class TimeDownSampleBooks:
             raise SystemExit
 
     def time_down_sample_tables(self):
-        mg.down_sample(self.A, self.B, self.size, self.y_param)
+        em.down_sample(self.A, self.B, self.size, self.y_param)
 
     def teardown(self):
         del self.A
@@ -113,8 +113,8 @@ class TimeDownSampleCitations:
         path_for_a = os.sep.join([DATASET_PATH, 'citations', 'A.csv'])
         path_for_b = os.sep.join([DATASET_PATH, 'citations', 'B.csv'])
         try:
-            self.A = mg.read_csv_metadata(path_for_a)
-            self.B = mg.read_csv_metadata(path_for_b)
+            self.A = em.read_csv_metadata(path_for_a)
+            self.B = em.read_csv_metadata(path_for_b)
             self.size = 3000
             self.y_param = 2
         except AssertionError:
@@ -122,7 +122,7 @@ class TimeDownSampleCitations:
             raise SystemExit
 
     def time_down_sample_tables(self):
-        mg.down_sample(self.A, self.B, self.size, self.y_param)
+        em.down_sample(self.A, self.B, self.size, self.y_param)
 
     def teardown(self):
         del self.A
@@ -136,8 +136,8 @@ class TimeDownSampleBikes:
         path_for_a = os.sep.join([DATASET_PATH, 'bikes', 'A.csv'])
         path_for_b = os.sep.join([DATASET_PATH, 'bikes', 'B.csv'])
         try:
-            self.A = mg.read_csv_metadata(path_for_a)
-            self.B = mg.read_csv_metadata(path_for_b)
+            self.A = em.read_csv_metadata(path_for_a)
+            self.B = em.read_csv_metadata(path_for_b)
             self.size = 2500
             self.y_param = 2
         except AssertionError:
@@ -145,7 +145,7 @@ class TimeDownSampleBikes:
             raise SystemExit
 
     def time_down_sample_tables(self):
-        mg.down_sample(self.A, self.B, self.size, self.y_param)
+        em.down_sample(self.A, self.B, self.size, self.y_param)
 
     def teardown(self):
         del self.A
@@ -159,8 +159,8 @@ class TimeDownSampleCosmetics:
         path_for_a = os.sep.join([DATASET_PATH, 'cosmetics', 'A.csv'])
         path_for_b = os.sep.join([DATASET_PATH, 'cosmetics', 'B.csv'])
         try:
-            self.A = mg.read_csv_metadata(path_for_a)
-            self.B = mg.read_csv_metadata(path_for_b)
+            self.A = em.read_csv_metadata(path_for_a)
+            self.B = em.read_csv_metadata(path_for_b)
             self.size = 4000
             self.y_param = 1
         except AssertionError:
@@ -168,7 +168,7 @@ class TimeDownSampleCosmetics:
             raise SystemExit
 
     def time_down_sample_tables(self):
-        mg.down_sample(self.A, self.B, self.size, self.y_param)
+        em.down_sample(self.A, self.B, self.size, self.y_param)
 
     def teardown(self):
         del self.A
@@ -182,8 +182,8 @@ class TimeDownSampleEbooks:
         path_for_a = os.sep.join([DATASET_PATH, 'ebooks', 'A.csv'])
         path_for_b = os.sep.join([DATASET_PATH, 'ebooks', 'B.csv'])
         try:
-            self.A = mg.read_csv_metadata(path_for_a)
-            self.B = mg.read_csv_metadata(path_for_b)
+            self.A = em.read_csv_metadata(path_for_a)
+            self.B = em.read_csv_metadata(path_for_b)
             self.size = 3000
             self.y_param = 1
         except AssertionError:
@@ -191,7 +191,7 @@ class TimeDownSampleEbooks:
             raise SystemExit
 
     def time_down_sample_tables(self):
-        mg.down_sample(self.A, self.B, self.size, self.y_param)
+        em.down_sample(self.A, self.B, self.size, self.y_param)
 
     def teardown(self):
         del self.A
@@ -205,8 +205,8 @@ class TimeDownSampleMovies:
         path_for_a = os.sep.join([DATASET_PATH, 'movies', 'A.csv'])
         path_for_b = os.sep.join([DATASET_PATH, 'movies', 'B.csv'])
         try:
-            self.A = mg.read_csv_metadata(path_for_a)
-            self.B = mg.read_csv_metadata(path_for_b)
+            self.A = em.read_csv_metadata(path_for_a)
+            self.B = em.read_csv_metadata(path_for_b)
             self.size = 1000
             self.y_param = 2
         except AssertionError:
@@ -214,7 +214,7 @@ class TimeDownSampleMovies:
             raise SystemExit
 
     def time_down_sample_tables(self):
-        mg.down_sample(self.A, self.B, self.size, self.y_param)
+        em.down_sample(self.A, self.B, self.size, self.y_param)
 
     def teardown(self):
         del self.A
@@ -228,8 +228,8 @@ class TimeDownSampleMusic:
         path_for_a = os.sep.join([DATASET_PATH, 'music', 'A.csv'])
         path_for_b = os.sep.join([DATASET_PATH, 'music', 'B.csv'])
         try:
-            self.A = mg.read_csv_metadata(path_for_a)
-            self.B = mg.read_csv_metadata(path_for_b)
+            self.A = em.read_csv_metadata(path_for_a)
+            self.B = em.read_csv_metadata(path_for_b)
             self.size = 1500
             self.y_param = 2
         except AssertionError:
@@ -237,7 +237,7 @@ class TimeDownSampleMusic:
             raise SystemExit
 
     def time_down_sample_tables(self):
-        mg.down_sample(self.A, self.B, self.size, self.y_param)
+        em.down_sample(self.A, self.B, self.size, self.y_param)
 
     def teardown(self):
         del self.A
@@ -251,8 +251,8 @@ class TimeDownSampleBeer:
         path_for_a = os.sep.join([DATASET_PATH, 'beer', 'A.csv'])
         path_for_b = os.sep.join([DATASET_PATH, 'beer', 'B.csv'])
         try:
-            self.A = mg.read_csv_metadata(path_for_a)
-            self.B = mg.read_csv_metadata(path_for_b)
+            self.A = em.read_csv_metadata(path_for_a)
+            self.B = em.read_csv_metadata(path_for_b)
             self.size = 500
             self.y_param = 10
         except AssertionError:
@@ -260,7 +260,7 @@ class TimeDownSampleBeer:
             raise SystemExit
 
     def time_down_sample_tables(self):
-        mg.down_sample(self.A, self.B, self.size, self.y_param)
+        em.down_sample(self.A, self.B, self.size, self.y_param)
 
     def teardown(self):
         del self.A
@@ -276,8 +276,8 @@ class TimeDownSampleASongs1:
         path_for_a = os.sep.join([DATASET_PATH, 'songs', 'A.csv'])
         path_for_b = os.sep.join([DATASET_PATH, 'songs', 'A.csv'])
         try:
-            self.A = mg.read_csv_metadata(path_for_a)
-            self.B = mg.read_csv_metadata(path_for_b)
+            self.A = em.read_csv_metadata(path_for_a)
+            self.B = em.read_csv_metadata(path_for_b)
             self.size = 2000
             self.y_param = 2
         except AssertionError:
@@ -285,7 +285,7 @@ class TimeDownSampleASongs1:
             raise SystemExit
 
     def time_down_sample_tables(self):
-        mg.down_sample(self.A, self.B, self.size, self.y_param)
+        em.down_sample(self.A, self.B, self.size, self.y_param)
 
     def teardown(self):
         del self.A
@@ -301,8 +301,8 @@ class TimeDownSampleASongs2:
         path_for_a = os.sep.join([DATASET_PATH, 'songs', 'A.csv'])
         path_for_b = os.sep.join([DATASET_PATH, 'songs', 'A.csv'])
         try:
-            self.A = mg.read_csv_metadata(path_for_a)
-            self.B = mg.read_csv_metadata(path_for_b)
+            self.A = em.read_csv_metadata(path_for_a)
+            self.B = em.read_csv_metadata(path_for_b)
             self.size = 3000
             self.y_param = 1
         except AssertionError:
@@ -310,7 +310,7 @@ class TimeDownSampleASongs2:
             raise SystemExit
 
     def time_down_sample_tables(self):
-        mg.down_sample(self.A, self.B, self.size, self.y_param)
+        em.down_sample(self.A, self.B, self.size, self.y_param)
 
     def teardown(self):
         del self.A
@@ -326,8 +326,8 @@ class TimeDownSampleASongs3:
         path_for_a = os.sep.join([DATASET_PATH, 'songs', 'A.csv'])
         path_for_b = os.sep.join([DATASET_PATH, 'songs', 'A.csv'])
         try:
-            self.A = mg.read_csv_metadata(path_for_a)
-            self.B = mg.read_csv_metadata(path_for_b)
+            self.A = em.read_csv_metadata(path_for_a)
+            self.B = em.read_csv_metadata(path_for_b)
             self.size = 4000
             self.y_param = 1
         except AssertionError:
@@ -335,7 +335,7 @@ class TimeDownSampleASongs3:
             raise SystemExit
 
     def time_down_sample_tables(self):
-        mg.down_sample(self.A, self.B, self.size, self.y_param)
+        em.down_sample(self.A, self.B, self.size, self.y_param)
 
     def teardown(self):
         del self.A
@@ -351,8 +351,8 @@ class TimeDownSampleCitation1:
         path_for_a = os.sep.join([DATASET_PATH, 'citation', 'A.csv'])
         path_for_b = os.sep.join([DATASET_PATH, 'citation', 'B.csv'])
         try:
-            self.A = mg.read_csv_metadata(path_for_a)
-            self.B = mg.read_csv_metadata(path_for_b)
+            self.A = em.read_csv_metadata(path_for_a)
+            self.B = em.read_csv_metadata(path_for_b)
             self.size = 1000
             self.y_param = 1
         except AssertionError:
@@ -360,7 +360,7 @@ class TimeDownSampleCitation1:
             raise SystemExit
 
     def time_down_sample_tables(self):
-        mg.down_sample(self.A, self.B, self.size, self.y_param)
+        em.down_sample(self.A, self.B, self.size, self.y_param)
 
     def teardown(self):
         del self.A
@@ -376,8 +376,8 @@ class TimeDownSampleCitation2:
         path_for_a = os.sep.join([DATASET_PATH, 'citation', 'A.csv'])
         path_for_b = os.sep.join([DATASET_PATH, 'citation', 'B.csv'])
         try:
-            self.A = mg.read_csv_metadata(path_for_a)
-            self.B = mg.read_csv_metadata(path_for_b)
+            self.A = em.read_csv_metadata(path_for_a)
+            self.B = em.read_csv_metadata(path_for_b)
             self.size = 2000
             self.y_param = 1
         except AssertionError:
@@ -385,7 +385,7 @@ class TimeDownSampleCitation2:
             raise SystemExit
 
     def time_down_sample_tables(self):
-        mg.down_sample(self.A, self.B, self.size, self.y_param)
+        em.down_sample(self.A, self.B, self.size, self.y_param)
 
     def teardown(self):
         del self.A
