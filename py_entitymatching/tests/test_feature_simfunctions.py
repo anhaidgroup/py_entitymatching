@@ -94,19 +94,19 @@ class SimFunctionsTestCases(unittest.TestCase):
         a = ['data']
         b = ['data', 'science']
         val = sim.cosine(a, b)
-        self.assertAlmostEqual(val, 0.7071067811865475)
+        self.assertAlmostEqual(val, 0.7071067811865475, 5)
 
     def test_sim_cosine_valid_2(self):
         a = 'data'
         b = ['data', 'science']
         val = sim.cosine(a, b)
-        self.assertAlmostEqual(val, 0.7071067811865475)
+        self.assertAlmostEqual(val, 0.7071067811865475, 5)
 
     def test_sim_cosine_valid_3(self):
         a = 'data'
         b = ['data', 'science']
         val = sim.cosine(b, a)
-        self.assertAlmostEqual(val, 0.7071067811865475)
+        self.assertAlmostEqual(val, 0.7071067811865475, 5)
 
     # >>> monge_elkan(['Niall'], ['Neal'])
     #     0.8049999999999999
@@ -114,19 +114,19 @@ class SimFunctionsTestCases(unittest.TestCase):
         a = ['Niall']
         b = ['Neal']
         val = sim.monge_elkan(a, b)
-        self.assertAlmostEqual(val, 0.8049999999999999)
+        self.assertAlmostEqual(val, 0.8049999999999999, 5)
 
     def test_sim_monelk_valid_2(self):
         a = 'Niall'
         b = ['Neal']
         val = sim.monge_elkan(a, b)
-        self.assertAlmostEqual(val, 0.8049999999999999)
+        self.assertAlmostEqual(val, 0.8049999999999999, 5)
 
     def test_sim_monelk_valid_3(self):
         a = ['Niall']
         b = 'Neal'
         val = sim.monge_elkan(a, b)
-        self.assertAlmostEqual(val, 0.8049999999999999)
+        self.assertAlmostEqual(val, 0.8049999999999999, 5)
 
         # levenshtein('levenshtein', 'frankenstein')
         #        6
@@ -151,7 +151,7 @@ class SimFunctionsTestCases(unittest.TestCase):
         a = 'MARTHA'
         b = 'MARHTA'
         val = sim.jaro(a, b)
-        self.assertAlmostEqual(val, 0.9444444444444445)
+        self.assertAlmostEqual(val, 0.9444444444444445, 5)
 
     def test_sim_jaro_valid_2(self):
         #         >>> jaro('MARTHA', 'MARHTA')
@@ -165,7 +165,7 @@ class SimFunctionsTestCases(unittest.TestCase):
         a = 'MARTHA'
         b = 'MARHTA'
         val = sim.jaro_winkler(a, b)
-        self.assertAlmostEqual(val, 0.9611111111111111)
+        self.assertAlmostEqual(val, 0.9611111111111111, 5)
 
     def test_sim_jaro_winkler_valid_2(self):
         a = 'MARTHA'
