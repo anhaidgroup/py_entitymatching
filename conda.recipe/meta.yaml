@@ -1,5 +1,5 @@
 package:
-  name: magellan
+  name: py_entitymatching
   version: "0.1.0"
 
 source:
