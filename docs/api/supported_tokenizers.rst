@@ -1,8 +1,8 @@
 ====================
 Supported Tokenizers
 ====================
-.. autofunction:: magellan.tok_qgram
-.. autofunction:: magellan.tok_delim
-.. autofunction:: magellan.tok_wspace
-.. autofunction:: magellan.tok_alphabetic
-.. autofunction:: magellan.tok_alphanumeric
+.. autofunction:: py_entitymatching.tok_qgram
+.. autofunction:: py_entitymatching.tok_delim
+.. autofunction:: py_entitymatching.tok_wspace
+.. autofunction:: py_entitymatching.tok_alphabetic
+.. autofunction:: py_entitymatching.tok_alphanumeric

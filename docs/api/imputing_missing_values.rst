@@ -1,4 +1,4 @@
 =======================
 Imputing Missing Values
 =======================
-.. autofunction:: magellan.impute_table
+.. autofunction:: py_entitymatching.impute_table

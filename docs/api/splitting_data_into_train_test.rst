@@ -1,4 +1,4 @@
 ==================================
 Splitting Data into Train and Test
 ==================================
-.. autofunction:: magellan.split_train_test
+.. autofunction:: py_entitymatching.split_train_test

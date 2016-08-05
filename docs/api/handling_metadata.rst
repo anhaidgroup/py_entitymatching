@@ -1,27 +1,27 @@
 =================
 Handling Metadata
 =================
-.. autofunction:: magellan.get_catalog
-.. autofunction:: magellan.get_catalog_len
-.. autofunction:: magellan.del_catalog
-.. autofunction:: magellan.is_catalog_empty
-.. autofunction:: magellan.is_dfinfo_present
-.. autofunction:: magellan.is_property_present_for_df
-.. autofunction:: magellan.show_properties
-.. autofunction:: magellan.show_properties_for_id
-.. autofunction:: magellan.init_properties
-.. autofunction:: magellan.get_property
-.. autofunction:: magellan.set_property
-.. autofunction:: magellan.del_property
-.. autofunction:: magellan.copy_properties
-.. autofunction:: magellan.get_key
-.. autofunction:: magellan.set_key
-.. autofunction:: magellan.get_fk_ltable
-.. autofunction:: magellan.set_fk_ltable
-.. autofunction:: magellan.get_fk_rtable
-.. autofunction:: magellan.set_fk_rtable
-.. autofunction:: magellan.get_ltable
-.. autofunction:: magellan.set_ltable
-.. autofunction:: magellan.get_rtable
-.. autofunction:: magellan.set_rtable
+.. autofunction:: py_entitymatching.get_catalog
+.. autofunction:: py_entitymatching.get_catalog_len
+.. autofunction:: py_entitymatching.del_catalog
+.. autofunction:: py_entitymatching.is_catalog_empty
+.. autofunction:: py_entitymatching.is_dfinfo_present
+.. autofunction:: py_entitymatching.is_property_present_for_df
+.. autofunction:: py_entitymatching.show_properties
+.. autofunction:: py_entitymatching.show_properties_for_id
+.. autofunction:: py_entitymatching.init_properties
+.. autofunction:: py_entitymatching.get_property
+.. autofunction:: py_entitymatching.set_property
+.. autofunction:: py_entitymatching.del_property
+.. autofunction:: py_entitymatching.copy_properties
+.. autofunction:: py_entitymatching.get_key
+.. autofunction:: py_entitymatching.set_key
+.. autofunction:: py_entitymatching.get_fk_ltable
+.. autofunction:: py_entitymatching.set_fk_ltable
+.. autofunction:: py_entitymatching.get_fk_rtable
+.. autofunction:: py_entitymatching.set_fk_rtable
+.. autofunction:: py_entitymatching.get_ltable
+.. autofunction:: py_entitymatching.set_ltable
+.. autofunction:: py_entitymatching.get_rtable
+.. autofunction:: py_entitymatching.set_rtable
 

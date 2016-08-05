@@ -1,11 +1,11 @@
 ========
 Blocking
 ========
-.. autoclass:: magellan.AttrEquivalenceBlocker
+.. autoclass:: py_entitymatching.AttrEquivalenceBlocker
     :members:
-.. autoclass:: magellan.OverlapBlocker
+.. autoclass:: py_entitymatching.OverlapBlocker
     :members:
-.. autoclass:: magellan.RuleBasedBlocker
+.. autoclass:: py_entitymatching.RuleBasedBlocker
     :members:
-.. autoclass:: magellan.BlackBoxBlocker
+.. autoclass:: py_entitymatching.BlackBoxBlocker
     :members:

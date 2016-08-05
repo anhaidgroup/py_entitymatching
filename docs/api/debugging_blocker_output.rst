@@ -1,4 +1,4 @@
 ========================
 Debugging Blocker Output
 ========================
-.. autofunction:: magellan.debug_blocker
+.. autofunction:: py_entitymatching.debug_blocker

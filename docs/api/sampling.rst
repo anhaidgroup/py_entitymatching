@@ -1,4 +1,4 @@
 ========
 Sampling
 ========
-.. autofunction:: magellan.sample_table
+.. autofunction:: py_entitymatching.sample_table

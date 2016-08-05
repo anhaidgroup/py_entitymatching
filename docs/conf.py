@@ -221,7 +221,7 @@ html_theme = 'sphinx_rtd_theme'
 #html_search_scorer = 'scorer.js'
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'Magellandoc'
+htmlhelp_basename = 'py_entitymatchingdoc'
 
 # -- Options for LaTeX output ---------------------------------------------
 

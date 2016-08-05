@@ -1,4 +1,4 @@
 ============
 Downsampling
 ============
-.. autofunction:: magellan.down_sample
+.. autofunction:: py_entitymatching.down_sample

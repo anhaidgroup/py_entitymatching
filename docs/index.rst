@@ -1,6 +1,6 @@
 
-Welcome to Magellan's documentation!
-====================================
+Welcome to py_entitymatching's documentation!
+=============================================
 
 Contents:
 

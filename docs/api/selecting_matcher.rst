@@ -1,4 +1,4 @@
 ==================
 Selecting Matcher
 ==================
-.. autofunction:: magellan.select_matcher
+.. autofunction:: py_entitymatching.select_matcher

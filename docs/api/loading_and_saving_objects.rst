@@ -1,7 +1,7 @@
 ============================
 Loading and Saving Objects
 ============================
-.. autofunction:: magellan.load_table
-.. autofunction:: magellan.save_table
-.. autofunction:: magellan.load_object
-.. autofunction:: magellan.save_object
+.. autofunction:: py_entitymatching.load_table
+.. autofunction:: py_entitymatching.save_table
+.. autofunction:: py_entitymatching.load_object
+.. autofunction:: py_entitymatching.save_object

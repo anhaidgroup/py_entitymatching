@@ -1,4 +1,4 @@
 =========================
 Combining Blocker Outputs
 =========================
-.. autofunction:: magellan.combine_blocker_outputs_via_union
+.. autofunction:: py_entitymatching.combine_blocker_outputs_via_union

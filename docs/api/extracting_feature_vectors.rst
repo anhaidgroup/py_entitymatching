@@ -1,4 +1,4 @@
 ==========================
 Extracting Feature Vectors
 ==========================
-.. autofunction:: magellan.extract_feature_vecs
+.. autofunction:: py_entitymatching.extract_feature_vecs

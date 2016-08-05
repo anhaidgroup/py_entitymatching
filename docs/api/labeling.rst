@@ -1,4 +1,4 @@
 ========
 Labeling
 ========
-.. autofunction:: magellan.label_table
+.. autofunction:: py_entitymatching.label_table
