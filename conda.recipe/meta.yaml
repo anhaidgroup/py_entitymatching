@@ -10,27 +10,18 @@ requirements:
   build:
     - python
     - setuptools
+    - py_stringsimjoin
     - cloudpickle
-    - pandas
-    - six
-    - joblib
     - pyparsing
     - scikit-learn
-    - py_stringsimjoin
-    - py_stringmatching
 
   run:
     - python
+    - py_stringsimjoin
     - cloudpickle
-    - pandas
-    - six
-    - joblib
     - pyparsing
     - scikit-learn
-    - py_stringsimjoin
-    - py_stringmatching
     - pyqt
-    - pyprind
 
 test:
   # Python imports
@@ -52,7 +43,7 @@ test:
 about:
   home: https://sites.google.com/site/anhaidgroup/projects/py_entitymatching
   license: BSD License
-  summary: 'Python library for entity matching.'
+  summary: 'Python library for string matching.'
 
 # See
 # http://docs.continuum.io/conda/build.html for
