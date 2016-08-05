@@ -10,23 +10,32 @@ requirements:
   build:
     - python
     - setuptools
-    - py_stringsimjoin
     - cloudpickle
+    - pandas
+    - six
+    - joblib
     - pyparsing
     - scikit-learn
+    - py_stringsimjoin
+    - py_stringmatching
 
   run:
     - python
-    - py_stringsimjoin
     - cloudpickle
+    - pandas
+    - six
+    - joblib
     - pyparsing
     - scikit-learn
+    - py_stringsimjoin
+    - py_stringmatching
     - pyqt
+    - pyprind
 
 test:
   # Python imports
   imports:
-    - magellan
+    - py_entitymatching
 
   # commands:
     # You can put test commands to be run here.  Use this to test that the
@@ -41,9 +50,9 @@ test:
     # - nose
 
 about:
-  home: https://sites.google.com/site/anhaidgroup/projects/magellan
+  home: https://sites.google.com/site/anhaidgroup/projects/py_entitymatching
   license: BSD License
-  summary: 'Python library for string matching.'
+  summary: 'Python library for entity matching.'
 
 # See
 # http://docs.continuum.io/conda/build.html for
