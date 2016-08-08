@@ -107,7 +107,7 @@ def _cast_val(v, i):
         # if isinstance(i, bytes):
         #     v = v.decode('utf-8')
         # # v = remove_non_ascii(str(v))
-        return unicode(v)
+        return v
     elif isinstance(i, object):
         return v
     else:
