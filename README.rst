@@ -28,7 +28,6 @@ Important links
 * Project Homepage: https://sites.google.com/site/anhaidgroup/projects/py_entitymatching
 * Code repository: https://github.com/anhaidgroup/py_entitymatching
 * Issue Tracker: https://github.com/anhaidgroup/py_entitymatching/issues
-* Mailing List: https://groups.google.com/forum/#!forum/py_entitymatching
 
 Platforms
 =========
