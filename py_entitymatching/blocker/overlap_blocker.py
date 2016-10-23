@@ -224,11 +224,18 @@ class OverlapBlocker(Blocker):
         ssj.dataframe_column_to_str(l_df, l_overlap_attr, inplace=True)
         ssj.dataframe_column_to_str(r_df, r_overlap_attr, inplace=True)
 
+
+
         # # cleanup the tables from non-ascii characters, punctuations, and stop words
+        l_dummy_overlap_attr = '@#__xx__overlap_ltable__#@'
+        r_dummy_overlap_attr = '@#__xx__overlap_rtable__#@'
+        l_df[l_dummy_overlap_attr] = l_df[l_overlap_attr]
+        r_df[r_dummy_overlap_attr] = r_df[r_overlap_attr]
+
         if not l_df.empty:
-            self.cleanup_table(l_df, l_overlap_attr, rem_stop_words)
+            self.cleanup_table(l_df, l_dummy_overlap_attr, rem_stop_words)
         if not r_df.empty:
-            self.cleanup_table(r_df, r_overlap_attr, rem_stop_words)
+            self.cleanup_table(r_df, r_dummy_overlap_attr, rem_stop_words)
 
         # # determine which tokenizer to use
         if word_level == True:
@@ -239,8 +246,9 @@ class OverlapBlocker(Blocker):
             tokenizer = QgramTokenizer(qval=q_val, return_set=True)
 
         # # perform overlap similarity join
-        candset = overlap_join(l_df, r_df, l_key, r_key, l_overlap_attr,
-                               r_overlap_attr, tokenizer, overlap_size, '>=',
+        candset = overlap_join(l_df, r_df, l_key, r_key, l_dummy_overlap_attr,
+                               r_dummy_overlap_attr, tokenizer, overlap_size,
+                               '>=',
                                allow_missing, l_output_attrs, r_output_attrs,
                                l_output_prefix, r_output_prefix, False, n_jobs,
                                show_progress)
@@ -516,6 +524,17 @@ class OverlapBlocker(Blocker):
         if not isinstance(overlap_size, int):
             logger.error('Parameter overlap_size is not of type int')
             raise AssertionError('Parameter overlap_size is not of type int')
+
+    # check and copy overlap attributes if required
+
+    # def check_and_copy_overlap_attrs(self, ltable, rtable, l_overlap_attr,
+    #                                 r_overlap_attr, l_output_attrs,
+    #                                  r_output_attrs):
+    #     if l_output_attrs != None:
+    #         if len(set(l_output_attrs).intersection(l_overlap_attr)) > 0:
+
+
+
 
     # validate the overlap attrs
     def validate_overlap_attrs(self, ltable, rtable, l_overlap_attr,

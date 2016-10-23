@@ -2,18 +2,9 @@
 Welcome to py_entitymatching's documentation!
 =============================================
 
-Contents:
-
-.. toctree::
-    :maxdepth: 2
-    :caption: Getting Started
-
-    installation
-    how_to_guide
-
 .. toctree::
     :maxdepth: 3
-    :caption: API Reference
+    :caption: User Manual
 
     api/reading_and_writing_data
     api/loading_and_saving_objects
