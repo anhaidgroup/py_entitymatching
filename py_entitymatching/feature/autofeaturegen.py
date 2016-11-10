@@ -575,6 +575,8 @@ def fill_fn_template(attr1, attr2, sim_func, tok_func_1=None, tok_func_2=None):
 #               'needleman_wunsch', 'smith_waterman', 'jaro', 'jaro_winkler',
 #               'exact_match', 'rel_diff', 'abs_norm']
 def get_fn_name(attr1, attr2, sim_func, tok_func_1=None, tok_func_2=None):
+    attr1 = '_'.join(attr1.split())
+    attr2 = '_'.join(attr2.split())
     fp = '_'.join([attr1, attr2])
     name_lkp = dict()
     name_lkp["jaccard"] = "jac"
