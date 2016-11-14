@@ -14,7 +14,7 @@ requirements:
     - cloudpickle
     - pyparsing
     - scikit-learn
-    - qt 4.8.6.99
+    - qt 4.8.*
     - sip >=4.16.4
     - pyqt 4.11.4
 
@@ -24,7 +24,7 @@ requirements:
     - cloudpickle
     - pyparsing
     - scikit-learn
-    - qt 4.8.6.99
+    - qt 4.8.*
     - sip >=4.16.4
     - pyqt 4.11.4
 
