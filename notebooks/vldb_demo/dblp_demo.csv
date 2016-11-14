@@ -1,4 +1,4 @@
-id,title,authors,venue,year
+id,title,authors,venue,paper year
 l0,Paradise: A Database System for GIS Applications,Paradise Team,SIGMOD Conference,1995
 l1,A Query Language and Optimization Techniques for Unstructured Data,"Gerd G. Hillebrand, Peter Buneman, Susan B. Davidson, Dan Suciu",SIGMOD Conference,1996
 l2,Turbo-charging Vertical Mining of Large Databases,"Jayant R. Haritsa, Devavrat Shah, S. Sudarshan, Pradeep Shenoy, Mayank Bawa, Gaurav Bhalotia",SIGMOD Conference,2000

@@ -1,4 +1,4 @@
-id,title,authors,venue,year
+id,title,authors,venue,paper year
 r0,An efficient bitmap encoding scheme for selection queries,"Chee-Yong Chan, Yannis E. Ioannidis",International Conference on Management of Data,1999
 r1,Integrating a Structured-Text Retrieval System with an Object-Oriented Database System,"Tak W. Yan, Jurgen Annevelink",Very Large Data Bases,1994
 r2,Nearest neighbor queries,"Nick Roussopoulos, Stephen Kelley, Frédéric Vincent",International Conference on Management of Data,1995
