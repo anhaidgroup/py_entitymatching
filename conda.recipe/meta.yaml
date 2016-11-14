@@ -16,7 +16,7 @@ requirements:
     - scikit-learn
     - qt 4.8.*
     - sip >=4.16.4
-    - pyqt 4.11.4
+    - pyqt-4.11.4
 
   run:
     - python
@@ -26,7 +26,7 @@ requirements:
     - scikit-learn
     - qt 4.8.*
     - sip >=4.16.4
-    - pyqt 4.11.4
+    - pyqt-4.11.4
 
 test:
   # Python imports
