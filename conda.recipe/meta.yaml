@@ -14,7 +14,7 @@ requirements:
     - cloudpickle
     - pyparsing
     - scikit-learn
-    - pyqt==4.11.4
+    - pyqt=4.11.4
 
   run:
     - python
@@ -22,7 +22,7 @@ requirements:
     - cloudpickle
     - pyparsing
     - scikit-learn
-    - pyqt==4.11.4
+    - pyqt=4.11.4
 
 test:
   # Python imports
