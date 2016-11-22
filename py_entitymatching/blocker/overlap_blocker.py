@@ -30,7 +30,7 @@ class OverlapBlocker(Blocker):
                            'be', 'by', 'for', 'from',
                            'has', 'he', 'in', 'is', 'it',
                            'its', 'on', 'that', 'the', 'to',
-                           'was', 'were', 'will', 'with']
+                           'was', 'were', 'will', 'with', 'of']
         self.regex_punctuation = re.compile(
             '[%s]' % re.escape(string.punctuation))
         super(OverlapBlocker, self).__init__()
