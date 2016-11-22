@@ -581,8 +581,11 @@ class OverlapBlocker(Blocker):
                 # chop the attribute values and convert into a set
                 val_chopped = list(set(val_no_punctuations.split()))
                 # remove stop words
-                val_chopped_no_stopwords = self.rem_stopwords(val_chopped)
-                val_joined = ' '.join(val_chopped_no_stopwords)
+                if rem_stop_words:
+                    val_chopped_no_stopwords = self.rem_stopwords(val_chopped)
+                    val_joined = ' '.join(val_chopped_no_stopwords)
+                else:
+                    val_joined = ' '.join(val_chopped)
                 values.append(val_joined)
 
         table.is_copy = False
@@ -599,8 +602,11 @@ class OverlapBlocker(Blocker):
         # chop the attribute values and convert into a set
         val_chopped = list(set(val_no_punctuations.split()))
         # remove stop words
-        val_chopped_no_stopwords = self.rem_stopwords(val_chopped)
-        val_joined = ' '.join(val_chopped_no_stopwords)
+        if rem_stop_words:
+            val_chopped_no_stopwords = self.rem_stopwords(val_chopped)
+            val_joined = ' '.join(val_chopped_no_stopwords)
+        else:
+            val_joined = ' '.join(val_chopped)
         return val_joined
 
     def rem_punctuations(self, s):
