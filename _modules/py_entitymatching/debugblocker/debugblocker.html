@@ -1,0 +1,845 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>py_entitymatching.debugblocker.debugblocker &mdash; py_entitymatching 0.1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="py_entitymatching 0.1.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> py_entitymatching
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/reading_and_writing_data.html">Reading and Writing Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/loading_and_saving_objects.html">Loading and Saving Objects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/handling_metadata.html">Handling Metadata</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/downsampling.html">Downsampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/blocking.html">Blocking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/debugging_blocker_output.html">Debugging Blocker Output</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/combining_blocker_outputs.html">Combining Blocker Outputs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/sampling.html">Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/labeling.html">Labeling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/handling_features.html">Handling Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/matching.html">Matching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/debugging_matcher.html">Debugging Matcher</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/evaluating_the_matching_output.html">Evaluating the Matching Output</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">py_entitymatching</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>py_entitymatching.debugblocker.debugblocker</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for py_entitymatching.debugblocker.debugblocker</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
+<span class="kn">import</span> <span class="nn">heapq</span> <span class="kn">as</span> <span class="nn">hq</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">attrgetter</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+
+<span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="kn">as</span> <span class="nn">em</span>
+<span class="kn">import</span> <span class="nn">py_entitymatching.catalog.catalog_manager</span> <span class="kn">as</span> <span class="nn">cm</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="debug_blocker"><a class="viewcode-back" href="../../../api/debugging_blocker_output.html#py_entitymatching.debug_blocker">[docs]</a><span class="k">def</span> <span class="nf">debug_blocker</span><span class="p">(</span><span class="n">candset</span><span class="p">,</span> <span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">output_size</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+                  <span class="n">attr_corres</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function debugs the blocker output and reports a list of potential</span>
+<span class="sd">    matches that are discarded by a blocker (or a blocker sequence).</span>
+
+<span class="sd">    Specifically,  this function takes in the two input tables for</span>
+<span class="sd">    matching and the candidate set returned by a blocker (or a blocker</span>
+<span class="sd">    sequence), and produces a list of tuple pairs which are rejected by the</span>
+<span class="sd">    blocker but with high potential of being true matches.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        candset (DataFrame): The candidate set generated by</span>
+<span class="sd">            applying the blocker on the ltable and rtable.</span>
+<span class="sd">        ltable,rtable (DataFrame): The input DataFrames that are used to</span>
+<span class="sd">            generate the blocker output.</span>
+<span class="sd">        output_size (int): The number of tuple pairs that will be</span>
+<span class="sd">            returned (defaults to 200).</span>
+<span class="sd">        attr_corres (list): A list of attribute correspondence tuples.</span>
+<span class="sd">            When ltable and rtable have different schemas, or the same</span>
+<span class="sd">            schema but different words describing the attributes, the</span>
+<span class="sd">            user needs to manually specify the attribute correspondence.</span>
+<span class="sd">            Each element in this list should be a tuple of strings</span>
+<span class="sd">            which are the corresponding attributes in ltable and rtable.</span>
+<span class="sd">            The default value is None, and if the user doesn&#39;t specify</span>
+<span class="sd">            this list, a built-in function for finding the</span>
+<span class="sd">            attribute correspondence list will be called. But we highly</span>
+<span class="sd">            recommend the users manually specify the attribute</span>
+<span class="sd">            correspondences, unless the schemas of ltable and rtable are</span>
+<span class="sd">            identical (defaults to None).</span>
+<span class="sd">        verbose (boolean):  A flag to indicate whether the debug information</span>
+<span class="sd">         should be logged (defaults to False).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A pandas DataFrame with &#39;output_size&#39; number of rows. Each row in the</span>
+<span class="sd">        DataFrame is a tuple pair which has potential of being a true</span>
+<span class="sd">        match, but is rejected by the blocker (meaning that the tuple</span>
+<span class="sd">        pair is in the Cartesian product of ltable and rtable subtracted</span>
+<span class="sd">        by the candidate set). The fields in the returned DataFrame are</span>
+<span class="sd">        from ltable and rtable, which are useful for determining similar</span>
+<span class="sd">        tuple pairs.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If `ltable`, `rtable` or `candset` is not of type</span>
+<span class="sd">            pandas DataFrame.</span>
+<span class="sd">        AssertionError: If `ltable` or `rtable` is empty (size of 0).</span>
+<span class="sd">        AssertionError: If the output `size` parameter is less than or equal</span>
+<span class="sd">            to 0.</span>
+<span class="sd">        AssertionError: If the attribute correspondence (`attr_corres`) list is</span>
+<span class="sd">            not in the correct format (a list of tuples).</span>
+<span class="sd">        AssertionError: If the attribute correspondence (`attr_corres`)</span>
+<span class="sd">            cannot be built correctly.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Check input types.</span>
+    <span class="n">_validate_types</span><span class="p">(</span><span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">candset</span><span class="p">,</span> <span class="n">output_size</span><span class="p">,</span>
+                    <span class="n">attr_corres</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+    <span class="c1"># Check table size.</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ltable</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Error: ltable is empty!&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rtable</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Error: rtable is empty!&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Check the value of output size.</span>
+    <span class="k">if</span> <span class="n">output_size</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;The input parameter: </span><span class="se">\&#39;</span><span class="s1">output_size</span><span class="se">\&#39;</span><span class="s1">&#39;</span>
+                             <span class="s1">&#39; is less than or equal to 0. Nothing needs&#39;</span>
+                             <span class="s1">&#39; to be done!&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Get table metadata.</span>
+    <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">get_keys_for_ltable_rtable</span><span class="p">(</span><span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+    <span class="c1"># Validate metadata</span>
+    <span class="n">cm</span><span class="o">.</span><span class="n">_validate_metadata_for_table</span><span class="p">(</span><span class="n">ltable</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span> <span class="s1">&#39;ltable&#39;</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+    <span class="n">cm</span><span class="o">.</span><span class="n">_validate_metadata_for_table</span><span class="p">(</span><span class="n">rtable</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span> <span class="s1">&#39;rtable&#39;</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+    <span class="c1"># Check the user input field correst list (if exists) and get the raw</span>
+    <span class="c1"># version of our internal correst list.</span>
+    <span class="n">_check_input_field_correspondence_list</span><span class="p">(</span><span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">attr_corres</span><span class="p">)</span>
+    <span class="n">corres_list</span> <span class="o">=</span> <span class="n">_get_field_correspondence_list</span><span class="p">(</span><span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span>
+                                                 <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span> <span class="n">attr_corres</span><span class="p">)</span>
+
+    <span class="c1"># Build the (col_name: col_index) dict to speed up locating a field in</span>
+    <span class="c1"># the schema.</span>
+    <span class="n">ltable_col_dict</span> <span class="o">=</span> <span class="n">_build_col_name_index_dict</span><span class="p">(</span><span class="n">ltable</span><span class="p">)</span>
+    <span class="n">rtable_col_dict</span> <span class="o">=</span> <span class="n">_build_col_name_index_dict</span><span class="p">(</span><span class="n">rtable</span><span class="p">)</span>
+
+    <span class="c1"># Filter correspondence list to remove numeric types. We only consider</span>
+    <span class="c1"># string types for document concatenation.</span>
+    <span class="n">_filter_corres_list</span><span class="p">(</span><span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span>
+                        <span class="n">ltable_col_dict</span><span class="p">,</span> <span class="n">rtable_col_dict</span><span class="p">,</span> <span class="n">corres_list</span><span class="p">)</span>
+
+    <span class="c1"># Get field filtered new table.</span>
+    <span class="n">ltable_filtered</span><span class="p">,</span> <span class="n">rtable_filtered</span> <span class="o">=</span> <span class="n">_get_filtered_table</span><span class="p">(</span>
+        <span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span> <span class="n">corres_list</span><span class="p">)</span>
+
+    <span class="c1"># Select a subset of fields with high scores.</span>
+    <span class="n">feature_list</span> <span class="o">=</span> <span class="n">_select_features</span><span class="p">(</span><span class="n">ltable_filtered</span><span class="p">,</span> <span class="n">rtable_filtered</span><span class="p">,</span> <span class="n">l_key</span><span class="p">)</span>
+
+    <span class="c1"># Map the record key value to its index in the table.</span>
+    <span class="n">lrecord_id_to_index_map</span> <span class="o">=</span> <span class="n">_get_record_id_to_index_map</span><span class="p">(</span><span class="n">ltable_filtered</span><span class="p">,</span> <span class="n">l_key</span><span class="p">)</span>
+    <span class="n">rrecord_id_to_index_map</span> <span class="o">=</span> <span class="n">_get_record_id_to_index_map</span><span class="p">(</span><span class="n">rtable_filtered</span><span class="p">,</span> <span class="n">r_key</span><span class="p">)</span>
+
+    <span class="c1"># Build the tokenized record list delimited by a white space on the</span>
+    <span class="c1"># selected fields.</span>
+    <span class="n">lrecord_list</span> <span class="o">=</span> <span class="n">_get_tokenized_table</span><span class="p">(</span><span class="n">ltable_filtered</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span> <span class="n">feature_list</span><span class="p">)</span>
+    <span class="n">rrecord_list</span> <span class="o">=</span> <span class="n">_get_tokenized_table</span><span class="p">(</span><span class="n">rtable_filtered</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span> <span class="n">feature_list</span><span class="p">)</span>
+
+    <span class="c1"># Reformat the candidate set from a dataframe to a list of record index</span>
+    <span class="c1"># tuple pair.</span>
+    <span class="n">new_formatted_candidate_set</span> <span class="o">=</span> <span class="n">_index_candidate_set</span><span class="p">(</span>
+        <span class="n">candset</span><span class="p">,</span> <span class="n">lrecord_id_to_index_map</span><span class="p">,</span> <span class="n">rrecord_id_to_index_map</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+    <span class="c1"># Build the token order according to token&#39;s frequency. To run a</span>
+    <span class="c1"># prefix filtering based similarity join algorithm, we first need</span>
+    <span class="c1"># the global token order.</span>
+    <span class="n">order_dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">_build_global_token_order</span><span class="p">(</span><span class="n">lrecord_list</span><span class="p">,</span> <span class="n">order_dict</span><span class="p">)</span>
+    <span class="n">_build_global_token_order</span><span class="p">(</span><span class="n">rrecord_list</span><span class="p">,</span> <span class="n">order_dict</span><span class="p">)</span>
+
+    <span class="c1"># Sort the tokens in each record by the global order.</span>
+    <span class="n">_sort_record_tokens_by_global_order</span><span class="p">(</span><span class="n">lrecord_list</span><span class="p">,</span> <span class="n">order_dict</span><span class="p">)</span>
+    <span class="n">_sort_record_tokens_by_global_order</span><span class="p">(</span><span class="n">rrecord_list</span><span class="p">,</span> <span class="n">order_dict</span><span class="p">)</span>
+
+    <span class="c1"># Run the topk similarity join.</span>
+    <span class="n">topk_heap</span> <span class="o">=</span> <span class="n">_topk_sim_join</span><span class="p">(</span>
+        <span class="n">lrecord_list</span><span class="p">,</span> <span class="n">rrecord_list</span><span class="p">,</span> <span class="n">new_formatted_candidate_set</span><span class="p">,</span> <span class="n">output_size</span><span class="p">)</span>
+
+    <span class="c1"># Assemble the topk record list to a dataframe.</span>
+    <span class="n">ret_dataframe</span> <span class="o">=</span> <span class="n">_assemble_topk_table</span><span class="p">(</span><span class="n">topk_heap</span><span class="p">,</span> <span class="n">ltable_filtered</span><span class="p">,</span> <span class="n">rtable_filtered</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ret_dataframe</span></div>
+
+
+<span class="c1"># Validate the types of input parameters.</span>
+<span class="k">def</span> <span class="nf">_validate_types</span><span class="p">(</span><span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">candidate_set</span><span class="p">,</span> <span class="n">output_size</span><span class="p">,</span>
+                    <span class="n">attr_corres</span><span class="p">,</span> <span class="n">verbose</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ltable</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Input left table is not of type pandas data frame&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Input left table is not of type pandas data frame&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rtable</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Input right table is not of type pandas data frame&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Input right table is not of type pandas data frame&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">candidate_set</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Input candidate set is not of type pandas dataframe&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Input candidate set is not of type pandas dataframe&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">output_size</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Output size is not of type int&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Output size is not of type int&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">attr_corres</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">attr_corres</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Input attribute correspondence is not of&#39;</span>
+                          <span class="s1">&#39; type list&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Input attribute correspondence is&#39;</span>
+                                 <span class="s1">&#39; not of type list&#39;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">pair</span> <span class="ow">in</span> <span class="n">attr_corres</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pair</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Pair in attribute correspondence list is not&#39;</span>
+                              <span class="s1">&#39; of type tuple&#39;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Pair in attribute correspondence list&#39;</span>
+                                     <span class="s1">&#39; is not of type tuple&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">verbose</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Parameter verbose is not of type bool&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Parameter verbose is not of type bool&#39;</span><span class="p">)</span>
+
+
+<span class="c1"># Assemble the topk heap to a dataframe.</span>
+<span class="k">def</span> <span class="nf">_assemble_topk_table</span><span class="p">(</span><span class="n">topk_heap</span><span class="p">,</span> <span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">ret_key</span><span class="o">=</span><span class="s1">&#39;_id&#39;</span><span class="p">,</span>
+                         <span class="n">l_output_prefix</span><span class="o">=</span><span class="s1">&#39;ltable_&#39;</span><span class="p">,</span> <span class="n">r_output_prefix</span><span class="o">=</span><span class="s1">&#39;rtable_&#39;</span><span class="p">):</span>
+    <span class="n">topk_heap</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">tup</span><span class="p">:</span> <span class="n">tup</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">ret_data_col_name_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;_id&#39;</span><span class="p">,</span> <span class="s1">&#39;similarity&#39;</span><span class="p">]</span>
+    <span class="n">ltable_col_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">ltable</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+    <span class="n">rtable_col_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">rtable</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+    <span class="n">lkey</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_key</span><span class="p">(</span><span class="n">ltable</span><span class="p">)</span>
+    <span class="n">rkey</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_key</span><span class="p">(</span><span class="n">rtable</span><span class="p">)</span>
+    <span class="n">lkey_index</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">rkey_index</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ltable_col_names</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">ltable_col_names</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">lkey</span><span class="p">:</span>
+            <span class="n">lkey_index</span> <span class="o">=</span> <span class="n">i</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rtable_col_names</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">rtable_col_names</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">rkey</span><span class="p">:</span>
+            <span class="n">rkey_index</span> <span class="o">=</span> <span class="n">i</span>
+
+    <span class="n">ret_data_col_name_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">l_output_prefix</span> <span class="o">+</span> <span class="n">lkey</span><span class="p">)</span>
+    <span class="n">ret_data_col_name_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r_output_prefix</span> <span class="o">+</span> <span class="n">rkey</span><span class="p">)</span>
+    <span class="n">ltable_col_names</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">lkey</span><span class="p">)</span>
+    <span class="n">rtable_col_names</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">rkey</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ltable_col_names</span><span class="p">)):</span>
+        <span class="n">ret_data_col_name_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">l_output_prefix</span> <span class="o">+</span> <span class="n">ltable_col_names</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rtable_col_names</span><span class="p">)):</span>
+        <span class="n">ret_data_col_name_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r_output_prefix</span> <span class="o">+</span> <span class="n">rtable_col_names</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+    <span class="n">ret_tuple_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">topk_heap</span><span class="p">)):</span>
+        <span class="n">tup</span> <span class="o">=</span> <span class="n">topk_heap</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">lrecord</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">ltable</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">tup</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+        <span class="n">rrecord</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">rtable</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">tup</span><span class="p">[</span><span class="mi">2</span><span class="p">]])</span>
+        <span class="n">ret_tuple</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">tup</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+        <span class="n">ret_tuple</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lrecord</span><span class="p">[</span><span class="n">lkey_index</span><span class="p">])</span>
+        <span class="n">ret_tuple</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rrecord</span><span class="p">[</span><span class="n">rkey_index</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lrecord</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">j</span> <span class="o">!=</span> <span class="n">lkey_index</span><span class="p">:</span>
+                <span class="n">ret_tuple</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lrecord</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rrecord</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">j</span> <span class="o">!=</span> <span class="n">rkey_index</span><span class="p">:</span>
+                <span class="n">ret_tuple</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rrecord</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+        <span class="n">ret_tuple_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ret_tuple</span><span class="p">)</span>
+
+    <span class="n">data_frame</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">ret_tuple_list</span><span class="p">)</span>
+    <span class="c1"># When the ret data frame is empty, we cannot assign column names.</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_frame</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">data_frame</span>
+
+    <span class="n">data_frame</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">ret_data_col_name_list</span>
+    <span class="n">lkey</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_key</span><span class="p">(</span><span class="n">ltable</span><span class="p">)</span>
+    <span class="n">rkey</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_key</span><span class="p">(</span><span class="n">rtable</span><span class="p">)</span>
+    <span class="n">cm</span><span class="o">.</span><span class="n">set_candset_properties</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">ret_key</span><span class="p">,</span> <span class="n">l_output_prefix</span> <span class="o">+</span> <span class="n">lkey</span><span class="p">,</span>
+                              <span class="n">r_output_prefix</span> <span class="o">+</span> <span class="n">rkey</span><span class="p">,</span> <span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">data_frame</span>
+
+
+<span class="c1"># Topk similarity join wrapper.</span>
+<span class="k">def</span> <span class="nf">_topk_sim_join</span><span class="p">(</span><span class="n">lrecord_list</span><span class="p">,</span> <span class="n">rrecord_list</span><span class="p">,</span> <span class="n">cand_set</span><span class="p">,</span> <span class="n">output_size</span><span class="p">):</span>
+    <span class="c1"># Build prefix events.</span>
+    <span class="n">prefix_events</span> <span class="o">=</span> <span class="n">_generate_prefix_events</span><span class="p">(</span><span class="n">lrecord_list</span><span class="p">,</span> <span class="n">rrecord_list</span><span class="p">)</span>
+    <span class="n">topk_heap</span> <span class="o">=</span> <span class="n">_topk_sim_join_impl</span><span class="p">(</span><span class="n">lrecord_list</span><span class="p">,</span> <span class="n">rrecord_list</span><span class="p">,</span>
+                                    <span class="n">prefix_events</span><span class="p">,</span> <span class="n">cand_set</span><span class="p">,</span> <span class="n">output_size</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">topk_heap</span>
+
+
+<span class="c1"># Implement topk similarity join. Refer to &quot;top-k set similarity join&quot;</span>
+<span class="c1"># by Xiao et al. for details.</span>
+<span class="k">def</span> <span class="nf">_topk_sim_join_impl</span><span class="p">(</span><span class="n">lrecord_list</span><span class="p">,</span> <span class="n">rrecord_list</span><span class="p">,</span> <span class="n">prefix_events</span><span class="p">,</span>
+                        <span class="n">cand_set</span><span class="p">,</span> <span class="n">output_size</span><span class="p">):</span>
+    <span class="n">total_compared_pairs</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">compared_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="n">l_inverted_index</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">r_inverted_index</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">topk_heap</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">prefix_events</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">topk_heap</span><span class="p">)</span> <span class="o">==</span> <span class="n">output_size</span> <span class="ow">and</span>\
+                        <span class="n">topk_heap</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">prefix_events</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="n">event</span> <span class="o">=</span> <span class="n">hq</span><span class="o">.</span><span class="n">heappop</span><span class="p">(</span><span class="n">prefix_events</span><span class="p">)</span>
+        <span class="n">table_indicator</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">rec_idx</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">tok_idx</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">table_indicator</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">token</span> <span class="o">=</span> <span class="n">lrecord_list</span><span class="p">[</span><span class="n">rec_idx</span><span class="p">][</span><span class="n">tok_idx</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">r_inverted_index</span><span class="p">:</span>
+                <span class="n">r_records</span> <span class="o">=</span> <span class="n">r_inverted_index</span><span class="p">[</span><span class="n">token</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">r_rec_idx</span> <span class="ow">in</span> <span class="n">r_records</span><span class="p">:</span>
+                    <span class="n">pair</span> <span class="o">=</span> <span class="p">(</span><span class="n">rec_idx</span><span class="p">,</span> <span class="n">r_rec_idx</span><span class="p">)</span>
+                    <span class="c1"># Skip if the pair is in the candidate set.</span>
+                    <span class="k">if</span> <span class="n">pair</span> <span class="ow">in</span> <span class="n">cand_set</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                    <span class="c1"># Skip if the pair has been compared.</span>
+                    <span class="k">if</span> <span class="n">pair</span> <span class="ow">in</span> <span class="n">compared_set</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                    <span class="n">sim</span> <span class="o">=</span> <span class="n">_jaccard_sim</span><span class="p">(</span>
+                        <span class="nb">set</span><span class="p">(</span><span class="n">lrecord_list</span><span class="p">[</span><span class="n">rec_idx</span><span class="p">]),</span> <span class="nb">set</span><span class="p">(</span><span class="n">rrecord_list</span><span class="p">[</span><span class="n">r_rec_idx</span><span class="p">]))</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">topk_heap</span><span class="p">)</span> <span class="o">==</span> <span class="n">output_size</span><span class="p">:</span>
+                        <span class="n">hq</span><span class="o">.</span><span class="n">heappushpop</span><span class="p">(</span><span class="n">topk_heap</span><span class="p">,</span> <span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">rec_idx</span><span class="p">,</span> <span class="n">r_rec_idx</span><span class="p">))</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">hq</span><span class="o">.</span><span class="n">heappush</span><span class="p">(</span><span class="n">topk_heap</span><span class="p">,</span> <span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">rec_idx</span><span class="p">,</span> <span class="n">r_rec_idx</span><span class="p">))</span>
+
+                    <span class="n">total_compared_pairs</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="n">compared_set</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">pair</span><span class="p">)</span>
+
+            <span class="c1"># Update the inverted index.</span>
+            <span class="k">if</span> <span class="n">token</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">l_inverted_index</span><span class="p">:</span>
+                <span class="n">l_inverted_index</span><span class="p">[</span><span class="n">token</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+            <span class="n">l_inverted_index</span><span class="p">[</span><span class="n">token</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">rec_idx</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">token</span> <span class="o">=</span> <span class="n">rrecord_list</span><span class="p">[</span><span class="n">rec_idx</span><span class="p">][</span><span class="n">tok_idx</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">l_inverted_index</span><span class="p">:</span>
+                <span class="n">l_records</span> <span class="o">=</span> <span class="n">l_inverted_index</span><span class="p">[</span><span class="n">token</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">l_rec_idx</span> <span class="ow">in</span> <span class="n">l_records</span><span class="p">:</span>
+                    <span class="n">pair</span> <span class="o">=</span> <span class="p">(</span><span class="n">l_rec_idx</span><span class="p">,</span> <span class="n">rec_idx</span><span class="p">)</span>
+                    <span class="c1"># Skip if the pair is in the candidate set.</span>
+                    <span class="k">if</span> <span class="n">pair</span> <span class="ow">in</span> <span class="n">cand_set</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                    <span class="c1"># Skip if the pair has been compared.</span>
+                    <span class="k">if</span> <span class="n">pair</span> <span class="ow">in</span> <span class="n">compared_set</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                    <span class="n">sim</span> <span class="o">=</span> <span class="n">_jaccard_sim</span><span class="p">(</span>
+                        <span class="nb">set</span><span class="p">(</span><span class="n">lrecord_list</span><span class="p">[</span><span class="n">l_rec_idx</span><span class="p">]),</span> <span class="nb">set</span><span class="p">(</span><span class="n">rrecord_list</span><span class="p">[</span><span class="n">rec_idx</span><span class="p">]))</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">topk_heap</span><span class="p">)</span> <span class="o">==</span> <span class="n">output_size</span><span class="p">:</span>
+                        <span class="n">hq</span><span class="o">.</span><span class="n">heappushpop</span><span class="p">(</span><span class="n">topk_heap</span><span class="p">,</span> <span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">l_rec_idx</span><span class="p">,</span> <span class="n">rec_idx</span><span class="p">))</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">hq</span><span class="o">.</span><span class="n">heappush</span><span class="p">(</span><span class="n">topk_heap</span><span class="p">,</span> <span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">l_rec_idx</span><span class="p">,</span> <span class="n">rec_idx</span><span class="p">))</span>
+
+                    <span class="n">total_compared_pairs</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="n">compared_set</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">pair</span><span class="p">)</span>
+
+            <span class="c1"># Update the inverted index.</span>
+            <span class="k">if</span> <span class="n">token</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">r_inverted_index</span><span class="p">:</span>
+                <span class="n">r_inverted_index</span><span class="p">[</span><span class="n">token</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+            <span class="n">r_inverted_index</span><span class="p">[</span><span class="n">token</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">rec_idx</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">topk_heap</span>
+
+
+<span class="c1"># Calculate the token-based Jaccard similarity of two string sets.</span>
+<span class="k">def</span> <span class="nf">_jaccard_sim</span><span class="p">(</span><span class="n">l_token_set</span><span class="p">,</span> <span class="n">r_token_set</span><span class="p">):</span>
+    <span class="n">l_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">l_token_set</span><span class="p">)</span>
+    <span class="n">r_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">r_token_set</span><span class="p">)</span>
+    <span class="n">intersect_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">l_token_set</span> <span class="o">&amp;</span> <span class="n">r_token_set</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">l_len</span> <span class="o">+</span> <span class="n">r_len</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mf">0.0</span>
+
+    <span class="k">return</span> <span class="n">intersect_size</span> <span class="o">*</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">l_len</span> <span class="o">+</span> <span class="n">r_len</span> <span class="o">-</span> <span class="n">intersect_size</span><span class="p">)</span>
+
+
+<span class="c1"># Check the input field correspondence list.</span>
+<span class="k">def</span> <span class="nf">_check_input_field_correspondence_list</span><span class="p">(</span><span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">field_corres_list</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">field_corres_list</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="n">true_ltable_fields</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">ltable</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+    <span class="n">true_rtable_fields</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">rtable</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">pair</span> <span class="ow">in</span> <span class="n">field_corres_list</span><span class="p">:</span>
+        <span class="c1"># Raise an error if the pair in not a tuple or the length is not two.</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">pair</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">tuple</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">pair</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Error in checking user input field&#39;</span>
+                                 <span class="s1">&#39; correspondence: the input field pairs&#39;</span>
+                                 <span class="s1">&#39;are not in the required tuple format!&#39;</span><span class="p">)</span>
+
+    <span class="n">given_ltable_fields</span> <span class="o">=</span> <span class="p">[</span><span class="n">field</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">field_corres_list</span><span class="p">]</span>
+    <span class="n">given_rtable_fields</span> <span class="o">=</span> <span class="p">[</span><span class="n">field</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">field_corres_list</span><span class="p">]</span>
+
+    <span class="c1"># Raise an error if a field is in the correspondence list but not in</span>
+    <span class="c1"># the table schema.</span>
+    <span class="k">for</span> <span class="n">given_field</span> <span class="ow">in</span> <span class="n">given_ltable_fields</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">given_field</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">true_ltable_fields</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Error in checking user input field&#39;</span>
+                                 <span class="s1">&#39; correspondence: the field </span><span class="se">\&#39;</span><span class="si">%s</span><span class="se">\&#39;</span><span class="s1"> is&#39;</span>
+                                 <span class="s1">&#39; not in the ltable!&#39;</span> <span class="o">%</span> <span class="n">given_field</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">given_field</span> <span class="ow">in</span> <span class="n">given_rtable_fields</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">given_field</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">true_rtable_fields</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Error in checking user input field&#39;</span>
+                                 <span class="s1">&#39; correspondence:&#39;</span>
+                                 <span class="s1">&#39; the field </span><span class="se">\&#39;</span><span class="si">%s</span><span class="se">\&#39;</span><span class="s1"> is not in the&#39;</span>
+                                 <span class="s1">&#39; rtable!&#39;</span> <span class="o">%</span> <span class="n">given_field</span><span class="p">)</span>
+    <span class="k">return</span>
+
+
+<span class="c1"># Get the field correspondence list. If the input list is empty, call</span>
+<span class="c1"># the system builtin function to get the correspondence, or use the</span>
+<span class="c1"># user input as the correspondence.</span>
+<span class="k">def</span> <span class="nf">_get_field_correspondence_list</span><span class="p">(</span><span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">lkey</span><span class="p">,</span> <span class="n">rkey</span><span class="p">,</span> <span class="n">attr_corres</span><span class="p">):</span>
+    <span class="n">corres_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">attr_corres</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">attr_corres</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">corres_list</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_attr_corres</span><span class="p">(</span><span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">)[</span><span class="s1">&#39;corres&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">corres_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Error: the field correspondence list&#39;</span>
+                                 <span class="s1">&#39; is empty. Please specify the field&#39;</span>
+                                 <span class="s1">&#39; correspondence!&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">tu</span> <span class="ow">in</span> <span class="n">attr_corres</span><span class="p">:</span>
+            <span class="n">corres_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tu</span><span class="p">)</span>
+
+    <span class="c1"># If the key correspondence is not in the list, add it in.</span>
+    <span class="n">key_pair</span> <span class="o">=</span> <span class="p">(</span><span class="n">lkey</span><span class="p">,</span> <span class="n">rkey</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">key_pair</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">corres_list</span><span class="p">:</span>
+        <span class="n">corres_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key_pair</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">corres_list</span>
+
+
+<span class="c1"># Filter the correspondence list. Remove the fields in numeric types.</span>
+<span class="k">def</span> <span class="nf">_filter_corres_list</span><span class="p">(</span><span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">ltable_key</span><span class="p">,</span> <span class="n">rtable_key</span><span class="p">,</span>
+                        <span class="n">ltable_col_dict</span><span class="p">,</span> <span class="n">rtable_col_dict</span><span class="p">,</span> <span class="n">corres_list</span><span class="p">):</span>
+    <span class="n">ltable_dtypes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">ltable</span><span class="o">.</span><span class="n">dtypes</span><span class="p">)</span>
+    <span class="n">rtable_dtypes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">rtable</span><span class="o">.</span><span class="n">dtypes</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">corres_list</span><span class="p">))):</span>
+        <span class="n">lcol_name</span> <span class="o">=</span> <span class="n">corres_list</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">rcol_name</span> <span class="o">=</span> <span class="n">corres_list</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+        <span class="c1"># Filter the pair where both fields are numeric types.</span>
+        <span class="k">if</span> <span class="n">ltable_dtypes</span><span class="p">[</span><span class="n">ltable_col_dict</span><span class="p">[</span><span class="n">lcol_name</span><span class="p">]]</span> <span class="o">!=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="s1">&#39;O&#39;</span><span class="p">)</span>\
+                <span class="ow">and</span> <span class="n">rtable_dtypes</span><span class="p">[</span><span class="n">rtable_col_dict</span><span class="p">[</span><span class="n">rcol_name</span><span class="p">]]</span> <span class="o">!=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="s1">&#39;O&#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">lcol_name</span> <span class="o">!=</span> <span class="n">ltable_key</span> <span class="ow">and</span> <span class="n">rcol_name</span> <span class="o">!=</span> <span class="n">rtable_key</span><span class="p">:</span>
+                <span class="n">corres_list</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">corres_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">corres_list</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">ltable_key</span>\
+                             <span class="ow">and</span> <span class="n">corres_list</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">rtable_key</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;The field correspondence list is empty after&#39;</span>
+                             <span class="s1">&#39; filtering: please verify your correspondence&#39;</span>
+                             <span class="s1">&#39; list, or check if each field is of numeric&#39;</span>
+                             <span class="s1">&#39; type!&#39;</span><span class="p">)</span>
+
+
+<span class="c1"># Filter the original input tables according to the correspondence list.</span>
+<span class="c1"># The filtered tables will only contain the fields in the correspondence list.</span>
+<span class="k">def</span> <span class="nf">_get_filtered_table</span><span class="p">(</span><span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">lkey</span><span class="p">,</span> <span class="n">rkey</span><span class="p">,</span> <span class="n">corres_list</span><span class="p">):</span>
+    <span class="n">ltable_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">col_pair</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">col_pair</span> <span class="ow">in</span> <span class="n">corres_list</span><span class="p">]</span>
+    <span class="n">rtable_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">col_pair</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">col_pair</span> <span class="ow">in</span> <span class="n">corres_list</span><span class="p">]</span>
+    <span class="n">lfiltered_table</span> <span class="o">=</span> <span class="n">ltable</span><span class="p">[</span><span class="n">ltable_cols</span><span class="p">]</span>
+    <span class="n">rfiltered_table</span> <span class="o">=</span> <span class="n">rtable</span><span class="p">[</span><span class="n">rtable_cols</span><span class="p">]</span>
+    <span class="n">em</span><span class="o">.</span><span class="n">set_key</span><span class="p">(</span><span class="n">lfiltered_table</span><span class="p">,</span> <span class="n">lkey</span><span class="p">)</span>
+    <span class="n">em</span><span class="o">.</span><span class="n">set_key</span><span class="p">(</span><span class="n">rfiltered_table</span><span class="p">,</span> <span class="n">rkey</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">lfiltered_table</span><span class="p">,</span> <span class="n">rfiltered_table</span>
+
+
+<span class="c1"># Build the mapping bewteen field name and its index in the schema.</span>
+<span class="k">def</span> <span class="nf">_build_col_name_index_dict</span><span class="p">(</span><span class="n">table</span><span class="p">):</span>
+    <span class="n">col_dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">col_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">col_names</span><span class="p">)):</span>
+        <span class="n">col_dict</span><span class="p">[</span><span class="n">col_names</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">i</span>
+    <span class="k">return</span> <span class="n">col_dict</span>
+
+
+<span class="c1"># Select the most important fields for similarity join. The importance</span>
+<span class="c1"># of a fields is measured by the combination of field value uniqueness</span>
+<span class="c1"># and non-emptyness.</span>
+<span class="k">def</span> <span class="nf">_select_features</span><span class="p">(</span><span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">lkey</span><span class="p">):</span>
+    <span class="n">lcolumns</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">ltable</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+    <span class="n">rcolumns</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">rtable</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+    <span class="n">lkey_index</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">lcolumns</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">rcolumns</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Error: FILTERED ltable and FILTERED rtable&#39;</span>
+                             <span class="s1">&#39; have different number of fields!&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lcolumns</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">lkey</span> <span class="o">==</span> <span class="n">lcolumns</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+            <span class="n">lkey_index</span> <span class="o">=</span> <span class="n">i</span>
+
+    <span class="n">lweight</span> <span class="o">=</span> <span class="n">_get_feature_weight</span><span class="p">(</span><span class="n">ltable</span><span class="p">)</span>
+    <span class="n">rweight</span> <span class="o">=</span> <span class="n">_get_feature_weight</span><span class="p">(</span><span class="n">rtable</span><span class="p">)</span>
+
+    <span class="n">Rank</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;Rank&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;index&#39;</span><span class="p">,</span> <span class="s1">&#39;weight&#39;</span><span class="p">])</span>
+    <span class="n">rank_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lweight</span><span class="p">)):</span>
+        <span class="n">rank_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Rank</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">lweight</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">rweight</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+    <span class="n">rank_list</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">lkey_index</span><span class="p">)</span>
+
+    <span class="n">rank_list</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">rank_list</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">attrgetter</span><span class="p">(</span><span class="s1">&#39;weight&#39;</span><span class="p">),</span> <span class="n">reverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">rank_index_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">num_selected_fields</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rank_list</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">num_selected_fields</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">rank_list</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">rank_list</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">5</span><span class="p">:</span>
+        <span class="n">num_selected_fields</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">num_selected_fields</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rank_list</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_selected_fields</span><span class="p">):</span>
+        <span class="n">rank_index_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rank_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">rank_index_list</span><span class="p">)</span>
+
+
+<span class="c1"># Calculate the importance (weight) for each field in a table.</span>
+<span class="k">def</span> <span class="nf">_get_feature_weight</span><span class="p">(</span><span class="n">table</span><span class="p">):</span>
+    <span class="n">num_records</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">num_records</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Error: empty table!&#39;</span><span class="p">)</span>
+    <span class="n">weight</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">table</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">value_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">non_empty_count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">col_values</span> <span class="o">=</span> <span class="n">table</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">col_values</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">pd</span><span class="o">.</span><span class="n">isnull</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="ow">and</span> <span class="n">value</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+                <span class="n">value_set</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+                <span class="n">non_empty_count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">selectivity</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">if</span> <span class="n">non_empty_count</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">selectivity</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">value_set</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">non_empty_count</span>
+        <span class="n">non_empty_ratio</span> <span class="o">=</span> <span class="n">non_empty_count</span> <span class="o">*</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">num_records</span>
+
+        <span class="c1"># The field weight is the combination of non-emptyness</span>
+        <span class="c1"># and uniqueness.</span>
+        <span class="n">weight</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">non_empty_ratio</span> <span class="o">+</span> <span class="n">selectivity</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">weight</span>
+
+
+<span class="c1"># Build the mapping of record key value and its index in the table.</span>
+<span class="k">def</span> <span class="nf">_get_record_id_to_index_map</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">table_key</span><span class="p">):</span>
+    <span class="n">record_id_to_index</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">id_col</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="n">table_key</span><span class="p">])</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">id_col</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">id_col</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">in</span> <span class="n">record_id_to_index</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Duplicate keys found:&#39;</span><span class="p">,</span> <span class="n">id_col</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">record_id_to_index</span><span class="p">[</span><span class="n">id_col</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">i</span>
+    <span class="k">return</span> <span class="n">record_id_to_index</span>
+
+
+<span class="c1"># Tokenize a table. First tokenize each table column by a white space,</span>
+<span class="c1"># then concatenate the column of each record. The reason for tokenizing</span>
+<span class="c1"># columns first is that it&#39;s more efficient than iterate each dataframe</span>
+<span class="c1"># tuple.</span>
+<span class="k">def</span> <span class="nf">_get_tokenized_table</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">table_key</span><span class="p">,</span> <span class="n">feature_list</span><span class="p">):</span>
+    <span class="n">record_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">feature_list</span><span class="p">]</span>
+    <span class="n">tmp_table</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">:</span>
+        <span class="n">column_token_list</span> <span class="o">=</span> <span class="n">_get_tokenized_column</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="n">col</span><span class="p">])</span>
+        <span class="n">tmp_table</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">column_token_list</span><span class="p">)</span>
+
+    <span class="n">num_records</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="n">table_key</span><span class="p">])</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_records</span><span class="p">):</span>
+        <span class="n">token_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">index_map</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">columns</span><span class="p">)):</span>
+            <span class="n">tmp_col_tokens</span> <span class="o">=</span> <span class="n">tmp_table</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">tmp_col_tokens</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">token</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">index_map</span><span class="p">:</span>
+                        <span class="n">token_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">token</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">index_map</span><span class="p">[</span><span class="n">token</span><span class="p">]))</span>
+                        <span class="n">index_map</span><span class="p">[</span><span class="n">token</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">token_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
+                        <span class="n">index_map</span><span class="p">[</span><span class="n">token</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">record_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">token_list</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">record_list</span>
+
+
+<span class="c1"># Tokenize each table column by white spaces.</span>
+<span class="k">def</span> <span class="nf">_get_tokenized_column</span><span class="p">(</span><span class="n">column</span><span class="p">):</span>
+    <span class="n">column_token_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">column</span><span class="p">):</span>
+        <span class="n">tmp_value</span> <span class="o">=</span> <span class="n">_replace_nan_to_empty</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">tmp_value</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="n">tmp_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">tmp_value</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">))</span>
+            <span class="n">column_token_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tmp_list</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">column_token_list</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="s1">&#39;&#39;</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">column_token_list</span>
+
+
+<span class="c1"># Check the value of each field. Replace nan with empty string.</span>
+<span class="c1"># Cast floats into integers.</span>
+<span class="k">def</span> <span class="nf">_replace_nan_to_empty</span><span class="p">(</span><span class="n">field</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">isnull</span><span class="p">(</span><span class="n">field</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">field</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">int64</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="s1">&#39;{0:.0f}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">field</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">field</span>
+
+
+<span class="c1"># Reformat the input candidate set. Since the input format is DataFrame,</span>
+<span class="c1"># it&#39;s difficult for us to know if a tuple pair is in the candidate</span>
+<span class="c1"># set or not. We will use the reformatted candidate set in the topk</span>
+<span class="c1"># similarity join.</span>
+<span class="k">def</span> <span class="nf">_index_candidate_set</span><span class="p">(</span><span class="n">candidate_set</span><span class="p">,</span> <span class="n">lrecord_id_to_index_map</span><span class="p">,</span> <span class="n">rrecord_id_to_index_map</span><span class="p">,</span> <span class="n">verbose</span><span class="p">):</span>
+    <span class="n">new_formatted_candidate_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">candidate_set</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">new_formatted_candidate_set</span>
+
+    <span class="c1"># Get metadata</span>
+    <span class="n">key</span><span class="p">,</span> <span class="n">fk_ltable</span><span class="p">,</span> <span class="n">fk_rtable</span><span class="p">,</span> <span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span> <span class="o">=</span>\
+        <span class="n">cm</span><span class="o">.</span><span class="n">get_metadata_for_candset</span><span class="p">(</span><span class="n">candidate_set</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+    <span class="c1"># validate metadata</span>
+    <span class="n">cm</span><span class="o">.</span><span class="n">_validate_metadata_for_candset</span><span class="p">(</span><span class="n">candidate_set</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">fk_ltable</span><span class="p">,</span> <span class="n">fk_rtable</span><span class="p">,</span>
+                                     <span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span>
+                                     <span class="n">logger</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+    <span class="n">ltable_key_data</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">candidate_set</span><span class="p">[</span><span class="n">fk_ltable</span><span class="p">])</span>
+    <span class="n">rtable_key_data</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">candidate_set</span><span class="p">[</span><span class="n">fk_rtable</span><span class="p">])</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ltable_key_data</span><span class="p">)):</span>
+        <span class="n">new_formatted_candidate_set</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="n">lrecord_id_to_index_map</span><span class="p">[</span><span class="n">ltable_key_data</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span>
+                                         <span class="n">rrecord_id_to_index_map</span><span class="p">[</span><span class="n">rtable_key_data</span><span class="p">[</span><span class="n">i</span><span class="p">]]))</span>
+
+    <span class="k">return</span> <span class="n">new_formatted_candidate_set</span>
+
+
+<span class="c1"># Build the global order of tokens in the table by frequency.</span>
+<span class="k">def</span> <span class="nf">_build_global_token_order</span><span class="p">(</span><span class="n">record_list</span><span class="p">,</span> <span class="n">order_dict</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">record_list</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">record</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">order_dict</span><span class="p">:</span>
+                <span class="n">order_dict</span><span class="p">[</span><span class="n">token</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">order_dict</span><span class="p">[</span><span class="n">token</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+
+<span class="c1"># Sort each tokenized record by the global token order.</span>
+<span class="k">def</span> <span class="nf">_sort_record_tokens_by_global_order</span><span class="p">(</span><span class="n">record_list</span><span class="p">,</span> <span class="n">order_dict</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">record_list</span><span class="p">)):</span>
+        <span class="n">tmp_record</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">record_list</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">order_dict</span><span class="p">:</span>
+                <span class="n">tmp_record</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
+        <span class="n">record_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">tmp_record</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">order_dict</span><span class="p">[</span><span class="n">x</span><span class="p">],</span> <span class="n">x</span><span class="p">))</span>
+
+
+<span class="c1"># Generate the prefix events of two tables for topk similarity joins.</span>
+<span class="c1"># Refer to &quot;top-k set similarity join&quot; by Xiao et al. for details.</span>
+<span class="k">def</span> <span class="nf">_generate_prefix_events</span><span class="p">(</span><span class="n">lrecord_list</span><span class="p">,</span> <span class="n">rrecord_list</span><span class="p">):</span>
+    <span class="n">prefix_events</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">_generate_prefix_events_impl</span><span class="p">(</span><span class="n">lrecord_list</span><span class="p">,</span> <span class="n">prefix_events</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">_generate_prefix_events_impl</span><span class="p">(</span><span class="n">rrecord_list</span><span class="p">,</span> <span class="n">prefix_events</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">prefix_events</span>
+
+
+<span class="c1"># Prefix event generation for a table.</span>
+<span class="k">def</span> <span class="nf">_generate_prefix_events_impl</span><span class="p">(</span><span class="n">record_list</span><span class="p">,</span> <span class="n">prefix_events</span><span class="p">,</span> <span class="n">table_indicator</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">record_list</span><span class="p">)):</span>
+        <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">record_list</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">length</span><span class="p">):</span>
+            <span class="n">threshold</span> <span class="o">=</span> <span class="n">_calc_threshold</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">length</span><span class="p">)</span>
+            <span class="n">hq</span><span class="o">.</span><span class="n">heappush</span><span class="p">(</span><span class="n">prefix_events</span><span class="p">,</span>
+                        <span class="p">(</span><span class="o">-</span><span class="mf">1.0</span> <span class="o">*</span> <span class="n">threshold</span><span class="p">,</span> <span class="n">table_indicator</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">record_list</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]))</span>
+
+
+<span class="c1"># Calculate the corresponding topk similarity join of a token in a record.</span>
+<span class="c1"># Refer to &quot;top-k set similarity join&quot; by Xiao et al. for details.</span>
+<span class="k">def</span> <span class="nf">_calc_threshold</span><span class="p">(</span><span class="n">token_index</span><span class="p">,</span> <span class="n">record_length</span><span class="p">):</span>
+    <span class="k">return</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">token_index</span> <span class="o">*</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">record_length</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, anhaidgroup.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,1065 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>py_entitymatching.blocker.rule_based_blocker &mdash; py_entitymatching 0.1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="py_entitymatching 0.1.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> py_entitymatching
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/reading_and_writing_data.html">Reading and Writing Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/loading_and_saving_objects.html">Loading and Saving Objects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/handling_metadata.html">Handling Metadata</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/downsampling.html">Downsampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/blocking.html">Blocking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/debugging_blocker_output.html">Debugging Blocker Output</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/combining_blocker_outputs.html">Combining Blocker Outputs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/sampling.html">Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/labeling.html">Labeling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/handling_features.html">Handling Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/matching.html">Matching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/debugging_matcher.html">Debugging Matcher</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/evaluating_the_matching_output.html">Evaluating the Matching Output</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">py_entitymatching</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>py_entitymatching.blocker.rule_based_blocker</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for py_entitymatching.blocker.rule_based_blocker</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">pyprind</span>
+<span class="kn">import</span> <span class="nn">six</span>
+<span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
+<span class="kn">from</span> <span class="nn">py_stringmatching.tokenizer.qgram_tokenizer</span> <span class="kn">import</span> <span class="n">QgramTokenizer</span>
+<span class="kn">from</span> <span class="nn">py_stringmatching.tokenizer.whitespace_tokenizer</span> <span class="kn">import</span> <span class="n">WhitespaceTokenizer</span>
+<span class="kn">import</span> <span class="nn">cloudpickle</span> <span class="kn">as</span> <span class="nn">cp</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+
+<span class="kn">import</span> <span class="nn">py_entitymatching.catalog.catalog_manager</span> <span class="kn">as</span> <span class="nn">cm</span>
+<span class="kn">from</span> <span class="nn">py_entitymatching.blocker.blocker</span> <span class="kn">import</span> <span class="n">Blocker</span>
+<span class="kn">import</span> <span class="nn">py_stringsimjoin</span> <span class="kn">as</span> <span class="nn">ssj</span>
+<span class="kn">from</span> <span class="nn">py_entitymatching.utils.catalog_helper</span> <span class="kn">import</span> <span class="n">log_info</span><span class="p">,</span> <span class="n">get_name_for_key</span><span class="p">,</span> <span class="n">add_key_column</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="RuleBasedBlocker"><a class="viewcode-back" href="../../../api/blocking.html#py_entitymatching.RuleBasedBlocker">[docs]</a><span class="k">class</span> <span class="nc">RuleBasedBlocker</span><span class="p">(</span><span class="n">Blocker</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Blocks  based on a sequence of blocking rules supplied by the user.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">feature_table</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;feature_table&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">feature_table</span> <span class="o">=</span> <span class="n">feature_table</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rules</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">rule_str</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rule_ft</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filterable_sim_fns</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;jaccard&#39;</span><span class="p">,</span> <span class="s1">&#39;cosine&#39;</span><span class="p">,</span> <span class="s1">&#39;dice&#39;</span><span class="p">,</span> <span class="s1">&#39;overlap_coeff&#39;</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">allowed_ops</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;&lt;&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;=&#39;</span><span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">rule_source</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rule_cnt</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">Blocker</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_create_rule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conjunct_list</span><span class="p">,</span> <span class="n">feature_table</span><span class="p">,</span> <span class="n">rule_name</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">rule_name</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="c1"># set the rule name automatically</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;_rule_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rule_cnt</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rule_cnt</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># use the rule name supplied by the user</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">rule_name</span>
+
+        <span class="c1"># create function string</span>
+        <span class="n">fn_str</span> <span class="o">=</span> <span class="s1">&#39;def &#39;</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;(ltuple, rtuple):</span><span class="se">\n</span><span class="s1">&#39;</span>
+
+        <span class="c1"># add 4 tabs</span>
+        <span class="n">fn_str</span> <span class="o">+=</span> <span class="s1">&#39;    &#39;</span>
+        <span class="n">fn_str</span> <span class="o">+=</span> <span class="s1">&#39;return &#39;</span> <span class="o">+</span> <span class="s1">&#39; and &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">conjunct_list</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">feature_table</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">feat_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+                <span class="nb">zip</span><span class="p">(</span><span class="n">feature_table</span><span class="p">[</span><span class="s1">&#39;feature_name&#39;</span><span class="p">],</span> <span class="n">feature_table</span><span class="p">[</span><span class="s1">&#39;function&#39;</span><span class="p">]))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">feat_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">feature_table</span><span class="p">[</span><span class="s1">&#39;feature_name&#39;</span><span class="p">],</span>
+                                 <span class="bp">self</span><span class="o">.</span><span class="n">feature_table</span><span class="p">[</span><span class="s1">&#39;function&#39;</span><span class="p">]))</span>
+
+        <span class="n">six</span><span class="o">.</span><span class="n">exec_</span><span class="p">(</span><span class="n">fn_str</span><span class="p">,</span> <span class="n">feat_dict</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">feat_dict</span><span class="p">[</span><span class="n">name</span><span class="p">],</span> <span class="n">name</span><span class="p">,</span> <span class="n">fn_str</span>
+
+<div class="viewcode-block" id="RuleBasedBlocker.add_rule"><a class="viewcode-back" href="../../../api/blocking.html#py_entitymatching.RuleBasedBlocker.add_rule">[docs]</a>    <span class="k">def</span> <span class="nf">add_rule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conjunct_list</span><span class="p">,</span> <span class="n">feature_table</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">rule_name</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Adds a rule to the rule-based blocker.</span>
+
+<span class="sd">           Args:</span>
+<span class="sd">               conjunct_list (list): A list of conjuncts specifying the rule.</span>
+<span class="sd">             </span>
+<span class="sd">               feature_table (DataFrame): A DataFrame containing all the</span>
+<span class="sd">                                          features that are being referenced by</span>
+<span class="sd">                                          the rule (defaults to None). If the</span>
+<span class="sd">                                          feature_table is not supplied here,</span>
+<span class="sd">                                          then it must have been specified</span>
+<span class="sd">                                          during the creation of the rule-based</span>
+<span class="sd">                                          blocker or using set_feature_table</span>
+<span class="sd">                                          function. Otherwise an AssertionError</span>
+<span class="sd">                                          will be raised and the rule will not</span>
+<span class="sd">                                          be added to the rule-based blocker.</span>
+
+<span class="sd">               rule_name (string): A string specifying the name of the rule to</span>
+<span class="sd">                                   be added (defaults to None). If the</span>
+<span class="sd">                                   rule_name is not specified then a name will</span>
+<span class="sd">                                   be automatically chosen. If there is already</span>
+<span class="sd">                                   a rule with the specified rule_name, then</span>
+<span class="sd">                                   an AssertionError will be raised and the</span>
+<span class="sd">                                   rule will not be added to the rule-based</span>
+<span class="sd">                                   blocker.</span>
+<span class="sd">            </span>
+<span class="sd">            Returns:</span>
+<span class="sd">                The name of the rule added (string).</span>
+
+<span class="sd">            Raises:</span>
+<span class="sd">                AssertionError: If `rule_name` already exists.</span>
+
+<span class="sd">                AssertionError: If `feature_table` is not a valid value</span>
+<span class="sd">                 parameter.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">rule_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">rule_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;A rule with the specified rule_name already exists.&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;A rule with the specified rule_name already exists.&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">feature_table</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_table</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Either feature table should be given as parameter &#39;</span> <span class="o">+</span>
+                         <span class="s1">&#39;or use set_feature_table to set the feature table.&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Either feature table should be given as &#39;</span> <span class="o">+</span>
+                                 <span class="s1">&#39;parameter or use set_feature_table to set &#39;</span> <span class="o">+</span>
+                                 <span class="s1">&#39;the feature table.&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conjunct_list</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">conjunct_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">conjunct_list</span><span class="p">]</span>
+
+        <span class="n">fn</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">fn_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_rule</span><span class="p">(</span><span class="n">conjunct_list</span><span class="p">,</span> <span class="n">feature_table</span><span class="p">,</span> <span class="n">rule_name</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">fn</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rule_source</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">fn_str</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rule_str</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">conjunct_list</span>
+        <span class="k">if</span> <span class="n">feature_table</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rule_ft</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">feature_table</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rule_ft</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_table</span>
+
+        <span class="k">return</span> <span class="n">name</span></div>
+
+<div class="viewcode-block" id="RuleBasedBlocker.delete_rule"><a class="viewcode-back" href="../../../api/blocking.html#py_entitymatching.RuleBasedBlocker.delete_rule">[docs]</a>    <span class="k">def</span> <span class="nf">delete_rule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rule_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Deletes a rule from the rule-based blocker.</span>
+
+<span class="sd">           Args:</span>
+<span class="sd">               rule_name (string): Name of the rule to be deleted.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">rule_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="s1">&#39;Rule name not in current set of rules&#39;</span>
+
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="p">[</span><span class="n">rule_name</span><span class="p">]</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">rule_source</span><span class="p">[</span><span class="n">rule_name</span><span class="p">]</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">rule_str</span><span class="p">[</span><span class="n">rule_name</span><span class="p">]</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">rule_ft</span><span class="p">[</span><span class="n">rule_name</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="bp">True</span></div>
+
+<div class="viewcode-block" id="RuleBasedBlocker.view_rule"><a class="viewcode-back" href="../../../api/blocking.html#py_entitymatching.RuleBasedBlocker.view_rule">[docs]</a>    <span class="k">def</span> <span class="nf">view_rule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rule_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Prints the source code of the function corresponding to a rule.</span>
+
+<span class="sd">           Args:</span>
+<span class="sd">               rule_name (string): Name of the rule to be viewed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">rule_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="s1">&#39;Rule name not in current set of rules&#39;</span>
+        <span class="k">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rule_source</span><span class="p">[</span><span class="n">rule_name</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="RuleBasedBlocker.get_rule_names"><a class="viewcode-back" href="../../../api/blocking.html#py_entitymatching.RuleBasedBlocker.get_rule_names">[docs]</a>    <span class="k">def</span> <span class="nf">get_rule_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the names of all the rules in the rule-based blocker.</span>
+
+<span class="sd">           Returns:</span>
+<span class="sd">               A list of names of all the rules in the rule-based blocker (list).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="RuleBasedBlocker.get_rule"><a class="viewcode-back" href="../../../api/blocking.html#py_entitymatching.RuleBasedBlocker.get_rule">[docs]</a>    <span class="k">def</span> <span class="nf">get_rule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rule_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the function corresponding to a rule.</span>
+
+<span class="sd">           Args:</span>
+<span class="sd">               rule_name (string): Name of the rule.</span>
+<span class="sd">           Returns:</span>
+<span class="sd">               A function object corresponding to the specified rule.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">rule_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="s1">&#39;Rule name not in current set of rules&#39;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="p">[</span><span class="n">rule_name</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="RuleBasedBlocker.set_feature_table"><a class="viewcode-back" href="../../../api/blocking.html#py_entitymatching.RuleBasedBlocker.set_feature_table">[docs]</a>    <span class="k">def</span> <span class="nf">set_feature_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature_table</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sets feature table for the rule-based blocker.</span>
+<span class="sd"> </span>
+<span class="sd">           Args:</span>
+<span class="sd">               feature_table (DataFrame): A DataFrame containing features.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_table</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s1">&#39;Feature table is already set, changing it now will not recompile &#39;</span>
+                <span class="s1">&#39;existing rules&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">feature_table</span> <span class="o">=</span> <span class="n">feature_table</span></div>
+
+<div class="viewcode-block" id="RuleBasedBlocker.block_tables"><a class="viewcode-back" href="../../../api/blocking.html#py_entitymatching.RuleBasedBlocker.block_tables">[docs]</a>    <span class="k">def</span> <span class="nf">block_tables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">l_output_attrs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                     <span class="n">r_output_attrs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                     <span class="n">l_output_prefix</span><span class="o">=</span><span class="s1">&#39;ltable_&#39;</span><span class="p">,</span> <span class="n">r_output_prefix</span><span class="o">=</span><span class="s1">&#39;rtable_&#39;</span><span class="p">,</span>
+                     <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">show_progress</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Blocks two tables based on the sequence of rules supplied by the user.</span>
+
+<span class="sd">        Finds tuple pairs from left and right tables that survive the sequence</span>
+<span class="sd">        of blocking rules. A tuple pair survives the sequence of blocking rules</span>
+<span class="sd">        if none of the rules in the sequence returns True for that pair. If any</span>
+<span class="sd">        of the rules returns True, then the pair is blocked.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            ltable (DataFrame): The left input table.</span>
+
+<span class="sd">            rtable (DataFrame): The right input table.</span>
+
+<span class="sd">            l_output_attrs (list): A list of attribute names from the left</span>
+<span class="sd">                                   table to be included in the</span>
+<span class="sd">                                   output candidate set (defaults to None).</span>
+
+<span class="sd">            r_output_attrs (list): A list of attribute names from the right</span>
+<span class="sd">                                   table to be included in the</span>
+<span class="sd">                                   output candidate set (defaults to None).</span>
+
+<span class="sd">            l_output_prefix (string): The prefix to be used for the attribute names</span>
+<span class="sd">                                   coming from the left table in the output</span>
+<span class="sd">                                   candidate set (defaults to &#39;ltable\_&#39;).</span>
+
+<span class="sd">            r_output_prefix (string): The prefix to be used for the attribute names</span>
+<span class="sd">                                   coming from the right table in the output</span>
+<span class="sd">                                   candidate set (defaults to &#39;rtable\_&#39;).</span>
+
+<span class="sd">            verbose (boolean): A flag to indicate whether the debug</span>
+<span class="sd">                information  should be logged (defaults to False).</span>
+
+<span class="sd">            show_progress (boolean): A flag to indicate whether progress should</span>
+<span class="sd">                                     be displayed to the user (defaults to True).</span>
+
+<span class="sd">            n_jobs (int): The number of parallel jobs to be used for computation</span>
+<span class="sd">                (defaults to 1). If -1 all CPUs are used. If 0 or 1,</span>
+<span class="sd">                no parallel computation is used at all, which is useful for</span>
+<span class="sd">                debugging. For n_jobs below -1, (n_cpus + 1 + n_jobs) are</span>
+<span class="sd">                used (where n_cpus is the total number of CPUs in the</span>
+<span class="sd">                machine).Thus, for n_jobs = -2, all CPUs but one are used.</span>
+<span class="sd">                If (n_cpus + 1 + n_jobs) is less than 1, then no parallel</span>
+<span class="sd">                computation is used (i.e., equivalent to the default).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A candidate set of tuple pairs that survived the sequence of</span>
+<span class="sd">            blocking rules (DataFrame).</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            AssertionError: If `ltable` is not of type pandas</span>
+<span class="sd">                DataFrame.</span>
+<span class="sd">            AssertionError: If `rtable` is not of type pandas</span>
+<span class="sd">                DataFrame.</span>
+<span class="sd">            AssertionError: If `l_output_attrs` is not of type of</span>
+<span class="sd">                list.</span>
+<span class="sd">            AssertionError: If `r_output_attrs` is not of type of</span>
+<span class="sd">                list.</span>
+<span class="sd">            AssertionError: If the values in `l_output_attrs` is not of type</span>
+<span class="sd">                string.</span>
+<span class="sd">            AssertionError: If the values in `r_output_attrs` is not of type</span>
+<span class="sd">                string.</span>
+<span class="sd">            AssertionError: If the input `l_output_prefix` is not of type</span>
+<span class="sd">                string.</span>
+<span class="sd">            AssertionError: If the input `r_output_prefix` is not of type</span>
+<span class="sd">                string.</span>
+<span class="sd">            AssertionError: If `verbose` is not of type</span>
+<span class="sd">                boolean.</span>
+<span class="sd">            AssertionError: If `show_progress` is not of type</span>
+<span class="sd">                boolean.</span>
+<span class="sd">            AssertionError: If `n_jobs` is not of type</span>
+<span class="sd">                int.</span>
+<span class="sd">            AssertionError: If `l_out_attrs` are not in the ltable.</span>
+<span class="sd">            AssertionError: If `r_out_attrs` are not in the rtable.</span>
+<span class="sd">            AssertionError: If there are no rules to apply.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># validate data types of input parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate_types_params_tables</span><span class="p">(</span><span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span>
+                                          <span class="n">l_output_attrs</span><span class="p">,</span> <span class="n">r_output_attrs</span><span class="p">,</span>
+                                          <span class="n">l_output_prefix</span><span class="p">,</span>
+                                          <span class="n">r_output_prefix</span><span class="p">,</span> <span class="n">verbose</span><span class="p">,</span> <span class="n">n_jobs</span><span class="p">)</span>
+
+        <span class="c1"># validate data type of show_progress</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate_show_progress</span><span class="p">(</span><span class="n">show_progress</span><span class="p">)</span>
+
+        <span class="c1"># validate input parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate_output_attrs</span><span class="p">(</span><span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">l_output_attrs</span><span class="p">,</span>
+                                   <span class="n">r_output_attrs</span><span class="p">)</span>
+
+        <span class="c1"># get and validate metadata</span>
+        <span class="n">log_info</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="s1">&#39;Required metadata: ltable key, rtable key&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+        <span class="c1"># # get metadata</span>
+        <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">get_keys_for_ltable_rtable</span><span class="p">(</span><span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span>
+                                                     <span class="n">verbose</span><span class="p">)</span>
+
+        <span class="c1"># # validate metadata</span>
+        <span class="n">cm</span><span class="o">.</span><span class="n">_validate_metadata_for_table</span><span class="p">(</span><span class="n">ltable</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span> <span class="s1">&#39;ltable&#39;</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span>
+                                        <span class="n">verbose</span><span class="p">)</span>
+        <span class="n">cm</span><span class="o">.</span><span class="n">_validate_metadata_for_table</span><span class="p">(</span><span class="n">rtable</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span> <span class="s1">&#39;rtable&#39;</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span>
+                                        <span class="n">verbose</span><span class="p">)</span>
+
+        <span class="c1"># validate rules</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;There are no rules to apply&#39;</span>
+
+        <span class="c1"># do blocking</span>
+
+        <span class="c1"># # set index for convenience</span>
+        <span class="n">l_df</span> <span class="o">=</span> <span class="n">ltable</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">l_key</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+        <span class="n">r_df</span> <span class="o">=</span> <span class="n">rtable</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">r_key</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
+        <span class="c1"># # remove l_key from l_output_attrs and r_key from r_output_attrs</span>
+        <span class="n">l_output_attrs_1</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">l_output_attrs</span><span class="p">:</span>
+            <span class="n">l_output_attrs_1</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">l_output_attrs</span> <span class="k">if</span> <span class="n">x</span> <span class="o">!=</span> <span class="n">l_key</span><span class="p">]</span>
+        <span class="n">r_output_attrs_1</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">r_output_attrs</span><span class="p">:</span>
+            <span class="n">r_output_attrs_1</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">r_output_attrs</span> <span class="k">if</span> <span class="n">x</span> <span class="o">!=</span> <span class="n">r_key</span><span class="p">]</span>
+
+        <span class="c1"># # get attributes to project</span>
+        <span class="n">l_proj_attrs</span><span class="p">,</span> <span class="n">r_proj_attrs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_attrs_to_project</span><span class="p">(</span><span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span>
+                                                               <span class="n">l_output_attrs_1</span><span class="p">,</span>
+                                                               <span class="n">r_output_attrs_1</span><span class="p">)</span>
+        <span class="n">l_df</span><span class="p">,</span> <span class="n">r_df</span> <span class="o">=</span> <span class="n">l_df</span><span class="p">[</span><span class="n">l_proj_attrs</span><span class="p">],</span> <span class="n">r_df</span><span class="p">[</span><span class="n">r_proj_attrs</span><span class="p">]</span>
+        
+        <span class="n">candset</span><span class="p">,</span> <span class="n">rule_applied</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_tables_with_filters</span><span class="p">(</span><span class="n">l_df</span><span class="p">,</span> <span class="n">r_df</span><span class="p">,</span>
+                                                               <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span>
+                                                               <span class="n">l_output_attrs_1</span><span class="p">,</span>
+                                                               <span class="n">r_output_attrs_1</span><span class="p">,</span>
+                                                               <span class="n">l_output_prefix</span><span class="p">,</span>
+                                                               <span class="n">r_output_prefix</span><span class="p">,</span>
+                                                               <span class="n">verbose</span><span class="p">,</span>
+                                                               <span class="n">show_progress</span><span class="p">,</span>
+                                                               <span class="n">n_jobs</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">candset</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="c1"># no filterable rule was applied</span>
+            <span class="n">candset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_tables_without_filters</span><span class="p">(</span><span class="n">l_df</span><span class="p">,</span> <span class="n">r_df</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span>
+                                                        <span class="n">r_key</span><span class="p">,</span> <span class="n">l_output_attrs_1</span><span class="p">,</span>
+                                                        <span class="n">r_output_attrs_1</span><span class="p">,</span>
+                                                        <span class="n">l_output_prefix</span><span class="p">,</span>
+                                                        <span class="n">r_output_prefix</span><span class="p">,</span>
+                                                        <span class="n">verbose</span><span class="p">,</span> <span class="n">show_progress</span><span class="p">,</span>
+                                                        <span class="n">n_jobs</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># one filterable rule was applied but other rules are left</span>
+            <span class="c1"># block candset by applying other rules and excluding the applied rule </span>
+            <span class="n">candset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_candset_excluding_rule</span><span class="p">(</span><span class="n">candset</span><span class="p">,</span> <span class="n">l_df</span><span class="p">,</span> <span class="n">r_df</span><span class="p">,</span>
+                                                        <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span>
+                                                        <span class="n">l_output_prefix</span> <span class="o">+</span> <span class="n">l_key</span><span class="p">,</span>
+                                                        <span class="n">r_output_prefix</span> <span class="o">+</span> <span class="n">r_key</span><span class="p">,</span>
+                                                        <span class="n">rule_applied</span><span class="p">,</span>
+                                                        <span class="n">show_progress</span><span class="p">,</span> <span class="n">n_jobs</span><span class="p">)</span>
+
+        <span class="n">retain_cols</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_attrs_to_retain</span><span class="p">(</span><span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span> <span class="n">l_output_attrs_1</span><span class="p">,</span>
+                                               <span class="n">r_output_attrs_1</span><span class="p">,</span>
+                                               <span class="n">l_output_prefix</span><span class="p">,</span> <span class="n">r_output_prefix</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">candset</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">candset</span> <span class="o">=</span> <span class="n">candset</span><span class="p">[</span><span class="n">retain_cols</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">candset</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">retain_cols</span><span class="p">)</span>
+
+        <span class="c1"># update catalog</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">get_name_for_key</span><span class="p">(</span><span class="n">candset</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+        <span class="n">candset</span> <span class="o">=</span> <span class="n">add_key_column</span><span class="p">(</span><span class="n">candset</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+        <span class="n">cm</span><span class="o">.</span><span class="n">set_candset_properties</span><span class="p">(</span><span class="n">candset</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">l_output_prefix</span> <span class="o">+</span> <span class="n">l_key</span><span class="p">,</span>
+                                  <span class="n">r_output_prefix</span> <span class="o">+</span> <span class="n">r_key</span><span class="p">,</span> <span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">)</span>
+
+        <span class="c1"># return candidate set</span>
+        <span class="k">return</span> <span class="n">candset</span></div>
+
+    <span class="k">def</span> <span class="nf">block_candset_excluding_rule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">c_df</span><span class="p">,</span> <span class="n">l_df</span><span class="p">,</span> <span class="n">r_df</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span>
+                                     <span class="n">fk_ltable</span><span class="p">,</span> <span class="n">fk_rtable</span><span class="p">,</span> <span class="n">rule_to_exclude</span><span class="p">,</span>
+                                     <span class="n">show_progress</span><span class="p">,</span> <span class="n">n_jobs</span><span class="p">):</span>
+
+        <span class="c1"># # determine number of processes to launch parallely</span>
+        <span class="n">n_procs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_num_procs</span><span class="p">(</span><span class="n">n_jobs</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">c_df</span><span class="p">))</span>
+
+        <span class="c1"># # list to keep track of valid ids</span>
+        <span class="n">valid</span> <span class="o">=</span> <span class="p">[]</span>
+
+
+        <span class="n">apply_rules_excluding_rule_pkl</span> <span class="o">=</span> <span class="n">cp</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">apply_rules_excluding_rule</span><span class="p">)</span>
+ 
+        <span class="k">if</span> <span class="n">n_procs</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># single process</span>
+            <span class="n">valid</span> <span class="o">=</span> <span class="n">_block_candset_excluding_rule_split</span><span class="p">(</span><span class="n">c_df</span><span class="p">,</span> <span class="n">l_df</span><span class="p">,</span> <span class="n">r_df</span><span class="p">,</span>
+                                                        <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span>
+                                                        <span class="n">fk_ltable</span><span class="p">,</span> <span class="n">fk_rtable</span><span class="p">,</span>
+                                                        <span class="n">rule_to_exclude</span><span class="p">,</span>
+                                                        <span class="n">apply_rules_excluding_rule_pkl</span><span class="p">,</span>
+                                                        <span class="n">show_progress</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># multiprocessing</span>
+            <span class="n">c_splits</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">np</span><span class="o">.</span><span class="n">array_split</span><span class="p">(</span><span class="n">c_df</span><span class="p">,</span> <span class="n">n_procs</span><span class="p">)</span>
+            <span class="n">valid_splits</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="n">n_procs</span><span class="p">)(</span>
+                <span class="n">delayed</span><span class="p">(</span><span class="n">_block_candset_excluding_rule_split</span><span class="p">)(</span><span class="n">c_splits</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                                                             <span class="n">l_df</span><span class="p">,</span> <span class="n">r_df</span><span class="p">,</span>
+                                                             <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span>
+                                                             <span class="n">fk_ltable</span><span class="p">,</span>
+                                                             <span class="n">fk_rtable</span><span class="p">,</span>
+                                                             <span class="n">rule_to_exclude</span><span class="p">,</span>
+                                                             <span class="n">apply_rules_excluding_rule_pkl</span><span class="p">,</span>
+                                                             <span class="n">show_progress</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span>
+                                                                 <span class="n">c_splits</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">c_splits</span><span class="p">)))</span>
+            <span class="n">valid</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">valid_splits</span><span class="p">,</span> <span class="p">[])</span>
+
+        <span class="c1"># construct output candset</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">c_df</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">candset</span> <span class="o">=</span> <span class="n">c_df</span><span class="p">[</span><span class="n">valid</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">candset</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">c_df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+
+        <span class="c1"># return candidate set</span>
+        <span class="k">return</span> <span class="n">candset</span>
+
+    <span class="k">def</span> <span class="nf">block_tables_without_filters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">l_df</span><span class="p">,</span> <span class="n">r_df</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span>
+                                     <span class="n">l_output_attrs</span><span class="p">,</span> <span class="n">r_output_attrs</span><span class="p">,</span>
+                                     <span class="n">l_output_prefix</span><span class="p">,</span> <span class="n">r_output_prefix</span><span class="p">,</span>
+                                     <span class="n">verbose</span><span class="p">,</span> <span class="n">show_progress</span><span class="p">,</span> <span class="n">n_jobs</span><span class="p">):</span>
+
+        <span class="c1"># do blocking</span>
+
+        <span class="c1"># # determine the number of processes to launch parallely</span>
+        <span class="n">n_procs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_num_procs</span><span class="p">(</span><span class="n">n_jobs</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">l_df</span><span class="p">)</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">r_df</span><span class="p">))</span>
+
+        <span class="n">candset</span> <span class="o">=</span> <span class="bp">None</span>
+
+        <span class="n">apply_rules_pkl</span> <span class="o">=</span> <span class="n">cp</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">apply_rules</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">n_procs</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># single process</span>
+            <span class="n">candset</span> <span class="o">=</span> <span class="n">_block_tables_split</span><span class="p">(</span><span class="n">l_df</span><span class="p">,</span> <span class="n">r_df</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span>
+                                          <span class="n">l_output_attrs</span><span class="p">,</span> <span class="n">r_output_attrs</span><span class="p">,</span>
+                                          <span class="n">l_output_prefix</span><span class="p">,</span> <span class="n">r_output_prefix</span><span class="p">,</span>
+                                          <span class="n">apply_rules_pkl</span><span class="p">,</span> <span class="n">show_progress</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># multiprocessing</span>
+            <span class="n">m</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_split_params</span><span class="p">(</span><span class="n">n_procs</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">l_df</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">r_df</span><span class="p">))</span>
+            <span class="n">l_splits</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">np</span><span class="o">.</span><span class="n">array_split</span><span class="p">(</span><span class="n">l_df</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span>
+            <span class="n">r_splits</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">np</span><span class="o">.</span><span class="n">array_split</span><span class="p">(</span><span class="n">r_df</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+            <span class="n">c_splits</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="n">m</span> <span class="o">*</span> <span class="n">n</span><span class="p">)(</span>
+                <span class="n">delayed</span><span class="p">(</span><span class="n">_block_tables_split</span><span class="p">)(</span><span class="n">l_splits</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">r_splits</span><span class="p">[</span><span class="n">j</span><span class="p">],</span>
+                                             <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span>
+                                             <span class="n">l_output_attrs</span><span class="p">,</span> <span class="n">r_output_attrs</span><span class="p">,</span>
+                                             <span class="n">l_output_prefix</span><span class="p">,</span> <span class="n">r_output_prefix</span><span class="p">,</span>
+                                             <span class="n">apply_rules_pkl</span><span class="p">,</span>
+                                             <span class="n">show_progress</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span>
+                                                 <span class="n">l_splits</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">j</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span>
+                                                 <span class="n">r_splits</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">l_splits</span><span class="p">))</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">r_splits</span><span class="p">)))</span>
+            <span class="n">candset</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">c_splits</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+        <span class="c1"># return candidate set</span>
+        <span class="k">return</span> <span class="n">candset</span>
+
+<div class="viewcode-block" id="RuleBasedBlocker.block_candset"><a class="viewcode-back" href="../../../api/blocking.html#py_entitymatching.RuleBasedBlocker.block_candset">[docs]</a>    <span class="k">def</span> <span class="nf">block_candset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">candset</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">show_progress</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                      <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Blocks an input candidate set of tuple pairs based on a sequence of</span>
+<span class="sd">        blocking rules supplied by the user.</span>
+
+<span class="sd">        Finds tuple pairs from an input candidate set of tuple pairs that</span>
+<span class="sd">        survive the sequence of blocking rules. A tuple pair survives the</span>
+<span class="sd">        sequence of blocking rules if none of the rules in the sequence returns</span>
+<span class="sd">        True for that pair. If any of the rules returns True, then the pair is</span>
+<span class="sd">        blocked (dropped).</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            candset (DataFrame): The input candidate set of tuple pairs.</span>
+<span class="sd">            verbose (boolean): A flag to indicate whether the debug</span>
+<span class="sd">                information  should be logged (defaults to False).</span>
+<span class="sd">            show_progress (boolean): A flag to indicate whether progress should</span>
+<span class="sd">                                     be displayed to the user (defaults to True).</span>
+
+<span class="sd">            n_jobs (int): The number of parallel jobs to be used for computation</span>
+<span class="sd">                (defaults to 1). If -1 all CPUs are used. If 0 or 1,</span>
+<span class="sd">                no parallel computation is used at all, which is useful for</span>
+<span class="sd">                debugging. For n_jobs below -1, (n_cpus + 1 + n_jobs) are</span>
+<span class="sd">                used (where n_cpus are the total number of CPUs in the</span>
+<span class="sd">                machine).Thus, for n_jobs = -2, all CPUs but one are used.</span>
+<span class="sd">                If (n_cpus + 1 + n_jobs) is less than 1, then no parallel</span>
+<span class="sd">                computation is used (i.e., equivalent to the default).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A candidate set of tuple pairs that survived blocking (DataFrame).</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            AssertionError: If `candset` is not of type pandas</span>
+<span class="sd">                DataFrame.</span>
+<span class="sd">            AssertionError: If `verbose` is not of type</span>
+<span class="sd">                boolean.</span>
+<span class="sd">            AssertionError: If `n_jobs` is not of type</span>
+<span class="sd">                int.</span>
+<span class="sd">            AssertionError: If `show_progress` is not of type boolean.</span>
+<span class="sd">            AssertionError: If `l_block_attr` is not in the ltable columns.</span>
+<span class="sd">            AssertionError: If `r_block_attr` is not in the rtable columns.</span>
+<span class="sd">            AssertionError: If there are no rules to apply.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># validate data types of input parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate_types_params_candset</span><span class="p">(</span><span class="n">candset</span><span class="p">,</span> <span class="n">verbose</span><span class="p">,</span> <span class="n">show_progress</span><span class="p">,</span>
+                                           <span class="n">n_jobs</span><span class="p">)</span>
+
+        <span class="c1"># get and validate metadata</span>
+        <span class="n">log_info</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="s1">&#39;Required metadata: cand.set key, fk ltable, &#39;</span> <span class="o">+</span>
+                 <span class="s1">&#39;fk rtable, ltable, rtable, ltable key, rtable key&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+        <span class="c1"># # get metadata</span>
+        <span class="n">key</span><span class="p">,</span> <span class="n">fk_ltable</span><span class="p">,</span> <span class="n">fk_rtable</span><span class="p">,</span> <span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">get_metadata_for_candset</span><span class="p">(</span>
+            <span class="n">candset</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+        <span class="c1"># # validate metadata</span>
+        <span class="n">cm</span><span class="o">.</span><span class="n">_validate_metadata_for_candset</span><span class="p">(</span><span class="n">candset</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">fk_ltable</span><span class="p">,</span> <span class="n">fk_rtable</span><span class="p">,</span>
+                                          <span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span>
+                                          <span class="n">logger</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+        <span class="c1"># validate rules</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;There are no rules to apply&#39;</span>
+
+        <span class="c1"># do blocking</span>
+
+        <span class="c1"># # initialize the progress bar</span>
+        <span class="k">if</span> <span class="n">show_progress</span><span class="p">:</span>
+            <span class="n">bar</span> <span class="o">=</span> <span class="n">pyprind</span><span class="o">.</span><span class="n">ProgBar</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">candset</span><span class="p">))</span>
+
+        <span class="c1"># # set index for convenience</span>
+        <span class="n">l_df</span> <span class="o">=</span> <span class="n">ltable</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">l_key</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+        <span class="n">r_df</span> <span class="o">=</span> <span class="n">rtable</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">r_key</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
+        <span class="c1"># # get attributes to project</span>
+        <span class="n">l_proj_attrs</span><span class="p">,</span> <span class="n">r_proj_attrs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_attrs_to_project</span><span class="p">(</span><span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span>
+                                                               <span class="p">[],</span> <span class="p">[])</span>
+        <span class="n">l_df</span><span class="p">,</span> <span class="n">r_df</span> <span class="o">=</span> <span class="n">l_df</span><span class="p">[</span><span class="n">l_proj_attrs</span><span class="p">],</span> <span class="n">r_df</span><span class="p">[</span><span class="n">r_proj_attrs</span><span class="p">]</span>
+
+        <span class="n">c_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">block_candset_excluding_rule</span><span class="p">(</span><span class="n">candset</span><span class="p">,</span> <span class="n">l_df</span><span class="p">,</span> <span class="n">r_df</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span>
+                                                 <span class="n">r_key</span><span class="p">,</span>
+                                                 <span class="n">fk_ltable</span><span class="p">,</span> <span class="n">fk_rtable</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
+                                                 <span class="n">show_progress</span><span class="p">,</span> <span class="n">n_jobs</span><span class="p">)</span>
+
+        <span class="c1"># update catalog</span>
+        <span class="n">cm</span><span class="o">.</span><span class="n">set_candset_properties</span><span class="p">(</span><span class="n">c_df</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">fk_ltable</span><span class="p">,</span> <span class="n">fk_rtable</span><span class="p">,</span> <span class="n">ltable</span><span class="p">,</span>
+                                  <span class="n">rtable</span><span class="p">)</span>
+
+        <span class="c1"># return candidate set</span>
+        <span class="k">return</span> <span class="n">c_df</span></div>
+
+<div class="viewcode-block" id="RuleBasedBlocker.block_tuples"><a class="viewcode-back" href="../../../api/blocking.html#py_entitymatching.RuleBasedBlocker.block_tuples">[docs]</a>    <span class="k">def</span> <span class="nf">block_tuples</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ltuple</span><span class="p">,</span> <span class="n">rtuple</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Blocks a tuple pair based on a sequence of blocking rules supplied</span>
+<span class="sd">        by the user.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            ltuple (Series): The input left tuple.</span>
+
+<span class="sd">            rtuple (Series): The input right tuple.</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            A status indicating if the tuple pair is blocked by applying the</span>
+<span class="sd">            sequence of blocking rules (boolean).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># validate rules</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;There are no rules to apply&#39;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">apply_rules</span><span class="p">(</span><span class="n">ltuple</span><span class="p">,</span> <span class="n">rtuple</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">apply_rules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ltuple</span><span class="p">,</span> <span class="n">rtuple</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">fn</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="c1"># here if the function returns true, then the tuple pair must be dropped.</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">fn</span><span class="p">(</span><span class="n">ltuple</span><span class="p">,</span> <span class="n">rtuple</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">res</span> <span class="o">==</span> <span class="bp">True</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">res</span>
+        <span class="k">return</span> <span class="bp">False</span>
+
+    <span class="k">def</span> <span class="nf">apply_rules_excluding_rule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ltuple</span><span class="p">,</span> <span class="n">rtuple</span><span class="p">,</span> <span class="n">rule_to_exclude</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">rule_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">rule_name</span> <span class="o">!=</span> <span class="n">rule_to_exclude</span><span class="p">:</span>
+                <span class="n">fn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="p">[</span><span class="n">rule_name</span><span class="p">]</span>
+                <span class="c1"># here if fn returns true, then the tuple pair must be dropped.</span>
+                <span class="n">res</span> <span class="o">=</span> <span class="n">fn</span><span class="p">(</span><span class="n">ltuple</span><span class="p">,</span> <span class="n">rtuple</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">res</span> <span class="o">==</span> <span class="bp">True</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">res</span>
+        <span class="k">return</span> <span class="bp">False</span>
+
+    <span class="k">def</span> <span class="nf">get_attrs_to_project</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span> <span class="n">l_output_attrs</span><span class="p">,</span>
+                             <span class="n">r_output_attrs</span><span class="p">):</span>
+        <span class="n">l_proj_attrs</span> <span class="o">=</span> <span class="p">[</span><span class="n">l_key</span><span class="p">]</span>
+        <span class="n">r_proj_attrs</span> <span class="o">=</span> <span class="p">[</span><span class="n">r_key</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">l_output_attrs</span><span class="p">:</span>
+            <span class="n">l_proj_attrs</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">l_output_attrs</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">l_proj_attrs</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">r_output_attrs</span><span class="p">:</span>
+            <span class="n">r_proj_attrs</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">r_output_attrs</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">r_proj_attrs</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">rule_name</span><span class="p">,</span> <span class="n">conjunct_list</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rule_str</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">conjunct</span> <span class="ow">in</span> <span class="n">conjunct_list</span><span class="p">:</span>
+                <span class="n">is_auto_gen</span><span class="p">,</span> <span class="n">sim_fn</span><span class="p">,</span> <span class="n">l_attr</span><span class="p">,</span> <span class="n">r_attr</span><span class="p">,</span> <span class="n">l_tok</span><span class="p">,</span> <span class="n">r_tok</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">th</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_conjunct</span><span class="p">(</span>
+                    <span class="n">conjunct</span><span class="p">,</span> <span class="n">rule_name</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">l_attr</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">l_proj_attrs</span><span class="p">:</span>
+                    <span class="n">l_proj_attrs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">l_attr</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">r_attr</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">r_proj_attrs</span><span class="p">:</span>
+                    <span class="n">r_proj_attrs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r_attr</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">l_proj_attrs</span><span class="p">,</span> <span class="n">r_proj_attrs</span>
+
+    <span class="k">def</span> <span class="nf">parse_conjunct</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conjunct</span><span class="p">,</span> <span class="n">rule_name</span><span class="p">):</span>
+        <span class="c1"># TODO: Make parsing more robust using pyparsing</span>
+        <span class="n">feature_table</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rule_ft</span><span class="p">[</span><span class="n">rule_name</span><span class="p">]</span>
+        <span class="n">vals</span> <span class="o">=</span> <span class="n">conjunct</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;(&#39;</span><span class="p">)</span>
+        <span class="n">feature_name</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">feature_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">feature_table</span><span class="o">.</span><span class="n">feature_name</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Feature &#39;</span> <span class="o">+</span> <span class="n">feature_name</span> <span class="o">+</span> <span class="s1">&#39; is not present in &#39;</span> <span class="o">+</span>
+                         <span class="s1">&#39;supplied feature table. Cannot apply rules.&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span>
+                <span class="s1">&#39;Feature &#39;</span> <span class="o">+</span> <span class="n">feature_name</span> <span class="o">+</span> <span class="s1">&#39; is not present &#39;</span> <span class="o">+</span>
+                <span class="s1">&#39;in supplied feature table. Cannot apply rules.&#39;</span><span class="p">)</span>
+        <span class="n">vals1</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;)&#39;</span><span class="p">)</span>
+        <span class="n">vals2</span> <span class="o">=</span> <span class="n">vals1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="n">vals3</span> <span class="o">=</span> <span class="n">vals2</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="n">operator</span> <span class="o">=</span> <span class="n">vals3</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="n">threshold</span> <span class="o">=</span> <span class="n">vals3</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="n">ft_df</span> <span class="o">=</span> <span class="n">feature_table</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;feature_name&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">ft_df</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">feature_name</span><span class="p">][</span><span class="s1">&#39;is_auto_generated&#39;</span><span class="p">],</span>
+                <span class="n">ft_df</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">feature_name</span><span class="p">][</span><span class="s1">&#39;simfunction&#39;</span><span class="p">],</span>
+                <span class="n">ft_df</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">feature_name</span><span class="p">][</span><span class="s1">&#39;left_attribute&#39;</span><span class="p">],</span>
+                <span class="n">ft_df</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">feature_name</span><span class="p">][</span><span class="s1">&#39;right_attribute&#39;</span><span class="p">],</span>
+                <span class="n">ft_df</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">feature_name</span><span class="p">][</span><span class="s1">&#39;left_attr_tokenizer&#39;</span><span class="p">],</span>
+                <span class="n">ft_df</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">feature_name</span><span class="p">][</span><span class="s1">&#39;right_attr_tokenizer&#39;</span><span class="p">],</span>
+                <span class="n">operator</span><span class="p">,</span> <span class="n">threshold</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">block_tables_with_filters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">l_df</span><span class="p">,</span> <span class="n">r_df</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span>
+                                  <span class="n">l_output_attrs</span><span class="p">,</span> <span class="n">r_output_attrs</span><span class="p">,</span>
+                                  <span class="n">l_output_prefix</span><span class="p">,</span> <span class="n">r_output_prefix</span><span class="p">,</span> <span class="n">verbose</span><span class="p">,</span>
+                                  <span class="n">show_progress</span><span class="p">,</span> <span class="n">n_jobs</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">rule_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="c1"># first check if a rule is filterable</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_rule_filterable</span><span class="p">(</span><span class="n">rule_name</span><span class="p">):</span>
+                <span class="n">candset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">apply_filterable_rule</span><span class="p">(</span><span class="n">rule_name</span><span class="p">,</span> <span class="n">l_df</span><span class="p">,</span> <span class="n">r_df</span><span class="p">,</span>
+                                                     <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span>
+                                                     <span class="n">l_output_attrs</span><span class="p">,</span>
+                                                     <span class="n">r_output_attrs</span><span class="p">,</span>
+                                                     <span class="n">l_output_prefix</span><span class="p">,</span>
+                                                     <span class="n">r_output_prefix</span><span class="p">,</span> <span class="n">verbose</span><span class="p">,</span>
+                                                     <span class="n">show_progress</span><span class="p">,</span> <span class="n">n_jobs</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">candset</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                    <span class="c1"># rule was filterable</span>
+                    <span class="k">return</span> <span class="n">candset</span><span class="p">,</span> <span class="n">rule_name</span>
+        <span class="k">return</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span>
+
+    <span class="k">def</span> <span class="nf">is_rule_filterable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rule_name</span><span class="p">):</span>
+        <span class="c1"># a rule is filterable if all the conjuncts in the conjunct list</span>
+        <span class="c1"># are filterable</span>
+        <span class="n">conjunct_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rule_str</span><span class="p">[</span><span class="n">rule_name</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">conjunct</span> <span class="ow">in</span> <span class="n">conjunct_list</span><span class="p">:</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_conjunct_filterable</span><span class="p">(</span><span class="n">conjunct</span><span class="p">,</span> <span class="n">rule_name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">res</span> <span class="o">!=</span> <span class="bp">True</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">res</span>
+        <span class="k">return</span> <span class="bp">True</span>
+
+    <span class="k">def</span> <span class="nf">is_conjunct_filterable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conjunct</span><span class="p">,</span> <span class="n">rule_name</span><span class="p">):</span>
+        <span class="c1"># a conjunct is filterable if it uses</span>
+        <span class="c1"># a filterable sim function (jaccard, cosine, dice, ...),</span>
+        <span class="c1"># an allowed operator (&lt;, &lt;=),</span>
+        <span class="n">is_auto_gen</span><span class="p">,</span> <span class="n">sim_fn</span><span class="p">,</span> <span class="n">l_attr</span><span class="p">,</span> <span class="n">r_attr</span><span class="p">,</span> <span class="n">l_tok</span><span class="p">,</span> <span class="n">r_tok</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">th</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_conjunct</span><span class="p">(</span>
+            <span class="n">conjunct</span><span class="p">,</span> <span class="n">rule_name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">is_auto_gen</span> <span class="o">!=</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="c1"># conjunct not filterable as the feature is not auto generated</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">if</span> <span class="n">sim_fn</span> <span class="o">==</span> <span class="s1">&#39;lev_dist&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">op</span> <span class="o">==</span> <span class="s1">&#39;&gt;&#39;</span> <span class="ow">or</span> <span class="n">op</span> <span class="o">==</span> <span class="s1">&#39;&gt;=&#39;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># conjunct not filterable due to unsupported operator</span>
+                <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">if</span> <span class="n">l_tok</span> <span class="o">!=</span> <span class="n">r_tok</span><span class="p">:</span>
+            <span class="c1"># conjunct not filterable because left and right tokenizers mismatch</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">if</span> <span class="n">sim_fn</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">filterable_sim_fns</span><span class="p">:</span>
+            <span class="c1"># conjunct not filterable due to unsupported sim_fn</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">if</span> <span class="n">op</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">allowed_ops</span><span class="p">:</span>
+            <span class="c1"># conjunct not filterable due to unsupported operator</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="c1"># conjunct is filterable</span>
+        <span class="k">return</span> <span class="bp">True</span>
+
+    <span class="k">def</span> <span class="nf">apply_filterable_rule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rule_name</span><span class="p">,</span> <span class="n">l_df</span><span class="p">,</span> <span class="n">r_df</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span>
+                              <span class="n">l_output_attrs</span><span class="p">,</span> <span class="n">r_output_attrs</span><span class="p">,</span>
+                              <span class="n">l_output_prefix</span><span class="p">,</span> <span class="n">r_output_prefix</span><span class="p">,</span>
+                              <span class="n">verbose</span><span class="p">,</span> <span class="n">show_progress</span><span class="p">,</span> <span class="n">n_jobs</span><span class="p">):</span>
+        <span class="n">candset</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="n">conjunct_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rule_str</span><span class="p">[</span><span class="n">rule_name</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">conjunct</span> <span class="ow">in</span> <span class="n">conjunct_list</span><span class="p">:</span>
+            <span class="n">is_auto_gen</span><span class="p">,</span> <span class="n">sim_fn</span><span class="p">,</span> <span class="n">l_attr</span><span class="p">,</span> <span class="n">r_attr</span><span class="p">,</span> <span class="n">l_tok</span><span class="p">,</span> <span class="n">r_tok</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">th</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_conjunct</span><span class="p">(</span>
+                <span class="n">conjunct</span><span class="p">,</span> <span class="n">rule_name</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">l_tok</span> <span class="o">==</span> <span class="s1">&#39;dlm_dc0&#39;</span><span class="p">:</span>
+                <span class="n">tokenizer</span> <span class="o">=</span> <span class="n">WhitespaceTokenizer</span><span class="p">(</span><span class="n">return_set</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">l_tok</span> <span class="o">==</span> <span class="s1">&#39;qgm_3&#39;</span><span class="p">:</span>
+                <span class="n">tokenizer</span> <span class="o">=</span> <span class="n">QgramTokenizer</span><span class="p">(</span><span class="n">qval</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">return_set</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">sim_fn</span> <span class="o">==</span> <span class="s1">&#39;jaccard&#39;</span><span class="p">:</span>
+                <span class="n">join_fn</span> <span class="o">=</span> <span class="n">ssj</span><span class="o">.</span><span class="n">jaccard_join</span>
+            <span class="k">elif</span> <span class="n">sim_fn</span> <span class="o">==</span> <span class="s1">&#39;cosine&#39;</span><span class="p">:</span>
+                <span class="n">join_fn</span> <span class="o">=</span> <span class="n">ssj</span><span class="o">.</span><span class="n">cosine_join</span>
+            <span class="k">elif</span> <span class="n">sim_fn</span> <span class="o">==</span> <span class="s1">&#39;dice&#39;</span><span class="p">:</span>
+                <span class="n">join_fn</span> <span class="o">=</span> <span class="n">ssj</span><span class="o">.</span><span class="n">dice_join</span>
+            <span class="k">elif</span> <span class="n">sim_fn</span> <span class="o">==</span> <span class="s1">&#39;overlap_coeff&#39;</span><span class="p">:</span>
+                <span class="n">join_fn</span> <span class="o">=</span> <span class="n">ssj</span><span class="o">.</span><span class="n">overlap_coefficient_join</span>
+            <span class="k">elif</span> <span class="n">sim_fn</span> <span class="o">==</span> <span class="s1">&#39;lev_dist&#39;</span><span class="p">:</span>
+                <span class="n">join_fn</span> <span class="o">=</span> <span class="n">ssj</span><span class="o">.</span><span class="n">edit_distance_join</span>
+
+            <span class="k">if</span> <span class="n">join_fn</span> <span class="o">==</span> <span class="n">ssj</span><span class="o">.</span><span class="n">edit_distance_join</span><span class="p">:</span>
+                <span class="n">comp_op</span> <span class="o">=</span> <span class="s1">&#39;&lt;=&#39;</span>
+                <span class="k">if</span> <span class="n">op</span> <span class="o">==</span> <span class="s1">&#39;&gt;=&#39;</span><span class="p">:</span>
+                    <span class="n">comp_op</span> <span class="o">=</span> <span class="s1">&#39;&lt;&#39;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">comp_op</span> <span class="o">=</span> <span class="s1">&#39;&gt;=&#39;</span>
+                <span class="k">if</span> <span class="n">op</span> <span class="o">==</span> <span class="s1">&#39;&lt;=&#39;</span><span class="p">:</span>
+                    <span class="n">comp_op</span> <span class="o">=</span> <span class="s1">&#39;&gt;&#39;</span>
+
+            <span class="n">ssj</span><span class="o">.</span><span class="n">dataframe_column_to_str</span><span class="p">(</span><span class="n">l_df</span><span class="p">,</span> <span class="n">l_attr</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span> 
+            <span class="n">ssj</span><span class="o">.</span><span class="n">dataframe_column_to_str</span><span class="p">(</span><span class="n">r_df</span><span class="p">,</span> <span class="n">r_attr</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+ 
+            <span class="k">if</span> <span class="n">join_fn</span> <span class="o">==</span> <span class="n">ssj</span><span class="o">.</span><span class="n">edit_distance_join</span><span class="p">:</span>
+                <span class="n">c_df</span> <span class="o">=</span> <span class="n">join_fn</span><span class="p">(</span><span class="n">l_df</span><span class="p">,</span> <span class="n">r_df</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span> <span class="n">l_attr</span><span class="p">,</span> <span class="n">r_attr</span><span class="p">,</span>
+                               <span class="nb">float</span><span class="p">(</span><span class="n">th</span><span class="p">),</span> <span class="n">comp_op</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="n">l_output_attrs</span><span class="p">,</span>
+                               <span class="n">r_output_attrs</span><span class="p">,</span> <span class="n">l_output_prefix</span><span class="p">,</span>
+                               <span class="n">r_output_prefix</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="n">n_jobs</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">c_df</span> <span class="o">=</span> <span class="n">join_fn</span><span class="p">(</span><span class="n">l_df</span><span class="p">,</span> <span class="n">r_df</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span> <span class="n">l_attr</span><span class="p">,</span> <span class="n">r_attr</span><span class="p">,</span>
+                               <span class="n">tokenizer</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">th</span><span class="p">),</span> <span class="n">comp_op</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span>
+                               <span class="n">l_output_attrs</span><span class="p">,</span> <span class="n">r_output_attrs</span><span class="p">,</span>
+                               <span class="n">l_output_prefix</span><span class="p">,</span>
+                               <span class="n">r_output_prefix</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="n">n_jobs</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">candset</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="c1"># union the candset of this conjunct with the existing candset</span>
+                <span class="n">candset</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">candset</span><span class="p">,</span> <span class="n">c_df</span><span class="p">])</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span>
+                    <span class="p">[</span><span class="n">l_output_prefix</span> <span class="o">+</span> <span class="n">l_key</span><span class="p">,</span>
+                     <span class="n">r_output_prefix</span> <span class="o">+</span> <span class="n">r_key</span><span class="p">])</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># candset from the first conjunct of the rule</span>
+                <span class="n">candset</span> <span class="o">=</span> <span class="n">c_df</span>
+        <span class="k">return</span> <span class="n">candset</span></div>
+
+
+<span class="k">def</span> <span class="nf">_block_tables_split</span><span class="p">(</span><span class="n">l_df</span><span class="p">,</span> <span class="n">r_df</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span>
+                        <span class="n">l_output_attrs</span><span class="p">,</span> <span class="n">r_output_attrs</span><span class="p">,</span>
+                        <span class="n">l_output_prefix</span><span class="p">,</span> <span class="n">r_output_prefix</span><span class="p">,</span> <span class="n">apply_rules_pkl</span><span class="p">,</span>
+                        <span class="n">show_progress</span><span class="p">):</span>
+    <span class="c1"># initialize progress bar</span>
+    <span class="k">if</span> <span class="n">show_progress</span><span class="p">:</span>
+        <span class="n">bar</span> <span class="o">=</span> <span class="n">pyprind</span><span class="o">.</span><span class="n">ProgBar</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">l_df</span><span class="p">)</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">r_df</span><span class="p">))</span>
+
+    <span class="c1"># create look up dictionaries for faster processing</span>
+    <span class="n">l_dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">l_df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+        <span class="n">l_dict</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">r</span>
+    <span class="n">r_dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">r_df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+        <span class="n">r_dict</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">r</span>
+
+    <span class="c1"># get the position of the ID attribute in the tables</span>
+    <span class="n">l_id_pos</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">l_df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">l_key</span><span class="p">)</span>
+    <span class="n">r_id_pos</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">r_df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">r_key</span><span class="p">)</span>
+
+    <span class="c1"># create candset column names for the ID attributes of the tables</span>
+    <span class="n">ltable_id</span> <span class="o">=</span> <span class="n">l_output_prefix</span> <span class="o">+</span> <span class="n">l_key</span>
+    <span class="n">rtable_id</span> <span class="o">=</span> <span class="n">r_output_prefix</span> <span class="o">+</span> <span class="n">r_key</span>
+
+    <span class="c1"># list to keep the tuple pairs that survive blocking</span>
+    <span class="n">valid</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># unpickle the apply_rules function</span>
+    <span class="n">apply_rules</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">apply_rules_pkl</span><span class="p">)</span>
+
+    <span class="c1"># iterate through the two tables</span>
+    <span class="k">for</span> <span class="n">l_t</span> <span class="ow">in</span> <span class="n">l_df</span><span class="o">.</span><span class="n">itertuples</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="c1"># # get ltuple from the look up table</span>
+        <span class="n">ltuple</span> <span class="o">=</span> <span class="n">l_dict</span><span class="p">[</span><span class="n">l_t</span><span class="p">[</span><span class="n">l_id_pos</span><span class="p">]]</span>
+        <span class="k">for</span> <span class="n">r_t</span> <span class="ow">in</span> <span class="n">r_df</span><span class="o">.</span><span class="n">itertuples</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+            <span class="c1"># # update the progress bar</span>
+            <span class="k">if</span> <span class="n">show_progress</span><span class="p">:</span>
+                <span class="n">bar</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+
+            <span class="c1"># # get rtuple from the look up dictionary</span>
+            <span class="n">rtuple</span> <span class="o">=</span> <span class="n">r_dict</span><span class="p">[</span><span class="n">r_t</span><span class="p">[</span><span class="n">r_id_pos</span><span class="p">]]</span>
+
+            <span class="c1"># # apply the rules to the tuple pair</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">apply_rules</span><span class="p">(</span><span class="n">ltuple</span><span class="p">,</span> <span class="n">rtuple</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">res</span> <span class="o">!=</span> <span class="bp">True</span><span class="p">:</span>
+                <span class="c1"># # this tuple pair survives blocking</span>
+
+                <span class="c1"># # an ordered dictionary to keep a surviving tuple pair</span>
+                <span class="n">d</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+                <span class="c1"># # add ltable and rtable ids to an ordered dictionary</span>
+                <span class="n">d</span><span class="p">[</span><span class="n">ltable_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">ltuple</span><span class="p">[</span><span class="n">l_key</span><span class="p">]</span>
+                <span class="n">d</span><span class="p">[</span><span class="n">rtable_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">rtuple</span><span class="p">[</span><span class="n">r_key</span><span class="p">]</span>
+
+                <span class="c1"># # add l/r output attributes to the ordered dictionary</span>
+                <span class="n">l_out</span> <span class="o">=</span> <span class="n">ltuple</span><span class="p">[</span><span class="n">l_output_attrs</span><span class="p">]</span>
+                <span class="n">l_out</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">l_output_prefix</span> <span class="o">+</span> <span class="n">l_out</span><span class="o">.</span><span class="n">index</span>
+                <span class="n">d</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">l_out</span><span class="p">)</span>
+
+                <span class="n">r_out</span> <span class="o">=</span> <span class="n">rtuple</span><span class="p">[</span><span class="n">r_output_attrs</span><span class="p">]</span>
+                <span class="n">r_out</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">r_output_prefix</span> <span class="o">+</span> <span class="n">r_out</span><span class="o">.</span><span class="n">index</span>
+                <span class="n">d</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">r_out</span><span class="p">)</span>
+
+                <span class="c1"># # add the ordered dict to the list</span>
+                <span class="n">valid</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+
+    <span class="c1"># construct candidate set</span>
+    <span class="n">candset</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">valid</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">candset</span>
+
+
+<span class="k">def</span> <span class="nf">_block_candset_excluding_rule_split</span><span class="p">(</span><span class="n">c_df</span><span class="p">,</span> <span class="n">l_df</span><span class="p">,</span> <span class="n">r_df</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span>
+                                        <span class="n">fk_ltable</span><span class="p">,</span>
+                                        <span class="n">fk_rtable</span><span class="p">,</span> <span class="n">rule_to_exclude</span><span class="p">,</span>
+                                        <span class="n">apply_rules_excluding_rule_pkl</span><span class="p">,</span>
+                                        <span class="n">show_progress</span><span class="p">):</span>
+    <span class="c1"># do blocking</span>
+
+    <span class="c1"># # initialize the progress bar</span>
+    <span class="k">if</span> <span class="n">show_progress</span><span class="p">:</span>
+        <span class="n">bar</span> <span class="o">=</span> <span class="n">pyprind</span><span class="o">.</span><span class="n">ProgBar</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">c_df</span><span class="p">))</span>
+
+    <span class="c1"># # initialize lookup tables for faster processing</span>
+    <span class="n">l_dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">r_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="c1"># # list to keep track of valid ids</span>
+    <span class="n">valid</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">l_id_pos</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">c_df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">fk_ltable</span><span class="p">)</span>
+    <span class="n">r_id_pos</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">c_df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">fk_rtable</span><span class="p">)</span>
+
+    <span class="c1"># # unpickle the apply_rules_excluding_rule function</span>
+    <span class="n">apply_rules_excluding_rule</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">apply_rules_excluding_rule_pkl</span><span class="p">)</span>
+
+    <span class="c1"># # iterate candidate set</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">c_df</span><span class="o">.</span><span class="n">itertuples</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="c1"># # update progress bar</span>
+        <span class="k">if</span> <span class="n">show_progress</span><span class="p">:</span>
+            <span class="n">bar</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+
+        <span class="c1"># # get ltuple, try dictionary first, then dataframe</span>
+        <span class="n">row_lid</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">l_id_pos</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">row_lid</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">l_dict</span><span class="p">:</span>
+            <span class="n">l_dict</span><span class="p">[</span><span class="n">row_lid</span><span class="p">]</span> <span class="o">=</span> <span class="n">l_df</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">row_lid</span><span class="p">]</span>
+        <span class="n">ltuple</span> <span class="o">=</span> <span class="n">l_dict</span><span class="p">[</span><span class="n">row_lid</span><span class="p">]</span>
+
+        <span class="c1"># # get rtuple, try dictionary first, then dataframe</span>
+        <span class="n">row_rid</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">r_id_pos</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">row_rid</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">r_dict</span><span class="p">:</span>
+            <span class="n">r_dict</span><span class="p">[</span><span class="n">row_rid</span><span class="p">]</span> <span class="o">=</span> <span class="n">r_df</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">row_rid</span><span class="p">]</span>
+        <span class="n">rtuple</span> <span class="o">=</span> <span class="n">r_dict</span><span class="p">[</span><span class="n">row_rid</span><span class="p">]</span>
+
+        <span class="n">res</span> <span class="o">=</span> <span class="n">apply_rules_excluding_rule</span><span class="p">(</span><span class="n">ltuple</span><span class="p">,</span> <span class="n">rtuple</span><span class="p">,</span> <span class="n">rule_to_exclude</span><span class="p">)</span>
+ 
+        <span class="k">if</span> <span class="n">res</span> <span class="o">!=</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="n">valid</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">valid</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">valid</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, anhaidgroup.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

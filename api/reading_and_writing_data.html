@@ -1,0 +1,342 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Reading and Writing Data &mdash; py_entitymatching 0.1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="py_entitymatching 0.1.0 documentation" href="../index.html"/>
+        <link rel="next" title="Loading and Saving Objects" href="loading_and_saving_objects.html"/>
+        <link rel="prev" title="Installation" href="../installation.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> py_entitymatching
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Reading and Writing Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="loading_and_saving_objects.html">Loading and Saving Objects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="handling_metadata.html">Handling Metadata</a></li>
+<li class="toctree-l1"><a class="reference internal" href="downsampling.html">Downsampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="blocking.html">Blocking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="debugging_blocker_output.html">Debugging Blocker Output</a></li>
+<li class="toctree-l1"><a class="reference internal" href="combining_blocker_outputs.html">Combining Blocker Outputs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sampling.html">Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="labeling.html">Labeling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="handling_features.html">Handling Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matching.html">Matching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="debugging_matcher.html">Debugging Matcher</a></li>
+<li class="toctree-l1"><a class="reference internal" href="evaluating_the_matching_output.html">Evaluating the Matching Output</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">py_entitymatching</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+    <li>Reading and Writing Data</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/api/reading_and_writing_data.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="reading-and-writing-data">
+<h1>Reading and Writing Data<a class="headerlink" href="#reading-and-writing-data" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="py_entitymatching.read_csv_metadata">
+<code class="descclassname">py_entitymatching.</code><code class="descname">read_csv_metadata</code><span class="sig-paren">(</span><em>file_path</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/py_entitymatching/io/parsers.html#read_csv_metadata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_entitymatching.read_csv_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads a CSV (comma-separated values) file into a pandas DataFrame
+and update the catalog with the metadata. The CSV files typically contain
+data for the input tables or a candidate set.</p>
+<p>Specifically, this function first reads the CSV file from the given file
+path into a pandas DataFrame, by using pandas&#8217; in-built &#8216;read_csv&#8217;
+method. Then, it updates the catalog with the metadata. There are three
+ways to update the metadata: (1) using a metadata file, (2) using the
+key-value parameters supplied in the function, and (3) using both
+metadata file and key-value parameters.</p>
+<p>To update the metadata in the catalog using the metadata file,
+the function will look for a file in the same directory with  same file name
+but with a  specific extension. This extension can be optionally given by
+the user (defaults to &#8216;.metadata&#8217;). If the metadata  file is  present,
+the function will read and update the catalog appropriately. If  the
+metadata file is not present, the function will issue a warning that the
+metadata file is not present.</p>
+<p>The metadata information can also be given as parameters to the function
+(see description of arguments for more details). If given, the function
+will update the catalog with the given information.</p>
+<p>Further, the metadata can partly reside in the metdata file and partly as
+supplied parameters. The function will take a union of the two and
+update the catalog appropriately.
+If the same metadata is given in both the metadata file
+and the function, then the metadata in the function takes precedence over
+the metadata given in the file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>file_path</strong> (<em>string</em>) &#8211; The CSV file path.</li>
+<li><strong>kwargs</strong> (<em>dictionary</em>) &#8211; A Python dictionary containing key-value
+arguments. There are a few key-value pairs that are specific to
+read_csv_metadata and  all the other key-value pairs are passed
+to pandas read_csv method.
+The keys that are specific to read_csv_metadata are: (1)
+&#8216;metadata_extn&#8217; (metadata extension), (2) &#8216;key&#8217; (key
+attribute), (3) &#8216;fk_ltable&#8217; (foreign key to ltable),
+(4) &#8216;fk_rtable&#8217; (foreign key to rtable), (5) &#8216;ltable&#8217; (left
+table), and (6) &#8216;rtable&#8217; (right table).
+The keys: &#8216;key&#8217;, &#8216;metadata_extn&#8217; are applicable to all
+tables, and the keys: &#8216;fk_ltable&#8217;, &#8216;fk_rtable&#8217;, &#8216;ltable&#8217;
+and &#8216;rtable&#8217; are applicable only to candidate sets.
+Here the metadata_extn is the expected metadata
+extension (with the default value set to &#8216;.metadata&#8217;), and all
+the others are metadata related to the DataFrame read from the
+CSV file.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A pandas DataFrame read from the input CSV file.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> &#8211; If <cite>file_path</cite> is not of type string.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> &#8211; If a file does not exist in the
+given <cite>file_path</cite>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#py_entitymatching.to_csv_metadata" title="py_entitymatching.to_csv_metadata"><code class="xref py py-meth docutils literal"><span class="pre">to_csv_metadata()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.to_csv_metadata">
+<code class="descclassname">py_entitymatching.</code><code class="descname">to_csv_metadata</code><span class="sig-paren">(</span><em>data_frame</em>, <em>file_path</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/py_entitymatching/io/parsers.html#to_csv_metadata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_entitymatching.to_csv_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes the DataFrame contents to a CSV file and the DataFrame&#8217;s metadata
+(to a separate text file).</p>
+<p>This function writes the DataFrame contents to a CSV file in
+the given file path. It uses &#8216;to_csv&#8217; method from pandas to write
+the CSV file. The metadata contents are written to the same directory
+derived from the file path but with the different extension. This
+extension can be optionally given by the user (with the default value
+set to .metadata).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data_frame</strong> (<em>DataFrame</em>) &#8211; The DataFrame that should be written to disk.</li>
+<li><strong>file_path</strong> (<em>string</em>) &#8211; The file path to which the DataFrame contents
+should be written. Metadata is written with the same file name
+with the extension given by the user (defaults to &#8216;.metadata&#8217;).</li>
+<li><strong>kwargs</strong> (<em>dictionary</em>) &#8211; A Python dictionary containing key-value pairs.
+There is one key-value pair that is specific to
+to_csv_metadata: metadata_extn. All the other key-value pairs
+are passed to pandas to_csv function.
+Here the metadata_extn is the metadata
+extension (defaults to &#8216;.metadata&#8217;), with which
+the metadata file must be written.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A Boolean value of True is returned if the files were written
+successfully.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> &#8211; If <cite>data_frame</cite> is not of type  pandas
+DataFrame.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> &#8211; If <cite>file_path</cite> is not of type string.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> &#8211; If DataFrame cannot be written to the given
+<cite>file_path</cite>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#py_entitymatching.read_csv_metadata" title="py_entitymatching.read_csv_metadata"><code class="xref py py-meth docutils literal"><span class="pre">read_csv_metadata()</span></code></a></p>
+</div>
+</dd></dl>
+
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="loading_and_saving_objects.html" class="btn btn-neutral float-right" title="Loading and Saving Objects" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../installation.html" class="btn btn-neutral" title="Installation" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, anhaidgroup.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

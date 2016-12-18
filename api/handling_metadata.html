@@ -1,0 +1,835 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Handling Metadata &mdash; py_entitymatching 0.1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="py_entitymatching 0.1.0 documentation" href="../index.html"/>
+        <link rel="next" title="Downsampling" href="downsampling.html"/>
+        <link rel="prev" title="Loading and Saving Objects" href="loading_and_saving_objects.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> py_entitymatching
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="reading_and_writing_data.html">Reading and Writing Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="loading_and_saving_objects.html">Loading and Saving Objects</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Handling Metadata</a></li>
+<li class="toctree-l1"><a class="reference internal" href="downsampling.html">Downsampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="blocking.html">Blocking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="debugging_blocker_output.html">Debugging Blocker Output</a></li>
+<li class="toctree-l1"><a class="reference internal" href="combining_blocker_outputs.html">Combining Blocker Outputs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sampling.html">Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="labeling.html">Labeling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="handling_features.html">Handling Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matching.html">Matching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="debugging_matcher.html">Debugging Matcher</a></li>
+<li class="toctree-l1"><a class="reference internal" href="evaluating_the_matching_output.html">Evaluating the Matching Output</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">py_entitymatching</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+    <li>Handling Metadata</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/api/handling_metadata.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="handling-metadata">
+<h1>Handling Metadata<a class="headerlink" href="#handling-metadata" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="py_entitymatching.get_catalog">
+<code class="descclassname">py_entitymatching.</code><code class="descname">get_catalog</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/py_entitymatching/catalog/catalog_manager.html#get_catalog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_entitymatching.get_catalog" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the catalog information for the current session.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A Python dictionary containing the catalog information.<p>Specifically, the dictionary contains the Python identifier of a
+DataFrame (obtained by id(DataFrame object)) as the key
+and their properties as value.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.get_catalog_len">
+<code class="descclassname">py_entitymatching.</code><code class="descname">get_catalog_len</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/py_entitymatching/catalog/catalog_manager.html#get_catalog_len"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_entitymatching.get_catalog_len" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the length (i.e the number of entries) in the catalog.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The number of entries in the catalog as an integer.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.del_catalog">
+<code class="descclassname">py_entitymatching.</code><code class="descname">del_catalog</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/py_entitymatching/catalog/catalog_manager.html#del_catalog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_entitymatching.del_catalog" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes the catalog for the current session.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A Boolean value of True is returned if the deletion was successful.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.is_catalog_empty">
+<code class="descclassname">py_entitymatching.</code><code class="descname">is_catalog_empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/py_entitymatching/catalog/catalog_manager.html#is_catalog_empty"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_entitymatching.is_catalog_empty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if the catalog is empty.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A Boolean value of True is returned if the catalog is empty,
+else returns False.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.is_dfinfo_present">
+<code class="descclassname">py_entitymatching.</code><code class="descname">is_dfinfo_present</code><span class="sig-paren">(</span><em>data_frame</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/py_entitymatching/catalog/catalog_manager.html#is_dfinfo_present"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_entitymatching.is_dfinfo_present" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether the DataFrame information is present in the catalog.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data_frame</strong> (<em>DataFrame</em>) &#8211; The DataFrame that should be checked for its
+presence in the catalog.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A Boolean value of True is returned if the DataFrame is present in
+the catalog, else False is returned.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> &#8211; If <cite>data_frame</cite> is not of type pandas
+DataFrame.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.is_property_present_for_df">
+<code class="descclassname">py_entitymatching.</code><code class="descname">is_property_present_for_df</code><span class="sig-paren">(</span><em>data_frame</em>, <em>property_name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/py_entitymatching/catalog/catalog_manager.html#is_property_present_for_df"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_entitymatching.is_property_present_for_df" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if the given property is present for the given DataFrame in the
+catalog.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data_frame</strong> (<em>DataFrame</em>) &#8211; The DataFrame for which the property must be
+checked for.</li>
+<li><strong>property_name</strong> (<em>string</em>) &#8211; The name of the property that should be</li>
+<li><strong>for its presence for the DataFrame, in the catalog.</strong> (<em>checked</em>) &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A Boolean value of True is returned if the property is present for
+the given DataFrame.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> &#8211; If <cite>data_frame</cite> is not of type pandas
+DataFrame.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> &#8211; If <cite>property_name</cite> is not of type string.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">KeyError</span></code> &#8211; If <cite>data_frame</cite> is not present in the catalog.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.show_properties">
+<code class="descclassname">py_entitymatching.</code><code class="descname">show_properties</code><span class="sig-paren">(</span><em>data_frame</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/py_entitymatching/catalog/catalog_manager.html#show_properties"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_entitymatching.show_properties" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints the properties for a DataFrame that is present in the catalog.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data_frame</strong> (<em>DataFrame</em>) &#8211; The input pandas DataFrame for which the
+properties must be displayed.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.show_properties_for_id">
+<code class="descclassname">py_entitymatching.</code><code class="descname">show_properties_for_id</code><span class="sig-paren">(</span><em>object_id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/py_entitymatching/catalog/catalog_manager.html#show_properties_for_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_entitymatching.show_properties_for_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shows the properties for an object id present in the catalog.</p>
+<p>Specifically, given an object id got from typically executing id(
+&lt;object&gt;), where the object could be a DataFrame, this function will
+display the properties present for that object id in the catalog.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>object_id</strong> (<em>int</em>) &#8211; The Python identifier of an object (typically a
+pandas DataFrame).</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.init_properties">
+<code class="descclassname">py_entitymatching.</code><code class="descname">init_properties</code><span class="sig-paren">(</span><em>data_frame</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/py_entitymatching/catalog/catalog_manager.html#init_properties"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_entitymatching.init_properties" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initializes properties for a pandas DataFrame in the catalog.</p>
+<p>Specifically, this function creates an entry in the catalog and sets its
+properties to empty.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data_frame</strong> (<em>DataFrame</em>) &#8211; DataFrame for which the properties must be
+initialized.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A Boolean value of True is returned if the initialization was
+successful.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.get_property">
+<code class="descclassname">py_entitymatching.</code><code class="descname">get_property</code><span class="sig-paren">(</span><em>data_frame</em>, <em>property_name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/py_entitymatching/catalog/catalog_manager.html#get_property"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_entitymatching.get_property" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the value of a property (with the given property name) for a pandas
+DataFrame from the catalog.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data_frame</strong> (<em>DataFrame</em>) &#8211; The DataFrame for which the property should be
+retrieved.</li>
+<li><strong>property_name</strong> (<em>string</em>) &#8211; The name of the property that should be
+retrieved.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A Python object (typically a string or a pandas DataFrame depending
+on the property name) is returned.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> &#8211; If <cite>data_frame</cite> is not of type pandas
+DataFrame.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> &#8211; If <cite>property_name</cite> is not of type string.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">KeyError</span></code> &#8211; If <cite>data_frame</cite> information is not present in the catalog.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">KeyError</span></code> &#8211; If requested property for the <cite>data_frame</cite> is not present
+in the catalog.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.set_property">
+<code class="descclassname">py_entitymatching.</code><code class="descname">set_property</code><span class="sig-paren">(</span><em>data_frame</em>, <em>property_name</em>, <em>property_value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/py_entitymatching/catalog/catalog_manager.html#set_property"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_entitymatching.set_property" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the value of a property (with the given property name) for a pandas
+DataFrame in the catalog.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data_frame</strong> (<em>DataFrame</em>) &#8211; The DataFrame for which the property must  be
+set.</li>
+<li><strong>property_name</strong> (<em>string</em>) &#8211; The name of the property to be set.</li>
+<li><strong>property_value</strong> (<em>object</em>) &#8211; The value of the property to be set. This is
+typically a string (such as key) or pandas DataFrame (such as
+ltable, rtable).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A Boolean value of True is returned if the update was successful.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> &#8211; If <cite>data_frame</cite> is not of type pandas
+DataFrame.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> &#8211; If <cite>property_name</cite> is not of type string.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If the input DataFrame is not present in the catalog, this function
+will create an entry in the catalog and set the given property.</p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.del_property">
+<code class="descclassname">py_entitymatching.</code><code class="descname">del_property</code><span class="sig-paren">(</span><em>data_frame</em>, <em>property_name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/py_entitymatching/catalog/catalog_manager.html#del_property"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_entitymatching.del_property" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes a property for a pandas DataFrame from the catalog.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data_frame</strong> (<em>DataFrame</em>) &#8211; The input DataFrame for which a property must be
+deleted from the catalog.</li>
+<li><strong>property_name</strong> (<em>string</em>) &#8211; The name of the property that should be deleted.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A Boolean value of True is returned if the deletion was successful.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> &#8211; If <cite>data_frame</cite> is not of type pandas DataFrame.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> &#8211; If <cite>property_name</cite> is not of type string.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">KeyError</span></code> &#8211; If <cite>data_frame</cite> information is not present in the catalog.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">KeyError</span></code> &#8211; If requested property for the DataFrame is not present
+in the catalog.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.copy_properties">
+<code class="descclassname">py_entitymatching.</code><code class="descname">copy_properties</code><span class="sig-paren">(</span><em>source_data_frame</em>, <em>target_data_frame</em>, <em>replace=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/py_entitymatching/catalog/catalog_manager.html#copy_properties"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_entitymatching.copy_properties" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copies properties from a source DataFrame to target DataFrame in the
+catalog.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>source_data_frame</strong> (<em>DataFrame</em>) &#8211; The DataFrame from which the properties
+to be copied from, in the catalog.</li>
+<li><strong>target_data_frame</strong> (<em>DataFrame</em>) &#8211; The DataFrame to which the properties
+to be copied to, in the catalog.</li>
+<li><strong>replace</strong> (<em>boolean</em>) &#8211; A flag to indicate whether the source
+DataFrame&#8217;s  properties can replace the target
+DataFrame&#8217;s properties in the catalog. The default value for the
+flag is True.
+Specifically, if the target DataFrame&#8217;s information is already
+present in the catalog then the function will check if the
+replace flag is True. If the flag is set to True, then the
+function will first delete the existing properties and then set
+it with the source DataFrame properties.
+If the flag is False, the function will just return without
+modifying the existing properties.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A Boolean value of True is returned if the copying was successful.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> &#8211; If <cite>source_data_frame</cite> is not of
+type pandas DataFrame.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> &#8211; If <cite>target_data_frame</cite> is not of
+type pandas DataFrame.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">KeyError</span></code> &#8211; If source DataFrame is not present in the
+catalog.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.get_key">
+<code class="descclassname">py_entitymatching.</code><code class="descname">get_key</code><span class="sig-paren">(</span><em>data_frame</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/py_entitymatching/catalog/catalog_manager.html#get_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_entitymatching.get_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the value of &#8216;key&#8217; property for a DataFrame from the catalog.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data_frame</strong> (<em>DataFrame</em>) &#8211; The DataFrame for which the key must be
+retrieved from the catalog.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A string value containing the key column name is returned (if present).</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#py_entitymatching.get_property" title="py_entitymatching.get_property"><code class="xref py py-meth docutils literal"><span class="pre">get_property()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.set_key">
+<code class="descclassname">py_entitymatching.</code><code class="descname">set_key</code><span class="sig-paren">(</span><em>data_frame</em>, <em>key_attribute</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/py_entitymatching/catalog/catalog_manager.html#set_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_entitymatching.set_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the value of &#8216;key&#8217; property for a DataFrame in the catalog with the
+given attribute (i.e column name).</p>
+<p>Specifically, this function set the the key attribute for the DataFrame
+if the given attribute satisfies the following two properties:</p>
+<blockquote>
+<div><p>The key attribute should have unique values.</p>
+<p>The key attribute should not have missing values. A missing value
+is represented as np.NaN.</p>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data_frame</strong> (<em>DataFrame</em>) &#8211; The DataFrame for which the key must be set in
+the catalog.</li>
+<li><strong>key_attribute</strong> (<em>string</em>) &#8211; The key attribute (column name) in the
+DataFrame.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A Boolean value of True is returned, if the given attribute
+satisfies the conditions for a key and the update was successful.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> &#8211; If <cite>data_frame</cite> is not of type
+pandas DataFrame.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> &#8211; If <cite>key_attribute</cite> is not of type string.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">KeyError</span></code> &#8211; If given <cite>key_attribute</cite> is not in the DataFrame columns.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#py_entitymatching.set_property" title="py_entitymatching.set_property"><code class="xref py py-meth docutils literal"><span class="pre">set_property()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.get_fk_ltable">
+<code class="descclassname">py_entitymatching.</code><code class="descname">get_fk_ltable</code><span class="sig-paren">(</span><em>data_frame</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/py_entitymatching/catalog/catalog_manager.html#get_fk_ltable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_entitymatching.get_fk_ltable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the foreign key to left table for a DataFrame from the
+catalog.</p>
+<p>Specifically this function is a sugar function that will get the foreign
+key to left table using underlying <a class="reference internal" href="#py_entitymatching.get_property" title="py_entitymatching.get_property"><code class="xref py py-meth docutils literal"><span class="pre">get_property()</span></code></a> function.
+This function is typically called on a DataFrame which contains metadata
+such as fk_ltable, fk_rtable, ltable, rtable.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data_frame</strong> (<em>DataFrame</em>) &#8211; The input DataFrame for which the foreign key
+ltable property must be retrieved.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A Python object, typically a string is returned.</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#py_entitymatching.get_property" title="py_entitymatching.get_property"><code class="xref py py-meth docutils literal"><span class="pre">get_property()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.set_fk_ltable">
+<code class="descclassname">py_entitymatching.</code><code class="descname">set_fk_ltable</code><span class="sig-paren">(</span><em>data_frame</em>, <em>fk_ltable</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/py_entitymatching/catalog/catalog_manager.html#set_fk_ltable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_entitymatching.set_fk_ltable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the foreign key to ltable for a DataFrame in the catalog.</p>
+<p>Specifically this function is a sugar function that will set the foreign
+key to the left table using <a class="reference internal" href="#py_entitymatching.set_property" title="py_entitymatching.set_property"><code class="xref py py-meth docutils literal"><span class="pre">py_entitymatching.set_property()</span></code></a> function. This
+function is typically called on a DataFrame which contains metadata such as
+fk_ltable, fk_rtable, ltable, rtable.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data_frame</strong> (<em>DataFrame</em>) &#8211; The input DataFrame for which the foreign key
+ltable property must be set.</li>
+<li><strong>fk_ltable</strong> (<em>string</em>) &#8211; The attribute that must ne set as the foreign key
+to the ltable in the catalog.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A Boolean value of True is returned if the foreign key to ltable was
+set successfully.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> &#8211; If <cite>data_frame</cite> is not of type
+pandas DataFrame.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> &#8211; If <cite>fk_ltable</cite> is not of type
+string.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> &#8211; If <cite>fk_ltable</cite> is not in the input
+DataFrame.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#py_entitymatching.set_property" title="py_entitymatching.set_property"><code class="xref py py-meth docutils literal"><span class="pre">set_property()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.get_fk_rtable">
+<code class="descclassname">py_entitymatching.</code><code class="descname">get_fk_rtable</code><span class="sig-paren">(</span><em>data_frame</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/py_entitymatching/catalog/catalog_manager.html#get_fk_rtable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_entitymatching.get_fk_rtable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the foreign key to right table for a DataFrame from the catalog.</p>
+<p>Specifically this function is a sugar function that will get the foreign
+key to right table using <a class="reference internal" href="#py_entitymatching.get_property" title="py_entitymatching.get_property"><code class="xref py py-meth docutils literal"><span class="pre">py_entitymatching.get_property()</span></code></a> function. This
+function is typically called on a DataFrame which contains metadata such as
+fk_ltable, fk_rtable, ltable, rtable.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data_frame</strong> (<em>DataFrame</em>) &#8211; The input DataFrame for which the foreign key
+rtable property must be retrieved.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A Python object, (typically a string) is returned.</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#py_entitymatching.get_property" title="py_entitymatching.get_property"><code class="xref py py-meth docutils literal"><span class="pre">get_property()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.set_fk_rtable">
+<code class="descclassname">py_entitymatching.</code><code class="descname">set_fk_rtable</code><span class="sig-paren">(</span><em>data_frame</em>, <em>foreign_key_rtable</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/py_entitymatching/catalog/catalog_manager.html#set_fk_rtable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_entitymatching.set_fk_rtable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the foreign key to rtable for a DataFrame in the catalog.</p>
+<p>Specifically this function is a sugar function that will set the foreign
+key to right table using set_property function. This function
+is typically called on a DataFrame which contains metadata such as
+fk_ltable, fk_rtable, ltable, rtable.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data_frame</strong> (<em>DataFrame</em>) &#8211; The input DataFrame for which the foreign key
+rtable property must be set.</li>
+<li><strong>foreign_key_rtable</strong> (<em>string</em>) &#8211; The attribute that must be set as
+foreign key to rtable in the catalog.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><dl class="docutils">
+<dt>A Boolean value of True is returned if the foreign key to rtable was</dt>
+<dd><p class="first last">set successfully.</p>
+</dd>
+</dl>
+</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> &#8211; If <cite>data_frame</cite> is not of type
+pandas DataFrame.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> &#8211; If <cite>foreign_key_rtable</cite> is not of
+type string.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> &#8211; If <cite>fk_rtable</cite> is not in the input
+DataFrame.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#py_entitymatching.set_property" title="py_entitymatching.set_property"><code class="xref py py-meth docutils literal"><span class="pre">set_property()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.get_ltable">
+<code class="descclassname">py_entitymatching.</code><code class="descname">get_ltable</code><span class="sig-paren">(</span><em>candset</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/py_entitymatching/catalog/catalog_manager.html#get_ltable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_entitymatching.get_ltable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the ltable for a DataFrame from the catalog.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>candset</strong> (<em>DataFrame</em>) &#8211; The input table for which the ltable must be
+returned.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A pandas DataFrame that is pointed by &#8216;ltable&#8217; property of the input
+table.</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#py_entitymatching.get_property" title="py_entitymatching.get_property"><code class="xref py py-meth docutils literal"><span class="pre">get_property()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.set_ltable">
+<code class="descclassname">py_entitymatching.</code><code class="descname">set_ltable</code><span class="sig-paren">(</span><em>candset</em>, <em>table</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/py_entitymatching/catalog/catalog_manager.html#set_ltable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_entitymatching.set_ltable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the ltable for a DataFrame in the catalog.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>candset</strong> (<em>DataFrame</em>) &#8211; The input table for which the ltable must be set.</li>
+<li><strong>table</strong> (<em>DataFrame</em>) &#8211; The table (typically a pandas DataFrame) that must
+be set as ltable for the input DataFrame.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A Boolean value of True is returned, if the update was successful.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#py_entitymatching.set_property" title="py_entitymatching.set_property"><code class="xref py py-meth docutils literal"><span class="pre">set_property()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.get_rtable">
+<code class="descclassname">py_entitymatching.</code><code class="descname">get_rtable</code><span class="sig-paren">(</span><em>candset</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/py_entitymatching/catalog/catalog_manager.html#get_rtable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_entitymatching.get_rtable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the rtable for a DataFrame from the catalog.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>candset</strong> (<em>DataFrame</em>) &#8211; Input table for which the rtable must be returned.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A pandas DataFrame that is pointed by &#8216;rtable&#8217; property of the input
+table.</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#py_entitymatching.get_property" title="py_entitymatching.get_property"><code class="xref py py-meth docutils literal"><span class="pre">get_property()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.set_rtable">
+<code class="descclassname">py_entitymatching.</code><code class="descname">set_rtable</code><span class="sig-paren">(</span><em>candset</em>, <em>table</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/py_entitymatching/catalog/catalog_manager.html#set_rtable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_entitymatching.set_rtable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the rtable for a DataFrame in the catalog.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>candset</strong> (<em>DataFrame</em>) &#8211; The input table for which the rtable must be set.</li>
+<li><strong>table</strong> (<em>DataFrame</em>) &#8211; The table that must be set as rtable for the input
+DataFrame.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A Boolean value of True is returned, if the update was successful.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#py_entitymatching.set_property" title="py_entitymatching.set_property"><code class="xref py py-meth docutils literal"><span class="pre">set_property()</span></code></a></p>
+</div>
+</dd></dl>
+
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="downsampling.html" class="btn btn-neutral float-right" title="Downsampling" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="loading_and_saving_objects.html" class="btn btn-neutral" title="Loading and Saving Objects" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, anhaidgroup.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,559 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>py_entitymatching.io.pickles &mdash; py_entitymatching 0.1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="py_entitymatching 0.1.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> py_entitymatching
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/reading_and_writing_data.html">Reading and Writing Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/loading_and_saving_objects.html">Loading and Saving Objects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/handling_metadata.html">Handling Metadata</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/downsampling.html">Downsampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/blocking.html">Blocking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/debugging_blocker_output.html">Debugging Blocker Output</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/combining_blocker_outputs.html">Combining Blocker Outputs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/sampling.html">Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/labeling.html">Labeling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/handling_features.html">Handling Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/matching.html">Matching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/debugging_matcher.html">Debugging Matcher</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/evaluating_the_matching_output.html">Evaluating the Matching Output</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">py_entitymatching</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>py_entitymatching.io.pickles</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for py_entitymatching.io.pickles</h1><div class="highlight"><pre>
+<span></span><span class="c1"># coding=utf-8</span>
+<span class="sd">&quot;&quot;&quot; This module defines the functions to load and save py_entitymatching objects</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1"># coding=utf-8</span>
+<span class="kn">import</span> <span class="nn">collections</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+
+<span class="kn">import</span> <span class="nn">cloudpickle</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">six</span>
+
+<span class="kn">import</span> <span class="nn">py_entitymatching.catalog.catalog_manager</span> <span class="kn">as</span> <span class="nn">cm</span>
+<span class="kn">import</span> <span class="nn">py_entitymatching.io.parsers</span> <span class="kn">as</span> <span class="nn">ps</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="save_object"><a class="viewcode-back" href="../../../api/loading_and_saving_objects.html#py_entitymatching.save_object">[docs]</a><span class="k">def</span> <span class="nf">save_object</span><span class="p">(</span><span class="n">object_to_save</span><span class="p">,</span> <span class="n">file_path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Saves a Python object to disk.</span>
+
+<span class="sd">    This function is intended to be used to save py_entitymatching objects such as</span>
+<span class="sd">    rule-based blocker, feature vectors, etc.</span>
+
+<span class="sd">    A user would like to store</span>
+<span class="sd">    py_entitymatching objects to disk, when he/she wants to save the workflow and</span>
+<span class="sd">    resume it later. This function provides a way to save the required</span>
+<span class="sd">    objects to disk.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        object_to_save (Python object): The Python object to save. This can be</span>
+<span class="sd">            a rule-based blocker, feature vectors, etc.</span>
+
+<span class="sd">        file_path (string): The file path where the object must be saved.</span>
+
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A Boolean value of True is returned, if the saving was successful.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If `file_path` is not of type string.</span>
+<span class="sd">        AssertionError: If a file cannot be written in the given `file_path`.</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        :meth:`~load_object`</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Validate input parameters</span>
+
+    <span class="c1"># # The file path is expected to be of type string.</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Input file path is not of type string&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Input file path is not of type string&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Check whether the file path is valid and if a file is already present</span>
+    <span class="c1"># at that path.</span>
+    <span class="c1"># noinspection PyProtectedMember</span>
+    <span class="n">can_write</span><span class="p">,</span> <span class="n">file_exists</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">_check_file_path</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+
+    <span class="c1"># Check whether we can write</span>
+    <span class="k">if</span> <span class="n">can_write</span><span class="p">:</span>
+        <span class="c1"># If a file already exists in that location, issue a warning and</span>
+        <span class="c1"># overwrite the file.</span>
+        <span class="k">if</span> <span class="n">file_exists</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s1">&#39;File already exists at </span><span class="si">%s</span><span class="s1">; Overwriting it&#39;</span><span class="p">,</span> <span class="n">file_path</span><span class="p">)</span>
+            <span class="c1"># we open the file in &#39;wb&#39; mode as we are writing a binary file.</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_handler</span><span class="p">:</span>
+                <span class="n">cloudpickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">object_to_save</span><span class="p">,</span> <span class="n">file_handler</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_handler</span><span class="p">:</span>
+                <span class="n">cloudpickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">object_to_save</span><span class="p">,</span> <span class="n">file_handler</span><span class="p">)</span>
+
+    <span class="c1"># If we cannot write, then raise an error.</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Cannot write in the file path </span><span class="si">%s</span><span class="s1">; Exiting&#39;</span><span class="p">,</span> <span class="n">file_path</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Cannot write in the file path </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">file_path</span><span class="p">)</span>
+
+    <span class="c1"># Return True if everything was successful.</span>
+    <span class="k">return</span> <span class="bp">True</span></div>
+
+
+<div class="viewcode-block" id="load_object"><a class="viewcode-back" href="../../../api/loading_and_saving_objects.html#py_entitymatching.load_object">[docs]</a><span class="k">def</span> <span class="nf">load_object</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Loads a Python object from disk.</span>
+
+<span class="sd">    This function loads py_entitymatching objects from disk such as</span>
+<span class="sd">    blockers, matchers, feature table, etc.</span>
+
+<span class="sd">    Args:</span>
+
+<span class="sd">        file_path (string): The file path to load the object from.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A Python object read from the file path.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If `file_path` is not of type string.</span>
+<span class="sd">        AssertionError: If a file does not exist at the given `file_path`.</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        :meth:`~save_object`</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Validate input parameters</span>
+
+    <span class="c1"># The file path is expected to be of type string.</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Input file path is not of type string&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Input file path is not of type string&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Check if a file exists at the given file path.</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;File does not exist at path </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">file_path</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;File does not exist at path&#39;</span><span class="p">,</span> <span class="n">file_path</span><span class="p">)</span>
+
+    <span class="c1"># Read the object from the file.</span>
+
+    <span class="c1"># # Open the file with the mode set to binary.</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_handler</span><span class="p">:</span>
+        <span class="n">object_to_return</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file_handler</span><span class="p">)</span>
+
+    <span class="c1"># Return the object.</span>
+    <span class="k">return</span> <span class="n">object_to_return</span></div>
+
+
+<span class="c1"># noinspection PyProtectedMember</span>
+<div class="viewcode-block" id="save_table"><a class="viewcode-back" href="../../../api/loading_and_saving_objects.html#py_entitymatching.save_table">[docs]</a><span class="k">def</span> <span class="nf">save_table</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">metadata_ext</span><span class="o">=</span><span class="s1">&#39;.pklmetadata&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Saves a DataFrame to disk along with its metadata in a pickle format.</span>
+
+<span class="sd">    This function saves a  DataFrame to disk along with its metadata from</span>
+<span class="sd">    the catalog.</span>
+
+<span class="sd">    Specifically, this function saves the DataFrame in the given</span>
+<span class="sd">    file path, and saves the metadata in the same directory (as the</span>
+<span class="sd">    file path) but with a different extension. This extension can be</span>
+<span class="sd">    optionally given by the user (defaults to &#39;.pklmetadata&#39;).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data_frame (DataFrame): The DataFrame that should be saved.</span>
+
+<span class="sd">        file_path (string): The file path where the DataFrame must be stored.</span>
+
+<span class="sd">        metadata_ext (string): The metadata extension that should be used while</span>
+<span class="sd">            storing the metadata information. The default value is</span>
+<span class="sd">            &#39;.pklmetadata&#39;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A Boolean value of True is returned if the DataFrame is successfully</span>
+<span class="sd">        saved.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If `data_frame` is not of type pandas</span>
+<span class="sd">         DataFrame.</span>
+<span class="sd">        AssertionError: If `file_path` is not of type string.</span>
+<span class="sd">        AssertionError: If `metadata_ext` is not of type string.</span>
+<span class="sd">        AssertionError: If a file cannot written in the given `file_path`.</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        :meth:`~py_entitymatching.load_table`</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        This function is a bit different from to_csv_metadata, where the</span>
+<span class="sd">        DataFrame is stored in a CSV file format. The CSV file format can be</span>
+<span class="sd">        viewed using a text editor. But a DataFrame stored using &#39;save_table&#39; is</span>
+<span class="sd">        stored in a special format, which cannot be viewed with a text editor.</span>
+<span class="sd">        The reason we have save_table is, for larger DataFrames it is</span>
+<span class="sd">        efficient to pickle the DataFrame to disk than writing the DataFrame</span>
+<span class="sd">        in CSV format.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Validate the input parameters</span>
+
+    <span class="c1"># # data_frame is expected to be of type pandas DataFrame</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Input object is not of type pandas DataFrame&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Input object is not of type pandas DataFrame&#39;</span><span class="p">)</span>
+
+    <span class="c1"># # file_path is expected to be of type pandas DataFrame</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Input file path is not of type string&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Input file path is not of type string&#39;</span><span class="p">)</span>
+
+    <span class="c1"># # metadata_ext is expected to be of type string</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">metadata_ext</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Input metadata ext is not of type string&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Input metadata ext is not of type string&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Get the file_name (with out extension) and the extension from the given</span>
+    <span class="c1">#  file path. For example if the file_path was /Users/foo/file.csv then</span>
+    <span class="c1"># the file_name will be /Users/foo/file and the extension will be &#39;.csv&#39;</span>
+    <span class="n">file_name</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+
+    <span class="c1"># The metadata file name is the same file name but with the extension</span>
+    <span class="c1"># given by the user</span>
+    <span class="n">metadata_filename</span> <span class="o">=</span> <span class="n">file_name</span> <span class="o">+</span> <span class="n">metadata_ext</span>
+
+    <span class="c1"># Check if the file exists in the file_path and whether we have</span>
+    <span class="c1"># sufficient access privileges to write in that path</span>
+    <span class="n">can_write</span><span class="p">,</span> <span class="n">file_exists</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">_check_file_path</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">can_write</span><span class="p">:</span>
+        <span class="c1"># If the file already exists then issue a warning and overwrite the</span>
+        <span class="c1"># file</span>
+        <span class="k">if</span> <span class="n">file_exists</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s1">&#39;File already exists at </span><span class="si">%s</span><span class="s1">; Overwriting it&#39;</span><span class="p">,</span> <span class="n">file_path</span><span class="p">)</span>
+            <span class="c1"># we open the file_path in binary mode, as we are writing in</span>
+            <span class="c1"># binary format&#39;</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_handler</span><span class="p">:</span>
+                <span class="n">cloudpickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">file_handler</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1">#</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_handler</span><span class="p">:</span>
+                <span class="n">cloudpickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">file_handler</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Looks like we cannot write the file in the given path. Raise an</span>
+        <span class="c1"># error in this case.</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Cannot write in the file path </span><span class="si">%s</span><span class="s1">; Exiting&#39;</span><span class="p">,</span> <span class="n">file_path</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Cannot write in the file path </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">file_path</span><span class="p">)</span>
+
+    <span class="c1"># Once we are done with writing the DataFrame, we will write the metadata</span>
+    <span class="c1">#  now</span>
+
+    <span class="c1"># Initialize a metadata dictionary to hold the metadata of DataFrame from</span>
+    <span class="c1">#  the catalog</span>
+    <span class="n">metadata_dict</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">OrderedDict</span><span class="p">()</span>
+
+    <span class="c1"># get all the properties for the input data frame</span>
+    <span class="c1"># # Check if the DataFrame information is present in the catalog</span>
+    <span class="n">properties</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="n">cm</span><span class="o">.</span><span class="n">is_dfinfo_present</span><span class="p">(</span><span class="n">data_frame</span><span class="p">)</span> <span class="ow">is</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="n">properties</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">get_all_properties</span><span class="p">(</span><span class="n">data_frame</span><span class="p">)</span>
+
+    <span class="c1"># If the properties are present in the catalog, then write properties to</span>
+    <span class="c1"># disk</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">properties</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">property_name</span><span class="p">,</span> <span class="n">property_value</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="n">properties</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">property_value</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">)</span> <span class="ow">is</span> <span class="bp">True</span><span class="p">:</span>
+                <span class="n">metadata_dict</span><span class="p">[</span><span class="n">property_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">property_value</span>
+
+    <span class="c1"># try to save metadata</span>
+    <span class="n">can_write</span><span class="p">,</span> <span class="n">file_exists</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">_check_file_path</span><span class="p">(</span><span class="n">metadata_filename</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">can_write</span><span class="p">:</span>
+        <span class="c1"># If the file already exists, then issue a warning and overwrite the</span>
+        <span class="c1"># file</span>
+        <span class="k">if</span> <span class="n">file_exists</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s1">&#39;Metadata file already exists at </span><span class="si">%s</span><span class="s1">. Overwriting it&#39;</span><span class="p">,</span>
+                <span class="n">metadata_filename</span><span class="p">)</span>
+            <span class="c1"># write metadata contents</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">metadata_filename</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_handler</span><span class="p">:</span>
+                <span class="n">cloudpickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">metadata_dict</span><span class="p">,</span> <span class="n">file_handler</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># write metadata contents</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">metadata_filename</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_handler</span><span class="p">:</span>
+                <span class="n">cloudpickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">metadata_dict</span><span class="p">,</span> <span class="n">file_handler</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+            <span class="s1">&#39;Cannot write metadata at the file path </span><span class="si">%s</span><span class="s1">. Skip writing metadata &#39;</span>
+            <span class="s1">&#39;file&#39;</span><span class="p">,</span> <span class="n">metadata_filename</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="bp">True</span></div>
+
+
+<span class="c1"># noinspection PyProtectedMember</span>
+<div class="viewcode-block" id="load_table"><a class="viewcode-back" href="../../../api/loading_and_saving_objects.html#py_entitymatching.load_table">[docs]</a><span class="k">def</span> <span class="nf">load_table</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">metadata_ext</span><span class="o">=</span><span class="s1">&#39;.pklmetadata&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Loads a pickled DataFrame from a file along with its metadata.</span>
+
+<span class="sd">    This function loads a DataFrame from a file stored in a pickle format.</span>
+
+<span class="sd">    Further, this function looks for a metadata file with the same file name</span>
+<span class="sd">    but with an extension given by the user (defaults to &#39;.pklmetadata&#39;. If the</span>
+<span class="sd">    metadata file is present, the function will update the metadata for that</span>
+<span class="sd">    DataFrame in the catalog.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        file_path (string): The file path to load the file from.</span>
+<span class="sd">        metadata_ext (string): The metadata file extension (defaults to</span>
+<span class="sd">            &#39;.pklmetadata&#39;) that should be used to generate metadata file name.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        If the loading is successful, the function will return a pandas</span>
+<span class="sd">        DataFrame read from the file. The catalog will be updated with the</span>
+<span class="sd">        metadata read from the metadata file (if the file was present).</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If `file_path` is not of type string.</span>
+<span class="sd">        AssertionError: If `metadata_ext` is not of type string.</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        :meth:`~py_entitymatching.save_table`</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        This function is different from read_csv_metadata in two aspects.</span>
+<span class="sd">        First, this function currently does not support reading in candidate</span>
+<span class="sd">        set tables, where there are more metadata such as ltable,</span>
+<span class="sd">        rtable than just &#39;key&#39;, and conceptually the user is expected to</span>
+<span class="sd">        provide ltable and rtable information while calling this function. (</span>
+<span class="sd">        this support will be added shortly). Second, this function loads the</span>
+<span class="sd">        table stored in a pickle format.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Validate input parameters</span>
+
+    <span class="c1"># # The file_path is expected to be of type string</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Input file path is not of type string&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Input file path is not of type string&#39;</span><span class="p">)</span>
+
+    <span class="c1"># # The metadata_extn is expected to be of type string</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">metadata_ext</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Input metadata ext is not of type string&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Input metadata ext is not of type string&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Load the object from the file path. Note that we use a generic load</span>
+    <span class="c1"># object to load in the DataFrame too.</span>
+    <span class="n">data_frame</span> <span class="o">=</span> <span class="n">load_object</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+
+    <span class="c1"># Load metadata from file path</span>
+
+    <span class="c1"># # Check if the meta data file is present</span>
+    <span class="k">if</span> <span class="n">ps</span><span class="o">.</span><span class="n">_is_metadata_file_present</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">extension</span><span class="o">=</span><span class="n">metadata_ext</span><span class="p">):</span>
+        <span class="c1"># Construct the metadata file name, and read it from the disk.</span>
+
+        <span class="c1"># # Get the file name used to load the DataFrame</span>
+        <span class="n">file_name</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+        <span class="c1"># # Construct the metadata file name</span>
+        <span class="n">metadata_filename</span> <span class="o">=</span> <span class="n">file_name</span> <span class="o">+</span> <span class="n">metadata_ext</span>
+        <span class="c1"># # Load the metadata from the disk</span>
+        <span class="n">metadata_dict</span> <span class="o">=</span> <span class="n">load_object</span><span class="p">(</span><span class="n">metadata_filename</span><span class="p">)</span>
+
+        <span class="c1"># Update the catalog with the properties read from the disk</span>
+        <span class="k">for</span> <span class="n">property_name</span><span class="p">,</span> <span class="n">property_value</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="n">metadata_dict</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">property_name</span> <span class="o">==</span> <span class="s1">&#39;key&#39;</span><span class="p">:</span>
+                <span class="c1"># If the property_name is key call set_key as the function</span>
+                <span class="c1"># will check for the integrity of key before setting it in</span>
+                <span class="c1"># the catalog</span>
+                <span class="n">cm</span><span class="o">.</span><span class="n">set_key</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">property_value</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">cm</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">property_name</span><span class="p">,</span> <span class="n">property_value</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># If the metadata file is not present then issue a warning</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;There is no metadata file&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Return the DataFrame</span>
+    <span class="k">return</span> <span class="n">data_frame</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, anhaidgroup.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

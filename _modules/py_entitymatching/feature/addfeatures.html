@@ -1,0 +1,585 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>py_entitymatching.feature.addfeatures &mdash; py_entitymatching 0.1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="py_entitymatching 0.1.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> py_entitymatching
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/reading_and_writing_data.html">Reading and Writing Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/loading_and_saving_objects.html">Loading and Saving Objects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/handling_metadata.html">Handling Metadata</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/downsampling.html">Downsampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/blocking.html">Blocking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/debugging_blocker_output.html">Debugging Blocker Output</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/combining_blocker_outputs.html">Combining Blocker Outputs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/sampling.html">Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/labeling.html">Labeling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/handling_features.html">Handling Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/matching.html">Matching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/debugging_matcher.html">Debugging Matcher</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/evaluating_the_matching_output.html">Evaluating the Matching Output</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">py_entitymatching</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>py_entitymatching.feature.addfeatures</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for py_entitymatching.feature.addfeatures</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module contains functions to add a feature to feature table.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">six</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="get_feature_fn"><a class="viewcode-back" href="../../../api/creating_the_features_manually.html#py_entitymatching.get_feature_fn">[docs]</a><span class="k">def</span> <span class="nf">get_feature_fn</span><span class="p">(</span><span class="n">feature_string</span><span class="p">,</span> <span class="n">tokenizers</span><span class="p">,</span> <span class="n">similarity_functions</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function creates a feature in a declarative manner.</span>
+
+<span class="sd">    Specifically, this function uses the feature string, parses it and</span>
+<span class="sd">    compiles it into a function using the given tokenizers and similarity</span>
+<span class="sd">    functions. This compiled function will take in two tuples and return a</span>
+<span class="sd">    feature value (typically a number).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        feature_string (string): A feature expression</span>
+<span class="sd">            to be converted into a function.</span>
+<span class="sd">        tokenizers (dictionary): A Python dictionary containing tokenizers.</span>
+<span class="sd">            Specifically, the dictionary contains tokenizer names as keys and</span>
+<span class="sd">            tokenizer functions as values. The tokenizer function typically</span>
+<span class="sd">            takes in a string and returns a list of tokens.</span>
+<span class="sd">        similarity_functions (dictionary): A Python dictionary containing</span>
+<span class="sd">            similarity functions. Specifically, the dictionary contains</span>
+<span class="sd">            similarity function names as keys and similarity functions as</span>
+<span class="sd">            values. The similarity function typically</span>
+<span class="sd">            takes in a string or two lists of tokens and returns a number.</span>
+
+<span class="sd">    Returns:</span>
+
+<span class="sd">        This function returns a Python dictionary which contains sufficient</span>
+<span class="sd">        information (such as attributes, tokenizers, function code) to be added</span>
+<span class="sd">        to the feature table.</span>
+
+<span class="sd">        Specifically the Python dictionary contains the following keys:</span>
+<span class="sd">        &#39;left_attribute&#39;, &#39;right_attribute&#39;,</span>
+<span class="sd">        &#39;left_attr_tokenizer&#39;,</span>
+<span class="sd">        &#39;right_attr_tokenizer&#39;, &#39;simfunction&#39;, &#39;function&#39;, and</span>
+<span class="sd">        &#39;function_source&#39;.</span>
+
+<span class="sd">        For all the keys except the &#39;function&#39; and &#39;function_source&#39; the</span>
+<span class="sd">        value will be either a valid string (if the input feature string is</span>
+<span class="sd">        parsed correctly) or PARSE_EXP (if the parsing was not successful).</span>
+<span class="sd">        The &#39;function&#39; will have a valid Python function as value,</span>
+<span class="sd">        and &#39;function_source&#39; will have the Python function&#39;s source in</span>
+<span class="sd">        string format.</span>
+
+<span class="sd">        The created function is a self-contained function</span>
+<span class="sd">        which means that the tokenizers and sim functions that it calls are</span>
+<span class="sd">        bundled along with the returned function code.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If `feature_string` is not of type string.</span>
+<span class="sd">        AssertionError: If the input `tokenizers` is not of type</span>
+<span class="sd">            dictionary.</span>
+<span class="sd">        AssertionError: If the input `similarity_functions` is not of</span>
+<span class="sd">            type dictionary.</span>
+<span class="sd">    See Also:</span>
+<span class="sd">        :meth:`py_entitymatching.get_sim_funs_for_blocking`,</span>
+<span class="sd">        :meth:`py_entitymatching.get_tokenizers_for_blocking`,</span>
+<span class="sd">        :meth:`py_entitymatching.get_sim_funs_for_matching`,</span>
+<span class="sd">        :meth:`py_entitymatching.get_tokenizers_for_matching`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Validate input parameters</span>
+    <span class="c1"># # We expect the input feature string to be of type string</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">feature_string</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Input feature string is not of type string&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Input feature string is not of type string&#39;</span><span class="p">)</span>
+
+    <span class="c1"># # We expect the input object tokenizers to be of type python dictionary</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tokenizers</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Input object (tokenizers) is not of type dict&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Input object (tokenizers) is not of type dict&#39;</span><span class="p">)</span>
+
+    <span class="c1"># # We expect the input object similarity functions to be of type python</span>
+    <span class="c1"># dictionary</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">similarity_functions</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Input object (similarity_functions) is not of type dict&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Input object (similarity_functions) is not of &#39;</span>
+                             <span class="s1">&#39;type dict&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Initialize a dictionary to have tokenizers/similarity functions</span>
+    <span class="n">dict_to_compile</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="c1"># Update the dictionary with similarity functions</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">similarity_functions</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">dict_to_compile</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">similarity_functions</span><span class="p">)</span>
+    <span class="c1"># Update the dictionary with tokenizers</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tokenizers</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">dict_to_compile</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">tokenizers</span><span class="p">)</span>
+
+    <span class="c1"># Create a python function string based on the input feature string</span>
+    <span class="n">function_string</span> <span class="o">=</span> <span class="s1">&#39;def fn(ltuple, rtuple):</span><span class="se">\n</span><span class="s1">&#39;</span>
+    <span class="n">function_string</span> <span class="o">+=</span> <span class="s1">&#39;    &#39;</span>
+    <span class="n">function_string</span> <span class="o">+=</span> <span class="s1">&#39;return &#39;</span> <span class="o">+</span> <span class="n">feature_string</span>
+
+    <span class="c1"># Parse the feature string to get the tokenizer, sim. function, and the</span>
+    <span class="c1"># attribute that it is operating on</span>
+    <span class="n">parsed_dict</span> <span class="o">=</span> <span class="n">_parse_feat_str</span><span class="p">(</span><span class="n">feature_string</span><span class="p">,</span> <span class="n">tokenizers</span><span class="p">,</span>
+                                  <span class="n">similarity_functions</span><span class="p">)</span>
+
+    <span class="c1"># Compile the function string using the constructed dictionary</span>
+    <span class="n">six</span><span class="o">.</span><span class="n">exec_</span><span class="p">(</span><span class="n">function_string</span><span class="p">,</span> <span class="n">dict_to_compile</span><span class="p">)</span>
+
+    <span class="c1"># Update the parsed dict with the function and the function source</span>
+    <span class="n">parsed_dict</span><span class="p">[</span><span class="s1">&#39;function&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dict_to_compile</span><span class="p">[</span><span class="s1">&#39;fn&#39;</span><span class="p">]</span>
+    <span class="n">parsed_dict</span><span class="p">[</span><span class="s1">&#39;function_source&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">function_string</span>
+
+    <span class="c1"># Finally, return the parsed dictionary</span>
+    <span class="k">return</span> <span class="n">parsed_dict</span></div>
+
+
+<span class="c1"># parse input feature string</span>
+<span class="k">def</span> <span class="nf">_parse_feat_str</span><span class="p">(</span><span class="n">feature_string</span><span class="p">,</span> <span class="n">tokenizers</span><span class="p">,</span> <span class="n">similarity_functions</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function parses the feature string to get left attribute,</span>
+<span class="sd">    right attribute, tokenizer, similarity function</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Validate the input parameters</span>
+    <span class="c1"># # We expect the input feature string to be of type string</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">feature_string</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Input feature string is not of type string&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Input feature string is not of type string&#39;</span><span class="p">)</span>
+
+    <span class="c1"># # We expect the input object (tokenizers) to be of type dict</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tokenizers</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Input tokenizers is not of type dict&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Input tokenizers is not of type dict&#39;</span><span class="p">)</span>
+
+    <span class="c1"># # We expect the input object (similarity functions) to be of type dict</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">similarity_functions</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Input similarity functions is not of type dict&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Input sim. is not of type dict&#39;</span><span class="p">)</span>
+
+    <span class="c1"># We will have to parse the feature string. Specifically we use pyparsing</span>
+    <span class="c1">#  module for the parsing purposes</span>
+
+    <span class="kn">from</span> <span class="nn">pyparsing</span> <span class="kn">import</span> <span class="n">Word</span><span class="p">,</span> <span class="n">alphanums</span><span class="p">,</span> <span class="n">ParseException</span>
+
+    <span class="c1"># initialization attributes, tokenizers and similarity function parsing</span>
+    <span class="c1"># result</span>
+    <span class="n">left_attribute</span> <span class="o">=</span> <span class="s1">&#39;PARSE_EXP&#39;</span>
+    <span class="n">right_attribute</span> <span class="o">=</span> <span class="s1">&#39;PARSE_EXP&#39;</span>
+    <span class="n">left_attr_tokenizer</span> <span class="o">=</span> <span class="s1">&#39;PARSE_EXP&#39;</span>
+    <span class="n">right_attr_tokenizer</span> <span class="o">=</span> <span class="s1">&#39;PARSE_EXP&#39;</span>
+    <span class="n">sim_function</span> <span class="o">=</span> <span class="s1">&#39;PARSE_EXP&#39;</span>
+
+    <span class="n">exception_flag</span> <span class="o">=</span> <span class="bp">False</span>
+
+    <span class="c1"># Define structures for each type such as attribute name, tokenizer</span>
+    <span class="c1"># function</span>
+    <span class="n">attr_name</span> <span class="o">=</span> <span class="n">Word</span><span class="p">(</span><span class="n">alphanums</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="s2">&quot;[&quot;</span> <span class="o">+</span> <span class="s2">&quot;]&quot;</span> <span class="o">+</span> <span class="s1">&#39;&quot;&#39;</span> <span class="o">+</span> <span class="s2">&quot;&#39;&quot;</span><span class="p">)</span>
+    <span class="n">tok_fn</span> <span class="o">=</span> <span class="n">Word</span><span class="p">(</span><span class="n">alphanums</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;(&quot;</span> <span class="o">+</span> <span class="n">attr_name</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span>
+    <span class="n">wo_tok</span> <span class="o">=</span> <span class="n">Word</span><span class="p">(</span><span class="n">alphanums</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;(&quot;</span> <span class="o">+</span> <span class="n">attr_name</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="n">attr_name</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span>
+    <span class="n">wi_tok</span> <span class="o">=</span> <span class="n">Word</span><span class="p">(</span><span class="n">alphanums</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;(&quot;</span> <span class="o">+</span> <span class="n">tok_fn</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="n">tok_fn</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span>
+    <span class="n">feat</span> <span class="o">=</span> <span class="n">wi_tok</span> <span class="o">|</span> <span class="n">wo_tok</span>
+    <span class="c1"># Try to parse the string</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">parsed_string</span> <span class="o">=</span> <span class="n">feat</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span><span class="n">feature_string</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">ParseException</span> <span class="k">as</span> <span class="n">_</span><span class="p">:</span>
+        <span class="n">exception_flag</span> <span class="o">=</span> <span class="bp">True</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">exception_flag</span><span class="p">:</span>
+        <span class="c1"># Parse the tokenizers</span>
+        <span class="n">parsed_tokenizers</span> <span class="o">=</span> <span class="p">[</span><span class="n">value</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">parsed_string</span>
+                             <span class="k">if</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">tokenizers</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parsed_tokenizers</span><span class="p">)</span> <span class="ow">is</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">left_attr_tokenizer</span> <span class="o">=</span> <span class="n">parsed_tokenizers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">right_attr_tokenizer</span> <span class="o">=</span> <span class="n">parsed_tokenizers</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1"># Parse the similarity functions</span>
+        <span class="n">parsed_similarity_function</span> <span class="o">=</span> <span class="p">[</span><span class="n">value</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">parsed_string</span>
+                                      <span class="k">if</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">similarity_functions</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parsed_similarity_function</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">sim_function</span> <span class="o">=</span> <span class="n">parsed_similarity_function</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="c1"># Parse the left attribute</span>
+        <span class="n">attribute</span> <span class="o">=</span> <span class="p">[</span><span class="n">value</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">parsed_string</span>
+                     <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;ltuple[&#39;</span><span class="p">)]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">attribute</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">attribute</span> <span class="o">=</span> <span class="n">attribute</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">left_attribute</span> <span class="o">=</span> <span class="n">attribute</span><span class="p">[</span><span class="mi">7</span><span class="p">:</span><span class="nb">len</span><span class="p">(</span><span class="n">attribute</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span>
+                <span class="s2">&quot;&#39;&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Parse the right attribute</span>
+        <span class="n">attribute</span> <span class="o">=</span> <span class="p">[</span><span class="n">val</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">parsed_string</span> <span class="k">if</span> <span class="n">val</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;rtuple[&#39;</span><span class="p">)]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">attribute</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">attribute</span> <span class="o">=</span> <span class="n">attribute</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">right_attribute</span> <span class="o">=</span> <span class="n">attribute</span><span class="p">[</span><span class="mi">7</span><span class="p">:</span><span class="nb">len</span><span class="p">(</span><span class="n">attribute</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span>
+                <span class="s2">&quot;&#39;&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="c1"># Return the parsed information in a dictionary format.</span>
+
+    <span class="n">parsed_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;left_attribute&#39;</span><span class="p">:</span> <span class="n">left_attribute</span><span class="p">,</span>
+                   <span class="s1">&#39;right_attribute&#39;</span><span class="p">:</span> <span class="n">right_attribute</span><span class="p">,</span>
+                   <span class="s1">&#39;left_attr_tokenizer&#39;</span><span class="p">:</span> <span class="n">left_attr_tokenizer</span><span class="p">,</span>
+                   <span class="s1">&#39;right_attr_tokenizer&#39;</span><span class="p">:</span> <span class="n">right_attr_tokenizer</span><span class="p">,</span>
+                   <span class="s1">&#39;simfunction&#39;</span><span class="p">:</span> <span class="n">sim_function</span><span class="p">,</span>
+                   <span class="s1">&#39;is_auto_generated&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">parsed_dict</span>
+
+
+<div class="viewcode-block" id="add_feature"><a class="viewcode-back" href="../../../api/creating_the_features_manually.html#py_entitymatching.add_feature">[docs]</a><span class="k">def</span> <span class="nf">add_feature</span><span class="p">(</span><span class="n">feature_table</span><span class="p">,</span> <span class="n">feature_name</span><span class="p">,</span> <span class="n">feature_dict</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Adds a feature to the feature table.</span>
+
+<span class="sd">    Specifically, this function is used in combination with</span>
+<span class="sd">    :meth:`~py_entitymatching.get_feature_fn`.</span>
+<span class="sd">    First the user creates a dictionary using :meth:`~py_entitymatching.get_feature_fn`,</span>
+<span class="sd">    then the user uses this function to add feature_dict to the feature table.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        feature_table (DataFrame): A DataFrame containing features.</span>
+<span class="sd">        feature_name (string): The name that should be given to the feature.</span>
+<span class="sd">        feature_dict (dictionary): A Python dictionary, that is typically</span>
+<span class="sd">            returned by executing :meth:`~py_entitymatching.get_feature_fn`.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A Boolean value of True is returned if the addition was successful.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If the input `feature_table` is not of type</span>
+<span class="sd">            pandas DataFrame.</span>
+<span class="sd">        AssertionError: If `feature_name` is not of type</span>
+<span class="sd">            string.</span>
+<span class="sd">        AssertionError: If `feature_dict` is not of type</span>
+<span class="sd">            Python dictionary.</span>
+<span class="sd">        AssertionError: If the `feature_table` does not have necessary columns</span>
+<span class="sd">            such as &#39;feature_name&#39;, &#39;left_attribute&#39;, &#39;right_attribute&#39;,</span>
+<span class="sd">            &#39;left_attr_tokenizer&#39;,</span>
+<span class="sd">            &#39;right_attr_tokenizer&#39;, &#39;simfunction&#39;, &#39;function&#39;, and</span>
+<span class="sd">            &#39;function_source&#39; in the DataFrame.</span>
+<span class="sd">        AssertionError: If the `feature_name` is already present in the feature</span>
+<span class="sd">            table.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Validate input parameters</span>
+    <span class="c1"># # We expect the feature_table to be of pandas DataFrame</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">feature_table</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Input feature table is not of type DataFrame&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Input feature table is not of type DataFrame&#39;</span><span class="p">)</span>
+
+    <span class="c1"># # We expect the feature_name to be of type string</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">feature_name</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Input feature name is not of type string&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Input feature name is not of type string&#39;</span><span class="p">)</span>
+
+    <span class="c1"># # We expect the feature_dict to be of type python dictionary</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">feature_dict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Input feature dictionary is not of type dict&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Input feature dictionary is not of type dict&#39;</span><span class="p">)</span>
+
+    <span class="c1"># # We expect the feature table to contain certain columns</span>
+    <span class="n">dummy_feature_table</span> <span class="o">=</span> <span class="n">create_feature_table</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">dummy_feature_table</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">feature_table</span><span class="o">.</span><span class="n">columns</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Input feature table does not have the necessary columns&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span>
+            <span class="s1">&#39;Input feature table does not have the necessary columns&#39;</span><span class="p">)</span>
+    <span class="c1"># Check whether the feature name is already present in the feature table</span>
+    <span class="n">feature_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">feature_table</span><span class="p">[</span><span class="s1">&#39;feature_name&#39;</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">feature_name</span> <span class="ow">in</span> <span class="n">feature_names</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Input feature name is already present in feature table&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span>
+            <span class="s1">&#39;Input feature name is already present in feature table&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Add feature to the feature table at last</span>
+    <span class="n">feature_dict</span><span class="p">[</span><span class="s1">&#39;feature_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">feature_name</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">feature_table</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">feature_table</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">feature_table</span><span class="p">)]</span> <span class="o">=</span> <span class="n">feature_dict</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">feature_table</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;feature_name&#39;</span><span class="p">,</span> <span class="s1">&#39;left_attribute&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;right_attribute&#39;</span><span class="p">,</span> <span class="s1">&#39;left_attr_tokenizer&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;right_attr_tokenizer&#39;</span><span class="p">,</span> <span class="s1">&#39;simfunction&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;function&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;function_source&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;is_auto_generated&#39;</span><span class="p">]</span>
+        <span class="n">feature_table</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">feature_table</span><span class="p">)]</span> <span class="o">=</span> <span class="n">feature_dict</span>
+    <span class="c1"># Finally, return True if everything was fine</span>
+    <span class="k">return</span> <span class="bp">True</span></div>
+
+
+<span class="k">def</span> <span class="nf">create_feature_table</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates an empty feature table.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Fix the column names</span>
+    <span class="n">column_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;feature_name&#39;</span><span class="p">,</span> <span class="s1">&#39;left_attribute&#39;</span><span class="p">,</span> <span class="s1">&#39;right_attribute&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;left_attr_tokenizer&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;right_attr_tokenizer&#39;</span><span class="p">,</span> <span class="s1">&#39;simfunction&#39;</span><span class="p">,</span> <span class="s1">&#39;function&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;function_source&#39;</span><span class="p">,</span> <span class="s1">&#39;is_auto_generated&#39;</span><span class="p">]</span>
+    <span class="c1"># Create a pandas DataFrame using the column names</span>
+    <span class="n">feature_table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">column_names</span><span class="p">)</span>
+
+    <span class="c1"># Finally, return the feature table</span>
+    <span class="k">return</span> <span class="n">feature_table</span>
+
+
+<div class="viewcode-block" id="add_blackbox_feature"><a class="viewcode-back" href="../../../api/creating_the_features_manually.html#py_entitymatching.add_blackbox_feature">[docs]</a><span class="k">def</span> <span class="nf">add_blackbox_feature</span><span class="p">(</span><span class="n">feature_table</span><span class="p">,</span> <span class="n">feature_name</span><span class="p">,</span> <span class="n">feature_function</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Adds a black box feature to the feature table.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        feature_table (DataFrame): The input DataFrame (typically a feature</span>
+<span class="sd">            table) to which the feature must be added.</span>
+<span class="sd">        feature_name (string): The name that should be given to the feature.</span>
+<span class="sd">        feature_function (Python function): A Python function for the black box</span>
+<span class="sd">            feature.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A Boolean value of True is returned if the addition was successful.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If the input `feature_table` is not of type</span>
+<span class="sd">            DataFrame.</span>
+<span class="sd">        AssertionError: If the input `feature_name` is not of type</span>
+<span class="sd">            string.</span>
+<span class="sd">        AssertionError: If the `feature_table` does not have necessary columns</span>
+<span class="sd">            such as &#39;feature_name&#39;, &#39;left_attribute&#39;, &#39;right_attribute&#39;,</span>
+<span class="sd">            &#39;left_attr_tokenizer&#39;,</span>
+<span class="sd">            &#39;right_attr_tokenizer&#39;, &#39;simfunction&#39;, &#39;function&#39;, and</span>
+<span class="sd">            &#39;function_source&#39; in the DataFrame.</span>
+<span class="sd">        AssertionError: If the `feature_name` is already present in the</span>
+<span class="sd">            feature table.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Validate input parameters</span>
+    <span class="c1"># # We expect the feature_table to be of type pandas DataFrame</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">feature_table</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Input feature table is not of type DataFrame&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Input feature table is not of type DataFrame&#39;</span><span class="p">)</span>
+
+    <span class="c1"># # We expect the feature_name to be of type string</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">feature_name</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Input feature name is not of type string&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Input feature name is not of type string&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Check if the input feature table contains necessary columns</span>
+    <span class="n">dummy_feature_table</span> <span class="o">=</span> <span class="n">create_feature_table</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">dummy_feature_table</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">feature_table</span><span class="o">.</span><span class="n">columns</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Input feature table does not have the necessary columns&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span>
+            <span class="s1">&#39;Input feature table does not have the necessary columns&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Check if the feature table already contains the given feature name</span>
+    <span class="n">feat_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">feature_table</span><span class="p">[</span><span class="s1">&#39;feature_name&#39;</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">feature_name</span> <span class="ow">in</span> <span class="n">feat_names</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Input feature name is already present in feature table&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span>
+            <span class="s1">&#39;Input feature name is already present in feature table&#39;</span><span class="p">)</span>
+
+    <span class="n">feature_dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">feature_dict</span><span class="p">[</span><span class="s1">&#39;feature_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">feature_name</span>
+    <span class="n">feature_dict</span><span class="p">[</span><span class="s1">&#39;function&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">feature_function</span>
+    <span class="n">feature_dict</span><span class="p">[</span><span class="s1">&#39;left_attribute&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">feature_dict</span><span class="p">[</span><span class="s1">&#39;right_attribute&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">feature_dict</span><span class="p">[</span><span class="s1">&#39;left_attr_tokenizer&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">feature_dict</span><span class="p">[</span><span class="s1">&#39;right_attr_tokenizer&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">feature_dict</span><span class="p">[</span><span class="s1">&#39;simfunction&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">feature_dict</span><span class="p">[</span><span class="s1">&#39;function_source&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">feature_dict</span><span class="p">[</span><span class="s1">&#39;is_auto_generated&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">False</span>
+
+    <span class="c1"># Add the feature to the feature table as a last entry.</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">feature_table</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">feature_table</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">feature_table</span><span class="p">)]</span> <span class="o">=</span> <span class="n">feature_dict</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">feature_table</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;feature_name&#39;</span><span class="p">,</span> <span class="s1">&#39;left_attribute&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;right_attribute&#39;</span><span class="p">,</span> <span class="s1">&#39;left_attr_tokenizer&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;right_attr_tokenizer&#39;</span><span class="p">,</span> <span class="s1">&#39;simfunction&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;function&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;function_source&#39;</span><span class="p">,</span> <span class="s1">&#39;is_auto_generated&#39;</span><span class="p">]</span>
+        <span class="n">feature_table</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">feature_table</span><span class="p">)]</span> <span class="o">=</span> <span class="n">feature_dict</span>
+    <span class="c1"># Finally return True if the addition was successful</span>
+    <span class="k">return</span> <span class="bp">True</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, anhaidgroup.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
