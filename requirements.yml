@@ -1,0 +1,12 @@
+name: py_entitymatching
+channels:
+  - conda-forge
+  - uwmagellan
+dependencies:
+    - setuptools
+    - py_stringsimjoin
+    - cloudpickle
+    - pyparsing
+    - scikit-learn
+    - pyqt ==4.11.4
+    - py_stringmatching
