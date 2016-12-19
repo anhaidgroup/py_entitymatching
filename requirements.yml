@@ -1,7 +1,8 @@
-name: py_entitymatching
+name: py_entitymatching_dev
 channels:
   - conda-forge
   - uwmagellan
+  - defaults
 dependencies:
     - setuptools
     - py_stringsimjoin
