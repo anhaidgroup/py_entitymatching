@@ -68,8 +68,8 @@ The metadata dictionary for table C in the catalog, will have at least these fie
 * fk_ltable: ltable.aid (that is, ltable.aid is a foreign key of table A)
 * fk_rtable: rtable.bid.
 
-Blockers:
----------
+Blockers
+--------
 Given two table A and B, we have to perform blocking to reduce the number of tuple
 pairs considered for matching. In Magellan, Blockers are the objects that help user
 perform blocking. Implementation wise, a Blocker is defined as a Python
@@ -90,8 +90,8 @@ The class diagram of Blocker and the concrete blockers inherited from it is show
 
 
 
-Matchers:
----------
+Matchers
+--------
 After performing blocking, we have to perform matching to predict each tuple pair as a
 match or not a match. In Magellan, Matchers are the objects that help user perform
 matching. Currently only machine learning (ML) matchers are supported in
@@ -118,8 +118,8 @@ The class diagram of Matchers and the concrete matchers inherited from it is sho
 
 
 
-Summary:
---------
+Summary
+-------
 * Tables in Magellan are represented as Pandas dataframes.
 * The metadata for tables are stored in a separate data strucuture: catalog
 * The kind of metadata stored will depend on the table (input table: key, table from
