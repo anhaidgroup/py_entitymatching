@@ -16,6 +16,8 @@ Pandas Dataframes as Tables
 We will need to store a lot of data as tables in Magellan. We use Pandas dataframes to
 represent tables.
 
+**Tuple:** Each row from dataframe is a tuple and this is of type Pandas series.
+
 Catalog to Store Metadata
 -------------------------
 In Magellan, we need to store a lot of metadata with a table.  Here
@@ -71,8 +73,7 @@ The metadata dictionary for table C in the catalog, will have at least these fie
 * fk_rtable: rtable.bid.
 
 
-.. 
-
+..
   Blockers
   --------
   Given two table A and B, we have to perform blocking to reduce the number of tuple
