@@ -71,7 +71,7 @@ The metadata dictionary for table C in the catalog, will have at least these fie
 * fk_rtable: rtable.bid.
 
 
-..
+<! ---
 Blockers
 --------
 Given two table A and B, we have to perform blocking to reduce the number of tuple
@@ -92,7 +92,7 @@ The class diagram of Blocker and the concrete blockers inherited from it is show
 ..
 [fig]
 
-
+--->
 ..
 Matchers
 --------
