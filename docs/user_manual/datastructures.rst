@@ -55,6 +55,7 @@ single attribute (i.e composite keys are not allowed).
 But, if we consider table C (which is obtained by performing blocking on input tables A
 and B), this table can be very large, so we typically represent it using a view over
 two tables A and B. Such a table C will have the following attributes:
+
 *  _id (key attribute of table C)
 * ltable.aid (aid is the key attribute in table A)
 * rtable.bid (bid is the key attribute in table B)
@@ -126,7 +127,7 @@ Summary
   blocking (say): key, ltable, rtable, fk_table, fk_rtable).
 * So there are five reserved keywords for metadata: key, ltable, rtable, fk_ltable,
   fk_rtable.
-* There are objects for blockers and matchers.
+* Different blockers and matchers are implemented as classes.
 
 
 
