@@ -14,25 +14,28 @@ Contents
     :maxdepth: 3
     :caption: Getting Started
 
-    installation
+    user_manual/installation
+    user_manual/overview
+    user_manual/datastructures
+    user_manual/reading_csv_files_from_disk
 
 .. toctree::
     :maxdepth: 3
     :caption: API Reference
 
-    api/reading_and_writing_data
-    api/loading_and_saving_objects
-    api/handling_metadata
-    api/downsampling
-    api/blocking
-    api/debugging_blocker_output
-    api/combining_blocker_outputs
-    api/sampling
-    api/labeling
-    api/handling_features
-    api/matching
-    api/debugging_matcher
-    api/evaluating_the_matching_output
+    user_manual/api/reading_and_writing_data
+    user_manual/api/loading_and_saving_objects
+    user_manual/api/handling_metadata
+    user_manual/api/downsampling
+    user_manual/api/blocking
+    user_manual/api/debugging_blocker_output
+    user_manual/api/combining_blocker_outputs
+    user_manual/api/sampling
+    user_manual/api/labeling
+    user_manual/api/handling_features
+    user_manual/api/matching
+    user_manual/api/debugging_matcher
+    user_manual/api/evaluating_the_matching_output
 
 
 
