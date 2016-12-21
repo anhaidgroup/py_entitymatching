@@ -17,7 +17,8 @@ Contents
     user_manual/installation
     user_manual/overview
     user_manual/datastructures
-    user_manual/reading_csv_files_from_disk
+    user_manual/read_csv_files
+    user_manual/blocking
 
 .. toctree::
     :maxdepth: 3

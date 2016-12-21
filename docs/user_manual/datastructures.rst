@@ -51,9 +51,7 @@ The kind of metadata stored for a table would depend on the table itself. For ex
 the input tables may typically have 'key' as the only metadata (of course, the user can
 add more metadata for a table depending on the application need).
 
-.. .. NOTE::
-..   Each table in Magellan is expected to have a key. We assume the key is just a
-..   single attribute (i.e composite keys are not allowed).
+
 
 But, if we consider table C (which is obtained by performing blocking on input tables A
 and B), this table can be very large, so we typically represent it using a view over
