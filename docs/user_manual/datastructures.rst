@@ -123,9 +123,10 @@ Summary:
 * Tables in Magellan are represented as Pandas dataframes.
 * The metadata for tables are stored in a separate data strucuture: catalog
 * The kind of metadata stored will depend on the table (input table: key, table from
-blocking (say): key, ltable, rtable, fk_table, fk_rtable).
+    blocking (say): key, ltable, rtable, fk_table, fk_rtable).
 * So there are five reserved keywords for metadata: key, ltable, rtable, fk_ltable,
 fk_rtable.
+* There are objects for blockers and matchers.
 
 
 
