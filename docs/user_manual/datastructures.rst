@@ -16,7 +16,7 @@ Pandas Dataframes as Tables
 We will need to store a lot of data as tables in Magellan. We use Pandas dataframes to
 represent tables.
 
-**Tuple:** Each row from dataframe is a tuple and this is of type Pandas series.
+**Tuple:** Each row in a dataframe is a tuple and this is of type Pandas series.
 
 Catalog to Store Metadata
 -------------------------
