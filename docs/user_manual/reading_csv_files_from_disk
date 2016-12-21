@@ -1,5 +1,7 @@
+===============================
 Reading the CSV Files from Disk
 ===============================
+
 Currently, Magellan supports reading CSV files from disk. We assume that the original
 tables A and B (to be matched) are stored as CSV files on disk.
 
