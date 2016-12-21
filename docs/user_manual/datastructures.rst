@@ -2,13 +2,13 @@
 Data Structures
 ===============
 
-A Note on conventions: We will often use
+A note on conventions: We will often use
 
 * A and B to refer to the original two tables to be matched,
 * C to refer to the candidate set table obtained from A and B after the blocking step,
 * S to refer to a sample taken from C, and
 * G to refer to a table that contains the tuple pairs in S and a golden label for each
-pair (indicating the pair as matches).
+  pair (indicating the pair as matches).
 
 
 Pandas Dataframes as Tables
