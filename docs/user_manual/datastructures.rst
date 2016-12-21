@@ -22,8 +22,8 @@ In Magellan, we need to store a lot of metadata with a table.  Here
 are a few examples:
 
 * Each table in Magellan should have a key, so that we can easily identify the tuples.
-Keys are also critical later for debugging, provenance, etc. Key is a metadata that we
-want to store for a table.
+  Keys are also critical later for debugging, provenance, etc. Key is a metadata that we
+  want to store for a table.
 
 * The blocking step will create tuple pairs from two tables A and B. For example,
   suppose we have table A(aid, a, b) and table B(bid, x, y), then the tuple pairs can be
