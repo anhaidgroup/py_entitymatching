@@ -49,9 +49,9 @@ The kind of metadata stored for a table would depend on the table itself. For ex
 the input tables may typically have 'key' as the only metadata (of course, the user can
 add more metadata for a table depending on the application need).
 
-.. note::
-   Each table in Magellan is expected to have a key. We assume the key is just a
-   single attribute (i.e composite keys are not allowed).
+.. .. NOTE::
+..   Each table in Magellan is expected to have a key. We assume the key is just a
+..   single attribute (i.e composite keys are not allowed).
 
 But, if we consider table C (which is obtained by performing blocking on input tables A
 and B), this table can be very large, so we typically represent it using a view over
@@ -70,6 +70,8 @@ The metadata dictionary for table C in the catalog, will have at least these fie
 * fk_ltable: ltable.aid (that is, ltable.aid is a foreign key of table A)
 * fk_rtable: rtable.bid.
 
+
+..
 Blockers
 --------
 Given two table A and B, we have to perform blocking to reduce the number of tuple
@@ -78,20 +80,20 @@ perform blocking. Implementation wise, a Blocker is defined as a Python
 class with certain methods (and some common utility functions) and all the concrete
 blockers inherit from this Blocker class and override the methods. Specifically, each
 concrete blocker will implement at least the following methods:
-
+..
 + block_tables (apply to input tables A and B)
 + block_candset (apply to an output from another blocker (e.g. table C))
 + block_tuples (apply to a tuple pair to check if it will survive blocking)
-
+..
 In Magellan, there are four concrete blockers implemented: (1) attribute equivalence
 blocker, (2) overlap blocker, (3) rule-based blocker, and (4) black box blocker.
-
+..
 The class diagram of Blocker and the concrete blockers inherited from it is shown below:
-
+..
 [fig]
 
 
-
+..
 Matchers
 --------
 After performing blocking, we have to perform matching to predict each tuple pair as a
@@ -101,20 +103,20 @@ Magellan. Implementation wise, a Matcher is defined as a Python class
 with certain methods (and some common utility functions) and all concrete blockers
 inherit from this Matcher class and override the methods. Specifically, each concrete
 matcher will implement at lease the following methods:
-
+..
 + fit (for training)
 + predict (for prediction)
-
+..
 In Magellan, there are six concrete ML-matchers implemented: (1) naive bayes, (2)
 logistic regression, (3) linear regression, (4) support vector machine, (5) decision
 trees, and (6) random forest.
-
+..
 These concrete matchers are just wrappers of scikit-learn matchers and this is because
 the fit/predict methods in scikit-learn are not metadata aware. The concrete matchers
 make the scikit-learn matchers metadata aware.
-
+..
 The class diagram of Matchers and the concrete matchers inherited from it is shown below:
-
+..
 [fig]
 
 
@@ -128,7 +130,6 @@ Summary
   blocking (say): key, ltable, rtable, fk_table, fk_rtable).
 * So there are five reserved keywords for metadata: key, ltable, rtable, fk_ltable,
   fk_rtable.
-* Different blockers and matchers are implemented as classes.
 
 
 
