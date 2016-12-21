@@ -52,6 +52,7 @@ The function signature for `block_tables` is shown below:
     r_output_attrs=None, l_output_prefix='ltable_', r_output_prefix='rtable_',
     allow_missing=False, verbose=False, n_jobs=1)
 
+**Needs to be modified**
 Conceptually, this will check `l_block_attr=r_block_attr` for each tuple
 pair from the Cartesian product of tables `ltable` and `rtable`. It outputs a
 Pandas dataframe object with tuple pairs that satisfy the equality condition.
@@ -66,7 +67,7 @@ Further, this will update the following metadata in the catalog for the output t
 
 An example of using the above function is shown below:
 
-.. code-block:: python
+::
 
     >>> import py_entitymatching as em
     >>> A = em.read_csv_metadata(em.get_install_path()+'/datasets/table_A.csv', key='ID')
@@ -98,3 +99,22 @@ example of using `block_candset` is shown below:
 
 Please look at :py:meth:`~py_entitymatching.AttrEquivalenceBlocker.block_tuples` for
 more details.
+
+**Overlap Blocker**
+
+Given two tables A and B, conceptually, `block_tables` in overlap blocker takes an
+attribute `x` of table A, an attribute `y` of table B, and returns true (that is, drop
+the tuple pair) if `x` and `y` do not share any token (where the token can be a word or
+a q-gram).
+
+Please look at :py:meth:`~py_entitymatching.OverlapBlocker.block_candset` for
+more details.
+
+An example of using `block_tables` is shown below:
+
+::
+    >>> import py_entitymatching as em
+    >>> A = em.read_csv_metadata(em.get_install_path()+'/datasets/table_A.csv', key='ID')
+    >>> B = em.read_csv_metadata(em.get_install_path()+'/datasets/table_B.csv', key='ID')
+    >>> ob = em.OverlapBlocker()
+    >>> C = ob.block_tables(A, B, 'zipcode', 'zipcode', l_output_attrs=['name','age'],r_output_attrs=['name', 'age'])
