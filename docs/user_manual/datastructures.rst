@@ -26,12 +26,12 @@ Keys are also critical later for debugging, provenance, etc. Key is a metadata t
 want to store for a table.
 
 * The blocking step will create tuple pairs from two tables A and B. For example,
-suppose we have table A(aid, a, b) and table B(bid, x, y), then the tuple pairs can be
-stored in a candidate set table C(cid, aid, bid, a, b, x, y). This table could be very
-big, taking up a lot of space in memory. To save space, we may want to just store C as
-C(cid, aid, bid) and then have pointers back to tables A and B. The two pointers back
-to A and B are metadata that we may want to store for table C. Specifically, the
-metadata for C would be 'aid and bid in table C are foreign keys to tables A and B'.
+  suppose we have table A(aid, a, b) and table B(bid, x, y), then the tuple pairs can be
+  stored in a candidate set table C(cid, aid, bid, a, b, x, y). This table could be very
+  big, taking up a lot of space in memory. To save space, we may want to just store C as
+  C(cid, aid, bid) and then have pointers back to tables A and B. The two pointers back
+  to A and B are metadata that we may want to store for table C. Specifically, the
+  metadata for C would be 'aid and bid in table C are foreign keys to tables A and B.
 
 There are many other examples of metadata that we may want to store for a table. Though
 Pandas dataframes is a good choice for storing data as tables, it does not provide a
