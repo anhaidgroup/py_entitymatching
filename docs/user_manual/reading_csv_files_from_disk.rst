@@ -7,13 +7,9 @@ tables A and B (to be matched) are stored as CSV files on disk.
 
 *Example 1. Suppose we have stored the two tables to be matched as table_A.csv and
 table_B.csv on disk, then table_A.csv may look like this:*
-
 ::
-ID, name, birth_year, hourly_wage, zipcode
-a1, Kevin Smith, 1989, 40, 94107
-a2, Michael Franklin, 1988, 27.5, 94122
-a2, William Bridge, 1988, 32, 94121
 
-
-
-
+    ID, name, birth_year, hourly_wage, zipcode
+    a1, Kevin Smith, 1989, 40, 94107
+    a2, Michael Franklin, 1988, 27.5, 94122
+    a2, William Bridge, 1988, 32, 94121
