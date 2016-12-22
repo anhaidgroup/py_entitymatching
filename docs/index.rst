@@ -18,7 +18,9 @@ Contents
     user_manual/overview
     user_manual/datastructures
     user_manual/read_csv_files
+    user_manual/down_sampling
     user_manual/blocking
+    user_manual/create_feats_for_blocking.rst
     user_manual/debugging_blocking
 
 .. toctree::
