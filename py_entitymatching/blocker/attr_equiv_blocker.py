@@ -24,10 +24,17 @@ class AttrEquivalenceBlocker(Blocker):
                      allow_missing=False, verbose=False, n_jobs=1):
         """Blocks two tables based on attribute equivalence.
 
-        Finds tuple pairs from left and right tables such that the value of
-        attribute l_block_attr of a tuple from the left table exactly matches
-        the value of attribute r_block_attr of a tuple from the right table.
-        This is similar to equi-join of two tables.
+        Conceptually, this will check `l_block_attr=r_block_attr` for each tuple
+        pair from the Cartesian product of tables `ltable` and `rtable`. It outputs a
+        Pandas dataframe object with tuple pairs that satisfy the equality condition.
+        The dataframe will include attributes '_id', key attribute from
+        ltable, key attributes from rtable, followed by lists `l_output_attrs` and
+        `r_output_attrs` if they are specified. Each of these output and key attributes will be
+        prefixed with given `l_output_prefix` and `r_output_prefix`. If `allow_missing` is set
+        to `True` then all tuple pairs with missing value in at least one of the tuples will be
+        included in the output dataframe.
+        Further, this will update the following metadata in the catalog for the output table:
+        (1) key, (2) ltable, (3) rtable, (4) fk_ltable, and (5) fk_rtable.
 
         Args:
             ltable (DataFrame): The left input table.

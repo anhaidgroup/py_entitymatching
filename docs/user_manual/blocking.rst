@@ -45,60 +45,39 @@ can just simply call them. *py_entitymatching* currently offers two built-in blo
 
 **Attribute Equivalence Blocker**
 
-The function signature for `block_tables` is shown below:
-::
-
-    block_tables(ltable, rtable, l_block_attr, r_block_attr, l_output_attrs=None,
-    r_output_attrs=None, l_output_prefix='ltable_', r_output_prefix='rtable_',
-    allow_missing=False, verbose=False, n_jobs=1)
-
-**Needs to be modified**
-Conceptually, this will check `l_block_attr=r_block_attr` for each tuple
-pair from the Cartesian product of tables `ltable` and `rtable`. It outputs a
-Pandas dataframe object with tuple pairs that satisfy the equality condition.
-The dataframe will include attributes '_id', key attribute from
-ltable, key attributes from rtable, followed by lists `l_output_attrs` and
-`r_output_attrs` if they are specified. Each of these output and key attributes will be
-prefixed with given `l_output_prefix` and `r_output_prefix`. If `allow_missing` is set
-to `True` then all tuple pairs with missing value in at least one of the tuples will be
-included in the output dataframe.
-Further, this will update the following metadata in the catalog for the output table:
-(1) key, (2) ltable, (3) rtable, (4) fk_ltable, and (5) fk_rtable.
+Given two tables A and B, conceptually, `block_tables` in attribute equivalence blocker
+takes an attribute `x` of table A, an attribute `y` of table B, and returns true (that
+is, drop the tuple pair) if `x` and `y` are not of the same value.
 
 An example of using the above function is shown below:
 
-::
-
     >>> import py_entitymatching as em
-    >>> A = em.read_csv_metadata(em.get_install_path()+'/datasets/table_A.csv', key='ID')
-    >>> B = em.read_csv_metadata(em.get_install_path()+'/datasets/table_B.csv', key='ID')
+    >>> A = em.read_csv_metadata('path_to_csv_dir/table_A.csv', key='ID')
+    >>> B = em.read_csv_metadata('path_to_csv_dir/datasets/table_B.csv', key='ID')
     >>> ab = em.AttrEquivalenceBlocker()
-    >>> C = ab.block_tables(A, B, 'zipcode', 'zipcode', l_output_attrs=['name','age'],r_output_attrs=['name', 'age'])
+    >>> C = ab.block_tables(A, B, 'zipcode', 'zipcode', l_output_attrs=['name'], r_output_attrs=['name'])
 
-The package is bundled with a few sample datasets (e.g. table_A.csv, table_B.csv). They
-can be accessed using the `em.get_install_path` as shown above.
-
-Please look at :py:meth:`~py_entitymatching.AttrEquivalenceBlocker.block_tables` for
-more details.
+Please look at the API reference of :py:meth:`~py_entitymatching.AttrEquivalenceBlocker.block_tables`
+for more details.
 
 The function `block_candset` is similar to `block_tables` except `block_candset` is
-applied on the output from `block_tables`. An example of using `block_candset` is shown
-below:
-::
+applied to the candidate set, i.e. the output from `block_tables`. An example of using
+`block_candset` is shown below:
+
     >>> D = ab.block_candset(C, 'age', 'age')
 
-Please look at :py:meth:`~py_entitymatching.AttrEquivalenceBlocker.block_candset` for
-more details.
+Please look at the API reference of :py:meth:`~py_entitymatching.AttrEquivalenceBlocker.block_candset`
+for more details.
 
 Further, `block_tuples` can be used to check if a tuple pair would get blocked. An
 example of using `block_candset` is shown below:
-::
+
     >>> status = ab.block_tuples(A.ix[0], B.ix[0])
     >>> status
         True
 
-Please look at :py:meth:`~py_entitymatching.AttrEquivalenceBlocker.block_tuples` for
-more details.
+Please look at the API reference of :py:meth:`~py_entitymatching.AttrEquivalenceBlocker.block_tuples`
+for more details.
 
 **Overlap Blocker**
 
@@ -107,14 +86,90 @@ attribute `x` of table A, an attribute `y` of table B, and returns true (that is
 the tuple pair) if `x` and `y` do not share any token (where the token can be a word or
 a q-gram).
 
-Please look at :py:meth:`~py_entitymatching.OverlapBlocker.block_candset` for
-more details.
+Please look at the API reference of :py:meth:`~py_entitymatching.OverlapBlocker.block_tables`
+for more details.
 
 An example of using `block_tables` is shown below:
+    >>> import py_entitymatching as em
+    >>> A = em.read_csv_metadata('path_to_csv_dir/table_A.csv', key='ID')
+    >>> B = em.read_csv_metadata('path_to_csv_dir/table_B.csv', key='ID')
+    >>> ob = em.OverlapBlocker()
+    >>> C = ob.block_tables(A, B, 'zipcode', 'zipcode', num_overlap=1, l_output_attrs=['name'], r_output_attrs=['name'] )
 
+The function `block_candset` is similar to `block_tables` except `block_candset` is
+applied to the candidate set, i.e. the output from `block_tables`.
+
+An example of using `block_candset` is shown below:
+::
+    >>> D = ab.block_candset(C, 'age', 'age')
+
+Please look at the API reference of :py:meth:`~py_entitymatching.OverlapBlocker.block_candset`
+for more details.
+
+
+Further, `block_tuples` can be used to check if a tuple pair would get blocked. An
+example of using `block_tuples` is shown below:
+::
+    >>> status = ob.block_tuples(A.ix[0], B.ix[0], 'name', 'name', num_overlap=1)
+    >>> status
+        True
+
+Please look at the API reference of :py:meth:`~py_entitymatching.OverlapBlocker.block_tuples`
+for more details.
+
+Blackbox Blockers
+-----------------
+By `blackbox blockers` we mean that the user supplies a Python function which
+encodes blocking for a tuple pair. Specifically, the Python function will take
+in two tuples and returns True if the tuple pair needs to be blocked else
+returns False. To use a blackbox blocker, the user should first write a
+blackbox blocker function.
+An example of blackbox blocker function is shown below:
+::
+
+    def match_last_name(ltuple, rtuple):
+        # assume that there is a 'name' attribute in the input tables
+        # and each value in it has two words
+        l_last_name = ltuple['name'].split()[1]
+        r_last_name = rtuple['name'].split()[1]
+        if l_last_name != r_last_name:
+            return True
+        else:
+            return False
+
+Then instantiate a `blackbox blocker` and set the blocking function function as follows:
 ::
     >>> import py_entitymatching as em
-    >>> A = em.read_csv_metadata(em.get_install_path()+'/datasets/table_A.csv', key='ID')
-    >>> B = em.read_csv_metadata(em.get_install_path()+'/datasets/table_B.csv', key='ID')
-    >>> ob = em.OverlapBlocker()
-    >>> C = ob.block_tables(A, B, 'zipcode', 'zipcode', l_output_attrs=['name','age'],r_output_attrs=['name', 'age'])
+    >>> bb = em.BlackBoxBlocker()
+    >>> bb.set_black_box_function(match_last_name)
+
+Now, the user can call `block_tables` on the input tables. Conceptually, `block_tables` would
+apply the blackbox blocker function on the Cartesian product of the input tables A and B and
+return a candidate set of tuple pairs.
+
+An example of using `block_tables` is shown below:
+::
+    >>> C = bb.block_tables(A, B, l_output_attrs=['name'], r_output_attrs=['name'] )
+
+Please look at the API reference of :py:meth:`~py_entitymatching.BlackBoxBlocker.block_tables`
+for more details.
+
+The function `block_candset` is similar to `block_tables` except `block_candset` is
+applied to the candidate set, i.e. the output from `block_tables`.
+
+An example of using `block_candset` is shown below:
+
+    >>> D = bb.block_candset(C)
+
+Please look at the API reference of :py:meth:`~py_entitymatching.BlackBoxBlocker.block_candset`
+for more details.
+
+Further, `block_tuples` can be used to check if a tuple pair would get blocked. An
+example of using `block_tuples` is shown below:
+
+    >>> status = bb.block_tuples(A.ix[0], B.ix[0])
+    >>> status
+        True
+
+Please look at the API reference of :py:meth:`~py_entitymatching.BlackBoxBlocker.block_tuples`
+for more details.
