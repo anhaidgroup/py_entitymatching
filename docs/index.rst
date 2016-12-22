@@ -19,6 +19,7 @@ Contents
     user_manual/datastructures
     user_manual/read_csv_files
     user_manual/blocking
+    user_manual/debugging_blocking
 
 .. toctree::
     :maxdepth: 3
