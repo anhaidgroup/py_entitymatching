@@ -22,6 +22,10 @@ Contents
     user_manual/blocking
     user_manual/create_feats_for_blocking.rst
     user_manual/debugging_blocking
+    user_manual/sampling
+    user_manual/labeling
+    user_manual/create_feats_for_matching.rst
+    user_manual/extract_feat_vecs.rst
 
 .. toctree::
     :maxdepth: 3

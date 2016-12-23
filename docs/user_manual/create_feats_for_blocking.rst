@@ -14,6 +14,7 @@ to create features:
 * Automatically generate a set of features (then the user can remove or add some more).
 * Skip the automatic process and generate features manually.
 
+
 Note that features will also be used in the matching process, as we
 will discuss later. The set of features for blocking and the set of
 features for matching can be quite different however. For example,
@@ -149,6 +150,9 @@ then apply the appropriate tokenizers and similarity functions to generate
 all appropriate features for this correspondence. The features are returned as
 a dataframe. Please look at the API reference of
 py:meth:`~py_entitymatching.get_features` for more details.
+
+
+.. _label-add-remove-features:
 
 Adding/Removing Features
 ------------------------
