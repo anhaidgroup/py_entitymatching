@@ -1,3 +1,5 @@
+.. _label-create-features-blocking:
+
 ==============================
 Creating Features for Blocking
 ==============================
@@ -6,11 +8,11 @@ blackbox blockers, or rule-based blockers. For rule-based blockers,
 the user often has to create a set of features.
 
 In creating features, user will have to refer to tokenizers, similarity functions, and
-attributes of the tables. Currently, in *py_entitymatching, there are two ways
+attributes of the tables. Currently, in *py_entitymatching*, there are two ways
 to create features:
-+ *py_entitytmatching* can automatically generate a set of features,
-then the user can remove or add some more.
-+ user can skip the automatic process and generate features of their own.
+
+* Automatically generate a set of features (then the user can remove or add some more).
+* Skip the automatic process and generate features manually.
 
 Note that features will also be used in the matching process, as we
 will discuss later. The set of features for blocking and the set of
@@ -18,8 +20,8 @@ features for matching can be quite different however. For example,
 for blocking we may only want to have features that are inexpensive
 to compute.
 Lay users may just want to ask the system to automatically
-generate a set of features. To do this, please see **Section ...** For
-users who want to generate features of their own, please read below.
+generate a set of features. To do this, please see :ref:`label-gen-feats-automatically`.
+For the users who want to generate features of their own, please read below.
 
 Available Tokenizers and Similarity Functions
 ---------------------------------------------
@@ -126,6 +128,8 @@ match of attribute names. The user can inspect `block_c` and modify the attribut
 correspondences. Please look at the API reference of
 py:meth:`~py_entitymatching.get_attr_corres` for more details.
 
+.. _label-get-a-set-of-features-manual:
+
 Getting a Set of Features
 -------------------------
 Recall that so far we have obtained:
@@ -151,8 +155,31 @@ Adding/Removing Features
 Given the set of features block_f, user can delete certain features,
 add new features.
 
-One way to add features is to write blackbox features **(see Section ...)** for more
-details.
+
+There are two ways to create and add a feature: (1) write blackbox function and
+add it to dataframe, and (2) define the feature declartively and add it to dataframe.
+
+
+**Adding a Blackbox Function as Feature**
+
+To create and add a blackbox function as a feature, first we must define it. Specifically,
+the function must take in two tuples as input and return a numeric value. An example of
+a blackbox function is given below:
+
+::
+
+    def age_diff(ltuple, rtuple):
+        # assume that the tuples have age attribute and values are valid numbers.
+        return ltuple['age'] - rtuple['age']
+
+Then we add it to the table `block_f` using `add_blackbox_feature` like this:
+
+    >>> status = em.add_blackbox_feature(block_f, 'age_difference', age_diff)
+
+Please look at the API reference of
+py:meth:`~py_entitymatching.add_blackbox_feature` for more details.
+
+**Adding a Feature Declaratively**
 
 Another way to add features is to write a feature expression in
 a `declarative` way. *py_entitymatching* will then compile it into a feature. For
@@ -187,6 +214,8 @@ The user is allow to define arbitrary complex expression involving function name
 Please look at the API reference of
 py:meth:`~py_entitymatching.get_feature_fn` and py:meth:`~py_entitymatching.add_feature`
 for more details.
+
+.. _label-gen-feats-automatically:
 
 Generating Features Automatically
 ---------------------------------

@@ -179,8 +179,10 @@ Rule-Based Blockers
 A user can write a few domain specific rules (for blocking purposes) using `rule-based blocker`.
 If a user wants to write rules, then he/she must start by defining a set of features.
 Each `feature` will be a function that when applied to a tuple pair will return a
-numeric value. We will discuss how to define a set of features in **section []**.
-Once defined, *py_entitymatching* stores this set of features in a feature table. We
+numeric value. We will discuss how to create a set of features in see section
+:ref:`label-create-features-blocking`.
+
+Once create, *py_entitymatching* stores this set of features in a feature table. We
 refer to this feature table as `block_f`. Then the user may be able to instantiate a
 rule-based blocker and add rules like this:
 ::
@@ -188,7 +190,8 @@ rule-based blocker and add rules like this:
     >>> rb.add_rule(rule1, block_f)
     >>> rb.add_rule(rule2, block_f)
 
-In the above, `block_f` is a set of features stored as a dataframe **(see section)**.
+In the above, `block_f` is a set of features stored as a dataframe (see section
+:ref:`label-create-features-blocking`).
 Each rule is a list of strings. Each string specifies a conjunction of predictes. Each
 `predicate` has three parts: (1) an expression, (2) a comparison operator, and (3) a
 value. The expression can be evaluated over a tuple pair, producing a numerical value.
