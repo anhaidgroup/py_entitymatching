@@ -1,0 +1,69 @@
+==============================================
+Specifying ML-Matchers and Performing Matching
+==============================================
+Once the labeled sample G has been converted into a table of feature vectors (and their
+labels) H, we can create and apply matchers to H.
+
+
+Currently *py_entitymatching* supports only ML-based matchers. Implementation wise,
+a Matcher is defined as a Python class with certain methods (and some common
+utility functions) and all concrete blockers inherit from this Matcher class and
+override the methods. Specifically, each concrete matcher will implement at least
+the following methods:
+
++ fit (for training)
++ predict (for prediction)
+
+Creating Learning-Based Matchers
+--------------------------------
+In *py_entitymatching*, there are six concrete ML-matchers implemented: (1) naive bayes, (2)
+logistic regression, (3) linear regression, (4) support vector machine, (5) decision
+trees, and (6) random forest.
+
+These concrete matchers are just wrappers of scikit-learn matchers and this is because
+the fit/predict methods in scikit-learn are not metadata aware. The concrete matchers
+make the scikit-learn matchers metadata aware.
+
+.. The class diagram of Matchers and the concrete matchers inherited from it is shown below:
+
+Each matcher can be created by calling its constructor. Since these matchers are
+just the wrappers of scikit-learn matchers, the parameters that can be given to
+scikit-learn matchers can be to given to the matchers in *py_entitymatching*.
+For example, a user can create a decision tree matcher like this:
+
+    >>> dt = em.DTMatcher(max_depth=5)
+
+Please refer to :py:meth:`~py_entitymatching.DTMatcher`, :py:meth:`~py_entitymatching.RFMatcher`,
+:py:meth:`~py_entitymatching.NBMatcher`, :py:meth:`~py_entitymatching.LogisticRegressionMatcher`,
+:py:meth:`~py_entitymatching.LinearRegressionMatcher` and :py:meth:`~py_entitymatching.SVMMatcher`
+for more details.
+
+Training Learning-Based Matchers
+--------------------------------
+Once the ML-matcher is instantiated, the user can train the matcher using the
+`fit` command. An example of using the `fit` command for decision tree matcher
+is shown below:
+
+    >>> dt.fit(table=H, exclude_attrs=['_id', 'ltable_id', 'rtable_id'], target_attr='gold_labels')
+
+There are other variants of `fit` method. As an example, Please refer to
+:py:meth:`~py_entitymatching.DTMatcher.fit` for more details.
+
+Applying Learning-Based Matchers
+--------------------------------
+Once the ML-matcher is trained, the user can predict the matches using the
+`predict` command. An example of using the `predict` command for decision tree matcher
+is shown below:
+
+    >>> dt.predict(table=H, exclude_attrs=['_id', 'ltable_id', 'rtable_id'], target_attr='predicted_labels', append=True, inplace=True)
+
+There are other variants of `predict` method. As an example, Please refer to
+:py:meth:`~py_entitymatching.DTMatcher.predict` for more details.
+
+
+
+
+
+
+
+

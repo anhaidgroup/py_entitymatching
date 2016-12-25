@@ -20,12 +20,20 @@ Contents
     user_manual/read_csv_files
     user_manual/down_sampling
     user_manual/blocking
-    user_manual/create_feats_for_blocking.rst
+    user_manual/create_feats_for_blocking
     user_manual/debugging_blocking
     user_manual/sampling
     user_manual/labeling
-    user_manual/create_feats_for_matching.rst
-    user_manual/extract_feat_vecs.rst
+    user_manual/split_train_test
+    user_manual/create_feats_for_matching
+    user_manual/extract_feat_vecs
+    user_manul/imputing_missing_values
+    user_manual/matching
+    user_manual/select_best_matcher
+    user_manual/debugging_matcher
+    user_manual/evaluating_matching
+
+
 
 .. toctree::
     :maxdepth: 3

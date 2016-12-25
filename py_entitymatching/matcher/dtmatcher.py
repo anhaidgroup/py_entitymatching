@@ -16,6 +16,8 @@ class DTMatcher(MLMatcher):
         name (string): The name of this matcher (defaults to None). If the
             matcher name is None, the class automatically generates a string
             and assigns it as the name.
+    Notes:
+        For more details please see
 
     """
     def __init__(self, *args, **kwargs):
