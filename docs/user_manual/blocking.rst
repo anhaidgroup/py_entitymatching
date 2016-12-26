@@ -190,7 +190,7 @@ rule-based blocker and add rules like this:
     >>> rb.add_rule(rule1, block_f)
     >>> rb.add_rule(rule2, block_f)
 
-In the above, `block_f` is a set of features stored as a dataframe (see section
+In the above, `block_f` is a set of features stored as a Dataframe (see section
 :ref:`label-create-features-blocking`).
 Each rule is a list of strings. Each string specifies a conjunction of predictes. Each
 `predicate` has three parts: (1) an expression, (2) a comparison operator, and (3) a

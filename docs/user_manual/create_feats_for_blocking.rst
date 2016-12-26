@@ -148,7 +148,7 @@ Briefly, this function will go through the correspondences. For each
 correspondence `m`, it examines the types of the involved attributes,
 then apply the appropriate tokenizers and similarity functions to generate
 all appropriate features for this correspondence. The features are returned as
-a dataframe. Please look at the API reference of
+a Dataframe. Please look at the API reference of
 py:meth:`~py_entitymatching.get_features` for more details.
 
 
@@ -161,7 +161,7 @@ add new features.
 
 
 There are two ways to create and add a feature: (1) write blackbox function and
-add it to dataframe, and (2) define the feature declartively and add it to dataframe.
+add it to Dataframe, and (2) define the feature declartively and add it to Dataframe.
 
 
 **Adding a Blackbox Function as Feature**

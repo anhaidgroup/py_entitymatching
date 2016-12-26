@@ -19,9 +19,9 @@ An example of using `split_train_test` is shown below:
     >>> devel_eval = split_train_test(G, train_proportion=0.5)
 
 In the above, `split_train_test` returns a dictionary with two keys: train, and test.
-The value for the key `train` is a dataframe containing tuples
+The value for the key `train` is a Dataframe containing tuples
 allocated from the input table based on train_proportion.
-Similarly, the value for the key `test` is a dataframe containing
+Similarly, the value for the key `test` is a Dataframe containing
 tuples for evaluation. An example of getting train and test dataframes from the output
 of `split_train_test` command is shown below:
 

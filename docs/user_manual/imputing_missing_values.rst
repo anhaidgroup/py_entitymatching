@@ -20,26 +20,26 @@ of the NaN's. There are many different ways to impute missing values such as
 filling the NaN's (in the whole table or just some columns) with a constant value,
 or fill the NaN's with an aggregate value (mean, median, etc.).
 
-Since the table is represented as a Pandas dataframe, there are two common ways to impute
-missing values: (1) use `fill_na` method from Pandas dataframe, and (2) impute missing
+Since the table is represented as a Pandas Dataframe, there are two common ways to impute
+missing values: (1) use `fill_na` method from Pandas Dataframe, and (2) impute missing
 values using `Imputer` from Scikit-learn package.
 
 But there are two problems that we have to tackle if we have to using the above commands
 or objects directly:
 
 * They are not metadata aware, so the user has to explicitly take care of it.
-* The dataframe type that gets imputed typically contains attributes such as key, foreign
+* The Dataframe type that gets imputed typically contains attributes such as key, foreign
     keys to A and B. The user must have to rightly project them out to impute missing
     values using aggregates.
 
 In *py_entitymatching*, we propose a hybrid method to impute missing values. To fill NaN's
-with a constant value use `fillna` command from Pandas dataframe.
+with a constant value use `fillna` command from Pandas Dataframe.
 An example of using `fillna` to the whole table is shown below:
 
     >>> H.fillna(0, inplace=True)
 
 
-In the above, `H` is a dataframe containing feature vectors, 0 is the constant value that
+In the above, `H` is a Dataframe containing feature vectors, 0 is the constant value that
 we want to fill in, and `inplace=True` means that the updation should be done in place
 (i.e., without creating a copy). It is important to set `inplace=True` as we do not want
 the metadata for H in catalog to be corrupted.
@@ -48,7 +48,7 @@ Another example of using `fillna` on a column is shown below:
     >>> H['name_name_lev'] = H['name_name_lev'].fillna(0)
 
 Note that, we don't specify `inplace=True` because the output is getting assigned to
-a column in the old dataframe `H` and the metadata of `H` does not get affected.
+a column in the old Dataframe `H` and the metadata of `H` does not get affected.
 
 To fill NaN's with an aggregate value, *py_entitymatching* supports `impute_table` command.
 It is a wrapper around Scikit-learn's `Imputer` object (to make it metadata aware).

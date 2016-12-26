@@ -2,7 +2,7 @@
 Data Structures
 ===============
 
-A note on conventions: We will often use
+A note on conventions: We will use:
 
 * A and B to refer to the original two tables to be matched,
 * C to refer to the candidate set table obtained from A and B after the blocking step,
@@ -16,7 +16,7 @@ Pandas Dataframes as Tables
 We will need to store a lot of data as tables in Magellan. We use Pandas dataframes to
 represent tables.
 
-**Tuple:** Each row in a dataframe is a tuple and this is of type Pandas series.
+**Tuple:** Each row in a Dataframe is a tuple and this is of type Pandas series.
 
 Catalog to Store Metadata
 -------------------------
@@ -39,7 +39,7 @@ There are many other examples of metadata that we may want to store for a table.
 Pandas dataframes is a good choice for storing data as tables, it does not provide a
 consistent way to store metadata (for more discussion on this, look at this thread).
 To tackle this, we have a new data structure: catalog to store the metadata for tables.
-Catalog is a dictionary, where the key is the id of a dataframe (know more id here) and
+Catalog is a dictionary, where the key is the id of a Dataframe (know more id here) and
 the value is a dictionary containing metadata. The metadata dictionary can have
 different kinds of keys that point to metadata. Examples of such keys are:
 
