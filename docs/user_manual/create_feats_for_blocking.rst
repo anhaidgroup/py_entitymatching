@@ -209,7 +209,7 @@ As described, the feature that was just created is *independent* of any table
 
 User can create more complex features. For example,
 
-    >>> r = get_feature_fn('jaccard(qgm_3(ltuple.address + ltuple.zipcode), qgm_3(rtuple.address + rtuple.zipcode)',block_t,block_s)
+    >>> r = em.get_feature_fn('jaccard(qgm_3(ltuple.address + ltuple.zipcode), qgm_3(rtuple.address + rtuple.zipcode)',block_t,block_s)
     >>> em.add_feature(block_f, 'full_address_address_jac_qgm3_qgm3', r)
 
 The user is allow to define arbitrary complex expression involving function names from
@@ -218,6 +218,53 @@ The user is allow to define arbitrary complex expression involving function name
 Please look at the API reference of
 py:meth:`~py_entitymatching.get_feature_fn` and py:meth:`~py_entitymatching.add_feature`
 for more details.
+
+Summary of the Manual Feature Generation Process
+------------------------------------------------
+Here we summarize the manual entire manual feature generation process.
+
+To generate features, the user will execute the following commands:
+
+    >>> block_t = em.get_tokenizers_for_blocking()
+    >>> block_s = em.get_sim_funs_for_blocking()
+    >>> atypes1 = em.get_attr_types(A)
+    >>> atypes2 = em.get_attr_types(B)
+    >>> block_c = em.get_attr_corres(A, B)
+    >>> block_f = em.get_features(A, B, atypes1, atypes2, block_c, block_t, block_s)
+
+
+
+Ways for User to Edit the Manual Feature Generation Process
+-----------------------------------------------------------
+Here we list the ways to edit the variables used in feature generation process.
+
+* The block_t, block_s, atypes1, atypes2, block_c are dictionaries. The user can modify these variables in anyway
+  he/she likes, to add/remove tokenizers, similarity functions, attribute correspondences, etc.
+
+* `block_f` is a Dataframe. The user can remove a feature by deleting a tuple from the Dataframe.
+
+* There are two ways to create and add a feature: (1) write blackbox function and
+  add it to Dataframe, and (2) define the feature declartively and add it to Dataframe
+
+    To add a blackbox feature, first write a blackbox function like this:
+    ::
+
+        def age_diff(ltuple, rtuple):
+            # assume that the tuples have age attribute and values are valid numbers.
+            return ltuple['age'] - rtuple['age']
+
+
+    Then add it to the table `block_f` using `add_blackbox_feature` like this:
+
+        >>> status = em.add_blackbox_feature(block_f, 'age_difference', age_diff)
+
+    To add a feature declaratively, first write a feature expression and compile it to feature using `get_feature_fn` like this:
+
+        >>> r = em.get_feature_fn('jaccard(qgm_3(ltuple.address + ltuple.zipcode), qgm_3(rtuple.address + rtuple.zipcode)',block_t,block_s)
+
+    Then add it to the table `block_f` using `add_feature` like this:
+
+        >>> em.add_feature(block_f, 'full_address_address_jac_qgm3_qgm3', r)
 
 .. _label-gen-feats-automatically:
 
