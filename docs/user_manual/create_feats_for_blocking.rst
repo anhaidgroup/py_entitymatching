@@ -232,6 +232,7 @@ To generate features, the user will execute the following commands:
     >>> block_c = em.get_attr_corres(A, B)
     >>> block_f = em.get_features(A, B, atypes1, atypes2, block_c, block_t, block_s)
 
+The variable `block_f` points to a Dataframe containing features as rows.
 
 
 Ways for User to Edit the Manual Feature Generation Process
