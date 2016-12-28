@@ -20,16 +20,15 @@ In *py_entitymatching*, there are six concrete ML-matchers implemented: (1) naiv
 logistic regression, (3) linear regression, (4) support vector machine, (5) decision
 trees, and (6) random forest.
 
-These concrete matchers are just wrappers of scikit-learn matchers and this is because
-the fit/predict methods in scikit-learn are not metadata aware. The concrete matchers
-make the scikit-learn matchers metadata aware.
+These concrete matchers are just wrappers of Scikit-learn matchers and this is because
+the fit/predict methods in Scikit-learn are not metadata aware. The concrete matchers
+make the Scikit-learn matchers metadata aware.
 
-.. The class diagram of Matchers and the concrete matchers inherited from it is shown below:
 
 Each matcher can be created by calling its constructor. Since these matchers are
-just the wrappers of scikit-learn matchers, the parameters that can be given to
-scikit-learn matchers can be to given to the matchers in *py_entitymatching*.
-For example, a user can create a decision tree matcher like this:
+just the wrappers of Scikit-learn matchers, the parameters that can be given to
+Scikit-learn matchers can be to given to the matchers in *py_entitymatching*.
+For example, a user can create a Decision Tree matcher like this:
 
     >>> dt = em.DTMatcher(max_depth=5)
 
@@ -41,7 +40,7 @@ for more details.
 Training Learning-Based Matchers
 --------------------------------
 Once the ML-matcher is instantiated, the user can train the matcher using the
-`fit` command. An example of using the `fit` command for decision tree matcher
+`fit` command. An example of using the `fit` command for Decision Tree matcher
 is shown below:
 
     >>> dt.fit(table=H, exclude_attrs=['_id', 'ltable_id', 'rtable_id'], target_attr='gold_labels')
@@ -52,7 +51,7 @@ There are other variants of `fit` method. As an example, Please refer to
 Applying Learning-Based Matchers
 --------------------------------
 Once the ML-matcher is trained, the user can predict the matches using the
-`predict` command. An example of using the `predict` command for decision tree matcher
+`predict` command. An example of using the `predict` command for Decision Tree matcher
 is shown below:
 
     >>> dt.predict(table=H, exclude_attrs=['_id', 'ltable_id', 'rtable_id'], target_attr='predicted_labels', append=True, inplace=True)

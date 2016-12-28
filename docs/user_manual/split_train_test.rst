@@ -22,7 +22,7 @@ In the above, `split_train_test` returns a dictionary with two keys: train, and 
 The value for the key `train` is a Dataframe containing tuples
 allocated from the input table based on train_proportion.
 Similarly, the value for the key `test` is a Dataframe containing
-tuples for evaluation. An example of getting train and test dataframes from the output
+tuples for evaluation. An example of getting train and test Dataframes from the output
 of `split_train_test` command is shown below:
 
 

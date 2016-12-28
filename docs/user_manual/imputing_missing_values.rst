@@ -42,7 +42,7 @@ An example of using `fillna` to the whole table is shown below:
 In the above, `H` is a Dataframe containing feature vectors, 0 is the constant value that
 we want to fill in, and `inplace=True` means that the updation should be done in place
 (i.e., without creating a copy). It is important to set `inplace=True` as we do not want
-the metadata for H in catalog to be corrupted.
+the metadata for H in Catalog to be corrupted.
 
 Another example of using `fillna` on a column is shown below:
     >>> H['name_name_lev'] = H['name_name_lev'].fillna(0)
@@ -61,6 +61,6 @@ An example of using `impute_table` is shown below:
     missing values). In such cases, the user need to specify a value in `val_all_nans`
     parameter and the command will use this value to fill in all the missing values.
 
-Please refer to the API reference of :py:meth:`py_entitymatching.impute_table` for
+Please refer to the API reference of :py:meth:`~py_entitymatching.impute_table` for
 more details.
 

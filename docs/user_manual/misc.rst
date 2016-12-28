@@ -1,3 +1,7 @@
+=============
+Miscellaneous
+=============
+
 CSV Format
 ----------
 We select CSV format because it’s well known and can be read by numerous external programs.
@@ -38,6 +42,7 @@ An example of metadata file is shown below:
 In the above, the pair key=ID states that ID is the key attribute.
 
 
+
 Writing a Dataframe to Disk Along With Its Metadata
 ---------------------------------------------------
 To write a Dataframe to disk along with its metadata, the user can use `to_csv_metadata`
@@ -46,7 +51,7 @@ command in *py_entitymatching*. An example of using `to_csv_metadata` is shown b
     >>> em.to_csv_metadata(A, './table_A.csv')
 
 The above command will first write Dataframe pointed by `A` to `table_A.csv` file in the
-disk (in CSV format), next it will write the metadata of `table A` stored in the catalog
+disk (in CSV format), next it will write the metadata of `table A` stored in the Catalog
 to `table_A.metadata` file in the disk.
 
 Please refer to the API reference of :py:meth:`~py_entitymatching.to_csv_metadata` for
