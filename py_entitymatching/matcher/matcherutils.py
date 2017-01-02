@@ -7,7 +7,7 @@ import time
 from collections import OrderedDict
 
 import pandas as pd
-import sklearn.cross_validation as cv
+import sklearn.model_selection as ms
 from  sklearn.preprocessing import Imputer
 
 import py_entitymatching.catalog.catalog_manager as cm
@@ -89,7 +89,7 @@ def split_train_test(labeled_data, train_proportion=0.5,
 
     # Use sk-learn to split the data
     idx_values = pd.np.array(labeled_data.index.values)
-    idx_train, idx_test = cv.train_test_split(idx_values, test_size=test_size,
+    idx_train, idx_test = ms.train_test_split(idx_values, test_size=test_size,
                                               train_size=train_size,
                                               random_state=random_state)
 

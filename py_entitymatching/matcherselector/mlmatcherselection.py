@@ -5,7 +5,7 @@ import logging
 from collections import OrderedDict
 
 import pandas as pd
-from sklearn.cross_validation import KFold, cross_val_score
+from sklearn.model_selection import KFold, cross_val_score
 
 from py_entitymatching.utils.catalog_helper import check_attrs_present
 from py_entitymatching.utils.generic_helper import list_diff, list_drop_duplicates
@@ -103,9 +103,9 @@ def cross_validation(matcher, x, y, metric, k, random_state):
     """
     The function does cross validation for a single matcher
     """
-    # Use KFold function from scikit learn to create a cv object that can be
+    # Use KFold function from scikit learn to create a ms object that can be
     # used for cross_val_score function.
-    cv = KFold(len(y), k, shuffle=True, random_state=random_state)
+    cv = KFold(k, shuffle=True, random_state=random_state)
     # Call the scikit-learn's cross_val_score function
     scores = cross_val_score(matcher.clf, x, y, scoring=metric, cv=cv)
     # Finally, return the matcher along with the scores.
