@@ -11,6 +11,8 @@ The command does uniform random sampling without replacement. An example of usin
 
     >>> S = em.sample_table(C, 100)
 
-The output table S, will be updated with the metadata as in table C.
+The command will first create a copy of the input table, sample the specified number of
+tuple pairs from the copy, update the metadata and return the sampled table.
+
 
 For more details, please look into the API reference of :py:meth:`~py_entitymatching.sample_table`

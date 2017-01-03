@@ -16,7 +16,7 @@ for evaluation.
 *py_entitymatching* provides `split_train_test` command for the above need.
 An example of using `split_train_test` is shown below:
 
-    >>> devel_eval = split_train_test(G, train_proportion=0.5)
+    >>> devel_eval = em.split_train_test(G, train_proportion=0.5)
 
 In the above, `split_train_test` returns a dictionary with two keys: train, and test.
 The value for the key `train` is a Dataframe containing tuples

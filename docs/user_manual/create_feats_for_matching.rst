@@ -50,7 +50,7 @@ shown below:
     >>> match_f = em.get_features_for_matching(A, B)
 
 Similar to what we saw in section :ref:`label-gen-feats-automatically` for blocking, the
-command will set the following variables: _match_t, _match_s, _atypes1, _atypes2, _match_c
+command will set the following variables: `_match_t`, `_match_s`, `_atypes1`, `_atypes2`, `_match_c`
 and they can be accessed like this:
 
     >>> em._match_t

@@ -68,7 +68,7 @@ class RuleBasedBlocker(Blocker):
     def add_rule(self, conjunct_list, feature_table=None, rule_name=None):
         """Adds a rule to the rule-based blocker.
 
-           Args:
+            Args:
                conjunct_list (list): A list of conjuncts specifying the rule.
              
                feature_table (DataFrame): A DataFrame containing all the
@@ -99,6 +99,15 @@ class RuleBasedBlocker(Blocker):
 
                 AssertionError: If `feature_table` is not a valid value
                  parameter.
+
+            Examples:
+                >>> import py_entitymatching as em
+                >>> rb = em.RuleBasedBlocker()
+                >>> A = em.read_csv_metadata('path_to_csv_dir/table_A.csv', key='id')
+                >>> B = em.read_csv_metadata('path_to_csv_dir/table_B.csv', key='id')
+                >>> block_f = em.get_features_for_blocking(A, B)
+                >>> rule = ['name_name_lev(ltuple, rtuple) > 3']
+                >>> rb.add_rule(rule, rule_name='rule1')
 
         """
 
@@ -131,8 +140,21 @@ class RuleBasedBlocker(Blocker):
     def delete_rule(self, rule_name):
         """Deletes a rule from the rule-based blocker.
 
-           Args:
+            Args:
                rule_name (string): Name of the rule to be deleted.
+
+            Examples:
+                >>> import py_entitymatching as em
+                >>> rb = em.RuleBasedBlocker()
+                >>> A = em.read_csv_metadata('path_to_csv_dir/table_A.csv', key='id')
+                >>> B = em.read_csv_metadata('path_to_csv_dir/table_B.csv', key='id')
+                >>> block_f = em.get_features_for_blocking(A, B)
+                >>> rule = ['name_name_lev(ltuple, rtuple) > 3']
+                >>> rb.add_rule(rule, block_f, rule_name='rule_1')
+                >>> rb.delete_rule('rule_1')
+
+
+
         """
         assert rule_name in self.rules.keys(), 'Rule name not in current set of rules'
 
@@ -146,9 +168,21 @@ class RuleBasedBlocker(Blocker):
     def view_rule(self, rule_name):
         """Prints the source code of the function corresponding to a rule.
 
-           Args:
+            Args:
                rule_name (string): Name of the rule to be viewed.
+
+            Examples:
+                >>> import py_entitymatching as em
+                >>> rb = em.RuleBasedBlocker()
+                >>> A = em.read_csv_metadata('path_to_csv_dir/table_A.csv', key='id')
+                >>> B = em.read_csv_metadata('path_to_csv_dir/table_B.csv', key='id')
+                >>> block_f = em.get_features_for_blocking(A, B)
+                >>> rule = ['name_name_lev(ltuple, rtuple) > 3']
+                >>> rb.add_rule(rule, block_f, rule_name='rule_1')
+                >>> rb.view_rule('rule_1')
+
         """
+
         assert rule_name in self.rules.keys(), 'Rule name not in current set of rules'
         print(self.rule_source[rule_name])
 
@@ -156,7 +190,19 @@ class RuleBasedBlocker(Blocker):
         """Returns the names of all the rules in the rule-based blocker.
 
            Returns:
+
                A list of names of all the rules in the rule-based blocker (list).
+
+           Examples:
+                >>> import py_entitymatching as em
+                >>> rb = em.RuleBasedBlocker()
+                >>> A = em.read_csv_metadata('path_to_csv_dir/table_A.csv', key='id')
+                >>> B = em.read_csv_metadata('path_to_csv_dir/table_B.csv', key='id')
+                >>> block_f = em.get_features_for_blocking(A, B)
+                >>> rule = ['name_name_lev(ltuple, rtuple) > 3']
+                >>> rb.add_rule(rule, block_f, rule_name='rule_1')
+                >>> rb.get_rule_names()
+
         """
         return self.rules.keys()
 
@@ -165,8 +211,20 @@ class RuleBasedBlocker(Blocker):
 
            Args:
                rule_name (string): Name of the rule.
+
            Returns:
                A function object corresponding to the specified rule.
+
+           Examples:
+                >>> import py_entitymatching as em
+                >>> rb = em.RuleBasedBlocker()
+                >>> A = em.read_csv_metadata('path_to_csv_dir/table_A.csv', key='id')
+                >>> B = em.read_csv_metadata('path_to_csv_dir/table_B.csv', key='id')
+                >>> block_f = em.get_features_for_blocking(A, B)
+                >>> rule = ['name_name_lev(ltuple, rtuple) > 3']
+                >>> rb.add_rule(rule, feature_table=block_f, rule_name='rule_1')
+                >>> rb.get_rule_names()
+
         """
         assert rule_name in self.rules.keys(), 'Rule name not in current set of rules'
         return self.rules[rule_name]
@@ -174,8 +232,16 @@ class RuleBasedBlocker(Blocker):
     def set_feature_table(self, feature_table):
         """Sets feature table for the rule-based blocker.
  
-           Args:
+            Args:
                feature_table (DataFrame): A DataFrame containing features.
+
+            Examples:
+                >>> import py_entitymatching as em
+                >>> rb = em.RuleBasedBlocker()
+                >>> A = em.read_csv_metadata('path_to_csv_dir/table_A.csv', key='id')
+                >>> B = em.read_csv_metadata('path_to_csv_dir/table_B.csv', key='id')
+                >>> block_f = em.get_features_for_blocking(A, B)
+                >>> rb.set_feature_table(block_f)
         """
 
         if self.feature_table is not None:
@@ -262,6 +328,17 @@ class RuleBasedBlocker(Blocker):
             AssertionError: If `l_out_attrs` are not in the ltable.
             AssertionError: If `r_out_attrs` are not in the rtable.
             AssertionError: If there are no rules to apply.
+
+        Examples:
+                >>> import py_entitymatching as em
+                >>> rb = em.RuleBasedBlocker()
+                >>> A = em.read_csv_metadata('path_to_csv_dir/table_A.csv', key='id')
+                >>> B = em.read_csv_metadata('path_to_csv_dir/table_B.csv', key='id')
+                >>> block_f = em.get_features_for_blocking(A, B)
+                >>> rule = ['name_name_lev(ltuple, rtuple) > 3']
+                >>> rb.add_rule(rule, feature_table=block_f)
+                >>> C = rb.block_tables(A, B)
+
         """
 
         # validate data types of input parameters
@@ -473,6 +550,8 @@ class RuleBasedBlocker(Blocker):
                 If (n_cpus + 1 + n_jobs) is less than 1, then no parallel
                 computation is used (i.e., equivalent to the default).
 
+
+
         Returns:
             A candidate set of tuple pairs that survived blocking (DataFrame).
 
@@ -487,6 +566,18 @@ class RuleBasedBlocker(Blocker):
             AssertionError: If `l_block_attr` is not in the ltable columns.
             AssertionError: If `r_block_attr` is not in the rtable columns.
             AssertionError: If there are no rules to apply.
+
+        Examples:
+                >>> import py_entitymatching as em
+                >>> rb = em.RuleBasedBlocker()
+                >>> A = em.read_csv_metadata('path_to_csv_dir/table_A.csv', key='id')
+                >>> B = em.read_csv_metadata('path_to_csv_dir/table_B.csv', key='id')
+                >>> block_f = em.get_features_for_blocking(A, B)
+                >>> rule = ['name_name_lev(ltuple, rtuple) > 3']
+                >>> rb.add_rule(rule, feature_table=block_f)
+                >>> D = rb.block_tables(C) # C is the candidate set.
+
+
         """
 
         # validate data types of input parameters
@@ -549,6 +640,17 @@ class RuleBasedBlocker(Blocker):
         Returns:
             A status indicating if the tuple pair is blocked by applying the
             sequence of blocking rules (boolean).
+
+        Examples:
+                >>> import py_entitymatching as em
+                >>> rb = em.RuleBasedBlocker()
+                >>> A = em.read_csv_metadata('path_to_csv_dir/table_A.csv', key='id')
+                >>> B = em.read_csv_metadata('path_to_csv_dir/table_B.csv', key='id')
+                >>> block_f = em.get_features_for_blocking(A, B)
+                >>> rule = ['name_name_lev(ltuple, rtuple) > 3']
+                >>> rb.add_rule(rule, feature_table=block_f)
+                >>> D = rb.block_tuples(A.ix[0], B.ix[1)
+
         """
 
         # validate rules

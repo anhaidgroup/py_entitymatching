@@ -34,7 +34,7 @@ are inherited. These concrete blockers implement the following methods:
 
 In *py_entitymatching*, there are four concrete blockers implemented: (1) attribute
 equivalence blocker, (2) overlap blocker, (3) rule-based blocker, and (4) black box
-blocker.
+blocker. All the functions implemented in the concrete blockers are metadata aware.
 
 The class diagram of Blocker and the concrete blockers inherited from it is shown below:
 
@@ -57,7 +57,7 @@ An example of using the above function is shown below:
 
     >>> import py_entitymatching as em
     >>> A = em.read_csv_metadata('path_to_csv_dir/table_A.csv', key='ID')
-    >>> B = em.read_csv_metadata('path_to_csv_dir/datasets/table_B.csv', key='ID')
+    >>> B = em.read_csv_metadata('path_to_csv_dir/table_B.csv', key='ID')
     >>> ab = em.AttrEquivalenceBlocker()
     >>> C = ab.block_tables(A, B, 'zipcode', 'zipcode', l_output_attrs=['name'], r_output_attrs=['name'])
 
@@ -73,8 +73,8 @@ applied to the candidate set, i.e. the output from `block_tables`. An example of
 Please look at the API reference of :py:meth:`~py_entitymatching.AttrEquivalenceBlocker.block_candset`
 for more details.
 
-Further, `block_tuples` can be used to check if a tuple pair would get blocked. An
-example of using `block_candset` is shown below:
+The function `block_tuples` can be used to check if a tuple pair would get blocked. An
+example of using `block_tuples` is shown below:
 
     >>> status = ab.block_tuples(A.ix[0], B.ix[0])
     >>> status
@@ -90,10 +90,9 @@ attribute `x` of table A, an attribute `y` of table B, and returns true (that is
 the tuple pair) if `x` and `y` do not share any token (where the token can be a word or
 a q-gram).
 
-Please look at the API reference of :py:meth:`~py_entitymatching.OverlapBlocker.block_tables`
-for more details.
 
 An example of using `block_tables` is shown below:
+
     >>> import py_entitymatching as em
     >>> A = em.read_csv_metadata('path_to_csv_dir/table_A.csv', key='ID')
     >>> B = em.read_csv_metadata('path_to_csv_dir/table_B.csv', key='ID')
@@ -114,7 +113,7 @@ Please look at the API reference of :py:meth:`~py_entitymatching.OverlapBlocker.
 for more details.
 
 
-Further, `block_tuples` can be used to check if a tuple pair would get blocked. An
+The function `block_tuples` can be used to check if a tuple pair would get blocked. An
 example of using `block_tuples` is shown below:
 
     >>> status = ob.block_tuples(A.ix[0], B.ix[0], 'name', 'name', num_overlap=1)
@@ -183,14 +182,14 @@ for more details.
 
 Rule-Based Blockers
 -------------------
-A user can write a few domain specific rules (for blocking purposes) using `rule-based blocker`.
+A user can write a few domain specific rules (for blocking purposes) using rule-based blocker.
 If a user wants to write rules, then he/she must start by defining a set of features.
-Each `feature` will be a function that when applied to a tuple pair will return a
+Each `feature` is a function that when applied to a tuple pair will return a
 numeric value. We will discuss how to create a set of features in the section
 :ref:`label-create-features-blocking`.
 
 Once the features are created, *py_entitymatching* stores this set of features in a
-feature table. We refer to this feature table as `block_f`. Then the user may be able
+feature table. We refer to this feature table as `block_f`. Then the user will be able
 to instantiate a rule-based blocker and add rules like this:
 
     >>> rb = em.RuleBasedBlocker()
@@ -199,7 +198,7 @@ to instantiate a rule-based blocker and add rules like this:
 
 In the above, `block_f` is a set of features stored as a Dataframe (see section
 :ref:`label-create-features-blocking`).
-Each rule is a list of strings. Each string specifies a conjunction of predictes. Each
+Each rule is a list of strings. Each string specifies a conjunction of predicates. Each
 predicate has three parts: (1) an expression, (2) a comparison operator, and (3) a
 value. The expression can be evaluated over a tuple pair, producing a numeric value.
 Currently, in *py_entitymatching* an expression is limited to contain a single feature
@@ -217,8 +216,10 @@ Now, the rules `rule1` and `rule2` may look like this:
     rule1 = ['name_name_lev(ltuple, rtuple) > 3', 'age_age_exact_match(ltuple, rtuple) !=0']
     rule2 = ['address_address_lev(ltuple, rtuple) > 6']
 
-The blocker is then a disjunction of rules. That is, even if one of the rules return
-True, then the tuple pair will be blocked.
+In the above, `rule1` contains two predicates and `rule2` contains just a single
+predicate. Each rule is a conjunction of predicates. That is, each rule will return True
+only if all the predicates return True. The blocker is then a disjunction of rules.
+That is, even if one of the rules return True, then the tuple pair will be blocked.
 
 
 Now, the user can call `block_tables` on the input tables. Conceptually, `block_tables` would
@@ -242,7 +243,7 @@ An example of using `block_candset` is shown below:
 Please look at the API reference of :py:meth:`~py_entitymatching.RuleBasedBlocker.block_candset`
 for more details.
 
-Further, `block_tuples` can be used to check if a tuple pair would get blocked. An
+The function `block_tuples` can be used to check if a tuple pair would get blocked. An
 example of using `block_tuples` is shown below:
 
     >>> status = rb.block_tuples(A.ix[0], B.ix[0])
@@ -254,7 +255,7 @@ for more details.
 
 Combining Multiple Blockers
 ---------------------------
-If the user uses multiple blockers, he/she often has to combine them to get a
+If the user uses multiple blockers, then he/she often has to combine them to get a
 consolidated candidate set. There are many different ways to combine the candidate sets
 such as doing union, majority vote, weighted vote, etc. Currently, *py_entitymatching*
 supports union-based combining.
@@ -268,15 +269,15 @@ An example of using `combine_blocker_outputs_via_union` is shown below:
     >>> ab = em.AttrEquivalenceBlocker()
     >>> C = ab.block_tables(A, B, 'zipcode', 'zipcode')
     >>> ob = em.OverlapBlocker()
-    >>> D = ob.block_candset(C, 'address', 'address')
+    >>> D = ob.block_candset(C, 'address', 'address', num_overlap=1)
     >>> block_f = em.get_features_for_blocking(A, B)
     >>> rb = em.RuleBasedBlocker()
-    >>> rule = ['address_address_lev(ltuple, rtuple) > 6']
+    >>> rule = ['name_name_lev(ltuple, rtuple) > 6']
     >>> rb.add_rule(rule, block_f)
     >>> E = rb.block_tables(A, B)
     >>> F = em.combine_blocker_outputs_via_union([C, E])
 
-Conceptually, the command takes in a list of blocker outputs (i.e. Pandas Dataframes) and
+Conceptually, the command takes in a list of blocker outputs (i.e. pandas Dataframes) and
 produces a consolidated table. The output table contains the union of tuple pair ids and
 other attributes from the input list.
 

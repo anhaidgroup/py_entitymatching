@@ -103,6 +103,16 @@ class OverlapBlocker(Blocker):
             show_progress (boolean): A flag to indicate whether progress should
                 be displayed to the user (defaults to True).
 
+            n_jobs (int): The number of parallel jobs to be used for computation
+                (defaults to 1). If -1 all CPUs are used. If 0 or 1,
+                no parallel computation is used at all, which is useful for
+                debugging. For n_jobs below -1, (n_cpus + 1 + n_jobs) are
+                used (where n_cpus is the total number of CPUs in the
+                machine). Thus, for n_jobs = -2, all CPUs but one are used.
+                If (n_cpus + 1 + n_jobs) is less than 1, then no parallel
+                computation is used (i.e., equivalent to the default).
+
+
         Returns:
             A candidate set of tuple pairs that survived blocking (DataFrame).
         Raises:
@@ -165,6 +175,21 @@ class OverlapBlocker(Blocker):
 
             SyntaxError: If `q_val` is set to None and
                 `word_level` is set to False.
+
+        Examples:
+            >>> import py_entitymatching as em
+            >>> A = em.read_csv_metadata('path_to_csv_dir/table_A.csv', key='ID')
+            >>> B = em.read_csv_metadata('path_to_csv_dir/table_B.csv', key='ID')
+            >>> ob = em.OverlapBlocker()
+            # Use word-level tokenizer
+            >>> C1 = ab.block_tables(A, B, 'address', 'address', l_output_attrs=['name'], r_output_attrs=['name'], word_level=True, num_overlap=1)
+            # Use q-gram tokenizer
+            >>> C2 = ab.block_tables(A, B, 'address', 'address', l_output_attrs=['name'], r_output_attrs=['name'], word_level=False, q_val=2)
+            # Include all possible missing values
+            >>> C3 = ab.block_tables(A, B, 'address', 'address', l_output_attrs=['name'], r_output_attrs=['name'], allow_missing=True)
+            # Use all the cores in the machine
+            >>> C3 = ab.block_tables(A, B, 'address', 'address', l_output_attrs=['name'], r_output_attrs=['name'], n_jobs=-1)
+
 
         """
 
@@ -354,6 +379,22 @@ class OverlapBlocker(Blocker):
                 `word_level` is set to True.
             SyntaxError: If `q_val` is set to None and
                 `word_level` is set to False.
+        Examples:
+            >>> import py_entitymatching as em
+            >>> A = em.read_csv_metadata('path_to_csv_dir/table_A.csv', key='ID')
+            >>> B = em.read_csv_metadata('path_to_csv_dir/table_B.csv', key='ID')
+            >>> ob = em.OverlapBlocker()
+            >>> C = ob.block_tables(A, B, 'address', 'address', l_output_attrs=['name'], r_output_attrs=['name'])
+
+            >>> D1 = ob.block_candset(C, 'name', 'name', allow_missing=True)
+            # Include all possible tuple pairs with missing values
+            >>> D2 = ob.block_candset(C, 'name', 'name', allow_missing=True)
+            # Execute blocking using multiple cores
+            >>> D3 = ob.block_candset(C, 'name', 'name', n_jobs=-1)
+            # Use q-gram tokenizer
+            >>> D2 = ob.block_candset(C, 'name', 'name', word_level=False, q_val=2)
+
+
         """
 
         # validate data types of standard input parameters
@@ -468,6 +509,14 @@ class OverlapBlocker(Blocker):
 
         Returns:
             A status indicating if the tuple pair is blocked (boolean).
+
+        Examples:
+            >>> import py_entitymatching as em
+            >>> A = em.read_csv_metadata('path_to_csv_dir/table_A.csv', key='ID')
+            >>> B = em.read_csv_metadata('path_to_csv_dir/table_B.csv', key='ID')
+            >>> ob = em.OverlapBlocker()
+            >>> status = ob.block_tuples(A.ix[0], B.ix[0], 'address', 'address')
+
         """
 
         # validate data types of input parameters specific to overlap blocker

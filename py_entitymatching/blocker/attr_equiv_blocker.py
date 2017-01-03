@@ -115,6 +115,16 @@ class AttrEquivalenceBlocker(Blocker):
             AssertionError: If `l_out_attrs` are not in the ltable.
             AssertionError: If `r_out_attrs` are not in the rtable.
 
+        Examples:
+            >>> import py_entitymatching as em
+            >>> A = em.read_csv_metadata('path_to_csv_dir/table_A.csv', key='ID')
+            >>> B = em.read_csv_metadata('path_to_csv_dir/table_B.csv', key='ID')
+            >>> ab = em.AttrEquivalenceBlocker()
+            >>> C1 = ab.block_tables(A, B, 'zipcode', 'zipcode', l_output_attrs=['name'], r_output_attrs=['name'])
+            # Include all possible tuple pairs with missing values
+            >>> C2 = ab.block_tables(A, B, 'zipcode', 'zipcode', l_output_attrs=['name'], r_output_attrs=['name'], allow_missing=True)
+
+
         """
 
         # validate data types of input parameters
@@ -264,6 +274,20 @@ class AttrEquivalenceBlocker(Blocker):
                 int.
             AssertionError: If `l_block_attr` is not in the ltable columns.
             AssertionError: If `r_block_attr` is not in the rtable columns.
+
+        Examples:
+            >>> import py_entitymatching as em
+            >>> A = em.read_csv_metadata('path_to_csv_dir/table_A.csv', key='ID')
+            >>> B = em.read_csv_metadata('path_to_csv_dir/table_B.csv', key='ID')
+            >>> ab = em.AttrEquivalenceBlocker()
+            >>> C = ab.block_tables(A, B, 'zipcode', 'zipcode', l_output_attrs=['name'], r_output_attrs=['name'])
+
+            >>> D1 = ab.block_candset(C, 'age', 'age', allow_missing=True)
+            # Include all possible tuple pairs with missing values
+            >>> D2 = ab.block_candset(C, 'age', 'age', allow_missing=True)
+            # Execute blocking using multiple cores
+            >>> D3 = ab.block_candset(C, 'age', 'age', n_jobs=-1)
+
         """
 
         # validate data types of input parameters
@@ -361,6 +385,13 @@ class AttrEquivalenceBlocker(Blocker):
             A status indicating if the tuple pair is blocked, i.e., the values
             of l_block_attr in ltuple and r_block_attr in rtuple are different
             (boolean).
+
+        Examples:
+            >>> import py_entitymatching as em
+            >>> A = em.read_csv_metadata('path_to_csv_dir/table_A.csv', key='ID')
+            >>> B = em.read_csv_metadata('path_to_csv_dir/table_B.csv', key='ID')
+            >>> ab = em.AttrEquivalenceBlocker()
+            >>> status = ab.block_tuples(A.ix[0], B.ix[0], 'zipcode', 'zipcode')
         """
         l_val, r_val = ltuple[l_block_attr], rtuple[r_block_attr]
         if allow_missing:

@@ -110,6 +110,24 @@ class BlackBoxBlocker(Blocker):
                 int.
             AssertionError: If `l_out_attrs` are not in the ltable.
             AssertionError: If `r_out_attrs` are not in the rtable.
+    Examples:
+
+        >>> def match_last_name(ltuple, rtuple):
+            # assume that there is a 'name' attribute in the input tables
+            # and each value in it has two words
+            l_last_name = ltuple['name'].split()[1]
+            r_last_name = rtuple['name'].split()[1]
+            if l_last_name != r_last_name:
+                return True
+            else:
+                return False
+        >>> import py_entitymatching as em
+        >>> bb = em.BlackBoxBlocker()
+        >>> bb.set_black_box_function(match_last_name)
+
+        >>> C = bb.block_tables(A, B, l_output_attrs=['name'], r_output_attrs=['name'] )
+
+
         """
 
         # validate data types of standard input parameters
@@ -239,6 +257,21 @@ class BlackBoxBlocker(Blocker):
             AssertionError: If `l_block_attr` is not in the ltable columns.
             AssertionError: If `r_block_attr` is not in the rtable columns.
 
+        Examples:
+            >>> def match_last_name(ltuple, rtuple):
+                # assume that there is a 'name' attribute in the input tables
+                # and each value in it has two words
+                l_last_name = ltuple['name'].split()[1]
+                r_last_name = rtuple['name'].split()[1]
+                if l_last_name != r_last_name:
+                    return True
+                else:
+                    return False
+            >>> import py_entitymatching as em
+            >>> bb = em.BlackBoxBlocker()
+            >>> bb.set_black_box_function(match_last_name)
+            >>> D = bb.block_candset(C) # C is an output from block_tables
+
 
         """
 
@@ -322,6 +355,22 @@ class BlackBoxBlocker(Blocker):
         Returns:
             A status indicating if the tuple pair should be dropped or kept,
             based on the black box blocking function (boolean).
+
+        Examples:
+            >>> def match_last_name(ltuple, rtuple):
+                # assume that there is a 'name' attribute in the input tables
+                # and each value in it has two words
+                l_last_name = ltuple['name'].split()[1]
+                r_last_name = rtuple['name'].split()[1]
+                if l_last_name != r_last_name:
+                    return True
+                else:
+                    return False
+            >>> import py_entitymatching as em
+            >>> bb = em.BlackBoxBlocker()
+            >>> bb.set_black_box_function(match_last_name)
+            >>> status = bb.block_tuples(A.ix[0], B.ix[0]) # A, B are input tables.
+
         """
 
         # validate black box function

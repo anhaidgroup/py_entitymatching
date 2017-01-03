@@ -13,8 +13,8 @@ An example of using `eval_matches` command is shown below:
     >>> pred_table = dt.predict(table=H,  exclude_attrs=['_id', 'ltable_id', 'rtable_id', 'gold_labels'],  append=True, target_attr='predicted_labels')
     >>> eval_summary = em.eval_matches(pred_table, 'gold_labels', 'predicted_labels')
 
-In the above, `eval_summary` is a dictionary containing accuracy numbers such as
-precision, recall, F1, etc.
+In the above, `eval_summary` is a dictionary containing accuracy numbers (such as
+precision, recall, F1, etc) and the list of false positives/negatives.
 
 Please refer to the API reference of :py:meth:`~py_entitymatching.eval_matches` for
 more details.

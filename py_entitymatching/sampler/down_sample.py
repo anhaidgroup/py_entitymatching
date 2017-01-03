@@ -198,6 +198,11 @@ def down_sample(table_a, table_b, size, y_param, show_progress=True,
          empty or not a DataFrame.
         AssertionError: If `size` or `y_param` is empty or 0 or not a
          valid integer value.
+
+    Examples:
+    >>> A = em.read_csv_metadata('path_to_csv_dir/table_A.csv', key='ID')
+    >>> B = em.read_csv_metadata('path_to_csv_dir/table_B.csv', key='ID')
+        >>> sample_A, sample_B = em.down_sample(A, B, 500, 1)
     """
 
     if not isinstance(table_a, pd.DataFrame):

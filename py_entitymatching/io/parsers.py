@@ -71,6 +71,25 @@ def read_csv_metadata(file_path, **kwargs):
         AssertionError: If `file_path` is not of type string.
         AssertionError: If a file does not exist in the
             given `file_path`.
+
+    Examples:
+
+        *Example 1:* Read from CSV file and set metadata
+
+        >>> A = em.read_csv_metadata('path_to_csv_file', key='id')
+        >>> em.get_key(A)
+         # 'id'
+
+        *Example 2:*  Read from CSV file (with metadata file in the same directory
+
+         Let the metadata file contain the following contents:
+
+          #key = id
+
+        >>> A = em.read_csv_metadata('path_to_csv_file')
+        >>> em.get_key(A)
+         # 'id'
+
     See Also:
         :meth:`~py_entitymatching.to_csv_metadata`
     """
@@ -179,6 +198,14 @@ def to_csv_metadata(data_frame, file_path, **kwargs):
         AssertionError: If `file_path` is not of type string.
         AssertionError: If DataFrame cannot be written to the given
          `file_path`.
+
+    Examples:
+
+        >>> import pandas as pd
+        >>> A = pd.DataFrame({'id' : [1, 2], 'colA':['a', 'b'], 'colB' : [10, 20]})
+        >>> em.set_key(A, 'id')
+        >>> em.to_csv_metadata(A, 'path_to_csv_file')
+
 
     See Also:
         :meth:`~py_entitymatching.read_csv_metadata`

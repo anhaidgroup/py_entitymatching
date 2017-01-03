@@ -18,11 +18,11 @@ As a convention, we will use:
 
 Store Tables Using Pandas Dataframes
 ------------------------------------
-We will need to store a lot of data as tables in *py_entitymatching*. We use Pandas Dataframes to
-represent tables (you can know more about Pandas and Pandas Dataframes `here
+We will need to store a lot of data as tables in *py_entitymatching*. We use pandas Dataframes to
+represent tables (you can know more about pandas and pandas Dataframes `here
 <http://pandas.pydata.org/>`_).
 
-**Tuple:** Each row in a Dataframe is a tuple and this is of type Pandas Series.
+**Tuple:** Each row in a Dataframe is a tuple and this is of type pandas Series.
 
 Store Metadata Using a Catalog
 ------------------------------
@@ -31,13 +31,14 @@ Store Metadata Using a Catalog
 In *py_entitymatching*, we need to store a lot of metadata with a table. We use a
 new data structure, Catalog, to store metadata. The user need not worry
 about intantiating this object (it gets automatically intantiated when *py_entitymatching*
-gets loaded in Python memory) and manipulating this object directly. All the *py_entitymatching*
-commands correctly handle the metadata in the Catalog, and for the user, there
-are commands to manipulate the Catalog.
+gets loaded in Python memory) or manipulating this object directly.
+
+All the *py_entitymatching* commands correctly handle the metadata in the Catalog,
+and for the user, there are commands to manipulate the Catalog (please see
+:ref:`label-handling-metadata` section for the supported commands).
 
 
-**If You Want to Understand More**
-
+**If You Want to Understand More:**
 As we mentioned earlier,  we need to store a lot of metadata with a table. Here are a few examples:
 
 * Each table in *py_entitymatching* should have a key, so that we can easily identify the tuples.
@@ -53,14 +54,15 @@ As we mentioned earlier,  we need to store a lot of metadata with a table. Here 
   metadata for C would be aid and bid in table C are foreign keys to tables A and B.
 
 There are many other examples of metadata that we may want to store for a table. Though
-Pandas Dataframes is a good choice for storing data as tables, it does not provide a
+pandas Dataframes is a good choice for storing data as tables, it does not provide a
 robust way to store metadata (for more discussion on this topic, please look at `this thread <https://github.com/pandas-dev/pandas/issues/2485>`_).
 To tackle this, we have a new data structure, `Catalog` to store the metadata for tables.
-The user need not worry
+As mentioned earlier, the user need not worry
 about intantiating this object (it gets automatically intantiated when *py_entitymatching*
-gets loaded in Python memory) and manipulating this object directly. All the *py_entitymatching*
+gets loaded in Python memory) or manipulating this object directly. All the *py_entitymatching*
 commands correctly handle the metadata in the Catalog, and for the user, there
 are commands to manipulate the Catalog.
+
 Conceptually, Catalog is a dictionary, where the key is the unique identifier of a Dataframe and the
 value is a dictionary containing metadata.
 The metadata dictionary can have different kinds of keys that point to metadata.
@@ -81,8 +83,8 @@ and B), this table can be very large, so we typically represent it using a view 
 two tables A and B. Such a table C will have the following attributes:
 
 *  _id (key attribute of table C).
-* ltable.aid (aid is the key attribute in table A).
-* rtable.bid (bid is the key attribute in table B).
+* ltable_aid (aid is the key attribute in table A).
+* rtable_bid (bid is the key attribute in table B).
 * some attributes from A and B.
 
 The metadata dictionary for table C in the Catalog, will have at least these fields:
@@ -96,7 +98,7 @@ The metadata dictionary for table C in the Catalog, will have at least these fie
 
 Summary
 -------
-* Tables in *py_entitymatching* are represented as Pandas Dataframes.
+* Tables in *py_entitymatching* are represented as pandas Dataframes.
 * The metadata for tables are stored in a separate data structure called Catalog.
 * The kind of metadata stored will depend on the table (input table: key, table from
   blocking (say): key, ltable, rtable, fk_table, fk_rtable).

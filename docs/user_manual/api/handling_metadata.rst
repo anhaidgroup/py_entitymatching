@@ -1,3 +1,5 @@
+.. _label-handling-metadata:
+
 =================
 Handling Metadata
 =================
@@ -9,7 +11,6 @@ Handling Metadata
 .. autofunction:: py_entitymatching.is_property_present_for_df
 .. autofunction:: py_entitymatching.show_properties
 .. autofunction:: py_entitymatching.show_properties_for_id
-.. autofunction:: py_entitymatching.init_properties
 .. autofunction:: py_entitymatching.get_property
 .. autofunction:: py_entitymatching.set_property
 .. autofunction:: py_entitymatching.del_property

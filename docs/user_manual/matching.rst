@@ -1,8 +1,8 @@
 ==============================================
 Specifying ML-Matchers and Performing Matching
 ==============================================
-Once the labeled sample G has been converted into a table of feature vectors (and their
-labels) H, we can create and apply matchers to H.
+Once the labeled sample `G` has been converted into a table of feature vectors (and their
+labels) `H`, we can create and apply matchers to `H`.
 
 
 Currently *py_entitymatching* supports only ML-based matchers. Implementation wise,
@@ -20,14 +20,14 @@ In *py_entitymatching*, there are six concrete ML-matchers implemented: (1) naiv
 logistic regression, (3) linear regression, (4) support vector machine, (5) decision
 trees, and (6) random forest.
 
-These concrete matchers are just wrappers of Scikit-learn matchers and this is because
-the fit/predict methods in Scikit-learn are not metadata aware. The concrete matchers
-make the Scikit-learn matchers metadata aware.
+These concrete matchers are just wrappers of scikit-learn matchers and this is because
+the fit/predict methods in scikit-learn are not metadata aware. The concrete matchers
+make the scikit-learn matchers metadata aware.
 
 
 Each matcher can be created by calling its constructor. Since these matchers are
-just the wrappers of Scikit-learn matchers, the parameters that can be given to
-Scikit-learn matchers can be to given to the matchers in *py_entitymatching*.
+just the wrappers of scikit-learn matchers, the parameters that can be given to
+scikit-learn matchers can be to given to the matchers in *py_entitymatching*.
 For example, a user can create a Decision Tree matcher like this:
 
     >>> dt = em.DTMatcher(max_depth=5)

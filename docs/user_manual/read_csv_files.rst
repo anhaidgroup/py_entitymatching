@@ -16,15 +16,14 @@ table_B.csv on disk, then table_A.csv may look like this:
     a3, William Bridge, 1988, 32, 94121
 
 In the above CSV file, `ID` is the key attribute. To read these files into memory as
-Pandas Dataframes and specify `ID` is the key attribute, use the
+pandas Dataframes and specify `ID` is the key attribute, use the
 :py:meth:`~py_entitymatching.read_csv_metadata` command.
 
 .. NOTE::
    Each table in *py_entitymatching* is expected to have a key. We assume the key is
    just a single attribute (i.e composite keys are not allowed).
 
-The two tables mentioned in the above example can be read into *py_entitymathcing* as
-follows:
+The two tables mentioned in the above example can be read as follows:
 
     >>> import py_entitymatching as em
     >>> A = em.read_csv_metadata('path_to_csv_dir/table_A.csv', key='ID')
@@ -40,8 +39,8 @@ looks for `table_A.metadata` file. The contents of `table_A.metadata` may look l
     #key=ID
 
 
-Each line in the file starts with `#`. The metadata is written as `key=value` pairs
-one in each line. The contents of the above file says that 'ID' is the key attribute
+Each line in the file starts with `#`. The metadata is written as `key=value` pairs,
+one in each line. The contents of the above file says that `ID` is the key attribute
 (for the table in the file `table_A.csv`).
 
 The user can manually create this file and specify the metadata for a table. Then the
@@ -49,14 +48,14 @@ user can call :py:meth:`~py_entitymatching.read_csv_metadata` with out providing
 any metadata as parameters. The command will automatically read the metadata from the
 file and update the Catalog.
 
-The two tables mentioned in the above example along with metadata file
-stored in the same directory can be read into *py_entitymatching* as follows:
+The two tables mentioned in the above example along with the metadata files
+stored in the same directory can be read as follows:
 
     >>> import py_entitymatching as em
     >>> A = em.read_csv_metadata('path_to_csv_dir/table_A.csv')
     >>> B = em.read_csv_metadata('path_to_csv_dir/table_B.csv')
 
-Once, the table is read into *py_entitymatching*, the user can check to see which
+Once, the table is read, the user can check to see which
 attribute of the table is a key using :py:meth:`~py_entitymatching.get_key` command as
 shown below:
 

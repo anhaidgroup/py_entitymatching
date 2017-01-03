@@ -10,7 +10,7 @@ workflow. This is because working with large tables can be very time consuming
 Random sampling however does not work, because tables A' and B' may end up sharing very
 few matches, i.e., matching tuples (especially if the number of matches between A
 and B is small to begin with). *py_entitymatching* provides a command, `down_sample`
-that samples more intelligently, to ensure a reasonable number of matches between
+that samples more intelligently to ensure a reasonable number of matches between
 A' and B'.
 
 An example of using `down_sample` is shown below:
@@ -27,7 +27,9 @@ details.
 .. note:: Currently, the input tables must be loaded in memory before the user can down
  sample.
 
-.. note:: For the purposes of this manual, we assume that the user uses the input tables
-    A and B for the matching purposes.
+
+
+..    .. note:: For the purposes of this manual, we assume that the user uses the input tables
+        A and B for the matching purposes.
 
 
