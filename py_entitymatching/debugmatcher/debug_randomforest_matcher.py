@@ -39,6 +39,18 @@ def debug_randomforest_matcher(random_forest, tuple_1, tuple_2,
     Raises:
         AssertionError: If the input feature table is not of type pandas
             DataFrame.
+
+    Examples:
+        >>> import py_entitymatching as em
+        >>> # devel is the labeled data used for development purposes, match_f is the feature table
+        >>> H = em.extract_feat_vecs(devel, feat_table=match_f, attrs_after='gold_labels')
+        >>> rf = em.RFMatcher()
+        >>> rf.fit(table=H, exclude_attrs=['_id', 'ltable_id', 'rtable_id', 'gold_labels'], target_attr='gold_labels')
+        >>> # F is the feature vector got from evaluation set of the labeled data.
+        >>> out = rf.predict(table=F, exclude_attrs=['_id', 'ltable_id', 'rtable_id', 'gold_labels'], target_attr='gold_labels')
+        >>> # A and B are input tables
+        >>> em.debug_randomforest_matcher(rf, A.ix[1], B.ix[2], match_f, H.columns, exclude_attrs=['_id', 'ltable_id', 'rtable_id', 'gold_labels'], target_attr='gold_labels')
+
     """
     # Validate input parameters.
     # # We expect the feature table to be of type pandas DataFrame

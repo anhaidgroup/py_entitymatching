@@ -651,7 +651,7 @@ def monge_elkan(arr1, arr2):
         >>> import py_entitymatching as em
         >>> em.monge_elkan(['Niall'], ['Neal'])
         0.8049999999999999
-        >>>> em.monge_elkan(['Niall'], None)
+        >>> em.monge_elkan(['Niall'], None)
         nan
     """
 
@@ -702,7 +702,7 @@ def exact_match(d1, d2):
         1
         >>> em.exact_match(False, True)
         0
-        >>>> em.exact_match(10, None)
+        >>> em.exact_match(10, None)
         nan
     """
     if d1 is None or d2 is None:

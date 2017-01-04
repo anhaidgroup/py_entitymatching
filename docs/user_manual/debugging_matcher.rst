@@ -18,7 +18,7 @@ An example of using `vis_debug_dt` is shown below:
     >>> dt = em.DTMatcher()
     >>> train_test = em.split_train_test(devel, 0.5)
     >>> train, test = train_test['train'], train_test['test']
-    >>> vis_debug_dt(dt, train, test, exclude_attrs=['_id', 'ltable_id', 'rtable_id'], target_attr='gold_labels')
+    >>> em.vis_debug_dt(dt, train, test, exclude_attrs=['_id', 'ltable_id', 'rtable_id'], target_attr='gold_labels')
 
 The command would display a GUI containing evaluation summary and an option to see tuples
 flagged as `false positives` or `false negatives`. If the user selects `false positives`
@@ -73,7 +73,7 @@ Decision Tree matcher and Random Forest matcher respectively.
 An example of using `debug_decisiontree_matcher` is shown below:
 
     >>> H = em.extract_feat_vecs(devel, feat_table=match_f, attrs_after='gold_labels')
-    >>> dt = mg.DTMatcher()
+    >>> dt = em.DTMatcher()
     >>> dt.fit(table=H, exclude_attrs=['_id', 'ltable_id', 'rtable_id', 'gold_labels'], target_attr='gold_labels')
     >>> out = dt.predict(table=F, exclude_attrs=['_id', 'ltable_id', 'rtable_id', 'gold_labels'], target_attr='gold_labels')
     >>> em.debug_decisiontree_matcher(dt, A.ix[1], B.ix[2], match_f, H.columns, exclude_attrs=['_id', 'ltable_id', 'rtable_id', 'gold_labels'], target_attr='gold_labels')

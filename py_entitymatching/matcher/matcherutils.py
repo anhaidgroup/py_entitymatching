@@ -52,6 +52,13 @@ def split_train_test(labeled_data, train_proportion=0.5,
         This function sets the output DataFrames (train, test) properties
         same as the input DataFrame.
 
+    Examples:
+        >>> import py_entitymatching as em
+        >>> # G is the labeled data or the feature vectors that should be split
+        >>> train_test = em.split_train_test(G, train_proportion=0.5)
+        >>> train, test = train_test['train'], train_test['test']
+
+
     """
     # Validate input parameters
     # # We expected labeled data to be of type pandas DataFrame

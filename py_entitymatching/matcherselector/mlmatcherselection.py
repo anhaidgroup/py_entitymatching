@@ -51,11 +51,19 @@ def select_matcher(matchers, x=None, y=None, table=None, exclude_attrs=None,
             used for splitting the data into folds (defaults to None).
 
     Returns:
+
         A dictionary containing two keys - selected matcher and the cv_stats.
 
         The selected matcher has a value that is a matcher (MLMatcher) object
         and cv_stats has a value that is a dictionary containing
         cross-validation statistics.
+
+    Examples:
+        >>> dt = em.DTMatcher()
+        >>> rf = em.RFMatcher()
+        # train is the feature vector containing user labels
+        >>> result = em.select_matcher(matchers=[dt, rf], table=train, exclude_attrs=['_id', 'ltable_id', 'rtable_id'], target_attr='gold_labels', k=5)
+
 
     """
     # Based on the input, get the x, y data that can be used to call the
