@@ -53,6 +53,10 @@ def get_sim_funs_for_blocking():
         Specifically, the key is the similarity function name and the value
         is the actual similary function.
 
+    Examples:
+        >>> import py_entitymatching as em
+        >>> block_s = em.get_sim_funs_for_blocking()
+
     """
     return get_sim_funs()
 
@@ -68,6 +72,11 @@ def get_sim_funs_for_matching():
 
         Specifically, the key is the similarity function name and the value
         is the actual similarity function.
+
+    Examples:
+        >>> import py_entitymatching as em
+        >>> match_s = em.get_sim_funs_for_matching()
+
 
     """
     return get_sim_funs()
@@ -106,6 +115,13 @@ def affine(s1, s2):
     Returns:
         The affine measure if both the strings are not missing (i.e NaN or
         None), else  returns NaN.
+
+    Examples:
+        >>> import py_entitymatching as em
+        >>> em.affine('dva', 'deeva')
+        1.5
+        >>> em.affine(None, 'deeva')
+        nan
     """
     if s1 is None or s2 is None:
         return pd.np.NaN
@@ -139,6 +155,15 @@ def hamming_dist(s1, s2):
     Returns:
         The Hamming distance if both the strings are not missing (i.e NaN),
         else  returns NaN.
+
+    Examples:
+        >>> import py_entitymatching as em
+        >>> em.hamming_dist('alex', 'john')
+        4
+        >>> em.hamming_dist(None, 'john')
+        nan
+
+
     """
 
     if s1 is None or s2 is None:
@@ -175,6 +200,14 @@ def hamming_sim(s1, s2):
     Returns:
         The Hamming similarity if both the strings are not missing (i.e NaN),
         else  returns NaN.
+
+    Examples:
+        >>> import py_entitymatching as em
+        >>> em.hamming_sim('alex', 'alxe')
+        0.5
+        >>> em.hamming_sim(None, 'alex')
+        nan
+
     """
 
     if s1 is None or s2 is None:
@@ -209,6 +242,14 @@ def lev_dist(s1, s2):
     Returns:
         The Levenshtein distance if both the strings are not missing (i.e NaN),
         else  returns NaN.
+
+    Examples:
+        >>> import py_entitymatching as em
+        >>> em.lev_dist('alex', 'alxe')
+        2
+        >>> em.lev_dist(None, 'alex')
+        nan
+
     """
 
     if s1 is None or s2 is None:
@@ -243,6 +284,14 @@ def lev_sim(s1, s2):
     Returns:
         The Levenshtein similarity if both the strings are not missing (i.e
         NaN), else  returns NaN.
+
+    Examples:
+        >>> import py_entitymatching as em
+        >>> em.lev_sim('alex', 'alxe')
+        0.5
+        >>> em.lev_dist(None, 'alex')
+        nan
+
     """
 
     if s1 is None or s2 is None:
@@ -277,6 +326,13 @@ def jaro(s1, s2):
     Returns:
         The Jaro measure if both the strings are not missing (i.e NaN),
         else  returns NaN.
+
+    Examples:
+        >>> import py_entitymatching as em
+        >>> em.jaro('MARTHA', 'MARHTA')
+        0.9444444444444445
+        >>> em.jaro(None, 'MARTHA')
+        nan
     """
 
     if s1 is None or s2 is None:
@@ -311,6 +367,14 @@ def jaro_winkler(s1, s2):
     Returns:
         The Jaro Winkler measure if both the strings are not missing (i.e NaN),
         else  returns NaN.
+
+    Examples:
+        >>> import py_entitymatching as em
+        >>> em.jaro_winkler('MARTHA', 'MARHTA')
+        0.9611111111111111
+        >>> >>> em.jaro_winkler('MARTHA', None)
+        nan
+
     """
 
     if s1 is None or s2 is None:
@@ -346,6 +410,14 @@ def needleman_wunsch(s1, s2):
         The Needleman-Wunsch measure if both the strings are not missing (i.e
         NaN), else  returns NaN.
 
+    Examples:
+        >>> import py_entitymatching as em
+        >>> em.needleman_wunsch('dva', 'deeva')
+        1.0
+        >>> em.needleman_wunsch('dva', None)
+        nan
+
+
     """
 
     if s1 is None or s2 is None:
@@ -380,6 +452,13 @@ def smith_waterman(s1, s2):
     Returns:
         The Smith-Waterman measure if both the strings are not missing (i.e
         NaN), else  returns NaN.
+
+    Examples:
+        >>> import py_entitymatching as em
+        >>> em.smith_waterman('cat', 'hat')
+        2.0
+        >>> em.smith_waterman('cat', None)
+        nan
     """
 
     if s1 is None or s2 is None:
@@ -415,6 +494,13 @@ def jaccard(arr1, arr2):
     Returns:
         The Jaccard measure if both the lists/set are not None and do not have
         any missing tokens (i.e NaN), else  returns NaN.
+
+    Examples:
+        >>> import py_entitymatching as em
+        >>> em.jaccard(['data', 'science'], ['data'])
+        0.5
+        >>> em.jaccard(['data', 'science'], None)
+        nan
     """
 
     if arr1 is None or arr2 is None:
@@ -445,6 +531,14 @@ def cosine(arr1, arr2):
     Returns:
         The cosine measure if both the lists/set are not None and do not have
         any missing tokens (i.e NaN), else  returns NaN.
+
+    Examples:
+        >>> import py_entitymatching as em
+        >>> em.cosine(['data', 'science'], ['data'])
+        0.7071067811865475
+        >>> em.cosine(['data', 'science'], None)
+        nan
+
     """
 
     if arr1 is None or arr2 is None:
@@ -475,6 +569,14 @@ def overlap_coeff(arr1, arr2):
     Returns:
         The overlap coefficient if both the lists/sets are not None and do not
         have any missing tokens (i.e NaN), else  returns NaN.
+
+    Examples:
+        >>> import py_entitymatching as em
+        >>> em.overlap_coeff(['data', 'science'], ['data'])
+        1.0
+        >>> em.overlap_coeff(['data', 'science'], None)
+        nan
+
     """
 
     if arr1 is None or arr2 is None:
@@ -504,6 +606,14 @@ def dice(arr1, arr2):
     Returns:
         The Dice score if both the lists/set are not None and do not
         have any missing tokens (i.e NaN), else  returns NaN.
+
+    Examples:
+        >>> import py_entitymatching as em
+        >>> em.dice(['data', 'science'], ['data'])
+        0.6666666666666666
+        >>> em.dice(['data', 'science'], None)
+        nan
+
     """
 
     if arr1 is None or arr2 is None:
@@ -536,6 +646,13 @@ def monge_elkan(arr1, arr2):
     Returns:
         The Monge-Elkan measure if both the lists/set are not None and do not
         have any missing tokens (i.e NaN), else  returns NaN.
+
+    Examples:
+        >>> import py_entitymatching as em
+        >>> em.monge_elkan(['Niall'], ['Neal'])
+        0.8049999999999999
+        >>>> em.monge_elkan(['Niall'], None)
+        nan
     """
 
     if arr1 is None or arr2 is None:
@@ -571,6 +688,22 @@ def exact_match(d1, d2):
         else returns 0. Further if one of the objects is NaN or None,
         it returns NaN.
 
+    Examples:
+        >>> import py_entitymatching as em
+        >>> em.exact_match('Niall', 'Neal')
+        0
+        >>> em.exact_match('Niall', 'Niall')
+        1
+        >>> em.exact_match(10, 10)
+        1
+        >>> em.exact_match(10, 20)
+        0
+        >>> em.exact_match(True, True)
+        1
+        >>> em.exact_match(False, True)
+        0
+        >>>> em.exact_match(10, None)
+        nan
     """
     if d1 is None or d2 is None:
         return pd.np.NaN
@@ -597,6 +730,14 @@ def rel_diff(d1, d2):
         they are valid). Further if one of the input objects is NaN or None,
         it returns NaN.
 
+    Examples:
+        >>> import py_entitymatching as em
+        >>> em.rel_diff(100, 200)
+        0.6666666666666666
+        >>> em.rel_diff(100, 100)
+        0.0
+        >>> em.rel_diff(100, None)
+        nan
     """
 
     if d1 is None or d2 is None:
@@ -627,6 +768,15 @@ def abs_norm(d1, d2):
         A float value of absolute norm between the input numbers (if
         they are valid). Further if one of the input objects is NaN or None,
         it returns NaN.
+
+    Examples:
+        >>> import py_entitymatching as em
+        >>> em.abs_norm(100, 200)
+        0.5
+        >>> em.abs_norm(100, 100)
+        1.0
+        >>> em.abs_norm(100, None)
+        nan
 
     """
 

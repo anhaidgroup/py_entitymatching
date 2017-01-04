@@ -63,6 +63,16 @@ def extract_feature_vecs(candset, attrs_before=None, feature_table=None,
             are not present in the input candset.
         AssertionError: If `feature_table` is set to None.
 
+
+    Examples:
+        >>> import py_entitymatching as em
+        >>> A = em.read_csv_metadata('path_to_csv_dir/table_A.csv', key='ID')
+        >>> B = em.read_csv_metadata('path_to_csv_dir/table_B.csv', key='ID')
+        >>> match_f = em.get_features_for_matching(A, B)
+        >>> # G is the labeled dataframe which should be converted into feature vectors
+        >>> H = em.extract_feature_vecs(G, features=match_f, attrs_before=['title'], attrs_after=['gold_labels'])
+
+
     """
     # Validate input parameters
 

@@ -150,6 +150,13 @@ def impute_table(table, exclude_attrs=None, missing_val='NaN',
     Raises:
         AssertionError: If `table` is not of type pandas DataFrame.
 
+    Examples:
+        >>> import py_entitymatching as em
+        >>> # H is the feature vector which should be imputed. Specifically, impute the missing values
+        >>> # in each column, with the mean of that column
+        >>> H = em.impute_table(H, exclude_attrs=['_id', 'ltable_id', 'rtable_id'], strategy='mean')
+
+
     """
     # Validate input paramaters
     # # We expect the input table to be of type pandas DataFrame

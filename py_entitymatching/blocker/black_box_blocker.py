@@ -82,8 +82,10 @@ class BlackBoxBlocker(Blocker):
                 If (n_cpus + 1 + n_jobs) is less than 1, then no parallel
                 computation is used (i.e., equivalent to the default).
 
+
         Returns:
             A candidate set of tuple pairs that survived blocking (DataFrame).
+
         Raises:
             AssertionError: If `ltable` is not of type pandas
                 DataFrame.
@@ -110,24 +112,23 @@ class BlackBoxBlocker(Blocker):
                 int.
             AssertionError: If `l_out_attrs` are not in the ltable.
             AssertionError: If `r_out_attrs` are not in the rtable.
-    Examples:
 
-        >>> def match_last_name(ltuple, rtuple):
-            # assume that there is a 'name' attribute in the input tables
-            # and each value in it has two words
-            l_last_name = ltuple['name'].split()[1]
-            r_last_name = rtuple['name'].split()[1]
-            if l_last_name != r_last_name:
-                return True
-            else:
-                return False
-        >>> import py_entitymatching as em
-        >>> bb = em.BlackBoxBlocker()
-        >>> bb.set_black_box_function(match_last_name)
+        Examples:
 
-        >>> C = bb.block_tables(A, B, l_output_attrs=['name'], r_output_attrs=['name'] )
+            >>> def match_last_name(ltuple, rtuple):
+                # assume that there is a 'name' attribute in the input tables
+                # and each value in it has two words
+                l_last_name = ltuple['name'].split()[1]
+                r_last_name = rtuple['name'].split()[1]
+                if l_last_name != r_last_name:
+                    return True
+                else:
+                    return False
+            >>> import py_entitymatching as em
+            >>> bb = em.BlackBoxBlocker()
+            >>> bb.set_black_box_function(match_last_name)
 
-
+            >>> C = bb.block_tables(A, B, l_output_attrs=['name'], r_output_attrs=['name'] )
         """
 
         # validate data types of standard input parameters

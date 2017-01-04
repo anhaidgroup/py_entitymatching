@@ -47,6 +47,10 @@ def label_table(table, label_column_name, verbose=False):
         AssertionError: If the `label_column_name` is already present in the
             input table.
 
+    Examples:
+        >>> import py_entitymatching as em
+        >>> G = em.label_table(S, label_column_name='label') # S is the (sampled) table that has to be labeled.
+
     """
     # Validate the input parameters: check input types, check the metadata
     # for the input DataFrame as it will get copied to the labeled DataFrame

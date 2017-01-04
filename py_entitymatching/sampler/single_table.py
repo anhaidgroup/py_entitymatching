@@ -52,6 +52,11 @@ def sample_table(table, sample_size, replace=False, verbose=False):
         AssertionError: If the `sample_size` is greater than the input
             DataFrame size.
 
+    Examples:
+        >>> import py_entitymatching as em
+        >>> S = em.sample_table(C, sample_size=450) # C is the candidate set to be sampled from.
+
+
     Note:
         As mentioned in the above description, the output DataFrame is
         updated (in the catalog) with the properties from the input

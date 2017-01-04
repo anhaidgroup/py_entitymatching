@@ -83,6 +83,7 @@ def combine_blocker_outputs_via_union(
             input list of DataFrames.
         AssertionError: If the `fk_rtable` values are different across the
             input list of DataFrames.
+
     Examples:
 
         >>> import py_entitymatching as em
