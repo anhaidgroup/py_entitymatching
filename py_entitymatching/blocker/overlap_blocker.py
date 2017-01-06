@@ -182,7 +182,7 @@ class OverlapBlocker(Blocker):
             >>> B = em.read_csv_metadata('path_to_csv_dir/table_B.csv', key='ID')
             >>> ob = em.OverlapBlocker()
             # Use word-level tokenizer
-            >>> C1 = ab.block_tables(A, B, 'address', 'address', l_output_attrs=['name'], r_output_attrs=['name'], word_level=True, num_overlap=1)
+            >>> C1 = ab.block_tables(A, B, 'address', 'address', l_output_attrs=['name'], r_output_attrs=['name'], word_level=True, overlap_size=1)
             # Use q-gram tokenizer
             >>> C2 = ab.block_tables(A, B, 'address', 'address', l_output_attrs=['name'], r_output_attrs=['name'], word_level=False, q_val=2)
             # Include all possible missing values

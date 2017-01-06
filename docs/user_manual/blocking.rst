@@ -97,7 +97,7 @@ An example of using `block_tables` is shown below:
     >>> A = em.read_csv_metadata('path_to_csv_dir/table_A.csv', key='ID')
     >>> B = em.read_csv_metadata('path_to_csv_dir/table_B.csv', key='ID')
     >>> ob = em.OverlapBlocker()
-    >>> C = ob.block_tables(A, B, 'zipcode', 'zipcode', num_overlap=1, l_output_attrs=['name'], r_output_attrs=['name'] )
+    >>> C = ob.block_tables(A, B, 'zipcode', 'zipcode', overlap_size=1, l_output_attrs=['name'], r_output_attrs=['name'] )
 
 Please look at the API reference of :py:meth:`~py_entitymatching.OverlapBlocker.block_tables`
 for more details.
@@ -116,7 +116,7 @@ for more details.
 The function `block_tuples` can be used to check if a tuple pair would get blocked. An
 example of using `block_tuples` is shown below:
 
-    >>> status = ob.block_tuples(A.ix[0], B.ix[0], 'name', 'name', num_overlap=1)
+    >>> status = ob.block_tuples(A.ix[0], B.ix[0], 'name', 'name', overlap_size=1)
     >>> status
         True
 
@@ -269,7 +269,7 @@ An example of using `combine_blocker_outputs_via_union` is shown below:
     >>> ab = em.AttrEquivalenceBlocker()
     >>> C = ab.block_tables(A, B, 'zipcode', 'zipcode')
     >>> ob = em.OverlapBlocker()
-    >>> D = ob.block_candset(C, 'address', 'address', num_overlap=1)
+    >>> D = ob.block_candset(C, 'address', 'address', overlap_size=1)
     >>> block_f = em.get_features_for_blocking(A, B)
     >>> rb = em.RuleBasedBlocker()
     >>> rule = ['name_name_lev(ltuple, rtuple) > 6']

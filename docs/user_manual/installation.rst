@@ -52,7 +52,7 @@ To install the py_entitymatching package using pip, execute the following
 command::
 
     pip install py_entitymatching
-  .*[]:
+
 
 
 The above command will install py_entitymatching and all its dependencies, except PyQt4.
@@ -83,16 +83,14 @@ home directory as follows::
         python setup.py install --user
 
 
-For more information see this StackOverflow `link
- <http://stackoverflow.com/questions/14179941/how-to-install-python-packages-without-root-privileges>`_.
+For more information see this StackOverflow `link <http://stackoverflow.com/questions/14179941/how-to-install-python-packages-without-root-privileges>`_.
 
 
 
 The above command will install py_entitymatching and all its
 dependencies, except PyQt4. This is because similar to pip, setup.py can install
 the dependency packages which are available in PyPI and PyQt4 is not in PyPI
-Refer to this `page
-<http://pyqt.sourceforge.net/Docs/PyQt4/installation.html>`_ to install PyQt4.
+Refer to this `page <http://pyqt.sourceforge.net/Docs/PyQt4/installation.html>`_ to install PyQt4.
 
 
 

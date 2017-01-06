@@ -156,9 +156,13 @@ def get_features(ltable, rtable, l_attr_types, r_attr_types,
                            'If you want to set them to be same and '
                            'generate features, '
                            'update output from get_attr_types and '
-                           'use get_features command.\n'
+                           'use get_features command.\n.'
                            % (ac[0], l_attr_type, ac[1], r_attr_type))
+            # features_1 = _get_features_for_type(l_attr_type)
+            # features_2 = _get_features_for_type(r_attr_type)
+            # features = set(features_1).union(features_2)
             continue
+
         # Generate features
         features = _get_features_for_type(l_attr_type)
 
@@ -364,7 +368,7 @@ def get_features_for_matching(ltable, rtable):
     em._match_t = tok_funcs
     em._match_s = sim_funcs
     em._atypes1 = attr_types_ltable
-    em._atypes2 = attr_types_ltable
+    em._atypes2 = attr_types_rtable
     em._match_c = attr_corres
 
     # Finally return the feature table

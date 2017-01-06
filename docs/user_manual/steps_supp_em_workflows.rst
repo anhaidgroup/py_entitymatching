@@ -2,7 +2,7 @@ Steps of Supported EM Workflows
 ===============================
 .. toctree::
     :maxdepth: 3
-    :caption: Steps of Supported EM Workflows
+
 
     read_csv_files
     down_sampling

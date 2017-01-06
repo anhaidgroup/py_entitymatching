@@ -205,7 +205,7 @@ def _get_type(column):
         elif returned_type == str or returned_type == six.unichr or returned_type == six.text_type:
             # get average token length
             average_token_len = \
-                pd.Series.mean(column.str.split(' ').apply(_len_handle_nan))
+                pd.Series.mean(column.str.split().apply(_len_handle_nan))
             if average_token_len == 1:
                 return "str_eq_1w"
             elif average_token_len <= 5:

@@ -1,0 +1,5 @@
+#key=_id
+#ltable=POINTER
+#rtable=POINTER
+#fk_rtable=zagats_id
+#fk_ltable=fodors_id
