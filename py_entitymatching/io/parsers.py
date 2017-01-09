@@ -43,37 +43,22 @@ def read_csv_metadata(file_path, **kwargs):
     and the function, then the metadata in the function takes precedence over
     the metadata given in the file.
 
-
     Args:
-        file_path (string): The CSV file path.
+        file_path(string): The CSV file path
 
-        kwargs (dictionary): A Python dictionary containing key-value
-            arguments. There are a few key-value pairs that are specific to
+        kwargs(dictionary): A Python dictionary containing key-value arguments.
+            There are a few key-value pairs that are specific to
             read_csv_metadata and  all the other key-value pairs are passed
-            to pandas read_csv method.
-            The keys that are specific to read_csv_metadata are: (1)
-            'metadata_extn' (metadata extension), (2) 'key' (key
-            attribute), (3) 'fk_ltable' (foreign key to ltable),
-            (4) 'fk_rtable' (foreign key to rtable), (5) 'ltable' (left
-            table), and (6) 'rtable' (right table).
-            The keys: 'key', 'metadata_extn' are applicable to all
-            tables, and the keys: 'fk_ltable', 'fk_rtable', 'ltable'
-            and 'rtable' are applicable only to candidate sets.
-            Here the metadata_extn is the expected metadata
-            extension (with the default value set to '.metadata'), and all
-            the others are metadata related to the DataFrame read from the
-            CSV file.
+            to pandas read_csv method
 
     Returns:
         A pandas DataFrame read from the input CSV file.
-
     Raises:
         AssertionError: If `file_path` is not of type string.
         AssertionError: If a file does not exist in the
             given `file_path`.
 
     Examples:
-
         *Example 1:* Read from CSV file and set metadata
 
         >>> A = em.read_csv_metadata('path_to_csv_file', key='id')

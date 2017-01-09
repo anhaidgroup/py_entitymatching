@@ -1,13 +1,14 @@
 =============
 Miscellaneous
 =============
+This section discusses somw of the miscellaneous things in *py_entitymatching*.
 
 CSV Format
 ----------
-We select CSV format because it’s well known and can be read by numerous external programs.
-Further, it can be easily inspected and edited by humans. Currently we handle two
-CSV formats: one with attribute names in the first line, and one without. An example of a
-CSV file with attribute names is shown below:
+The CSV format is selected because it’s well known and can be read by numerous external
+programs. Further, it can be easily inspected and edited by humans. Currently *py_entitymatching*
+handle two CSV formats: one with attribute names in the first line, and one without.
+An example of a CSV file with attribute names is shown below:
 ::
 
     ID, name, birth_year, hourly_wage, zipcode

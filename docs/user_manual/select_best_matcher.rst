@@ -1,10 +1,9 @@
 ======================
-Selecting a ML Matcher
+Selecting a ML-Matcher
 ======================
-Once the user has created different concrete ML matchers, he/she would
-like to choose one of them.
-There are many different criteria by which one can decide to choose a
-matcher such as `akaike information criterion`, `bayesian information
+Once you have created different concrete ML matchers, then you have to choose one of
+them for matching purposes. There are many different criteria by which one can
+decide to choose a matcher such as `akaike information criterion`, `bayesian information
 criterion`, `k-fold cross validation`, etc. Currently *py_entitymatching* supports
 k-fold cross validation and other approaches are left for future work.
 
@@ -28,8 +27,8 @@ example of using `select_matcher` is shown below:
     >>> result = em.select_matcher(matchers=[dt, rf], table=train, exclude_attrs=['_id', 'ltable_id', 'rtable_id'], target_attr='gold_labels', k=5)
 
 In the above the output, `result` is a dictionary containing two keys: (1) selected_matcher,
-and (2) cv_stats. `selected_matcher` is the selected ML-based matcher, `cv_stats` includes
-cross validation statistics such as false positives, false negatives for each fold.
+and (2) cv_stats. `selected_matcher` is the selected ML-based matcher, `cv_stats` is a
+Dataframe which includes cross validation statistics for each fold.
 
 Please refer to the API reference of :py:meth:`~py_entitymatching.select_matcher` for
 more details.

@@ -2,19 +2,25 @@
 Specifying Blockers and Performing Blocking
 ===========================================
 
+In this section, we discuss how you can specify blockers and perform blocking.
+
 Types of Blockers and Blocker Hierarchy
 ---------------------------------------
-After the tables are loaded and downsampled, the user often has to do blocking.
+
+Once the tables are loaded and downsampled, most often you have to do blocking.
 Note that by *blocking* we mean to block a *tuple pair* from going through to the
-matching step. When applied to a tuple pair, a blocker returns *true* if the pair
-should be blocked.
+matching step. When applied to a tuple pair, a blocker returns *True* if the pair
+should be blocked. You must know conceptually the types of blockers and
+the blocker hierarchy in *py_entitymatching* to extend or modify them based on your need.
+
 
 There are two types of blockers: (1) tuple-level, and (2) global. A tuple-level blocker
 can examine a tuple pair in isolation and decide if it should be admitted to the next
 stage. For example, an attribute equivalence blocker is a tuple-level blocker. A global
 blocker cannot make this decision in isolation. It would need to examine a set of other
-pairs as well. For example, a sorted neighborhood blocker applied over an union of A and B
-is a global blocker. Currently, *py_entitymatching* supports only tuple-level blockers.
+pairs as well. For example, a sorted neighborhood blocker applied over an union of the
+input tables is a global blocker. Currently, *py_entitymatching* supports only
+tuple-level blockers.
 
 The blockers can be combined in complex ways, such as
 
@@ -22,15 +28,15 @@ The blockers can be combined in complex ways, such as
 * apply blocker *b2* to the two tables
 * apply blocker *b3* to the output of *b1*
 
-Further, the user may also want to apply a blocker to just a pair of tuples, to see how
+Further, you may just want to apply a blocker to just a pair of tuples, to see how
 the blocker works.
 
 In *py_entitymatching*, there is a Blocker class from which a set of concrete blockers
 are inherited. These concrete blockers implement the following methods:
 
-  + block_tables (apply to input tables A and B)
-  + block_candset (apply to an output from another blocker (e.g. table C))
-  + block_tuples (apply to a tuple pair to check if it will survive blocking)
+* block_tables (apply to input tables A and B)
+* block_candset (apply to an output from another blocker (e.g. table C))
+* block_tuples (apply to a tuple pair to check if it will survive blocking)
 
 In *py_entitymatching*, there are four concrete blockers implemented: (1) attribute
 equivalence blocker, (2) overlap blocker, (3) rule-based blocker, and (4) black box
@@ -39,18 +45,18 @@ blocker. All the functions implemented in the concrete blockers are metadata awa
 The class diagram of Blocker and the concrete blockers inherited from it is shown below:
 
 .. image:: blocker_hierarchy.png
-    :scale: 130
+    :scale: 100
     :alt: 'Blocker Hierarchy'
 
 Built-In Blockers
 -----------------
-Built-in blockers are those that have been built into *py_entitymatching* and the user
-can just simply call them. *py_entitymatching* currently offers two built-in blockers.
+Built-in blockers are those that have been built into *py_entitymatching* and you can just
+simply call them. *py_entitymatching* currently offers two built-in blockers.
 
 **Attribute Equivalence Blocker**
 
 Given two tables A and B, conceptually, `block_tables` in attribute equivalence blocker
-takes an attribute `x` of table A, an attribute `y` of table B, and returns true (that
+takes an attribute `x` of table A, an attribute `y` of table B, and returns True (that
 is, drop the tuple pair) if `x` and `y` are not of the same value.
 
 An example of using the above function is shown below:
@@ -73,7 +79,7 @@ applied to the candidate set, i.e. the output from `block_tables`. An example of
 Please look at the API reference of :py:meth:`~py_entitymatching.AttrEquivalenceBlocker.block_candset`
 for more details.
 
-The function `block_tuples` can be used to check if a tuple pair would get blocked. An
+The function `block_tuples` is used to check if a tuple pair would get blocked. An
 example of using `block_tuples` is shown below:
 
     >>> status = ab.block_tuples(A.ix[0], B.ix[0])
@@ -86,8 +92,8 @@ for more details.
 **Overlap Blocker**
 
 Given two tables A and B, conceptually, `block_tables` in overlap blocker takes an
-attribute `x` of table A, an attribute `y` of table B, and returns true (that is, drop
-the tuple pair) if `x` and `y` do not share any token (where the token can be a word or
+attribute `x` of table A, an attribute `y` of table B, and returns True (that is, drop
+the tuple pair) if `x` and `y` do not share any token (where the token is a word or
 a q-gram).
 
 
@@ -113,7 +119,7 @@ Please look at the API reference of :py:meth:`~py_entitymatching.OverlapBlocker.
 for more details.
 
 
-The function `block_tuples` can be used to check if a tuple pair would get blocked. An
+The function `block_tuples` is used to check if a tuple pair would get blocked. An
 example of using `block_tuples` is shown below:
 
     >>> status = ob.block_tuples(A.ix[0], B.ix[0], 'name', 'name', overlap_size=1)
@@ -128,8 +134,9 @@ Blackbox Blockers
 By `blackbox blockers` we mean that the user supplies a Python function which
 encodes blocking for a tuple pair. Specifically, the Python function will take
 in two tuples and returns True if the tuple pair needs to be blocked, else
-returns False. To use a blackbox blocker, the user should first write a
+returns False. To use a blackbox blocker, first you must write a
 blackbox blocker function.
+
 An example of blackbox blocker function is shown below:
 ::
 
@@ -149,7 +156,7 @@ Then instantiate a `blackbox blocker` and set the blocking function function as 
     >>> bb = em.BlackBoxBlocker()
     >>> bb.set_black_box_function(match_last_name)
 
-Now, the user can call `block_tables` on the input tables. Conceptually, `block_tables` would
+Now, you can call `block_tables` on the input tables. Conceptually, `block_tables` would
 apply the blackbox blocker function on the Cartesian product of the input tables A and B, and
 return a candidate set of tuple pairs.
 
@@ -170,7 +177,7 @@ An example of using `block_candset` is shown below:
 Please look at the API reference of :py:meth:`~py_entitymatching.BlackBoxBlocker.block_candset`
 for more details.
 
-Further, `block_tuples` can be used to check if a tuple pair would get blocked. An
+Further, `block_tuples` is used to check if a tuple pair would get blocked. An
 example of using `block_tuples` is shown below:
 
     >>> status = bb.block_tuples(A.ix[0], B.ix[0])
@@ -182,14 +189,14 @@ for more details.
 
 Rule-Based Blockers
 -------------------
-A user can write a few domain specific rules (for blocking purposes) using rule-based blocker.
-If a user wants to write rules, then he/she must start by defining a set of features.
+You can write a few domain specific rules (for blocking purposes) using rule-based blocker.
+If you want to write rules, then you must start by defining a set of features.
 Each `feature` is a function that when applied to a tuple pair will return a
 numeric value. We will discuss how to create a set of features in the section
 :ref:`label-create-features-blocking`.
 
 Once the features are created, *py_entitymatching* stores this set of features in a
-feature table. We refer to this feature table as `block_f`. Then the user will be able
+feature table. We refer to this feature table as `block_f`. Then you will be able
 to instantiate a rule-based blocker and add rules like this:
 
     >>> rb = em.RuleBasedBlocker()
@@ -198,11 +205,12 @@ to instantiate a rule-based blocker and add rules like this:
 
 In the above, `block_f` is a set of features stored as a Dataframe (see section
 :ref:`label-create-features-blocking`).
+
 Each rule is a list of strings. Each string specifies a conjunction of predicates. Each
 predicate has three parts: (1) an expression, (2) a comparison operator, and (3) a
-value. The expression can be evaluated over a tuple pair, producing a numeric value.
+value. The expression is evaluated over a tuple pair, producing a numeric value.
 Currently, in *py_entitymatching* an expression is limited to contain a single feature
-(being applied to a tuple pair). So a predicate may look like this:
+(being applied to a tuple pair). So an example predicate will look like this:
 ::
 
     name_name_lev(ltuple, rtuple) > 3
@@ -210,7 +218,7 @@ Currently, in *py_entitymatching* an expression is limited to contain a single f
 In the above `name_name_lev` is feature. Concretely, this feature computes
 Levenshtein distance between the `name` values in the input tuple pair.
 
-Now, the rules `rule1` and `rule2` may look like this:
+As an example, the rules `rule1` and `rule2` can look like this:
 ::
 
     rule1 = ['name_name_lev(ltuple, rtuple) > 3', 'age_age_exact_match(ltuple, rtuple) !=0']
@@ -222,7 +230,8 @@ only if all the predicates return True. The blocker is then a disjunction of rul
 That is, even if one of the rules return True, then the tuple pair will be blocked.
 
 
-Now, the user can call `block_tables` on the input tables. Conceptually, `block_tables` would
+Once the rules are specified, you can call `block_tables` on the input tables.
+Conceptually, `block_tables` would
 apply the rule-based blocker function on the Cartesian product of the input tables A and B and
 return a candidate set of tuple pairs.
 
@@ -243,7 +252,7 @@ An example of using `block_candset` is shown below:
 Please look at the API reference of :py:meth:`~py_entitymatching.RuleBasedBlocker.block_candset`
 for more details.
 
-The function `block_tuples` can be used to check if a tuple pair would get blocked. An
+The function `block_tuples` is used to check if a tuple pair would get blocked. An
 example of using `block_tuples` is shown below:
 
     >>> status = rb.block_tuples(A.ix[0], B.ix[0])
@@ -255,13 +264,13 @@ for more details.
 
 Combining Multiple Blockers
 ---------------------------
-If the user uses multiple blockers, then he/she often has to combine them to get a
+If you use multiple blockers, then you have to combine them to get a
 consolidated candidate set. There are many different ways to combine the candidate sets
 such as doing union, majority vote, weighted vote, etc. Currently, *py_entitymatching*
-supports union-based combining.
-In *py_entitymatching*, `combine_blocker_outputs_via_union` can be used to do union-based
-combining.
+only supports union-based combining.
 
+In *py_entitymatching*, `combine_blocker_outputs_via_union` is used to do union-based
+combining.
 
 An example of using `combine_blocker_outputs_via_union` is shown below:
 
@@ -283,7 +292,3 @@ other attributes from the input list.
 
 Please look at the API reference of :py:meth:`~py_entitymatching.combine_blocker_outputs_via_union`
 for more details.
-
-
-
-

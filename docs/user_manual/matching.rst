@@ -1,18 +1,16 @@
 ==============================================
 Specifying ML-Matchers and Performing Matching
 ==============================================
-Once the labeled sample `G` has been converted into a table of feature vectors (and their
-labels) `H`, we can create and apply matchers to `H`.
-
-
+Once yor convert the labeled sample  into a table of feature vectors (and their
+labels), the we can  can create and apply matchers to the feature vectors.
 Currently *py_entitymatching* supports only ML-based matchers. Implementation wise,
 a Matcher is defined as a Python class with certain methods (and some common
 utility functions) and all concrete blockers inherit from this Matcher class and
 override the methods. Specifically, each concrete matcher will implement at least
 the following methods:
 
-+ fit (for training)
-+ predict (for prediction)
+* fit (for training)
+* predict (for prediction)
 
 Creating Learning-Based Matchers
 --------------------------------
@@ -39,7 +37,7 @@ for more details.
 
 Training Learning-Based Matchers
 --------------------------------
-Once the ML-matcher is instantiated, the user can train the matcher using the
+Once the ML-matcher is instantiated, you can train the matcher using the
 `fit` command. An example of using the `fit` command for Decision Tree matcher
 is shown below:
 
@@ -50,7 +48,7 @@ There are other variants of `fit` method. As an example, Please refer to
 
 Applying Learning-Based Matchers
 --------------------------------
-Once the ML-matcher is trained, the user can predict the matches using the
+Once the ML-matcher is trained, you can predict the matches using the
 `predict` command. An example of using the `predict` command for Decision Tree matcher
 is shown below:
 

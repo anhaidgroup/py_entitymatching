@@ -3,11 +3,13 @@
 ========
 Sampling
 ========
-If we are to use supervised learning-based matchers or evaluate matchers, we need
-labeled data. To get labeled data, we can sample of candidate set pairs and let the
-user label them. In *py_stringmatching*, the user can use `sample_table` to get a sample.
-The command does uniform random sampling without replacement. An example of using
-`sample_table` is shown below:
+If you have to use supervised learning-based matchers or evaluate matchers, you need to
+create labeled data. To create labeled data, first you need to sample of candidate set
+pairs and then label them.
+
+In *py_stringmatching*, you can use `sample_table` to get a sample. The command does
+uniform random sampling without replacement. An example of using `sample_table` is shown
+below:
 
     >>> S = em.sample_table(C, 100)
 

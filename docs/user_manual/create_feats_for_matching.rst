@@ -3,8 +3,8 @@
 ==============================
 Creating Features for Matching
 ==============================
-If we are to use supervised learning-based matchers, we can't just operate on the
-labeled set of tuple pairs (say `G`). For each tuple in `G`, we would need to convert it
+If you have to use supervised learning-based matchers, then you cannot just operate on the
+labeled set of tuple pairs. For each tuple in the labeled, you need to convert it
 into a feature vector which consists of a list of numerical/categorical features. To do
 this, first we need to create a set of features.
 
@@ -19,7 +19,7 @@ Creating the Features Manually
 This is very similar to manual feature creation process for blocking (see section
 :ref:`label-create-features-blocking`) except the features are created for
 matching purposes.
-In brief, the user can execute the following sequence of commands in *py_entitymatching*
+In brief, you can execute the following sequence of commands in *py_entitymatching*
 to create the features manually:
 
     >>> match_t = em.get_tokenizers_for_matching()
@@ -29,7 +29,7 @@ to create the features manually:
     >>> match_c = em.get_attr_corres(A, B)
     >>> match_f = em.get_features(A, B, atypes1, atype2, match_c, match_t, match_s)
 
-Further, the user can add or delete features as see saw in section
+Further, you can add or delete features as see saw in section
 :ref:`label-add-remove-features`.
 
 Please refer to the API reference of :py:meth:`~py_entitymatching.get_tokenizers_for_matching`
@@ -39,11 +39,11 @@ and :py:meth:`py_entitymatching.get_sim_funs_for_matching` for more details.
 
 Creating the Features Automatically
 -----------------------------------
-If a user does not want to go through the hassle of creating the features manually, then
+If you do not want to go through the hassle of creating the features manually, then
 the user can generate the features automatically. This is very similar to automatic
-feature creation process in blocking (see section :ref:`label-gen-feats-automatically`).
+feature creation process for blocking (see section :ref:`label-gen-feats-automatically`).
 
-In *py_entitymatching*, the user can use `get_features_for_matching` to generate features
+In *py_entitymatching*, you can use `get_features_for_matching` to generate features
 for matching purposes automatically. An example of using `get_features_for_matching` is
 shown below:
 
@@ -59,9 +59,9 @@ and they can be accessed like this:
     >>> em._atypes2
     >>> em._match_c
 
-The user would be able to examine these variables, modify them as appropriate, and then
+You can to examine these variables, modify them as appropriate, and then
 perhaps regenerate a set of features.
-Please refer to the API reference of :py:meth:`py_entitymatching.get_features_for_matching`
+Please refer to the API reference of :py:meth:`~py_entitymatching.get_features_for_matching`
 for more details.
 
 

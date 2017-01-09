@@ -1,10 +1,9 @@
 ==================
 Debugging Blocking
 ==================
-In a typical entity matching workflow, a user loads in two tables to
-match, samples them (if required) and often uses a blocker
-to remove obvious non-matches. But it
-is often not clear whether the blocker drops only non-matches or it
+In a typical entity matching workflow, you will load in the two tables to
+match, sample them (if required) and use a blocker to remove obvious non-matches.
+But it is often not clear whether the blocker drops only non-matches or it
 also removes a lot of potential matches.
 
 In such cases, it is important to debug the output of blocker. In
@@ -16,16 +15,16 @@ potential matches and yet are not present in the blocker output
 C. Table D also contains similarity measure computed for each reported
 tuple pair (as its second column).
 
-The user can examine these potential matches in table D. If the user
-finds that many of them are indeed true matches, then that means the
-blocker may have removed too many true matches. In this case the user
+You can examine these potential matches in table D. If you
+find that many of them are indeed true matches, then that means the
+blocker may have removed too many true matches. In this case you
 may want to `relax` the blocker by modifying its parameters, or
-choose a different blocker. On the other hand, if the user does not
+choose a different blocker. On the other hand, if you do not
 find many true matches in table D, then it could be the case that the
 blocker has done a good job and preserve all the matches (or most of
 the matches) in the blocker output C.
 
-In the `debug_blocker`, the user can specify attribute correspondences between
+In the `debug_blocker`, you can optionally specify attribute correspondences between
 the input tables A and B. If it is not specified, then attribute correspondences
 will be a list of attribute pairs with the exact same names in A and B.
 

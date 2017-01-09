@@ -3,15 +3,13 @@
 ==============================
 Creating Features for Blocking
 ==============================
-Recall that when doing blocking, the user can use built-in blockers,
+Recall that when doing blocking, you can use built-in blockers,
 blackbox blockers, or rule-based blockers. For rule-based blockers,
-the user often has to create a set of features.
+you have to create a set of features. While creating features, you will have to
+refer to tokenizers, similarity functions, and attributes of the tables.
+Currently, in *py_entitymatching*, there are two ways to create features:
 
-In creating features, user will have to refer to tokenizers, similarity functions, and
-attributes of the tables. Currently, in *py_entitymatching*, there are two ways
-to create features:
-
-* Automatically generate a set of features (then the user can remove or add some more).
+* Automatically generate a set of features (then you can remove or add some more).
 * Skip the automatic process and generate features manually.
 
 
@@ -20,17 +18,16 @@ will discuss later.
 
 .. The set of features for blocking and the set of features for matching can be quite different however. For example, for blocking we may only want to have features that are inexpensive to compute.
 
-Lay users may just want to ask the system to automatically
-generate a set of features. To do this, please see :ref:`label-gen-feats-automatically`.
+If you are interested in just letting the system to automatically
+generate a set of features, then please see :ref:`label-gen-feats-automatically`.
 
-For the users who want to generate features of their own, please read below.
+If you want to generate features on your own, please read below.
 
 Available Tokenizers and Similarity Functions
 ---------------------------------------------
 A tokenizer is a function that takes a string and optionally a number
-of other arguments, then tokenize the string and return an output
-value which is often a set of tokens. Currently, the following tokenizers
-are provided along with *py_entitytmatching*:
+of other arguments, then tokenizes the string and returns a set of tokens.
+Currently, the following tokenizers are provided along with *py_entitytmatching*:
 
 * Alphabetic
 * Alphanumeric
@@ -41,7 +38,7 @@ are provided along with *py_entitytmatching*:
 
 A similarity function takes two arguments (can be strings, numeric values, etc.),
 which are typically two attribute values such
-as two book titles, then return an output value which is typically a similarity score
+as two book titles, then returns an output value which is typically a similarity score
 between the two attribute values. Currently, the following similarity functions
 are provided along with *py_entitytmatching*:
 
@@ -63,26 +60,16 @@ are provided along with *py_entitytmatching*:
 
 Obtaining Tokenizers and Similarity Functions
 ---------------------------------------------
-In *py_entitymatching*, the user can use
+First you need to get tokenizers and similarity functions to refer them in features.
+In *py_entitymatching*, you can use
 `get_tokenizers_for_blocking` to get all the tokenizers available for blocking purposes.
 
     >>> block_t = em.get_tokenizers_for_blocking()
 
-In the above, `block_t` will be a dictionary where keys are tokenizer names
-and values are tokenizer functions in Python. User can inspect `block_t` and delete/add
+In the above, `block_t` is a dictionary where keys are tokenizer names
+and values are tokenizer functions in Python. You can inspect `block_t` and delete/add
 tokenizers as appropriate. The above command will return single-argument tokenizers,
 i.e., those that take a string then produce a set of tokens.
-
-The reason we want to obtain single-argument tokenizers is because eventually we want
-to write expressions such as:
-::
-
-    jacccard(qgram3(x.title), qgram3(y.title)).
-
-Here the tokenizer will have just a single argument. So if we have tokenizers
-that take multiple arguments, then we want to generate all templates
-from them that have just a single argument, to facilitate writing
-expressions such as above.
 
 Please look at the API reference of :py:meth:`~py_entitymatching.get_tokenizers_for_blocking`
 for more details.
@@ -92,8 +79,8 @@ functions available for blocking purposes.
 
     >>> block_s = em.get_sim_funs_for_blocking()
 
-In the above, `block_s` will be a dictionary where keys are similarity function names
-and values are similarity functions in Python. Similar to `block_t`, the user can
+In the above, `block_s` is a dictionary where keys are similarity function names
+and values are similarity functions in Python. Similar to `block_t`, you can
 inspect `block_s` and delete/add similarity functions as appropriate.
 
 Please look at the API reference of :py:meth:`~py_entitymatching.get_sim_funs_for_blocking`
@@ -102,12 +89,12 @@ for more details.
 
 Obtaining Attribute Types and Correspondences
 ---------------------------------------------
-In the next step, we need to obtain some information about A and B
-so that we can generate features.
+In the next step, you need to obtain type and correspondence information about A and B
+so that the features can be generated.
 
-To start, we want to obtain the types of attributes in A and B,
-so that we can apply the right tokenizers/similarity functions to each of them.
-In *py_entitymatching*, the user can use `get_attr_types` to get the attribute types.
+First, you need to obtain the types of attributes in A and B,
+so that the right tokenizers/similarity functions can be applied to each of them.
+In *py_entitymatching*, you can use `get_attr_types` to get the attribute types.
 An example of using `get_attr_types` is shown below:
 
     >>> atypes1 = em.get_attr_types(A)
@@ -119,15 +106,17 @@ Python types. Please look at the API reference of
 :py:meth:`~py_entitymatching.get_attr_types` for more details.
 
 Next, we need to obtain correspondences between the attributes of A and B,
-so that we can generate features based on those. In *py_entitymatching*, the user can
-use `get_attr_corres` to get the attribute correspondences.
+so that the features can be generated based on those correspondences.
+In *py_entitymatching*, you can use `get_attr_corres` to get the attribute
+correspondences.
+
 An example of using `get_attr_corres` is shown below:
 
     >>> block_c = em.get_attr_corres(A, B)
 
 In the above, `block_c` is a dictionary containing attribute correspondences.
-Currently, *py_entitymatching* returns attribute correspondences based on the exact
-match of attribute names. The user can inspect `block_c` and modify the attribute
+Currently, *py_entitymatching* returns attribute correspondences only based on the exact
+match of attribute names. You can inspect `block_c` and modify the attribute
 correspondences. Please look at the API reference of
 :py:meth:`~py_entitymatching.get_attr_corres` for more details.
 
@@ -142,7 +131,8 @@ Recall that so far we have obtained:
 + atypes1 and atypes2, the types of attributes in A and B
 + block_c, the correspondences of attributes in A and B
 
-To obtain a set of features, we can use `get_features` command.
+Next, to obtain a set of features, you can use `get_features` command.
+An example of using `get_features` command is shown below:
 
     >>> block_f = em.get_features(A, B, atypes1, atypes2, block_c, block_t, block_s)
 
@@ -158,8 +148,14 @@ a Dataframe. Please look at the API reference of
 
 Adding/Removing Features
 ------------------------
-Given the set of features block_f, user can delete certain features,
+Given the set of features `block_f` as a pandas Dataframe, you can delete certain features,
 add new features.
+
+Deletion of a feature is straightforward, all that you have to do is delete the row
+from the feature table corresponding to the feature. You can use `drop` command
+from pandas Dataframe for this purpose. Please look at this
+`API reference link <http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.drop.html>`_
+for more details.
 
 
 There are two ways to create and add a feature: (1) write a blackbox function and
@@ -169,7 +165,7 @@ feature table.
 
 **Adding a Blackbox Function as Feature**
 
-To create and add a blackbox function as a feature, first we must define it. Specifically,
+To create and add a blackbox function as a feature, first you must define it. Specifically,
 the function must take in two tuples as input and return a numeric value. An example of
 a blackbox function is shown below:
 
@@ -179,7 +175,7 @@ a blackbox function is shown below:
         # assume that the tuples have age attribute and values are valid numbers.
         return ltuple['age'] - rtuple['age']
 
-Then we add it to the feature table `block_f` using `add_blackbox_feature` like this:
+Then add it to the feature table `block_f` using `add_blackbox_feature` like this:
 
     >>> status = em.add_blackbox_feature(block_f, 'age_difference', age_diff)
 
@@ -190,28 +186,30 @@ Please look at the API reference of
 
 Another way to add features is to write a feature expression in
 a `declarative` way. *py_entitymatching* will then compile it into a feature. For
-example, user can do something like this:
+example, you can declaratively create and add a feature like this:
 
     >>> r = em.get_feature_fn('jaccard(qgm_3(ltuple.name), qgm_3(rtuple.name)', block_t, block_s)
     >>> em.add_feature(block_f, 'name_name_jac_qgm3_qgm3', r)
 
-Here `block_t` and `block_s` refer to the set of tokenizers and similarity functions
-for blocking respectively.
+Here `block_t` and `block_s` refer to the dictionaries containing a
+set of tokenizers and similarity functions for blocking.
 
-The first command creates a feature which is a function that will take
-two tuples `ltuple` and `rtuple`, get the attribute publisher from `ltuple`,
+Conceptually, the first command, `get_feature_fn`, creates a feature which is a Python function
+that will take two tuples `ltuple` and `rtuple`, get the attribute publisher from `ltuple`,
 issuer from `rtuple`, tokenize them, then compute jaccard score.
 
 .. note:: The feature must refer the tuple from the left table (say A) as **ltuple** and
  the tuple from the right table (say B) as **rtuple**.
 
-The second command creates a feature with a particular name,
-supplying the above function as the feature code.
-As described, the feature that was just created is *independent* of any table
-(eg A and B). Instead, it expects as the input two tuples ltuple and rtuple.
+The second command, `add_feature` tags the feature with the specified name,
+and adds it to the feature table.
 
-User can also create more complex features. Specifically,
-the user is allowed to define arbitrary complex expression involving function names from
+As described, the feature that was just created is *independent* of any table
+(eg A and B). Instead, it expects as the input two tuples: ltuple and rtuple.
+
+
+You can also create more complex features. Specifically,
+you are allowed to define arbitrary complex expression involving function names from
 `block_t` and `block_s`, and attribute names from ltuple and rtuple.
 
     >>> r = em.get_feature_fn('jaccard(qgm_3(ltuple.address + ltuple.zipcode), qgm_3(rtuple.address + rtuple.zipcode)',block_t,block_s)
@@ -225,9 +223,9 @@ for more details.
 
 Summary of the Manual Feature Generation Process
 ------------------------------------------------
-Here we summarize the manual entire manual feature generation process.
+Here is the summary of commands for the entire manual feature generation process.
 
-To generate features, the user will execute the following commands:
+To generate features, you must execute the following commands:
 
     >>> block_t = em.get_tokenizers_for_blocking()
     >>> block_s = em.get_sim_funs_for_blocking()
@@ -239,38 +237,37 @@ To generate features, the user will execute the following commands:
 The variable `block_f` points to a Dataframe containing features as rows.
 
 
-Ways for User to Edit the Manual Feature Generation Process
------------------------------------------------------------
-Here we list the ways to edit the variables used in feature generation process.
+Ways to Edit the Manual Feature Generation Process
+--------------------------------------------------
+Here is the summary of ways to edit the variables used in feature generation process.
 
-* The `block_t`, `block_s`, `atypes1`, `atypes2`, `block_c` are dictionaries. The user
-  can modify these variables in anyway he/she likes, to add/remove tokenizers,
+* The `block_t`, `block_s`, `atypes1`, `atypes2`, `block_c` are dictionaries. You
+  can modify these variables based on your need, to add/remove tokenizers,
   similarity functions, attribute correspondences, etc.
 
-* `block_f` is a Dataframe. The user can remove a feature by deleting a tuple from the Dataframe.
+* `block_f` is a Dataframe. You can remove a feature by just deleting the corresponding
+  tuple from the Dataframe.
 
 * There are two ways to create and add a feature: (1) write a blackbox function and
   add it to feature table, and (2) define the feature declartively and add it to
-  feature table
+  feature table.
+  To add a blackbox feature, first write a blackbox function like this:
+  ::
 
-    To add a blackbox feature, first write a blackbox function like this:
-    ::
+    def age_diff(ltuple, rtuple):
+        # assume that the tuples have age attribute and values are valid numbers.
+        return ltuple['age'] - rtuple['age']
 
-        def age_diff(ltuple, rtuple):
-            # assume that the tuples have age attribute and values are valid numbers.
-            return ltuple['age'] - rtuple['age']
-
-
-    Then add it to the table `block_f` using `add_blackbox_feature` like this:
+  Then add it to the table `block_f` using `add_blackbox_feature` like this:
 
         >>> status = em.add_blackbox_feature(block_f, 'age_difference', age_diff)
 
-    To add a feature declaratively, first write a feature expression and compile it to feature
-    using `get_feature_fn` like this:
+  To add a feature declaratively, first write a feature expression and compile it to feature
+  using `get_feature_fn` like this:
 
         >>> r = em.get_feature_fn('jaccard(qgm_3(ltuple.address + ltuple.zipcode), qgm_3(rtuple.address + rtuple.zipcode)',block_t,block_s)
 
-    Then add it to the table `block_f` using `add_feature` like this:
+  Then add it to the table `block_f` using `add_feature` like this:
 
         >>> em.add_feature(block_f, 'full_address_address_jac_qgm3_qgm3', r)
 
@@ -278,7 +275,7 @@ Here we list the ways to edit the variables used in feature generation process.
 
 Generating Features Automatically
 ---------------------------------
-Recall that to get the features for blocking, eventually user
+Recall that to get the features for blocking, eventually you
 must execute the following:
 
     >>> block_f = em.get_features(A, B, atypes1, atypes2, block_c, block_t, block_s)
@@ -287,16 +284,16 @@ where `atypes1`/`atypes2` are the attribute types of A and B, `block_c` is
 the correspondences between their attributes, `block_t` is the set of tokenizers,
 and `block_s` is the set of similarity functions.
 
-If a user doesn’t want to go through the hassle of creating these intermediate
-variables, then the user can execute the following:
+If you don't want to go through the hassle of creating these intermediate
+variables, then you can execute the following:
 
     >>> block_f = em.get_features_for_blocking(A,B)
 
 The system will automatically generate a set of features and return it as
-as a Dataframe which the user can then use for blocking purposes.
+as a Dataframe which you can then use for blocking purposes.
 
 The command `get_features_for_blocking` will set the following variables: `_block_t`,
-`_block_s`, `_atypes1`, `_atypes2`, and `_block_c`. The user can access these variables like this:
+`_block_s`, `_atypes1`, `_atypes2`, and `_block_c`. You can access these variables like this:
 
     >>> em._block_t
     >>> em._block_s
@@ -304,8 +301,8 @@ The command `get_features_for_blocking` will set the following variables: `_bloc
     >>> em._atypes2
     >>> em._block_c
 
-The user can examine these variables, modify them as appropriate, and
-then perhaps re-generate the set of features.
+You can examine these variables, modify them as appropriate, and
+then perhaps re-generate the set of features using `get_features` command.
 
 Please look at the API reference of
 :py:meth:`~py_entitymatching.get_features_for_blocking` for more details.

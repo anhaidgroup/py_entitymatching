@@ -1,15 +1,15 @@
 =====================================================
 Splitting Labeled Data into Training and Testing Sets
 =====================================================
-A user doing entity matching would like to split data for
+While doing entity matching you will have to split data for
 multiple purposes. Some examples are:
 
 1. Split labeled data into development and test. Th development
-set is used to come up with right features for ML-based matcher, and
+set is used to come up with right features for learning-based matcher, and
 `test` set is used to evaluate the matcher.
 
 2. Split feature vectors into a train and test set. The train
-set is used to train the ML-based matcher and test set is used
+set is used to train the learning-based matcher and test set is used
 for evaluation.
 
 
@@ -26,11 +26,11 @@ tuples for evaluation. An example of getting train and test Dataframes from the 
 of `split_train_test` command is shown below:
 
 
-    >>> devel = train_test['train']
-    >>> eval = train_test['test']
+    >>> devel_set = train_test['train']
+    >>> eval_set = train_test['test']
 
 Setting the value for train proportion would depend on the
-context of its use. For instance, if the data is split for ML
+context of its use. For instance, if the data is split for machine learning
 purposes then train proportion is typically larger than the
 test.
 The most commonly used values of train_proportion are between
