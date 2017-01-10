@@ -4,8 +4,8 @@ Reading the CSV Files from Disk
 Currently, *py_entitymatching* only asupports reading CSV files from disk.
 
 **The Minimal That You Should Do:** First, you must store the input tables as CSV files
-in disk. Please look here to learn more about CSV format. An example of a CSV file
-will look like this:
+in disk. Please look at section :ref:`label-csv-format` to learn more
+about CSV format. An example of a CSV file will look like this:
 
 ::
 

@@ -1,7 +1,7 @@
 ============
 Installation
 ============
-
+This section discusses the installation instructions of *py_entitymatching*.
 
 Requirements
 ------------
@@ -56,9 +56,9 @@ command::
 
 
 The above command will install py_entitymatching and all its dependencies, except PyQt4.
-This is because pip can install the dependency packages which are available in PyPI and
+This is because pip can only install the dependency packages that are available in PyPI and
 PyQt4 is not in PyPI. Refer to this `PyQt4 page <http://pyqt.sourceforge.net/Docs/PyQt4/installation.html>`_
-to install PyQt4.
+on how to install PyQt4.
 
 
 
@@ -88,9 +88,10 @@ For more information see this StackOverflow `link <http://stackoverflow.com/ques
 
 
 The above command will install py_entitymatching and all its
-dependencies, except PyQt4. This is because similar to pip, setup.py can install
-the dependency packages which are available in PyPI and PyQt4 is not in PyPI
-Refer to this `page <http://pyqt.sourceforge.net/Docs/PyQt4/installation.html>`_ to install PyQt4.
+dependencies, except PyQt4. This is because similar to pip, setup.py can only install
+the dependency packages that are available in PyPI and PyQt4 is not in PyPI  .
+Refer to this `page <http://pyqt.sourceforge.net/Docs/PyQt4/installation.html>`_ on how to
+install PyQt4.
 
 
 

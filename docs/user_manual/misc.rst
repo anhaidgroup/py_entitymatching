@@ -1,13 +1,19 @@
 =============
 Miscellaneous
 =============
-This section discusses somw of the miscellaneous things in *py_entitymatching*.
+This section covers some miscellaneous things in *py_entitymatching*.
+
+.. _label-csv-format:
 
 CSV Format
 ----------
 The CSV format is selected because it’s well known and can be read by numerous external
-programs. Further, it can be easily inspected and edited by humans. Currently *py_entitymatching*
-handle two CSV formats: one with attribute names in the first line, and one without.
+programs. Further, it can be easily inspected and edited by the users.
+You can read more about CSV formats `here <https://en.wikipedia.org/wiki/Comma-separated_values>`_.
+
+There are two common CSV formats that are used to store CSV files: one with attribute
+names in the first line, and one without. Both these formats are supported by *py_entitymatching*.
+
 An example of a CSV file with attribute names is shown below:
 ::
 
@@ -42,11 +48,9 @@ An example of metadata file is shown below:
 
 In the above, the pair key=ID states that ID is the key attribute.
 
-
-
 Writing a Dataframe to Disk Along With Its Metadata
 ---------------------------------------------------
-To write a Dataframe to disk along with its metadata, the user can use `to_csv_metadata`
+To write a Dataframe to disk along with its metadata, you can use `to_csv_metadata`
 command in *py_entitymatching*. An example of using `to_csv_metadata` is shown below:
 
     >>> em.to_csv_metadata(A, './table_A.csv')
