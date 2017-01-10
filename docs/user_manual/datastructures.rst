@@ -2,8 +2,8 @@
 Data Structures
 ===============
 In *py_entitymatching*, we will need to store many tables and metadata associated
-with it. It is important for the user to know the data structures that are used to store
-the tables and the metadata, so that the user can manipulate them based on his/her need.
+with it. It is important for you to know the data structures that are used to store
+the tables and the metadata, so that you can manipulate them based on your need.
 
 As a convention, we will use:
 
@@ -28,15 +28,15 @@ in a Dataframe and this is of type pandas Series (you can read more about pandas
 Storing Metadata Using a Catalog
 --------------------------------
 
-**Bare Minimum that the User Should Know:**
+**Bare Minimum that You Should Know:**
 In *py_entitymatching*, we need to store a lot of metadata with a table such as
 key and foreign key. We use a
-new data structure, Catalog, to store metadata. The user need not worry
+new data structure, Catalog, to store metadata. You need not worry
 about instantiating this object (it gets automatically instantiated when *py_entitymatching*
 gets loaded in Python memory) or manipulating this object directly.
 
 All the *py_entitymatching* commands correctly handle the metadata in the Catalog,
-and for the user, there are commands to manipulate the Catalog (please see
+and for you, there are commands to manipulate the Catalog (please see
 :ref:`label-handling-metadata` section for the supported commands).
 
 
@@ -53,10 +53,8 @@ As we mentioned earlier,  we need to store a lot of metadata with a table. Here 
   big, taking up a lot of space in memory. To save space, we may want to just store C as
   C(cid, aid, bid) and then have pointers back to tables A and B. The two pointers back
   to A and B are metadata that we may want to store for table C. Specifically, the
-  metadata for C would be the following:
-   - key (cid),
-   - foreign keys (aid and bid) to the base tables (A and B).
-
+  metadata for C include key (`cid`) and foreign keys (`aid`, `bid`) to the base tables
+  (`A`, `B`).
 
 There are many other examples of metadata that we may want to store for a table. Though
 pandas Dataframes is a good choice for storing data as tables, it does not provide a
@@ -74,8 +72,6 @@ Examples of such keys are:
 
 The kind of metadata stored for a table would depend on the table itself. For example,
 the input tables must have a key and this can be the only metadata.
-
-
 
 But, if we consider table C (which is obtained by performing blocking on input tables A
 and B), this table can be very large, so we typically represent it using a view over
@@ -99,8 +95,8 @@ Summary
 -------
 * Tables in *py_entitymatching* are represented as pandas Dataframes.
 * The metadata for tables are stored in a separate data structure called Catalog.
-* The kind of metadata stored will depend on the table (input table: key, table from
-  blocking (say): key, ltable, rtable, fk_table, fk_rtable).
+* The kind of metadata stored will depend on the table (for example input table will have key,
+  and the table from blocking will have key, ltable, rtable, fk_table, fk_rtable).
 * So there are five reserved keywords for metadata: key, ltable, rtable, fk_ltable,
   fk_rtable. You should not use these names to store metadata for other application
   specific purposes.
