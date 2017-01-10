@@ -16,6 +16,7 @@ Contents
     user_manual/whatisnew
     user_manual/installation
     user_manual/overview
+    user_manual/guides
     user_manual/datastructures
     user_manual/steps_supp_em_workflows
     user_manual/misc
@@ -26,6 +27,7 @@ Contents
     :maxdepth: 3
     :caption: API Reference
 
+    user_manual/api/overview
     user_manual/api/reading_and_writing_data
     user_manual/api/loading_and_saving_objects
     user_manual/api/handling_metadata
