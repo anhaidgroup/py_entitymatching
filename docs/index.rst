@@ -28,19 +28,19 @@ Contents
     :caption: API Reference
 
     user_manual/api/overview
-    user_manual/api/reading_and_writing_data
-    user_manual/api/loading_and_saving_objects
-    user_manual/api/handling_metadata
-    user_manual/api/downsampling
-    user_manual/api/blocking
-    user_manual/api/debugging_blocker_output
-    user_manual/api/combining_blocker_outputs
-    user_manual/api/sampling
-    user_manual/api/labeling
-    user_manual/api/handling_features
-    user_manual/api/matching
-    user_manual/api/debugging_matcher
-    user_manual/api/evaluating_the_matching_output
+    user_manual/api/actual_commands/reading_and_writing_data
+    user_manual/api/actual_commands/loading_and_saving_objects
+    user_manual/api/actual_commands/handling_metadata
+    user_manual/api/actual_commands/downsampling
+    user_manual/api/actual_commands/blocking
+    user_manual/api/actual_commands/debugging_blocker_output
+    user_manual/api/actual_commands/combining_blocker_outputs
+    user_manual/api/actual_commands/sampling
+    user_manual/api/actual_commands/labeling
+    user_manual/api/actual_commands/handling_features
+    user_manual/api/actual_commands/matching
+    user_manual/api/actual_commands/debugging_matcher
+    user_manual/api/actual_commands/evaluating_the_matching_output
 
 
 
