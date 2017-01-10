@@ -32,6 +32,14 @@ def vis_debug_dt(matcher, train, test, exclude_attrs, target_attr):
         target_attr (string): The attribute name in the 'train' containing the
             true labels.
 
+    Examples:
+        >>> import py_entitymatching as em
+        >>> dt = em.DTMatcher()
+        # 'devel' is the labeled set used for development (e.g., selecting the best matcher) purposes
+        >>> train_test = em.split_train_test(devel, 0.5)
+        >>> train, test = train_test['train'], train_test['test']
+        >>> em.vis_debug_dt(dt, train, test, exclude_attrs=['_id', 'ltable_id', 'rtable_id'], target_attr='gold_labels')
+
     """
     # Call a wrapper for visualization
     _vis_debug_dt(matcher, train, test, exclude_attrs, target_attr)

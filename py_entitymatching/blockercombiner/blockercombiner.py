@@ -83,6 +83,22 @@ def combine_blocker_outputs_via_union(
             input list of DataFrames.
         AssertionError: If the `fk_rtable` values are different across the
             input list of DataFrames.
+
+    Examples:
+
+        >>> import py_entitymatching as em
+        >>> ab = em.AttrEquivalenceBlocker()
+        >>> C = ab.block_tables(A, B, 'zipcode', 'zipcode')
+        >>> ob = em.OverlapBlocker()
+        >>> D = ob.block_candset(C, 'address', 'address')
+        >>> block_f = em.get_features_for_blocking(A, B)
+        >>> rb = em.RuleBasedBlocker()
+        >>> rule = ['address_address_lev(ltuple, rtuple) > 6']
+        >>> rb.add_rule(rule, block_f)
+        >>> E = rb.block_tables(A, B)
+        >>> F = em.combine_blocker_outputs_via_union([C, E])
+
+
     """
 
     # validate input parameters

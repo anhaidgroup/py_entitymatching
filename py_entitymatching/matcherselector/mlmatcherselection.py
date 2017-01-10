@@ -5,7 +5,7 @@ import logging
 from collections import OrderedDict
 
 import pandas as pd
-from sklearn.cross_validation import KFold, cross_val_score
+from sklearn.model_selection import KFold, cross_val_score
 
 from py_entitymatching.utils.catalog_helper import check_attrs_present
 from py_entitymatching.utils.generic_helper import list_diff, list_drop_duplicates
@@ -51,11 +51,19 @@ def select_matcher(matchers, x=None, y=None, table=None, exclude_attrs=None,
             used for splitting the data into folds (defaults to None).
 
     Returns:
+
         A dictionary containing two keys - selected matcher and the cv_stats.
 
         The selected matcher has a value that is a matcher (MLMatcher) object
         and cv_stats has a value that is a dictionary containing
         cross-validation statistics.
+
+    Examples:
+        >>> dt = em.DTMatcher()
+        >>> rf = em.RFMatcher()
+        # train is the feature vector containing user labels
+        >>> result = em.select_matcher(matchers=[dt, rf], table=train, exclude_attrs=['_id', 'ltable_id', 'rtable_id'], target_attr='gold_labels', k=5)
+
 
     """
     # Based on the input, get the x, y data that can be used to call the
@@ -103,9 +111,9 @@ def cross_validation(matcher, x, y, metric, k, random_state):
     """
     The function does cross validation for a single matcher
     """
-    # Use KFold function from scikit learn to create a cv object that can be
+    # Use KFold function from scikit learn to create a ms object that can be
     # used for cross_val_score function.
-    cv = KFold(len(y), k, shuffle=True, random_state=random_state)
+    cv = KFold(k, shuffle=True, random_state=random_state)
     # Call the scikit-learn's cross_val_score function
     scores = cross_val_score(matcher.clf, x, y, scoring=metric, cv=cv)
     # Finally, return the matcher along with the scores.

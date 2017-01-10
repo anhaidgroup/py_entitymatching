@@ -7,7 +7,7 @@ import time
 from collections import OrderedDict
 
 import pandas as pd
-import sklearn.cross_validation as cv
+import sklearn.model_selection as ms
 from  sklearn.preprocessing import Imputer
 
 import py_entitymatching.catalog.catalog_manager as cm
@@ -52,6 +52,13 @@ def split_train_test(labeled_data, train_proportion=0.5,
         This function sets the output DataFrames (train, test) properties
         same as the input DataFrame.
 
+    Examples:
+        >>> import py_entitymatching as em
+        >>> # G is the labeled data or the feature vectors that should be split
+        >>> train_test = em.split_train_test(G, train_proportion=0.5)
+        >>> train, test = train_test['train'], train_test['test']
+
+
     """
     # Validate input parameters
     # # We expected labeled data to be of type pandas DataFrame
@@ -89,7 +96,7 @@ def split_train_test(labeled_data, train_proportion=0.5,
 
     # Use sk-learn to split the data
     idx_values = pd.np.array(labeled_data.index.values)
-    idx_train, idx_test = cv.train_test_split(idx_values, test_size=test_size,
+    idx_train, idx_test = ms.train_test_split(idx_values, test_size=test_size,
                                               train_size=train_size,
                                               random_state=random_state)
 
@@ -149,6 +156,13 @@ def impute_table(table, exclude_attrs=None, missing_val='NaN',
 
     Raises:
         AssertionError: If `table` is not of type pandas DataFrame.
+
+    Examples:
+        >>> import py_entitymatching as em
+        >>> # H is the feature vector which should be imputed. Specifically, impute the missing values
+        >>> # in each column, with the mean of that column
+        >>> H = em.impute_table(H, exclude_attrs=['_id', 'ltable_id', 'rtable_id'], strategy='mean')
+
 
     """
     # Validate input paramaters

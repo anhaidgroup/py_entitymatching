@@ -1,0 +1,113 @@
+_id,fodors_id,zagats_id,ltable_name,ltable_addr,ltable_city,ltable_phone,rtable_name,rtable_addr,rtable_city,rtable_phone,gold
+0,534,219,arnie mortons of chicago,435 s. la cienega blv.,los angeles,310/246-1501,arnie mortons of chicago,435 s. la cienega blvd.,los angeles,310-246-1501,1
+1,535,220,arts delicatessen,12224 ventura blvd.,studio city,818/762-1221,arts deli,12224 ventura blvd.,studio city,818-762-1221,1
+2,536,221,hotel bel-air,701 stone canyon rd.,bel air,310/472-1211,bel-air hotel,701 stone canyon rd.,bel air,310-472-1211,1
+3,537,222,cafe bizou,14016 ventura blvd.,sherman oaks,818/788-3536,cafe bizou,14016 ventura blvd.,sherman oaks,818-788-3536,1
+4,538,223,campanile,624 s. la brea ave.,los angeles,213/938-1447,campanile,624 s. la brea ave.,los angeles,213-938-1447,1
+5,539,224,chinois on main,2709 main st.,santa monica,310/392-9025,chinois on main,2709 main st.,santa monica,310-392-9025,1
+6,540,225,citrus,6703 melrose ave.,los angeles,213/857-0034,citrus,6703 melrose ave.,los angeles,213-857-0034,1
+7,541,226,fenix,8358 sunset blvd. west,hollywood,213/848-6677,fenix at the argyle,8358 sunset blvd.,w. hollywood,213-848-6677,1
+8,542,227,granita,23725 w. malibu rd.,malibu,310/456-0488,granita,23725 w. malibu rd.,malibu,310-456-0488,1
+9,543,228,grill on the alley,9560 dayton way,los angeles,310/276-0615,grill  the,9560 dayton way,beverly hills,310-276-0615,1
+10,544,229,restaurant katsu,1972 n. hillhurst ave.,los angeles,213/665-1891,katsu,1972 hillhurst ave.,los feliz,213-665-1891,1
+11,545,230,lorangerie,903 n. la cienega blvd.,los angeles,310/652-9770,lorangerie,903 n. la cienega blvd.,w. hollywood,310-652-9770,1
+12,546,231,le chardonnay,8284 melrose ave.,los angeles,213/655-8880,le chardonnay (los angeles),8284 melrose ave.,los angeles,213-655-8880,1
+13,547,232,locanda veneta,3rd st.,los angeles,310/274-1893,locanda veneta,8638 w. third st.,los angeles,310-274-1893,1
+14,548,233,matsuhisa,129 n. la cienega blvd.,beverly hills,310/659-9639,matsuhisa,129 n. la cienega blvd.,beverly hills,310-659-9639,1
+15,549,234,the palm,9001 santa monica blvd.,los angeles,310/550-8811,palm  the (los angeles),9001 santa monica blvd.,w. hollywood,310-550-8811,1
+16,550,235,patina,5955 melrose ave.,los angeles,213/467-1108,patina,5955 melrose ave.,los angeles,213-467-1108,1
+17,551,236,philippes the original,1001 n. alameda st.,los angeles,213/628-3781,philippe the original,1001 n. alameda st.,chinatown,213-628-3781,1
+18,552,237,pinot bistro,12969 ventura blvd.,los angeles,818/990-0500,pinot bistro,12969 ventura blvd.,studio city,818-990-0500,1
+19,553,238,rex il ristorante,617 s. olive st.,los angeles,213/627-2300,rex il ristorante,617 s. olive st.,los angeles,213-627-2300,1
+20,554,239,spago,1114 horn ave.,los angeles,310/652-4025,spago (los angeles),8795 sunset blvd.,w. hollywood,310-652-4025,1
+21,555,240,valentino,3115 pico blvd.,santa monica,310/829-4313,valentino,3115 pico blvd.,santa monica,310-829-4313,1
+22,556,241,yujean kangs gourmet chinese cuisine,67 n. raymond ave.,los angeles,818/585-0855,yujean kangs,67 n. raymond ave.,pasadena,818-585-0855,1
+23,557,242,21 club,21 w. 52nd st.,new york,212/582-7200,21 club,21 w. 52nd st.,new york city,212-582-7200,1
+24,558,243,aquavit,13 w. 54th st.,new york,212/307-7311,aquavit,13 w. 54th st.,new york city,212-307-7311,1
+25,559,244,aureole,34 e. 61st st.,new york,212/ 319-1660,aureole,34 e. 61st st.,new york city,212-319-1660,1
+26,560,245,cafe lalo,201 w. 83rd st.,new york,212/496-6031,cafe lalo,201 w. 83rd st.,new york city,212-496-6031,1
+27,561,246,cafe des artistes,1 w. 67th st.,new york,212/877-3500,cafe des artistes,1 w. 67th st.,new york city,212-877-3500,1
+28,562,247,carmines,2450 broadway  between 90th and 91st sts.,new york,212/362-2200,carmines,2450 broadway,new york city,212-362-2200,1
+29,563,248,carnegie deli,854 7th ave.  between 54th and 55th sts.,new york,212/757-2245,carnegie deli,854 seventh ave.,new york city,212-757-2245,1
+30,564,249,chanterelle,2 harrison st.  near hudson st.,new york,212/966-6960,chanterelle,2 harrison st.,new york city,212-966-6960,1
+31,565,250,daniel,20 e. 76th st.,new york,212/288-0033,daniel,20 e. 76th st.,new york city,212-288-0033,1
+32,566,251,dawat,210 e. 58th st.,new york,212/355-7555,dawat,210 e. 58th st.,new york city,212-355-7555,1
+33,567,252,felidia,243 e. 58th st.,new york,212/758-1479,felidia,243 e. 58th st.,new york city,212-758-1479,1
+34,568,253,four seasons grill room,99 e. 52nd st.,new york,212/754-9494,four seasons,99 e. 52nd st.,new york city,212-754-9494,1
+35,569,254,gotham bar & grill,12 e. 12th st.,new york,212/620-4020,gotham bar & grill,12 e. 12th st.,new york city,212-620-4020,1
+36,570,255,gramercy tavern,42 e. 20th st.  between park ave. s and broadway,new york,212/477-0777,gramercy tavern,42 e. 20th st.,new york city,212-477-0777,1
+37,571,256,island spice,402 w. 44th st.,new york,212/765-1737,island spice,402 w. 44th st.,new york city,212-765-1737,1
+38,572,257,jo jo,160 e. 64th st.,new york,212/223-5656,jo jo,160 e. 64th st.,new york city,212-223-5656,1
+39,573,258,la caravelle,33 w. 55th st.,new york,212/586-4252,la caravelle,33 w. 55th st.,new york city,212-586-4252,1
+40,574,259,la cote basque,60 w. 55th st.  between 5th and 6th ave.,new york,212/688-6525,la cote basque,60 w. 55th st.,new york city,212-688-6525,1
+41,575,260,le bernardin,155 w. 51st st.,new york,212/489-1515,le bernardin,155 w. 51st st.,new york city,212-489-1515,1
+42,576,261,les celebrites,160 central park s,new york,212/484-5113,les celebrites,155 w. 58th st.,new york city,212-484-5113,1
+43,577,262,lespinasse,2 e. 55th st.,new york,212/339-6719,lespinasse (new york city),2 e. 55th st.,new york city,212-339-6719,1
+44,578,263,lutece,249 e. 50th st.,new york,212/752-2225,lutece,249 e. 50th st.,new york city,212-752-2225,1
+45,579,264,manhattan ocean club,57 w. 58th st.,new york,212/ 371-7777,manhattan ocean club,57 w. 58th st.,new york city,212-371-7777,1
+46,580,265,march,405 e. 58th st.,new york,212/754-6272,march,405 e. 58th st.,new york city,212-754-6272,1
+47,581,266,mesa grill,102 5th ave.  between 15th and 16th sts.,new york,212/807-7400,mesa grill,102 fifth ave.,new york city,212-807-7400,1
+48,582,267,mi cocina,57 jane st.  off hudson st.,new york,212/627-8273,mi cocina,57 jane st.,new york city,212-627-8273,1
+49,583,268,montrachet,239 w. broadway  between walker and white sts.,new york,212/ 219-2777,montrachet,239 w. broadway,new york city,212-219-2777,1
+50,584,269,oceana,55 e. 54th st.,new york,212/759-5941,oceana,55 e. 54th st.,new york city,212-759-5941,1
+51,585,270,park avenue cafe,100 e. 63rd st.,new york,212/644-1900,park avenue cafe (new york city),100 e. 63rd st.,new york city,212-644-1900,1
+52,586,271,petrossian,182 w. 58th st.,new york,212/245-2214,petrossian,182 w. 58th st.,new york city,212-245-2214,1
+53,587,272,picholine,35 w. 64th st.,new york,212/724-8585,picholine,35 w. 64th st.,new york city,212-724-8585,1
+54,588,273,pisces,95 ave. a at 6th st.,new york,212/260-6660,pisces,95 ave. a,new york city,212-260-6660,1
+55,589,274,rainbow room,30 rockefeller plaza,new york,212/632-5000,rainbow room,30 rockefeller plaza,new york city,212-632-5000,1
+56,590,275,river cafe,1 water st. at the east river,brooklyn,718/522-5200,river cafe,1 water st.,brooklyn,718-522-5200,1
+57,591,276,san domenico,240 central park s,new york,212/265-5959,san domenico,240 central park s.,new york city,212-265-5959,1
+58,592,277,second avenue deli,156 2nd ave. at 10th st.,new york,212/677-0606,second avenue deli,156 second ave.,new york city,212-677-0606,1
+59,593,278,seryna,11 e. 53rd st.,new york,212/980-9393,seryna,11 e. 53rd st.,new york city,212-980-9393,1
+60,594,279,shun lee west,43 w. 65th st.,new york,212/371-8844,shun lee palace,155 e. 55th st.,new york city,212-371-8844,1
+61,595,280,sign of the dove,1110 3rd ave. at 65th st.,new york,212/861-8080,sign of the dove,1110 third ave.,new york city,212-861-8080,1
+62,596,281,smith & wollensky,201 e. 49th st.,new york,212/753-1530,smith & wollensky,797 third ave.,new york city,212-753-1530,1
+63,597,282,tavern on the green,in central park at 67th st.,new york,212/873-3200,tavern on the green,central park west,new york city,212-873-3200,1
+64,598,283,uncle nicks,747 9th ave.  between 50th and 51st sts.,new york,212/315-1726,uncle nicks,747 ninth ave.,new york city,212-245-7992,1
+65,599,284,union square cafe,21 e. 16th st.,new york,212/243-4020,union square cafe,21 e. 16th st.,new york city,212-243-4020,1
+66,600,285,virgils,152 w. 44th st.,new york,212/ 921-9494,virgils real bbq,152 w. 44th st.,new york city,212-921-9494,1
+67,601,286,chins,3200 las vegas blvd. s,las vegas,702/733-8899,chins,3200 las vegas blvd. s.,las vegas,702-733-8899,1
+68,602,287,coyote cafe,3799 las vegas blvd. s,las vegas,702/891-7349,coyote cafe (las vegas),3799 las vegas blvd. s.,las vegas,702-891-7349,1
+69,603,288,le montrachet,3000 w. paradise rd.,las vegas,702/732-5111,le montrachet bistro,3000 paradise rd.,las vegas,702-732-5651,1
+70,604,289,palace court,3570 las vegas blvd. s,las vegas,702/731-7547,palace court,3570 las vegas blvd. s.,las vegas,702-731-7110,1
+71,605,290,second street grille,200 e. fremont st.,las vegas,702/385-3232,second street grill,200 e. fremont st.,las vegas,702-385-6277,1
+72,606,291,steak house,2880 las vegas blvd. s,las vegas,702/734-0410,steak house  the,2880 las vegas blvd. s.,las vegas,702-734-0410,1
+73,607,292,tillerman,2245 e. flamingo rd.,las vegas,702/731-4036,tillerman  the,2245 e. flamingo rd.,las vegas,702-731-4036,1
+74,608,293,abruzzi,2355 peachtree rd.  peachtree battle shopping center,atlanta,404/261-8186,abruzzi,2355 peachtree rd. ne,atlanta,404-261-8186,1
+75,609,294,bacchanalia,3125 piedmont rd.  near peachtree rd.,atlanta,404/365-0410,bacchanalia,3125 piedmont rd.,atlanta,404-365-0410,1
+76,610,295,bones,3130 piedmont road,atlanta,404/237-2663,bones restaurant,3130 piedmont rd. ne,atlanta,404-237-2663,1
+77,611,296,brasserie le coze,3393 peachtree rd.  lenox square mall  near neiman marcus,atlanta,404/266-1440,brasserie le coze,3393 peachtree rd.,atlanta,404-266-1440,1
+78,612,297,buckhead diner,3073 piedmont road,atlanta,404/262-3336,buckhead diner,3073 piedmont rd.,atlanta,404-262-3336,1
+79,613,298,ciboulette,1529 piedmont ave.,atlanta,404/874-7600,ciboulette restaurant,1529 piedmont ave.,atlanta,404-874-7600,1
+80,614,299,delectables,1 margaret mitchell sq.,atlanta,404/681-2909,delectables,1 margaret mitchell sq.,atlanta,404-681-2909,1
+81,615,300,georgia grille,2290 peachtree rd.  peachtree square shopping center,atlanta,404/352-3517,georgia grille,2290 peachtree rd.,atlanta,404-352-3517,1
+82,616,301,hedgerose heights inn,490 e. paces ferry rd.,atlanta,404/233-7673,hedgerose heights inn  the,490 e. paces ferry rd. ne,atlanta,404-233-7673,1
+83,617,302,heera of india,595 piedmont ave.  rio shopping mall,atlanta,404/876-4408,heera of india,595 piedmont ave.,atlanta,404-876-4408,1
+84,618,303,indigo coastal grill,1397 n. highland ave.,atlanta,404/876-0676,indigo coastal grill,1397 n. highland ave.,atlanta,404-876-0676,1
+85,619,304,la grotta,2637 peachtree rd.  peachtree house condominium,atlanta,404/231-1368,la grotta,2637 peachtree rd. ne,atlanta,404-231-1368,1
+86,620,305,mary macs tea room,224 ponce de leon ave.,atlanta,404/876-1800,mary macs tea room,224 ponce de leon ave.,atlanta,404-876-1800,1
+87,621,306,nikolais roof,255 courtland st.  at harris st.,atlanta,404/221-6362,nikolais roof,255 courtland st.,atlanta,404-221-6362,1
+88,622,307,panos and pauls,1232 w. paces ferry rd.,atlanta,404/261-3662,panos & pauls,1232 w. paces ferry rd.,atlanta,404-261-3662,1
+89,623,308,cafe  ritz-carlton  buckhead,3434 peachtree rd.,atlanta,404/237-2700,ritz-carlton cafe (buckhead),3434 peachtree rd. ne,atlanta,404-237-2700,1
+90,624,309,dining room  ritz-carlton  buckhead,3434 peachtree rd.,atlanta,404/237-2700,ritz-carlton dining room (buckhead),3434 peachtree rd. ne,atlanta,404-237-2700,1
+91,625,310,restaurant  ritz-carlton  atlanta,181 peachtree st.,atlanta,404/659-0400,ritz-carlton restaurant,181 peachtree st.,atlanta,404-659-0400,1
+92,626,311,toulouse,b peachtree rd.,atlanta,404/351-9533,toulouse,293-b peachtree rd.,atlanta,404-351-9533,1
+93,627,312,veni vidi vici,41 14th st.,atlanta,404/875-8424,veni vidi vici,41 14th st.,atlanta,404-875-8424,1
+94,628,313,alain rondelli,126 clement st.,san francisco,415/387-0408,alain rondelli,126 clement st.,san francisco,415-387-0408,1
+95,629,314,aqua,252 california st.,san francisco,415/956-9662,aqua,252 california st.,san francisco,415-956-9662,1
+96,630,315,boulevard,1 mission st.,san francisco,415/543-6084,boulevard,1 mission st.,san francisco,415-543-6084,1
+97,631,316,cafe claude,7 claude la.,san francisco,415/392-3505,cafe claude,7 claude ln.,san francisco,415-392-3505,1
+98,632,317,campton place,340 stockton st.,san francisco,415/955-5555,campton place,340 stockton st.,san francisco,415-955-5555,1
+99,633,318,chez michel,804 northpoint,san francisco,415/775-7036,chez michel,804 north point st.,san francisco,415-775-7036,1
+100,634,319,fleur de lys,777 sutter st.,san francisco,415/673-7779,fleur de lys,777 sutter st.,san francisco,415-673-7779,1
+101,635,320,fringale,570 4th st.,san francisco,415/543-0573,fringale,570 fourth st.,san francisco,415-543-0573,1
+102,636,321,hawthorne lane,22 hawthorne st.,san francisco,415/777-9779,hawthorne lane,22 hawthorne st.,san francisco,415-777-9779,1
+103,637,322,khan toke thai house,5937 geary blvd.,san francisco,415/668-6654,khan toke thai house,5937 geary blvd.,san francisco,415-668-6654,1
+104,638,323,la folie,2316 polk st.,san francisco,415/776-5577,la folie,2316 polk st.,san francisco,415-776-5577,1
+105,639,324,lulu,816 folsom st.,san francisco,415/495-5775,lulu restaurant-bis-cafe,816 folsom st.,san francisco,415-495-5775,1
+106,640,325,masas,648 bush st.,san francisco,415/989-7154,masas,648 bush st.,san francisco,415-989-7154,1
+107,641,326,mifune japan center  kintetsu building,1737 post st.,san francisco,415/922-0337,mifune,1737 post st.,san francisco,415-922-0337,1
+108,642,327,plumpjack cafe,3201 fillmore st.,san francisco,415/563-4755,plumpjack cafe,3127 fillmore st.,san francisco,415-563-4755,1
+109,643,328,postrio,545 post st.,san francisco,415/776-7825,postrio,545 post st.,san francisco,415-776-7825,1
+110,644,329,ritz-carlton restaurant and dining room,600 stockton st.,san francisco,415/296-7465,ritz-carlton dining room (san francisco),600 stockton st.,san francisco,415-296-7465,1
+111,645,330,rose pistola,532 columbus ave.,san francisco,415/399-0499,rose pistola,532 columbus ave.,san francisco,415-399-0499,1

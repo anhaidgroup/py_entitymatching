@@ -35,6 +35,14 @@ def get_property(data_frame, property_name):
         KeyError: If `data_frame` information is not present in the catalog.
         KeyError: If requested property for the `data_frame` is not present
             in the catalog.
+
+    Examples:
+        >>> import py_entitymatching as em
+        >>> import pandas as pd
+        >>> A = pd.DataFrame({'id' : [1, 2], 'colA':['a', 'b'], 'colB' : [10, 20]})
+        >>> em.set_key(A, 'id')
+        >>> em.get_property(A, 'key')
+         # id
     """
     # Validate input parameters
 
@@ -91,6 +99,17 @@ def set_property(data_frame, property_name, property_value):
         AssertionError: If `data_frame` is not of type pandas
          DataFrame.
         AssertionError: If `property_name` is not of type string.
+
+    Examples:
+        >>> import py_entitymatching as em
+        >>> import pandas as pd
+        >>> A = pd.DataFrame({'id' : [1, 2], 'colA':['a', 'b'], 'colB' : [10, 20]})
+        >>> em.set_property(A, 'key', 'id')
+        >>> em.get_property(A, 'key')
+         # id
+        >>> em.get_key(A)
+         # id
+
 
     Note:
         If the input DataFrame is not present in the catalog, this function
@@ -213,6 +232,18 @@ def del_property(data_frame, property_name):
         KeyError: If `data_frame` information is not present in the catalog.
         KeyError: If requested property for the DataFrame is not present
             in the catalog.
+
+    Examples:
+        >>> import py_entitymatching as em
+        >>> import pandas as pd
+        >>> A = pd.DataFrame({'id' : [1, 2], 'colA':['a', 'b'], 'colB' : [10, 20]})
+        >>> em.set_property(A, 'key', 'id')
+        >>> em.get_property(A, 'key')
+        # id
+        >>> em.del_property(A, 'key')
+        >>> em.is_property_present_for_df(A, 'key')
+        # False
+
     """
     # Validate input parameters
 
@@ -301,6 +332,11 @@ def get_catalog():
         Specifically, the dictionary contains the Python identifier of a
         DataFrame (obtained by id(DataFrame object)) as the key
         and their properties as value.
+
+    Examples:
+        >>> import py_entitymatching as em
+        >>> catalog = em.get_catalog()
+
     """
     # Get the catalog instance
     catalog = Catalog.Instance()
@@ -315,6 +351,10 @@ def del_catalog():
 
     Returns:
         A Boolean value of True is returned if the deletion was successful.
+
+    Examples:
+        >>> import py_entitymatching as em
+        >>> em.del_catalog()
     """
     # Get the catalog instance
     catalog = Catalog.Instance()
@@ -330,6 +370,14 @@ def is_catalog_empty():
     Returns:
         A Boolean value of True is returned if the catalog is empty,
         else returns False.
+
+    Examples:
+        >>> import py_entitymatching as em
+        >>> import pandas as pd
+        >>> A = pd.DataFrame({'id' : [1, 2], 'colA':['a', 'b'], 'colB' : [10, 20]})
+        >>> em.set_key(A, 'id')
+        >>> em.is_catalog_empty()
+         # False
 
     """
     # Get the catalog instance
@@ -355,6 +403,14 @@ def is_dfinfo_present(data_frame):
     Raises:
         AssertionError: If `data_frame` is not of type pandas
          DataFrame.
+
+    Examples:
+        >>> import py_entitymatching as em
+        >>> import pandas as pd
+        >>> A = pd.DataFrame({'id' : [1, 2], 'colA':['a', 'b'], 'colB' : [10, 20]})
+        >>> em.set_key(A, 'id')
+        >>> em.is_dfinfo_present(A)
+         # True
 
     """
     # Validate inputs
@@ -392,6 +448,18 @@ def is_property_present_for_df(data_frame, property_name):
          DataFrame.
         AssertionError: If `property_name` is not of type string.
         KeyError: If `data_frame` is not present in the catalog.
+
+    Examples:
+
+        >>> import py_entitymatching as em
+        >>> import pandas as pd
+        >>> A = pd.DataFrame({'id' : [1, 2], 'colA':['a', 'b'], 'colB' : [10, 20]})
+        >>> em.set_key(A, 'id')
+        >>> em.is_property_present_for_df(A, 'id')
+         # True
+        >>> em.is_property_present_for_df(A, 'fk_ltable')
+         # False
+
     """
     # Input validations
 
@@ -426,6 +494,10 @@ def get_catalog_len():
 
     Returns:
         The number of entries in the catalog as an integer.
+
+    Examples:
+        >>> import py_entitymatching as em
+        >>> len = em.get_catalog_len()
 
     """
     # Get the catalog instance
@@ -540,7 +612,16 @@ def copy_properties(source_data_frame, target_data_frame, replace=True):
         KeyError: If source DataFrame is not present in the
             catalog.
 
+    Examples:
 
+        >>> import py_entitymatching as em
+        >>> import pandas as pd
+        >>> A = pd.DataFrame({'id' : [1, 2], 'colA':['a', 'b'], 'colB' : [10, 20]})
+        >>> em.set_key(A, 'id')
+        >>> B = pd.DataFrame({'id' : [1, 2], 'colA':['c', 'd'], 'colB' : [30, 40]})
+        >>> em.copy_properties(A, B)
+        >>> em.get_key(B)
+        # 'id'
     """
     # Validate input parameters
 
@@ -596,6 +677,15 @@ def get_key(data_frame):
     Returns:
         A string value containing the key column name is returned (if present).
 
+    Examples:
+        >>> import py_entitymatching as em
+        >>> import pandas as pd
+        >>> A = pd.DataFrame({'id' : [1, 2], 'colA':['a', 'b'], 'colB' : [10, 20]})
+        >>> em.set_key(A, 'id')
+        >>> em.get_key(A)
+        # 'id'
+
+
     See Also:
         :meth:`~py_entitymatching.get_property`
 
@@ -632,6 +722,15 @@ def set_key(data_frame, key_attribute):
             pandas DataFrame.
         AssertionError: If `key_attribute` is not of type string.
         KeyError: If given `key_attribute` is not in the DataFrame columns.
+
+    Examples:
+        >>> import py_entitymatching as em
+        >>> import pandas as pd
+        >>> A = pd.DataFrame({'id' : [1, 2], 'colA':['a', 'b'], 'colB' : [10, 20]})
+        >>> em.set_key(A, 'id')
+        >>> em.get_key(A)
+        # 'id'
+
 
     See Also:
         :meth:`~py_entitymatching.set_property`
@@ -692,6 +791,19 @@ def get_fk_ltable(data_frame):
     Returns:
         A Python object, typically a string is returned.
 
+
+    Examples:
+        >>> import py_entitymatching as em
+        >>> A = pd.DataFrame({'id' : [1, 2], 'colA':['a', 'b'], 'colB' : [10, 20]})
+        >>> B = pd.DataFrame({'id' : [1, 2], 'colA':['c', 'd'], 'colB' : [30, 40]})
+        >>> em.set_key(A, 'id')
+        >>> em.set_key(B, 'id')
+        >>> C = pd.DataFrame({'id':[1, 2], 'ltable_id':[1, 2], 'rtable_id':[2, 1]})
+        >>> em.set_key(C, 'id')
+        >>> em.set_fk_ltable(C, 'ltable_id')
+        >>> em.get_fk_ltable(C)
+        # 'ltable_id'
+
     See Also:
         :meth:`~py_entitymatching.get_property`
 
@@ -715,6 +827,19 @@ def get_fk_rtable(data_frame):
 
     Returns:
         A Python object, (typically a string) is returned.
+
+    Examples:
+        >>> import py_entitymatching as em
+        >>> A = pd.DataFrame({'id' : [1, 2], 'colA':['a', 'b'], 'colB' : [10, 20]})
+        >>> B = pd.DataFrame({'id' : [1, 2], 'colA':['c', 'd'], 'colB' : [30, 40]})
+        >>> em.set_key(A, 'id')
+        >>> em.set_key(B, 'id')
+        >>> C = pd.DataFrame({'id':[1, 2], 'ltable_id':[1, 2], 'rtable_id':[2, 1]})
+        >>> em.set_key(C, 'id')
+        >>> em.set_fk_rtable(C, 'rtable_id')
+        >>> em.get_fk_rtable(C)
+        # 'rtable_id'
+
 
     See Also:
         :meth:`~py_entitymatching.get_property`
@@ -749,6 +874,20 @@ def set_fk_ltable(data_frame, fk_ltable):
             string.
         AssertionError: If `fk_ltable` is not in the input
             DataFrame.
+
+    Examples:
+        >>> import py_entitymatching as em
+        >>> A = pd.DataFrame({'id' : [1, 2], 'colA':['a', 'b'], 'colB' : [10, 20]})
+        >>> B = pd.DataFrame({'id' : [1, 2], 'colA':['c', 'd'], 'colB' : [30, 40]})
+        >>> em.set_key(A, 'id')
+        >>> em.set_key(B, 'id')
+        >>> C = pd.DataFrame({'id':[1, 2], 'ltable_id':[1, 2], 'rtable_id':[2, 1]})
+        >>> em.set_key(C, 'id')
+        >>> em.set_fk_ltable(C, 'ltable_id')
+        >>> em.get_fk_ltable(C)
+        # 'ltable_id'
+
+
 
     See Also:
         :meth:`~py_entitymatching.set_property`
@@ -910,6 +1049,19 @@ def set_fk_rtable(data_frame, foreign_key_rtable):
         AssertionError: If `fk_rtable` is not in the input
             DataFrame.
 
+    Examples:
+        >>> import py_entitymatching as em
+        >>> A = pd.DataFrame({'id' : [1, 2], 'colA':['a', 'b'], 'colB' : [10, 20]})
+        >>> B = pd.DataFrame({'id' : [1, 2], 'colA':['c', 'd'], 'colB' : [30, 40]})
+        >>> em.set_key(A, 'id')
+        >>> em.set_key(B, 'id')
+        >>> C = pd.DataFrame({'id':[1, 2], 'ltable_id':[1, 2], 'rtable_id':[2, 1]})
+        >>> em.set_key(C, 'id')
+        >>> em.set_fk_rtable(C, 'rtable_id')
+        >>> em.get_fk_rtable(C)
+        # 'rtable_id'
+
+
     See Also:
         :meth:`~py_entitymatching.set_property`
 
@@ -944,6 +1096,16 @@ def show_properties(data_frame):
     Args:
         data_frame (DataFrame): The input pandas DataFrame for which the
             properties must be displayed.
+
+    Examples:
+        >>> A = pd.DataFrame({'key_attr' : [1, 2], 'colA':['a', 'b'], 'colB' : [10, 20]})
+        >>> em.set_key(A, 'key_attr')
+        >>> em.show_properties(A)
+        # id: 4572922488  # This will change dynamically
+        # key: key_attr
+
+
+
     """
     # Check if the DataFrame information is present in the catalog. If not
     # return
@@ -979,6 +1141,14 @@ def show_properties_for_id(object_id):
     Args:
         object_id (int): The Python identifier of an object (typically a
          pandas DataFrame).
+
+    Examples:
+        >>> A = pd.DataFrame({'key_attr' : [1, 2], 'colA':['a', 'b'], 'colB' : [10, 20]})
+        >>> em.set_key(A, 'key_attr')
+        >>> em.show_properties_for_id(id(A))
+        # id: 4572922488  # This will change dynamically
+        # key: key_attr
+
 
     """
     catalog = Catalog.Instance()
@@ -1219,6 +1389,19 @@ def get_ltable(candset):
         A pandas DataFrame that is pointed by 'ltable' property of the input
         table.
 
+    Examples:
+        >>> import py_entitymatching as em
+        >>> A = pd.DataFrame({'id' : [1, 2], 'colA':['a', 'b'], 'colB' : [10, 20]})
+        >>> B = pd.DataFrame({'id' : [1, 2], 'colA':['c', 'd'], 'colB' : [30, 40]})
+        >>> em.set_key(A, 'id')
+        >>> em.set_key(B, 'id')
+        >>> C = pd.DataFrame({'id':[1, 2], 'ltable_id':[1, 2], 'rtable_id':[2, 1]})
+        >>> em.set_key(C, 'id')
+        >>> em.set_ltable(C, A)
+        >>> id(em.get_ltable(A) == id(A)
+        # True
+
+
     See Also:
         :meth:`~py_entitymatching.get_property`
     """
@@ -1237,6 +1420,19 @@ def get_rtable(candset):
     Returns:
         A pandas DataFrame that is pointed by 'rtable' property of the input
         table.
+
+    Examples:
+        >>> import py_entitymatching as em
+        >>> A = pd.DataFrame({'id' : [1, 2], 'colA':['a', 'b'], 'colB' : [10, 20]})
+        >>> B = pd.DataFrame({'id' : [1, 2], 'colA':['c', 'd'], 'colB' : [30, 40]})
+        >>> em.set_key(A, 'id')
+        >>> em.set_key(B, 'id')
+        >>> C = pd.DataFrame({'id':[1, 2], 'ltable_id':[1, 2], 'rtable_id':[2, 1]})
+        >>> em.set_key(C, 'id')
+        >>> em.set_rtable(C, B)
+        >>> id(em.get_rtable(B) == id(B)
+        # True
+
 
     See Also:
         :meth:`~py_entitymatching.get_property`
@@ -1257,6 +1453,19 @@ def set_ltable(candset, table):
     Returns:
         A Boolean value of True is returned, if the update was successful.
 
+    Examples:
+        >>> import py_entitymatching as em
+        >>> A = pd.DataFrame({'id' : [1, 2], 'colA':['a', 'b'], 'colB' : [10, 20]})
+        >>> B = pd.DataFrame({'id' : [1, 2], 'colA':['c', 'd'], 'colB' : [30, 40]})
+        >>> em.set_key(A, 'id')
+        >>> em.set_key(B, 'id')
+        >>> C = pd.DataFrame({'id':[1, 2], 'ltable_id':[1, 2], 'rtable_id':[2, 1]})
+        >>> em.set_key(C, 'id')
+        >>> em.set_ltable(C, A)
+        >>> id(em.get_ltable(A) == id(A)
+        # True
+
+
     See Also:
         :meth:`~py_entitymatching.set_property`
     """
@@ -1276,6 +1485,19 @@ def set_rtable(candset, table):
 
     Returns:
         A Boolean value of True is returned, if the update was successful.
+
+    Examples:
+        >>> import py_entitymatching as em
+        >>> A = pd.DataFrame({'id' : [1, 2], 'colA':['a', 'b'], 'colB' : [10, 20]})
+        >>> B = pd.DataFrame({'id' : [1, 2], 'colA':['c', 'd'], 'colB' : [30, 40]})
+        >>> em.set_key(A, 'id')
+        >>> em.set_key(B, 'id')
+        >>> C = pd.DataFrame({'id':[1, 2], 'ltable_id':[1, 2], 'rtable_id':[2, 1]})
+        >>> em.set_key(C, 'id')
+        >>> em.set_rtable(C, B)
+        >>> id(em.get_rtable(B) == id(B)
+        # True
+
 
     See Also:
         :meth:`~py_entitymatching.set_property`

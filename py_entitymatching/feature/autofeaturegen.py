@@ -64,6 +64,18 @@ def get_features(ltable, rtable, l_attr_types, r_attr_types,
         AssertionError: If the `ltable` and `rtable` order is same as mentioned
             in the `l_attr_types`/`r_attr_types` and `attr_corres`.
 
+    Examples:
+
+        >>> import py_entitymatching as em
+        >>> A = em.read_csv_metadata('path_to_csv_dir/table_A.csv', key='ID')
+        >>> B = em.read_csv_metadata('path_to_csv_dir/table_B.csv', key='ID')
+        >>> match_t = em.get_tokenizers_for_matching()
+        >>> match_s = em.get_sim_funs_for_matching()
+        >>> atypes1 = em.get_attr_types(A) # don't need, if atypes1 exists from blocking step
+        >>> atypes2 = em.get_attr_types(B) # don't need, if atypes2 exists from blocking step
+        >>> match_c = em.get_attr_corres(A, B)
+        >>> match_f = em.get_features(A, B, atypes1, atype2, match_c, match_t, match_s)
+
     See Also:
      :meth:`py_entitymatching.get_attr_corres`, :meth:`py_entitymatching.get_attr_types`,
      :meth:`py_entitymatching.get_sim_funs_for_blocking`,
@@ -144,9 +156,13 @@ def get_features(ltable, rtable, l_attr_types, r_attr_types,
                            'If you want to set them to be same and '
                            'generate features, '
                            'update output from get_attr_types and '
-                           'use get_features command.\n'
+                           'use get_features command.\n.'
                            % (ac[0], l_attr_type, ac[1], r_attr_type))
+            # features_1 = _get_features_for_type(l_attr_type)
+            # features_2 = _get_features_for_type(r_attr_type)
+            # features = set(features_1).union(features_2)
             continue
+
         # Generate features
         features = _get_features_for_type(l_attr_type)
 
@@ -201,6 +217,13 @@ def get_features_for_blocking(ltable, rtable):
             DataFrame.
         AssertionError: If `rtable` is not of type pandas
             DataFrame.
+
+    Examples:
+        >>> import py_entitymatching as em
+        >>> A = em.read_csv_metadata('path_to_csv_dir/table_A.csv', key='ID')
+        >>> B = em.read_csv_metadata('path_to_csv_dir/table_B.csv', key='ID')
+        >>> block_f = em.get_features_for_blocking(A, B)
+
     Note:
         In the output DataFrame, two
         attributes demand some explanation: (1) function, and (2)
@@ -288,6 +311,13 @@ def get_features_for_matching(ltable, rtable):
             DataFrame.
         AssertionError: If `rtable` is not of type pandas
             DataFrame.
+
+    Examples:
+        >>> import py_entitymatching as em
+        >>> A = em.read_csv_metadata('path_to_csv_dir/table_A.csv', key='ID')
+        >>> B = em.read_csv_metadata('path_to_csv_dir/table_B.csv', key='ID')
+        >>> match_f = em.get_features_for_matching(A, B)
+
     Note:
         In the output DataFrame, two
         attributes demand some explanation: (1) function, and (2)
@@ -338,7 +368,7 @@ def get_features_for_matching(ltable, rtable):
     em._match_t = tok_funcs
     em._match_s = sim_funcs
     em._atypes1 = attr_types_ltable
-    em._atypes2 = attr_types_ltable
+    em._atypes2 = attr_types_rtable
     em._match_c = attr_corres
 
     # Finally return the feature table

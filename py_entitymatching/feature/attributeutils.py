@@ -40,6 +40,15 @@ def get_attr_types(data_frame):
         AssertionError: If `data_frame` is not of type
             pandas DataFrame.
 
+    Examples:
+
+        >>> import py_entitymatching as em
+        >>> A = em.read_csv_metadata('path_to_csv_dir/table_A.csv', key='ID')
+        >>> B = em.read_csv_metadata('path_to_csv_dir/table_B.csv', key='ID')
+        >>> atypes1 = em.get_attr_types(A)
+        >>> atypes2 = em.get_attr_types(B)
+
+
     """
     # Validate input paramaters
 
@@ -97,6 +106,15 @@ def get_attr_corres(ltable, rtable):
             pandas DataFrame.
         AssertionError: If `rtable` is not of type
             pandas DataFrame.
+
+    Examples:
+
+        >>> import py_entitymatching as em
+        >>> A = em.read_csv_metadata('path_to_csv_dir/table_A.csv', key='ID')
+        >>> B = em.read_csv_metadata('path_to_csv_dir/table_B.csv', key='ID')
+        >>> match_c = em.get_attr_corres(A, B)
+
+
     """
     # Validate input parameters
     # # We expect the input object (ltable) to be of type pandas
@@ -187,7 +205,7 @@ def _get_type(column):
         elif returned_type == str or returned_type == six.unichr or returned_type == six.text_type:
             # get average token length
             average_token_len = \
-                pd.Series.mean(column.str.split(' ').apply(_len_handle_nan))
+                pd.Series.mean(column.str.split().apply(_len_handle_nan))
             if average_token_len == 1:
                 return "str_eq_1w"
             elif average_token_len <= 5:

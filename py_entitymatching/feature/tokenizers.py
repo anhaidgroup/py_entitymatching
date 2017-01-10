@@ -36,6 +36,12 @@ def get_tokenizers_for_blocking(q=[2, 3], dlm_char=[' ']):
     Raises:
         AssertionError: If both `q` and `dlm_char` are set to None.
 
+    Examples:
+        >>> import py_entitymatching as em
+        >>> block_t = em.get_tokenizers_for_blocking()
+        >>> block_t = em.get_tokenizers_for_blocking(q=[3], dlm_char=None)
+        >>> block_t = em.get_tokenizers_for_blocking(q=None, dlm_char=[' '])
+
     """
     # Validate inputs
     if q is None and dlm_char is None:
@@ -63,6 +69,13 @@ def get_tokenizers_for_matching(q=[2, 3], dlm_char=[' ']):
 
     Raises:
         AssertionError: If both `q` and `dlm_char` are set to None.
+
+    Examples:
+        >>> import py_entitymatching as em
+        >>> match_t = em.get_tokenizers_for_blocking()
+        >>> match_t = em.get_tokenizers_for_blocking(q=[3], dlm_char=None)
+        >>> match_t = em.get_tokenizers_for_blocking(q=None, dlm_char=[' '])
+
     """
 
     if q is None and dlm_char is None:
@@ -190,10 +203,18 @@ def tok_qgram(input_string, q):
         A list of tokens, if the input string is not NaN,
         else returns NaN.
 
+    Examples:
+        >>> import py_entitymatching as em
+        >>> em.tok_qgram('database', q=2)
+        ['#d', 'da', 'at', 'ta', 'ab', 'ba', 'as', 'se', 'e$']
+        >>> em.tok_qgram('database', q=3)
+        ['##d', '#da', 'dat', 'ata', 'tab', 'aba', 'bas', 'ase', 'se$', 'e$$']
+        >>> em.tok_qgram(None, q=2)
+        nan
     """
 
     if pd.isnull(input_string):
-        return input_string
+        return pd.np.NaN
 
 
     if not (isinstance(input_string, six.string_types) or isinstance(input_string, bytes)):
@@ -220,10 +241,20 @@ def tok_delim(input_string, d):
         A list of tokens, if the input string is not NaN ,
         else returns NaN.
 
+    Examples:
+        >>> import py_entitymatching as em
+        >>> em.tok_delim('data science', ' ')
+        ['data', 'science']
+        >>> em.tok_delim('data$#$science', '$#$')
+        ['data', 'science']
+        >>> em.tok_delim(None, ' ')
+        nan
+
+
     """
 
     if pd.isnull(input_string):
-        return input_string
+        return pd.np.NaN
     if not (isinstance(input_string, six.string_types) or isinstance(input_string, bytes)):
         input_string = str(input_string)
     else:
@@ -244,9 +275,19 @@ def tok_wspace(input_string):
         A list of tokens, if the input string is not NaN ,
         else returns NaN.
 
+    Examples:
+        >>> import py_entitymatching as em
+        >>> em.tok_wspace('data science')
+        ['data', 'science']
+        >>> em.tok_wspace('data         science')
+        ['data', 'science']
+        >>> em.tok_wspace(None)
+        nan
+
+
     """
     if pd.isnull(input_string):
-        return input_string
+        return pd.np.NaN
 
     # input_string = remove_non_ascii(input_string)
     if not (isinstance(input_string, six.string_types) or isinstance(input_string, bytes)):
@@ -269,9 +310,19 @@ def tok_alphabetic(input_string):
         A list of tokens, if the input string is not NaN ,
         else returns NaN.
 
+    Examples:
+        >>> import py_entitymatching as em
+        >>> em.tok_alphabetic('data99science, data#integration.')
+        ['data', 'science', 'data', 'integration']
+        >>> em.tok_alphabetic('99')
+        []
+        >>> em.tok_alphabetic(None)
+        nan
+
+
     """
     if pd.isnull(input_string):
-        return input_string
+        return pd.np.NaN
     measure = sm.AlphabeticTokenizer()
 
     if not (isinstance(input_string, six.string_types) or isinstance(input_string, bytes)):
@@ -295,9 +346,18 @@ def tok_alphanumeric(input_string):
         A list of tokens, if the input string is not NaN ,
         else returns NaN.
 
+    Examples:
+        >>> import py_entitymatching as em
+        >>> em.tok_alphanumeric('data9,(science), data9#.(integration).88')
+        ['data9', 'science', 'data9', 'integration', '88']
+        >>> em.tok_alphanumeric('#.$')
+        []
+        >>> em.tok_alphanumeric(None)
+        nan
+
     """
     if pd.isnull(input_string):
-        return input_string
+      return pd.np.NaN
 
     if not (isinstance(input_string, six.string_types) or isinstance(input_string, bytes)):
         input_string = str(input_string)

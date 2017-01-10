@@ -22,12 +22,13 @@ def save_object(object_to_save, file_path):
     Saves a Python object to disk.
 
     This function is intended to be used to save py_entitymatching objects such as
-    rule-based blocker, feature vectors, etc.
-
-    A user would like to store
+    rule-based blocker, feature vectors, etc. A user would like to store
     py_entitymatching objects to disk, when he/she wants to save the workflow and
     resume it later. This function provides a way to save the required
     objects to disk.
+
+    This function takes in the object to save the file path. It pickles the object and
+    stores it in the file path specified.
 
     Args:
         object_to_save (Python object): The Python object to save. This can be
@@ -42,6 +43,19 @@ def save_object(object_to_save, file_path):
     Raises:
         AssertionError: If `file_path` is not of type string.
         AssertionError: If a file cannot be written in the given `file_path`.
+
+    Examples:
+
+        >>> import pandas as pd
+        >>> A = pd.DataFrame({'id' : [1, 2], 'colA':['a', 'b'], 'colB' : [10, 20]})
+        >>> B = pd.DataFrame({'id' : [1, 2], 'colA':['c', 'd'], 'colB' : [30, 40]})
+        >>> rb = em.RuleBasebBlocker()
+        >>> block_f = em.get_features_for_blocking(A, B)
+        >>> rule1 = ['colA_colA_lev_dist(ltuple, rtuple) > 3']
+        >>> rb.add_rule(rule1)
+        >>> em.save_object(rb, './rule_blocker.pkl')
+
+
 
     See Also:
         :meth:`~load_object`
@@ -99,6 +113,10 @@ def load_object(file_path):
     Raises:
         AssertionError: If `file_path` is not of type string.
         AssertionError: If a file does not exist at the given `file_path`.
+
+    Examples:
+
+        >>> rb = em.load_object('./rule_blocker.pkl')
 
     See Also:
         :meth:`~save_object`
@@ -159,6 +177,15 @@ def save_table(data_frame, file_path, metadata_ext='.pklmetadata'):
         AssertionError: If `file_path` is not of type string.
         AssertionError: If `metadata_ext` is not of type string.
         AssertionError: If a file cannot written in the given `file_path`.
+
+    Examples:
+
+        >>> A = pd.DataFrame({'id' : [1, 2], 'colA':['a', 'b'], 'colB' : [10, 20]})
+        >>> em.save_table(A, './A.pkl') # will store two files ./A.pkl and ./A.pklmetadata
+
+        >>> A = pd.DataFrame({'id' : [1, 2], 'colA':['a', 'b'], 'colB' : [10, 20]})
+        >>> em.save_table(A, './A.pkl', metadata_ext='.pklmeta') # will store two files ./A.pkl and ./A.pklmeta
+
 
     See Also:
         :meth:`~py_entitymatching.load_table`
@@ -271,7 +298,7 @@ def load_table(file_path, metadata_ext='.pklmetadata'):
     """
     Loads a pickled DataFrame from a file along with its metadata.
 
-    This function loads a DataFrame from a file stored in a pickle format.
+    This function loads a DataFrame from a file stored in pickle format.
 
     Further, this function looks for a metadata file with the same file name
     but with an extension given by the user (defaults to '.pklmetadata'. If the
@@ -292,8 +319,18 @@ def load_table(file_path, metadata_ext='.pklmetadata'):
         AssertionError: If `file_path` is not of type string.
         AssertionError: If `metadata_ext` is not of type string.
 
+
+    Examples:
+
+        >>> A = em.load_table('./A.pkl')
+
+        >>> A = em.load_table('./A.pkl', metadata_ext='.pklmeta')
+
+
     See Also:
         :meth:`~py_entitymatching.save_table`
+
+
 
     Note:
         This function is different from read_csv_metadata in two aspects.
@@ -303,6 +340,7 @@ def load_table(file_path, metadata_ext='.pklmetadata'):
         provide ltable and rtable information while calling this function. (
         this support will be added shortly). Second, this function loads the
         table stored in a pickle format.
+
 
     """
     # Validate input parameters

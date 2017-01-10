@@ -45,6 +45,15 @@ def eval_matches(data_frame, gold_label_attr, predicted_label_attr):
             the input dataFrame.
         AssertionError: If the `predicted_label_attr` is not in
             the input dataFrame.
+
+    Examples:
+        >>> import py_entitymatching as em
+        >>> # G is the labeled data used for development purposes, match_f is the feature table
+        >>> H = em.extract_feat_vecs(G, feat_table=match_f, attrs_after='gold_labels')
+        >>> dt = em.DTMatcher()
+        >>> dt.fit(table=H, exclude_attrs=['_id', 'ltable_id', 'rtable_id', 'gold_labels'], target_attr='gold_labels')
+        >>> pred_table = dt.predict(table=H,  exclude_attrs=['_id', 'ltable_id', 'rtable_id', 'gold_labels'],  append=True, target_attr='predicted_labels')
+        >>> eval_summary = em.eval_matches(pred_table, 'gold_labels', 'predicted_labels')
     """
     # Validate input parameters
 
@@ -206,6 +215,17 @@ def get_false_positives_as_df(table, eval_summary, verbose=False):
         this function sets the output DataFrame's properties same as input
         DataFrame.
 
+    Examples:
+        >>> import py_entitymatching as em
+        >>> # G is the labeled data used for development purposes, match_f is the feature table
+        >>> H = em.extract_feat_vecs(G, feat_table=match_f, attrs_after='gold_labels')
+        >>> dt = em.DTMatcher()
+        >>> dt.fit(table=H, exclude_attrs=['_id', 'ltable_id', 'rtable_id', 'gold_labels'], target_attr='gold_labels')
+        >>> pred_table = dt.predict(table=H,  exclude_attrs=['_id', 'ltable_id', 'rtable_id', 'gold_labels'],  append=True, target_attr='predicted_labels')
+        >>> eval_summary = em.eval_matches(pred_table, 'gold_labels', 'predicted_labels')
+        >>> false_pos_df = em.get_false_positives_as_df(H, eval_summary)
+
+
 
     """
     # Validate input parameters
@@ -266,6 +286,17 @@ def get_false_negatives_as_df(table, eval_summary, verbose=False):
         this function sets the output DataFrame's properties same as input
         DataFrame.
 
+    Examples:
+        >>> import py_entitymatching as em
+        >>> # G is the labeled data used for development purposes, match_f is the feature table
+        >>> H = em.extract_feat_vecs(G, feat_table=match_f, attrs_after='gold_labels')
+        >>> dt = em.DTMatcher()
+        >>> dt.fit(table=H, exclude_attrs=['_id', 'ltable_id', 'rtable_id', 'gold_labels'], target_attr='gold_labels')
+        >>> pred_table = dt.predict(table=H,  exclude_attrs=['_id', 'ltable_id', 'rtable_id', 'gold_labels'],  append=True, target_attr='predicted_labels')
+        >>> eval_summary = em.eval_matches(pred_table, 'gold_labels', 'predicted_labels')
+        >>> false_neg_df = em.get_false_negatives_as_df(H, eval_summary)
+
+
     """
     # Validate input parameters
 
@@ -316,6 +347,17 @@ def print_eval_summary(eval_summary):
     Args:
         eval_summary (dictionary): Dictionary containing evaluation results,
             typically from 'eval_matches' function.
+
+    Examples:
+        >>> import py_entitymatching as em
+        >>> # G is the labeled data used for development purposes, match_f is the feature table
+        >>> H = em.extract_feat_vecs(G, feat_table=match_f, attrs_after='gold_labels')
+        >>> dt = em.DTMatcher()
+        >>> dt.fit(table=H, exclude_attrs=['_id', 'ltable_id', 'rtable_id', 'gold_labels'], target_attr='gold_labels')
+        >>> pred_table = dt.predict(table=H,  exclude_attrs=['_id', 'ltable_id', 'rtable_id', 'gold_labels'],  append=True, target_attr='predicted_labels')
+        >>> eval_summary = em.eval_matches(pred_table, 'gold_labels', 'predicted_labels')
+        >>> em.print_eval_summary(eval_summary)
+
     """
     m = _get_metric(eval_summary)
     for key, value in six.iteritems(m):

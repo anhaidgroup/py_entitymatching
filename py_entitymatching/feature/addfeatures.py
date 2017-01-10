@@ -60,6 +60,25 @@ def get_feature_fn(feature_string, tokenizers, similarity_functions):
             dictionary.
         AssertionError: If the input `similarity_functions` is not of
             type dictionary.
+
+    Examples:
+        >>> import py_entitymatching as em
+        >>> A = em.read_csv_metadata('path_to_csv_dir/table_A.csv', key='ID')
+        >>> B = em.read_csv_metadata('path_to_csv_dir/table_B.csv', key='ID')
+
+        >>> block_t = em.get_tokenizers_for_blocking()
+        >>> block_s = em.get_sim_funs_for_blocking()
+        >>> block_f = em.get_features_for_blocking(A, B)
+        >>> r = get_feature_fn('jaccard(qgm_3(ltuple.name), qgm_3(rtuple.name)', block_t, block_s)
+        >>> em.add_feature(block_f, 'name_name_jac_qgm3_qgm3', r)
+
+        >>> match_t = em.get_tokenizers_for_matching()
+        >>> match_s = em.get_sim_funs_for_matching()
+        >>> match_f = em.get_features_for_matching(A, B)
+        >>> r = get_feature_fn('jaccard(qgm_3(ltuple.name), qgm_3(rtuple.name)', match_t, match_s)
+        >>> em.add_feature(match_f, 'name_name_jac_qgm3_qgm3', r)
+
+
     See Also:
         :meth:`py_entitymatching.get_sim_funs_for_blocking`,
         :meth:`py_entitymatching.get_tokenizers_for_blocking`,
@@ -238,6 +257,23 @@ def add_feature(feature_table, feature_name, feature_dict):
             'function_source' in the DataFrame.
         AssertionError: If the `feature_name` is already present in the feature
             table.
+
+    Examples:
+        >>> import py_entitymatching as em
+        >>> A = em.read_csv_metadata('path_to_csv_dir/table_A.csv', key='ID')
+        >>> B = em.read_csv_metadata('path_to_csv_dir/table_B.csv', key='ID')
+
+        >>> block_t = em.get_tokenizers_for_blocking()
+        >>> block_s = em.get_sim_funs_for_blocking()
+        >>> block_f = em.get_features_for_blocking(A, B)
+        >>> r = get_feature_fn('jaccard(qgm_3(ltuple.name), qgm_3(rtuple.name)', block_t, block_s)
+        >>> em.add_feature(block_f, 'name_name_jac_qgm3_qgm3', r)
+
+        >>> match_t = em.get_tokenizers_for_matching()
+        >>> match_s = em.get_sim_funs_for_matching()
+        >>> match_f = em.get_features_for_matching(A, B)
+        >>> r = get_feature_fn('jaccard(qgm_3(ltuple.name), qgm_3(rtuple.name)', match_t, match_s)
+        >>> em.add_feature(match_f, 'name_name_jac_qgm3_qgm3', r)
     """
     # Validate input parameters
     # # We expect the feature_table to be of pandas DataFrame
@@ -326,6 +362,17 @@ def add_blackbox_feature(feature_table, feature_name, feature_function):
             'function_source' in the DataFrame.
         AssertionError: If the `feature_name` is already present in the
             feature table.
+
+    Examples:
+        >>> import py_entitymatching as em
+        >>> A = em.read_csv_metadata('path_to_csv_dir/table_A.csv', key='ID')
+        >>> B = em.read_csv_metadata('path_to_csv_dir/table_B.csv', key='ID')
+        >>> block_f = em.get_features_for_blocking(A, B)
+        >>> def age_diff(ltuple, rtuple):
+        >>>     # assume that the tuples have age attribute and values are valid numbers.
+        >>>   return ltuple['age'] - rtuple['age']
+        >>> status = em.add_blackbox_feature(block_f, 'age_difference', age_diff)
+
     """
     # Validate input parameters
     # # We expect the feature_table to be of type pandas DataFrame
