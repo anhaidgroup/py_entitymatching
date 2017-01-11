@@ -1,0 +1,199 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Splitting Labeled Data into Training and Testing Sets &mdash; py_entitymatching 0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="py_entitymatching 0.1.0 documentation" href="../index.html" />
+    <link rel="up" title="Steps of Supported EM Workflows" href="steps_supp_em_workflows.html" />
+    <link rel="next" title="Creating Features for Matching" href="create_feats_for_matching.html" />
+    <link rel="prev" title="Labeling" href="labeling.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="create_feats_for_matching.html" title="Creating Features for Matching"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="labeling.html" title="Labeling"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">py_entitymatching 0.1.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="steps_supp_em_workflows.html" accesskey="U">Steps of Supported EM Workflows</a> &raquo;</li> 
+      </ul>
+    </div>
+<div class="content-wrapper">
+    <div class="content">
+        <div class="document">
+            <div class="sphinxsidebar">
+                <h3>Table Of Contents</h3>
+                <p class="caption"><span class="caption-text">User Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="whatisnew.html">What is New?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview of Supported EM Workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides.html">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datastructures.html">Data Structures</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="steps_supp_em_workflows.html">Steps of Supported EM Workflows</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="read_csv_files.html">Reading the CSV Files from Disk</a></li>
+<li class="toctree-l2"><a class="reference internal" href="down_sampling.html">Down Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blocking.html">Specifying Blockers and Performing Blocking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="create_feats_for_blocking.html">Creating Features for Blocking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="debugging_blocking.html">Debugging Blocking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sampling.html">Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="labeling.html">Labeling</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Splitting Labeled Data into Training and Testing Sets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="create_feats_for_matching.html">Creating Features for Matching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extract_feat_vecs.html">Extracting Feature Vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="imputing_missing_values.html">Imputing Missing Values</a></li>
+<li class="toctree-l2"><a class="reference internal" href="matching.html">Specifying ML-Matchers and Performing Matching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="select_best_matcher.html">Selecting a ML-Matcher</a></li>
+<li class="toctree-l2"><a class="reference internal" href="debugging_matcher.html">Debugging ML-Matchers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evaluate_matching.html">Evaluating the Matching Output</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="misc.html">Miscellaneous</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/overview.html">Overview of Command Organization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/actual_commands.html">Commands in py_entitymatching</a></li>
+</ul>
+
+                <h3 style="margin-top: 1.5em;">Search</h3>
+
+                <form class="search" action="../search.html" method="get">
+                    <input type="text" name="q" size="18"/>
+                    <input type="submit" value="Go"/>
+                    <input type="hidden" name="check_keywords" value="yes"/>
+                    <input type="hidden" name="area" value="default"/>
+                </form>
+                <p class="searchtip" style="font-size: 90%">
+                    Enter search terms or a module, class or function name.
+                </p>
+
+            </div>
+             
+            <div class="documentwrapper">
+                <div class="bodywrapper">
+                    <div class="body">
+                        
+  <div class="section" id="splitting-labeled-data-into-training-and-testing-sets">
+<h1>Splitting Labeled Data into Training and Testing Sets<a class="headerlink" href="#splitting-labeled-data-into-training-and-testing-sets" title="Permalink to this headline">¶</a></h1>
+<p>While doing entity matching you will have to split data for
+multiple purposes. Some examples are:</p>
+<p>1. Split labeled data into development and test. Th development
+set is used to come up with right features for learning-based matcher, and
+<cite>test</cite> set is used to evaluate the matcher.</p>
+<p>2. Split feature vectors into a train and test set. The train
+set is used to train the learning-based matcher and test set is used
+for evaluation.</p>
+<p><em>py_entitymatching</em> provides <cite>split_train_test</cite> command for the above need.
+An example of using <cite>split_train_test</cite> is shown below:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">train_test</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">split_train_test</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">train_proportion</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In the above, <cite>split_train_test</cite> returns a dictionary with two keys: train, and test.
+The value for the key <cite>train</cite> is a Dataframe containing tuples
+allocated from the input table based on train_proportion.
+Similarly, the value for the key <cite>test</cite> is a Dataframe containing
+tuples for evaluation. An example of getting train and test Dataframes from the output
+of <cite>split_train_test</cite> command is shown below:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">devel_set</span> <span class="o">=</span> <span class="n">train_test</span><span class="p">[</span><span class="s1">&#39;train&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eval_set</span> <span class="o">=</span> <span class="n">train_test</span><span class="p">[</span><span class="s1">&#39;test&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Setting the value for train proportion would depend on the
+context of its use. For instance, if the data is split for machine learning
+purposes then train proportion is typically larger than the
+test.
+The most commonly used values of train_proportion are between
+0.5 and 0.8.</p>
+<p>Please refer to the API reference of <a class="reference internal" href="api/splitting_data_into_train_test.html#py_entitymatching.split_train_test" title="py_entitymatching.split_train_test"><code class="xref py py-meth docutils literal"><span class="pre">split_train_test()</span></code></a> for
+more details.</p>
+</div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="clearer"></div>
+        </div>
+    </div>
+</div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="create_feats_for_matching.html" title="Creating Features for Matching"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="labeling.html" title="Labeling"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">py_entitymatching 0.1.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="steps_supp_em_workflows.html" >Steps of Supported EM Workflows</a> &raquo;</li> 
+      </ul>
+    </div>
+<style type="text/css">
+    .scrollToTop {
+        text-align: center;
+        font-weight: bold;
+        position: fixed;
+        bottom: 60px;
+        right: 40px;
+        display: none;
+    }
+</style>
+<a href="#" class="scrollToTop">Scroll To Top</a>
+<script type="text/javascript">
+$(document).ready(function() {
+    //Check to see if the window is top if not then display button
+    $(window).scroll(function() {
+        if ($(this).scrollTop() > 200) {
+            $('.scrollToTop').fadeIn();
+        } else {
+            $('.scrollToTop').fadeOut();
+        }
+    });
+
+    //Click event to scroll to top
+    $('.scrollToTop').click(function() {
+        $('html, body').animate({
+            scrollTop: 0
+        }, 500);
+        return false;
+    });
+});
+</script>
+
+  </body>
+</html>
