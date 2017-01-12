@@ -64,10 +64,7 @@ The Development and Production Stages
 
 In practice EM is typically carried out in two stages. In the development stage, the user tries to find an accurate EM workflow, often using data samples. In the production stage, the user then executes the discovered workflow on the entirety of data. The following figure illustrates the development stage (which is the focus of the current package). Suppose we want to match two tables A and B, each having 1 million tuples. Trying to explore and discover an accurate workflow using these two tables would be too time consuming, because they are too big. Hence, the user will first "down sample" the two tables to obtain two smaller versions, shown as Tables A' and B' in the figure, each having 100K tuples, say (see the figure). 
 
-The current package supports EM workflows that consist of a blocking step followed by a matching step. Specifically, the package provides a set of blockers and a set of matchers (and the user can easily write his or her own blocker/matcher). Given two tables A and B to be matched, the user applies a blocker to the two tables to obtain a set of tuple pairs, then applies a matcher to these pairs to predict "match" or "no-match". The user can use multiple blockers in the blocking step, and can combine them in flexible ways. The figure below illustrates both cases. 
-
 .. image:: example-dev-stage.png
 	:scale: 100
     :alt: 'An example of the development stage'
     
-
