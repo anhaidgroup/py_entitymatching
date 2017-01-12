@@ -16,7 +16,10 @@ find all tuple pairs (a in A, b in B) such that a and b refer to the same real-w
 entity. The following figure shows an example of matching persons between two given tables.
 
 .. image:: example-match-two-tables.png
-	:scale: 100
+    :height: 200px
+    :width: 500px
+    :scale: 60 %
+    :align: center
     :alt: 'An example of matching two tables'
     
 
@@ -45,7 +48,10 @@ tuple pairs and predicts for each of them a label "match" or "not-match"
 (shown as "+" and "-" in the figure).
 
 .. image:: example-blocking-matching.png
-	:scale: 100
+    :height: 220px
+    :width: 500px
+    :scale: 100 %
+    :align: center
     :alt: 'An example of blocking and matching'
     
 Supported EM Workflows
@@ -54,7 +60,10 @@ Supported EM Workflows
 The current package supports EM workflows that consist of a blocking step followed by a matching step. Specifically, the package provides a set of blockers and a set of matchers (and the user can easily write his or her own blocker/matcher). Given two tables A and B to be matched, the user applies a blocker to the two tables to obtain a set of tuple pairs, then applies a matcher to these pairs to predict "match" or "no-match". The user can use multiple blockers in the blocking step, and can combine them in flexible ways. The figure below illustrates both cases. 
 
 .. image:: example-workflow.png
-	:scale: 100
+    :height: 95px
+    :width: 650px
+    :scale: 95 %
+    :align: center
     :alt: 'An example of EM workflow'
  
 Further, the current package only supports learning-based matchers. Specifically, it will require the user to label a set of tuple pairs (as "match" or "no-match"), then use the labeled data to train matchers. In the future, we will consider extending the package to support more powerful EM workflows, such as using multiple matchers, including rule-based ones, or being able to add rules to process the output of the matchers. 
@@ -67,7 +76,10 @@ In practice EM is typically carried out in two stages. In the development stage,
 In the figure, suppose we want to match two tables A and B, each having 1 million tuples. Trying to explore and discover an accurate workflow using these two tables would be too time consuming, because they are too big. Hence, the user will first "down sample" the two tables to obtain two smaller versions, shown as Tables A' and B' in the figure, each having 100K tuples, say (see the figure). 
 
 .. image:: example-dev-stage.png
-	:scale: 100
+    :height: 300px
+    :width: 500px
+    :scale: 100 %
+    :align: center
     :alt: 'An example of the development stage'
     
 Next, suppose the package provides two blockers X and Y. Then the user will experiment with these blockers (for example, executing both on Tables A' and B' and examining their output) to select the blocker judged the best (according to some criterion). Suppose the user selects blocker X. Then next, he or she executes X on Tables A' and B' to obtain a set of candidate tuple pairs C. 
