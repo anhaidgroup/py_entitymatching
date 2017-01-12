@@ -1,26 +1,26 @@
 py_entitymatching
 =================
 
-Entity matching (EM) is a critical problem and will become even more critical.
-Lot of EM research, but has focused mostly
-on matching algorithms. Focus mostly on maximizing some performance factors 
-such as accuracy, time, money, etc. Currently there is very little help for 
-users. For many of these steps, there is little or no work, so no solution. 
-Even when there are solutions, there may be no tools. Even when there are 
-tools, user is faced with a wide variety of tools, one for each step, so 
-user is left trying to move among the tools, stitching them together, 
-deciphering their different data formats, import/export commands. too 
-cumbersome and difficult. So often users just give up and roll their own 
-ad-hoc solutions instead. This is obviously a major bottleneck that prevents
-the deployment of matching in practice. To solve the above problems, 
-py_entitymatching aims to provide a set of commands that help the user to
- 
-* Come up with a EM workflow
-* Iterate and debugmatcher the workflow
-* Deploy it in production 
-
+This project seeks to build a Python software package that comprehensive set of tools
+that help the user come up with an entity matching workflow.
 
 The package is free, open-source, and BSD-licensed.
+
+Dependencies
+============
+The required dependencies to build the packages are:
+
+* pandas (provides data structures to store and manage tables)
+* scikit-learn (provides implementations for common machine learning algorithms)
+* joblib (provides multiprocessing capabilities)
+* pyqt4 (provides tools to build GUIs)
+* py_stringsimjoin (provides implementations for string similarity joins)
+* py_stringmatching (provides a set of string tokenizers and string similarity functions)
+* cloudpickle (provides functions to serialize Python constructs)
+* pyprind (library to display progress indicators)
+* pyparsing (library to parse strings)
+* six (provides functions to write compatible code across Python 2 and 3)
+
 
 Important links
 ===============
