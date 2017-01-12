@@ -1,8 +1,8 @@
 
 User Manual for py_entitymatching
 =================================
-This document shows the users how to install and use the package.
-To contribute to or further develop the package, see the
+This document explains how to install and use the package.
+To contribute to the package, see the
 `project website <https://sites.google.com/site/anhaidgroup/projects/py_entitymatching>`_,
 section "For Contributors and Developers".
 
