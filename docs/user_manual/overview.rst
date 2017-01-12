@@ -13,11 +13,9 @@ Entity matching (EM) has many problem variations: matching two tables, matching 
 single table, matching from a table into a knowledge base, etc. The package currently only
 support matching two tables. Specifically, given two tables A and B of relational tuples,
 find all tuple pairs (a in A, b in B) such that a and b refer to the same real-world
-entity. The following figure shows an example of matching persons: Given the two tables
-in (a) and (b), find all tuple pairs across the two tables that refer to the same
-real-world person; these pairs are called *matches* and are shown in (c).
+entity. The following figure shows an example of matching persons between two given tables.
 
-.. image:: match-two-tables-example.png
+.. image:: example-match-two-tables.png
 	:scale: 100
     :alt: 'An example of matching two tables'
     
@@ -46,7 +44,7 @@ that agree on state, as shown in (b). The matching step in (c) then considers on
 tuple pairs and predicts for each of them a label "match" or "not-match"
 (shown as "+" and "-" in the figure).
 
-.. image:: blocking-matching-example.png
+.. image:: example-blocking-matching.png
 	:scale: 100
     :alt: 'An example of blocking and matching'
     
@@ -55,6 +53,21 @@ Supported EM Workflows
 
 The current package supports EM workflows that consist of a blocking step followed by a matching step. Specifically, the package provides a set of blockers and a set of matchers (and the user can easily write his or her own blocker/matcher). Given two tables A and B to be matched, the user applies a blocker to the two tables to obtain a set of tuple pairs, then applies a matcher to these pairs to predict "match" or "no-match". The user can use multiple blockers in the blocking step, and can combine them in flexible ways. The figure below illustrates both cases. 
 
-.. image:: workflow-example.png
+.. image:: example-workflow.png
 	:scale: 100
     :alt: 'An example of EM workflow'
+    
+In the future, we will consider extending the package to support more powerful EM workflows, such as using multiple matchers, or being able to add rules to process the output of the matchers. 
+
+The Development and Production Stages
+-------------------------------------
+
+In practice EM is typically carried out in two stages. In the development stage, the user tries to find an accurate EM workflow, often using data samples. In the production stage, the user then executes the discovered workflow on the entirety of data. The following figure illustrates the development stage (which is the focus of the current package). Suppose we want to match two tables A and B, each having 1 million tuples. Trying to explore and discover an accurate workflow using these two tables would be too time consuming, because they are too big. Hence, the user will first "down sample" the two tables to obtain two smaller versions, shown as Tables A' and B' in the figure, each having 100K tuples, say (see the figure). 
+
+The current package supports EM workflows that consist of a blocking step followed by a matching step. Specifically, the package provides a set of blockers and a set of matchers (and the user can easily write his or her own blocker/matcher). Given two tables A and B to be matched, the user applies a blocker to the two tables to obtain a set of tuple pairs, then applies a matcher to these pairs to predict "match" or "no-match". The user can use multiple blockers in the blocking step, and can combine them in flexible ways. The figure below illustrates both cases. 
+
+.. image:: example-dev-stage.png
+	:scale: 100
+    :alt: 'An example of the development stage'
+    
+
