@@ -11,7 +11,6 @@ Platforms
 py_entitymatching has been tested on Linux (Redhat enterprise Linux with 2.6
 .32 kernel), OS X (Sierra), and Windows 10.
 
-
 Dependencies
 ------------
 * pandas (provides data structures to store and manage tables)
@@ -52,37 +51,23 @@ command::
 
 The above command will install py_entitymatching and all of its dependencies, except PyQt4.
 This is because pip can only install the dependency packages that are available in PyPI and
-PyQt4 is not in PyPI. Refer to this `PyQt4 page <http://pyqt.sourceforge.net/Docs/PyQt4/installation.html>`_
-on how to install PyQt4.
+PyQt4 is not in PyPI. So next, you need to install PyQt4, using the instructions on `this page <http://pyqt.sourceforge.net/Docs/PyQt4/installation.html>`_.
 
 
 Installing from Source Distribution
 -----------------------------------
 Download the py_stringmatching package from `here
-<https://sites.google.com/site/anhaidgroup/projects/py_entitymatching>`_.
-
-Step 2: Unzip the package and execute the following command from the package
-root::
+<https://sites.google.com/site/anhaidgroup/projects/py_entitymatching>`_, unzip the package, then execute the following command from the package root::
 
     python setup.py install
 
-
-
-
-The above command will try to install py_stringmatching into the default
-Python directory on your machine. If you do not have installation
-permission for that directory then you can install the package in your
+which installs py_stringmatching into the default Python directory on your machine. If you do not have installation permission for that directory then you can install the package in your
 home directory as follows::
 
         python setup.py install --user
 
-
 For more information see this StackOverflow `link <http://stackoverflow.com/questions/14179941/how-to-install-python-packages-without-root-privileges>`_.
 
-
-
-The above command will install py_entitymatching and all its
+The above command will install py_entitymatching and all of its
 dependencies, except PyQt4. This is because similar to pip, setup.py can only install
-the dependency packages that are available in PyPI and PyQt4 is not in PyPI.
-Refer to this `page <http://pyqt.sourceforge.net/Docs/PyQt4/installation.html>`_ on how to
-install PyQt4.
+the dependency packages that are available in PyPI and PyQt4 is not in PyPI. So next, you need to install PyQt4, using the instructions on `this page <http://pyqt.sourceforge.net/Docs/PyQt4/installation.html>`_.
