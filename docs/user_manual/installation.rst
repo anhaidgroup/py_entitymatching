@@ -1,7 +1,6 @@
 ============
 Installation
 ============
-This section discusses the installation instructions of *py_entitymatching*.
 
 Requirements
 ------------
@@ -20,18 +19,17 @@ Dependencies
 * joblib (provides multiprocessing capabilities)
 * pyqt4 (provides tools to build GUIs)
 * py_stringsimjoin (provides implementations for string similarity joins)
-* py_stringmatching (provides a set of tokenizers and string similarity functions)
+* py_stringmatching (provides a set of string tokenizers and string similarity functions)
 * cloudpickle (provides functions to serialize Python constructs)
 * pyprind (library to display progress indicators)
-* pyparsing (library to parse strings.)
+* pyparsing (library to parse strings)
 * six (provides functions to write compatible code across Python 2 and 3)
 
-There are three ways to install py_entitymatching package: (1) using conda,
-(2) using pip , and (3) using source distribution.
-
+py_entitymatching can be installed using conda, pip, or source distribution, as described below. 
+ 
 Installing Using conda
 ----------------------
-The easiest and the recommended way to install the package is to use conda,
+The easiest and recommended way to install the package is to use conda,
 which will retrieve py_entitymatching from Anaconda repository then install it::
 
     conda install -c uwmagellan py_entitymatching
@@ -89,6 +87,3 @@ dependencies, except PyQt4. This is because similar to pip, setup.py can only in
 the dependency packages that are available in PyPI and PyQt4 is not in PyPI.
 Refer to this `page <http://pyqt.sourceforge.net/Docs/PyQt4/installation.html>`_ on how to
 install PyQt4.
-
-
-
