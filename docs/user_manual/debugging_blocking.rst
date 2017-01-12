@@ -7,7 +7,7 @@ But it is often not clear whether the blocker drops only non-matches or it
 also removes a lot of potential matches.
 
 In such cases, it is important to debug the output of blocker. In
-*py_entitymatching*, `debug_blocker` command can be used for that purpose.
+py_entitymatching, `debug_blocker` command can be used for that purpose.
 
 The `debug_blocker` command takes in two input tables A, B, blocker output C
 and returns a table D containing a set of tuple pairs that are

@@ -2,7 +2,7 @@
 Evaluating the Matching Output
 ==============================
 Once you have predicted matches using ML-based matcher, then you would have to
-evaluate the matches. *py_entitymatching* supports `eval_matches` command for that
+evaluate the matches. py_entitymatching supports `eval_matches` command for that
 purpose.
 
 An example of using `eval_matches` command is shown below:

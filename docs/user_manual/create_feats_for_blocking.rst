@@ -7,7 +7,7 @@ Recall that when doing blocking, you can use built-in blockers,
 blackbox blockers, or rule-based blockers. For rule-based blockers,
 you have to create a set of features. While creating features, you will have to
 refer to tokenizers, similarity functions, and attributes of the tables.
-Currently, in *py_entitymatching*, there are two ways to create features:
+Currently, in py_entitymatching, there are two ways to create features:
 
 * Automatically generate a set of features (then you can remove or add some more).
 * Skip the automatic process and generate features manually.
@@ -61,7 +61,7 @@ are provided along with *py_entitytmatching*:
 Obtaining Tokenizers and Similarity Functions
 ---------------------------------------------
 First you need to get tokenizers and similarity functions to refer them in features.
-In *py_entitymatching*, you can use
+In py_entitymatching, you can use
 `get_tokenizers_for_blocking` to get all the tokenizers available for blocking purposes.
 
     >>> block_t = em.get_tokenizers_for_blocking()
@@ -94,7 +94,7 @@ so that the features can be generated.
 
 First, you need to obtain the types of attributes in A and B,
 so that the right tokenizers/similarity functions can be applied to each of them.
-In *py_entitymatching*, you can use `get_attr_types` to get the attribute types.
+In py_entitymatching, you can use `get_attr_types` to get the attribute types.
 An example of using `get_attr_types` is shown below:
 
     >>> atypes1 = em.get_attr_types(A)
@@ -107,7 +107,7 @@ Python types. Please look at the API reference of
 
 Next, we need to obtain correspondences between the attributes of A and B,
 so that the features can be generated based on those correspondences.
-In *py_entitymatching*, you can use `get_attr_corres` to get the attribute
+In py_entitymatching, you can use `get_attr_corres` to get the attribute
 correspondences.
 
 An example of using `get_attr_corres` is shown below:
@@ -115,7 +115,7 @@ An example of using `get_attr_corres` is shown below:
     >>> block_c = em.get_attr_corres(A, B)
 
 In the above, `block_c` is a dictionary containing attribute correspondences.
-Currently, *py_entitymatching* returns attribute correspondences only based on the exact
+Currently, py_entitymatching returns attribute correspondences only based on the exact
 match of attribute names. You can inspect `block_c` and modify the attribute
 correspondences. Please look at the API reference of
 :py:meth:`~py_entitymatching.get_attr_corres` for more details.
@@ -185,7 +185,7 @@ Please look at the API reference of
 **Adding a Feature Declaratively**
 
 Another way to add features is to write a feature expression in
-a `declarative` way. *py_entitymatching* will then compile it into a feature. For
+a `declarative` way. py_entitymatching will then compile it into a feature. For
 example, you can declaratively create and add a feature like this:
 
     >>> r = em.get_feature_fn('jaccard(qgm_3(ltuple.name), qgm_3(rtuple.name)', block_t, block_s)
