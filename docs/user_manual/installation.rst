@@ -47,7 +47,7 @@ Installing Using pip
 To install the package using pip, execute the following
 command::
 
-    pip install py_entitymatching
+    pip install -U numpy scipy py_entitymatching
 
 The above command will install py_entitymatching and all of its dependencies, except PyQt4.
 This is because pip can only install the dependency packages that are available in PyPI and
@@ -57,8 +57,9 @@ PyQt4 is not in PyPI. So next, you need to install PyQt4, using the instructions
 Installing from Source Distribution
 -----------------------------------
 Download the py_entitymatching package from `here
-<https://sites.google.com/site/anhaidgroup/projects/py_entitymatching>`_, unzip the package, then execute the following command from the package root::
+<https://sites.google.com/site/anhaidgroup/projects/py_entitymatching>`_, unzip the package, then execute the following commands from the package root::
 
+    pip install -U numpy scipy
     python setup.py install
 
 which installs py_stringmatching into the default Python directory on your machine. If you do not have installation permission for that directory then you can install the package in your
@@ -68,6 +69,6 @@ home directory as follows::
 
 For more information see this StackOverflow `link <http://stackoverflow.com/questions/14179941/how-to-install-python-packages-without-root-privileges>`_.
 
-The above command will install py_entitymatching and all of its
+The above commands will install py_entitymatching and all of its
 dependencies, except PyQt4. This is because similar to pip, setup.py can only install
 the dependency packages that are available in PyPI and PyQt4 is not in PyPI. So next, you need to install PyQt4, using the instructions on `this page <http://pyqt.sourceforge.net/Docs/PyQt4/installation.html>`_.
