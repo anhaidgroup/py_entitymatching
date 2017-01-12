@@ -56,8 +56,8 @@ The current package supports EM workflows that consist of a blocking step follow
 .. image:: example-workflow.png
 	:scale: 100
     :alt: 'An example of EM workflow'
-    
-In the future, we will consider extending the package to support more powerful EM workflows, such as using multiple matchers, or being able to add rules to process the output of the matchers. 
+ 
+Further, the current package only supports learning-based matchers. Specifically, it will require the user to label a set of tuple pairs (as "match" or "no-match"), then use the labeled data to train matchers. In the future, we will consider extending the package to support more powerful EM workflows, such as using multiple matchers, including rule-based ones, or being able to add rules to process the output of the matchers. 
 
 The Development and Production Stages
 -------------------------------------
@@ -68,7 +68,6 @@ In practice EM is typically carried out in two stages. In the development stage,
 	:scale: 100
     :alt: 'An example of the development stage'
     
-Next, suppose the package provides two blockers: X and Y. Then the user will experiment with these blockers (for example, executing both on Tables A' and B' and examining their output) to select the blocker judged the best (according to some criterion). Suppose the user selects blocker X. Then next, he or she executes X on Tables A' and B' to obtain a set of candidate tuple pairs C. 
+Next, suppose the package provides two blockers X and Y. Then the user will experiment with these blockers (for example, executing both on Tables A' and B' and examining their output) to select the blocker judged the best (according to some criterion). Suppose the user selects blocker X. Then next, he or she executes X on Tables A' and B' to obtain a set of candidate tuple pairs C. 
 
-
-    
+Next, the user takes a sample S from C, and labels the pairs in S as "match" or "no-match" (see the figure). Let the labeled set be G, and suppose the package provides two matchers U and V. Suppose further that U and V are learning-based matchers (for example, one uses decision trees and the other uses logistic regression). Then in the next step, the user will use the labeled set G to perform cross validation for U and V. Suppose V produces higher matching accuracy (such as F1 score of 0.93, see the figure). Then the user will select V as the matcher, then apply V to the set C to predict "match" or "no-match", shown as "+" or "-" in the figure. 
