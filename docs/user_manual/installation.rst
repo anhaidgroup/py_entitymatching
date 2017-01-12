@@ -56,7 +56,7 @@ PyQt4 is not in PyPI. So next, you need to install PyQt4, using the instructions
 
 Installing from Source Distribution
 -----------------------------------
-Download the py_stringmatching package from `here
+Download the py_entitymatching package from `here
 <https://sites.google.com/site/anhaidgroup/projects/py_entitymatching>`_, unzip the package, then execute the following command from the package root::
 
     python setup.py install
