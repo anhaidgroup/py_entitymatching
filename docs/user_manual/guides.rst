@@ -45,9 +45,9 @@ Stepwise Guides
 
 * Handling features:
 
-    * Generating features manually: `Jupyter notebook <https://nbviewer.jupyter.org/github/anhaidgroup/py_entitymatching/blob/rel_0.1.x/notebooks/guides/step_wise_em_guides/Generating%20Features%20for%20Blocking%20Manually.ipynb>`_
+    * Generating features manually: `Jupyter notebook <https://nbviewer.jupyter.org/github/anhaidgroup/py_entitymatching/blob/rel_0.1.x/notebooks/guides/step_wise_em_guides/Generating%20Features%20for%20Manually.ipynb>`_
 
-    * Editing attribute types and generating features manually: `Jupyter notebook <https://nbviewer.jupyter.org/github/anhaidgroup/py_entitymatching/blob/rel_0.1.x/notebooks/guides/step_wise_em_guides/Editing%20and%20Generate%20Features%20for%20Blocking%20Manually.ipynb>`_
+    * Editing attribute types and generating features manually: `Jupyter notebook <https://nbviewer.jupyter.org/github/anhaidgroup/py_entitymatching/blob/rel_0.1.x/notebooks/guides/step_wise_em_guides/Editing%20and%20Generate%20Features%20for%20Manually.ipynb>`_
 
     * Adding features to feature table: `Jupyter notebook <https://nbviewer.jupyter.org/github/anhaidgroup/py_entitymatching/blob/rel_0.1.x/notebooks/guides/step_wise_em_guides/Adding%20Features%20to%20Feature%20Table.ipynb>`_
 
