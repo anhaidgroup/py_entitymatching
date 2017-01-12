@@ -68,3 +68,7 @@ In practice EM is typically carried out in two stages. In the development stage,
 	:scale: 100
     :alt: 'An example of the development stage'
     
+Next, suppose the package provides two blockers: X and Y. Then the user will experiment with these blockers (for example, executing both on Tables A' and B' and examining their output) to select the blocker judged the best (according to some criterion). Suppose the user selects blocker X. Then next, he or she executes X on Tables A' and B' to obtain a set of candidate tuple pairs C. 
+
+
+    
