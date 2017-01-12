@@ -29,15 +29,15 @@ py_entitymatching can be installed using conda, pip, or source distribution, as 
  
 Installing Using conda
 ----------------------
-The easiest and recommended way to install the package is to use conda,
+The easiest and recommended way to install the package is to use the command conda,
 which will retrieve py_entitymatching from Anaconda repository then install it::
 
     conda install -c uwmagellan py_entitymatching
 
-The above command will install py_entitymatching and all its dependencies.
+The above command will install py_entitymatching and all of its dependencies.
 
 .. note::
-    To use conda command, first you must install Miniconda or Anaconda. For
+    To use the command conda, first you must install Miniconda or Anaconda. For
     more details refer to this `conda page <http://conda.pydata
     .org/docs/using/index
     .html>`_.
@@ -45,21 +45,20 @@ The above command will install py_entitymatching and all its dependencies.
 
 Installing Using pip
 --------------------
-To install the py_entitymatching package using pip, execute the following
+To install the package using pip, execute the following
 command::
 
     pip install py_entitymatching
 
-The above command will install py_entitymatching and all its dependencies, except PyQt4.
+The above command will install py_entitymatching and all of its dependencies, except PyQt4.
 This is because pip can only install the dependency packages that are available in PyPI and
 PyQt4 is not in PyPI. Refer to this `PyQt4 page <http://pyqt.sourceforge.net/Docs/PyQt4/installation.html>`_
 on how to install PyQt4.
 
 
-
 Installing from Source Distribution
 -----------------------------------
-Step 1: Download the py_stringmatching package from `here
+Download the py_stringmatching package from `here
 <https://sites.google.com/site/anhaidgroup/projects/py_entitymatching>`_.
 
 Step 2: Unzip the package and execute the following command from the package
