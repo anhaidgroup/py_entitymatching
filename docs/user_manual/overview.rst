@@ -56,7 +56,4 @@ Supported EM Workflows
 The current package supports EM workflows that consist of a blocking step followed by a
 matching step. Specifically, the package provides a set of blockers and a set of matchers
 (and the user can easily write his or her own blocker/matcher). Given two tables A and B
-to be matched, the user applies a blocker to the two tables
-
-    
-
+to be matched, the user applies a blocker to the two tables xxx
