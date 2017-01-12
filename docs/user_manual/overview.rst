@@ -74,4 +74,9 @@ Next, the user takes a sample S from C, and labels the pairs in S as "match" or 
 
 Once the user has been satisfied with the EM workflow, the production stage begins. In this stage the user will execute the discovered workflow on the original tables A and B. Since these tables are very large, scaling is a major concern (and is typically solved using Hadoop or Spark). Other concerns include quality monitoring, exception handling, crash recovery, etc. 
 
+The Focus of the Current Package
+--------------------------------
+
+The current py_entitymatching package focuses on helping the user with the development stage, that is, help him or her discover an accurate EM workflow. In the future, we will extend the package to also help the user with the production stage. 
+
 
