@@ -19,5 +19,5 @@ Of course, if you want to match tuples within a single table X, you can also use
 Two Fundamental Steps in the EM Process: Blocking and Matching
 --------------------------------------------------------------
 
-
+In practice, tables A and B can be quite large, such as having 100K tuples each, resulting in 10 billions tuple pairs in the Cartesian product of A and B. Trying to match all of these pairs is clearly very expensive. Thus, in such cases the user often employs domain heuristics to quickly remove obviously non-matched pairs, in a step called *blocking*, before matching the remaining pairs, in a step called *matching*. The following figure illustrates these two fundamental steps. Again, suppose that we are matching the two tables A and B in (a) that describe persons. The blocking step can use a heuristic such as "if two person tuples do not agree on state, then they cannot refer to the same person" to quickly remove all such tuple pairs. In other words, the blocking step retains only the four tuple pairs that agree on state, as shown in (b). 
 
