@@ -19,5 +19,12 @@ Of course, if you want to match tuples within a single table X, you can also use
 Two Fundamental Steps in the EM Process: Blocking and Matching
 --------------------------------------------------------------
 
-In practice, tables A and B can be quite large, such as having 100K tuples each, resulting in 10 billions tuple pairs in the Cartesian product of A and B. Trying to match all of these pairs is clearly very expensive. Thus, in such cases the user often employs domain heuristics to quickly remove obviously non-matched pairs, in a step called *blocking*, before matching the remaining pairs, in a step called *matching*. The following figure illustrates these two fundamental steps. Again, suppose that we are matching the two tables A and B in (a) that describe persons. The blocking step can use a heuristic such as "if two person tuples do not agree on state, then they cannot refer to the same person" to quickly remove all such tuple pairs. In other words, the blocking step retains only the four tuple pairs that agree on state, as shown in (b). 
+In practice, tables A and B can be quite large, such as having 100K tuples each, resulting in 10 billions tuple pairs across A and B. Trying to match all of these pairs is clearly very expensive. Thus, in such cases the user often employs domain heuristics to quickly remove obviously non-matched pairs, in a step called *blocking*, before matching the remaining pairs, in a step called *matching*. 
+
+The following figure illustrates the above two fundamental steps. Suppose that we are matching the two tables A and B in (a), where each tuple describes a person. The blocking step can use a heuristic such as "if two tuples do not agree on state, then they cannot refer to the same person" to quickly remove all such tuple pairs. In other words, the blocking step retains only the four tuple pairs that agree on state, as shown in (b). The matching step in (c) then considers only these tuple pairs and predicts for each of them a label "match" or "not-match" (shown as "+" and "-" in the figure). 
+
+.. image:: blocking-matching-example.png
+	:scale: 100
+    :alt: 'An example of blocking and matching'
+    
 
