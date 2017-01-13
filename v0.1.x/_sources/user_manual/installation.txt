@@ -1,7 +1,6 @@
 ============
 Installation
 ============
-This section discusses the installation instructions of *py_entitymatching*.
 
 Requirements
 ------------
@@ -12,7 +11,6 @@ Platforms
 py_entitymatching has been tested on Linux (Redhat enterprise Linux with 2.6
 .32 kernel), OS X (Sierra), and Windows 10.
 
-
 Dependencies
 ------------
 * pandas (provides data structures to store and manage tables)
@@ -20,26 +18,25 @@ Dependencies
 * joblib (provides multiprocessing capabilities)
 * pyqt4 (provides tools to build GUIs)
 * py_stringsimjoin (provides implementations for string similarity joins)
-* py_stringmatching (provides a set of tokenizers and string similarity functions)
+* py_stringmatching (provides a set of string tokenizers and string similarity functions)
 * cloudpickle (provides functions to serialize Python constructs)
 * pyprind (library to display progress indicators)
-* pyparsing (library to parse strings.)
+* pyparsing (library to parse strings)
 * six (provides functions to write compatible code across Python 2 and 3)
 
-There are three ways to install py_entitymatching package: (1) using conda,
-(2) using pip , and (3) using source distribution.
-
+py_entitymatching can be installed using conda, pip, or source distribution, as described below. 
+ 
 Installing Using conda
 ----------------------
-The easiest and the recommended way to install the package is to use conda,
+The easiest and recommended way to install the package is to use the command conda,
 which will retrieve py_entitymatching from Anaconda repository then install it::
 
     conda install -c uwmagellan py_entitymatching
 
-The above command will install py_entitymatching and all its dependencies.
+The above command will install py_entitymatching and all of its dependencies.
 
 .. note::
-    To use conda command, first you must install Miniconda or Anaconda. For
+    To use the command conda, first you must install Miniconda or Anaconda. For
     more details refer to this `conda page <http://conda.pydata
     .org/docs/using/index
     .html>`_.
@@ -47,48 +44,31 @@ The above command will install py_entitymatching and all its dependencies.
 
 Installing Using pip
 --------------------
-To install the py_entitymatching package using pip, execute the following
+To install the package using pip, execute the following
 command::
 
-    pip install py_entitymatching
+    pip install -U numpy scipy py_entitymatching
 
-The above command will install py_entitymatching and all its dependencies, except PyQt4.
+The above command will install py_entitymatching and all of its dependencies, except PyQt4.
 This is because pip can only install the dependency packages that are available in PyPI and
-PyQt4 is not in PyPI. Refer to this `PyQt4 page <http://pyqt.sourceforge.net/Docs/PyQt4/installation.html>`_
-on how to install PyQt4.
-
+PyQt4 is not in PyPI. So next, you need to install PyQt4, using the instructions on `this page <http://pyqt.sourceforge.net/Docs/PyQt4/installation.html>`_.
 
 
 Installing from Source Distribution
 -----------------------------------
-Step 1: Download the py_stringmatching package from `here
-<https://sites.google.com/site/anhaidgroup/projects/py_entitymatching>`_.
+Download the py_entitymatching package from `here
+<https://sites.google.com/site/anhaidgroup/projects/py_entitymatching>`_, unzip the package, then execute the following commands from the package root::
 
-Step 2: Unzip the package and execute the following command from the package
-root::
-
+    pip install -U numpy scipy
     python setup.py install
 
-
-
-
-The above command will try to install py_stringmatching into the default
-Python directory on your machine. If you do not have installation
-permission for that directory then you can install the package in your
+which installs py_stringmatching into the default Python directory on your machine. If you do not have installation permission for that directory then you can install the package in your
 home directory as follows::
 
         python setup.py install --user
 
-
 For more information see this StackOverflow `link <http://stackoverflow.com/questions/14179941/how-to-install-python-packages-without-root-privileges>`_.
 
-
-
-The above command will install py_entitymatching and all its
+The above commands will install py_entitymatching and all of its
 dependencies, except PyQt4. This is because similar to pip, setup.py can only install
-the dependency packages that are available in PyPI and PyQt4 is not in PyPI.
-Refer to this `page <http://pyqt.sourceforge.net/Docs/PyQt4/installation.html>`_ on how to
-install PyQt4.
-
-
-
+the dependency packages that are available in PyPI and PyQt4 is not in PyPI. So next, you need to install PyQt4, using the instructions on `this page <http://pyqt.sourceforge.net/Docs/PyQt4/installation.html>`_.

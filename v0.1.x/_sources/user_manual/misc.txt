@@ -1,7 +1,7 @@
 =============
 Miscellaneous
 =============
-This section covers some miscellaneous things in *py_entitymatching*.
+This section covers some miscellaneous things in py_entitymatching.
 
 .. _label-csv-format:
 
@@ -12,7 +12,7 @@ programs. Further, it can be easily inspected and edited by the users.
 You can read more about CSV formats `here <https://en.wikipedia.org/wiki/Comma-separated_values>`_.
 
 There are two common CSV formats that are used to store CSV files: one with attribute
-names in the first line, and one without. Both these formats are supported by *py_entitymatching*.
+names in the first line, and one without. Both these formats are supported by py_entitymatching.
 
 An example of a CSV file with attribute names is shown below:
 ::
@@ -51,7 +51,7 @@ In the above, the pair key=ID states that ID is the key attribute.
 Writing a Dataframe to Disk Along With Its Metadata
 ---------------------------------------------------
 To write a Dataframe to disk along with its metadata, you can use `to_csv_metadata`
-command in *py_entitymatching*. An example of using `to_csv_metadata` is shown below:
+command in py_entitymatching. An example of using `to_csv_metadata` is shown below:
 
     >>> em.to_csv_metadata(A, './table_A.csv')
 
@@ -65,10 +65,10 @@ more details.
 .. note:: Once the Dataframe is written to disk along with metadata, it can read using :py:meth:`~py_entitymatching.read_csv_metadata` command.
 
 
-Writing/Reading Other Types of *py_entitymatching* Objects
+Writing/Reading Other Types of py_entitymatching Objects
 ----------------------------------------------------------
 After creating a blocker or feature table, it is desirable to have a
-way to persist the objects to disk for future use. *py_entitymatching* provides
+way to persist the objects to disk for future use. py_entitymatching provides
 two commands for that purpose: `save_object` and `load_object`.
 
 An example of using `save_object` is shown below:

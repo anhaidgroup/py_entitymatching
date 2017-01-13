@@ -4,7 +4,7 @@ Selecting a ML-Matcher
 Once you have created different concrete ML matchers, then you have to choose one of
 them for matching purposes. There are many different criteria by which one can
 decide to choose a matcher such as `akaike information criterion`, `bayesian information
-criterion`, `k-fold cross validation`, etc. Currently *py_entitymatching* supports
+criterion`, `k-fold cross validation`, etc. Currently py_entitymatching supports
 k-fold cross validation and other approaches are left for future work.
 
 Conceptually, the command to select a matcher would take in the following inputs:
@@ -19,7 +19,7 @@ And it would produce the following output:
 * Selected matcher.
 * Statistics such as mean accuracy of all input matchers.
 
-In *py_entitymatching*, `select_matcher` command addresses the above needs. An
+In py_entitymatching, `select_matcher` command addresses the above needs. An
 example of using `select_matcher` is shown below:
 
     >>> dt = em.DTMatcher()
