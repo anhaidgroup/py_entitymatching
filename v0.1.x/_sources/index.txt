@@ -11,6 +11,13 @@ Contents
 
 .. toctree::
     :maxdepth: 3
+    :caption: How To Guide
+
+    how_to_guide
+
+.. toctree::
+    :maxdepth: 3
+    :caption: User Manual
     
     user_manual/whatisnew
     user_manual/installation
