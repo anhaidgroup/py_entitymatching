@@ -152,7 +152,7 @@ PyQt4 is not in PyPI. So next, you need to install PyQt4, using the instructions
 </div>
 <div class="section" id="installing-from-source-distribution">
 <h3>Installing from Source Distribution<a class="headerlink" href="#installing-from-source-distribution" title="Permalink to this headline">¶</a></h3>
-<p>Download the py_entitymatching package from <a class="reference external" href="https://sites.google.com/site/anhaidgroup/projects/py_entitymatching">here</a>, unzip the package, then execute the following commands from the package root:</p>
+<p>Download the py_entitymatching package from <a class="reference external" href="https://sites.google.com/site/anhaidgroup/projects/magellan/py_entitymatching">here</a>, unzip the package, then execute the following commands from the package root:</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span>pip install -U numpy scipy
 python setup.py install
 </pre></div>
