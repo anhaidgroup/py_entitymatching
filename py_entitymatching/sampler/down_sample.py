@@ -34,8 +34,9 @@ def _get_stop_words():
 # get string column list
 def _get_str_cols_list(table):
     if len(table) == 0:
-        logger.error('_get_str_cols_list: Size of the input table is 0')
-        raise AssertionError('_get_str_cols_list: Size of the input table is 0')
+        error_message = 'Size of the input table is 0'
+        logger.error(error_message)
+        raise AssertionError(error_message)
 
     cols = list(table.columns[table.dtypes == object])
     col_list = []

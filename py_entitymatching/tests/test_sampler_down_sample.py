@@ -37,6 +37,16 @@ class DownSampleTestCases(unittest.TestCase):
         C, D = down_sample(self.A, self.B, 100, 10)
         self.assertNotEqual(len(C), 0)
 
+    def test_invalid_data_frame_size(self):
+        df_empty = pd.DataFrame({'A': []})
+        with self.assertRaises(AssertionError) as ctx:
+            down_sample(df_empty, self.B, 100, 10)
+
+        actual = str(ctx.exception)
+        expected = 'Size of the input table is 0'
+        self.assertEqual(actual, expected)
+
+
     @raises(AssertionError)
     def test_down_sample_table_invalid_dfA(self):
         C, D = down_sample(None, self.B, 100, 10)
