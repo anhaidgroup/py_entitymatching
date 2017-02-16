@@ -371,6 +371,17 @@ class ToCSVMetadataTestCases(unittest.TestCase):
         expected = 'Input file path 1001 is not of type string'
         self.assertEqual(actual, expected)
 
+    def test_invalid_data_frame_type(self):
+        cm.del_catalog()
+        del_files_in_dir(sndbx_path)
+
+        p = os.sep.join([sndbx_path, 'temp', 'A_saved.csv'])
+        with self.assertRaises(AssertionError) as ctx:
+            to_csv_metadata(1001, p)
+
+        actual = str(ctx.exception)
+        expected = 'Input dataframe 1001 is not of type pandas dataframe'
+        self.assertEqual(actual, expected)
 
 
 

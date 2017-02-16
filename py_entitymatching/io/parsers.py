@@ -7,7 +7,7 @@ import pandas as pd
 import six
 
 import py_entitymatching.catalog.catalog_manager as cm
-from py_entitymatching.utils.generic_helper import validate_file_path_type_is_string
+from py_entitymatching.utils.generic_helper import validate_file_path_type_is_string, validate_dataframe_type
 
 logger = logging.getLogger(__name__)
 
@@ -196,10 +196,7 @@ def to_csv_metadata(data_frame, file_path, **kwargs):
     """
     # Validate input parameters
 
-    # # data_frame is expected to be of type pandas DataFrame.
-    if not isinstance(data_frame, pd.DataFrame):
-        logging.error('Input dataframe is not of type pandas dataframe')
-        raise AssertionError('Input dataframe is not of type pandas dataframe')
+    validate_dataframe_type(data_frame)
 
     validate_file_path_type_is_string(file_path)
 
