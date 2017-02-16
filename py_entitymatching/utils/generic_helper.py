@@ -215,3 +215,11 @@ def validate_dataframe_type(data_frame):
         error_message = 'Input dataframe {0} is not of type pandas dataframe'.format(str(data_frame))
         logger.error('%s' % error_message)
         raise AssertionError(error_message)
+
+
+def validate_metadata_ext_type_is_string(metadata_ext):
+    # # The metadata_extn is expected to be of type string
+    if not isinstance(metadata_ext, six.string_types):
+        error_message = 'Input metadata ext {0} is not of type string'.format(str(metadata_ext))
+        logger.error('%s' % error_message)
+        raise AssertionError(error_message)
