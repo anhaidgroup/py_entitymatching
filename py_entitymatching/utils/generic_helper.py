@@ -13,7 +13,6 @@ import py_entitymatching.catalog.catalog_manager as cm
 from py_entitymatching.debugmatcher.debug_gui_utils import _get_metric, _get_dataframe
 
 from py_entitymatching.utils import install_path
-from py_entitymatching.io.parsers import read_csv_metadata
 
 logger = logging.getLogger(__name__)
 
@@ -202,6 +201,9 @@ def creat_dir_ifnot_exists(dir):
         os.makedirs(dir)
 
 
-
-
-
+def validate_file_path_type_is_string(file_path):
+    # # file_path is expected to be of type string.
+    if not isinstance(file_path, six.string_types):
+        error_message = 'Input file path {0} is not of type string'.format(str(file_path))
+        logger.error('%s' % error_message)
+        raise AssertionError(error_message)
