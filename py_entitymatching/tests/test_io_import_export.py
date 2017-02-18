@@ -183,7 +183,7 @@ class ReadCSVMetadataTestCases(unittest.TestCase):
             read_csv_metadata(1001)
 
         actual = str(ctx.exception)
-        expected = 'Input file path 1001 is not of type string'
+        expected = 'Input object 1001 is not of type string'
         self.assertEqual(actual, expected)
 
 
@@ -368,7 +368,7 @@ class ToCSVMetadataTestCases(unittest.TestCase):
             to_csv_metadata(A, 1001)
 
         actual = str(ctx.exception)
-        expected = 'Input file path 1001 is not of type string'
+        expected = 'Input object 1001 is not of type string'
         self.assertEqual(actual, expected)
 
     def test_invalid_data_frame_type(self):
@@ -380,7 +380,7 @@ class ToCSVMetadataTestCases(unittest.TestCase):
             to_csv_metadata(1001, p)
 
         actual = str(ctx.exception)
-        expected = 'Input dataframe 1001 is not of type pandas dataframe'
+        expected = 'Input object 1001 is not of type pandas dataframe'
         self.assertEqual(actual, expected)
 
 

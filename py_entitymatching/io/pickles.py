@@ -13,8 +13,7 @@ import six
 
 import py_entitymatching.catalog.catalog_manager as cm
 import py_entitymatching.io.parsers as ps
-from py_entitymatching.utils.generic_helper import validate_file_path_type_is_string, validate_dataframe_type, \
-    validate_metadata_ext_type_is_string
+from py_entitymatching.utils.generic_helper import validate_object_type
 
 logger = logging.getLogger(__name__)
 
@@ -65,7 +64,7 @@ def save_object(object_to_save, file_path):
     """
     # Validate input parameters
 
-    validate_file_path_type_is_string(file_path)
+    validate_object_type(file_path, six.string_types)
 
     # Check whether the file path is valid and if a file is already present
     # at that path.
@@ -124,7 +123,7 @@ def load_object(file_path):
     """
     # Validate input parameters
 
-    validate_file_path_type_is_string(file_path)
+    validate_object_type(file_path, six.string_types)
 
     # Check if a file exists at the given file path.
     if not os.path.exists(file_path):
@@ -197,11 +196,11 @@ def save_table(data_frame, file_path, metadata_ext='.pklmetadata'):
     """
     # Validate the input parameters
 
-    validate_dataframe_type(data_frame)
+    validate_object_type(data_frame, pd.DataFrame)
 
-    validate_file_path_type_is_string(file_path)
+    validate_object_type(file_path, six.string_types)
 
-    validate_metadata_ext_type_is_string(metadata_ext)
+    validate_object_type(metadata_ext, six.string_types)
 
     # Get the file_name (with out extension) and the extension from the given
     #  file path. For example if the file_path was /Users/foo/file.csv then
@@ -331,9 +330,9 @@ def load_table(file_path, metadata_ext='.pklmetadata'):
 
     """
     # Validate input parameters
-    validate_file_path_type_is_string(file_path)
+    validate_object_type(file_path, six.string_types)
 
-    validate_metadata_ext_type_is_string(metadata_ext)
+    validate_object_type(metadata_ext, six.string_types)
 
     # Load the object from the file path. Note that we use a generic load
     # object to load in the DataFrame too.

@@ -201,25 +201,16 @@ def creat_dir_ifnot_exists(dir):
         os.makedirs(dir)
 
 
-def validate_file_path_type_is_string(file_path):
-    # # file_path is expected to be of type string.
-    if not isinstance(file_path, six.string_types):
-        error_message = 'Input file path {0} is not of type string'.format(str(file_path))
-        logger.error('%s' % error_message)
-        raise AssertionError(error_message)
+def type_name(expected_type):
+    messages = {
+        six.string_types: 'string',
+        pd.DataFrame: 'pandas dataframe'
+    }
+    return messages[expected_type]
 
 
-def validate_dataframe_type(data_frame):
-    # # data_frame is expected to be of type pandas DataFrame.
-    if not isinstance(data_frame, pd.DataFrame):
-        error_message = 'Input dataframe {0} is not of type pandas dataframe'.format(str(data_frame))
-        logger.error('%s' % error_message)
-        raise AssertionError(error_message)
-
-
-def validate_metadata_ext_type_is_string(metadata_ext):
-    # # The metadata_extn is expected to be of type string
-    if not isinstance(metadata_ext, six.string_types):
-        error_message = 'Input metadata ext {0} is not of type string'.format(str(metadata_ext))
+def validate_object_type(input_object, expected_type):
+    if not isinstance(input_object, expected_type):
+        error_message = 'Input object {0} is not of type {1}'.format(str(input_object), type_name(expected_type))
         logger.error('%s' % error_message)
         raise AssertionError(error_message)
