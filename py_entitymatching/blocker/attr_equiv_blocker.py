@@ -8,7 +8,7 @@ from joblib import Parallel, delayed
 import py_entitymatching.catalog.catalog_manager as cm
 from py_entitymatching.blocker.blocker import Blocker
 from py_entitymatching.utils.catalog_helper import log_info, get_name_for_key, add_key_column
-from py_entitymatching.utils.generic_helper import rem_nan
+from py_entitymatching.utils.generic_helper import rem_nan, validate_object_type
 
 logger = logging.getLogger(__name__)
 
@@ -411,17 +411,8 @@ class AttrEquivalenceBlocker(Blocker):
 
     # validate the data types of the blocking attributes 
     def validate_types_block_attrs(self, l_block_attr, r_block_attr):
-        if not isinstance(l_block_attr, six.string_types):
-            logger.error(
-                'Blocking attribute name of left table is not of type string')
-            raise AssertionError(
-                'Blocking attribute name of left table is not of type string')
-
-        if not isinstance(r_block_attr, six.string_types):
-            logger.error(
-                'Blocking attribute name of right table is not of type string')
-            raise AssertionError(
-                'Blocking attribute name of right table is not of type string')
+        validate_object_type(l_block_attr, six.string_types, param_name='Blocking attribute name of left table')
+        validate_object_type(r_block_attr, six.string_types, param_name='Blocking attribute name of right table')
 
     # validate the blocking attributes
     def validate_block_attrs(self, ltable, rtable, l_block_attr, r_block_attr):
