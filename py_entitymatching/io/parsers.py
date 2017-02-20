@@ -7,6 +7,7 @@ import pandas as pd
 import six
 
 import py_entitymatching.catalog.catalog_manager as cm
+from py_entitymatching.utils.generic_helper import validate_object_type
 
 logger = logging.getLogger(__name__)
 
@@ -80,10 +81,7 @@ def read_csv_metadata(file_path, **kwargs):
     """
     # Validate the input parameters.
 
-    # # File path is expected to be of type string.
-    if not isinstance(file_path, six.string_types):
-        logger.error('Input file path is not of type string')
-        raise AssertionError('Input file path is not of type string')
+    validate_object_type(file_path, six.string_types)
 
     # # Check if the given path is valid.
     if not os.path.exists(file_path):
@@ -198,15 +196,9 @@ def to_csv_metadata(data_frame, file_path, **kwargs):
     """
     # Validate input parameters
 
-    # # data_frame is expected to be of type pandas DataFrame.
-    if not isinstance(data_frame, pd.DataFrame):
-        logging.error('Input dataframe is not of type pandas dataframe')
-        raise AssertionError('Input dataframe is not of type pandas dataframe')
+    validate_object_type(data_frame, pd.DataFrame)
 
-    # # file_path is expected to be of type string.
-    if not isinstance(file_path, six.string_types):
-        logger.error('Input file path is not of type string')
-        raise AssertionError('Input file path is not of type string')
+    validate_object_type(file_path, six.string_types)
 
     # Check if the user has specified the metadata file's extension.
     extension = kwargs.pop('metadata_extn', None)

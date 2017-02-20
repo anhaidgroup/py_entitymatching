@@ -13,7 +13,6 @@ import py_entitymatching.catalog.catalog_manager as cm
 from py_entitymatching.debugmatcher.debug_gui_utils import _get_metric, _get_dataframe
 
 from py_entitymatching.utils import install_path
-from py_entitymatching.io.parsers import read_csv_metadata
 
 logger = logging.getLogger(__name__)
 
@@ -202,6 +201,16 @@ def creat_dir_ifnot_exists(dir):
         os.makedirs(dir)
 
 
+def type_name(expected_type):
+    messages = {
+        six.string_types: 'string',
+        pd.DataFrame: 'pandas dataframe'
+    }
+    return messages[expected_type]
 
 
-
+def validate_object_type(input_object, expected_type):
+    if not isinstance(input_object, expected_type):
+        error_message = 'Input object {0} is not of type {1}'.format(str(input_object), type_name(expected_type))
+        logger.error('%s' % error_message)
+        raise AssertionError(error_message)

@@ -13,6 +13,7 @@ import six
 
 import py_entitymatching.catalog.catalog_manager as cm
 import py_entitymatching.io.parsers as ps
+from py_entitymatching.utils.generic_helper import validate_object_type
 
 logger = logging.getLogger(__name__)
 
@@ -63,10 +64,7 @@ def save_object(object_to_save, file_path):
     """
     # Validate input parameters
 
-    # # The file path is expected to be of type string.
-    if not isinstance(file_path, six.string_types):
-        logger.error('Input file path is not of type string')
-        raise AssertionError('Input file path is not of type string')
+    validate_object_type(file_path, six.string_types)
 
     # Check whether the file path is valid and if a file is already present
     # at that path.
@@ -125,10 +123,7 @@ def load_object(file_path):
     """
     # Validate input parameters
 
-    # The file path is expected to be of type string.
-    if not isinstance(file_path, six.string_types):
-        logger.error('Input file path is not of type string')
-        raise AssertionError('Input file path is not of type string')
+    validate_object_type(file_path, six.string_types)
 
     # Check if a file exists at the given file path.
     if not os.path.exists(file_path):
@@ -201,20 +196,11 @@ def save_table(data_frame, file_path, metadata_ext='.pklmetadata'):
     """
     # Validate the input parameters
 
-    # # data_frame is expected to be of type pandas DataFrame
-    if not isinstance(data_frame, pd.DataFrame):
-        logging.error('Input object is not of type pandas DataFrame')
-        raise AssertionError('Input object is not of type pandas DataFrame')
+    validate_object_type(data_frame, pd.DataFrame)
 
-    # # file_path is expected to be of type pandas DataFrame
-    if not isinstance(file_path, six.string_types):
-        logger.error('Input file path is not of type string')
-        raise AssertionError('Input file path is not of type string')
+    validate_object_type(file_path, six.string_types)
 
-    # # metadata_ext is expected to be of type string
-    if not isinstance(metadata_ext, six.string_types):
-        logger.error('Input metadata ext is not of type string')
-        raise AssertionError('Input metadata ext is not of type string')
+    validate_object_type(metadata_ext, six.string_types)
 
     # Get the file_name (with out extension) and the extension from the given
     #  file path. For example if the file_path was /Users/foo/file.csv then
@@ -344,16 +330,9 @@ def load_table(file_path, metadata_ext='.pklmetadata'):
 
     """
     # Validate input parameters
+    validate_object_type(file_path, six.string_types)
 
-    # # The file_path is expected to be of type string
-    if not isinstance(file_path, six.string_types):
-        logger.error('Input file path is not of type string')
-        raise AssertionError('Input file path is not of type string')
-
-    # # The metadata_extn is expected to be of type string
-    if not isinstance(metadata_ext, six.string_types):
-        logger.error('Input metadata ext is not of type string')
-        raise AssertionError('Input metadata ext is not of type string')
+    validate_object_type(metadata_ext, six.string_types)
 
     # Load the object from the file path. Note that we use a generic load
     # object to load in the DataFrame too.

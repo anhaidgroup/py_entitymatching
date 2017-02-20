@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 import os
 import unittest
 import pandas as pd
-from nose.tools import *
+from nose.tools import raises
 
 from py_entitymatching.io.parsers import read_csv_metadata, to_csv_metadata, _get_metadata_from_file
 from py_entitymatching.utils.generic_helper import get_install_path, del_files_in_dir, creat_dir_ifnot_exists
@@ -176,6 +176,16 @@ class ReadCSVMetadataTestCases(unittest.TestCase):
         # path_c = os.sep.join([io_datasets_path, 'C_partialmeta.csv'])
 
         C = read_csv_metadata(path_c, rtable="temp", ltable=A)
+
+    def test_valid_path_type_is_not_string(self):
+        cm.del_catalog()
+        with self.assertRaises(AssertionError) as ctx:
+            read_csv_metadata(1001)
+
+        actual = str(ctx.exception)
+        expected = 'Input object 1001 is not of type string'
+        self.assertEqual(actual, expected)
+
 
 
 class ToCSVMetadataTestCases(unittest.TestCase):
@@ -350,7 +360,28 @@ class ToCSVMetadataTestCases(unittest.TestCase):
         creat_dir_ifnot_exists(sndbx_path)
         to_csv_metadata(A, p)
 
+    def test_valid_path_type_is_string(self):
+        cm.del_catalog()
+        del_files_in_dir(sndbx_path)
+        A = read_csv_metadata(path_a)
+        with self.assertRaises(AssertionError) as ctx:
+            to_csv_metadata(A, 1001)
 
+        actual = str(ctx.exception)
+        expected = 'Input object 1001 is not of type string'
+        self.assertEqual(actual, expected)
+
+    def test_invalid_data_frame_type(self):
+        cm.del_catalog()
+        del_files_in_dir(sndbx_path)
+
+        p = os.sep.join([sndbx_path, 'temp', 'A_saved.csv'])
+        with self.assertRaises(AssertionError) as ctx:
+            to_csv_metadata(1001, p)
+
+        actual = str(ctx.exception)
+        expected = 'Input object 1001 is not of type pandas dataframe'
+        self.assertEqual(actual, expected)
 
 
 
