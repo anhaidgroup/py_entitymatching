@@ -67,9 +67,7 @@ def _vis_debug_rf(matcher, train, test, exclude_attrs, target_attr,
                              'Random Forest matcher')
 
     # # We expect the target attribute to be of type string.
-    if not isinstance(target_attr, six.string_types):
-        logger.error('Target attribute is not of type string')
-        raise AssertionError('Target attribute is not of type string')
+    validate_object_type(target_attr, six.string_types, param_name='Target attribute')
 
     # # Check whether the exclude attributes are indeed present in the train
     #  DataFrame.

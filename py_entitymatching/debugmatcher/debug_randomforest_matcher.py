@@ -55,9 +55,7 @@ def debug_randomforest_matcher(random_forest, tuple_1, tuple_2,
     """
     # Validate input parameters.
     # # We expect the feature table to be of type pandas DataFrame
-    if not isinstance(feature_table, pd.DataFrame):
-        logger.error('The input feature table is not of type dataframe')
-        raise AssertionError('The input feature table is not of type dataframe')
+    validate_object_type(feature_table, pd.DataFrame, param_name='The input feature')
 
     # Get the classifier based on the input object.
     i = 1

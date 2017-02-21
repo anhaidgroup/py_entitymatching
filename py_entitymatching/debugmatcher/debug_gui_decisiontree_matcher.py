@@ -6,7 +6,6 @@ import six
 import pandas as pd
 
 import py_entitymatching as em
-import py_entitymatching.utils.validation_helper
 from py_entitymatching.evaluation.evaluation import eval_matches
 from py_entitymatching import DTMatcher
 from py_entitymatching.debugmatcher.debug_gui_utils import _get_code_vis, _get_metric,\
@@ -69,9 +68,7 @@ def _vis_debug_dt(matcher, train, test, exclude_attrs, target_attr,
                              'Decision Tree matcher')
 
     # # We expect the target attribute to be of type string.
-    if not isinstance(target_attr, six.string_types):
-        logger.error('Target attribute is not of type string')
-        raise AssertionError('Target attribute is not of type string')
+    validate_object_type(target_attr, six.string_types, param_name='Target attribute')
 
     # # Check whether the exclude attributes are indeed present in the train
     #  DataFrame.

@@ -5,7 +5,6 @@ This module contains functions for debugging decision tree matcher.
 import logging
 import subprocess
 
-# import numpy as np
 import pandas as pd
 import six
 from py_entitymatching.utils.validation_helper import validate_object_type
@@ -194,9 +193,8 @@ def debug_decisiontree_matcher(decision_tree, tuple_1, tuple_2, feature_table,
         >>> # A and B are input tables
         >>> em.debug_decisiontree_matcher(dt, A.ix[1], B.ix[2], match_f, H.columns, exclude_attrs=['_id', 'ltable_id', 'rtable_id', 'gold_labels'], target_attr='gold_labels')
     """
-    if not isinstance(feature_table, pd.DataFrame):
-        logger.error('The input feature table is not of type DataFrame')
-        raise AssertionError('The input feature table is not of type DataFrame')
+
+    validate_object_type(feature_table, pd.DataFrame, 'The input feature table')
 
     _debug_decisiontree_matcher(decision_tree, tuple_1, tuple_2, feature_table,
                                 table_columns,
