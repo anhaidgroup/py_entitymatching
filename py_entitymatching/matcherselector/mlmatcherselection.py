@@ -9,6 +9,7 @@ from sklearn.model_selection import KFold, cross_val_score
 
 from py_entitymatching.utils.catalog_helper import check_attrs_present
 from py_entitymatching.utils.generic_helper import list_diff, list_drop_duplicates
+from py_entitymatching.utils.validation_helper import validate_object_type
 
 logger = logging.getLogger(__name__)
 
@@ -167,11 +168,7 @@ def _get_xy_data_prj(x, y):
 def _get_xy_data_ex(table, exclude_attrs, target_attr):
     # Validate the input parameters
     # # We expect the input table to be of type pandas DataFrame
-    if not isinstance(table, pd.DataFrame):
-        logger.error('Input table is not of type DataFrame')
-        raise AssertionError(
-            logger.error('Input table is not of type dataframe'))
-
+    validate_object_type(table, pd.DataFrame)
     # We expect exclude attributes to be of type list. If not convert it into
     #  a list.
     if not isinstance(exclude_attrs, list):

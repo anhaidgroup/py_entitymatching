@@ -6,6 +6,8 @@ import logging
 import pandas as pd
 import six
 
+from py_entitymatching.utils.validation_helper import validate_object_type
+
 logger = logging.getLogger(__name__)
 
 
@@ -119,16 +121,10 @@ def get_attr_corres(ltable, rtable):
     # Validate input parameters
     # # We expect the input object (ltable) to be of type pandas
     # DataFrame
-    if not isinstance(ltable, pd.DataFrame):
-        logger.error('Input ltable is not of type pandas DataFrame')
-        raise AssertionError('Input rtable is not of type pandas '
-                             'DataFrame')
+    validate_object_type(ltable, pd.DataFrame, param_name='Input ltable')
     # # We expect the input object (rtable) to be of type pandas
     # DataFrame
-    if not isinstance(rtable, pd.DataFrame):
-        logger.error('Input rtable is not of type pandas DataFrame')
-        raise AssertionError('Input rtable is not of type pandas '
-                             'DataFrame')
+    validate_object_type(rtable, pd.DataFrame, param_name='Input rtable')
 
     # Initialize the correspondence list
     correspondence_list = []

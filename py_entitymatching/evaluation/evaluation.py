@@ -10,6 +10,7 @@ import six
 import py_entitymatching.catalog.catalog_manager as cm
 import py_entitymatching.utils.catalog_helper as ch
 from py_entitymatching.debugmatcher.debug_gui_utils import _get_dataframe, _get_metric
+from py_entitymatching.utils.validation_helper import validate_object_type
 
 logger = logging.getLogger(__name__)
 
@@ -58,21 +59,14 @@ def eval_matches(data_frame, gold_label_attr, predicted_label_attr):
     # Validate input parameters
 
     # # We expect the input object to be of type pandas DataFrame
-    if not isinstance(data_frame, pd.DataFrame):
-        logger.error('The input table is not of type DataFrame')
-        raise AssertionError('The input is not of type DataFrame')
+    validate_object_type(data_frame, pd.DataFrame, 'The input table')
 
     # # We expect the input attribute (gold_label_attr) to be of type string
-    if not isinstance(gold_label_attr, six.string_types):
-        logger.error('The input gold_label_attr is not of type string')
-        raise AssertionError('The input gold_label_attr is not of type string')
+    validate_object_type(gold_label_attr, six.string_types, 'The input gold_label_attr')
 
     # # We expect the input attribute (predicted_label_attr) to be of type
     # string
-    if not isinstance(predicted_label_attr, six.string_types):
-        logger.error('The input predicted_label_attr is not of type string')
-        raise AssertionError(
-            'The input predicted_label_attr is not of type string')
+    validate_object_type(predicted_label_attr, six.string_types, 'The input predicted_label_attr')
 
     # Check whether the gold label attribute is present in the input table
     if not ch.check_attrs_present(data_frame, gold_label_attr):
@@ -231,9 +225,7 @@ def get_false_positives_as_df(table, eval_summary, verbose=False):
     # Validate input parameters
 
     # # We expect the input candset to be of type pandas DataFrame.
-    if not isinstance(table, pd.DataFrame):
-        logger.error('Input cand.set is not of type dataframe')
-        raise AssertionError('Input cand.set is not of type dataframe')
+    validate_object_type(table, pd.DataFrame, param_name='Input cand.set')
 
     # Do metadata checking
     # # Mention what metadata is required to the user
@@ -301,9 +293,7 @@ def get_false_negatives_as_df(table, eval_summary, verbose=False):
     # Validate input parameters
 
     # # We expect the input candset to be of type pandas DataFrame.
-    if not isinstance(table, pd.DataFrame):
-        logger.error('Input cand.set is not of type dataframe')
-        raise AssertionError('Input cand.set is not of type dataframe')
+    validate_object_type(table, pd.DataFrame, param_name='Input cand.set')
 
     # Do metadata checking
     # # Mention what metadata is required to the user

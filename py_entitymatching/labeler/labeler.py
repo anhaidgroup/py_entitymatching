@@ -8,6 +8,7 @@ import six
 
 import py_entitymatching.catalog.catalog_manager as cm
 import py_entitymatching.utils.catalog_helper as ch
+from py_entitymatching.utils.validation_helper import validate_object_type
 
 logger = logging.getLogger(__name__)
 
@@ -86,14 +87,10 @@ def _validate_inputs(table, label_column_name, verbose):
     # Validate the input parameters
 
     # # The input table table is expected to be of type pandas DataFrame
-    if not isinstance(table, pd.DataFrame):
-        logger.error('Input object is not of type data frame')
-        raise AssertionError('Input object is not of type data frame')
+    validate_object_type(table, pd.DataFrame)
 
     # # The label column name is expected to be of type string
-    if not isinstance(label_column_name, six.string_types):
-        logger.error('Input attr. is not of type string')
-        raise AssertionError('Input attr. is not of type string')
+    validate_object_type(label_column_name, six.string_types, param_name='Input attr.')
 
     # # Check if the label column name is already present in the input table
     if ch.check_attrs_present(table, label_column_name):
