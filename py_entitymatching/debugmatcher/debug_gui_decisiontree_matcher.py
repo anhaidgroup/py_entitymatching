@@ -6,6 +6,7 @@ import six
 import pandas as pd
 
 import py_entitymatching as em
+import py_entitymatching.utils.validation_helper
 from py_entitymatching.evaluation.evaluation import eval_matches
 from py_entitymatching import DTMatcher
 from py_entitymatching.debugmatcher.debug_gui_utils import _get_code_vis, _get_metric,\
@@ -13,6 +14,7 @@ from py_entitymatching.debugmatcher.debug_gui_utils import _get_code_vis, _get_m
 
 import py_entitymatching.utils.catalog_helper as ch
 import py_entitymatching.utils.generic_helper as gh
+from py_entitymatching.utils.validation_helper import validate_object_type
 
 logger = logging.getLogger(__name__)
 

@@ -15,7 +15,8 @@ import py_entitymatching.catalog.catalog_manager as cm
 from py_entitymatching.blocker.blocker import Blocker
 from py_entitymatching.utils.catalog_helper import log_info, get_name_for_key, \
     add_key_column
-from py_entitymatching.utils.generic_helper import remove_non_ascii, validate_object_type
+from py_entitymatching.utils.generic_helper import remove_non_ascii
+from py_entitymatching.utils.validation_helper import validate_object_type
 
 logger = logging.getLogger(__name__)
 

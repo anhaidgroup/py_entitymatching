@@ -5,7 +5,7 @@ import pandas as pd
 import six
 import multiprocessing
 
-from py_entitymatching.utils.generic_helper import validate_object_type
+from py_entitymatching.utils.validation_helper import validate_object_type
 
 logger = logging.getLogger(__name__)
 

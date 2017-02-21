@@ -8,6 +8,7 @@ import subprocess
 # import numpy as np
 import pandas as pd
 import six
+from py_entitymatching.utils.validation_helper import validate_object_type
 from sklearn.tree import export_graphviz
 
 from py_entitymatching.feature.extractfeatures import apply_feat_fns

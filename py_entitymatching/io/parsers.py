@@ -7,7 +7,7 @@ import pandas as pd
 import six
 
 import py_entitymatching.catalog.catalog_manager as cm
-from py_entitymatching.utils.generic_helper import validate_object_type
+from py_entitymatching.utils.validation_helper import validate_object_type
 
 logger = logging.getLogger(__name__)
 

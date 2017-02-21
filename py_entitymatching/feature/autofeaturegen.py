@@ -5,7 +5,7 @@ import logging
 
 import pandas as pd
 import six
-from py_entitymatching.utils.generic_helper import validate_object_type
+from py_entitymatching.utils.validation_helper import validate_object_type
 
 import py_entitymatching as em
 import py_entitymatching.feature.attributeutils as au

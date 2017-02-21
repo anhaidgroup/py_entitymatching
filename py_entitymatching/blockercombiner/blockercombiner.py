@@ -10,6 +10,7 @@ import six
 import py_entitymatching.catalog.catalog_manager as cm
 import py_entitymatching.utils.catalog_helper as ch
 import py_entitymatching.utils.generic_helper as gh
+import py_entitymatching.utils.validation_helper
 
 logger = logging.getLogger(__name__)
 
@@ -104,10 +105,10 @@ def combine_blocker_outputs_via_union(
     # validate input parameters
 
     # The l_prefix is expected to be of type string
-    gh.validate_object_type(l_prefix, six.string_types, 'l_prefix')
+    py_entitymatching.utils.validation_helper.validate_object_type(l_prefix, six.string_types, 'l_prefix')
 
     # The r_prefix is expected to be of type string
-    gh.validate_object_type(r_prefix, six.string_types, 'r_prefix')
+    py_entitymatching.utils.validation_helper.validate_object_type(r_prefix, six.string_types, 'r_prefix')
 
     # We cannot combine empty DataFrame list
     if not len(blocker_output_list) > 0:
@@ -260,7 +261,7 @@ def _validate_lr_tables(blocker_output_list):
     # # 1) Validate whether the input objects are all DataFrames
     # # 2) Update the ltable, rtable (ids), fk_ltable and fk_rtable.
     for data_frame in blocker_output_list:
-        gh.validate_object_type(data_frame, pd.DataFrame)
+        py_entitymatching.utils.validation_helper.validate_object_type(data_frame, pd.DataFrame)
         ltable_ids.append(id(cm.get_ltable(data_frame)))
         rtable_ids.append(id(cm.get_rtable(data_frame)))
         fk_ltable_list.append(cm.get_fk_ltable(data_frame))

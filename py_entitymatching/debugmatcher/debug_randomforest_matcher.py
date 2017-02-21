@@ -8,6 +8,7 @@ import pandas as pd
 from py_entitymatching.debugmatcher.debug_decisiontree_matcher import \
     _debug_decisiontree_matcher, _get_prob
 from py_entitymatching.matcher.rfmatcher import RFMatcher
+from py_entitymatching.utils.validation_helper import validate_object_type
 
 logger = logging.getLogger(__name__)
 

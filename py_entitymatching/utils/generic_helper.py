@@ -1,18 +1,13 @@
 # coding=utf-8
 import logging
 import os
+
+import pandas as pd
 import six
 
-
-
-# import numpy as np
-import pandas as pd
-
-from py_entitymatching.utils.catalog_helper import check_fk_constraint
 import py_entitymatching.catalog.catalog_manager as cm
-from py_entitymatching.debugmatcher.debug_gui_utils import _get_metric, _get_dataframe
-
 from py_entitymatching.utils import install_path
+from py_entitymatching.utils.catalog_helper import check_fk_constraint
 
 logger = logging.getLogger(__name__)
 
@@ -199,21 +194,3 @@ def del_files_in_dir(dir):
 def creat_dir_ifnot_exists(dir):
     if not os.path.exists(dir):
         os.makedirs(dir)
-
-
-def type_name(expected_type):
-    messages = {
-        six.string_types: 'string',
-        pd.DataFrame: 'pandas dataframe',
-        list: 'list',
-        bool: 'bool',
-        int: 'int',
-        dict: 'dictionary'
-    }
-    return messages[expected_type]
-
-
-def validate_object_type(input_object, expected_type, param_name='Input object'):
-    if not isinstance(input_object, expected_type):
-        error_message = '{0}: {1} \nis not of type {2}'.format(param_name, str(input_object), type_name(expected_type))
-        raise AssertionError(error_message)

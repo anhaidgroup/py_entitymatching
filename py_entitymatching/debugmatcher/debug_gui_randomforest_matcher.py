@@ -11,6 +11,7 @@ from py_entitymatching.debugmatcher.debug_gui_utils import _get_metric, \
     get_name_for_predict_column, _get_dataframe
 from py_entitymatching.utils.catalog_helper import check_attrs_present
 from py_entitymatching.utils.generic_helper import list_drop_duplicates
+from py_entitymatching.utils.validation_helper import validate_object_type
 
 logger = logging.getLogger(__name__)
 
