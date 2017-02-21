@@ -207,7 +207,8 @@ def type_name(expected_type):
         pd.DataFrame: 'pandas dataframe',
         list: 'list',
         bool: 'bool',
-        int: 'int'
+        int: 'int',
+        dict: 'dictionary'
     }
     return messages[expected_type]
 
