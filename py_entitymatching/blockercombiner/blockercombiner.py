@@ -104,14 +104,10 @@ def combine_blocker_outputs_via_union(
     # validate input parameters
 
     # The l_prefix is expected to be of type string
-    if not isinstance(l_prefix, six.string_types):
-        logger.error('l_prefix is not of type string')
-        raise AssertionError('l_prefix is not of type string')
+    gh.validate_object_type(l_prefix, six.string_types, 'l_prefix')
 
     # The r_prefix is expected to be of type string
-    if not isinstance(r_prefix, six.string_types):
-        logger.error('r_prefix is not of type string')
-        raise AssertionError('r_prefix is not of type string')
+    gh.validate_object_type(r_prefix, six.string_types, 'r_prefix')
 
     # We cannot combine empty DataFrame list
     if not len(blocker_output_list) > 0:
@@ -264,11 +260,7 @@ def _validate_lr_tables(blocker_output_list):
     # # 1) Validate whether the input objects are all DataFrames
     # # 2) Update the ltable, rtable (ids), fk_ltable and fk_rtable.
     for data_frame in blocker_output_list:
-        if not isinstance(data_frame, pd.DataFrame):
-            logger.error(
-                'Input object at index %s is not a data frame', str(data_frame))
-            raise AssertionError(
-                'Input object at index %s is not a data frame', str(data_frame))
+        gh.validate_object_type(data_frame, pd.DataFrame)
         ltable_ids.append(id(cm.get_ltable(data_frame)))
         rtable_ids.append(id(cm.get_rtable(data_frame)))
         fk_ltable_list.append(cm.get_fk_ltable(data_frame))
