@@ -123,7 +123,7 @@ def load_object(file_path):
     """
     # Validate input parameters
 
-    validate_object_type(file_path, six.string_types, param_name='Input file path')
+    validate_object_type(file_path, six.string_types, error_prefix='Input file path')
 
     # Check if a file exists at the given file path.
     if not os.path.exists(file_path):
@@ -198,9 +198,9 @@ def save_table(data_frame, file_path, metadata_ext='.pklmetadata'):
 
     validate_object_type(data_frame, pd.DataFrame)
 
-    validate_object_type(file_path, six.string_types, param_name='Input file path')
+    validate_object_type(file_path, six.string_types, error_prefix='Input file path')
 
-    validate_object_type(metadata_ext, six.string_types, param_name='Input Metadata ext')
+    validate_object_type(metadata_ext, six.string_types, error_prefix='Input Metadata ext')
 
     # Get the file_name (with out extension) and the extension from the given
     #  file path. For example if the file_path was /Users/foo/file.csv then
@@ -330,7 +330,7 @@ def load_table(file_path, metadata_ext='.pklmetadata'):
 
     """
     # Validate input parameters
-    validate_object_type(file_path, six.string_types, param_name='Input file path')
+    validate_object_type(file_path, six.string_types, error_prefix='Input file path')
 
     validate_object_type(metadata_ext, six.string_types)
 

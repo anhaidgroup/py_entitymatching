@@ -59,7 +59,7 @@ def is_attr_unique(df, attr):
     """
     validate_object_type(df, pd.DataFrame)
 
-    validate_object_type(attr, six.string_types, param_name='Input attr.')
+    validate_object_type(attr, six.string_types, error_prefix='Input attr.')
 
     uniq_flag = (len(pd.unique(df[attr])) == len(df))
     if not uniq_flag:
@@ -85,7 +85,7 @@ def does_contain_missing_vals(df, attr):
     """
     validate_object_type(df, pd.DataFrame)
 
-    validate_object_type(attr, six.string_types, param_name='Input attr.')
+    validate_object_type(attr, six.string_types, error_prefix='Input attr.')
 
     # nan_flag = (sum(df[attr].isnull()) != 0)
     nan_flag = any(pd.isnull(df[attr]))
@@ -109,7 +109,7 @@ def is_key_attribute(df, attr, verbose=False):
     """
     validate_object_type(df, pd.DataFrame)
 
-    validate_object_type(attr, six.string_types, param_name='Input attr.')
+    validate_object_type(attr, six.string_types, error_prefix='Input attr.')
 
     # check if the length is > 0
     if len(df) > 0:
@@ -145,13 +145,13 @@ def check_fk_constraint(df_foreign, attr_foreign, df_base, attr_base):
     Notes:
         This is an internal helper function
     """
-    validate_object_type(df_foreign, pd.DataFrame, param_name='Input object (df_foreign)')
+    validate_object_type(df_foreign, pd.DataFrame, error_prefix='Input object (df_foreign)')
 
-    validate_object_type(attr_foreign, six.string_types, param_name='Input attr (attr_foreign)')
+    validate_object_type(attr_foreign, six.string_types, error_prefix='Input attr (attr_foreign)')
 
-    validate_object_type(df_base, pd.DataFrame, param_name='Input object (df_base)')
+    validate_object_type(df_base, pd.DataFrame, error_prefix='Input object (df_base)')
 
-    validate_object_type(attr_base, six.string_types, param_name='Input attr (attr_base)')
+    validate_object_type(attr_base, six.string_types, error_prefix='Input attr (attr_base)')
 
     if not check_attrs_present(df_base, attr_base):
         logger.warning('The attribute %s is not in df_base' %attr_base)
@@ -226,7 +226,7 @@ def get_name_for_key(columns, key_val='_id'):
 def add_key_column(table, key):
     validate_object_type(table, pd.DataFrame)
 
-    validate_object_type(key, six.string_types, param_name='Input key')
+    validate_object_type(key, six.string_types, error_prefix='Input key')
 
     table.insert(0, key, range(0, len(table)))
     return table

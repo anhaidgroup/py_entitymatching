@@ -225,7 +225,7 @@ def get_false_positives_as_df(table, eval_summary, verbose=False):
     # Validate input parameters
 
     # # We expect the input candset to be of type pandas DataFrame.
-    validate_object_type(table, pd.DataFrame, param_name='Input cand.set')
+    validate_object_type(table, pd.DataFrame, error_prefix='Input cand.set')
 
     # Do metadata checking
     # # Mention what metadata is required to the user
@@ -293,7 +293,7 @@ def get_false_negatives_as_df(table, eval_summary, verbose=False):
     # Validate input parameters
 
     # # We expect the input candset to be of type pandas DataFrame.
-    validate_object_type(table, pd.DataFrame, param_name='Input cand.set')
+    validate_object_type(table, pd.DataFrame, error_prefix='Input cand.set')
 
     # Do metadata checking
     # # Mention what metadata is required to the user

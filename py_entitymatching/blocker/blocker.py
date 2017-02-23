@@ -18,8 +18,8 @@ class Blocker(object):
                                      l_output_attrs, r_output_attrs, l_output_prefix,
                                      r_output_prefix, verbose, n_jobs):
 
-        validate_object_type(ltable, pd.DataFrame, param_name='Input left table')
-        validate_object_type(rtable, pd.DataFrame, param_name='Input right table')
+        validate_object_type(ltable, pd.DataFrame, error_prefix='Input left table')
+        validate_object_type(rtable, pd.DataFrame, error_prefix='Input right table')
 
         if l_output_attrs:
             validate_object_type(l_output_attrs, list, 'Output attributes of left table')

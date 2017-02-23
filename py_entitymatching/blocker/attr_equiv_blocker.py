@@ -412,8 +412,8 @@ class AttrEquivalenceBlocker(Blocker):
 
     # validate the data types of the blocking attributes 
     def validate_types_block_attrs(self, l_block_attr, r_block_attr):
-        validate_object_type(l_block_attr, six.string_types, param_name='Blocking attribute name of left table')
-        validate_object_type(r_block_attr, six.string_types, param_name='Blocking attribute name of right table')
+        validate_object_type(l_block_attr, six.string_types, error_prefix='Blocking attribute name of left table')
+        validate_object_type(r_block_attr, six.string_types, error_prefix='Blocking attribute name of right table')
 
     # validate the blocking attributes
     def validate_block_attrs(self, ltable, rtable, l_block_attr, r_block_attr):

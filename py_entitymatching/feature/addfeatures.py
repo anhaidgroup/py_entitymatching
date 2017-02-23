@@ -89,14 +89,14 @@ def get_feature_fn(feature_string, tokenizers, similarity_functions):
     """
     # Validate input parameters
     # # We expect the input feature string to be of type string
-    validate_object_type(feature_string, six.string_types, param_name='Input feature')
+    validate_object_type(feature_string, six.string_types, error_prefix='Input feature')
 
     # # We expect the input object tokenizers to be of type python dictionary
-    validate_object_type(tokenizers, dict, param_name='Input object (tokenizers)')
+    validate_object_type(tokenizers, dict, error_prefix='Input object (tokenizers)')
 
     # # We expect the input object similarity functions to be of type python
     # dictionary
-    validate_object_type(similarity_functions, dict, param_name='Input object (similarity_functions)')
+    validate_object_type(similarity_functions, dict, error_prefix='Input object (similarity_functions)')
 
     # Initialize a dictionary to have tokenizers/similarity functions
     dict_to_compile = {}
@@ -136,14 +136,14 @@ def _parse_feat_str(feature_string, tokenizers, similarity_functions):
     """
     # Validate the input parameters
     # # We expect the input feature string to be of type string
-    validate_object_type(feature_string, six.string_types, param_name='Input feature')
+    validate_object_type(feature_string, six.string_types, error_prefix='Input feature')
 
     # # We expect the input object tokenizers to be of type python dictionary
-    validate_object_type(tokenizers, dict, param_name='Input object (tokenizers)')
+    validate_object_type(tokenizers, dict, error_prefix='Input object (tokenizers)')
 
     # # We expect the input object similarity functions to be of type python
     # dictionary
-    validate_object_type(similarity_functions, dict, param_name='Input object (similarity_functions)')
+    validate_object_type(similarity_functions, dict, error_prefix='Input object (similarity_functions)')
 
     # We will have to parse the feature string. Specifically we use pyparsing
     #  module for the parsing purposes

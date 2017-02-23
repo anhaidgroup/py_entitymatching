@@ -78,7 +78,7 @@ def extract_feature_vecs(candset, attrs_before=None, feature_table=None,
     # Validate input parameters
 
     # # We expect the input candset to be of type pandas DataFrame.
-    validate_object_type(candset, pd.DataFrame, param_name='Input cand.set')
+    validate_object_type(candset, pd.DataFrame, error_prefix='Input cand.set')
 
     # # If the attrs_before is given, Check if the attrs_before are present in
     # the input candset

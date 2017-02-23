@@ -68,7 +68,7 @@ def _vis_debug_dt(matcher, train, test, exclude_attrs, target_attr,
                              'Decision Tree matcher')
 
     # # We expect the target attribute to be of type string.
-    validate_object_type(target_attr, six.string_types, param_name='Target attribute')
+    validate_object_type(target_attr, six.string_types, error_prefix='Target attribute')
 
     # # Check whether the exclude attributes are indeed present in the train
     #  DataFrame.

@@ -90,7 +90,7 @@ def _validate_inputs(table, label_column_name, verbose):
     validate_object_type(table, pd.DataFrame)
 
     # # The label column name is expected to be of type string
-    validate_object_type(label_column_name, six.string_types, param_name='Input attr.')
+    validate_object_type(label_column_name, six.string_types, error_prefix='Input attr.')
 
     # # Check if the label column name is already present in the input table
     if ch.check_attrs_present(table, label_column_name):

@@ -51,7 +51,7 @@ def get_property(data_frame, property_name):
     validate_object_type(data_frame, pd.DataFrame)
 
     # # The property name should be of type string
-    validate_object_type(property_name, six.string_types, param_name='Property name')
+    validate_object_type(property_name, six.string_types, error_prefix='Property name')
 
     # Get the catalog instance, this is imported here because this object
     # used to validate the presence of a DataFrame in the catalog, and the
@@ -119,7 +119,7 @@ def set_property(data_frame, property_name, property_value):
     validate_object_type(data_frame, pd.DataFrame)
 
     # # The property name should be of type string
-    validate_object_type(property_name, six.string_types, param_name='Property name')
+    validate_object_type(property_name, six.string_types, error_prefix='Property name')
 
     # Get the catalog instance
     catalog = Catalog.Instance()
@@ -241,7 +241,7 @@ def del_property(data_frame, property_name):
     validate_object_type(data_frame, pd.DataFrame)
 
     # # The property name should be of type string
-    validate_object_type(property_name, six.string_types, param_name='Property name')
+    validate_object_type(property_name, six.string_types, error_prefix='Property name')
 
     # Get the catalog instance
     catalog = Catalog.Instance()
@@ -451,7 +451,7 @@ def is_property_present_for_df(data_frame, property_name):
     validate_object_type(data_frame, pd.DataFrame)
 
     # # The property name should be of type string
-    validate_object_type(property_name, six.string_types, param_name='Property name')
+    validate_object_type(property_name, six.string_types, error_prefix='Property name')
 
     # Get the catalog instance
     catalog = Catalog.Instance()
@@ -522,7 +522,7 @@ def set_properties(data_frame, properties, replace=True):
     validate_object_type(data_frame, pd.DataFrame)
 
     # # Input properties is expected to be of type Python dictionary
-    validate_object_type(properties, dict, param_name='The properties')
+    validate_object_type(properties, dict, error_prefix='The properties')
 
     # Get the catalog instance
     catalog = Catalog.Instance()
@@ -601,10 +601,10 @@ def copy_properties(source_data_frame, target_data_frame, replace=True):
     # Validate input parameters
 
     # # The source_data_frame is expected to be of type pandas DataFrame
-    validate_object_type(source_data_frame, pd.DataFrame, param_name='Input object (source_data_frame)')
+    validate_object_type(source_data_frame, pd.DataFrame, error_prefix='Input object (source_data_frame)')
 
     # # The target_data_frame is expected to be of type pandas DataFrame
-    validate_object_type(target_data_frame, pd.DataFrame, param_name='Input object (target_data_frame)')
+    validate_object_type(target_data_frame, pd.DataFrame, error_prefix='Input object (target_data_frame)')
 
     # Get the catalog instance
     catalog = Catalog.Instance()
@@ -710,7 +710,7 @@ def set_key(data_frame, key_attribute):
     validate_object_type(data_frame, pd.DataFrame)
 
     # # We expect input key attribute to be of type string
-    validate_object_type(key_attribute, six.string_types, param_name='Input key attribute')
+    validate_object_type(key_attribute, six.string_types, error_prefix='Input key attribute')
 
     # Check if the key attribute is present as one of the columns in the
     # DataFrame
@@ -862,7 +862,7 @@ def set_fk_ltable(data_frame, fk_ltable):
     validate_object_type(data_frame, pd.DataFrame)
 
     # # We expect the input fk_ltable to be of type string
-    validate_object_type(fk_ltable, six.string_types, param_name='The input (fk_ltable)')
+    validate_object_type(fk_ltable, six.string_types, error_prefix='The input (fk_ltable)')
 
     # # The fk_ltable attribute should be one of the columns in the input
     # DataFrame
@@ -1030,7 +1030,7 @@ def set_fk_rtable(data_frame, foreign_key_rtable):
     # # The input object is expected to be of type pandas DataFrame
     validate_object_type(data_frame, pd.DataFrame)
 
-    validate_object_type(foreign_key_rtable, six.string_types, param_name='Input (foreign key ltable)')
+    validate_object_type(foreign_key_rtable, six.string_types, error_prefix='Input (foreign key ltable)')
 
     # Check if the given attribute is present in the DataFrame
     if not ch.check_attrs_present(data_frame, foreign_key_rtable):
@@ -1176,7 +1176,7 @@ def _validate_metadata_for_table(table, key, output_string, lgr, verbose):
     ch.log_info(lgr, 'Validating ' + output_string + ' key: ' + str(key),
                 verbose)
     # We expect the key to be of type string
-    validate_object_type(key, six.string_types, param_name='Key attribute')
+    validate_object_type(key, six.string_types, error_prefix='Key attribute')
 
     if not ch.is_key_attribute(table, key, verbose):
         logger.error('Attribute %s in the %s table does not '
@@ -1199,7 +1199,7 @@ def _validate_metadata_for_candset(candset, key, foreign_key_ltable,
     """
     # Validate input parameters
     # # We expect candset to be of type pandas DataFrame
-    validate_object_type(candset, pd.DataFrame, param_name='Input candset')
+    validate_object_type(candset, pd.DataFrame, error_prefix='Input candset')
 
     # Check if the key column is present in the candset
     if not ch.check_attrs_present(candset, key):
@@ -1222,10 +1222,10 @@ def _validate_metadata_for_candset(candset, key, foreign_key_ltable,
             'Input fk_rtable ( %s ) not in the DataFrame' % foreign_key_rtable)
 
     # We expect the ltable to be of type pandas DataFrame
-    validate_object_type(ltable, pd.DataFrame, param_name='Input ltable')
+    validate_object_type(ltable, pd.DataFrame, error_prefix='Input ltable')
 
     # We expect the rtable to be of type pandas DataFrame
-    validate_object_type(rtable, pd.DataFrame, param_name='Input rtable')
+    validate_object_type(rtable, pd.DataFrame, error_prefix='Input rtable')
 
     # We expect the ltable key to be present in the ltable
     if not ch.check_attrs_present(ltable, ltable_key):
@@ -1299,7 +1299,7 @@ def get_metadata_for_candset(candset, lgr, verbose):
 
     """
     # Validate input parameters
-    validate_object_type(candset, pd.DataFrame, param_name='Input candset')
+    validate_object_type(candset, pd.DataFrame, error_prefix='Input candset')
 
     ch.log_info(lgr, 'Getting metadata from the catalog', verbose)
     # Get the key, foreign keys, ltable, rtable and their keys

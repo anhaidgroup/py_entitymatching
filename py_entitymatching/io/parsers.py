@@ -81,7 +81,7 @@ def read_csv_metadata(file_path, **kwargs):
     """
     # Validate the input parameters.
 
-    validate_object_type(file_path, six.string_types, param_name='Input file path')
+    validate_object_type(file_path, six.string_types, error_prefix='Input file path')
 
     # # Check if the given path is valid.
     if not os.path.exists(file_path):
@@ -198,7 +198,7 @@ def to_csv_metadata(data_frame, file_path, **kwargs):
 
     validate_object_type(data_frame, pd.DataFrame)
 
-    validate_object_type(file_path, six.string_types, param_name='Input file path')
+    validate_object_type(file_path, six.string_types, error_prefix='Input file path')
 
     # Check if the user has specified the metadata file's extension.
     extension = kwargs.pop('metadata_extn', None)

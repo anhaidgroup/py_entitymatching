@@ -552,17 +552,17 @@ class OverlapBlocker(Blocker):
     def validate_types_other_params(self, l_overlap_attr, r_overlap_attr,
                                     rem_stop_words, q_val,
                                     word_level, overlap_size):
-        validate_object_type(l_overlap_attr, six.string_types, param_name='Overlap attribute name of left table')
-        validate_object_type(r_overlap_attr, six.string_types, param_name='Overlap attribute name of right table')
+        validate_object_type(l_overlap_attr, six.string_types, error_prefix='Overlap attribute name of left table')
+        validate_object_type(r_overlap_attr, six.string_types, error_prefix='Overlap attribute name of right table')
 
-        validate_object_type(rem_stop_words, bool, param_name='Parameter rem_stop_words')
+        validate_object_type(rem_stop_words, bool, error_prefix='Parameter rem_stop_words')
 
         if q_val != None and not isinstance(q_val, int):
             logger.error('Parameter q_val is not of type int')
             raise AssertionError('Parameter q_val is not of type int')
 
-        validate_object_type(word_level, bool, param_name='Parameter word_level')
-        validate_object_type(overlap_size, int, param_name='Parameter overlap_size')
+        validate_object_type(word_level, bool, error_prefix='Parameter word_level')
+        validate_object_type(overlap_size, int, error_prefix='Parameter overlap_size')
 
 
     # validate the overlap attrs

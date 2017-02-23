@@ -121,10 +121,10 @@ def get_attr_corres(ltable, rtable):
     # Validate input parameters
     # # We expect the input object (ltable) to be of type pandas
     # DataFrame
-    validate_object_type(ltable, pd.DataFrame, param_name='Input ltable')
+    validate_object_type(ltable, pd.DataFrame, error_prefix='Input ltable')
     # # We expect the input object (rtable) to be of type pandas
     # DataFrame
-    validate_object_type(rtable, pd.DataFrame, param_name='Input rtable')
+    validate_object_type(rtable, pd.DataFrame, error_prefix='Input rtable')
 
     # Initialize the correspondence list
     correspondence_list = []
