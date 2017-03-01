@@ -168,11 +168,8 @@ def _get_type(column):
     #  we want to keep the types minimal. Further, explicitly recommend the
     # user to update the returned types later.
     if len(type_list) == 0:
-        logger.warning('Column %s does not seem to qualify as any atomic type. '
-                       'It may contain all NaNs. Currently, setting its type to '
-                       'be un_determined.We recommend the users to manually '
-                       'update '
-                       'the returned types or features later. \n' % column.name)
+        logger.warning("Column {0} does not seem to qualify as any atomic type. "
+                       "It may contain all NaNs. Please update the values of column {0}".format(column.name))
         return 'un_determined'
 
     # If the column qualifies to be of more than one type (for instance,

@@ -276,12 +276,11 @@ def add_feature(feature_table, feature_name, feature_dict):
     validate_object_type(feature_dict, dict, 'Input feature dictionary')
 
     # # We expect the feature table to contain certain columns
-    dummy_feature_table = create_feature_table()
-    if sorted(dummy_feature_table.columns) != sorted(feature_table.columns):
-        logger.error('Input feature table does not have the necessary columns')
-        raise AssertionError(
-            'Input feature table does not have the necessary columns')
-    # Check whether the feature name is already present in the feature table
+    missing_columns = get_missing_column_values(feature_table.columns)
+    if missing_columns:
+        error_msg = "Feature table does not have all required columns\n The following columns are missing: {0}".format(", ".join(missing_columns))
+        raise AssertionError(error_msg)
+
     feature_names = list(feature_table['feature_name'])
     if feature_name in feature_names:
         logger.error('Input feature name is already present in feature table')
@@ -302,6 +301,14 @@ def add_feature(feature_table, feature_name, feature_dict):
         feature_table.loc[len(feature_table)] = feature_dict
     # Finally, return True if everything was fine
     return True
+
+
+def get_missing_column_values(column):
+    required_columns_items = ['feature_name', 'left_attribute', 'right_attribute',
+                    'left_attr_tokenizer',
+                    'right_attr_tokenizer', 'simfunction', 'function',
+                    'function_source', 'is_auto_generated']
+    return [item for item in required_columns_items if item not in column]
 
 
 def create_feature_table():
