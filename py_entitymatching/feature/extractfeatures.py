@@ -141,8 +141,6 @@ def extract_feature_vecs(candset, attrs_before=None, feature_table=None,
     l_df = ltable.set_index(l_key, drop=False)
     r_df = rtable.set_index(r_key, drop=False)
 
-    if show_progress:
-        prog_bar = pyprind.ProgBar(len(candset))
     # # Apply feature functions
     ch.log_info(logger, 'Applying feature functions', verbose)
     col_names = list(candset.columns)
@@ -152,13 +150,14 @@ def extract_feature_vecs(candset, attrs_before=None, feature_table=None,
     n_procs = get_num_procs(n_jobs, len(candset))
 
     c_splits = pd.np.array_split(candset, n_procs)
-    feat_vals_by_splits = Parallel(n_jobs=n_procs)(delayed(get_feature_vals_by_row)(feature_table,
-                                                                                    fk_ltable_idx,
-                                                                                    fk_rtable_idx,
-                                                                                    l_df, r_df,
-                                                                                    c_splits[i],
-                                                                                    show_progress and i == len(
-                                                                                        c_splits) - 1)
+
+    feat_vals_by_splits = Parallel(n_jobs=n_procs)(delayed(get_feature_vals_by_cand_split)(feature_table,
+                                                                                           fk_ltable_idx,
+                                                                                           fk_rtable_idx,
+                                                                                           l_df, r_df,
+                                                                                           c_splits[i],
+                                                                                           show_progress and i == len(
+                                                                                               c_splits) - 1)
                                                    for i in range(len(c_splits)))
 
     feat_vals = sum(feat_vals_by_splits, [])
@@ -207,7 +206,7 @@ def extract_feature_vecs(candset, attrs_before=None, feature_table=None,
     return feature_vectors
 
 
-def get_feature_vals_by_row(feature_table, fk_ltable_idx, fk_rtable_idx, l_df, r_df, candsplit, show_progress):
+def get_feature_vals_by_cand_split(feature_table, fk_ltable_idx, fk_rtable_idx, l_df, r_df, candsplit, show_progress):
     if show_progress:
         prog_bar = pyprind.ProgBar(len(candsplit))
 
