@@ -4,14 +4,18 @@ This module contains functions to extract features using a feature table.
 import logging
 
 import multiprocessing
+import os
+
 import pandas as pd
 import pyprind
+import tempfile
 from joblib import Parallel
 from joblib import delayed
 
 import py_entitymatching.catalog.catalog_manager as cm
 import py_entitymatching.utils.catalog_helper as ch
 import py_entitymatching.utils.generic_helper as gh
+from py_entitymatching.io.pickles import save_object, load_object
 
 logger = logging.getLogger(__name__)
 
@@ -151,7 +155,9 @@ def extract_feature_vecs(candset, attrs_before=None, feature_table=None,
 
     c_splits = pd.np.array_split(candset, n_procs)
 
-    feat_vals_by_splits = Parallel(n_jobs=n_procs)(delayed(get_feature_vals_by_cand_split)(feature_table,
+    pickle_file = pickle_feature_table(feature_table)
+
+    feat_vals_by_splits = Parallel(n_jobs=n_procs)(delayed(get_feature_vals_by_cand_split)(pickle_file,
                                                                                            fk_ltable_idx,
                                                                                            fk_rtable_idx,
                                                                                            l_df, r_df,
@@ -206,7 +212,8 @@ def extract_feature_vecs(candset, attrs_before=None, feature_table=None,
     return feature_vectors
 
 
-def get_feature_vals_by_cand_split(feature_table, fk_ltable_idx, fk_rtable_idx, l_df, r_df, candsplit, show_progress):
+def get_feature_vals_by_cand_split(pickle_file, fk_ltable_idx, fk_rtable_idx, l_df, r_df, candsplit, show_progress):
+    feature_table = load_object(pickle_file)
     if show_progress:
         prog_bar = pyprind.ProgBar(len(candsplit))
 
@@ -259,3 +266,11 @@ def get_num_procs(n_jobs, min_procs):
         n_procs = n_cpus + 1 + n_jobs
     # cannot launch less than min_procs to safeguard against small tables
     return min(n_procs, min_procs)
+
+
+def pickle_feature_table(feature_table):
+    default_tmp_dir = tempfile._get_default_tempdir()
+    temp_name = next(tempfile._get_candidate_names())
+    file_name = os.path.join(default_tmp_dir, temp_name)
+    save_object(feature_table, file_name)
+    return file_name

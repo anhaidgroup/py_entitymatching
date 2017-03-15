@@ -51,6 +51,38 @@ class ExtractFeaturesTestCases(unittest.TestCase):
         self.assertEqual(F.columns[len(F.columns)-1]=='label', False)
         self.assertEqual(cm.get_all_properties(C) == cm.get_all_properties(F), True)
 
+    def test_extract_feature_vecs_with_default_value_for_n_jobs(self):
+        A = read_csv_metadata(path_a)
+        B = read_csv_metadata(path_b, key='ID')
+        C = read_csv_metadata(path_c, ltable=A, rtable=B)
+        col_pos = len(C.columns)
+        C.insert(col_pos, 'label', [0] * len(C))
+        feature_table = get_features_for_matching(A, B)
+        F = extract_feature_vecs(C, attrs_before=['ltable_name', 'rtable_name'], feature_table=feature_table, n_jobs=1)
+        self.assertEqual(isinstance(F, pd.DataFrame), True)
+        self.assertEqual(F.columns[0], '_id')
+        self.assertEqual(F.columns[1], cm.get_fk_ltable(C))
+        self.assertEqual(F.columns[2], cm.get_fk_rtable(C))
+        self.assertEqual(F.columns[3], 'ltable_name')
+        self.assertEqual(F.columns[4], 'rtable_name')
+        self.assertEqual(F.columns[len(F.columns) - 1] == 'label', False)
+        self.assertEqual(cm.get_all_properties(C) == cm.get_all_properties(F), True)
+
+    def test_extract_feature_vecs_with_parralel_job_count_more_than_one(self):
+        A = read_csv_metadata(path_a)
+        B = read_csv_metadata(path_b, key='ID')
+        C = read_csv_metadata(path_c, ltable=A, rtable=B)
+        col_pos = len(C.columns)
+        C.insert(col_pos, 'label', [0] * len(C))
+        feature_table = get_features_for_matching(A, B)
+        F = extract_feature_vecs(C, attrs_before=['ltable_name', 'rtable_name'], feature_table=feature_table, n_jobs=2)
+        self.assertEqual(isinstance(F, pd.DataFrame), True)
+        self.assertEqual(F.columns[0], '_id')
+        self.assertEqual(F.columns[1], cm.get_fk_ltable(C))
+        self.assertEqual(F.columns[2], cm.get_fk_rtable(C))
+        self.assertEqual(F.columns[4], 'rtable_name')
+        self.assertEqual(F.columns[len(F.columns) - 1] == 'label', False)
+        self.assertEqual(cm.get_all_properties(C) == cm.get_all_properties(F), True)
 
     def test_extract_feature_vecs_valid_3(self):
         A = read_csv_metadata(path_a)
