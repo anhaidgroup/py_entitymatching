@@ -304,12 +304,6 @@ def _get_attrs_to_project(key, output_attrs):
         proj_attrs.append(key)                                            
     return proj_attrs
 
-#XYZZY def _sn_block_tables_process_row(this_row, blocking_column, block_id, output_prefix, output_attrs):
-#XYZZY    s = this_row[_get_attrs_to_project(block_id, output_attrs)] # Project out only the attrs we need.
-#XYZZY    s['BKV__']=this_row[blocking_column] # Add the blocking key value
-#XYZZY    return s
-
-
 def _sn_block_tables_split(ltable, rtable, l_key, r_key, l_block_attr, r_block_attr, window_size,
                            l_output_attrs, r_output_attrs, l_output_prefix,
                            r_output_prefix, allow_missing):
@@ -319,7 +313,6 @@ def _sn_block_tables_split(ltable, rtable, l_key, r_key, l_block_attr, r_block_a
     #combine tables
     #sort on BKV__
 
-#XYZZY    #lconv = ltable.apply(_sn_block_tables_process_row, axis=1, raw=True, args=(l_block_attr, l_key, l_output_prefix, l_output_attrs))
     lconv = pd.DataFrame()
     rconv = pd.DataFrame()
 
@@ -330,7 +323,6 @@ def _sn_block_tables_split(ltable, rtable, l_key, r_key, l_block_attr, r_block_a
     lconv = lconv.copy() # Make a full copy
     lconv.loc[:,'source']='l'
     lconv.loc[:,'BKV__']=ltable[l_block_attr]
-#XYZZY    #rconv = rtable.apply(_sn_block_tables_process_row, axis=1, raw=True, args=(r_block_attr, r_key, r_output_prefix, r_output_attrs))
     if r_output_attrs:
         rconv = rtable[[r_key] + r_output_attrs]
     else:
@@ -342,32 +334,13 @@ def _sn_block_tables_split(ltable, rtable, l_key, r_key, l_block_attr, r_block_a
     # Now, if allow_missing=True, yank out "missing" values
     lmissing = pd.DataFrame()
     rmissing = pd.DataFrame()
+
     if allow_missing:
-        # set ?conv_missing to = all where BKV__ = ""
-        # delete from ?conv where BKV__ = ""
-
-        #l_df.is_copy, r_df.is_copy = False, False  # to avoid setwithcopy warning
-        #l_df['ones'] = pd.np.ones(len(lconv))
-        #r_df['ones'] = pd.np.ones(len(rconv))
-
-#        # find ltable records with missing value in l_block_attr
-#        l_df_missing = l_df[pd.isnull(l_df['BKV__'])]
-#
-#        # find rtable records with missing value in r_block_attr
-#        r_df_missing = r_df[pd.isnull(r_df['BKV__'])]
-
-#        return l_df_missing, r_df_missing
-
-        #missing = lconv.query('"BKV__" == ""') + rconv.query('"BKV__" == ""')
-        #lconv = lconv.query('"BKV__" != ""')
-        #rconv = rconv.query('"BKV__" != ""')
         lmissing = lconv[pd.isnull(lconv['BKV__'])]
         rmissing = rconv[pd.isnull(rconv['BKV__'])]
         lconv = lconv[pd.notnull(lconv['BKV__'])]
         rconv = rconv[pd.notnull(rconv['BKV__'])]
 
-        
-    #return pd.concat([lconv,rconv]).sort_values(by='BKV__'), missing
     return pd.concat([lconv,rconv]).sort_values(by='BKV__'), pd.concat([lmissing,rmissing])
 
 

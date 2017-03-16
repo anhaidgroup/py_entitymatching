@@ -25,11 +25,6 @@ expected_ids_1 = sorted([('a3', 'b2'), ('a3', 'b1'), ('a3', 'b6'),
 # attribute equivalence on [l|r]_block_attr_1 \intersection [l|r]_block_attr_2
 #expected_ids_2 = [('a2', 'b3'), ('a3', 'b2'), ('a5', 'b5')]
 
-# attr equiv on [l|r]_block_attr_1 in tables with missing vals, allow_missing = True
-#expected_ids_3 = sorted([('a3', 'b1'), ('a3', 'b6'), ('a5', 'b1'), ('a5', 'b6'),
-#                  ('a5', 'b5'), ('a5', 'b3'), ('a2', 'b5'), ('a2', 'b3'),
-#                  ('a2', 'b4'), ('a2', 'b2'), ('a4', 'b4'), ('a4', 'b2'),
-#                  ('a1', 'b2')])
 expected_ids_3= sorted([ ('a4', 'b5'), ('a5', 'b5'), ('a5', 'b4'),
                  ('a5', 'b2'), ('a4', 'b2'), ('a1', 'b2'), ('a1', 'b4'),
                  ('a1', 'b1'), ('a4', 'b1'), ('a1', 'b6'), ('a4', 'b6'),
@@ -363,10 +358,6 @@ class SortedNeighborhoodBlockerTestCases(unittest.TestCase):
         em.set_key(A, 'ID')
         B = em.read_csv_metadata(path_b)
         em.set_key(B, 'ID')
-#XYZZY
-#        C = self.sn.block_tables(A, B, l_block_attr, r_block_attr, window_size,
-#                                 l_output_attrs, r_output_attrs,
-#                                 l_output_prefix, r_output_prefix, True)
         C = self.sn.block_tables(A, B, 'name', 'name', window_size,
                                  l_output_attrs, r_output_attrs,
                                  l_output_prefix, r_output_prefix, True)
@@ -384,10 +375,6 @@ class SortedNeighborhoodBlockerTestCases(unittest.TestCase):
         em.set_key(A, 'ID')
         B = em.read_csv_metadata(path_b)
         em.set_key(B, 'ID')
-#XYZZY
-#C = self.sn.block_tables(A, B, l_block_attr, r_block_attr, window_size,
-#                                 l_output_attrs, r_output_attrs,
-#                                 l_output_prefix, r_output_prefix)
         C = self.sn.block_tables(A, B, 'name', 'name', window_size,
                                  l_output_attrs, r_output_attrs,
                                  l_output_prefix, r_output_prefix)
@@ -395,250 +382,11 @@ class SortedNeighborhoodBlockerTestCases(unittest.TestCase):
                           l_output_prefix, r_output_prefix)
         validate_data(C, expected_ids_4)
 
-#CANDSET    @raises(AssertionError)
-#CANDSET    def test_sn_block_candset_invalid_candset_1(self):
-#CANDSET        self.sn.block_candset(None, l_block_attr, r_block_attr)
-#CANDSET
-#CANDSET    @raises(AssertionError)
-#CANDSET    def test_sn_block_candset_invalid_candset_2(self):
-#CANDSET        self.sn.block_candset([10, 10], l_block_attr, r_block_attr)
-#CANDSET
-#CANDSET    @raises(KeyError)
-#CANDSET    def test_sn_block_candset_invalid_candset_3(self):
-#CANDSET        self.sn.block_candset(pd.DataFrame(), l_block_attr, r_block_attr)
-#CANDSET
-#CANDSET    @raises(AssertionError)
-#CANDSET    def test_sn_block_candset_invalid_l_block_attr(self):
-#CANDSET        C = self.sn.block_tables(self.A, self.B,
-#CANDSET                                 l_block_attr, r_block_attr)
-#CANDSET        self.sn.block_candset(C, None, r_block_fn_2)
-#CANDSET
-#CANDSET    @raises(AssertionError)
-#CANDSET    def test_sn_block_candset_invalid_l_block_fn_2(self):
-#CANDSET        C = self.sn.block_tables(self.A, self.B,
-#CANDSET                                 l_block_attr, r_block_attr)
-#CANDSET        self.sn.block_candset(C, 10, r_block_fn_2)
-#CANDSET
-#CANDSET    @raises(AssertionError)
-#CANDSET    def test_sn_block_candset_invalid_l_block_fn_3(self):
-#CANDSET        C = self.sn.block_tables(self.A, self.B,
-#CANDSET                                 l_block_attr, r_block_attr)
-#CANDSET        self.sn.block_candset(C, True, r_block_fn_2)
-#CANDSET
-#CANDSET    @raises(AssertionError)
-#CANDSET    def test_sn_block_candset_bogus_l_block_fn(self):
-#CANDSET        C = self.sn.block_tables(self.A, self.B,
-#CANDSET                                 l_block_attr, r_block_attr)
-#CANDSET        self.sn.block_candset(C, 'bogus_attr', r_block_fn_2)
-#CANDSET
-#CANDSET    @raises(AssertionError)
-#CANDSET    def test_sn_block_candset_multi_l_block_fn(self):
-#CANDSET        C = self.sn.block_tables(self.A, self.B,
-#CANDSET                                 l_block_attr, r_block_attr)
-#CANDSET        self.sn.block_candset(C, ['zipcode', 'birth_year'], r_block_fn_2)
-#CANDSET
-#CANDSET    @raises(AssertionError)
-#CANDSET    def test_sn_block_candset_invalid_r_block_attr(self):
-#CANDSET        C = self.sn.block_tables(self.A, self.B,
-#CANDSET                                 l_block_attr, r_block_attr)
-#CANDSET        self.sn.block_candset(C, l_block_fn_2, None)
-#CANDSET
-#CANDSET    @raises(AssertionError)
-#CANDSET    def test_sn_block_candset_invalid_r_block_fn_2(self):
-#CANDSET        C = self.sn.block_tables(self.A, self.B,
-#CANDSET                                 l_block_attr, r_block_attr)
-#CANDSET        self.sn.block_candset(C, l_block_fn_2, 10)
-#CANDSET
-#CANDSET    @raises(AssertionError)
-#CANDSET    def test_sn_block_candset_invalid_r_block_fn_3(self):
-#CANDSET        C = self.sn.block_tables(self.A, self.B,
-#CANDSET                                 l_block_attr, r_block_attr)
-#CANDSET        self.sn.block_candset(C, l_block_fn_2, True)
-#CANDSET
-#CANDSET    @raises(AssertionError)
-#CANDSET    def test_sn_block_candset_bogus_r_block_fn(self):
-#CANDSET        C = self.sn.block_tables(self.A, self.B,
-#CANDSET                                 l_block_attr, r_block_attr)
-#CANDSET        self.sn.block_candset(C, l_block_fn_2, 'bogus_attr')
-#CANDSET
-#CANDSET    @raises(AssertionError)
-#CANDSET    def test_sn_block_candset_multi_r_block_fn(self):
-#CANDSET        C = self.sn.block_tables(self.A, self.B,
-#CANDSET                                 l_block_attr, r_block_attr)
-#CANDSET        self.sn.block_candset(C, l_block_fn_2, ['zipcode', 'birth_year'])
-#CANDSET
-#CANDSET    @raises(AssertionError)
-#CANDSET    def test_sn_block_candset_invalid_verbose_1(self):
-#CANDSET        C = self.sn.block_tables(self.A, self.B,
-#CANDSET                                 l_block_attr, r_block_attr)
-#CANDSET        self.sn.block_candset(C, l_block_fn_2, r_block_fn_2, verbose=None)
-#CANDSET
-#CANDSET    @raises(AssertionError)
-#CANDSET    def test_sn_block_candset_invalid_verbose_2(self):
-#CANDSET        C = self.sn.block_tables(self.A, self.B,
-#CANDSET                                 l_block_attr, r_block_attr)
-#CANDSET        self.sn.block_candset(C, l_block_fn_2, r_block_fn_2, verbose=1)
-#CANDSET
-#CANDSET    @raises(AssertionError)
-#CANDSET    def test_sn_block_candset_invalid_verbose_3(self):
-#CANDSET        C = self.sn.block_tables(self.A, self.B,
-#CANDSET                                 l_block_attr, r_block_attr)
-#CANDSET        self.sn.block_candset(C, l_block_fn_2, r_block_fn_2, verbose='yes')
-#CANDSET
-#CANDSET    @raises(AssertionError)
-#CANDSET    def test_sn_block_candset_invalid_show_progress_1(self):
-#CANDSET        C = self.sn.block_tables(self.A, self.B,
-#CANDSET                                 l_block_attr, r_block_attr)
-#CANDSET        self.sn.block_candset(C, l_block_fn_2, r_block_fn_2,
-#CANDSET                              show_progress=None)
-#CANDSET
-#CANDSET    @raises(AssertionError)
-#CANDSET    def test_sn_block_candset_invalid_show_progress_2(self):
-#CANDSET        C = self.sn.block_tables(self.A, self.B,
-#CANDSET                                 l_block_attr, r_block_attr)
-#CANDSET        self.sn.block_candset(C, l_block_fn_2, r_block_fn_2,
-#CANDSET                              show_progress=1)
-#CANDSET
-#CANDSET    @raises(AssertionError)
-#CANDSET    def test_sn_block_candset_invalid_show_progress_3(self):
-#CANDSET        C = self.sn.block_tables(self.A, self.B,
-#CANDSET                                 l_block_attr, r_block_attr)
-#CANDSET        self.sn.block_candset(C, l_block_fn_2, r_block_fn_2,
-#CANDSET                              show_progress='yes')
-#CANDSET
-#CANDSET    @raises(AssertionError)
-#CANDSET    def test_sn_block_candset_invalid_njobs_1(self):
-#CANDSET        C = self.sn.block_tables(self.A, self.B,
-#CANDSET                                 l_block_attr, r_block_attr)
-#CANDSET        self.sn.block_candset(C, l_block_fn_2, r_block_fn_2, n_jobs=None)
-#CANDSET
-#CANDSET    @raises(AssertionError)
-#CANDSET    def test_sn_block_candset_invalid_njobs_2(self):
-#CANDSET        C = self.sn.block_tables(self.A, self.B,
-#CANDSET                                 l_block_attr, r_block_attr)
-#CANDSET        self.sn.block_candset(C, l_block_fn_2, r_block_fn_2, n_jobs='1')
-#CANDSET
-#CANDSET    @raises(AssertionError)
-#CANDSET    def test_sn_block_candset_invalid_njobs_3(self):
-#CANDSET        C = self.sn.block_tables(self.A, self.B,
-#CANDSET                                 l_block_attr, r_block_attr)
-#CANDSET        self.sn.block_candset(C, l_block_fn_2, r_block_fn_2, n_jobs=1.5)
-#CANDSET
-#CANDSET    def test_sn_block_candset(self):
-#CANDSET        C = self.sn.block_tables(self.A, self.B,
-#CANDSET                                 l_block_attr, r_block_attr,
-#CANDSET                                 l_output_attrs, r_output_attrs,
-#CANDSET                                 l_output_prefix, r_output_prefix)
-#CANDSET        validate_metadata(C, l_output_attrs, r_output_attrs,
-#CANDSET                          l_output_prefix, r_output_prefix)
-#CANDSET        validate_data(C, expected_ids_1)
-#CANDSET        D = self.sn.block_candset(C, l_block_fn_2, r_block_fn_2)
-#CANDSET        validate_metadata_two_candsets(C, D)
-#CANDSET        validate_data(D, expected_ids_2)
-#CANDSET
-#CANDSET    def test_sn_block_candset_empty_input(self):
-#CANDSET        C = self.sn.block_tables(self.A, self.B,
-#CANDSET                                 l_block_fn_3, r_block_fn_3)
-#CANDSET        validate_metadata(C)
-#CANDSET        validate_data(C)
-#CANDSET        D = self.sn.block_candset(C, l_block_fn_2, r_block_fn_2,
-#CANDSET                                  show_progress=False)
-#CANDSET        validate_metadata_two_candsets(C, D)
-#CANDSET        validate_data(D)
-#CANDSET
-#CANDSET    def test_sn_block_candset_empty_output(self):
-#CANDSET        C = self.sn.block_tables(self.A, self.B,
-#CANDSET                                 l_block_attr, r_block_attr)
-#CANDSET        validate_metadata(C)
-#CANDSET        validate_data(C, expected_ids_1)
-#CANDSET        D = self.sn.block_candset(C, l_block_fn_3, r_block_fn_3,
-#CANDSET                                  show_progress=False)
-#CANDSET        validate_metadata_two_candsets(C, D)
-#CANDSET        validate_data(D)
-#CANDSET
-#CANDSET    def test_sn_block_candset_wi_missing_values_allow_missing(self):
-#CANDSET        path_a = os.sep.join([p, 'tests', 'test_datasets', 'blocker',
-#CANDSET                              'table_A_wi_missing_vals.csv'])
-#CANDSET        path_b = os.sep.join([p, 'tests', 'test_datasets', 'blocker',
-#CANDSET                              'table_B_wi_missing_vals.csv'])
-#CANDSET        A = em.read_csv_metadata(path_a)
-#CANDSET        em.set_key(A, 'ID')
-#CANDSET        B = em.read_csv_metadata(path_b)
-#CANDSET        em.set_key(B, 'ID')
-#CANDSET        C = self.sn.block_tables(A, B, l_block_attr, r_block_attr)
-#CANDSET        validate_metadata(C)
-#CANDSET        validate_data(C, expected_ids_4)
-#CANDSET        D = self.sn.block_candset(C, l_block_fn_2, r_block_fn_2,
-#CANDSET                                  allow_missing=True)
-#CANDSET        validate_metadata_two_candsets(C, D)
-#CANDSET        validate_data(D, expected_ids_5)
-#CANDSET
-#CANDSET    def test_sn_block_candset_wi_missing_values_disallow_missing(self):
-#CANDSET        path_a = os.sep.join([p, 'tests', 'test_datasets', 'blocker',
-#CANDSET                              'table_A_wi_missing_vals.csv'])
-#CANDSET        path_b = os.sep.join([p, 'tests', 'test_datasets', 'blocker',
-#CANDSET                              'table_B_wi_missing_vals.csv'])
-#CANDSET        A = em.read_csv_metadata(path_a)
-#CANDSET        em.set_key(A, 'ID')
-#CANDSET        B = em.read_csv_metadata(path_b)
-#CANDSET        em.set_key(B, 'ID')
-#CANDSET        C = self.sn.block_tables(A, B, l_block_attr, r_block_attr)
-#CANDSET        validate_metadata(C)
-#CANDSET        validate_data(C, expected_ids_4)
-#CANDSET        D = self.sn.block_candset(C, l_block_fn_2, r_block_fn_2)
-#CANDSET        validate_metadata_two_candsets(C, D)
-#CANDSET        validate_data(D, [('a5','b5')])
-#CANDSET
 
     @raises(AssertionError)
     def test_sn_block_tuples(self):
         A = self.sn.block_tuples(self.A1.ix[1], self.B1.ix[2], l_block_attr, r_block_attr, window_size)
 
-#    def test_sn_block_tuples_wi_missing_values_allow_missing(self):
-#        path_a = os.sep.join([p, 'tests', 'test_datasets', 'blocker',
-#                              'table_A_wi_missing_vals.csv'])
-#        path_b = os.sep.join([p, 'tests', 'test_datasets', 'blocker',
-#                              'table_B_wi_missing_vals.csv'])
-#        A = em.read_csv_metadata(path_a)
-#        em.set_key(A, 'ID')
-#        B = em.read_csv_metadata(path_b)
-#        em.set_key(B, 'ID')
-#        assert_equal(self.sn.block_tuples(A.ix[0], B.ix[0], l_block_attr,
-#                                          r_block_attr, window_size, allow_missing=True),
-#                     False)
-#        assert_equal(self.sn.block_tuples(A.ix[1], B.ix[2], l_block_attr,
-#                                          r_block_attr, window_size, allow_missing=True),
-#                     False)
-#        assert_equal(self.sn.block_tuples(A.ix[2], B.ix[1], l_block_attr,
-#                                          r_block_attr, window_size, allow_missing=True),
-#                     False)
-#        assert_equal(self.sn.block_tuples(A.ix[0], B.ix[1], l_block_attr,
-#                                          r_block_attr, window_size, allow_missing=True),
-#                     False)
-#        assert_equal(self.sn.block_tuples(A.ix[2], B.ix[2], l_block_attr,
-#                                          r_block_attr, window_size, allow_missing=True),
-#                     True)
-#
-#    def test_sn_block_tuples_wi_missing_values_disallow_missing(self):
-#        path_a = os.sep.join([p, 'tests', 'test_datasets', 'blocker',
-#                              'table_A_wi_missing_vals.csv'])
-#        path_b = os.sep.join([p, 'tests', 'test_datasets', 'blocker',
-#                              'table_B_wi_missing_vals.csv'])
-#        A = em.read_csv_metadata(path_a)
-#        em.set_key(A, 'ID')
-#        B = em.read_csv_metadata(path_b)
-#        em.set_key(B, 'ID')
-#        assert_equal(self.sn.block_tuples(A.ix[0], B.ix[0], l_block_attr,
-#                                          r_block_attr, window_size), True)
-#        assert_equal(self.sn.block_tuples(A.ix[1], B.ix[2], l_block_attr,
-#                                          r_block_attr, window_size), False)
-#        assert_equal(self.sn.block_tuples(A.ix[2], B.ix[1], l_block_attr,
-#                                          r_block_attr, window_size), True)
-#        assert_equal(self.sn.block_tuples(A.ix[0], B.ix[1], l_block_attr,
-#                                          r_block_attr, window_size), True)
-#        assert_equal(self.sn.block_tuples(A.ix[2], B.ix[2], l_block_attr,
-#                                          r_block_attr, window_size), True)
-#
 
 class SortedNeighborhoodBlockerMulticoreTestCases(unittest.TestCase):
 
@@ -699,12 +447,6 @@ class SortedNeighborhoodBlockerMulticoreTestCases(unittest.TestCase):
                           l_output_prefix, r_output_prefix)
         validate_data(C, expected_ids_1)
     
-#find replacement?    def test_sn_block_tables_wi_no_output_tuples_njobs_2(self):
-#find replacement?        C = self.sn.block_tables(self.A, self.B,
-#find replacement?                                 l_block_fn_3, r_block_fn_3, window_size, n_jobs=2)
-#find replacement?        validate_metadata(C)
-#find replacement?        validate_data(C)
-
     def test_sn_block_tables_wi_null_l_output_attrs_njobs_2(self):
         C = self.sn.block_tables(self.A1, self.B1,
                                  l_block_attr, r_block_attr, window_size,
@@ -742,12 +484,6 @@ class SortedNeighborhoodBlockerMulticoreTestCases(unittest.TestCase):
                           l_output_prefix, r_output_prefix)
         validate_data(C, expected_ids_1)
 
-#find replacement?    def test_sn_block_tables_wi_no_output_tuples_njobs_all(self):
-#find replacement?        C = self.sn.block_tables(self.A, self.B,
-#find replacement?                                 l_block_fn_3, r_block_fn_3, window_size, n_jobs=-1)
-#find replacement?        validate_metadata(C)
-#find replacement?        validate_data(C)
-
     def test_sn_block_tables_wi_null_l_output_attrs_njobs_all(self):
         C = self.sn.block_tables(self.A1, self.B1,
                                  l_block_attr, r_block_attr, window_size,
@@ -775,78 +511,6 @@ class SortedNeighborhoodBlockerMulticoreTestCases(unittest.TestCase):
         validate_metadata(C, l_output_attrs, [])
         validate_data(C, expected_ids_1)
 
-#CANDSET    def test_sn_block_candset_njobs_2(self):
-#CANDSET        C = self.sn.block_tables(self.A, self.B,
-#CANDSET                                 l_block_attr, r_block_attr,
-#CANDSET                                 l_output_attrs, r_output_attrs,
-#CANDSET                                 l_output_prefix, r_output_prefix)
-#CANDSET        validate_metadata(C, l_output_attrs, r_output_attrs,
-#CANDSET                          l_output_prefix, r_output_prefix)
-#CANDSET        validate_data(C, expected_ids_1)
-#CANDSET        D = self.sn.block_candset(C, l_block_fn_2, r_block_fn_2, n_jobs=2)
-#CANDSET        validate_metadata_two_candsets(C, D)
-#CANDSET        validate_data(D, expected_ids_2)
-#CANDSET
-#CANDSET    def test_sn_block_candset_empty_input_njobs_2(self):
-#CANDSET        print ("---- A")
-#CANDSET        print (self.A)
-#CANDSET        print ("---- B")
-#CANDSET        print (self.B)
-#CANDSET        C = self.sn.block_tables(self.A, self.B,
-#CANDSET                                 l_block_fn_3, r_block_fn_3, 2, n_jobs=2)
-#CANDSET        validate_metadata(C)
-#CANDSET        validate_data(C)
-#CANDSET        #D = self.sn.block_candset(C, l_block_fn_2, r_block_fn_2,
-#CANDSET                                  #show_progress=False, n_jobs=2)
-#CANDSET        #validate_metadata_two_candsets(C, D)
-#CANDSET        #validate_data(D)
-#CANDSET        die()
-#CANDSET
-#CANDSET    def test_sn_block_candset_empty_output_njobs_2(self):
-#CANDSET        C = self.sn.block_tables(self.A, self.B,
-#CANDSET                                 l_block_attr, r_block_attr)
-#CANDSET        validate_metadata(C)
-#CANDSET        validate_data(C, expected_ids_1)
-#CANDSET        D = self.sn.block_candset(C, l_block_fn_3, r_block_fn_3,
-#CANDSET                                  show_progress=False, n_jobs=2)
-#CANDSET        validate_metadata_two_candsets(C, D)
-#CANDSET        validate_data(D)
-#CANDSET
-#CANDSET    def test_sn_block_candset_njobs_all(self):
-#CANDSET        C = self.sn.block_tables(self.A, self.B,
-#CANDSET                                 l_block_attr, r_block_attr,
-#CANDSET                                 l_output_attrs, r_output_attrs,
-#CANDSET                                 l_output_prefix, r_output_prefix)
-#CANDSET        validate_metadata(C, l_output_attrs, r_output_attrs,
-#CANDSET                          l_output_prefix, r_output_prefix)
-#CANDSET        validate_data(C, expected_ids_1)
-#CANDSET        D = self.sn.block_candset(C, l_block_fn_2, r_block_fn_2, n_jobs=-1)
-#CANDSET        validate_metadata_two_candsets(C, D)
-#CANDSET        validate_data(D, expected_ids_2)
-#CANDSET
-#CANDSET    def test_sn_block_candset_empty_input_njobs_all(self):
-#CANDSET        C = self.sn.block_tables(self.A, self.B,
-#CANDSET                                 l_block_fn_3, r_block_fn_3)
-#CANDSET        validate_metadata(C)
-#CANDSET        validate_data(C)
-#CANDSET        D = self.sn.block_candset(C, l_block_fn_2, r_block_fn_2,
-#CANDSET                                  show_progress=False, n_jobs=-1)
-#CANDSET        validate_metadata_two_candsets(C, D)
-#CANDSET        validate_data(D)
-#CANDSET
-#CANDSET    def test_sn_block_candset_empty_output_njobs_all(self):
-#CANDSET        C = self.sn.block_tables(self.A, self.B,
-#CANDSET                                 l_block_attr, r_block_attr)
-#CANDSET        validate_metadata(C)
-#CANDSET        validate_data(C, expected_ids_1)
-#CANDSET        D = self.sn.block_candset(C, l_block_fn_3, r_block_fn_3,
-#CANDSET                                  show_progress=False, n_jobs=-1)
-#CANDSET        validate_metadata_two_candsets(C, D)
-#CANDSET        validate_data(D)
-#CANDSET
-#CANDSET
-
-# helper functions for validating the output
     
 def validate_metadata(C, l_output_attrs=None, r_output_attrs=None,
                       l_output_prefix='ltable_', r_output_prefix='rtable_',
