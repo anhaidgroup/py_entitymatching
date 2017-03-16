@@ -9,6 +9,8 @@ import os
 import pandas as pd
 import pyprind
 import tempfile
+
+from cloudpickle import cloudpickle
 from joblib import Parallel
 from joblib import delayed
 
@@ -155,9 +157,9 @@ def extract_feature_vecs(candset, attrs_before=None, feature_table=None,
 
     c_splits = pd.np.array_split(candset, n_procs)
 
-    pickle_file = pickle_feature_table(feature_table)
+    pickled_obj = cloudpickle.dumps(feature_table)
 
-    feat_vals_by_splits = Parallel(n_jobs=n_procs)(delayed(get_feature_vals_by_cand_split)(pickle_file,
+    feat_vals_by_splits = Parallel(n_jobs=n_procs)(delayed(get_feature_vals_by_cand_split)(pickled_obj,
                                                                                            fk_ltable_idx,
                                                                                            fk_rtable_idx,
                                                                                            l_df, r_df,
@@ -212,8 +214,8 @@ def extract_feature_vecs(candset, attrs_before=None, feature_table=None,
     return feature_vectors
 
 
-def get_feature_vals_by_cand_split(pickle_file, fk_ltable_idx, fk_rtable_idx, l_df, r_df, candsplit, show_progress):
-    feature_table = load_object(pickle_file)
+def get_feature_vals_by_cand_split(pickled_obj, fk_ltable_idx, fk_rtable_idx, l_df, r_df, candsplit, show_progress):
+    feature_table = cloudpickle.loads(pickled_obj)
     if show_progress:
         prog_bar = pyprind.ProgBar(len(candsplit))
 
@@ -266,11 +268,3 @@ def get_num_procs(n_jobs, min_procs):
         n_procs = n_cpus + 1 + n_jobs
     # cannot launch less than min_procs to safeguard against small tables
     return min(n_procs, min_procs)
-
-
-def pickle_feature_table(feature_table):
-    default_tmp_dir = tempfile._get_default_tempdir()
-    temp_name = next(tempfile._get_candidate_names())
-    file_name = os.path.join(default_tmp_dir, temp_name)
-    save_object(feature_table, file_name)
-    return file_name
