@@ -32,6 +32,7 @@ from py_entitymatching.blocker.attr_equiv_blocker import AttrEquivalenceBlocker
 from py_entitymatching.blocker.black_box_blocker import BlackBoxBlocker
 from py_entitymatching.blocker.overlap_blocker import OverlapBlocker
 from py_entitymatching.blocker.rule_based_blocker import RuleBasedBlocker
+from py_entitymatching.blocker.sn_blocker import SortedNeighborhoodBlocker
 
 # # blocker debugger
 from py_entitymatching.debugblocker.debugblocker import debug_blocker
