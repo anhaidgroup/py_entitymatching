@@ -15,13 +15,14 @@ path_a = os.sep.join([datasets_path, 'A.csv'])
 path_b = os.sep.join([datasets_path, 'B.csv'])
 path_c = os.sep.join([datasets_path, 'C.csv'])
 
+
 class ExtractFeaturesTestCases(unittest.TestCase):
     def test_extract_feature_vecs_valid_1(self):
         A = read_csv_metadata(path_a)
         B = read_csv_metadata(path_b, key='ID')
         C = read_csv_metadata(path_c, ltable=A, rtable=B)
         col_pos = len(C.columns)
-        C.insert(col_pos, 'label', [0]*len(C))
+        C.insert(col_pos, 'label', [0] * len(C))
         feature_table = get_features_for_matching(A, B)
         F = extract_feature_vecs(C, attrs_before=['ltable_name', 'rtable_name'], feature_table=feature_table,
                                  attrs_after='label')
@@ -31,7 +32,7 @@ class ExtractFeaturesTestCases(unittest.TestCase):
         self.assertEqual(F.columns[2], cm.get_fk_rtable(C))
         self.assertEqual(F.columns[3], 'ltable_name')
         self.assertEqual(F.columns[4], 'rtable_name')
-        self.assertEqual(F.columns[len(F.columns)-1], 'label')
+        self.assertEqual(F.columns[len(F.columns) - 1], 'label')
         self.assertEqual(cm.get_all_properties(C) == cm.get_all_properties(F), True)
 
     def test_extract_feature_vecs_valid_2(self):
@@ -39,7 +40,7 @@ class ExtractFeaturesTestCases(unittest.TestCase):
         B = read_csv_metadata(path_b, key='ID')
         C = read_csv_metadata(path_c, ltable=A, rtable=B)
         col_pos = len(C.columns)
-        C.insert(col_pos, 'label', [0]*len(C))
+        C.insert(col_pos, 'label', [0] * len(C))
         feature_table = get_features_for_matching(A, B)
         F = extract_feature_vecs(C, attrs_before=['ltable_name', 'rtable_name'], feature_table=feature_table)
         self.assertEqual(isinstance(F, pd.DataFrame), True)
@@ -48,7 +49,7 @@ class ExtractFeaturesTestCases(unittest.TestCase):
         self.assertEqual(F.columns[2], cm.get_fk_rtable(C))
         self.assertEqual(F.columns[3], 'ltable_name')
         self.assertEqual(F.columns[4], 'rtable_name')
-        self.assertEqual(F.columns[len(F.columns)-1]=='label', False)
+        self.assertEqual(F.columns[len(F.columns) - 1] == 'label', False)
         self.assertEqual(cm.get_all_properties(C) == cm.get_all_properties(F), True)
 
     def test_extract_feature_vecs_with_default_value_for_n_jobs(self):
@@ -84,12 +85,28 @@ class ExtractFeaturesTestCases(unittest.TestCase):
         self.assertEqual(F.columns[len(F.columns) - 1] == 'label', False)
         self.assertEqual(cm.get_all_properties(C) == cm.get_all_properties(F), True)
 
+    def test_extract_feature_vecs_with_parralel_job_count_less_than_zero(self):
+        A = read_csv_metadata(path_a)
+        B = read_csv_metadata(path_b, key='ID')
+        C = read_csv_metadata(path_c, ltable=A, rtable=B)
+        col_pos = len(C.columns)
+        C.insert(col_pos, 'label', [0] * len(C))
+        feature_table = get_features_for_matching(A, B)
+        F = extract_feature_vecs(C, attrs_before=['ltable_name', 'rtable_name'], feature_table=feature_table, n_jobs=-1)
+        self.assertEqual(isinstance(F, pd.DataFrame), True)
+        self.assertEqual(F.columns[0], '_id')
+        self.assertEqual(F.columns[1], cm.get_fk_ltable(C))
+        self.assertEqual(F.columns[2], cm.get_fk_rtable(C))
+        self.assertEqual(F.columns[4], 'rtable_name')
+        self.assertEqual(F.columns[len(F.columns) - 1] == 'label', False)
+        self.assertEqual(cm.get_all_properties(C) == cm.get_all_properties(F), True)
+
     def test_extract_feature_vecs_valid_3(self):
         A = read_csv_metadata(path_a)
         B = read_csv_metadata(path_b, key='ID')
         C = read_csv_metadata(path_c, ltable=A, rtable=B)
         col_pos = len(C.columns)
-        C.insert(col_pos, 'label', [0]*len(C))
+        C.insert(col_pos, 'label', [0] * len(C))
         feature_table = get_features_for_matching(A, B)
         F = extract_feature_vecs(C, attrs_before=['ltable_name', 'rtable_name'],
                                  feature_table=pd.DataFrame(columns=feature_table.columns),
@@ -100,7 +117,7 @@ class ExtractFeaturesTestCases(unittest.TestCase):
         self.assertEqual(F.columns[2], cm.get_fk_rtable(C))
         self.assertEqual(F.columns[3], 'ltable_name')
         self.assertEqual(F.columns[4], 'rtable_name')
-        self.assertEqual(F.columns[len(F.columns)-1]=='label', True)
+        self.assertEqual(F.columns[len(F.columns) - 1] == 'label', True)
         self.assertEqual(cm.get_all_properties(C) == cm.get_all_properties(F), True)
 
     def test_extract_feature_vecs_valid_4(self):
@@ -108,7 +125,7 @@ class ExtractFeaturesTestCases(unittest.TestCase):
         B = read_csv_metadata(path_b, key='ID')
         C = read_csv_metadata(path_c, ltable=A, rtable=B)
         col_pos = len(C.columns)
-        C.insert(col_pos, 'label', [0]*len(C))
+        C.insert(col_pos, 'label', [0] * len(C))
         feature_table = get_features_for_matching(A, B)
         F = extract_feature_vecs(C, attrs_before=['ltable_name', 'rtable_name', 'ltable_ID', 'rtable_ID'],
                                  feature_table=pd.DataFrame(columns=feature_table.columns),
@@ -119,16 +136,15 @@ class ExtractFeaturesTestCases(unittest.TestCase):
         self.assertEqual(F.columns[2], cm.get_fk_rtable(C))
         self.assertEqual(F.columns[3], 'ltable_name')
         self.assertEqual(F.columns[4], 'rtable_name')
-        self.assertEqual(F.columns[len(F.columns)-1]=='label', True)
+        self.assertEqual(F.columns[len(F.columns) - 1] == 'label', True)
         self.assertEqual(cm.get_all_properties(C) == cm.get_all_properties(F), True)
-
 
     def test_extract_feature_vecs_valid_5(self):
         A = read_csv_metadata(path_a)
         B = read_csv_metadata(path_b, key='ID')
         C = read_csv_metadata(path_c, ltable=A, rtable=B)
         col_pos = len(C.columns)
-        C.insert(col_pos, 'label', [0]*len(C))
+        C.insert(col_pos, 'label', [0] * len(C))
         feature_table = get_features_for_matching(A, B)
         F = extract_feature_vecs(C, attrs_before=['ltable_name', 'rtable_name', 'ltable_ID', 'rtable_ID', '_id'],
                                  feature_table=pd.DataFrame(columns=feature_table.columns),
@@ -139,7 +155,7 @@ class ExtractFeaturesTestCases(unittest.TestCase):
         self.assertEqual(F.columns[2], cm.get_fk_rtable(C))
         self.assertEqual(F.columns[3], 'ltable_name')
         self.assertEqual(F.columns[4], 'rtable_name')
-        self.assertEqual(F.columns[len(F.columns)-1]=='label', True)
+        self.assertEqual(F.columns[len(F.columns) - 1] == 'label', True)
         self.assertEqual(cm.get_all_properties(C) == cm.get_all_properties(F), True)
 
     def test_extract_feature_vecs_valid_6(self):
@@ -147,7 +163,7 @@ class ExtractFeaturesTestCases(unittest.TestCase):
         B = read_csv_metadata(path_b, key='ID')
         C = read_csv_metadata(path_c, ltable=A, rtable=B)
         col_pos = len(C.columns)
-        C.insert(col_pos, 'label', [0]*len(C))
+        C.insert(col_pos, 'label', [0] * len(C))
         feature_table = get_features_for_matching(A, B)
         F = extract_feature_vecs(C, attrs_before=['ltable_name', 'rtable_name', 'ltable_ID', 'rtable_ID', '_id'],
                                  feature_table=pd.DataFrame(columns=feature_table.columns),
@@ -158,7 +174,7 @@ class ExtractFeaturesTestCases(unittest.TestCase):
         self.assertEqual(F.columns[2], cm.get_fk_rtable(C))
         self.assertEqual(F.columns[3], 'ltable_name')
         self.assertEqual(F.columns[4], 'rtable_name')
-        self.assertEqual(F.columns[len(F.columns)-1]=='label', True)
+        self.assertEqual(F.columns[len(F.columns) - 1] == 'label', True)
         self.assertEqual(cm.get_all_properties(C) == cm.get_all_properties(F), True)
 
     def test_extract_feature_vecs_valid_7(self):
@@ -166,7 +182,7 @@ class ExtractFeaturesTestCases(unittest.TestCase):
         B = read_csv_metadata(path_b, key='ID')
         C = read_csv_metadata(path_c, ltable=A, rtable=B)
         col_pos = len(C.columns)
-        C.insert(col_pos, 'label', [0]*len(C))
+        C.insert(col_pos, 'label', [0] * len(C))
         feature_table = get_features_for_matching(A, B)
         F = extract_feature_vecs(C, attrs_before='ltable_name',
                                  feature_table=pd.DataFrame(columns=feature_table.columns),
@@ -176,7 +192,7 @@ class ExtractFeaturesTestCases(unittest.TestCase):
         self.assertEqual(F.columns[1], cm.get_fk_ltable(C))
         self.assertEqual(F.columns[2], cm.get_fk_rtable(C))
         self.assertEqual(F.columns[3], 'ltable_name')
-        self.assertEqual(F.columns[len(F.columns)-1]=='label', True)
+        self.assertEqual(F.columns[len(F.columns) - 1] == 'label', True)
         self.assertEqual(cm.get_all_properties(C) == cm.get_all_properties(F), True)
 
     def test_extract_feature_vecs_valid_8(self):
@@ -184,7 +200,7 @@ class ExtractFeaturesTestCases(unittest.TestCase):
         B = read_csv_metadata(path_b, key='ID')
         C = read_csv_metadata(path_c, ltable=A, rtable=B)
         col_pos = len(C.columns)
-        C.insert(col_pos, 'label', [0]*len(C))
+        C.insert(col_pos, 'label', [0] * len(C))
         feature_table = get_features_for_matching(A, B)
         F = extract_feature_vecs(C,
                                  feature_table=pd.DataFrame(columns=feature_table.columns),
@@ -194,9 +210,8 @@ class ExtractFeaturesTestCases(unittest.TestCase):
         self.assertEqual(F.columns[1], cm.get_fk_ltable(C))
         self.assertEqual(F.columns[2], cm.get_fk_rtable(C))
         # self.assertEqual(F.columns[3], 'ltable_name')
-        self.assertEqual(F.columns[len(F.columns)-1]=='label', True)
+        self.assertEqual(F.columns[len(F.columns) - 1] == 'label', True)
         self.assertEqual(cm.get_all_properties(C) == cm.get_all_properties(F), True)
-
 
     @raises(AssertionError)
     def test_extract_feature_vecs_invalid_df(self):
@@ -210,12 +225,11 @@ class ExtractFeaturesTestCases(unittest.TestCase):
         B = read_csv_metadata(path_b, key='ID')
         C = read_csv_metadata(path_c, ltable=A, rtable=B)
         col_pos = len(C.columns)
-        C.insert(col_pos, 'label', [0]*len(C))
+        C.insert(col_pos, 'label', [0] * len(C))
         feature_table = get_features_for_matching(A, B)
         F = extract_feature_vecs(C, attrs_before='ltable_name1',
                                  feature_table=pd.DataFrame(columns=feature_table.columns),
                                  attrs_after=['label', '_id'])
-
 
     @raises(AssertionError)
     def test_extract_feature_vecs_invalid_attrs_after(self):
@@ -223,7 +237,7 @@ class ExtractFeaturesTestCases(unittest.TestCase):
         B = read_csv_metadata(path_b, key='ID')
         C = read_csv_metadata(path_c, ltable=A, rtable=B)
         col_pos = len(C.columns)
-        C.insert(col_pos, 'label', [0]*len(C))
+        C.insert(col_pos, 'label', [0] * len(C))
         feature_table = get_features_for_matching(A, B)
         F = extract_feature_vecs(C, attrs_before='ltable_name',
                                  feature_table=pd.DataFrame(columns=feature_table.columns),
@@ -235,7 +249,7 @@ class ExtractFeaturesTestCases(unittest.TestCase):
         B = read_csv_metadata(path_b, key='ID')
         C = read_csv_metadata(path_c, ltable=A, rtable=B)
         col_pos = len(C.columns)
-        C.insert(col_pos, 'label', [0]*len(C))
+        C.insert(col_pos, 'label', [0] * len(C))
         feature_table = get_features_for_matching(A, B)
         F = extract_feature_vecs(C, attrs_before='ltable_name',
                                  feature_table=None,
