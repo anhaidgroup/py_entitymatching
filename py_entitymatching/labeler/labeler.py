@@ -62,9 +62,9 @@ def label_table(table, label_column_name, verbose=False):
 
     # Invoke the GUI
     try:
-        from PyQt4 import QtGui
+        from PyQt5 import QtGui
     except ImportError:
-        raise ImportError('PyQt4 is not installed. Please install PyQt4 to use '
+        raise ImportError('PyQt5 is not installed. Please install PyQt5 to use '
                       'GUI related functions in py_entitymatching.')
 
     from py_entitymatching.gui.table_gui import edit_table
