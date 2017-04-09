@@ -2,9 +2,9 @@ from collections import OrderedDict
 
 
 try:
-    from PyQt4 import QtGui, QtCore
+    from PyQt5 import QtCore, QtWidgets
 except ImportError:
-    raise ImportError('PyQt4 is not installed. Please install PyQt4 to use '
+    raise ImportError('PyQt5 is not installed. Please install PyQt5 to use '
                       'GUI related functions in py_entitymatching.')
 
 import py_entitymatching as em
@@ -12,7 +12,7 @@ import py_entitymatching.catalog.catalog_manager as cm
 from  py_entitymatching.gui.gui_utils import DictTableViewWithLabel, \
     DataFrameTableViewWithLabel, TreeViewWithLabel
 
-class MainWindowManager(QtGui.QWidget):
+class MainWindowManager(QtWidgets.QWidget):
     """
     This class defines the main window manager
     """
@@ -28,10 +28,10 @@ class MainWindowManager(QtGui.QWidget):
         self.table = table
         self.fp_dataframe = fp_dataframe
         self.fn_dataframe = fn_dataframe
-        # Get the instance for QtGui
-        em._viewapp = QtGui.QApplication.instance()
+        # Get the instance for QtWidgets
+        em._viewapp = QtWidgets.QApplication.instance()
         if em._viewapp is None:
-            em._viewapp = QtGui.QApplication([])
+            em._viewapp = QtWidgets.QApplication([])
         app = em._viewapp
 
         ltable = cm.get_ltable(self.table)
@@ -65,7 +65,7 @@ class MainWindowManager(QtGui.QWidget):
         This function sets up the GUI
         """
         # Set the combo box with the values false postives and negatives
-        self.combo_box = QtGui.QComboBox()
+        self.combo_box = QtWidgets.QComboBox()
         self.combo_box.addItems(['False Positives', 'False Negatives'])
         self.combo_box.activated[str].connect(self.combobox_onactivated)
 
@@ -82,8 +82,8 @@ class MainWindowManager(QtGui.QWidget):
         # We want to split the main window vertically into two halves and on
         # the left have metric, and the combo box for false positives and
         # negatives
-        layout = QtGui.QVBoxLayout(self)
-        splitter = QtGui.QSplitter(QtCore.Qt.Horizontal)
+        layout = QtWidgets.QVBoxLayout(self)
+        splitter = QtWidgets.QSplitter(QtCore.Qt.Horizontal)
         splitter.addWidget(self.metric_widget)
         splitter.addWidget(self.dataframe_widget)
         layout.addWidget(splitter)
@@ -154,7 +154,7 @@ class MainWindowManager(QtGui.QWidget):
             self.dataframe_widget.label_obj.setText(text)
 
 
-class ShowWindowManager(QtGui.QWidget):
+class ShowWindowManager(QtWidgets.QWidget):
     """
     Class to handle the window manager
     """
@@ -178,9 +178,9 @@ class ShowWindowManager(QtGui.QWidget):
         self.right_tuple_widget = DictTableViewWithLabel(self, self.right_tuple_dict, 'Right Tuple')
         self.setWindowTitle('Show Tuples')
 
-        layout = QtGui.QVBoxLayout()
+        layout = QtWidgets.QVBoxLayout()
         # Set the widgets at appropriate position
-        splitter = QtGui.QSplitter(QtCore.Qt.Horizontal)
+        splitter = QtWidgets.QSplitter(QtCore.Qt.Horizontal)
         splitter.addWidget(self.left_tuple_widget)
         splitter.addWidget(self.right_tuple_widget)
         layout.addWidget(splitter)
@@ -188,7 +188,7 @@ class ShowWindowManager(QtGui.QWidget):
         self.setLayout(layout)
 
 
-class DebugWindowManager(QtGui.QWidget):
+class DebugWindowManager(QtWidgets.QWidget):
     """
     Class defining the over all debug window manager
     """
@@ -225,12 +225,12 @@ class DebugWindowManager(QtGui.QWidget):
                                               debug_result=self.debug_result
                                               )
         # Show the tree and the have a layout to show the tuples
-        layout = QtGui.QHBoxLayout()
-        splitter1 = QtGui.QSplitter(QtCore.Qt.Vertical)
+        layout = QtWidgets.QHBoxLayout()
+        splitter1 = QtWidgets.QSplitter(QtCore.Qt.Vertical)
         splitter1.addWidget(self.left_tuple_widget)
         splitter1.addWidget(self.right_tuple_widget)
 
-        splitter2 = QtGui.QSplitter(QtCore.Qt.Horizontal)
+        splitter2 = QtWidgets.QSplitter(QtCore.Qt.Horizontal)
         splitter2.addWidget(splitter1)
         splitter2.addWidget(self.debug_widget)
         layout.addWidget(splitter2)
