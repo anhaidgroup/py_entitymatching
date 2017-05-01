@@ -85,8 +85,8 @@ def edit_table(table, show_flag=True):
     datatable = view_table(table, edit_flag=True, show_flag=show_flag)
     cols = list(table.columns)
     idxv = list(table.index)
+    j = len(table.columns) - 1
     for i in range(len(table.index)):
-        for j in range(len(table.columns)):
             val = datatable.item(i, j).text()
             inp = table.iat[i, j]
             val = _cast_val(val, inp)
