@@ -58,6 +58,7 @@ if __name__ == "__main__":
             'Programming Language :: Python :: 2.7',
             'Programming Language :: Python :: 3.4',
             'Programming Language :: Python :: 3.5',
+            'Programming Language :: Python :: 3.6',            
             'Topic :: Scientific/Engineering',
             'Topic :: Utilities',
             'Topic :: Software Development :: Libraries',
@@ -65,12 +66,11 @@ if __name__ == "__main__":
         packages=packages,
         install_requires=[
             'PyPrind == 2.9.8',
-            'py_stringsimjoin', # this internally installs other
+            'py_stringsimjoin',
             # dependencies such as py_stringmatching, joblib, pyprind
             'cloudpickle >= 0.2.1',
             'pyparsing >= 2.1.4',
-            'scikit-learn >= 0.17.1',
-            'scipy >= 0.18.1'
+            'scikit-learn >= 0.18'
         ],
         include_package_data=True,
         zip_safe=False

@@ -1,7 +1,7 @@
 ===============
 Data Structures
 ===============
-In *py_entitymatching*, we will need to store many tables and metadata associated
+In py_entitymatching, we will need to store many tables and metadata associated
 with it. It is important for you to know the data structures that are used to store
 the tables and the metadata, so that you can manipulate them based on your need.
 
@@ -16,7 +16,7 @@ As a convention, we will use:
 
 Storing Tables Using Pandas Dataframes
 --------------------------------------
-We will need to store a lot of data as tables in *py_entitymatching*. We use pandas Dataframes to
+We will need to store a lot of data as tables in py_entitymatching. We use pandas Dataframes to
 represent tables (you can read more about pandas and pandas Dataframes `here
 <http://pandas.pydata.org/>`_).
 
@@ -29,13 +29,13 @@ Storing Metadata Using a Catalog
 --------------------------------
 
 **Bare Minimum that You Should Know:**
-In *py_entitymatching*, we need to store a lot of metadata with a table such as
+In py_entitymatching, we need to store a lot of metadata with a table such as
 key and foreign key. We use a
 new data structure, Catalog, to store metadata. You need not worry
-about instantiating this object (it gets automatically instantiated when *py_entitymatching*
+about instantiating this object (it gets automatically instantiated when py_entitymatching
 gets loaded in Python memory) or manipulating this object directly.
 
-All the *py_entitymatching* commands correctly handle the metadata in the Catalog,
+All the py_entitymatching commands correctly handle the metadata in the Catalog,
 and for you, there are commands to manipulate the Catalog (please see
 :ref:`label-handling-metadata` section for the supported commands).
 
@@ -43,7 +43,7 @@ and for you, there are commands to manipulate the Catalog (please see
 **If You Want to Read More:**
 As we mentioned earlier,  we need to store a lot of metadata with a table. Here are a few examples:
 
-* Each table in *py_entitymatching* should have a key, so that we can easily identify the tuples.
+* Each table in py_entitymatching should have a key, so that we can easily identify the tuples.
   Keys are also critical later for debugging, provenance, etc. Key is a metadata that we
   want to store for a table.
 
@@ -93,7 +93,7 @@ The metadata dictionary for table C will have at least these fields:
 
 Summary
 -------
-* Tables in *py_entitymatching* are represented as pandas Dataframes.
+* Tables in py_entitymatching are represented as pandas Dataframes.
 * The metadata for tables are stored in a separate data structure called Catalog.
 * The kind of metadata stored will depend on the table (for example input table will have key,
   and the table from blocking will have key, ltable, rtable, fk_table, fk_rtable).

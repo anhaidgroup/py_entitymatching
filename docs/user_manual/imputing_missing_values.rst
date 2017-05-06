@@ -8,7 +8,7 @@ a machine learning (ML) model and use it to produce matches.
 The step of filling in the missing values (also called imputing
 missing values) is important and necessary. If there are missing values in the input
 tables A and B, then they would be passed on to candidate set and most
-likely to the feature vectors. In *py_entitymatching*, if the feature vectors
+likely to the feature vectors. In py_entitymatching, if the feature vectors
 contain missing values, then most of the ML algorithms would not work
 as they rely on scikit-learn package to provide ML-algorithm
 implementations (and their implementations would not work if the
@@ -32,7 +32,7 @@ or objects directly:
   keys to A and B. The user must have to rightly project them out to impute missing
   values using aggregates.
 
-In *py_entitymatching*, we propose a hybrid method to impute missing values. To fill NaN's
+In py_entitymatching, we propose a hybrid method to impute missing values. To fill NaN's
 with a constant value use `fillna` command from pandas Dataframe. Please look at the
 `API reference of fillna <http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.fillna.html>`_
 for more details. An example of using `fillna` to the whole table is shown below:
@@ -53,7 +53,7 @@ Note that, in the above `inplace` should be specified as False, this is because
 the output is getting assigned to a column in the old Dataframe `H` and the metadata
 of `H` does not get affected.
 
-To fill NaN's with an aggregate value, in *py_entitymatching* you can use `impute_table`
+To fill NaN's with an aggregate value, in py_entitymatching you can use `impute_table`
 command. It is a wrapper around scikit-learn's `Imputer` object (to make it metadata aware).
 An example of using `impute_table` is shown below:
 

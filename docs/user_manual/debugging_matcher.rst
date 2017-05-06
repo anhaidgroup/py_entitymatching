@@ -3,12 +3,12 @@ Debugging ML-Matchers
 =====================
 While doing entity matching you would like to choose a matcher that produces the desired
 precision, recall or F1 numbers. If a matcher does not produce the desired accuracy, then
-you would like to debug the matcher. *py_entitymatching* supports two ways to
+you would like to debug the matcher. py_entitymatching supports two ways to
 debug: (1) using the GUI, and (2) using the command line.
 
 Debugging Using the GUI
 -----------------------
-*py_entitymatching* supports debugging using the GUI for a subset of ML-based matchers.
+py_entitymatching supports debugging using the GUI for a subset of ML-based matchers.
 Specifically, it supports debugging Decision Tree matcher and Random Forest matcher.
 You can use `vis_debug_dt` and `vis_debug_rf` to debug Decision Tree matcher
 and Random Forest matcher respectively.
@@ -63,8 +63,8 @@ then we recommend the following steps:
 Debugging Using the Command Line
 --------------------------------
 
-Similar to debugging using the GUI, *py_entitymatching* supports command line debugging for two
-ML matchers: Decision Tree and Random Forest. Currently, *py_entitymatching*  supports
+Similar to debugging using the GUI, py_entitymatching supports command line debugging for two
+ML matchers: Decision Tree and Random Forest. Currently, py_entitymatching  supports
 command line debugging only using tuple pairs, other approaches are left for future work.
 
 You can use `debug_decisiontree_matcher` and `debug_randomforest_matcher` to debug

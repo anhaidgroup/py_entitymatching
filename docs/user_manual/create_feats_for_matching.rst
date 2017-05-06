@@ -19,7 +19,7 @@ Creating the Features Manually
 This is very similar to manual feature creation process for blocking (see section
 :ref:`label-create-features-blocking`) except the features are created for
 matching purposes.
-In brief, you can execute the following sequence of commands in *py_entitymatching*
+In brief, you can execute the following sequence of commands in py_entitymatching
 to create the features manually:
 
     >>> match_t = em.get_tokenizers_for_matching()
@@ -35,7 +35,7 @@ Further, you can add or delete features as see saw in section
 Please refer to the API reference of :py:meth:`~py_entitymatching.get_tokenizers_for_matching`
 and :py:meth:`py_entitymatching.get_sim_funs_for_matching` for more details.
 
-.. note:: Currently, *py_entitymatching* returns the same set of features for blocking and matching purposes.
+.. note:: Currently, py_entitymatching returns the same set of features for blocking and matching purposes.
 
 Creating the Features Automatically
 -----------------------------------
@@ -43,7 +43,7 @@ If you do not want to go through the hassle of creating the features manually, t
 the user can generate the features automatically. This is very similar to automatic
 feature creation process for blocking (see section :ref:`label-gen-feats-automatically`).
 
-In *py_entitymatching*, you can use `get_features_for_matching` to generate features
+In py_entitymatching, you can use `get_features_for_matching` to generate features
 for matching purposes automatically. An example of using `get_features_for_matching` is
 shown below:
 
