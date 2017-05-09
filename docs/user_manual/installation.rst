@@ -18,7 +18,7 @@ Dependencies
 * pandas (provides data structures to store and manage tables)
 * scikit-learn (provides implementations for common machine learning algorithms)
 * joblib (provides multiprocessing capabilities)
-* pyqt4 (provides tools to build GUIs)
+* pyqt5 (provides tools to build GUIs)
 * py_stringsimjoin (provides implementations for string similarity joins)
 * py_stringmatching (provides a set of tokenizers and string similarity functions)
 * cloudpickle (provides functions to serialize Python constructs)
@@ -52,10 +52,10 @@ command::
 
     pip install py_entitymatching
 
-The above command will install py_entitymatching and all its dependencies, except PyQt4.
+The above command will install py_entitymatching and all its dependencies, except PyQt5.
 This is because pip can only install the dependency packages that are available in PyPI and
-PyQt4 is not in PyPI. Refer to this `PyQt4 page <http://pyqt.sourceforge.net/Docs/PyQt4/installation.html>`_
-on how to install PyQt4.
+PyQt5 is not in PyPI. Refer to this `PyQt5 page <http://pyqt.sourceforge.net/Docs/PyQt5/installation.html>`_
+on how to install PyQt5.
 
 
 
@@ -85,10 +85,10 @@ For more information see this StackOverflow `link <http://stackoverflow.com/ques
 
 
 The above command will install py_entitymatching and all its
-dependencies, except PyQt4. This is because similar to pip, setup.py can only install
-the dependency packages that are available in PyPI and PyQt4 is not in PyPI.
-Refer to this `page <http://pyqt.sourceforge.net/Docs/PyQt4/installation.html>`_ on how to
-install PyQt4.
+dependencies, except PyQt5. This is because similar to pip, setup.py can only install
+the dependency packages that are available in PyPI and PyQt5 is not in PyPI.
+Refer to this `page <http://pyqt.sourceforge.net/Docs/PyQt5/installation.html>`_ on how to
+install PyQt5.
 
 
 
