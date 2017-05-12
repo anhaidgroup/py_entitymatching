@@ -11,6 +11,8 @@ import py_entitymatching.utils.catalog_helper as ch
 from py_entitymatching.io.parsers import read_csv_metadata
 import py_entitymatching.debugblocker.debugblocker as db
 
+from operator import itemgetter
+
 
 datasets_path = os.sep.join([get_install_path(), 'tests', 'test_datasets'])
 catalog_datasets_path = os.sep.join([get_install_path(), 'tests', 'test_datasets', 'catalog'])
@@ -520,7 +522,11 @@ class DebugblockerTestCases(unittest.TestCase):
         B = read_csv_metadata(path_b, key='ID')
         A_key = em.get_key(A)
         B_key = em.get_key(B)
-        corres_list = [(0, 0), (1, 1), (4, 4), (5, 5)]
+        cols_A = list(A.columns)
+        cols_B = list(B.columns)
+        corres_list = [(cols_A[0], cols_B[0]), (cols_A[1], cols_B[1]), (cols_A[4],
+                                                                        cols_B[4]),
+                       (cols_A[5], cols_B[5])]
         A_filtered, B_filtered = db._get_filtered_table(
             A, B, A_key, B_key, corres_list)
         A_wlist = db._get_feature_weight(A_filtered)
@@ -550,7 +556,10 @@ class DebugblockerTestCases(unittest.TestCase):
         B = read_csv_metadata(path_b, key='ID')
         A_key = em.get_key(A)
         B_key = em.get_key(B)
-        corres_list = [(0, 0), (1, 1), (4, 4)]
+        cols_A = list(A.columns)
+        cols_B = list(B.columns)
+        corres_list = [(cols_A[0], cols_B[0]), (cols_A[1], cols_B[1]), (cols_A[4],
+                                                                        cols_B[4])]
         A_filtered, B_filtered = db._get_filtered_table(A, B, A_key, B_key, corres_list)
         actual_selected_features = db._select_features(
             A_filtered, B_filtered, A_key)
@@ -562,7 +571,10 @@ class DebugblockerTestCases(unittest.TestCase):
         B = read_csv_metadata(path_b, key='ID')
         A_key = em.get_key(A)
         B_key = em.get_key(B)
-        corres_list = [(0, 0)]
+        cols_A = list(A.columns)
+        cols_B = list(B.columns)
+
+        corres_list = [(cols_A[0], cols_B[0])]
         A_filtered, B_filtered = db._get_filtered_table(A, B, A_key, B_key, corres_list)
         actual_selected_features = db._select_features(
             A_filtered, B_filtered, A_key)
@@ -574,8 +586,14 @@ class DebugblockerTestCases(unittest.TestCase):
         A = read_csv_metadata(path_a, key='ID')
         B = read_csv_metadata(path_b, key='ID')
         A_key = em.get_key(A)
+        cols_A = list(A.columns)
+        cols_B = list(B.columns)
+
         A_field_set = [0, 1, 2]
         B_field_set = [0, 1, 2, 3]
+
+        A_field_set = list(itemgetter(*A_field_set)(cols_A))
+        B_field_set = list(itemgetter(*B_field_set)(cols_B))
 
         A_filtered = A[A_field_set]
         B_filtered = B[B_field_set]
@@ -587,8 +605,15 @@ class DebugblockerTestCases(unittest.TestCase):
         A = read_csv_metadata(path_a, key='ID')
         B = read_csv_metadata(path_b, key='ID')
         A_key = em.get_key(A)
+        cols_A = list(A.columns)
+        cols_B = list(B.columns)
+
         A_field_set = [0, 1, 2, 3]
         B_field_set = [0, 1, 2]
+
+        A_field_set = list(itemgetter(*A_field_set)(cols_A))
+        B_field_set = list(itemgetter(*B_field_set)(cols_B))
+
 
         A_filtered = A[A_field_set]
         B_filtered = B[B_field_set]
