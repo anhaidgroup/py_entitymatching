@@ -1,6 +1,9 @@
 """
 This module contains functions for linear regression classifier.
 """
+
+import logging
+
 from py_entitymatching.matcher.mlmatcher import MLMatcher
 from py_entitymatching.matcher.matcherutils import get_ts
 
@@ -9,6 +12,9 @@ from sklearn.base import BaseEstimator
 from sklearn.base import ClassifierMixin
 from sklearn.base import TransformerMixin
 
+import numpy as np
+
+logger = logging.getLogger(__name__)
 class LinRegClassifierSKLearn(BaseEstimator, ClassifierMixin, TransformerMixin):
     """
     This class implements Linear Regression classifer.
@@ -41,6 +47,17 @@ class LinRegClassifierSKLearn(BaseEstimator, ClassifierMixin, TransformerMixin):
         y[y == -1] = 0
         # Return back the predictions
         return y
+
+    def predict_proba(self, X):
+        # There is no proba function defined for Linear Regression Matcher in scikit
+        # learn. So we return the probs as 1
+
+        # give the warning to the user
+        logger.warning('There is no proba function defined for Linear Regression '
+                       'Matcher in scikit learn. So we return the probs as 1')
+
+        # return all the probs as 1
+        return np.ones(len(X))
 
     def get_params(self, deep=True):
         """

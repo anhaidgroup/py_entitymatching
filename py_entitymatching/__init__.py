@@ -66,6 +66,7 @@ from py_entitymatching.matcher.logregmatcher import LogRegMatcher
 from py_entitymatching.matcher.nbmatcher import NBMatcher
 from py_entitymatching.matcher.rfmatcher import RFMatcher
 from py_entitymatching.matcher.svmmatcher import SVMMatcher
+from py_entitymatching.matcher.xgboostmatcher import XGBoostMatcher
 
 # # matcher selector
 from py_entitymatching.matcherselector.mlmatcherselection import select_matcher

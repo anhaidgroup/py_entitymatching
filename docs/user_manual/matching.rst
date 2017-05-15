@@ -32,7 +32,8 @@ For example, a user can create a Decision Tree matcher like this:
 
 Please refer to :py:meth:`~py_entitymatching.DTMatcher`, :py:meth:`~py_entitymatching.RFMatcher`,
 :py:meth:`~py_entitymatching.NBMatcher`, :py:meth:`~py_entitymatching.LogisticRegressionMatcher`,
-:py:meth:`~py_entitymatching.LinearRegressionMatcher` and :py:meth:`~py_entitymatching.SVMMatcher`
+:py:meth:`~py_entitymatching.LinearRegressionMatcher`, :py:meth:`~py_entitymatching.SVMMatcher`, and
+:py:meth:`~py_entitymatching.XGBoostMatcher`
 for more details.
 
 Training Learning-Based Matchers
@@ -56,11 +57,3 @@ is shown below:
 
 There are other variants of `predict` method. As an example, Please refer to
 :py:meth:`~py_entitymatching.DTMatcher.predict` for more details.
-
-
-
-
-
-
-
-
