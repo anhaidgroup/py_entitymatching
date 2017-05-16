@@ -33,5 +33,11 @@ class XGBoostMatcher(MLMatcher):
             # Set the name of the matcher, with the given name.
             self.name = name
         # Set the classifier to the scikit-learn classifier.
+        try:
+            from xgboost.sklearn import XGBClassifier
+        except ImportError:
+            raise ImportError(
+                'Check if xgboost library is installed. You can install xgboost '
+                'by following the instructions at http://xgboost.readthedocs.io/en/latest/build.html')
         self.clf = XGBClassifier(*args, **kwargs)
 
