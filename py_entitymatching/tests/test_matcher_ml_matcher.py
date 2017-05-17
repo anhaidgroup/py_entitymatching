@@ -355,6 +355,35 @@ class MLMatcherTestCases(unittest.TestCase):
         self.assertEqual(sum(predictions[r_col] >= 0.5), len(predictions))
 
 
+    def test_ml_matcher_return_probs_true_predict_diff_colname(self):
+        A = read_csv_metadata(fpath_a, key='id')
+        B = read_csv_metadata(fpath_b, key='id')
+        feature_vectors = read_csv_metadata(fpath_f, ltable=A, rtable=B)
+        train_test = mu.split_train_test(feature_vectors)
+        train, test = train_test['train'], train_test['test']
+        dt = DTMatcher(name='DecisionTree')
+        train.drop('ltable.id', axis=1, inplace=True)
+        train.drop('rtable.id', axis=1, inplace=True)
+        test.drop('ltable.id', axis=1, inplace=True)
+        test.drop('rtable.id', axis=1, inplace=True)
+        test.drop('gold', axis=1, inplace=True)
+        dt.fit(table=train, exclude_attrs='_id', target_attr='gold')
+        predictions = dt.predict(table=test, exclude_attrs='_id',
+                                 target_attr='predicted', probs_attr='probas',
+                                 inplace=False, append=True, return_probs=True)
+
+        self.assertNotEqual(id(predictions), id(test))
+        self.assertEqual(len(predictions), len(test))
+        self.assertEqual(set(list(test.columns)).issubset(list(predictions.columns)), True)
+
+        p_col = predictions.columns[len(predictions.columns)-2]
+        self.assertEqual(p_col, 'predicted')
+
+        r_col = predictions.columns[len(predictions.columns) - 1]
+        self.assertEqual(r_col, 'probas')
+
+        self.assertEqual(sum(predictions[r_col] >= 0.5), len(predictions))
+
 
 
     def test_ml_matcher_set_name(self):

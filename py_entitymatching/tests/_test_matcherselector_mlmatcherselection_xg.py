@@ -13,7 +13,7 @@ from py_entitymatching.matcher.logregmatcher import LogRegMatcher
 from py_entitymatching.matcher.nbmatcher import NBMatcher
 from py_entitymatching.matcher.rfmatcher import RFMatcher
 from py_entitymatching.matcher.svmmatcher import SVMMatcher
-
+from py_entitymatching.matcher.xgboostmatcher import XGBoostMatcher
 
 import py_entitymatching.catalog.catalog_manager as cm
 
@@ -46,9 +46,9 @@ class MLMatcherSelectionTestCases(unittest.TestCase):
         svmmatcher = SVMMatcher()
         linregmatcher = LinRegMatcher()
         logregmatcher = LogRegMatcher()
-        # xgmatcher = XGBoostMatcher()
+        xgmatcher = XGBoostMatcher()
         matchers = [dtmatcher, nbmatcher, rfmatcher, svmmatcher, linregmatcher,
-                    logregmatcher]
+                    logregmatcher, xgmatcher]
 
         result = select_matcher(matchers, x=None, y=None, table=feature_vectors,
                                 exclude_attrs=['ltable.id', 'rtable.id', '_id', 'gold'],
@@ -81,7 +81,10 @@ class MLMatcherSelectionTestCases(unittest.TestCase):
         svmmatcher = SVMMatcher()
         linregmatcher = LinRegMatcher()
         logregmatcher = LogRegMatcher()
-        matchers = [dtmatcher, nbmatcher, rfmatcher, svmmatcher, linregmatcher, logregmatcher]
+        xgmatcher = XGBoostMatcher()
+        matchers = [dtmatcher, nbmatcher, rfmatcher, svmmatcher, linregmatcher,
+                    logregmatcher, xgmatcher]
+
         col_list = list(feature_vectors.columns)
         l = list_diff(col_list, [cm.get_key(feature_vectors), cm.get_fk_ltable(feature_vectors),
                                  cm.get_fk_rtable(feature_vectors),
@@ -117,7 +120,10 @@ class MLMatcherSelectionTestCases(unittest.TestCase):
         svmmatcher = SVMMatcher()
         linregmatcher = LinRegMatcher()
         logregmatcher = LogRegMatcher()
-        matchers = [dtmatcher, nbmatcher, rfmatcher, svmmatcher, linregmatcher, logregmatcher]
+        xgmatcher = XGBoostMatcher()
+        matchers = [dtmatcher, nbmatcher, rfmatcher, svmmatcher, linregmatcher,
+                    logregmatcher, xgmatcher]
+
         col_list = list(feature_vectors.columns)
         l = list_diff(col_list, [cm.get_key(feature_vectors), cm.get_fk_ltable(feature_vectors),
                                  cm.get_fk_rtable(feature_vectors),
@@ -153,7 +159,10 @@ class MLMatcherSelectionTestCases(unittest.TestCase):
         svmmatcher = SVMMatcher()
         linregmatcher = LinRegMatcher()
         logregmatcher = LogRegMatcher()
-        matchers = [dtmatcher, nbmatcher, rfmatcher, svmmatcher, linregmatcher, logregmatcher]
+        xgmatcher = XGBoostMatcher()
+        matchers = [dtmatcher, nbmatcher, rfmatcher, svmmatcher, linregmatcher,
+                    logregmatcher, xgmatcher]
+
         col_list = list(feature_vectors.columns)
         l = list_diff(col_list, [cm.get_key(feature_vectors), cm.get_fk_ltable(feature_vectors),
                                  cm.get_fk_rtable(feature_vectors),
@@ -189,7 +198,10 @@ class MLMatcherSelectionTestCases(unittest.TestCase):
         svmmatcher = SVMMatcher()
         linregmatcher = LinRegMatcher()
         logregmatcher = LogRegMatcher()
-        matchers = [dtmatcher, nbmatcher, rfmatcher, svmmatcher, linregmatcher, logregmatcher]
+        xgmatcher = XGBoostMatcher()
+        matchers = [dtmatcher, nbmatcher, rfmatcher, svmmatcher, linregmatcher,
+                    logregmatcher, xgmatcher]
+
         col_list = list(feature_vectors.columns)
         l = list_diff(col_list, [cm.get_key(feature_vectors), cm.get_fk_ltable(feature_vectors),
                                  cm.get_fk_rtable(feature_vectors),
@@ -225,7 +237,10 @@ class MLMatcherSelectionTestCases(unittest.TestCase):
         svmmatcher = SVMMatcher()
         linregmatcher = LinRegMatcher()
         logregmatcher = LogRegMatcher()
-        matchers = [dtmatcher, nbmatcher, rfmatcher, svmmatcher, linregmatcher, logregmatcher]
+        xgmatcher = XGBoostMatcher()
+        matchers = [dtmatcher, nbmatcher, rfmatcher, svmmatcher, linregmatcher,
+                    logregmatcher, xgmatcher]
+
         col_list = list(feature_vectors.columns)
         l = list_diff(col_list, [cm.get_fk_ltable(feature_vectors),
                                  cm.get_fk_rtable(feature_vectors),
@@ -260,7 +275,9 @@ class MLMatcherSelectionTestCases(unittest.TestCase):
         svmmatcher = SVMMatcher()
         linregmatcher = LinRegMatcher()
         logregmatcher = LogRegMatcher()
-        matchers = [dtmatcher, nbmatcher, rfmatcher, svmmatcher, linregmatcher, logregmatcher]
+        xgmatcher = XGBoostMatcher()
+        matchers = [dtmatcher, nbmatcher, rfmatcher, svmmatcher, linregmatcher,
+                    logregmatcher, xgmatcher]
 
         col_list = list(feature_vectors.columns)
         l = list_diff(col_list, [cm.get_fk_ltable(feature_vectors),
@@ -309,7 +326,10 @@ class MLMatcherSelectionTestCases(unittest.TestCase):
         svmmatcher = SVMMatcher()
         linregmatcher = LinRegMatcher()
         logregmatcher = LogRegMatcher()
-        matchers = [dtmatcher, nbmatcher, rfmatcher, svmmatcher, linregmatcher, logregmatcher]
+        xgmatcher = XGBoostMatcher()
+        matchers = [dtmatcher, nbmatcher, rfmatcher, svmmatcher, linregmatcher,
+                    logregmatcher, xgmatcher]
+
         col_list = list(feature_vectors.columns)
         l = list_diff(col_list, [cm.get_fk_ltable(feature_vectors),
                                  cm.get_fk_rtable(feature_vectors),
@@ -337,7 +357,9 @@ class MLMatcherSelectionTestCases(unittest.TestCase):
         svmmatcher = SVMMatcher()
         linregmatcher = LinRegMatcher()
         logregmatcher = LogRegMatcher()
-        matchers = [dtmatcher, nbmatcher, rfmatcher, svmmatcher, linregmatcher, logregmatcher]
+        xgmatcher = XGBoostMatcher()
+        matchers = [dtmatcher, nbmatcher, rfmatcher, svmmatcher, linregmatcher,
+                    logregmatcher, xgmatcher]
 
         col_list = list(feature_vectors.columns)
         l = list_diff(col_list, [cm.get_fk_ltable(feature_vectors),
@@ -368,7 +390,9 @@ class MLMatcherSelectionTestCases(unittest.TestCase):
         svmmatcher = SVMMatcher()
         linregmatcher = LinRegMatcher()
         logregmatcher = LogRegMatcher()
-        matchers = [dtmatcher, nbmatcher, rfmatcher, svmmatcher, linregmatcher, logregmatcher]
+        xgmatcher = XGBoostMatcher()
+        matchers = [dtmatcher, nbmatcher, rfmatcher, svmmatcher, linregmatcher,
+                    logregmatcher, xgmatcher]
 
         col_list = list(feature_vectors.columns)
         l = list_diff(col_list, [cm.get_fk_ltable(feature_vectors),
