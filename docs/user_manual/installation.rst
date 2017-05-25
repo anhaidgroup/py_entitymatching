@@ -15,6 +15,7 @@ Dependencies
 ------------
 * pandas (provides data structures to store and manage tables)
 * scikit-learn (provides implementations for common machine learning algorithms)
+* xgboost (provides an implementation for xgboost classifier)
 * joblib (provides multiprocessing capabilities)
 * pyqt4 (provides tools to build GUIs)
 * py_stringsimjoin (provides implementations for string similarity joins)
@@ -24,40 +25,18 @@ Dependencies
 * pyparsing (library to parse strings)
 * six (provides functions to write compatible code across Python 2 and 3)
 
-py_entitymatching can be installed using conda, pip, or source distribution, as described below. 
+py_entitymatching can be installed using source distribution, as described below.
  
-Installing Using conda
-----------------------
-The easiest and recommended way to install the package is to use the command conda,
-which will retrieve py_entitymatching from Anaconda repository then install it::
-
-    conda install -c uwmagellan py_entitymatching
-
-The above command will install py_entitymatching and all of its dependencies.
-
-.. note::
-    To use the command conda, first you must install Miniconda or Anaconda. For
-    more details refer to this `conda page <http://conda.pydata
-    .org/docs/using/index
-    .html>`_.
-
-
-Installing Using pip
---------------------
-To install the package using pip, execute the following
-command::
-
-    pip install -U numpy scipy py_entitymatching
-
-The above command will install py_entitymatching and all of its dependencies, except PyQt4.
-This is because pip can only install the dependency packages that are available in PyPI and
-PyQt4 is not in PyPI. So next, you need to install PyQt4, using the instructions on `this page <http://pyqt.sourceforge.net/Docs/PyQt4/installation.html>`_.
 
 
 Installing from Source Distribution
 -----------------------------------
-Download the py_entitymatching package from `here
-<https://sites.google.com/site/anhaidgroup/projects/magellan/py_entitymatching>`_, unzip the package, then execute the following commands from the package root::
+Clone the py_entitymatching package from GitHub and check out the *RIT_features* branch
+like this::
+
+    git clone -b RIT_features https://github.com/anhaidgroup/py_entitymatching.git
+
+Then,  execute the following commands from the package root::
 
     pip install -U numpy scipy
     python setup.py install
@@ -70,5 +49,13 @@ home directory as follows::
 For more information see this StackOverflow `link <http://stackoverflow.com/questions/14179941/how-to-install-python-packages-without-root-privileges>`_.
 
 The above commands will install py_entitymatching and all of its
-dependencies, except PyQt4. This is because similar to pip, setup.py can only install
-the dependency packages that are available in PyPI and PyQt4 is not in PyPI. So next, you need to install PyQt4, using the instructions on `this page <http://pyqt.sourceforge.net/Docs/PyQt4/installation.html>`_.
+dependencies, except PyQt4 and xgboost.
+
+This is  because, similar to pip,
+setup.py can only install the dependency packages that are available in PyPI and PyQt4
+is not in PyPI.
+
+* You can install PyQt4, using the instructions on `this page <http://pyqt.sourceforge.net/Docs/PyQt4/installation.html>`_.
+
+* You can install xgboost using the instructions on `this page <https://xgboost.readthedocs.io/en/latest/build.html>`_.
+

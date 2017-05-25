@@ -1,7 +1,7 @@
 
 from py_entitymatching.catalog.catalog import Catalog
 
-__version__ = '0.1.0'
+__version__ = '0.2.0_rit'
 
 _catalog = Catalog.Instance()
 

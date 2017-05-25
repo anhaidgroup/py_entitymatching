@@ -192,7 +192,7 @@ class MLMatcher(Matcher):
     # predict method
     def predict(self, x=None, table=None, exclude_attrs=None, target_attr=None,
                 append=False, return_probs=False,
-                probs_attr='proba', inplace=True):
+                probs_attr=None, inplace=True):
         """
         Predict interface for the matcher.
 
@@ -214,9 +214,13 @@ class MLMatcher(Matcher):
             exclude_attrs (list): A list of attributes to be excluded from the
                 input table to get the feature vectors (defaults to None).
             target_attr (string): The attribute name where the predictions
-                need to stored in the input table (defaults to None).
+                need to be stored in the input table (defaults to None).
+            probs_attr (string): The attribute name where the prediction probabilities 
+                need to be stored in the input table (defaults to None).
             append (boolean): A flag to indicate whether the predictions need
                 to be appended in the input DataFrame (defaults to False).
+            return_probs (boolean): A flag to indicate where the prediction probabilities
+                need to be returned (defaults to False).
             inplace (boolean): A flag to indicate whether the append needs to be
                 done inplace (defaults to True).
 

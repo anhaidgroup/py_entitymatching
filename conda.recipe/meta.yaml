@@ -23,6 +23,7 @@ requirements:
     - pyparsing
     - scikit-learn
     - pyqt ==4.11.4
+    - xgboost
 
 test:
   # Python imports

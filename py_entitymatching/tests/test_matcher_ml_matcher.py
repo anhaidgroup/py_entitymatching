@@ -339,7 +339,7 @@ class MLMatcherTestCases(unittest.TestCase):
         test.drop('gold', axis=1, inplace=True)
         dt.fit(table=train, exclude_attrs='_id', target_attr='gold')
         predictions = dt.predict(table=test, exclude_attrs='_id',
-                                 target_attr='predicted',
+                                 target_attr='predicted', probs_attr='proba',
                                  inplace=False, append=True, return_probs=True)
 
         self.assertNotEqual(id(predictions), id(test))

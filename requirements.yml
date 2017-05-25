@@ -11,3 +11,4 @@ dependencies:
     - scikit-learn >= 0.18
     - pyqt ==4.11.4
     - py_stringmatching
+    - xgboost
