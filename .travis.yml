@@ -49,7 +49,7 @@ before_install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sh -e /etc/init.d/xvfb start; fi
 
 install:
-  - conda install --yes python=$PYTHON_VERSION pip nose pandas pyparsing six scikit-learn pyqt  cloudpickle joblib xgboost
+  - conda install --yes python=$PYTHON_VERSION pip nose pandas pyparsing six scikit-learn pyqt cloudpickle joblib xgboost
   - pip install -r requirements.txt
 
 script:
