@@ -96,7 +96,12 @@ section “For Contributors and Developers”.</p>
 <div class="toctree-wrapper compound">
 <span id="document-user_manual/whatisnew"></span><div class="section" id="what-is-new">
 <h2>What is New?<a class="headerlink" href="#what-is-new" title="Permalink to this headline">¶</a></h2>
-<p>This is py_entitymatching version 0.1.0. It is the first release version (and hence there is nothing new compared to the old version because there is no old version).</p>
+<blockquote>
+<div><ul class="simple">
+<li>Included XGBoost classifier</li>
+<li>Updated matchers to return probabilities along with predictions</li>
+</ul>
+</div></blockquote>
 </div>
 <span id="document-user_manual/installation"></span><div class="section" id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
