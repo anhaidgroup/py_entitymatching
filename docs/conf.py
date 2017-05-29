@@ -39,7 +39,7 @@ extensions = ['sphinx.ext.autodoc', 'sphinx.ext.napoleon'
               # 'IPython.sphinxext.ipython_console_highlighting',
               # 'IPython.sphinxext.ipython_directive'
               ]
-extensions += ['sphinxjp.themes.basicstrap']
+#extensions += ['sphinxjp.themes.basicstrap']
 
 # Napoleon settings
 napoleon_google_docstring = True
@@ -130,7 +130,8 @@ todo_include_todos = False
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'nature_with_gtoc'
+#html_theme = 'nature_with_gtoc'
+html_theme = 'sphinx_rtd_theme'
 # html_theme = 'nature'
 # html_theme = 'basicstrap'
 

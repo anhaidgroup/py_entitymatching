@@ -219,7 +219,7 @@ help the next person.
    :local:
 
 About the *py_entitymatching* documentation
-------------------------------------------
+-------------------------------------------
 
 The documentation is written in **reStructuredText**, which is almost like writing
 in plain English, and built using `Sphinx <http://sphinx.pocoo.org/>`__. The
