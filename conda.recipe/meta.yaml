@@ -15,6 +15,7 @@ requirements:
     - pyparsing
     - scikit-learn
     - pyqt ==4.11.4
+    - xgboost
 
   run:
     - python
@@ -45,7 +46,7 @@ test:
 about:
   home: https://sites.google.com/site/anhaidgroup/projects/py_entitymatching
   license: BSD License
-  summary: 'Python library for string matching.'
+  summary: 'Python library for entity matching.'
 
 # See
 # http://docs.continuum.io/conda/build.html for
