@@ -1,0 +1,310 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Overview of Supported EM Processes &mdash; py_entitymatching 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="py_entitymatching 0.1.0 documentation" href="../index.html"/>
+        <link rel="next" title="Guides" href="guides.html"/>
+        <link rel="prev" title="Installation" href="installation.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> py_entitymatching
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">How To Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../how_to_guide.html">How to Guide To Do Entity Matching</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="whatisnew.html">What is New?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Overview of Supported EM Processes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#supported-em-problem-scenarios">Supported EM Problem Scenarios</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#two-fundamental-steps-in-the-em-process-blocking-and-matching">Two Fundamental Steps in the EM Process: Blocking and Matching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#supported-em-workflows">Supported EM Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-development-and-production-stages">The Development and Production Stages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-focus-of-the-current-package">The Focus of the Current Package</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="guides.html">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datastructures.html">Data Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="steps_supp_em_workflows.html">Steps of Supported EM Workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="misc.html">Miscellaneous</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/overview.html">Overview of Command Organization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/actual_commands.html">Commands in py_entitymatching</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">py_entitymatching</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Overview of Supported EM Processes</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/user_manual/overview.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="overview-of-supported-em-processes">
+<h1>Overview of Supported EM Processes<a class="headerlink" href="#overview-of-supported-em-processes" title="Permalink to this headline">¶</a></h1>
+<p>In this section we provide a high-level overview of the EM processes supported by
+py_entitymatching. For more details, please read the document “How-To Guide to Entity Matching”
+(will soon be available from the package website).</p>
+<div class="section" id="supported-em-problem-scenarios">
+<h2>Supported EM Problem Scenarios<a class="headerlink" href="#supported-em-problem-scenarios" title="Permalink to this headline">¶</a></h2>
+<p>Entity matching (EM) has many problem variations: matching two tables, matching within a
+single table, matching from a table into a knowledge base, etc. The package currently only
+support matching two tables. Specifically, given two tables A and B of relational tuples,
+find all tuple pairs (a in A, b in B) such that a and b refer to the same real-world
+entity. The following figure shows an example of matching persons between two given tables.</p>
+<a class="reference internal image-reference" href="../_images/example-match-two-tables.png"><img alt="'An example of matching two tables'" class="align-center" src="../_images/example-match-two-tables.png" style="width: 300.0px; height: 120.0px;" /></a>
+<p>Of course, if you want to match tuples within a single table X, you can also use
+the package, by matching X with X (you do not have to create another copy of X,
+just provide X twice as the input if a command in the package requires two tables A
+and B as the input).</p>
+</div>
+<div class="section" id="two-fundamental-steps-in-the-em-process-blocking-and-matching">
+<h2>Two Fundamental Steps in the EM Process: Blocking and Matching<a class="headerlink" href="#two-fundamental-steps-in-the-em-process-blocking-and-matching" title="Permalink to this headline">¶</a></h2>
+<p>In practice, tables A and B can be quite large, such as having 100K tuples each, resulting
+in 10 billions tuple pairs across A and B. Trying to match all of these pairs is clearly
+very expensive. Thus, in such cases the user often employs domain heuristics to quickly
+remove obviously non-matched pairs, in a step called <em>blocking</em>, before matching the
+remaining pairs, in a step called <em>matching</em>.</p>
+<p>The following figure illustrates the above two fundamental steps. Suppose that we are
+matching the two tables A and B in (a), where each tuple describes a person. The blocking
+step can use a heuristic such as “if two tuples do not agree on state, then they cannot
+refer to the same person” to quickly remove all such tuple pairs (this is typically
+done using indexes, so the blocking step does not have to enumerate all tuple pairs
+between A and B). In other words, the blocking step retains only the four tuple pairs
+that agree on state, as shown in (b). The matching step in (c) then considers only these
+tuple pairs and predicts for each of them a label “match” or “not-match”
+(shown as “+” and “-” in the figure).</p>
+<a class="reference internal image-reference" href="../_images/example-blocking-matching.png"><img alt="'An example of blocking and matching'" class="align-center" src="../_images/example-blocking-matching.png" style="width: 500.0px; height: 220.0px;" /></a>
+</div>
+<div class="section" id="supported-em-workflows">
+<h2>Supported EM Workflows<a class="headerlink" href="#supported-em-workflows" title="Permalink to this headline">¶</a></h2>
+<p>The current package supports EM workflows that consist of a blocking step followed by a matching step. Specifically, the package provides a set of blockers and a set of matchers (and the user can easily write his or her own blocker/matcher). Given two tables A and B to be matched, the user applies a blocker to the two tables to obtain a set of tuple pairs, then applies a matcher to these pairs to predict “match” or “no-match”. The user can use multiple blockers in the blocking step, and can combine them in flexible ways. The figure below illustrates both cases.</p>
+<a class="reference internal image-reference" href="../_images/example-workflow.png"><img alt="'An example of EM workflow'" class="align-center" src="../_images/example-workflow.png" style="width: 617.5px; height: 90.25px;" /></a>
+<p>Further, the current package only supports learning-based matchers. Specifically, it will require the user to label a set of tuple pairs (as “match” or “no-match”), then use the labeled data to train matchers. In the future, we will consider extending the package to support more powerful EM workflows, such as using multiple matchers, including rule-based ones, or being able to add rules to process the output of the matchers.</p>
+</div>
+<div class="section" id="the-development-and-production-stages">
+<h2>The Development and Production Stages<a class="headerlink" href="#the-development-and-production-stages" title="Permalink to this headline">¶</a></h2>
+<p>In practice EM is typically carried out in two stages. In the development stage, the user tries to find an accurate EM workflow, often using data samples. In the production stage, the user then executes the discovered workflow on the entirety of data. The following figure illustrates the development stage, which is the focus of the current package. The figure also highlights the steps of the development stage that the current package supports.</p>
+<p>In the figure, suppose we want to match two tables A and B, each having 1 million tuples. Trying to explore and discover an accurate workflow using these two tables would be too time consuming, because they are too big. Hence, the user will first “down sample” the two tables to obtain two smaller versions, shown as Tables A’ and B’ in the figure, each having 100K tuples, say (see the figure).</p>
+<a class="reference internal image-reference" href="../_images/example-dev-stage.png"><img alt="'An example of the development stage'" class="align-center" src="../_images/example-dev-stage.png" style="width: 500.0px; height: 300.0px;" /></a>
+<p>Next, suppose the package provides two blockers X and Y. Then the user will experiment with these blockers (for example, executing both on Tables A’ and B’ and examining their output) to select the blocker judged the best (according to some criterion). Suppose the user selects blocker X. Then next, he or she executes X on Tables A’ and B’ to obtain a set of candidate tuple pairs C.</p>
+<p>Next, the user takes a sample S from C, and labels the pairs in S as “match” or “no-match” (see the figure). Let the labeled set be G, and suppose the package provides two matchers U and V. Suppose further that U and V are learning-based matchers (for example, one uses decision trees and the other uses logistic regression). Then in the next step, the user will use the labeled set G to perform cross validation for U and V. Suppose V produces higher matching accuracy (such as F1 score of 0.93, see the figure). Then the user will select V as the matcher, then apply V to the set C to predict “match” or “no-match”, shown as “+” or “-” in the figure. Finally, the user may perform quality check (by examining a sample of the predictions), then go back and debug and modify the previous steps as appropriate. This continues until the user is satisfied with the accuracy of the EM workflow.</p>
+<p>Once the user has been satisfied with the EM workflow, the production stage begins. In this stage the user will execute the discovered workflow on the original tables A and B. Since these tables are very large, scaling is a major concern (and is typically solved using Hadoop or Spark). Other concerns include quality monitoring, exception handling, crash recovery, etc.</p>
+</div>
+<div class="section" id="the-focus-of-the-current-package">
+<h2>The Focus of the Current Package<a class="headerlink" href="#the-focus-of-the-current-package" title="Permalink to this headline">¶</a></h2>
+<p>The current py_entitymatching package focuses on helping the user with the development stage, that is, help him or her discover an accurate EM workflow. In the future, we will extend the package to also help the user with the production stage.</p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="guides.html" class="btn btn-neutral float-right" title="Guides" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="installation.html" class="btn btn-neutral" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, anhaidgroup.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

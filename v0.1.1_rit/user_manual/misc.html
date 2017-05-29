@@ -1,0 +1,330 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Miscellaneous &mdash; py_entitymatching 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="py_entitymatching 0.1.0 documentation" href="../index.html"/>
+        <link rel="next" title="Overview of Command Organization" href="api/overview.html"/>
+        <link rel="prev" title="Evaluating the Matching Output" href="evaluate_matching.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> py_entitymatching
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">How To Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../how_to_guide.html">How to Guide To Do Entity Matching</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="whatisnew.html">What is New?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview of Supported EM Processes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides.html">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datastructures.html">Data Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="steps_supp_em_workflows.html">Steps of Supported EM Workflows</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Miscellaneous</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#csv-format">CSV Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#metadata-file-format">Metadata File Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#writing-a-dataframe-to-disk-along-with-its-metadata">Writing a Dataframe to Disk Along With Its Metadata</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#writing-reading-other-types-of-py-entitymatching-objects">Writing/Reading Other Types of py_entitymatching Objects</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/overview.html">Overview of Command Organization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/actual_commands.html">Commands in py_entitymatching</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">py_entitymatching</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Miscellaneous</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/user_manual/misc.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="miscellaneous">
+<h1>Miscellaneous<a class="headerlink" href="#miscellaneous" title="Permalink to this headline">¶</a></h1>
+<p>This section covers some miscellaneous things in py_entitymatching.</p>
+<div class="section" id="csv-format">
+<span id="label-csv-format"></span><h2>CSV Format<a class="headerlink" href="#csv-format" title="Permalink to this headline">¶</a></h2>
+<p>The CSV format is selected because it’s well known and can be read by numerous external
+programs. Further, it can be easily inspected and edited by the users.
+You can read more about CSV formats <a class="reference external" href="https://en.wikipedia.org/wiki/Comma-separated_values">here</a>.</p>
+<p>There are two common CSV formats that are used to store CSV files: one with attribute
+names in the first line, and one without. Both these formats are supported by py_entitymatching.</p>
+<p>An example of a CSV file with attribute names is shown below:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ID</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">birth_year</span><span class="p">,</span> <span class="n">hourly_wage</span><span class="p">,</span> <span class="n">zipcode</span>
+<span class="n">a1</span><span class="p">,</span> <span class="n">Kevin</span> <span class="n">Smith</span><span class="p">,</span> <span class="mi">1989</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">94107</span>
+<span class="n">a2</span><span class="p">,</span> <span class="n">Michael</span> <span class="n">Franklin</span><span class="p">,</span> <span class="mi">1988</span><span class="p">,</span> <span class="mf">27.5</span><span class="p">,</span> <span class="mi">94122</span>
+<span class="n">a3</span><span class="p">,</span> <span class="n">William</span> <span class="n">Bridge</span><span class="p">,</span> <span class="mi">1988</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">94321</span>
+</pre></div>
+</div>
+<p>An example of a CSV file with out attribute names is shown below:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">a1</span><span class="p">,</span> <span class="n">Kevin</span> <span class="n">Smith</span><span class="p">,</span> <span class="mi">1989</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">94107</span>
+<span class="n">a2</span><span class="p">,</span> <span class="n">Michael</span> <span class="n">Franklin</span><span class="p">,</span> <span class="mi">1988</span><span class="p">,</span> <span class="mf">27.5</span><span class="p">,</span> <span class="mi">94122</span>
+<span class="n">a3</span><span class="p">,</span> <span class="n">William</span> <span class="n">Bridge</span><span class="p">,</span> <span class="mi">1988</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">94321</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="metadata-file-format">
+<h2>Metadata File Format<a class="headerlink" href="#metadata-file-format" title="Permalink to this headline">¶</a></h2>
+<p>The CSV file can be accompanied with a metadata file containing the metadata information
+of the table. Typically, it contains information such as key, foreign key, etc.
+The metadata file is expected to be of the same name as the CSV file but with <cite>.metadata</cite>
+extension. For example, if the CSV file <cite>table_A.csv</cite> contains table A’s data, then
+<cite>table_A.metadata</cite> will contain table A’s metadata. So, the metadata is
+associated based on the names of the files. The metadata file contains key-value pairs
+one per line and each line starts with ‘#’.</p>
+<p>An example of metadata file is shown below:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1">#key=ID</span>
+</pre></div>
+</div>
+<p>In the above, the pair key=ID states that ID is the key attribute.</p>
+</div>
+<div class="section" id="writing-a-dataframe-to-disk-along-with-its-metadata">
+<h2>Writing a Dataframe to Disk Along With Its Metadata<a class="headerlink" href="#writing-a-dataframe-to-disk-along-with-its-metadata" title="Permalink to this headline">¶</a></h2>
+<p>To write a Dataframe to disk along with its metadata, you can use <cite>to_csv_metadata</cite>
+command in py_entitymatching. An example of using <cite>to_csv_metadata</cite> is shown below:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">to_csv_metadata</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="s1">&#39;./table_A.csv&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The above command will first write Dataframe pointed by <cite>A</cite> to <cite>table_A.csv</cite> file in the
+disk (in CSV format), next it will write the metadata of <cite>table A</cite> stored in the Catalog
+to <cite>table_A.metadata</cite> file in the disk.</p>
+<p>Please refer to the API reference of <a class="reference internal" href="api/reading_and_writing_data.html#py_entitymatching.to_csv_metadata" title="py_entitymatching.to_csv_metadata"><code class="xref py py-meth docutils literal"><span class="pre">to_csv_metadata()</span></code></a> for
+more details.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Once the Dataframe is written to disk along with metadata, it can read using <a class="reference internal" href="api/reading_and_writing_data.html#py_entitymatching.read_csv_metadata" title="py_entitymatching.read_csv_metadata"><code class="xref py py-meth docutils literal"><span class="pre">read_csv_metadata()</span></code></a> command.</p>
+</div>
+</div>
+<div class="section" id="writing-reading-other-types-of-py-entitymatching-objects">
+<h2>Writing/Reading Other Types of py_entitymatching Objects<a class="headerlink" href="#writing-reading-other-types-of-py-entitymatching-objects" title="Permalink to this headline">¶</a></h2>
+<p>After creating a blocker or feature table, it is desirable to have a
+way to persist the objects to disk for future use. py_entitymatching provides
+two commands for that purpose: <cite>save_object</cite> and <cite>load_object</cite>.</p>
+<p>An example of using <cite>save_object</cite> is shown below:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">block_f</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_features_for_blocking</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rb</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">RuleBasedBlocker</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rb</span><span class="o">.</span><span class="n">add_rule</span><span class="p">([</span><span class="n">name_name_lev</span><span class="p">(</span><span class="n">ltuple</span><span class="p">,</span> <span class="n">rtuple</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.4</span><span class="p">],</span> <span class="n">block_f</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">save_object</span><span class="p">(</span><span class="n">rb</span><span class="p">,</span> <span class="s1">&#39;./rule_based_blocker.pkl&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><cite>load_object</cite> loads the stored object from disk. An example of using <cite>load_object</cite> is
+shown below:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rb</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">load_object</span><span class="p">(</span><span class="s1">&#39;./rule_based_blocker.pkl&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Please refer to the API reference of <a class="reference internal" href="api/loading_and_saving_objects.html#py_entitymatching.save_object" title="py_entitymatching.save_object"><code class="xref py py-meth docutils literal"><span class="pre">save_object()</span></code></a> and
+<a class="reference internal" href="api/loading_and_saving_objects.html#py_entitymatching.save_object" title="py_entitymatching.save_object"><code class="xref py py-meth docutils literal"><span class="pre">save_object()</span></code></a> for more details.</p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="api/overview.html" class="btn btn-neutral float-right" title="Overview of Command Organization" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="evaluate_matching.html" class="btn btn-neutral" title="Evaluating the Matching Output" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, anhaidgroup.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,545 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Creating Features for Blocking &mdash; py_entitymatching 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="py_entitymatching 0.1.0 documentation" href="../index.html"/>
+        <link rel="up" title="Steps of Supported EM Workflows" href="steps_supp_em_workflows.html"/>
+        <link rel="next" title="Debugging Blocking" href="debugging_blocking.html"/>
+        <link rel="prev" title="Specifying Blockers and Performing Blocking" href="blocking.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> py_entitymatching
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">How To Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../how_to_guide.html">How to Guide To Do Entity Matching</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="whatisnew.html">What is New?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview of Supported EM Processes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides.html">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datastructures.html">Data Structures</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="steps_supp_em_workflows.html">Steps of Supported EM Workflows</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="read_csv_files.html">Reading the CSV Files from Disk</a></li>
+<li class="toctree-l2"><a class="reference internal" href="down_sampling.html">Down Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blocking.html">Specifying Blockers and Performing Blocking</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Creating Features for Blocking</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#available-tokenizers-and-similarity-functions">Available Tokenizers and Similarity Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#obtaining-tokenizers-and-similarity-functions">Obtaining Tokenizers and Similarity Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#obtaining-attribute-types-and-correspondences">Obtaining Attribute Types and Correspondences</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#getting-a-set-of-features">Getting a Set of Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#adding-removing-features">Adding/Removing Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#summary-of-the-manual-feature-generation-process">Summary of the Manual Feature Generation Process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ways-to-edit-the-manual-feature-generation-process">Ways to Edit the Manual Feature Generation Process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#generating-features-automatically">Generating Features Automatically</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="debugging_blocking.html">Debugging Blocking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sampling.html">Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="labeling.html">Labeling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="split_train_test.html">Splitting Labeled Data into Training and Testing Sets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="create_feats_for_matching.html">Creating Features for Matching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extract_feat_vecs.html">Extracting Feature Vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="imputing_missing_values.html">Imputing Missing Values</a></li>
+<li class="toctree-l2"><a class="reference internal" href="matching.html">Specifying ML-Matchers and Performing Matching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="select_best_matcher.html">Selecting a ML-Matcher</a></li>
+<li class="toctree-l2"><a class="reference internal" href="debugging_matcher.html">Debugging ML-Matchers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evaluate_matching.html">Evaluating the Matching Output</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="misc.html">Miscellaneous</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/overview.html">Overview of Command Organization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/actual_commands.html">Commands in py_entitymatching</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">py_entitymatching</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="steps_supp_em_workflows.html">Steps of Supported EM Workflows</a> &raquo;</li>
+        
+      <li>Creating Features for Blocking</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/user_manual/create_feats_for_blocking.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="creating-features-for-blocking">
+<span id="label-create-features-blocking"></span><h1>Creating Features for Blocking<a class="headerlink" href="#creating-features-for-blocking" title="Permalink to this headline">¶</a></h1>
+<p>Recall that when doing blocking, you can use built-in blockers,
+blackbox blockers, or rule-based blockers. For rule-based blockers,
+you have to create a set of features. While creating features, you will have to
+refer to tokenizers, similarity functions, and attributes of the tables.
+Currently, in py_entitymatching, there are two ways to create features:</p>
+<ul class="simple">
+<li>Automatically generate a set of features (then you can remove or add some more).</li>
+<li>Skip the automatic process and generate features manually.</li>
+</ul>
+<p>Note that features will also be used in the matching process, as we
+will discuss later.</p>
+<p>If you are interested in just letting the system to automatically
+generate a set of features, then please see <a class="reference internal" href="#label-gen-feats-automatically"><span class="std std-ref">Generating Features Automatically</span></a>.</p>
+<p>If you want to generate features on your own, please read below.</p>
+<div class="section" id="available-tokenizers-and-similarity-functions">
+<h2>Available Tokenizers and Similarity Functions<a class="headerlink" href="#available-tokenizers-and-similarity-functions" title="Permalink to this headline">¶</a></h2>
+<p>A tokenizer is a function that takes a string and optionally a number
+of other arguments, then tokenizes the string and returns a set of tokens.
+Currently, the following tokenizers are provided along with <em>py_entitytmatching</em>:</p>
+<ul class="simple">
+<li>Alphabetic</li>
+<li>Alphanumeric</li>
+<li>White space</li>
+<li>Delimiter based</li>
+<li>Qgram based</li>
+</ul>
+<p>A similarity function takes two arguments (can be strings, numeric values, etc.),
+which are typically two attribute values such
+as two book titles, then returns an output value which is typically a similarity score
+between the two attribute values. Currently, the following similarity functions
+are provided along with <em>py_entitytmatching</em>:</p>
+<ul class="simple">
+<li>Affine</li>
+<li>Hamming distance</li>
+<li>Jaro</li>
+<li>Jaro-Winkler</li>
+<li>Levenshtein</li>
+<li>Monge-Elkan</li>
+<li>Needleman-Wunsch</li>
+<li>Smith-Waterman</li>
+<li>Jaccard</li>
+<li>Cosine</li>
+<li>Dice</li>
+<li>Overlap coefficient</li>
+<li>Exact match</li>
+<li>Absolute norm</li>
+</ul>
+</div>
+<div class="section" id="obtaining-tokenizers-and-similarity-functions">
+<h2>Obtaining Tokenizers and Similarity Functions<a class="headerlink" href="#obtaining-tokenizers-and-similarity-functions" title="Permalink to this headline">¶</a></h2>
+<p>First you need to get tokenizers and similarity functions to refer them in features.
+In py_entitymatching, you can use
+<cite>get_tokenizers_for_blocking</cite> to get all the tokenizers available for blocking purposes.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">block_t</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_tokenizers_for_blocking</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>In the above, <cite>block_t</cite> is a dictionary where keys are tokenizer names
+and values are tokenizer functions in Python. You can inspect <cite>block_t</cite> and delete/add
+tokenizers as appropriate. The above command will return single-argument tokenizers,
+i.e., those that take a string then produce a set of tokens.</p>
+<p>Please look at the API reference of <a class="reference internal" href="api/creating_the_features_manually.html#py_entitymatching.get_tokenizers_for_blocking" title="py_entitymatching.get_tokenizers_for_blocking"><code class="xref py py-meth docutils literal"><span class="pre">get_tokenizers_for_blocking()</span></code></a>
+for more details.</p>
+<p>Similarly, the user can use <cite>get_sim_funs_for_blocking</cite> to get all the similarity
+functions available for blocking purposes.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">block_s</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_sim_funs_for_blocking</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>In the above, <cite>block_s</cite> is a dictionary where keys are similarity function names
+and values are similarity functions in Python. Similar to <cite>block_t</cite>, you can
+inspect <cite>block_s</cite> and delete/add similarity functions as appropriate.</p>
+<p>Please look at the API reference of <a class="reference internal" href="api/creating_the_features_manually.html#py_entitymatching.get_sim_funs_for_blocking" title="py_entitymatching.get_sim_funs_for_blocking"><code class="xref py py-meth docutils literal"><span class="pre">get_sim_funs_for_blocking()</span></code></a>
+for more details.</p>
+</div>
+<div class="section" id="obtaining-attribute-types-and-correspondences">
+<h2>Obtaining Attribute Types and Correspondences<a class="headerlink" href="#obtaining-attribute-types-and-correspondences" title="Permalink to this headline">¶</a></h2>
+<p>In the next step, you need to obtain type and correspondence information about A and B
+so that the features can be generated.</p>
+<p>First, you need to obtain the types of attributes in A and B,
+so that the right tokenizers/similarity functions can be applied to each of them.
+In py_entitymatching, you can use <cite>get_attr_types</cite> to get the attribute types.
+An example of using <cite>get_attr_types</cite> is shown below:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">atypes1</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_attr_types</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">atypes2</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_attr_types</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In the above, <cite>atypes1</cite> and <cite>atypes2</cite> are dictionaries. They contain, the type of
+attribute in each of the tables. Note that this <cite>type</cite> is different from basic
+Python types. Please look at the API reference of
+<a class="reference internal" href="api/creating_the_features_manually.html#py_entitymatching.get_attr_types" title="py_entitymatching.get_attr_types"><code class="xref py py-meth docutils literal"><span class="pre">get_attr_types()</span></code></a> for more details.</p>
+<p>Next, we need to obtain correspondences between the attributes of A and B,
+so that the features can be generated based on those correspondences.
+In py_entitymatching, you can use <cite>get_attr_corres</cite> to get the attribute
+correspondences.</p>
+<p>An example of using <cite>get_attr_corres</cite> is shown below:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">block_c</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_attr_corres</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In the above, <cite>block_c</cite> is a dictionary containing attribute correspondences.
+Currently, py_entitymatching returns attribute correspondences only based on the exact
+match of attribute names. You can inspect <cite>block_c</cite> and modify the attribute
+correspondences. Please look at the API reference of
+<a class="reference internal" href="api/creating_the_features_manually.html#py_entitymatching.get_attr_corres" title="py_entitymatching.get_attr_corres"><code class="xref py py-meth docutils literal"><span class="pre">get_attr_corres()</span></code></a> for more details.</p>
+</div>
+<div class="section" id="getting-a-set-of-features">
+<span id="label-get-a-set-of-features-manual"></span><h2>Getting a Set of Features<a class="headerlink" href="#getting-a-set-of-features" title="Permalink to this headline">¶</a></h2>
+<p>Recall that so far we have obtained:</p>
+<ul class="simple">
+<li>block_t, the set of tokenizers,</li>
+<li>block_s, the set of sim functions</li>
+<li>atypes1 and atypes2, the types of attributes in A and B</li>
+<li>block_c, the correspondences of attributes in A and B</li>
+</ul>
+<p>Next, to obtain a set of features, you can use <cite>get_features</cite> command.
+An example of using <cite>get_features</cite> command is shown below:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">block_f</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_features</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">atypes1</span><span class="p">,</span> <span class="n">atypes2</span><span class="p">,</span> <span class="n">block_c</span><span class="p">,</span> <span class="n">block_t</span><span class="p">,</span> <span class="n">block_s</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Briefly, this function will go through the correspondences. For each
+correspondence <cite>m</cite>, it examines the types of the involved attributes,
+then apply the appropriate tokenizers and similarity functions to generate
+all appropriate features for this correspondence. The features are returned as
+a Dataframe. Please look at the API reference of
+<a class="reference internal" href="api/creating_the_features_manually.html#py_entitymatching.get_features" title="py_entitymatching.get_features"><code class="xref py py-meth docutils literal"><span class="pre">get_features()</span></code></a> for more details.</p>
+</div>
+<div class="section" id="adding-removing-features">
+<span id="label-add-remove-features"></span><h2>Adding/Removing Features<a class="headerlink" href="#adding-removing-features" title="Permalink to this headline">¶</a></h2>
+<p>Given the set of features <cite>block_f</cite> as a pandas Dataframe, you can delete certain features,
+add new features.</p>
+<p>Deletion of a feature is straightforward, all that you have to do is delete the row
+from the feature table corresponding to the feature. You can use <cite>drop</cite> command
+from pandas Dataframe for this purpose. Please look at this
+<a class="reference external" href="http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.drop.html">API reference link</a>
+for more details.</p>
+<p>There are two ways to create and add a feature: (1) write a blackbox function and
+add it to feature table, and (2) define a feature declartively and add it to
+feature table.</p>
+<p><strong>Adding a Blackbox Function as Feature</strong></p>
+<p>To create and add a blackbox function as a feature, first you must define it. Specifically,
+the function must take in two tuples as input and return a numeric value. An example of
+a blackbox function is shown below:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">age_diff</span><span class="p">(</span><span class="n">ltuple</span><span class="p">,</span> <span class="n">rtuple</span><span class="p">):</span>
+    <span class="c1"># assume that the tuples have age attribute and values are valid numbers.</span>
+    <span class="k">return</span> <span class="n">ltuple</span><span class="p">[</span><span class="s1">&#39;age&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">rtuple</span><span class="p">[</span><span class="s1">&#39;age&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Then add it to the feature table <cite>block_f</cite> using <cite>add_blackbox_feature</cite> like this:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">status</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">add_blackbox_feature</span><span class="p">(</span><span class="n">block_f</span><span class="p">,</span> <span class="s1">&#39;age_difference&#39;</span><span class="p">,</span> <span class="n">age_diff</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Please look at the API reference of
+<a class="reference internal" href="api/adding_features.html#py_entitymatching.add_blackbox_feature" title="py_entitymatching.add_blackbox_feature"><code class="xref py py-meth docutils literal"><span class="pre">add_blackbox_feature()</span></code></a> for more details.</p>
+<p><strong>Adding a Feature Declaratively</strong></p>
+<p>Another way to add features is to write a feature expression in
+a <cite>declarative</cite> way. py_entitymatching will then compile it into a feature. For
+example, you can declaratively create and add a feature like this:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_feature_fn</span><span class="p">(</span><span class="s1">&#39;jaccard(qgm_3(ltuple.name), qgm_3(rtuple.name)&#39;</span><span class="p">,</span> <span class="n">block_t</span><span class="p">,</span> <span class="n">block_s</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">block_f</span><span class="p">,</span> <span class="s1">&#39;name_name_jac_qgm3_qgm3&#39;</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Here <cite>block_t</cite> and <cite>block_s</cite> refer to the dictionaries containing a
+set of tokenizers and similarity functions for blocking.</p>
+<p>Conceptually, the first command, <cite>get_feature_fn</cite>, creates a feature which is a Python function
+that will take two tuples <cite>ltuple</cite> and <cite>rtuple</cite>, get the attribute publisher from <cite>ltuple</cite>,
+issuer from <cite>rtuple</cite>, tokenize them, then compute jaccard score.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The feature must refer the tuple from the left table (say A) as <strong>ltuple</strong> and
+the tuple from the right table (say B) as <strong>rtuple</strong>.</p>
+</div>
+<p>The second command, <cite>add_feature</cite> tags the feature with the specified name,
+and adds it to the feature table.</p>
+<p>As described, the feature that was just created is <em>independent</em> of any table
+(eg A and B). Instead, it expects as the input two tuples: ltuple and rtuple.</p>
+<p>You can also create more complex features. Specifically,
+you are allowed to define arbitrary complex expression involving function names from
+<cite>block_t</cite> and <cite>block_s</cite>, and attribute names from ltuple and rtuple.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_feature_fn</span><span class="p">(</span><span class="s1">&#39;jaccard(qgm_3(ltuple.address + ltuple.zipcode), qgm_3(rtuple.address + rtuple.zipcode)&#39;</span><span class="p">,</span><span class="n">block_t</span><span class="p">,</span><span class="n">block_s</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">block_f</span><span class="p">,</span> <span class="s1">&#39;full_address_address_jac_qgm3_qgm3&#39;</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Please look at the API reference of
+<a class="reference internal" href="api/adding_features.html#py_entitymatching.get_feature_fn" title="py_entitymatching.get_feature_fn"><code class="xref py py-meth docutils literal"><span class="pre">get_feature_fn()</span></code></a> and <a class="reference internal" href="api/adding_features.html#py_entitymatching.add_feature" title="py_entitymatching.add_feature"><code class="xref py py-meth docutils literal"><span class="pre">add_feature()</span></code></a>
+for more details.</p>
+</div>
+<div class="section" id="summary-of-the-manual-feature-generation-process">
+<h2>Summary of the Manual Feature Generation Process<a class="headerlink" href="#summary-of-the-manual-feature-generation-process" title="Permalink to this headline">¶</a></h2>
+<p>Here is the summary of commands for the entire manual feature generation process.</p>
+<p>To generate features, you must execute the following commands:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">block_t</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_tokenizers_for_blocking</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">block_s</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_sim_funs_for_blocking</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">atypes1</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_attr_types</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">atypes2</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_attr_types</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">block_c</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_attr_corres</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">block_f</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_features</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">atypes1</span><span class="p">,</span> <span class="n">atypes2</span><span class="p">,</span> <span class="n">block_c</span><span class="p">,</span> <span class="n">block_t</span><span class="p">,</span> <span class="n">block_s</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The variable <cite>block_f</cite> points to a Dataframe containing features as rows.</p>
+</div>
+<div class="section" id="ways-to-edit-the-manual-feature-generation-process">
+<h2>Ways to Edit the Manual Feature Generation Process<a class="headerlink" href="#ways-to-edit-the-manual-feature-generation-process" title="Permalink to this headline">¶</a></h2>
+<p>Here is the summary of ways to edit the variables used in feature generation process.</p>
+<ul>
+<li><p class="first">The <cite>block_t</cite>, <cite>block_s</cite>, <cite>atypes1</cite>, <cite>atypes2</cite>, <cite>block_c</cite> are dictionaries. You
+can modify these variables based on your need, to add/remove tokenizers,
+similarity functions, attribute correspondences, etc.</p>
+</li>
+<li><p class="first"><cite>block_f</cite> is a Dataframe. You can remove a feature by just deleting the corresponding
+tuple from the Dataframe.</p>
+</li>
+<li><p class="first">There are two ways to create and add a feature: (1) write a blackbox function and
+add it to feature table, and (2) define the feature declartively and add it to
+feature table.
+To add a blackbox feature, first write a blackbox function like this:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">age_diff</span><span class="p">(</span><span class="n">ltuple</span><span class="p">,</span> <span class="n">rtuple</span><span class="p">):</span>
+    <span class="c1"># assume that the tuples have age attribute and values are valid numbers.</span>
+    <span class="k">return</span> <span class="n">ltuple</span><span class="p">[</span><span class="s1">&#39;age&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">rtuple</span><span class="p">[</span><span class="s1">&#39;age&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Then add it to the table <cite>block_f</cite> using <cite>add_blackbox_feature</cite> like this:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">status</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">add_blackbox_feature</span><span class="p">(</span><span class="n">block_f</span><span class="p">,</span> <span class="s1">&#39;age_difference&#39;</span><span class="p">,</span> <span class="n">age_diff</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To add a feature declaratively, first write a feature expression and compile it to feature
+using <cite>get_feature_fn</cite> like this:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_feature_fn</span><span class="p">(</span><span class="s1">&#39;jaccard(qgm_3(ltuple.address + ltuple.zipcode), qgm_3(rtuple.address + rtuple.zipcode)&#39;</span><span class="p">,</span><span class="n">block_t</span><span class="p">,</span><span class="n">block_s</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Then add it to the table <cite>block_f</cite> using <cite>add_feature</cite> like this:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">block_f</span><span class="p">,</span> <span class="s1">&#39;full_address_address_jac_qgm3_qgm3&#39;</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="generating-features-automatically">
+<span id="label-gen-feats-automatically"></span><h2>Generating Features Automatically<a class="headerlink" href="#generating-features-automatically" title="Permalink to this headline">¶</a></h2>
+<p>Recall that to get the features for blocking, eventually you
+must execute the following:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">block_f</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_features</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">atypes1</span><span class="p">,</span> <span class="n">atypes2</span><span class="p">,</span> <span class="n">block_c</span><span class="p">,</span> <span class="n">block_t</span><span class="p">,</span> <span class="n">block_s</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>where <cite>atypes1</cite>/<cite>atypes2</cite> are the attribute types of A and B, <cite>block_c</cite> is
+the correspondences between their attributes, <cite>block_t</cite> is the set of tokenizers,
+and <cite>block_s</cite> is the set of similarity functions.</p>
+<p>If you don’t want to go through the hassle of creating these intermediate
+variables, then you can execute the following:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">block_f</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_features_for_blocking</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">B</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The system will automatically generate a set of features and return it as
+as a Dataframe which you can then use for blocking purposes.</p>
+<p>The command <cite>get_features_for_blocking</cite> will set the following variables: <cite>_block_t</cite>,
+<cite>_block_s</cite>, <cite>_atypes1</cite>, <cite>_atypes2</cite>, and <cite>_block_c</cite>. You can access these variables like this:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">_block_t</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">_block_s</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">_atypes1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">_atypes2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">_block_c</span>
+</pre></div>
+</div>
+<p>You can examine these variables, modify them as appropriate, and
+then perhaps re-generate the set of features using <cite>get_features</cite> command.</p>
+<p>Please look at the API reference of
+<a class="reference internal" href="api/creating_the_features_automatically.html#py_entitymatching.get_features_for_blocking" title="py_entitymatching.get_features_for_blocking"><code class="xref py py-meth docutils literal"><span class="pre">get_features_for_blocking()</span></code></a> for more details.</p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="debugging_blocking.html" class="btn btn-neutral float-right" title="Debugging Blocking" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="blocking.html" class="btn btn-neutral" title="Specifying Blockers and Performing Blocking" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, anhaidgroup.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,331 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Specifying ML-Matchers and Performing Matching &mdash; py_entitymatching 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="py_entitymatching 0.1.0 documentation" href="../index.html"/>
+        <link rel="up" title="Steps of Supported EM Workflows" href="steps_supp_em_workflows.html"/>
+        <link rel="next" title="Selecting a ML-Matcher" href="select_best_matcher.html"/>
+        <link rel="prev" title="Imputing Missing Values" href="imputing_missing_values.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> py_entitymatching
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">How To Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../how_to_guide.html">How to Guide To Do Entity Matching</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="whatisnew.html">What is New?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview of Supported EM Processes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides.html">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datastructures.html">Data Structures</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="steps_supp_em_workflows.html">Steps of Supported EM Workflows</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="read_csv_files.html">Reading the CSV Files from Disk</a></li>
+<li class="toctree-l2"><a class="reference internal" href="down_sampling.html">Down Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blocking.html">Specifying Blockers and Performing Blocking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="create_feats_for_blocking.html">Creating Features for Blocking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="debugging_blocking.html">Debugging Blocking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sampling.html">Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="labeling.html">Labeling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="split_train_test.html">Splitting Labeled Data into Training and Testing Sets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="create_feats_for_matching.html">Creating Features for Matching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extract_feat_vecs.html">Extracting Feature Vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="imputing_missing_values.html">Imputing Missing Values</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Specifying ML-Matchers and Performing Matching</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#creating-learning-based-matchers">Creating Learning-Based Matchers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#training-learning-based-matchers">Training Learning-Based Matchers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#applying-learning-based-matchers">Applying Learning-Based Matchers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="select_best_matcher.html">Selecting a ML-Matcher</a></li>
+<li class="toctree-l2"><a class="reference internal" href="debugging_matcher.html">Debugging ML-Matchers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evaluate_matching.html">Evaluating the Matching Output</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="misc.html">Miscellaneous</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/overview.html">Overview of Command Organization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/actual_commands.html">Commands in py_entitymatching</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">py_entitymatching</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="steps_supp_em_workflows.html">Steps of Supported EM Workflows</a> &raquo;</li>
+        
+      <li>Specifying ML-Matchers and Performing Matching</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/user_manual/matching.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="specifying-ml-matchers-and-performing-matching">
+<h1>Specifying ML-Matchers and Performing Matching<a class="headerlink" href="#specifying-ml-matchers-and-performing-matching" title="Permalink to this headline">¶</a></h1>
+<p>Once yor convert the labeled sample  into a table of feature vectors (and their
+labels), the we can  can create and apply matchers to the feature vectors.
+Currently py_entitymatching supports only ML-based matchers. Implementation wise,
+a Matcher is defined as a Python class with certain methods (and some common
+utility functions) and all concrete blockers inherit from this Matcher class and
+override the methods. Specifically, each concrete matcher will implement at least
+the following methods:</p>
+<ul class="simple">
+<li>fit (for training)</li>
+<li>predict (for prediction)</li>
+</ul>
+<div class="section" id="creating-learning-based-matchers">
+<h2>Creating Learning-Based Matchers<a class="headerlink" href="#creating-learning-based-matchers" title="Permalink to this headline">¶</a></h2>
+<p>In py_entitymatching, there are seven concrete ML-matchers implemented: (1) naive bayes,
+(2) logistic regression, (3) linear regression, (4) support vector machine, (5) decision
+trees, (6) random forest, and (7) xgboost matcher.</p>
+<p>These concrete matchers are just wrappers of scikit-learn matchers or that supports
+scikit-learn wrappers (for eg., xgboost) and this is because
+the fit/predict methods in scikit-learn are not metadata aware. The concrete matchers
+make the scikit-learn matchers metadata aware.</p>
+<p>Each matcher can be created by calling its constructor. Since these matchers are
+just the wrappers of scikit-learn matchers, the parameters that can be given to
+scikit-learn matchers can be to given to the matchers in py_entitymatching.
+For example, a user can create a Decision Tree matcher like this:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dt</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">DTMatcher</span><span class="p">(</span><span class="n">max_depth</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Please refer to <a class="reference internal" href="api/supported_matchers.html#py_entitymatching.DTMatcher" title="py_entitymatching.DTMatcher"><code class="xref py py-meth docutils literal"><span class="pre">DTMatcher()</span></code></a>, <a class="reference internal" href="api/supported_matchers.html#py_entitymatching.RFMatcher" title="py_entitymatching.RFMatcher"><code class="xref py py-meth docutils literal"><span class="pre">RFMatcher()</span></code></a>,
+<a class="reference internal" href="api/supported_matchers.html#py_entitymatching.NBMatcher" title="py_entitymatching.NBMatcher"><code class="xref py py-meth docutils literal"><span class="pre">NBMatcher()</span></code></a>, <code class="xref py py-meth docutils literal"><span class="pre">LogisticRegressionMatcher()</span></code>,
+<code class="xref py py-meth docutils literal"><span class="pre">LinearRegressionMatcher()</span></code>, <a class="reference internal" href="api/supported_matchers.html#py_entitymatching.SVMMatcher" title="py_entitymatching.SVMMatcher"><code class="xref py py-meth docutils literal"><span class="pre">SVMMatcher()</span></code></a>, and
+<a class="reference internal" href="api/supported_matchers.html#py_entitymatching.XGBoostMatcher" title="py_entitymatching.XGBoostMatcher"><code class="xref py py-meth docutils literal"><span class="pre">XGBoostMatcher()</span></code></a>
+for more details.</p>
+</div>
+<div class="section" id="training-learning-based-matchers">
+<h2>Training Learning-Based Matchers<a class="headerlink" href="#training-learning-based-matchers" title="Permalink to this headline">¶</a></h2>
+<p>Once the ML-matcher is instantiated, you can train the matcher using the
+<cite>fit</cite> command. An example of using the <cite>fit</cite> command for Decision Tree matcher
+is shown below:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dt</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="n">H</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;_id&#39;</span><span class="p">,</span> <span class="s1">&#39;ltable_id&#39;</span><span class="p">,</span> <span class="s1">&#39;rtable_id&#39;</span><span class="p">],</span> <span class="n">target_attr</span><span class="o">=</span><span class="s1">&#39;gold_labels&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>There are other variants of <cite>fit</cite> method. As an example, Please refer to
+<a class="reference internal" href="api/supported_matchers.html#py_entitymatching.DTMatcher.fit" title="py_entitymatching.DTMatcher.fit"><code class="xref py py-meth docutils literal"><span class="pre">fit()</span></code></a> for more details.</p>
+</div>
+<div class="section" id="applying-learning-based-matchers">
+<h2>Applying Learning-Based Matchers<a class="headerlink" href="#applying-learning-based-matchers" title="Permalink to this headline">¶</a></h2>
+<p>Once the ML-matcher is trained, you can predict the matches using the
+<cite>predict</cite> command. An example of using the <cite>predict</cite> command for Decision Tree matcher
+is shown below:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dt</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="n">H</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;_id&#39;</span><span class="p">,</span> <span class="s1">&#39;ltable_id&#39;</span><span class="p">,</span> <span class="s1">&#39;rtable_id&#39;</span><span class="p">],</span> <span class="n">target_attr</span><span class="o">=</span><span class="s1">&#39;predicted_labels&#39;</span><span class="p">,</span> <span class="n">return_probs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">probs_attr</span><span class="o">=</span><span class="s1">&#39;proba&#39;</span><span class="p">,</span> <span class="n">append</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="go">inplace=True)</span>
+</pre></div>
+</div>
+<p>There are other variants of <cite>predict</cite> method. As an example, Please refer to
+<a class="reference internal" href="api/supported_matchers.html#py_entitymatching.DTMatcher.predict" title="py_entitymatching.DTMatcher.predict"><code class="xref py py-meth docutils literal"><span class="pre">predict()</span></code></a> for more details.</p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="select_best_matcher.html" class="btn btn-neutral float-right" title="Selecting a ML-Matcher" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="imputing_missing_values.html" class="btn btn-neutral" title="Imputing Missing Values" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, anhaidgroup.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
