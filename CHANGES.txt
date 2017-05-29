@@ -1,3 +1,6 @@
+V0.1.1 = 5/29/2017
+  * Included XGBoost classifier
+  * Updated matchers to return probabilities along with predictions
 v0.1.0 - 01/12/2017
   * Initial release.
   * Contains commands to support matching two tables using supervised learning.
