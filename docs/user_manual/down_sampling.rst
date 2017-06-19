@@ -10,7 +10,7 @@ Random sampling however does not work, because the sampled may end up sharing ve
 few matches, especially if the number of matches between the
 input tables are small to begin with.
 
-In *py_entitymatching*, you can use sample the input tables using `down_sample` command.
+In py_entitymatching, you can use sample the input tables using `down_sample` command.
 This command samples the input tables intelligently that ensures a reasonable number of
 matches between them.
 

@@ -13,7 +13,7 @@ set is used to train the learning-based matcher and test set is used
 for evaluation.
 
 
-*py_entitymatching* provides `split_train_test` command for the above need.
+py_entitymatching provides `split_train_test` command for the above need.
 An example of using `split_train_test` is shown below:
 
     >>> train_test = em.split_train_test(G, train_proportion=0.5)

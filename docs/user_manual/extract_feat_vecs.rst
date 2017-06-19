@@ -2,7 +2,7 @@
 Extracting Feature Vectors
 ==========================
 Once you have created a set of features, you use them to convert labeled sample to feature
-vectors. In *py_entitymatching*, you can use `extract_feature_vecs` to convert
+vectors. In py_entitymatching, you can use `extract_feature_vecs` to convert
 labeled sample to feature vectors using the features created
 (see section :ref:`label-create-feats-matching`).
 

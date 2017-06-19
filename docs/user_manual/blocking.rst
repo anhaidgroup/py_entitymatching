@@ -11,7 +11,7 @@ Once the tables are loaded and downsampled, most often you have to do blocking.
 Note that by *blocking* we mean to block a *tuple pair* from going through to the
 matching step. When applied to a tuple pair, a blocker returns *True* if the pair
 should be blocked. You must know conceptually the types of blockers and
-the blocker hierarchy in *py_entitymatching* to extend or modify them based on your need.
+the blocker hierarchy in py_entitymatching to extend or modify them based on your need.
 
 
 There are two types of blockers: (1) tuple-level, and (2) global. A tuple-level blocker
@@ -19,7 +19,7 @@ can examine a tuple pair in isolation and decide if it should be admitted to the
 stage. For example, an attribute equivalence blocker is a tuple-level blocker. A global
 blocker cannot make this decision in isolation. It would need to examine a set of other
 pairs as well. For example, a sorted neighborhood blocker applied over an union of the
-input tables is a global blocker. Currently, *py_entitymatching* supports only
+input tables is a global blocker. Currently, py_entitymatching supports only
 tuple-level blockers.
 
 The blockers can be combined in complex ways, such as
@@ -31,14 +31,14 @@ The blockers can be combined in complex ways, such as
 Further, you may just want to apply a blocker to just a pair of tuples, to see how
 the blocker works.
 
-In *py_entitymatching*, there is a Blocker class from which a set of concrete blockers
+In py_entitymatching, there is a Blocker class from which a set of concrete blockers
 are inherited. These concrete blockers implement the following methods:
 
 * block_tables (apply to input tables A and B)
 * block_candset (apply to an output from another blocker (e.g. table C))
 * block_tuples (apply to a tuple pair to check if it will survive blocking)
 
-In *py_entitymatching*, there are four concrete blockers implemented: (1) attribute
+In py_entitymatching, there are four concrete blockers implemented: (1) attribute
 equivalence blocker, (2) overlap blocker, (3) rule-based blocker, and (4) black box
 blocker. All the functions implemented in the concrete blockers are metadata aware.
 
@@ -50,8 +50,8 @@ The class diagram of Blocker and the concrete blockers inherited from it is show
 
 Built-In Blockers
 -----------------
-Built-in blockers are those that have been built into *py_entitymatching* and you can just
-simply call them. *py_entitymatching* currently offers two built-in blockers.
+Built-in blockers are those that have been built into py_entitymatching and you can just
+simply call them. py_entitymatching currently offers two built-in blockers.
 
 **Attribute Equivalence Blocker**
 
@@ -195,7 +195,7 @@ Each `feature` is a function that when applied to a tuple pair will return a
 numeric value. We will discuss how to create a set of features in the section
 :ref:`label-create-features-blocking`.
 
-Once the features are created, *py_entitymatching* stores this set of features in a
+Once the features are created, py_entitymatching stores this set of features in a
 feature table. We refer to this feature table as `block_f`. Then you will be able
 to instantiate a rule-based blocker and add rules like this:
 
@@ -209,7 +209,7 @@ In the above, `block_f` is a set of features stored as a Dataframe (see section
 Each rule is a list of strings. Each string specifies a conjunction of predicates. Each
 predicate has three parts: (1) an expression, (2) a comparison operator, and (3) a
 value. The expression is evaluated over a tuple pair, producing a numeric value.
-Currently, in *py_entitymatching* an expression is limited to contain a single feature
+Currently, in py_entitymatching an expression is limited to contain a single feature
 (being applied to a tuple pair). So an example predicate will look like this:
 ::
 
@@ -266,10 +266,10 @@ Combining Multiple Blockers
 ---------------------------
 If you use multiple blockers, then you have to combine them to get a
 consolidated candidate set. There are many different ways to combine the candidate sets
-such as doing union, majority vote, weighted vote, etc. Currently, *py_entitymatching*
+such as doing union, majority vote, weighted vote, etc. Currently, py_entitymatching
 only supports union-based combining.
 
-In *py_entitymatching*, `combine_blocker_outputs_via_union` is used to do union-based
+In py_entitymatching, `combine_blocker_outputs_via_union` is used to do union-based
 combining.
 
 An example of using `combine_blocker_outputs_via_union` is shown below:

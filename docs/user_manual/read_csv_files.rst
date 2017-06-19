@@ -1,7 +1,7 @@
 ===============================
 Reading the CSV Files from Disk
 ===============================
-Currently, *py_entitymatching* only asupports reading CSV files from disk.
+Currently, py_entitymatching only asupports reading CSV files from disk.
 
 **The Minimal That You Should Do:** First, you must store the input tables as CSV files
 in disk. Please look at section :ref:`label-csv-format` to learn more
@@ -14,7 +14,7 @@ about CSV format. An example of a CSV file will look like this:
     a2, Michael Franklin, 1988, 27.5, 94122
     a3, William Bridge, 1988, 32, 94121
 
-Next, each table in *py_entitymatching* must have a key column. If the table already
+Next, each table in py_entitymatching must have a key column. If the table already
 has a key column, then you can read the CSV file and set the key column as like this:
 
 ::
