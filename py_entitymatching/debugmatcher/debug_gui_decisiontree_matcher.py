@@ -52,12 +52,11 @@ def _vis_debug_dt(matcher, train, test, exclude_attrs, target_attr,
     """
 
     try:
-        from PyQt4 import QtGui
+        from PyQt5 import QtWidgets
         from py_entitymatching.gui.debug_gui_base import MainWindowManager
     except ImportError:
-        raise ImportError('PyQt4 is not installed. Please install PyQt4 to use '
-                      'GUI related functions in py_entitymatching.')
-
+        raise ImportError('PyQt5 is not installed. Please install PyQt5 to use '
+                          'GUI related functions in py_entitymatching.')
 
     # Validate the input parameters
     # # We expect the matcher to be of type DTMatcher
@@ -127,13 +126,11 @@ def _vis_debug_dt(matcher, train, test, exclude_attrs, target_attr,
     fp_dataframe = _get_dataframe(predicted, eval_summary['false_pos_ls'])
     fn_dataframe = _get_dataframe(predicted, eval_summary['false_neg_ls'])
 
+    em._viewapp = QtWidgets.QApplication.instance()
 
-
-    em._viewapp = QtGui.QApplication.instance()
     if em._viewapp is None:
-        em._viewapp = QtGui.QApplication([])
+        em._viewapp = QtWidgets.QApplication([])
     app = em._viewapp
-
 
     # Get the main window application
     app = em._viewapp

@@ -50,10 +50,10 @@ def _vis_debug_rf(matcher, train, test, exclude_attrs, target_attr,
     Wrapper function for debugging the Random Forest matcher visually.
     """
     try:
-        from PyQt4 import QtGui
+        from PyQt5 import QtWidgets
         from py_entitymatching.gui.debug_gui_base import MainWindowManager
     except ImportError:
-        raise ImportError('PyQt4 is not installed. Please install PyQt4 to use '
+        raise ImportError('PyQt5 is not installed. Please install PyQt5 to use '
                       'GUI related functions in py_entitymatching.')
 
 
@@ -116,9 +116,9 @@ def _vis_debug_rf(matcher, train, test, exclude_attrs, target_attr,
 
     # Get the evaluation summary.
     eval_summary = em.eval_matches(predicted, target_attr, predict_attr_name)
-    em._viewapp = QtGui.QApplication.instance()
+    em._viewapp = QtWidgets.QApplication.instance()
     if em._viewapp is None:
-        em._viewapp = QtGui.QApplication([])
+        em._viewapp = QtWidgets.QApplication([])
 
     # Get metric in a form that can be displayed from the evaluation summary
     metric = _get_metric(eval_summary)

@@ -16,7 +16,7 @@ Dependencies
 * pandas (provides data structures to store and manage tables)
 * scikit-learn (provides implementations for common machine learning algorithms)
 * joblib (provides multiprocessing capabilities)
-* pyqt4 (provides tools to build GUIs)
+* pyqt5 (provides tools to build GUIs)
 * py_stringsimjoin (provides implementations for string similarity joins)
 * py_stringmatching (provides a set of string tokenizers and string similarity functions)
 * cloudpickle (provides functions to serialize Python constructs)
@@ -49,9 +49,12 @@ command::
 
     pip install -U numpy scipy py_entitymatching
 
-The above command will install py_entitymatching and all of its dependencies, except PyQt4.
+
+The above command will install py_entitymatching and all its dependencies, except PyQt5.
 This is because pip can only install the dependency packages that are available in PyPI and
-PyQt4 is not in PyPI. So next, you need to install PyQt4, using the instructions on `this page <http://pyqt.sourceforge.net/Docs/PyQt4/installation.html>`_.
+PyQt5 is not in PyPI. Refer to this `PyQt5 page <http://pyqt.sourceforge.net/Docs/PyQt5/installation.html>`_
+on how to install PyQt5.
+
 
 
 Installing from Source Distribution
@@ -69,6 +72,12 @@ home directory as follows::
 
 For more information see this StackOverflow `link <http://stackoverflow.com/questions/14179941/how-to-install-python-packages-without-root-privileges>`_.
 
-The above commands will install py_entitymatching and all of its
-dependencies, except PyQt4. This is because similar to pip, setup.py can only install
-the dependency packages that are available in PyPI and PyQt4 is not in PyPI. So next, you need to install PyQt4, using the instructions on `this page <http://pyqt.sourceforge.net/Docs/PyQt4/installation.html>`_.
+
+
+
+The above command will install py_entitymatching and all its
+dependencies, except PyQt5. This is because similar to pip, setup.py can only install
+the dependency packages that are available in PyPI and PyQt5 is not in PyPI.
+Refer to this `page <http://pyqt.sourceforge.net/Docs/PyQt5/installation.html>`_ on how to
+install PyQt5.
+
