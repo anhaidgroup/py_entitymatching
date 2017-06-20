@@ -5,6 +5,7 @@ import logging
 
 import pandas as pd
 import six
+from py_entitymatching.utils.validation_helper import validate_object_type
 
 import py_entitymatching as em
 import py_entitymatching.feature.attributeutils as au
@@ -99,39 +100,25 @@ def get_features(ltable, rtable, l_attr_types, r_attr_types,
     """
     # Validate input parameters
     # # We expect the ltable to be of type pandas DataFrame
-    if not isinstance(ltable, pd.DataFrame):
-        logger.error('Input ltable is not of type pandas DataFrame')
-        raise AssertionError('Input ltable is not of type pandas DataFrame')
+    validate_object_type(ltable, pd.DataFrame, 'Input ltable')
 
     # # We expect the rtable to be of type pandas DataFrame
-    if not isinstance(rtable, pd.DataFrame):
-        logger.error('Input rtable is not of type pandas DataFrame')
-        raise AssertionError('Input rtable is not of type pandas DataFrame')
+    validate_object_type(rtable, pd.DataFrame, 'Input rtable')
 
     # # We expect the l_attr_types to be of type python dictionary
-    if not isinstance(l_attr_types, dict):
-        logger.error('Input l_attr_types is not of type dictionary')
-        raise AssertionError('Input l_attr_types is not of type dictionary')
+    validate_object_type(l_attr_types, dict, 'Input l_attr_types')
 
     # # We expect the r_attr_types to be of type python dictionary
-    if not isinstance(r_attr_types, dict):
-        logger.error('Input r_attr_types is not of type dictionary')
-        raise AssertionError('Input r_attr_types is not of type dictionary')
+    validate_object_type(r_attr_types, dict, 'Input r_attr_types')
 
     # # We expect the attr_corres to be of type python dictionary
-    if not isinstance(attr_corres, dict):
-        logger.error('Input attr_corres is not of type dictionary')
-        raise AssertionError('Input attr_corres is not of type dictionary')
+    validate_object_type(attr_corres, dict, 'Input attr_corres')
 
     # # We expect the tok_funcs to be of type python dictionary
-    if not isinstance(tok_funcs, dict):
-        logger.error('Input tok_funcs is not of type dictionary')
-        raise AssertionError('Input tok_funcs is not of type dictionary')
+    validate_object_type(tok_funcs, dict, 'Input tok_funcs')
 
     # # We expect the sim_funcs to be of type python dictionary
-    if not isinstance(sim_funcs, dict):
-        logger.error('Input sim_funcs is not of type dictionary')
-        raise AssertionError('Input sim_funcs is not of type dictionary')
+    validate_object_type(sim_funcs, dict, 'Input sim_funcs')
 
     # We expect the table order to be same in l/r_attr_types and attr_corres
     if not _check_table_order(ltable, rtable,
@@ -244,14 +231,11 @@ def get_features_for_blocking(ltable, rtable):
     """
     # Validate input parameters
     # # We expect the ltable to be of type pandas DataFrame
-    if not isinstance(ltable, pd.DataFrame):
-        logger.error('Input table A is not of type pandas DataFrame')
-        raise AssertionError('Input table A is not of type pandas DataFrame')
+    validate_object_type(ltable, pd.DataFrame, 'Input table A')
 
     # # We expect the rtable to be of type pandas DataFrame
-    if not isinstance(rtable, pd.DataFrame):
-        logger.error('Input table B is not of type pandas dataframe')
-        raise AssertionError('Input table B is not of type pandas dataframe')
+    validate_object_type(rtable, pd.DataFrame, 'Input table B')
+
     # Get the similarity functions to be used for blocking
     sim_funcs = sim.get_sim_funs_for_blocking()
     # Get the tokenizers to be used for blocking
@@ -338,14 +322,10 @@ def get_features_for_matching(ltable, rtable):
     """
     # Validate input parameters
     # # We expect the ltable to be of type pandas DataFrame
-    if not isinstance(ltable, pd.DataFrame):
-        logger.error('Input table A is not of type pandas DataFrame')
-        raise AssertionError('Input table A is not of type pandas DataFrame')
+    validate_object_type(ltable, pd.DataFrame, 'Input table A')
 
     # # We expect the rtable to be of type pandas DataFrame
-    if not isinstance(rtable, pd.DataFrame):
-        logger.error('Input table B is not of type pandas DataFrame')
-        raise AssertionError('Input table B is not of type pandas DataFrame')
+    validate_object_type(rtable, pd.DataFrame, 'Input table B')
 
     # Get similarity functions for generating the features for matching
     sim_funcs = sim.get_sim_funs_for_matching()
@@ -383,14 +363,10 @@ def _check_table_order(ltable, rtable, l_attr_types, r_attr_types, attr_corres):
     """
     # Validate the input parameters
     # We expect the input object ltable to be of type pandas DataFrame
-    if not isinstance(ltable, pd.DataFrame):
-        logger.error('Input ltable is not of type pandas dataframe')
-        raise AssertionError('Input ltable is not of type pandas dataframe')
+    validate_object_type(ltable, pd.DataFrame, 'Input left table')
 
-    # We expect the input object rtable to be of type pandas DataFrame
-    if not isinstance(rtable, pd.DataFrame):
-        logger.error('Input rtable is not of type pandas dataframe')
-        raise AssertionError('Input rtable is not of type pandas dataframe')
+    # # We expect the rtable to be of type pandas DataFrame
+    validate_object_type(rtable, pd.DataFrame, 'Input right table')
 
     # Get the ids of the input tables. This is used to validate the order
     # of tables present in the given data structures.

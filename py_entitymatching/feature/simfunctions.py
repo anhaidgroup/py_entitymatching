@@ -4,11 +4,8 @@ This module contains similarity functions supported by py_entitymatching
 """
 
 import pandas as pd
-import six
-
 import py_stringmatching as sm
-
-import py_entitymatching.utils.generic_helper as gh
+import six
 
 # These are the sim. function names
 sim_function_names = ['affine',

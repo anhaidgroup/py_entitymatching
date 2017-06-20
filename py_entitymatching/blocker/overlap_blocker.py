@@ -16,6 +16,7 @@ from py_entitymatching.blocker.blocker import Blocker
 from py_entitymatching.utils.catalog_helper import log_info, get_name_for_key, \
     add_key_column
 from py_entitymatching.utils.generic_helper import remove_non_ascii
+from py_entitymatching.utils.validation_helper import validate_object_type
 
 logger = logging.getLogger(__name__)
 
@@ -551,38 +552,17 @@ class OverlapBlocker(Blocker):
     def validate_types_other_params(self, l_overlap_attr, r_overlap_attr,
                                     rem_stop_words, q_val,
                                     word_level, overlap_size):
-        if not isinstance(l_overlap_attr, six.string_types):
-            logger.error(
-                'Overlap attribute name of left table is not of type string')
-            raise AssertionError(
-                'Overlap attribute name of left table is not of type string')
-        if not isinstance(r_overlap_attr, six.string_types):
-            logger.error(
-                'Overlap attribute name of right table is not of type string')
-            raise AssertionError(
-                'Overlap attribute name of right table is not of type string')
-        if not isinstance(rem_stop_words, bool):
-            logger.error('Parameter rem_stop_words is not of type bool')
-            raise AssertionError('Parameter rem_stop_words is not of type bool')
+        validate_object_type(l_overlap_attr, six.string_types, error_prefix='Overlap attribute name of left table')
+        validate_object_type(r_overlap_attr, six.string_types, error_prefix='Overlap attribute name of right table')
+
+        validate_object_type(rem_stop_words, bool, error_prefix='Parameter rem_stop_words')
+
         if q_val != None and not isinstance(q_val, int):
             logger.error('Parameter q_val is not of type int')
             raise AssertionError('Parameter q_val is not of type int')
-        if not isinstance(word_level, bool):
-            logger.error('Parameter word_level is not of type bool')
-            raise AssertionError('Parameter word_level is not of type bool')
-        if not isinstance(overlap_size, int):
-            logger.error('Parameter overlap_size is not of type int')
-            raise AssertionError('Parameter overlap_size is not of type int')
 
-    # check and copy overlap attributes if required
-
-    # def check_and_copy_overlap_attrs(self, ltable, rtable, l_overlap_attr,
-    #                                 r_overlap_attr, l_output_attrs,
-    #                                  r_output_attrs):
-    #     if l_output_attrs != None:
-    #         if len(set(l_output_attrs).intersection(l_overlap_attr)) > 0:
-
-
+        validate_object_type(word_level, bool, error_prefix='Parameter word_level')
+        validate_object_type(overlap_size, int, error_prefix='Parameter overlap_size')
 
 
     # validate the overlap attrs
