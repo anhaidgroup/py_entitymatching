@@ -11,6 +11,7 @@ from py_entitymatching.debugmatcher.debug_gui_utils import _get_metric, \
     get_name_for_predict_column, _get_dataframe
 from py_entitymatching.utils.catalog_helper import check_attrs_present
 from py_entitymatching.utils.generic_helper import list_drop_duplicates
+from py_entitymatching.utils.validation_helper import validate_object_type
 
 logger = logging.getLogger(__name__)
 
@@ -66,9 +67,7 @@ def _vis_debug_rf(matcher, train, test, exclude_attrs, target_attr,
                              'Random Forest matcher')
 
     # # We expect the target attribute to be of type string.
-    if not isinstance(target_attr, six.string_types):
-        logger.error('Target attribute is not of type string')
-        raise AssertionError('Target attribute is not of type string')
+    validate_object_type(target_attr, six.string_types, error_prefix='Target attribute')
 
     # # Check whether the exclude attributes are indeed present in the train
     #  DataFrame.

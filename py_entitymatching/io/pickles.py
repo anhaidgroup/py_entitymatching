@@ -13,7 +13,7 @@ import six
 
 import py_entitymatching.catalog.catalog_manager as cm
 import py_entitymatching.io.parsers as ps
-from py_entitymatching.utils.generic_helper import validate_object_type
+from py_entitymatching.utils.validation_helper import validate_object_type
 
 logger = logging.getLogger(__name__)
 
@@ -64,7 +64,7 @@ def save_object(object_to_save, file_path):
     """
     # Validate input parameters
 
-    validate_object_type(file_path, six.string_types)
+    validate_object_type(file_path, six.string_types, 'Input file path')
 
     # Check whether the file path is valid and if a file is already present
     # at that path.
@@ -123,7 +123,7 @@ def load_object(file_path):
     """
     # Validate input parameters
 
-    validate_object_type(file_path, six.string_types)
+    validate_object_type(file_path, six.string_types, error_prefix='Input file path')
 
     # Check if a file exists at the given file path.
     if not os.path.exists(file_path):
@@ -198,9 +198,9 @@ def save_table(data_frame, file_path, metadata_ext='.pklmetadata'):
 
     validate_object_type(data_frame, pd.DataFrame)
 
-    validate_object_type(file_path, six.string_types)
+    validate_object_type(file_path, six.string_types, error_prefix='Input file path')
 
-    validate_object_type(metadata_ext, six.string_types)
+    validate_object_type(metadata_ext, six.string_types, error_prefix='Input Metadata ext')
 
     # Get the file_name (with out extension) and the extension from the given
     #  file path. For example if the file_path was /Users/foo/file.csv then
@@ -330,7 +330,7 @@ def load_table(file_path, metadata_ext='.pklmetadata'):
 
     """
     # Validate input parameters
-    validate_object_type(file_path, six.string_types)
+    validate_object_type(file_path, six.string_types, error_prefix='Input file path')
 
     validate_object_type(metadata_ext, six.string_types)
 
