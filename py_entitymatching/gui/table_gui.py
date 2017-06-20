@@ -93,6 +93,7 @@ def edit_table(table, show_flag=True):
             val = _cast_val(val, inp)
             table.set_value(idxv[i], cols[j], val)
 
+            
 
 def _cast_val(v, i):
     # need to cast string values from edit window
