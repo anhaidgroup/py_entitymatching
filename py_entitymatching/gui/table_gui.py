@@ -2,6 +2,7 @@ import logging
 # from builtins import str
 
 import six
+import sys
 
 import py_entitymatching as em
 from py_entitymatching.utils.generic_helper import remove_non_ascii
@@ -92,6 +93,7 @@ def edit_table(table, show_flag=True):
             val = _cast_val(val, inp)
             table.set_value(idxv[i], cols[j], val)
 
+            
 
 def _cast_val(v, i):
     # need to cast string values from edit window
@@ -104,9 +106,8 @@ def _cast_val(v, i):
     elif isinstance(i, int):
         return int(v)
     elif isinstance(i, six.string_types):
-        # if isinstance(i, bytes):
-        #     v = v.decode('utf-8')
-        # # v = remove_non_ascii(str(v))
+        if sys.version_info[0] < 3:
+            v = unicode(v.toUtf8(), encoding="UTF-8")
         return v
     elif isinstance(i, object):
         return v
