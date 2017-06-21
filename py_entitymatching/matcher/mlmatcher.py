@@ -9,7 +9,8 @@ import pandas as pd
 
 import py_entitymatching.catalog.catalog_manager as cm
 from py_entitymatching.matcher.matcher import Matcher
-from py_entitymatching.matcher.matcherutils import process_preds_probs
+from py_entitymatching.matcher.matcherutils import (process_preds_probs,
+                                                    get_true_lbl_index)
 import py_entitymatching.utils.catalog_helper as ch
 import py_entitymatching.utils.generic_helper as gh
 
@@ -122,7 +123,7 @@ class MLMatcher(Matcher):
                 'The arguments supplied does not match the signatures '
                 'supported !!!')
 
-    def _predict_sklearn(self, x, check_rem=True, return_prob=False):
+    def _predict_sklearn(self, x, check_rem=True, return_probs=False):
         # Function that implements, predict interface mimic-ing sk-learn's
         # predict interface.
 
@@ -135,15 +136,15 @@ class MLMatcher(Matcher):
         x = self._get_data_for_sklearn(x, check_rem=check_rem)
         # Call the underlying predict function.
         y = self.clf.predict(x)
-        if not return_prob:
+        if not return_probs:
             # Return the predictions
             return y
         else:
             _p = self.clf.predict_proba(x)
-            y, p = process_preds_probs(y, _p, self.clf)
-            return y, p
+            true_index = get_true_lbl_index(self.clf)
+            return y, _p[:, true_index]
 
-    def _predict_ex_attrs(self, table, exclude_attrs, return_prob=False):
+    def _predict_ex_attrs(self, table, exclude_attrs, return_probs=False):
         """
         Variant of predict method, where data is derived based on exclude
         attributes.
@@ -176,7 +177,8 @@ class MLMatcher(Matcher):
 
 
         # Do the predictions and return the probabilities (if required)
-        res = self._predict_sklearn(x, check_rem=False, return_prob=return_prob)
+        res = self._predict_sklearn(x, check_rem=False,
+                                    return_probs=return_probs)
         return res
 
         # if not just do the predictions and return the result
@@ -191,8 +193,8 @@ class MLMatcher(Matcher):
 
     # predict method
     def predict(self, x=None, table=None, exclude_attrs=None, target_attr=None,
-                append=False, return_probs=False,
-                probs_attr=None, inplace=True):
+                append=False, return_probs=False, probs_attr="prob",
+                inplace=True):
         """
         Predict interface for the matcher.
 
@@ -231,11 +233,12 @@ class MLMatcher(Matcher):
         # If x is not none, call the predict method that mimics sk-learn
         # predict method.
         if x is not None:
-            y = self._predict_sklearn(x, return_prob=return_probs)
+            y = self._predict_sklearn(x, return_probs=return_probs)
         # If the input table and the exclude attributes are not None,
         # then call the appropriate predict method.
         elif table is not None and exclude_attrs is not None:
-            y = self._predict_ex_attrs(table, exclude_attrs, return_prob=return_probs)
+            y = self._predict_ex_attrs(table, exclude_attrs,
+                                       return_probs=return_probs)
             # If the append is True, update the table
             if target_attr is not None and append is True:
                 # If inplace is True, then update the input table.

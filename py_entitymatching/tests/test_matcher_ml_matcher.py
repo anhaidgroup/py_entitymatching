@@ -346,13 +346,15 @@ class MLMatcherTestCases(unittest.TestCase):
         self.assertEqual(len(predictions), len(test))
         self.assertEqual(set(list(test.columns)).issubset(list(predictions.columns)), True)
 
-        p_col = predictions.columns[len(predictions.columns)-2]
+        p_col = predictions.columns[len(predictions.columns) - 2]
         self.assertEqual(p_col, 'predicted')
 
         r_col = predictions.columns[len(predictions.columns) - 1]
         self.assertEqual(r_col, 'proba')
 
-        self.assertEqual(sum(predictions[r_col] >= 0.5), len(predictions))
+        self.assertEqual(sum((predictions[r_col] >= 0.0) &
+                             (predictions[r_col] <= 1.0)),
+                         len(predictions))
 
 
     def test_ml_matcher_return_probs_true_predict_diff_colname(self):
@@ -382,7 +384,9 @@ class MLMatcherTestCases(unittest.TestCase):
         r_col = predictions.columns[len(predictions.columns) - 1]
         self.assertEqual(r_col, 'probas')
 
-        self.assertEqual(sum(predictions[r_col] >= 0.5), len(predictions))
+        self.assertEqual(sum((predictions[r_col] >= 0.0) &
+                             (predictions[r_col] <= 1.0)),
+                         len(predictions))
 
 
 
