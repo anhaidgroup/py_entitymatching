@@ -7,8 +7,6 @@ import pandas as pd
 import six
 from py_entitymatching.utils.validation_helper import validate_object_type
 
-from IPython.display import display
-
 import py_entitymatching as em
 import py_entitymatching.feature.attributeutils as au
 import py_entitymatching.feature.simfunctions as sim
