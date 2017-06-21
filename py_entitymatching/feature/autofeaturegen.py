@@ -6,6 +6,8 @@ import logging
 import pandas as pd
 import six
 
+from IPython.display import display
+
 import py_entitymatching as em
 import py_entitymatching.feature.attributeutils as au
 import py_entitymatching.feature.simfunctions as sim
@@ -183,7 +185,7 @@ def get_features(ltable, rtable, l_attr_types, r_attr_types,
     return feature_table
 
 
-def get_features_for_blocking(ltable, rtable):
+def get_features_for_blocking(ltable, rtable, validate_inferred_attr_types=True, display='t'):
     """
 
     This function automatically generates features that can be used for
@@ -192,6 +194,9 @@ def get_features_for_blocking(ltable, rtable):
     Args:
         ltable,rtable (DataFrame): The pandas DataFrames for which the
             features are to be generated.
+        validate_inferred_attr_types (boolean): A flag to indicate whether to 
+            show the user the inferred attribute types and the features
+            chosen for those types.
 
     Returns:
         A pandas DataFrame containing automatically generated features.
@@ -252,6 +257,12 @@ def get_features_for_blocking(ltable, rtable):
     if not isinstance(rtable, pd.DataFrame):
         logger.error('Input table B is not of type pandas dataframe')
         raise AssertionError('Input table B is not of type pandas dataframe')
+
+    # # We expect the rtable to be of type pandas DataFrame
+    if not isinstance(validate_inferred_attr_types, bool):
+        logger.error('Input validate_inferred_attr_types is not of type boolean')
+        raise AssertionError('Input validate_inferred_attr_types is not of type boolean')
+
     # Get the similarity functions to be used for blocking
     sim_funcs = sim.get_sim_funs_for_blocking()
     # Get the tokenizers to be used for blocking
@@ -262,6 +273,14 @@ def get_features_for_blocking(ltable, rtable):
     attr_types_rtable = au.get_attr_types(rtable)
     # Get the attr. correspondences between ltable and rtable
     attr_corres = au.get_attr_corres(ltable, rtable)
+    
+    # Show the user inferred attribute types and features and request
+    # user permission to proceed
+    if validate_inferred_attr_types:
+        # if the user does not want to proceed, then exit the function
+        if validate_attr_types(attr_types_ltable, attr_types_rtable, attr_corres, display) is None:
+            return
+
     # Get features based on attr types, attr correspondences, sim functions
     # and tok. functions
     feature_table = get_features(ltable, rtable, attr_types_ltable,
@@ -278,7 +297,7 @@ def get_features_for_blocking(ltable, rtable):
     return feature_table
 
 
-def get_features_for_matching(ltable, rtable):
+def get_features_for_matching(ltable, rtable, validate_inferred_attr_types=True, display='t'):
     """
     This function automatically generates features that can be used for
     matching purposes.
@@ -286,6 +305,9 @@ def get_features_for_matching(ltable, rtable):
     Args:
         ltable,rtable (DataFrame): The pandas DataFrames for which the
             features are to be generated.
+        validate_inferred_attr_types (boolean): A flag to indicate whether to 
+            show the user the inferred attribute types and the features
+            chosen for those types.
 
     Returns:
         A pandas DataFrame containing automatically generated features.
@@ -347,6 +369,11 @@ def get_features_for_matching(ltable, rtable):
         logger.error('Input table B is not of type pandas DataFrame')
         raise AssertionError('Input table B is not of type pandas DataFrame')
 
+    # # We expect the rtable to be of type pandas DataFrame
+    if not isinstance(validate_inferred_attr_types, bool):
+        logger.error('Input validate_inferred_attr_types is not of type boolean')
+        raise AssertionError('Input validate_inferred_attr_types is not of type boolean')
+
     # Get similarity functions for generating the features for matching
     sim_funcs = sim.get_sim_funs_for_matching()
     # Get tokenizer functions for generating the features for matching
@@ -358,6 +385,13 @@ def get_features_for_matching(ltable, rtable):
 
     # Get the attribute correspondence between the input tables
     attr_corres = au.get_attr_corres(ltable, rtable)
+
+    # Show the user inferred attribute types and features and request
+    # user permission to proceed
+    if validate_inferred_attr_types:
+        # if the user does not want to proceed, then exit the function
+        if validate_attr_types(attr_types_ltable, attr_types_rtable, attr_corres, display) is None:
+            return
 
     # Get the features
     feature_table = get_features(ltable, rtable, attr_types_ltable,
@@ -667,3 +701,180 @@ def conv_fn_str_to_obj(fn_tup, tok, sim_funcs):
 
 def flatten_list(inp_list):
     return [item for sublist in inp_list for item in sublist]
+
+
+# Show the user inferred attribute types and features and request
+# user permission to proceed
+def validate_attr_types(l_attr_types, r_attr_types, attr_corres, display_type):
+
+    # We expect the l_attr_types to be of type python dictionary
+    if not isinstance(l_attr_types, dict):
+        logger.error('Input l_attr_types is not of type dictionary')
+        raise AssertionError('Input l_attr_types is not of type dictionary')
+
+    # We expect the r_attr_types to be of type python dictionary
+    if not isinstance(r_attr_types, dict):
+        logger.error('Input r_attr_types is not of type dictionary')
+        raise AssertionError('Input r_attr_types is not of type dictionary')
+
+    # We expect the attr_corres to be of type python dictionary
+    if not isinstance(attr_corres, dict):
+        logger.error('Input attr_corres is not of type dictionary')
+        raise AssertionError('Input attr_corres is not of type dictionary')
+
+    corres_features_list = []
+
+    print('The table shows the corresponding attributes along with their respective '
+          'types. Please confirm that the information  has been correctly inferred.')
+    if display_type == 's':
+        print('')
+
+    # Generate features for each attr. correspondence
+    for ac in attr_corres['corres']:
+        l_attr_type = l_attr_types[ac[0]]
+        r_attr_type = r_attr_types[ac[1]]
+
+        # get human readable type names
+        readable_l_type = _get_readable_type_name(l_attr_type)
+        readable_r_type = _get_readable_type_name(r_attr_type)
+
+        # List and string of readable feature descriptions
+        readable_features = []
+
+        # Generate a feature only if the attribute types are same
+        if l_attr_type != r_attr_type:
+            logger.info('py_entitymatching types: %s type (%s) and %s type (%s) '
+                        'are different.'
+                        'If you want to set them to be same and '
+                        'generate features, '
+                        'update output from get_attr_types and '
+                        'use get_features command.\n.'
+                        % (ac[0], l_attr_type, ac[1], r_attr_type))
+            features = ['N/A']
+        else:
+            # Generate features
+            features = _get_features_for_type(l_attr_type)
+
+        # Change features into more readable format
+        for feat in features:
+            readable_features.append(_get_readable_feature_name(feat))
+
+        # Change the first 3 values in the list of features into a string
+        readable_features_str = "; ".join(readable_features[:2])
+
+        # print information to user
+        if display_type == 's':
+            print('Left Attribute:  %s [Type: %s]' % (ac[0], readable_l_type))
+            print('Right Attribute: %s [Type: %s]' % (ac[1], readable_r_type))
+            print('Example Features: ' + readable_features_str + '\n')
+
+        # Add information for each set of corresponding attributes to the list
+        # corres_features_list.append([ac[0], readable_l_type, ac[1], readable_r_type, readable_features_str])
+        corres_features_list.append([ac[0], ac[1], readable_l_type, readable_r_type, readable_features_str])
+
+    # create and display table for the user
+    if display_type == 't':
+        # Create the pandas dataframe from the lists
+        # labels = ['Left Attribute', 'Left Attribute Type', 'Right Attribute', 'Right Attribute Type',
+        #        'Example Features']
+        labels = ['Left Attribute', 'Right Attribute', 'Left Attribute Type', 'Right Attribute Type',
+                'Example Features']
+        corres_feat_df = pd.DataFrame(corres_features_list, columns=labels)
+
+        # display the pandas dataframe
+        display(corres_feat_df)
+
+    # Ask user if the inferred types are satisfactory
+    response = raw_input('Do you want to proceed? (y/n):')
+
+    if response == 'y':
+        return corres_feat_df
+    else:
+        return None
+
+
+# get look up table to generate readable type names
+def _get_type_name_lkp_tbl():
+
+    # Initialize a lookup table
+    lookup_table = dict()
+
+    # Map type names to more human readable names
+    lookup_table['str_eq_1w'] = 'short string (1 word)'
+    lookup_table['str_bt_1w_5w'] = 'short string (1 word to 5 words)'
+    lookup_table['str_bt_5w_10w'] = 'medium string (5 words to 10 words)'
+    lookup_table['str_gt_10w'] = 'short string (1 word)'
+    lookup_table['numeric'] = 'numeric'
+    lookup_table['boolean'] = 'boolean'
+    lookup_table['ud_determined'] = 'un-determined type'
+
+    return lookup_table
+
+
+# Get readable names for the types
+def _get_readable_type_name(column_type):
+
+    # First get the look up table
+    lookup_table = _get_type_name_lkp_tbl()
+
+    # Check if the column type is in the dictionary
+    if column_type in lookup_table:
+        return lookup_table[column_type]
+    else:
+        raise TypeError('Unknown type')
+
+
+# get look up table to generate readable feature descriptions
+def _get_feature_name_lkp_tbl():
+
+    # Initialize a lookup table
+    lookup_table = dict()
+
+    # Map features to more human readable descriptions
+    lookup_table['lev_dist'] = 'Levenshtein Distance'
+    lookup_table['lev_sim'] = 'Levenshtein Similarity'
+    lookup_table['jaro'] = 'Jaro Distance'
+    lookup_table['jaro_winkler'] = 'Jaro-Winkler Distance'
+    lookup_table['exact_match'] = 'Exact Match'
+    lookup_table['needleman_wunsch'] = 'Needleman-Wunsch Algorithm'
+    lookup_table['smith_waterman'] = 'Smith-Waterman Algorithm'
+    lookup_table['abs_norm'] = 'Absolute Norm'
+    lookup_table['jaccard'] = 'Jaccard Similarity'
+    lookup_table['monge_elkan'] = 'Monge-Elkan Algorithm'
+    lookup_table['cosine'] = 'Cosine Similarity'
+    lookup_table['qgm_1'] = "1-grams"
+    lookup_table['qgm_2'] = "2-grams"
+    lookup_table['qgm_3'] = "3-grams"
+    lookup_table['qgm_4'] = "4-grams"
+    lookup_table['dlm_dc0'] = 'Space Delimiter'
+    lookup_table['dlm_wsp'] = 'Whitespace Delimiter'
+    lookup_table['N/A'] = 'Not Applicable: Types do not match'
+
+    return lookup_table
+
+
+# Get readable names for the features
+def _get_readable_feature_name(feature):
+
+    # First get the look up table
+    lookup_table = _get_feature_name_lkp_tbl()
+
+    readable_feature = []
+
+    if isinstance(feature, (str, unicode)):
+        # If feature is just a string, return the readable name
+        if feature in lookup_table:
+            return lookup_table[feature]
+        else:
+            raise AssertionError('Feature is not present in lookup table')
+    elif len(feature) == 3:
+        # If feature is a list, get the readable name of each part
+        for name in feature:
+            # Check if the feature is in the dictionary
+            if name in lookup_table:
+                readable_feature.append(lookup_table[name])
+            else:
+                raise AssertionError('Feature is not present in lookup table')
+        return readable_feature[0] + ' [' + readable_feature[1] + ', ' + readable_feature[2] + "]"
+    else:
+        raise AssertionError('Features should have either 0 or 2 (one for each table) tokenizers')
