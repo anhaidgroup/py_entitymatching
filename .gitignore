@@ -75,6 +75,7 @@ html/
 *.dot
 *.png
 *.pkl
+*.swp
 
 notebooks/how-to-guides/bdata/
 garage/

@@ -3,7 +3,6 @@ from nose.tools import *
 import unittest
 import pandas as pd
 import __builtin__
-from IPython import display as disp
 
 from py_entitymatching.utils.generic_helper import get_install_path
 from py_entitymatching.io.parsers import read_csv_metadata

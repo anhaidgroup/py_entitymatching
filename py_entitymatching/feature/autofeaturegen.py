@@ -239,8 +239,10 @@ def get_features_for_blocking(ltable, rtable, validate_inferred_attr_types=True,
     validate_object_type(ltable, pd.DataFrame, 'Input table A')
 
     # # We expect the rtable to be of type pandas DataFrame
-
     validate_object_type(rtable, pd.DataFrame, 'Input table B')
+
+    # # We expect the validate_inferred_attr_types to be of type boolean
+    validate_object_type(validate_inferred_attr_types, bool, 'Validate inferred attribute type')
 
     # Get the similarity functions to be used for blocking
     sim_funcs = sim.get_sim_funs_for_blocking()
@@ -344,10 +346,8 @@ def get_features_for_matching(ltable, rtable, validate_inferred_attr_types=True,
     # # We expect the rtable to be of type pandas DataFrame
     validate_object_type(rtable, pd.DataFrame, 'Input table B')
 
-    # # We expect the rtable to be of type pandas DataFrame
-    if not isinstance(validate_inferred_attr_types, bool):
-        logger.error('Input validate_inferred_attr_types is not of type boolean')
-        raise AssertionError('Input validate_inferred_attr_types is not of type boolean')
+    # # We expect the validate_inferred_attr_types to be of type boolean
+    validate_object_type(validate_inferred_attr_types, bool, 'Validate inferred attribute type')
 
     # Get similarity functions for generating the features for matching
     sim_funcs = sim.get_sim_funs_for_matching()
@@ -678,20 +678,14 @@ def flatten_list(inp_list):
 # user permission to proceed
 def validate_attr_types(l_attr_types, r_attr_types, attr_corres, display_type):
 
-    # We expect the l_attr_types to be of type python dictionary
-    if not isinstance(l_attr_types, dict):
-        logger.error('Input l_attr_types is not of type dictionary')
-        raise AssertionError('Input l_attr_types is not of type dictionary')
+    # # We expect the l_attr_types to be of type dictionary
+    validate_object_type(l_attr_types, dict, 'Left table attribute types')
 
-    # We expect the r_attr_types to be of type python dictionary
-    if not isinstance(r_attr_types, dict):
-        logger.error('Input r_attr_types is not of type dictionary')
-        raise AssertionError('Input r_attr_types is not of type dictionary')
+    # # We expect the r_attr_types to be of type dictionary
+    validate_object_type(r_attr_types, dict, 'Right table attribute types')
 
-    # We expect the attr_corres to be of type python dictionary
-    if not isinstance(attr_corres, dict):
-        logger.error('Input attr_corres is not of type dictionary')
-        raise AssertionError('Input attr_corres is not of type dictionary')
+    # # We expect the attr_corres to be of type dictionary
+    validate_object_type(attr_corres, dict, 'Left table attribute types')
 
     corres_features_list = []
 
