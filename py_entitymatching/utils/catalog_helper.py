@@ -4,15 +4,14 @@ import logging
 import pandas as pd
 import six
 
+from py_entitymatching.utils.validation_helper import validate_object_type
 
 logger = logging.getLogger(__name__)
 
 
 def check_attrs_present(table, attrs):
 
-    if not isinstance(table, pd.DataFrame):
-        logger.error('Input object is not of type pandas data frame')
-        raise AssertionError('Input object is not of type pandas data frame')
+    validate_object_type(table, pd.DataFrame)
 
     if attrs is None:
         logger.warning('Input attr. list is null')
@@ -25,9 +24,7 @@ def check_attrs_present(table, attrs):
 
 def are_all_attrs_in_df(df, col_names, verbose=False):
 
-    if not isinstance(df, pd.DataFrame):
-        logger.error('Input object is not of type pandas data frame')
-        raise AssertionError('Input object is not of type pandas data frame')
+    validate_object_type(df, pd.DataFrame)
 
     if col_names is None:
         logger.warning('Input col_names is null')
@@ -60,13 +57,9 @@ def is_attr_unique(df, attr):
         This is an internal helper function
 
     """
-    if not isinstance(df, pd.DataFrame):
-        logger.error('Input object is not of type pandas data frame')
-        raise AssertionError('Input object is not of type pandas data frame')
+    validate_object_type(df, pd.DataFrame)
 
-    if not isinstance(attr, six.string_types):
-        logger.error('Input attr. is not of type string')
-        raise AssertionError('Input attr. is not of type string')
+    validate_object_type(attr, six.string_types, error_prefix='Input attr.')
 
     uniq_flag = (len(pd.unique(df[attr])) == len(df))
     if not uniq_flag:
@@ -90,13 +83,9 @@ def does_contain_missing_vals(df, attr):
         This is an internal helper function
 
     """
-    if not isinstance(df, pd.DataFrame):
-        logger.error('Input object is not of type pandas data frame')
-        raise AssertionError('Input object is not of type pandas data frame')
+    validate_object_type(df, pd.DataFrame)
 
-    if not isinstance(attr, six.string_types):
-        logger.error('Input attr. is not of type string')
-        raise AssertionError('Input attr. is not of type string')
+    validate_object_type(attr, six.string_types, error_prefix='Input attr.')
 
     # nan_flag = (sum(df[attr].isnull()) != 0)
     nan_flag = any(pd.isnull(df[attr]))
@@ -118,13 +107,9 @@ def is_key_attribute(df, attr, verbose=False):
          returns False
 
     """
-    if not isinstance(df, pd.DataFrame):
-        logger.error('Input object is not of type pandas data frame')
-        raise AssertionError('Input object is not of type pandas data frame')
+    validate_object_type(df, pd.DataFrame)
 
-    if not isinstance(attr, six.string_types):
-        logger.error('Input attr. is not of type string')
-        raise AssertionError('Input attr. is not of type string')
+    validate_object_type(attr, six.string_types, error_prefix='Input attr.')
 
     # check if the length is > 0
     if len(df) > 0:
@@ -160,21 +145,13 @@ def check_fk_constraint(df_foreign, attr_foreign, df_base, attr_base):
     Notes:
         This is an internal helper function
     """
-    if not isinstance(df_foreign, pd.DataFrame):
-        logger.error('Input object (df_foreign) is not of type pandas data frame')
-        raise AssertionError('Input object is not of type pandas data frame')
+    validate_object_type(df_foreign, pd.DataFrame, error_prefix='Input object (df_foreign)')
 
-    if not isinstance(attr_foreign, six.string_types):
-        logger.error('Input attr (attr_foreign) is not of type string')
-        raise AssertionError('Input attr (attr_foreign) is not of type string')
+    validate_object_type(attr_foreign, six.string_types, error_prefix='Input attr (attr_foreign)')
 
-    if not isinstance(df_base, pd.DataFrame):
-        logger.error('Input object (df_base) is not of type pandas data frame')
-        raise AssertionError('Input object (df_base) is not of type pandas data frame')
+    validate_object_type(df_base, pd.DataFrame, error_prefix='Input object (df_base)')
 
-    if not isinstance(attr_base, six.string_types):
-        logger.error('Input attr (attr_base) is not of type string')
-        raise AssertionError('Input attr (attr_base) is not of type string')
+    validate_object_type(attr_base, six.string_types, error_prefix='Input attr (attr_base)')
 
     if not check_attrs_present(df_base, attr_base):
         logger.warning('The attribute %s is not in df_base' %attr_base)
@@ -247,13 +224,9 @@ def get_name_for_key(columns, key_val='_id'):
 
 
 def add_key_column(table, key):
-    if not isinstance(table, pd.DataFrame):
-        logger.error('Input object is not of type pandas data frame')
-        raise AssertionError('Input object is not of type pandas data frame')
+    validate_object_type(table, pd.DataFrame)
 
-    if not isinstance(key, six.string_types):
-        logger.error('Input key is not of type string.')
-        raise AssertionError('Input object is not of type string')
+    validate_object_type(key, six.string_types, error_prefix='Input key')
 
     table.insert(0, key, range(0, len(table)))
     return table

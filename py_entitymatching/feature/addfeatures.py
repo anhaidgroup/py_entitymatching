@@ -6,6 +6,8 @@ import logging
 import pandas as pd
 import six
 
+from py_entitymatching.utils.validation_helper import validate_object_type
+
 logger = logging.getLogger(__name__)
 
 
@@ -87,21 +89,14 @@ def get_feature_fn(feature_string, tokenizers, similarity_functions):
     """
     # Validate input parameters
     # # We expect the input feature string to be of type string
-    if not isinstance(feature_string, six.string_types):
-        logger.error('Input feature string is not of type string')
-        raise AssertionError('Input feature string is not of type string')
+    validate_object_type(feature_string, six.string_types, error_prefix='Input feature')
 
     # # We expect the input object tokenizers to be of type python dictionary
-    if not isinstance(tokenizers, dict):
-        logger.error('Input object (tokenizers) is not of type dict')
-        raise AssertionError('Input object (tokenizers) is not of type dict')
+    validate_object_type(tokenizers, dict, error_prefix='Input object (tokenizers)')
 
     # # We expect the input object similarity functions to be of type python
     # dictionary
-    if not isinstance(similarity_functions, dict):
-        logger.error('Input object (similarity_functions) is not of type dict')
-        raise AssertionError('Input object (similarity_functions) is not of '
-                             'type dict')
+    validate_object_type(similarity_functions, dict, error_prefix='Input object (similarity_functions)')
 
     # Initialize a dictionary to have tokenizers/similarity functions
     dict_to_compile = {}
@@ -141,19 +136,14 @@ def _parse_feat_str(feature_string, tokenizers, similarity_functions):
     """
     # Validate the input parameters
     # # We expect the input feature string to be of type string
-    if not isinstance(feature_string, six.string_types):
-        logger.error('Input feature string is not of type string')
-        raise AssertionError('Input feature string is not of type string')
+    validate_object_type(feature_string, six.string_types, error_prefix='Input feature')
 
-    # # We expect the input object (tokenizers) to be of type dict
-    if not isinstance(tokenizers, dict):
-        logger.error('Input tokenizers is not of type dict')
-        raise AssertionError('Input tokenizers is not of type dict')
+    # # We expect the input object tokenizers to be of type python dictionary
+    validate_object_type(tokenizers, dict, error_prefix='Input object (tokenizers)')
 
-    # # We expect the input object (similarity functions) to be of type dict
-    if not isinstance(similarity_functions, dict):
-        logger.error('Input similarity functions is not of type dict')
-        raise AssertionError('Input sim. is not of type dict')
+    # # We expect the input object similarity functions to be of type python
+    # dictionary
+    validate_object_type(similarity_functions, dict, error_prefix='Input object (similarity_functions)')
 
     # We will have to parse the feature string. Specifically we use pyparsing
     #  module for the parsing purposes
@@ -277,27 +267,20 @@ def add_feature(feature_table, feature_name, feature_dict):
     """
     # Validate input parameters
     # # We expect the feature_table to be of pandas DataFrame
-    if not isinstance(feature_table, pd.DataFrame):
-        logger.error('Input feature table is not of type DataFrame')
-        raise AssertionError('Input feature table is not of type DataFrame')
+    validate_object_type(feature_table, pd.DataFrame, 'Input feature table')
 
     # # We expect the feature_name to be of type string
-    if not isinstance(feature_name, six.string_types):
-        logger.error('Input feature name is not of type string')
-        raise AssertionError('Input feature name is not of type string')
+    validate_object_type(feature_name, six.string_types, 'Input feature name')
 
     # # We expect the feature_dict to be of type python dictionary
-    if not isinstance(feature_dict, dict):
-        logger.error('Input feature dictionary is not of type dict')
-        raise AssertionError('Input feature dictionary is not of type dict')
+    validate_object_type(feature_dict, dict, 'Input feature dictionary')
 
     # # We expect the feature table to contain certain columns
-    dummy_feature_table = create_feature_table()
-    if sorted(dummy_feature_table.columns) != sorted(feature_table.columns):
-        logger.error('Input feature table does not have the necessary columns')
-        raise AssertionError(
-            'Input feature table does not have the necessary columns')
-    # Check whether the feature name is already present in the feature table
+    missing_columns = get_missing_column_values(feature_table.columns)
+    if missing_columns:
+        error_msg = "Feature table does not have all required columns\n The following columns are missing: {0}".format(", ".join(missing_columns))
+        raise AssertionError(error_msg)
+
     feature_names = list(feature_table['feature_name'])
     if feature_name in feature_names:
         logger.error('Input feature name is already present in feature table')
@@ -318,6 +301,14 @@ def add_feature(feature_table, feature_name, feature_dict):
         feature_table.loc[len(feature_table)] = feature_dict
     # Finally, return True if everything was fine
     return True
+
+
+def get_missing_column_values(column):
+    required_columns_items = ['feature_name', 'left_attribute', 'right_attribute',
+                    'left_attr_tokenizer',
+                    'right_attr_tokenizer', 'simfunction', 'function',
+                    'function_source', 'is_auto_generated']
+    return [item for item in required_columns_items if item not in column]
 
 
 def create_feature_table():
@@ -376,14 +367,10 @@ def add_blackbox_feature(feature_table, feature_name, feature_function):
     """
     # Validate input parameters
     # # We expect the feature_table to be of type pandas DataFrame
-    if not isinstance(feature_table, pd.DataFrame):
-        logger.error('Input feature table is not of type DataFrame')
-        raise AssertionError('Input feature table is not of type DataFrame')
+    validate_object_type(feature_table, pd.DataFrame, 'Input feature table')
 
     # # We expect the feature_name to be of type string
-    if not isinstance(feature_name, six.string_types):
-        logger.error('Input feature name is not of type string')
-        raise AssertionError('Input feature name is not of type string')
+    validate_object_type(feature_name, six.string_types, 'Input feature name')
 
     # Check if the input feature table contains necessary columns
     dummy_feature_table = create_feature_table()

@@ -3,15 +3,15 @@ from functools import partial
 import pandas as pd
 import six
 try:
-    from PyQt4 import QtGui, QtCore
+    from PyQt5 import QtCore, QtWidgets
 except ImportError:
-    raise ImportError('PyQt4 is not installed. Please install PyQt4 to use '
+    raise ImportError('PyQt5 is not installed. Please install PyQt5 to use '
                       'GUI related functions in py_entitymatching.')
 
 import py_entitymatching as em
 
 
-class DataFrameTableView(QtGui.QTableWidget):
+class DataFrameTableView(QtWidgets.QTableWidget):
     """
     Class implementing DataFrame table view
     """
@@ -21,9 +21,9 @@ class DataFrameTableView(QtGui.QTableWidget):
         # Set the parameters and set up the GUI
         self.controller = controller
         self.dataframe = dataframe
-        em._viewapp = QtGui.QApplication.instance()
+        em._viewapp = QtWidgets.QApplication.instance()
         if em._viewapp is None:
-            em._viewapp = QtGui.QApplication([])
+            em._viewapp = QtWidgets.QApplication([])
         self.setup_gui()
 
     def set_dataframe(self, dataframe):
@@ -54,27 +54,27 @@ class DataFrameTableView(QtGui.QTableWidget):
             for i in range(nrows):
                 for j in range(ncols + 2):
                     if j == 0:
-                        button = QtGui.QPushButton('Show', self)
+                        button = QtWidgets.QPushButton('Show', self)
                         self.setCellWidget(i, j, button)
                         button.clicked.connect(
                             partial(self.controller.handle_show_button, i))
                     elif j == 1:
-                        button = QtGui.QPushButton('Debug', self)
+                        button = QtWidgets.QPushButton('Debug', self)
                         self.setCellWidget(i, j, button)
                         button.clicked.connect(
                             partial(self.controller.handle_debug_button, i))
                     else:
                         if pd.isnull(self.dataframe.iloc[i, j - 2]):
-                            self.setItem(i, j, QtGui.QTableWidgetItem(""))
+                            self.setItem(i, j, QtWidgets.QTableWidgetItem(""))
                         else:
-                            self.setItem(i, j, QtGui.QTableWidgetItem(
+                            self.setItem(i, j, QtWidgets.QTableWidgetItem(
                                 str(self.dataframe.iloc[i, j - 2])
                             ))
                         self.item(i, j).setFlags(
                             QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
 
 
-class DataFrameTableViewWithLabel(QtGui.QWidget):
+class DataFrameTableViewWithLabel(QtWidgets.QWidget):
     """
     Class implementing DataFrame table view with the label
     """
@@ -87,9 +87,9 @@ class DataFrameTableViewWithLabel(QtGui.QWidget):
         self.controller = controller
         self.tbl_obj = None
         self.label_obj = None
-        em._viewapp = QtGui.QApplication.instance()
+        em._viewapp = QtWidgets.QApplication.instance()
         if em._viewapp is None:
-            em._viewapp = QtGui.QApplication([])
+            em._viewapp = QtWidgets.QApplication([])
         self.setup_gui()
 
     def set_dataframe(self, data_frame):
@@ -102,18 +102,18 @@ class DataFrameTableViewWithLabel(QtGui.QWidget):
 
     def setup_gui(self):
         # Setup the GUI
-        label = QtGui.QLabel(self.label)
+        label = QtWidgets.QLabel(self.label)
         tbl_view = DataFrameTableView(self.controller, self.dataframe)
         self.label_obj = label
         self.tbl_obj = tbl_view
-        layout = QtGui.QVBoxLayout()
+        layout = QtWidgets.QVBoxLayout()
         layout.addWidget(label)
         layout.addWidget(tbl_view)
         # Set the layout
         self.setLayout(layout)
 
 
-class DictTableViewWithLabel(QtGui.QWidget):
+class DictTableViewWithLabel(QtWidgets.QWidget):
     """
     Class implementing Dictionary table view with label
     """
@@ -126,9 +126,9 @@ class DictTableViewWithLabel(QtGui.QWidget):
         self.controller = controller
         self.combo_box = combo_box
 
-        em._viewapp = QtGui.QApplication.instance()
+        em._viewapp = QtWidgets.QApplication.instance()
         if em._viewapp is None:
-            em._viewapp = QtGui.QApplication([])
+            em._viewapp = QtWidgets.QApplication([])
         app = em._viewapp
         # Set up the GUI
         self.setup_gui()
@@ -136,11 +136,11 @@ class DictTableViewWithLabel(QtGui.QWidget):
     def setup_gui(self):
         # Set up the GUI
         # Set up the label
-        label = QtGui.QLabel(self.label)
+        label = QtWidgets.QLabel(self.label)
         # Create a dict table view
         dict_view = DictTableView(self.controller, self.dictionary,
                                   self.combo_box)
-        layout = QtGui.QVBoxLayout()
+        layout = QtWidgets.QVBoxLayout()
         # Set the label
         layout.addWidget(label)
         layout.addWidget(dict_view)
@@ -148,7 +148,7 @@ class DictTableViewWithLabel(QtGui.QWidget):
         self.setLayout(layout)
 
 
-class DictTableView(QtGui.QTableWidget):
+class DictTableView(QtWidgets.QTableWidget):
     """
     Class implementing the Dictionary table view
     """
@@ -159,9 +159,9 @@ class DictTableView(QtGui.QTableWidget):
         self.controller = controller
         self.dictionary = dictionary
         self.combo_box = combo_box
-        em._viewapp = QtGui.QApplication.instance()
+        em._viewapp = QtWidgets.QApplication.instance()
         if em._viewapp is None:
-            em._viewapp = QtGui.QApplication([])
+            em._viewapp = QtWidgets.QApplication([])
         self.setup_gui()
 
     def set_dictionary(self, dictionary):
@@ -193,13 +193,13 @@ class DictTableView(QtGui.QTableWidget):
         idx = 0
 
         for k, v in six.iteritems(self.dictionary):
-            self.setItem(idx, 0, QtGui.QTableWidgetItem(str(v)))
+            self.setItem(idx, 0, QtWidgets.QTableWidgetItem(str(v)))
             idx += 1
         if self.combo_box is not None:
             self.setCellWidget(idx, 0, self.combo_box)
 
 
-class TreeView(QtGui.QTreeWidget):
+class TreeView(QtWidgets.QTreeWidget):
     """
     Class implementing the Tree view
     """
@@ -210,26 +210,26 @@ class TreeView(QtGui.QTreeWidget):
         self.controller = controller
         self.debug_result = debug_result
         self.type = type
-        em._viewapp = QtGui.QApplication.instance()
+        em._viewapp = QtWidgets.QApplication.instance()
         if em._viewapp is None:
-            em._viewapp = QtGui.QApplication([])
+            em._viewapp = QtWidgets.QApplication([])
         app = em._viewapp
         self.setup_gui()
 
     def setup_gui(self):
         # Set up the GUI, set the header appropriately
         if self.type == 'dt':
-            header = QtGui.QTreeWidgetItem(["Debug-Tree", "Status", "Predicate",
+            header = QtWidgets.QTreeWidgetItem(["Debug-Tree", "Status", "Predicate",
                                             "Feature value"])
             self.setHeaderItem(header)
             root = self.get_treewidget_items_for_dt()
         elif self.type == 'rf':
-            header = QtGui.QTreeWidgetItem(["Debug-Tree", "Status", "Predicate",
+            header = QtWidgets.QTreeWidgetItem(["Debug-Tree", "Status", "Predicate",
                                             "Feature value"])
             self.setHeaderItem(header)
             root = self.get_treewidget_items_for_rf()
         elif self.type == 'rm':
-            header = QtGui.QTreeWidgetItem(["Debug-Rules", "Status",
+            header = QtWidgets.QTreeWidgetItem(["Debug-Rules", "Status",
                                             "Conjunct", "Feature value"])
             self.setHeaderItem(header)
             root = self.get_treewidget_items_for_rm()
@@ -244,12 +244,12 @@ class TreeView(QtGui.QTreeWidget):
         # matcher.
         overall_status = self.debug_result[0]
         node_list = self.debug_result[1]
-        root = QtGui.QTreeWidgetItem(self, ['Nodes', str(overall_status), '',
+        root = QtWidgets.QTreeWidgetItem(self, ['Nodes', str(overall_status), '',
                                             ''])
         idx = 0
         for ls in node_list:
-            temp = QtGui.QTreeWidgetItem(root, ['', '', '', ''])
-            temp = QtGui.QTreeWidgetItem(root, ['Node '
+            temp = QtWidgets.QTreeWidgetItem(root, ['', '', '', ''])
+            temp = QtWidgets.QTreeWidgetItem(root, ['Node '
                                                 + str(idx + 1), str(ls[0]),
                                                 str(ls[1]), str(ls[2])])
 
@@ -265,19 +265,19 @@ class TreeView(QtGui.QTreeWidget):
 
         overall_status = self.debug_result[0]
         consol_node_list = self.debug_result[1]
-        root = QtGui.QTreeWidgetItem(self,
+        root = QtWidgets.QTreeWidgetItem(self,
                                      ['Trees(' + str(len(consol_node_list))
                                       + ')', str(overall_status), '', ''])
         tree_idx = 1
         for node_list in consol_node_list:
-            sub_root = QtGui.QTreeWidgetItem(root, ['', '', '', ''])
-            sub_root = QtGui.QTreeWidgetItem(root, ['Tree ' + str(tree_idx),
+            sub_root = QtWidgets.QTreeWidgetItem(root, ['', '', '', ''])
+            sub_root = QtWidgets.QTreeWidgetItem(root, ['Tree ' + str(tree_idx),
                                                     str(node_list[0]), '', ''])
 
             node_idx = 1
             for ls in node_list[1]:
-                temp = QtGui.QTreeWidgetItem(sub_root, ['', '', '', ''])
-                temp = QtGui.QTreeWidgetItem(sub_root, ['Node ' + str(node_idx),
+                temp = QtWidgets.QTreeWidgetItem(sub_root, ['', '', '', ''])
+                temp = QtWidgets.QTreeWidgetItem(sub_root, ['Node ' + str(node_idx),
                                                         str(ls[0]), str(ls[1]),
                                                         str(ls[2])])
                 node_idx += 1
@@ -293,19 +293,19 @@ class TreeView(QtGui.QTreeWidget):
 
         overall_status = self.debug_result[0]
         consol_rule_list = self.debug_result[1]
-        root = QtGui.QTreeWidgetItem(self, ['Rules(' + str(
+        root = QtWidgets.QTreeWidgetItem(self, ['Rules(' + str(
             len(consol_rule_list)) + ')', str(overall_status),
                                             '', ''])
         rule_idx = 1
         for rule_list in consol_rule_list:
-            sub_root = QtGui.QTreeWidgetItem(root, ['', '', '', ''])
-            sub_root = QtGui.QTreeWidgetItem(root, ['Rule ' + str(rule_idx),
+            sub_root = QtWidgets.QTreeWidgetItem(root, ['', '', '', ''])
+            sub_root = QtWidgets.QTreeWidgetItem(root, ['Rule ' + str(rule_idx),
                                                     str(rule_list[0]), '', ''])
 
             node_idx = 1
             for ls in rule_list[1]:
-                temp = QtGui.QTreeWidgetItem(sub_root, ['', '', '', ''])
-                temp = QtGui.QTreeWidgetItem(sub_root, ['Conjunct ' +
+                temp = QtWidgets.QTreeWidgetItem(sub_root, ['', '', '', ''])
+                temp = QtWidgets.QTreeWidgetItem(sub_root, ['Conjunct ' +
                                                         str(node_idx),
                                                         str(ls[0]), str(ls[1]),
                                                         str(ls[2])])
@@ -314,7 +314,7 @@ class TreeView(QtGui.QTreeWidget):
         return root
 
 
-class TreeViewWithLabel(QtGui.QWidget):
+class TreeViewWithLabel(QtWidgets.QWidget):
     """
     Class implementing Tree view with label
     """
@@ -326,18 +326,18 @@ class TreeViewWithLabel(QtGui.QWidget):
         self.debug_result = debug_result
         self.label = label
         self.controller = controller
-        em._viewapp = QtGui.QApplication.instance()
+        em._viewapp = QtWidgets.QApplication.instance()
         if em._viewapp is None:
-            em._viewapp = QtGui.QApplication([])
+            em._viewapp = QtWidgets.QApplication([])
 
         # Set up the GUI
         self.setup_gui()
 
     def setup_gui(self):
-        label = QtGui.QLabel(self.label)
+        label = QtWidgets.QLabel(self.label)
         tree_view = TreeView(self.controller, self.type, self.debug_result)
         # Set up the GUI with tree and label
-        layout = QtGui.QVBoxLayout()
+        layout = QtWidgets.QVBoxLayout()
         layout.addWidget(label)
         layout.addWidget(tree_view)
         # Set the layout

@@ -9,8 +9,8 @@ from py_entitymatching.io.parsers import read_csv_metadata
 from py_entitymatching.feature.simfunctions import get_sim_funs_for_matching
 from py_entitymatching.feature.tokenizers import get_tokenizers_for_matching
 from py_entitymatching.feature.autofeaturegen import get_features_for_matching
-from py_entitymatching.feature.addfeatures import add_feature, add_blackbox_feature, get_feature_fn, _parse_feat_str, create_feature_table
-
+from py_entitymatching.feature.addfeatures import add_feature, add_blackbox_feature, get_feature_fn, _parse_feat_str, \
+    create_feature_table
 
 import py_entitymatching.catalog.catalog_manager as cm
 
@@ -133,14 +133,23 @@ class AddFeaturesTestCases(unittest.TestCase):
     def test_add_feature_invalid_feature_dict_type(self):
         add_feature(pd.DataFrame(), "", None)
 
-    @raises(AssertionError)
     def test_add_feature_invalid_df_columns(self):
         A = read_csv_metadata(path_a)
         B = read_csv_metadata(path_b, key='ID')
 
         feature_string = "exact_match(ltuple['zipcode'], rtuple['zipcode'])"
         f_dict = get_feature_fn(feature_string, get_tokenizers_for_matching(), get_sim_funs_for_matching())
-        add_feature(pd.DataFrame(), 'test', f_dict)
+
+        with self.assertRaises(AssertionError) as ctx:
+            add_feature(pd.DataFrame(), 'test', f_dict)
+
+        actual = str(ctx.exception)
+        print(actual)
+        expected = 'Feature table does not have all required columns\n ' \
+                   'The following columns are missing: feature_name, left_attribute, right_attribute, ' \
+                   'left_attr_tokenizer,' \
+                   ' right_attr_tokenizer, simfunction, function, function_source, is_auto_generated'
+        self.assertEqual(actual, expected)
 
     @raises(AssertionError)
     def test_add_feature_name_already_present(self):

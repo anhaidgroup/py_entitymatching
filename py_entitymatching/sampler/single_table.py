@@ -9,6 +9,7 @@ import six
 
 import py_entitymatching.catalog.catalog_manager as cm
 import py_entitymatching.utils.catalog_helper as ch
+from py_entitymatching.utils.validation_helper import validate_object_type
 
 logger = logging.getLogger(__name__)
 
@@ -68,9 +69,7 @@ def sample_table(table, sample_size, replace=False, verbose=False):
     # Validate input parameters.
 
     # # The input DataFrame is expected to be of type pandas DataFrame.
-    if not isinstance(table, pd.DataFrame):
-        logger.error('Input table is not of type pandas dataframe')
-        raise AssertionError('Input table is not of type pandas dataframe')
+    validate_object_type(table, pd.DataFrame)
 
     # # There should at least not-zero rows to sample from
     if len(table) == 0:

@@ -818,13 +818,13 @@ class RuleBasedBlocker(Blocker):
                 c_df = join_fn(l_df, r_df, l_key, r_key, l_attr, r_attr,
                                float(th), comp_op, True, l_output_attrs,
                                r_output_attrs, l_output_prefix,
-                               r_output_prefix, False, n_jobs)
+                               r_output_prefix, False, n_jobs, show_progress)
             else:
                 c_df = join_fn(l_df, r_df, l_key, r_key, l_attr, r_attr,
                                tokenizer, float(th), comp_op, True, True,
                                l_output_attrs, r_output_attrs,
                                l_output_prefix,
-                               r_output_prefix, False, n_jobs)
+                               r_output_prefix, False, n_jobs, show_progress)
             if candset is not None:
                 # union the candset of this conjunct with the existing candset
                 candset = pd.concat([candset, c_df]).drop_duplicates(
