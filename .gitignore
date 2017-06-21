@@ -65,15 +65,16 @@ scratch/
 .idea/
 # Created by .ignore support plugin (hsz.mobi)
 
-magellan/datasets/msd_reduced.csv
-magellan/tests/test_datasets/sandbox/*
-magellan/datasets/example_datasets
+py_entitymatching/datasets/msd_reduced.csv
+py_entitymatching/tests/test_datasets/sandbox/*
+py_entitymatching/datasets/example_datasets
 cover/
 results/
 html/
 
 *.dot
 *.png
+*.pkl
 
 notebooks/how-to-guides/bdata/
 garage/
