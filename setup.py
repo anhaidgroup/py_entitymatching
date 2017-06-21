@@ -65,7 +65,7 @@ if __name__ == "__main__":
         ],
         packages=packages,
         install_requires=[
-            'PyPrind == 2.9.8',
+            'PyPrind',
             'py_stringsimjoin',
             # dependencies such as py_stringmatching, joblib, pyprind
             'cloudpickle >= 0.2.1',
