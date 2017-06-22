@@ -5,14 +5,14 @@ import logging
 
 import pandas as pd
 import six
-from IPython.display import display
 from py_entitymatching.utils.validation_helper import validate_object_type
+
+from IPython.display import display
 
 import py_entitymatching as em
 import py_entitymatching.feature.attributeutils as au
 import py_entitymatching.feature.simfunctions as sim
 import py_entitymatching.feature.tokenizers as tok
-
 
 logger = logging.getLogger(__name__)
 
@@ -749,18 +749,19 @@ def validate_attr_types(l_attr_types, r_attr_types, attr_corres, display_type):
         # display the pandas dataframe
         display(corres_feat_df)
 
-    # Ask user if the inferred types are satisfactory
-    response = raw_input('Do you want to proceed? (y/n):')
-
-    if response == 'y':
-        return corres_feat_df
-    else:
-        return None
+    # Ask user if the inferred types are satisfactory. Repeat until satisfactory answer is reached
+    while True:
+        response = six.moves.input('Do you want to proceed? (y/n):')
+        if response == 'y':
+            return corres_feat_df
+        elif response == 'n':
+            return None
+        else:
+            print("You must answer with either 'y' or 'n'")
 
 
 # get look up table to generate readable type names
 def _get_type_name_lkp_tbl():
-
     # Initialize a lookup table
     lookup_table = dict()
 
@@ -826,7 +827,7 @@ def _get_readable_feature_name(feature):
 
     readable_feature = []
 
-    if isinstance(feature, (str, unicode)):
+    if isinstance(feature, six.string_types):
         # If feature is just a string, return the readable name
         if feature in lookup_table:
             return lookup_table[feature]
