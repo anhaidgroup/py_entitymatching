@@ -5,12 +5,14 @@ import logging
 
 import pandas as pd
 import six
+from IPython.display import display
 from py_entitymatching.utils.validation_helper import validate_object_type
 
 import py_entitymatching as em
 import py_entitymatching.feature.attributeutils as au
 import py_entitymatching.feature.simfunctions as sim
 import py_entitymatching.feature.tokenizers as tok
+
 
 logger = logging.getLogger(__name__)
 
