@@ -2,7 +2,6 @@ import os
 from nose.tools import *
 import unittest
 import pandas as pd
-from six.moves import builtins
 import six
 from contextlib import contextmanager
 
