@@ -73,7 +73,7 @@ class RuleBasedBlockerTestCases(unittest.TestCase):
         em.set_key(self.A, 'ID')
         self.B = em.read_csv_metadata(path_for_B)
         em.set_key(self.B, 'ID')
-        self.feature_table = em.get_features_for_blocking(self.A, self.B)
+        self.feature_table = em.get_features_for_blocking(self.A, self.B, validate_inferred_attr_types=False)
         self.rb = em.RuleBasedBlocker()
         
     def tearDown(self):
@@ -542,7 +542,7 @@ class RuleBasedBlockerMulticoreTestCases(unittest.TestCase):
         em.set_key(self.A, 'ID')
         self.B = em.read_csv_metadata(path_for_B)
         em.set_key(self.B, 'ID')
-        self.feature_table = em.get_features_for_blocking(self.A, self.B)
+        self.feature_table = em.get_features_for_blocking(self.A, self.B, validate_inferred_attr_types=False)
         self.rb = em.RuleBasedBlocker()
         
     def tearDown(self):

@@ -29,7 +29,7 @@ class AddFeaturesTestCases(unittest.TestCase):
     def test_add_features_valid_1(self):
         A = read_csv_metadata(path_a)
         B = read_csv_metadata(path_b, key='ID')
-        feature_table = get_features_for_matching(A, B)
+        feature_table = get_features_for_matching(A, B, validate_inferred_attr_types=False)
         len1 = len(feature_table)
         feature_string = "exact_match(ltuple['zipcode'], rtuple['zipcode'])"
         f_dict = get_feature_fn(feature_string, get_tokenizers_for_matching(), get_sim_funs_for_matching())
@@ -42,7 +42,7 @@ class AddFeaturesTestCases(unittest.TestCase):
     def test_feature_fn_valid_nosim_tok(self):
         A = read_csv_metadata(path_a)
         B = read_csv_metadata(path_b, key='ID')
-        feature_table = get_features_for_matching(A, B)
+        feature_table = get_features_for_matching(A, B, validate_inferred_attr_types=False)
         len1 = len(feature_table)
         feature_string = "exact_match(ltuple['zipcode'], rtuple['zipcode'])"
         f_dict = get_feature_fn(feature_string, dict(), dict())
@@ -173,7 +173,7 @@ class AddBlackBoxFeatureTestCases(unittest.TestCase):
     def test_add_bb_feature_valid_1(self):
         A = read_csv_metadata(path_a)
         B = read_csv_metadata(path_b, key='ID')
-        feature_table = get_features_for_matching(A, B)
+        feature_table = get_features_for_matching(A, B, validate_inferred_attr_types=False)
         def bb_fn(ltuple, rtuple):
             return 1.0
         len1 = len(feature_table)
