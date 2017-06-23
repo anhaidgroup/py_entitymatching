@@ -4,6 +4,7 @@ import unittest
 import pandas as pd
 from six.moves import builtins
 import six
+from contextlib import contextmanager
 
 from py_entitymatching.utils.generic_helper import get_install_path
 from py_entitymatching.io.parsers import read_csv_metadata
@@ -21,6 +22,15 @@ bc_datasets_path = os.sep.join([get_install_path(), 'tests', 'test_datasets', 'b
 path_a = os.sep.join([datasets_path, 'A.csv'])
 path_b = os.sep.join([datasets_path, 'B.csv'])
 path_c = os.sep.join([datasets_path, 'C.csv'])
+
+# proxy for user input. Since we use six, the way to proxy the input is to use the moves module.
+# Specifically, for input we had to replace input with a function that will return the desired output
+@contextmanager
+def mockInput(mock):
+    original_input = six.moves.input
+    six.moves.input = lambda _: mock
+    yield
+    six.moves.input = original_input
 
 class AutoFeatureGenerationTestCases(unittest.TestCase):
     def setUp(self):
@@ -253,14 +263,9 @@ class AutoFeatureGenerationTestCases(unittest.TestCase):
         r_attr_types = au.get_attr_types(B)
         attr_corres = au.get_attr_corres(A, B)
 
-        # proxy for user input. Since we use six the way to proxy the input we use the moves module.
-        # Specifically, for input we had to replace input with a function that will return the desired output
-        original_input = six.moves.input
-        six.moves.input = lambda _: 'n'
-        status = afg.validate_attr_types(l_attr_types, r_attr_types, attr_corres, 't')
-        six.moves.input = original_input
-
-        self.assertEqual(status is None, True)
+        with mockInput('n'):
+            status = afg.validate_attr_types(l_attr_types, r_attr_types, attr_corres, 't')
+            self.assertEqual(status is None, True)
 
     def test_validate_attr_types_proceed_yes(self):
         A = read_csv_metadata(path_a)
@@ -269,14 +274,9 @@ class AutoFeatureGenerationTestCases(unittest.TestCase):
         r_attr_types = au.get_attr_types(B)
         attr_corres = au.get_attr_corres(A, B)
 
-        # proxy for user input. Since we use six the way to proxy the input we use the moves module.
-        # Specifically, for input we had to replace input with a function that will return the desired output
-        original_input = six.moves.input
-        six.moves.input = lambda _: 'y'
-        status = afg.validate_attr_types(l_attr_types, r_attr_types, attr_corres, display_type='t')
-        six.moves.input = original_input
-
-        self.assertEqual(status is None, False)
+        with mockInput('y'):
+            status = afg.validate_attr_types(l_attr_types, r_attr_types, attr_corres, 't')
+            self.assertEqual(status is None, False)
 
     @raises(AssertionError)
     def test_validate_attr_types_invalid_l_types(self):
@@ -312,10 +312,8 @@ class AutoFeatureGenerationTestCases(unittest.TestCase):
         r_attr_types = au.get_attr_types(B)
         attr_corres = au.get_attr_corres(A, B)
 
-        original_input = six.moves.input
-        six.moves.input = lambda _: 'y'
-        validate_table = afg.validate_attr_types(l_attr_types, r_attr_types, attr_corres, display_type='t')
-        builtins.input = original_input
+        with mockInput('y'):
+            validate_table = afg.validate_attr_types(l_attr_types, r_attr_types, attr_corres, display_type='t')
 
         self.assertEqual(isinstance(validate_table, pd.DataFrame), True)
 
@@ -350,10 +348,8 @@ class AutoFeatureGenerationTestCases(unittest.TestCase):
         A = read_csv_metadata(path_a)
         B = read_csv_metadata(path_b, key='ID')
 
-        original_input = six.moves.input
-        six.moves.input = lambda _: 'y'
-        feat_table = afg.get_features_for_blocking(A, B, validate_inferred_attr_types=True)
-        six.moves.input = original_input
+        with mockInput('y'):
+            feat_table = afg.get_features_for_blocking(A, B, validate_inferred_attr_types=True)
 
         self.assertEqual(isinstance(feat_table, pd.DataFrame), True)
         functions = feat_table['function']
@@ -365,10 +361,8 @@ class AutoFeatureGenerationTestCases(unittest.TestCase):
         A = read_csv_metadata(path_a)
         B = read_csv_metadata(path_b, key='ID')
 
-        original_input = six.moves.input
-        six.moves.input = lambda _: 'y'
-        feat_table = afg.get_features_for_matching(A, B, validate_inferred_attr_types=True)
-        six.moves.input = original_input
+        with mockInput('y'):
+            feat_table = afg.get_features_for_matching(A, B, validate_inferred_attr_types=True)
 
         self.assertEqual(isinstance(feat_table, pd.DataFrame), True)
         functions = feat_table['function']
@@ -380,10 +374,8 @@ class AutoFeatureGenerationTestCases(unittest.TestCase):
         A = read_csv_metadata(path_a)
         B = read_csv_metadata(path_b, key='ID')
 
-        original_input = six.moves.input
-        six.moves.input = lambda _: 'n'
-        feat_table = afg.get_features_for_blocking(A, B, validate_inferred_attr_types=True)
-        six.moves.input = original_input
+        with mockInput('n'):
+            feat_table = afg.get_features_for_blocking(A, B, validate_inferred_attr_types=True)
 
         self.assertEqual(feat_table, None)
 
@@ -391,9 +383,7 @@ class AutoFeatureGenerationTestCases(unittest.TestCase):
         A = read_csv_metadata(path_a)
         B = read_csv_metadata(path_b, key='ID')
 
-        original_input = six.moves.input
-        six.moves.input = lambda _: 'n'
-        feat_table = afg.get_features_for_matching(A, B, validate_inferred_attr_types=True)
-        six.moves.input = original_input
+        with mockInput('n'):
+            feat_table = afg.get_features_for_matching(A, B, validate_inferred_attr_types=True)
 
         self.assertEqual(feat_table, None)
