@@ -460,7 +460,8 @@ class OverlapBlocker(Blocker):
                                                   l_df, r_df, l_key, r_key,
                                                   l_overlap_attr,
                                                   r_overlap_attr,
-                                                  n_jobs)
+                                                  n_jobs,
+                                                  show_progress=show_progress)
         # update catalog
         cm.set_candset_properties(out_table, key, fk_ltable, fk_rtable, ltable,
                                   rtable)
