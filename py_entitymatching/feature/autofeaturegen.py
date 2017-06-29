@@ -690,7 +690,9 @@ def validate_attr_types(l_attr_types, r_attr_types, attr_corres, display_type):
     corres_features_list = []
 
     print('The table shows the corresponding attributes along with their respective '
-          'types. Please confirm that the information  has been correctly inferred.')
+          'types. Please confirm that the information  has been correctly inferred. '
+          'If you would like to skip this validation process in the future, please set '
+          'the flag    validate_inferred_attr_types equal to false.')
     if display_type == 's':
         print('')
 
@@ -755,6 +757,8 @@ def validate_attr_types(l_attr_types, r_attr_types, attr_corres, display_type):
         if response == 'y':
             return corres_feat_df
         elif response == 'n':
+            print('\nIf the attribute correspondences or types have been inferred incorrectly, use the get_features()'
+                  ' function with your  own correspondences and attribute types to get the correct features for your data')
             return None
         else:
             print("You must answer with either 'y' or 'n'")
