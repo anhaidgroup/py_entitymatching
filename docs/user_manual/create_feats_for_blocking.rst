@@ -257,6 +257,64 @@ you are allowed to define arbitrary complex expression involving function names 
     >>> em.add_feature(block_f, 'full_address_address_jac_qgm3_qgm3', r)
 
 
+You can also create your own similarity functions and tokenizers for your custom features.
+For example, you can create a similarity function that changes all strings to lowercase
+before checking if they are equivalent.
+
+    >>> # This similarity function converts the two strings to lowercase before checking if they are an exact match
+    >>> def match_lowercase(l_attr, r_attr):
+    >>>     l_attr = l_attr.lower()
+    >>>     r_attr = r_attr.lower()
+    >>>     if l_attr == r_attr:
+    >>>         return 1
+    >>>     else:
+    >>>         return 0
+
+You can then add a feature declarativly with your new similarity function.
+
+    >>> # The new similarity function is added to block_s and then a new feature is created
+    >>> block_t = em.get_tokenizers_for_blocking()
+    >>> block_s = em.get_sim_funs_for_blocking()
+    >>> block_s['match_lowercase'] = match_lowercase
+    >>> r = em.get_feature_fn('match_lowercase(ltuple["name"], rtuple["name"])', block_t, block_s)
+    >>> em.add_feature(block_f, 'name_name_match_lowercase', r)
+
+It is also possible to create features with your own similarity functions that require
+tokenizers. The next example shows how to create a custom tokenizer that returns only
+the first and last words of a string.
+
+    >>> # This custom tokenizer returns the first and last words of a string
+    >>> def first_last_tok(attr):
+    >>>     all_toks = attr.split(" ")
+    >>>     toks = [all_toks[0], all_toks[len(all_toks) - 1]]
+    >>>     return toks
+
+Next, a similarity function that can utilize the new tokenizer is created. This example
+shows how to create a similarity function that raises the score if the first words match
+and raises the score by one if the second words match.
+
+    >>> # This similarity function compares two tokens from each set.
+    >>> # Greater weight is placed on the equality of the first token.
+    >>> def first_last_sim(l_attr, r_attr):
+    >>>     score = 0
+    >>>     if l_attr[0] == r_attr[0]:
+    >>>         score += 2
+    >>>     if l_attr[1] == r_attr[1]:
+    >>>         score +=1
+    >>>     return score
+
+Finally, with the tokenizer and similarity functions defined, the new feature can be
+created and added.
+
+    >>> # The new tokenizer is added to block_t and the new similarity function is added to block_s
+    >>> # then a new feature is created
+    >>> block_t = em.get_tokenizers_for_blocking()
+    >>> block_t['first_last_tok'] = first_last_tok
+    >>> block_s = em.get_sim_funs_for_blocking()
+    >>> block_s['first_last_sim'] = first_last_sim
+    >>> r = em.get_feature_fn('first_last_sim(first_last_tok(ltuple["name"]), first_last_tok(rtuple["name"]))',
+    >>>                  block_t, block_s)
+    >>> em.add_feature(block_f, 'name_name_fls_flt_flt', r)
 
 Please look at the API reference of
 :py:meth:`~py_entitymatching.get_feature_fn` and :py:meth:`~py_entitymatching.add_feature`
