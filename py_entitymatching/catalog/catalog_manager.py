@@ -1169,7 +1169,6 @@ def _validate_metadata_for_table(table, key, output_string, lgr, verbose):
 
     # Check the key column is present in the table
     if not ch.check_attrs_present(table, key):
-        logger.error('Input key ( %s ) not in the DataFrame' % key)
         raise KeyError('Input key ( %s ) not in the DataFrame' % key)
 
     # Validate the key
@@ -1179,8 +1178,6 @@ def _validate_metadata_for_table(table, key, output_string, lgr, verbose):
     validate_object_type(key, six.string_types, error_prefix='Key attribute')
 
     if not ch.is_key_attribute(table, key, verbose):
-        logger.error('Attribute %s in the %s table does not '
-                     'qualify to be the key' % (str(key), output_string))
         raise AssertionError('Attribute %s in the %s table does not '
                              'qualify to be the key' % (
                                  str(key), output_string))
@@ -1203,21 +1200,16 @@ def _validate_metadata_for_candset(candset, key, foreign_key_ltable,
 
     # Check if the key column is present in the candset
     if not ch.check_attrs_present(candset, key):
-        logger.error('Input key ( %s ) not in the DataFrame' % key)
         raise KeyError('Input key ( %s ) not in the DataFrame' % key)
 
     # Check if the foreign key ltable column is present in the candset
     if not ch.check_attrs_present(candset, foreign_key_ltable):
-        logger.error('Input foreign_key_ltable ( %s ) not in the DataFrame'
-                     % foreign_key_ltable)
         raise KeyError(
             'Input foreign_key_ltable ( %s ) not in the DataFrame'
             % foreign_key_ltable)
 
     # Check if the foreign key rtable column is present in the candset
     if not ch.check_attrs_present(candset, foreign_key_rtable):
-        logger.error(
-            'Input fk_rtable ( %s ) not in the DataFrame' % foreign_key_rtable)
         raise KeyError(
             'Input fk_rtable ( %s ) not in the DataFrame' % foreign_key_rtable)
 
@@ -1229,12 +1221,10 @@ def _validate_metadata_for_candset(candset, key, foreign_key_ltable,
 
     # We expect the ltable key to be present in the ltable
     if not ch.check_attrs_present(ltable, ltable_key):
-        logger.error('ltable key ( %s ) not in ltable' % ltable_key)
         raise KeyError('ltable key ( %s ) not in ltable' % ltable_key)
 
     # We expect the rtable key to be present in the rtable
     if not ch.check_attrs_present(rtable, rtable_key):
-        logger.error('rtable key ( %s ) not in rtable' % rtable_key)
         raise KeyError('rtable key ( %s ) not in rtable' % rtable_key)
 
     # First validate metadata for the candidate set (as a table)
@@ -1245,16 +1235,12 @@ def _validate_metadata_for_candset(candset, key, foreign_key_ltable,
     # Second check foreign key constraints
     if not ch.check_fk_constraint(candset, foreign_key_ltable,
                                   ltable, ltable_key):
-        logger.error('Candset does not satisfy foreign key constraint with '
-                     'the left table')
         raise AssertionError(
             'Candset does not satisfy foreign key constraint with '
             'the left table')
 
     if not ch.check_fk_constraint(candset, foreign_key_rtable,
                                   rtable, rtable_key):
-        logger.error('Candset does not satisfy foreign key constraint with '
-                     'the right table')
         raise AssertionError(
             'Candset does not satisfy foreign key constraint with '
             'the right table')
