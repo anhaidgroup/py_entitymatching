@@ -36,7 +36,7 @@ similar to `vis_debug_dt`, except the debug window would list a set of trees. Yo
 expand each tree to see the path taken by the features in that tree.
 
 Please refer to the API reference of :py:meth:`~py_entitymatching.vis_debug_dt` and
-:py:meth:`~py_entitymatching.vis_debug_dt` for more details.
+:py:meth:`~py_entitymatching.vis_debug_rf` for more details.
 
 
 If you want to debug a Decision Tree matcher or Random Forest matcher using GUI,

@@ -269,7 +269,7 @@ def get_features_for_blocking(ltable, rtable, validate_inferred_attr_types=True,
                                  tok_funcs, sim_funcs)
 
     # Export important variables to global name space
-    em._match_t = tok_funcs
+    em._block_t = tok_funcs
     em._block_s = sim_funcs
     em._atypes1 = attr_types_ltable
     em._atypes2 = attr_types_rtable

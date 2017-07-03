@@ -64,6 +64,19 @@ def debug_blocker(candset, ltable, rtable, output_size=200,
             not in the correct format (a list of tuples).
         AssertionError: If the attribute correspondence (`attr_corres`)
             cannot be built correctly.
+
+    Examples:
+        >>> import py_entitymatching as em
+        >>> ob = em.OverlapBlocker()
+        >>> C = ob.block_tables(A, B, l_overlap_attr='title', r_overlap_attr='title', overlap_size=3)
+        >>> corres = [('ID','ssn'), ('name', 'ename'), ('address', 'location'),('zipcode', 'zipcode')]
+        >>> D = em.debug_blocker(C, A, B, attr_corres=corres)
+
+        >>> import py_entitymatching as em
+        >>> ob = em.OverlapBlocker()
+        >>> C = ob.block_tables(A, B, l_overlap_attr='name', r_overlap_attr='name', overlap_size=3)
+        >>> D = em.debug_blocker(C, A, B, output_size=150)
+
     """
     # Check input types.
     _validate_types(ltable, rtable, candset, output_size,

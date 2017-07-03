@@ -41,7 +41,7 @@ An example of using `debug_blocker` is shown below:
 
     >>> import py_entitymatching as em
     >>> ob = em.OverlapBlocker()
-    >>> C = ob.block_tables(A, B, l_block_attr=title, r_block_attr=title, overlap_size=3)
+    >>> C = ob.block_tables(A, B, l_overlap_attr='title', r_overlap_attr='title', overlap_size=3)
     >>> corres = [('ID','ssn'), ('name', 'ename'), ('address', 'location'),('zipcode', 'zipcode')]
     >>> D = em.debug_blocker(C, A, B, attr_corres=corres)
 

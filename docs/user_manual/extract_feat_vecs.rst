@@ -8,7 +8,7 @@ labeled sample to feature vectors using the features created
 
 An example of using `extract_feature_vecs` is shown below:
 
-    >>> H = em.extract_feature_vecs(G, features=match_f, attrs_before=['title'], attrs_after=['gold_labels'])
+    >>> H = em.extract_feature_vecs(G, feature_table=match_f, attrs_before=['title'], attrs_after=['gold_labels'])
 
 Conceptually, the command takes the labeled data (`G`), applies the feature functions (in `match_f`)
 to each tuple in G to create a Dataframe, adds the `attrs_before` and `attrs_after`

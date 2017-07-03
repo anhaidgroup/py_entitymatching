@@ -183,13 +183,13 @@ class OverlapBlocker(Blocker):
             >>> B = em.read_csv_metadata('path_to_csv_dir/table_B.csv', key='ID')
             >>> ob = em.OverlapBlocker()
             # Use word-level tokenizer
-            >>> C1 = ab.block_tables(A, B, 'address', 'address', l_output_attrs=['name'], r_output_attrs=['name'], word_level=True, overlap_size=1)
+            >>> C1 = ob.block_tables(A, B, 'address', 'address', l_output_attrs=['name'], r_output_attrs=['name'], word_level=True, overlap_size=1)
             # Use q-gram tokenizer
-            >>> C2 = ab.block_tables(A, B, 'address', 'address', l_output_attrs=['name'], r_output_attrs=['name'], word_level=False, q_val=2)
+            >>> C2 = ob.block_tables(A, B, 'address', 'address', l_output_attrs=['name'], r_output_attrs=['name'], word_level=False, q_val=2)
             # Include all possible missing values
-            >>> C3 = ab.block_tables(A, B, 'address', 'address', l_output_attrs=['name'], r_output_attrs=['name'], allow_missing=True)
+            >>> C3 = ob.block_tables(A, B, 'address', 'address', l_output_attrs=['name'], r_output_attrs=['name'], allow_missing=True)
             # Use all the cores in the machine
-            >>> C3 = ab.block_tables(A, B, 'address', 'address', l_output_attrs=['name'], r_output_attrs=['name'], n_jobs=-1)
+            >>> C3 = ob.block_tables(A, B, 'address', 'address', l_output_attrs=['name'], r_output_attrs=['name'], n_jobs=-1)
 
 
         """
