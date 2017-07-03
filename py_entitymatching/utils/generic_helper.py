@@ -194,3 +194,14 @@ def del_files_in_dir(dir):
 def creat_dir_ifnot_exists(dir):
     if not os.path.exists(dir):
         os.makedirs(dir)
+
+
+def convert_to_str_unicode(input_string):
+
+    if not isinstance(input_string, six.string_types):
+        input_string = six.u(str(input_string))
+
+    if isinstance(input_string, bytes):
+        input_string = input_string.decode('utf-8', 'ignore')
+
+    return input_string
