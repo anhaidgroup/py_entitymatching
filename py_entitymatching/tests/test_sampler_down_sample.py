@@ -46,7 +46,6 @@ class DownSampleTestCases(unittest.TestCase):
         expected = 'Size of the input table is 0'
         self.assertEqual(actual, expected)
 
-
     @raises(AssertionError)
     def test_down_sample_table_invalid_dfA(self):
         C, D = down_sample(None, self.B, 100, 10)
@@ -71,6 +70,17 @@ class DownSampleTestCases(unittest.TestCase):
     def test_down_sample_invalid_param_y(self):
         C, D = down_sample(self.A, self.B, 100, 0)
 
+    @raises(AssertionError)
+    def test_down_sample_invalid_seed(self):
+        C, D = down_sample(self.A, self.B, 100, 10, seed="test")
+
+    def test_down_sample_seed(self):
+        C, D = down_sample(self.A, self.B, 100, 10, seed=0, show_progress=False)
+        E, F = down_sample(self.A, self.B, 100, 10, seed=0, show_progress=False)
+        self.assertEqual(D.equals(F), True)
+        self.assertEqual(C.equals(E), True)
+
+
 class InvertedIndexTestCases(unittest.TestCase):
     def test_down_sample_inv_index_valid_1(self):
         A = read_csv_metadata(path_a)
@@ -87,6 +97,7 @@ class InvertedIndexTestCases(unittest.TestCase):
         inv_index = _inv_index(A)
         self.assertNotEqual(len(inv_index.get('beach')), 0)
 
+
 class StrColTestCases(unittest.TestCase):
     @raises(AssertionError)
     def test_down_sample_get_str_cols_list_valid1(self):
@@ -98,6 +109,7 @@ class StrColTestCases(unittest.TestCase):
         str_col_list = _get_str_cols_list(A)
         self.assertNotEqual(len(str_col_list), 0)
 
+
 class ProbeIndexTestCases(unittest.TestCase):
     def test_down_sample_probe_index_invalid_set(self):
         A = read_csv_metadata(path_a)
@@ -105,7 +117,7 @@ class ProbeIndexTestCases(unittest.TestCase):
         in_index = _inv_index(A)
         s_tbl_indices = _probe_index(B, 5, len(A), in_index)
         self.assertTrue(type(s_tbl_indices) is set)
-        
+
     def test_down_sample_probe_index_validchk1(self):
         A = read_csv_metadata(path_a)
         B = read_csv_metadata(path_b, key='ID')

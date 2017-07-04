@@ -6,12 +6,13 @@ from __future__ import division
 import logging
 import math
 import os
-from random import randint
+import random
 from py_entitymatching.utils.catalog_helper import log_info
 
 
 import pandas as pd
 import pyprind
+from numpy.random import RandomState
 
 import py_entitymatching.catalog.catalog_manager as cm
 from py_entitymatching.utils.generic_helper import get_install_path
@@ -88,7 +89,8 @@ def _inv_index(table):
     return inv_index
 
 
-def _probe_index(table_b, y_param, s_tbl_sz, s_inv_index, show_progress=True):
+def _probe_index(table_b, y_param, s_tbl_sz, s_inv_index, show_progress=True, seed=None):
+
     """
     This is probe index function that probes the second table into inverted index to get
     good coverage in the down sampled output
@@ -157,8 +159,10 @@ def _probe_index(table_b, y_param, s_tbl_sz, s_inv_index, show_progress=True):
 
         # Remaining y_param/2 items are selected here randomly. This is to get better coverage from both the input
         # tables
+        if seed is not None:
+            random.seed(seed)
         while len(smpl_pos_neg) < y_param:
-            rand_item_num = randint(0, s_tbl_sz - 1)
+            rand_item_num = random.randint(0, s_tbl_sz - 1)
             smpl_pos_neg.add(rand_item_num)
         h_table.update(smpl_pos_neg)
 
@@ -167,7 +171,7 @@ def _probe_index(table_b, y_param, s_tbl_sz, s_inv_index, show_progress=True):
 
 # down sample of two tables : based on sanjib's index based solution
 def down_sample(table_a, table_b, size, y_param, show_progress=True,
-                verbose=False):
+                verbose=False, seed=None):
     """
     This function down samples two tables A and B into smaller tables A' and
     B' respectively.
@@ -190,6 +194,7 @@ def down_sample(table_a, table_b, size, y_param, show_progress=True,
             should be displayed.
         verbose (boolean): A flag to indicate whether the debug information
          should be displayed.
+        seed (int): The seed for the random number generator.
 
     Returns:
         Down sampled tables A and B as pandas DataFrames.
@@ -226,6 +231,10 @@ def down_sample(table_a, table_b, size, y_param, show_progress=True,
         raise AssertionError(
             'size or y_param cannot be zero (3rd and 4th parameter of downsample)')
 
+    if seed is not None and not isinstance(seed, int):
+        logger.error('Seed is not of type integer')
+        raise AssertionError('Seed is not of type integer')
+
     if len(table_b) < size:
         logger.warning(
             'Size of table B is less than b_size parameter - using entire table B')
@@ -248,13 +257,17 @@ def down_sample(table_a, table_b, size, y_param, show_progress=True,
     s_inv_index = _inv_index(table_a)
 
     # Randomly select size tuples from table B to be B'
+    # If a seed value has been give, use a RandomState with the given seed
     b_sample_size = min(math.floor(size), len(table_b))
-    b_tbl_indices = list(
-        pd.np.random.choice(len(table_b), int(b_sample_size), replace=False))
+    if seed is not None:
+        rand = RandomState(seed)
+    else:
+        rand = RandomState()
+    b_tbl_indices = list(rand.choice(len(table_b), int(b_sample_size), replace=False))
 
     # Probe inverted index to find all tuples in A that share tokens with tuples in B'.
     s_tbl_indices = _probe_index(table_b.ix[b_tbl_indices], y_param,
-                                 len(table_a), s_inv_index, show_progress)
+                                 len(table_a), s_inv_index, show_progress, seed=seed)
     s_tbl_indices = list(s_tbl_indices)
     l_sampled = table_a.iloc[list(s_tbl_indices)]
     r_sampled = table_b.iloc[list(b_tbl_indices)]
