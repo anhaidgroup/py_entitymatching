@@ -62,6 +62,35 @@ class MLMatcherSelectionTestCases(unittest.TestCase):
         a_max = pd.np.max(d['Mean score'])
         self.assertEqual(p_max, a_max)
 
+    def test_select_matcher_valid_1_parallel(self):
+        A = read_csv_metadata(path_a, key='id')
+        B = read_csv_metadata(path_b, key='id')
+        # C = read_csv_metadata(path_c, ltable=A, rtable=B, fk_ltable='ltable.id',
+        #                       fk_rtable='rtable.id', key='_id')
+        # C['labels'] = labels
+        feature_vectors = read_csv_metadata(path_f, ltable=A, rtable=B)
+        dtmatcher = DTMatcher()
+        nbmatcher = NBMatcher()
+        rfmatcher = RFMatcher()
+        svmmatcher = SVMMatcher()
+        linregmatcher = LinRegMatcher()
+        logregmatcher = LogRegMatcher()
+        # xgmatcher = XGBoostMatcher()
+        matchers = [dtmatcher, nbmatcher, rfmatcher, svmmatcher, linregmatcher,
+                    logregmatcher]
+
+        result = select_matcher(matchers, x=None, y=None, table=feature_vectors,
+                                exclude_attrs=['ltable.id', 'rtable.id', '_id', 'gold'],
+                                target_attr='gold', k=7, n_jobs=-1)
+        header = ['Name', 'Matcher', 'Num folds']
+        result_df = result['cv_stats']
+        self.assertEqual(set(header) == set(list(result_df.columns[[0, 1, 2]])), True)
+        self.assertEqual('Mean score', result_df.columns[len(result_df.columns) - 1])
+        d = result_df.set_index('Name')
+        p_max = d.ix[result['selected_matcher'].name, 'Mean score']
+        a_max = pd.np.max(d['Mean score'])
+        self.assertEqual(p_max, a_max)
+
     # @nottest
     def test_select_matcher_valid_2(self):
         A = read_csv_metadata(path_a, key='id')
