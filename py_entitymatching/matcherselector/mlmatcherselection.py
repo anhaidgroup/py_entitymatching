@@ -14,13 +14,13 @@ logger = logging.getLogger(__name__)
 
 
 def select_matcher(matchers, x=None, y=None, table=None, exclude_attrs=None,
-                   target_attr=None,
+                   target_attr=None, n_jobs=1,
                    metric='precision', k=5,
                    random_state=None):
     """
     This function selects a matcher from a given list of matchers based on a
     given metric.
-    
+
     Specifically, this function internally uses scikit-learn's
     cross validation function to select a matcher. There are two ways the
     user can call the fit method. First, interface similar to scikit-learn
@@ -43,6 +43,8 @@ def select_matcher(matchers, x=None, y=None, table=None, exclude_attrs=None,
             excluded from the input table to get the feature vectors.
         target_attr (string): The target attribute in the input table (defaults
             to None).
+        n_jobs (integer): The number of CPUs to use to do the computation.
+            -1 means 'all CPUs'.
         metric (string): The metric based on which the matchers must be
             selected. The string can be one of 'precision', 'recall',
             'f1' (defaults to 'precision').
@@ -84,7 +86,8 @@ def select_matcher(matchers, x=None, y=None, table=None, exclude_attrs=None,
     for m in matchers:
         # Use scikit learn's cross validation to get the matcher and the list
         #  of scores (one for each fold).
-        matcher, scores = cross_validation(m, x, y, metric, k, random_state)
+        matcher, scores = cross_validation(m, x, y, metric, k, random_state,
+                                           n_jobs)
         # Fill a dictionary based on the matcher and the scores.
         val_list = [matcher.get_name(), matcher, k]
         val_list.extend(scores)
@@ -107,7 +110,7 @@ def select_matcher(matchers, x=None, y=None, table=None, exclude_attrs=None,
     return res
 
 
-def cross_validation(matcher, x, y, metric, k, random_state):
+def cross_validation(matcher, x, y, metric, k, random_state, n_jobs):
     """
     The function does cross validation for a single matcher
     """
@@ -115,7 +118,8 @@ def cross_validation(matcher, x, y, metric, k, random_state):
     # used for cross_val_score function.
     cv = KFold(k, shuffle=True, random_state=random_state)
     # Call the scikit-learn's cross_val_score function
-    scores = cross_val_score(matcher.clf, x, y, scoring=metric, cv=cv)
+    scores = cross_val_score(matcher.clf, x, y, scoring=metric, cv=cv,
+                             n_jobs=n_jobs)
     # Finally, return the matcher along with the scores.
     return matcher, scores
 
