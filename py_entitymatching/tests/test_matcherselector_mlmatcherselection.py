@@ -424,12 +424,12 @@ class MLMatcherSelectionTestCases(unittest.TestCase):
         result = select_matcher(matchers, x=None, y=None, table=feature_vectors,
                                 exclude_attrs=['ltable.id', 'rtable.id', '_id', 'gold'],
                                 target_attr='gold', k=7)
-        header = ['Matcher', 'precision', 'recall', 'f1']
+        header = ['Matcher', 'Average precision', 'Average recall', 'Average f1']
         result_df = result['cv_stats']
         result_df_p = result['drill_down_cv_stats']['precision']
         self.assertEqual(set(header) == set(list(result_df.columns[[0, 1, 2, 3]])), True)
         d = result_df.set_index('Matcher')
-        p_max = d.ix[result['selected_matcher'].name, 'precision']
+        p_max = d.ix[result['selected_matcher'].name, 'Average precision']
         a_max = pd.np.max(result_df_p['Mean score'])
         self.assertEqual(p_max, a_max)
 
@@ -450,12 +450,12 @@ class MLMatcherSelectionTestCases(unittest.TestCase):
                                 metric_to_select_matcher='recall',
                                 metrics_to_display=['recall', 'f1'],
                                 target_attr='gold', k=7)
-        header = ['Matcher', 'recall', 'f1']
+        header = ['Matcher', 'Average recall', 'Average f1']
         result_df = result['cv_stats']
         result_df_r = result['drill_down_cv_stats']['recall']
         self.assertEqual(set(header) == set(list(result_df.columns[[0, 1, 2]])), True)
         d = result_df.set_index('Matcher')
-        p_max = d.ix[result['selected_matcher'].name, 'recall']
+        p_max = d.ix[result['selected_matcher'].name, 'Average recall']
         a_max = pd.np.max(result_df_r['Mean score'])
         self.assertEqual(p_max, a_max)
 
@@ -476,12 +476,12 @@ class MLMatcherSelectionTestCases(unittest.TestCase):
                                 metric_to_select_matcher='recall',
                                 metrics_to_display='recall',
                                 target_attr='gold', k=7)
-        header = ['Matcher', 'recall']
+        header = ['Matcher', 'Average recall']
         result_df = result['cv_stats']
         result_df_r = result['drill_down_cv_stats']['recall']
         self.assertEqual(set(header) == set(list(result_df.columns[[0, 1]])), True)
         d = result_df.set_index('Matcher')
-        p_max = d.ix[result['selected_matcher'].name, 'recall']
+        p_max = d.ix[result['selected_matcher'].name, 'Average recall']
         a_max = pd.np.max(result_df_r['Mean score'])
         self.assertEqual(p_max, a_max)
 
