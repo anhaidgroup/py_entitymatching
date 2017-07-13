@@ -17,6 +17,11 @@ environment:
       PYTHON_VERSION: "3.5"
       PYTHON_ARCH: "64"
       CONDA_PY: "35"
+      
+    - PYTHON: "C:\\Python36_64"
+      PYTHON_VERSION: "3.6"
+      PYTHON_ARCH: "64"
+      CONDA_PY: "36"
 
 install:
   # this installs the appropriate Miniconda (Py2/Py3, 32/64 bit)
@@ -24,7 +29,7 @@ install:
   - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
 
   # Don't install from requirements-pip.txt, python-coveralls has broken dependencies on windows it seems.
-  - conda install --yes setuptools nose numpy pip coverage scipy pandas pyparsing six scikit-learn Cython pyqt cloudpickle joblib
+  - conda install --yes setuptools nose numpy pip coverage scipy pandas pyparsing six scikit-learn Cython pyqt cloudpickle joblib ipython
   - pip install -r requirements.txt
   - python setup.py install
 
