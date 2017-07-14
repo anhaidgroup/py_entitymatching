@@ -744,8 +744,11 @@ def rel_diff(d1, d2):
         return pd.np.NaN
     if pd.isnull(d1) or pd.isnull(d2):
         return pd.np.NaN
-    d1 = float(d1)
-    d2 = float(d2)
+    try:
+        d1 = float(d1)
+        d2 = float(d2)
+    except ValueError:
+        return pd.np.NaN
     if d1 == 0.0 and d2 == 0.0:
         return 0
     else:
@@ -784,8 +787,11 @@ def abs_norm(d1, d2):
         return pd.np.NaN
     if pd.isnull(d1) or pd.isnull(d2):
         return pd.np.NaN
-    d1 = float(d1)
-    d2 = float(d2)
+    try:
+        d1 = float(d1)
+        d2 = float(d2)
+    except ValueError:
+        return pd.np.NaN
     if d1 == 0.0 and d2 == 0.0:
         return 0
     else:
