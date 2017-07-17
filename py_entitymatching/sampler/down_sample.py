@@ -209,6 +209,12 @@ def down_sample(table_a, table_b, size, y_param, show_progress=True,
         >>> A = em.read_csv_metadata('path_to_csv_dir/table_A.csv', key='ID')
         >>> B = em.read_csv_metadata('path_to_csv_dir/table_B.csv', key='ID')
         >>> sample_A, sample_B = em.down_sample(A, B, 500, 1)
+
+        # Example with seed = 0. This means the same sample data set will be returned
+        # each time this function is run.
+        >>> A = em.read_csv_metadata('path_to_csv_dir/table_A.csv', key='ID')
+        >>> B = em.read_csv_metadata('path_to_csv_dir/table_B.csv', key='ID')
+        >>> sample_A, sample_B = em.down_sample(A, B, 500, 1, seed=0)
     """
 
     if not isinstance(table_a, pd.DataFrame):
