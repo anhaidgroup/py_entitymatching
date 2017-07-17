@@ -31,8 +31,8 @@ For example, a user can create a Decision Tree matcher like this:
     >>> dt = em.DTMatcher(max_depth=5)
 
 Please refer to :py:meth:`~py_entitymatching.DTMatcher`, :py:meth:`~py_entitymatching.RFMatcher`,
-:py:meth:`~py_entitymatching.NBMatcher`, :py:meth:`~py_entitymatching.LogisticRegressionMatcher`,
-:py:meth:`~py_entitymatching.LinearRegressionMatcher` and :py:meth:`~py_entitymatching.SVMMatcher`
+:py:meth:`~py_entitymatching.NBMatcher`, :py:meth:`~py_entitymatching.LogRegMatcher`,
+:py:meth:`~py_entitymatching.LinRegMatcher` and :py:meth:`~py_entitymatching.SVMMatcher`
 for more details.
 
 Training Learning-Based Matchers

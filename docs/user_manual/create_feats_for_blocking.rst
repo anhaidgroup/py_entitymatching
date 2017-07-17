@@ -71,6 +71,18 @@ and values are tokenizer functions in Python. You can inspect `block_t` and dele
 tokenizers as appropriate. The above command will return single-argument tokenizers,
 i.e., those that take a string then produce a set of tokens.
 
+Each of the keys of the default dictionary returned to 'block_t' by
+'get_tokenizers_for_blocking' represent a tokenizer that can be used by similarity
+functions. The keys and the respective tokenizer they represent are shown below:
+
+* alphabetic: Alphabetic tokenizer
+* alphanumeric: Alphanumeric tokenizer
+* dlm_dc0: Delimiter tokenizer using spaces as the delimiter
+* qgm_2: Two Gram tokenizer
+* qgm_3: Three Gram tokenizer
+* wspace: Whitespace tokenizer
+
+
 Please look at the API reference of :py:meth:`~py_entitymatching.get_tokenizers_for_blocking`
 for more details.
 
@@ -82,6 +94,30 @@ functions available for blocking purposes.
 In the above, `block_s` is a dictionary where keys are similarity function names
 and values are similarity functions in Python. Similar to `block_t`, you can
 inspect `block_s` and delete/add similarity functions as appropriate.
+
+Each of the keys of the default dictionary returned to 'block_s' by
+'get_sim_funs_for_blocking' represent a similarity function. The keys and the
+respective similarity function they represent are shown below:
+
+* abs_norm: Absolute Norm
+* affine: Affine Transformation
+* cosine: Cosine Similarity
+* dice: Dice similarity Coefficient
+* exact_match: Exact Match
+* hamming_dist: Hamming Distance
+* hamming_sim: Hamming Similarity
+* jaccard: Jaccard Similarity
+* jaro: Jaro Distance
+* jaro_winkler: Jaro-Winkler Distance
+* lev_dist: Levenshtein Distance
+* lev_sim: Levenshtein Similarity
+* monge_elkan: Monge-Elkan Algorithm
+* needleman_wunsch: Needleman-Wunsch Algorithm
+* overlap_coeff: Overlap Coefficient
+* rel_diff: Relative Difference
+* smith_waterman: Smith-Waterman Algorithm
+
+
 
 Please look at the API reference of :py:meth:`~py_entitymatching.get_sim_funs_for_blocking`
 for more details.
@@ -188,11 +224,16 @@ Another way to add features is to write a feature expression in
 a `declarative` way. py_entitymatching will then compile it into a feature. For
 example, you can declaratively create and add a feature like this:
 
-    >>> r = em.get_feature_fn('jaccard(qgm_3(ltuple.name), qgm_3(rtuple.name)', block_t, block_s)
+    >>> r = em.get_feature_fn('jaccard(qgm_3(ltuple["name"]), qgm_3(rtuple["name"]))', block_t, block_s)
     >>> em.add_feature(block_f, 'name_name_jac_qgm3_qgm3', r)
 
-Here `block_t` and `block_s` refer to the dictionaries containing a
-set of tokenizers and similarity functions for blocking.
+Here `block_t` and `block_s` refer to the dictionaries containing a set of
+tokenizers and similarity functions for blocking. Additionally, 'jaccard' refers
+to the key in 'block_s' that represents the Jaccard Similarity function and
+'qgm_3' refers to the key in 'block_t' that represents a three gram tokenizer.
+The keys in 'block_t' and 'block_s' and which function or tokenizer they
+represent are explained above in the Obtaining Tokenizers and Similarity Functions
+section.
 
 Conceptually, the first command, `get_feature_fn`, creates a feature which is a Python function
 that will take two tuples `ltuple` and `rtuple`, get the attribute publisher from `ltuple`,
@@ -216,6 +257,64 @@ you are allowed to define arbitrary complex expression involving function names 
     >>> em.add_feature(block_f, 'full_address_address_jac_qgm3_qgm3', r)
 
 
+You can also create your own similarity functions and tokenizers for your custom features.
+For example, you can create a similarity function that changes all strings to lowercase
+before checking if they are equivalent.
+
+    >>> # This similarity function converts the two strings to lowercase before checking if they are an exact match
+    >>> def match_lowercase(l_attr, r_attr):
+    >>>     l_attr = l_attr.lower()
+    >>>     r_attr = r_attr.lower()
+    >>>     if l_attr == r_attr:
+    >>>         return 1
+    >>>     else:
+    >>>         return 0
+
+You can then add a feature declarativly with your new similarity function.
+
+    >>> # The new similarity function is added to block_s and then a new feature is created
+    >>> block_t = em.get_tokenizers_for_blocking()
+    >>> block_s = em.get_sim_funs_for_blocking()
+    >>> block_s['match_lowercase'] = match_lowercase
+    >>> r = em.get_feature_fn('match_lowercase(ltuple["name"], rtuple["name"])', block_t, block_s)
+    >>> em.add_feature(block_f, 'name_name_match_lowercase', r)
+
+It is also possible to create features with your own similarity functions that require
+tokenizers. The next example shows how to create a custom tokenizer that returns only
+the first and last words of a string.
+
+    >>> # This custom tokenizer returns the first and last words of a string
+    >>> def first_last_tok(attr):
+    >>>     all_toks = attr.split(" ")
+    >>>     toks = [all_toks[0], all_toks[len(all_toks) - 1]]
+    >>>     return toks
+
+Next, a similarity function that can utilize the new tokenizer is created. This example
+shows how to create a similarity function that raises the score if the first words match
+and raises the score by one if the second words match.
+
+    >>> # This similarity function compares two tokens from each set.
+    >>> # Greater weight is placed on the equality of the first token.
+    >>> def first_last_sim(l_attr, r_attr):
+    >>>     score = 0
+    >>>     if l_attr[0] == r_attr[0]:
+    >>>         score += 2
+    >>>     if l_attr[1] == r_attr[1]:
+    >>>         score +=1
+    >>>     return score
+
+Finally, with the tokenizer and similarity functions defined, the new feature can be
+created and added.
+
+    >>> # The new tokenizer is added to block_t and the new similarity function is added to block_s
+    >>> # then a new feature is created
+    >>> block_t = em.get_tokenizers_for_blocking()
+    >>> block_t['first_last_tok'] = first_last_tok
+    >>> block_s = em.get_sim_funs_for_blocking()
+    >>> block_s['first_last_sim'] = first_last_sim
+    >>> r = em.get_feature_fn('first_last_sim(first_last_tok(ltuple["name"]), first_last_tok(rtuple["name"]))',
+    >>>                  block_t, block_s)
+    >>> em.add_feature(block_f, 'name_name_fls_flt_flt', r)
 
 Please look at the API reference of
 :py:meth:`~py_entitymatching.get_feature_fn` and :py:meth:`~py_entitymatching.add_feature`
@@ -290,7 +389,17 @@ variables, then you can execute the following:
     >>> block_f = em.get_features_for_blocking(A,B)
 
 The system will automatically generate a set of features and return it as
-as a Dataframe which you can then use for blocking purposes.
+as a Dataframe which you can then use for blocking purposes. This Dataframe
+contains a few attributes that require further explanation, specifically
+'left_attr_tokenizer', 'right_attr_tokenizer', and 'simfunction'. There are
+two types of similarity functions, those that use tokenizers and those that
+do not. Some similarity functions use tokenizers and all such features must
+designate a tokenizer for both the left table attribute in
+'left_attr_tokenizer' and for the right table attribute in
+'right_attr_tokenizer'. The 'simfunction' attribute refers to the name of
+the function and comes from the keys in 'block_s'. The various keys and the
+actual functions they correspond to are explained in the Obtaining
+Tokenizers and Similarity Functions section above.
 
 The command `get_features_for_blocking` will set the following variables: `_block_t`,
 `_block_s`, `_atypes1`, `_atypes2`, and `_block_c`. You can access these variables like this:

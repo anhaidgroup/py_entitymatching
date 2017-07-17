@@ -45,13 +45,13 @@ Stepwise Guides
 
 * Handling features:
 
-    * Generating features manually: `Jupyter notebook <https://nbviewer.jupyter.org/github/anhaidgroup/py_entitymatching/blob/rel_0.1.x/notebooks/guides/step_wise_em_guides/Generating%20Features%20Manually.ipynb.ipynb>`_
+    * Generating features manually: `Jupyter notebook <https://nbviewer.jupyter.org/github/anhaidgroup/py_entitymatching/blob/rel_0.1.x/notebooks/guides/step_wise_em_guides/Generating%20Features%20Manually.ipynb>`_
 
     * Editing attribute types and generating features manually: `Jupyter notebook <https://nbviewer.jupyter.org/github/anhaidgroup/py_entitymatching/blob/rel_0.1.x/notebooks/guides/step_wise_em_guides/Editing%20and%20Generating%20Features%20Manually.ipynb>`_
 
     * Adding features to feature table: `Jupyter notebook <https://nbviewer.jupyter.org/github/anhaidgroup/py_entitymatching/blob/rel_0.1.x/notebooks/guides/step_wise_em_guides/Adding%20Features%20to%20Feature%20Table.ipynb>`_
 
-    * Removing features from feature table: `Jupyter notebook <https://nbviewer.jupyter.org/github/anhaidgroup/py_entitymatching/blob/rel_0.1.x/notebooks/guides/step_wise_em_guides/Adding%20Features%20to%20Feature%20Table.ipynb>`_
+    * Removing features from feature table: `Jupyter notebook <https://nbviewer.jupyter.org/github/anhaidgroup/py_entitymatching/blob/rel_0.1.x/notebooks/guides/step_wise_em_guides/Removing%20Features%20From%20Feature%20Table.ipynb>`_
 
 * Sampling and labeling: `Jupyter notebook <https://nbviewer.jupyter.org/github/anhaidgroup/py_entitymatching/blob/rel_0.1.x/notebooks/guides/step_wise_em_guides/Sampling%20and%20Labeling.ipynb>`_
 
