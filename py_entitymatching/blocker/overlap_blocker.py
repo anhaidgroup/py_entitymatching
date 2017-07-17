@@ -592,6 +592,10 @@ class OverlapBlocker(Blocker):
                 'set to None by default, so if you want to use qgram then '
                 'explictiy set word_level=False and specify the q_val')
 
+
+
+
+
     # cleanup a table from non-ascii characters, punctuations and stop words
     def cleanup_table(self, table, overlap_attr, rem_stop_words):
 
@@ -603,19 +607,8 @@ class OverlapBlocker(Blocker):
             if pd.isnull(val):
                 values.append(val)
             else:
-                # remove non-ascii chars
-                val_no_non_ascii = remove_non_ascii(val)
-                # remove punctuations
-                val_no_punctuations = self.rem_punctuations(val_no_non_ascii)
-                # chop the attribute values and convert into a set
-                val_chopped = list(set(val_no_punctuations.split()))
-                # remove stop words
-                if rem_stop_words:
-                    val_chopped_no_stopwords = self.rem_stopwords(val_chopped)
-                    val_joined = ' '.join(val_chopped_no_stopwords)
-                else:
-                    val_joined = ' '.join(val_chopped)
-                values.append(val_joined)
+                processed_val = self.process_string(val, rem_stop_words)
+                values.append(processed_val)
 
         table.is_copy = False
         table[overlap_attr] = values
@@ -624,22 +617,39 @@ class OverlapBlocker(Blocker):
     def cleanup_tuple_val(self, val, rem_stop_words):
         if pd.isnull(val):
             return val
-        # remove non-ascii chars
-        val_no_non_ascii = remove_non_ascii(val)
-        # remove punctuations
-        val_no_punctuations = self.rem_punctuations(val_no_non_ascii)
+
+        return self.process_string(val, rem_stop_words)
+
+
+    def process_string(self, input_string, rem_stop_words):
+        if not input_string:
+            return input_string
+
+        if isinstance(input_string, bytes):
+            input_string = input_string.decode('utf-8', 'ignore')
+        input_string = input_string.lower()
+
+        input_string = self.rem_punctuations(input_string)
+
+        # remove stopwords
         # chop the attribute values and convert into a set
-        val_chopped = list(set(val_no_punctuations.split()))
+        val_chopped = list(set(input_string.strip().split()))
+
         # remove stop words
         if rem_stop_words:
             val_chopped_no_stopwords = self.rem_stopwords(val_chopped)
             val_joined = ' '.join(val_chopped_no_stopwords)
         else:
             val_joined = ' '.join(val_chopped)
+
         return val_joined
 
+
     def rem_punctuations(self, s):
-        return self.regex_punctuation.sub('', s).lower()
+        return self.regex_punctuation.sub('', s)
+
+
 
     def rem_stopwords(self, lst):
         return [t for t in lst if t not in self.stop_words]
+

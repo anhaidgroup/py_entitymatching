@@ -8,7 +8,7 @@ import pandas as pd
 import six
 
 import py_stringmatching as sm
-from py_entitymatching.utils.generic_helper import remove_non_ascii
+import py_entitymatching.utils.generic_helper as gh
 
 logger = logging.getLogger(__name__)
 
@@ -154,11 +154,8 @@ def _make_tok_delim(d):
         # Remove non ascii  characters. Note: This should be fixed in the
         # next version.
         #s = remove_non_ascii(s)
-        if not (isinstance(s, six.string_types) or isinstance(s, bytes)):
-            s = str(s)
-        else:
-            if isinstance(s, bytes):
-                s = s.decode('utf-8')
+
+        s = gh.convert_to_str_unicode(s)
 
         # Initialize the tokenizer measure object
         measure = sm.DelimiterTokenizer(delim_set=[d])
@@ -178,11 +175,8 @@ def _make_tok_qgram(q):
         # check if the input is of type base string
         if pd.isnull(s):
             return s
-        if not (isinstance(s, six.string_types) or isinstance(s, bytes)):
-            s = str(s)
-        else:
-            if isinstance(s, bytes):
-                s = s.decode('utf-8')
+
+        s = gh.convert_to_str_unicode(s)
 
         measure = sm.QgramTokenizer(qval=q)
         return measure.tokenize(s)
@@ -216,13 +210,7 @@ def tok_qgram(input_string, q):
     if pd.isnull(input_string):
         return pd.np.NaN
 
-
-    if not (isinstance(input_string, six.string_types) or isinstance(input_string, bytes)):
-        input_string = str(input_string)
-    else:
-        if isinstance(input_string, bytes):
-            input_string = input_string.decode('utf-8')
-
+    input_string = gh.convert_to_str_unicode(input_string)
     measure = sm.QgramTokenizer(qval=q)
 
     return measure.tokenize(input_string)
@@ -255,12 +243,11 @@ def tok_delim(input_string, d):
 
     if pd.isnull(input_string):
         return pd.np.NaN
-    if not (isinstance(input_string, six.string_types) or isinstance(input_string, bytes)):
-        input_string = str(input_string)
-    else:
-        if isinstance(input_string, bytes):
-            input_string = input_string.decode('utf-8')
+
+    input_string = gh.convert_to_str_unicode(input_string)
+
     measure = sm.DelimiterTokenizer(delim_set=[d])
+
     return measure.tokenize(input_string)
 
 def tok_wspace(input_string):
@@ -290,11 +277,8 @@ def tok_wspace(input_string):
         return pd.np.NaN
 
     # input_string = remove_non_ascii(input_string)
-    if not (isinstance(input_string, six.string_types) or isinstance(input_string, bytes)):
-        input_string = str(input_string)
-    else:
-        if isinstance(input_string, bytes):
-            input_string = input_string.decode('utf-8')
+    input_string = gh.convert_to_str_unicode(input_string)
+
     measure = sm.WhitespaceTokenizer()
     return measure.tokenize(input_string)
 
@@ -325,12 +309,8 @@ def tok_alphabetic(input_string):
         return pd.np.NaN
     measure = sm.AlphabeticTokenizer()
 
-    if not (isinstance(input_string, six.string_types) or isinstance(input_string, bytes)):
-        input_string = str(input_string)
-    else:
-        if isinstance(input_string, bytes):
-            input_string = input_string.decode('utf-8')
-    
+    input_string = gh.convert_to_str_unicode(input_string)
+
     return measure.tokenize(input_string)
 
 
@@ -359,10 +339,7 @@ def tok_alphanumeric(input_string):
     if pd.isnull(input_string):
       return pd.np.NaN
 
-    if not (isinstance(input_string, six.string_types) or isinstance(input_string, bytes)):
-        input_string = str(input_string)
-    else:
-        if isinstance(input_string, bytes):
-            input_string = input_string.decode('utf-8')
+    input_string = gh.convert_to_str_unicode(input_string)
+
     measure = sm.AlphanumericTokenizer()
     return measure.tokenize(input_string)
