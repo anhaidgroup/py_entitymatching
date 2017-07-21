@@ -31,3 +31,4 @@ class LogRegMatcher(MLMatcher):
         super(LogRegMatcher, self).__init__()
         # Set the classifier to the scikit-learn classifier.
         self.clf = LogisticRegression(*args, **kwargs)
+        self.clf.classes_ = [0, 1]

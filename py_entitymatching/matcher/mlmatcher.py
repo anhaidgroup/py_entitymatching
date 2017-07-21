@@ -9,7 +9,7 @@ import pandas as pd
 
 import py_entitymatching.catalog.catalog_manager as cm
 from py_entitymatching.matcher.matcher import Matcher
-from py_entitymatching.matcher.matcherutils import process_preds_probs
+from py_entitymatching.matcher.matcherutils import get_true_lbl_index
 import py_entitymatching.utils.catalog_helper as ch
 import py_entitymatching.utils.generic_helper as gh
 
@@ -140,8 +140,8 @@ class MLMatcher(Matcher):
             return y
         else:
             _p = self.clf.predict_proba(x)
-            y, p = process_preds_probs(y, _p, self.clf)
-            return y, p
+            true_index = get_true_lbl_index(self.clf)
+            return y, _p[:, true_index]
 
     def _predict_ex_attrs(self, table, exclude_attrs, return_prob=False):
         """

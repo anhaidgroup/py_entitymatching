@@ -49,13 +49,13 @@ home directory as follows::
 For more information see this StackOverflow `link <http://stackoverflow.com/questions/14179941/how-to-install-python-packages-without-root-privileges>`_.
 
 The above commands will install py_entitymatching and all of its
-dependencies, except PyQt4 and xgboost.
+dependencies, except PyQt5 and xgboost.
 
 This is  because, similar to pip,
-setup.py can only install the dependency packages that are available in PyPI and PyQt4
-is not in PyPI.
+setup.py can only install the dependency packages that are available in PyPI and PyQt5
+xgboost are not in PyPI for Python 2.
 
-* You can install PyQt4, using the instructions on `this page <http://pyqt.sourceforge.net/Docs/PyQt4/installation.html>`_.
+* You can install PyQt5, using the instructions on `this page <http://pyqt.sourceforge.net/Docs/PyQt5/installation.html>`_.
 
 * You can install xgboost using the instructions on `this page <https://xgboost.readthedocs.io/en/latest/build.html>`_.
 

@@ -352,8 +352,8 @@ class MLMatcherTestCases(unittest.TestCase):
         r_col = predictions.columns[len(predictions.columns) - 1]
         self.assertEqual(r_col, 'proba')
 
-        self.assertEqual(sum(predictions[r_col] >= 0.5), len(predictions))
-
+        self.assertEqual(sum((predictions[r_col] >= 0.0) & (predictions[r_col] <= 1.0)),
+                         len(predictions))
 
     def test_ml_matcher_return_probs_true_predict_diff_colname(self):
         A = read_csv_metadata(fpath_a, key='id')
@@ -382,9 +382,8 @@ class MLMatcherTestCases(unittest.TestCase):
         r_col = predictions.columns[len(predictions.columns) - 1]
         self.assertEqual(r_col, 'probas')
 
-        self.assertEqual(sum(predictions[r_col] >= 0.5), len(predictions))
-
-
+        self.assertEqual(sum((predictions[r_col] >= 0.0) & (predictions[r_col] <= 1.0)),
+                         len(predictions))
 
     def test_ml_matcher_set_name(self):
         dt = DTMatcher()

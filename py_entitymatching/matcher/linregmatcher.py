@@ -50,14 +50,26 @@ class LinRegClassifierSKLearn(BaseEstimator, ClassifierMixin, TransformerMixin):
 
     def predict_proba(self, X):
         # There is no proba function defined for Linear Regression Matcher in scikit
-        # learn. So we return the probs as 1
+        # learn. So we return the probs as 0 or 1
 
         # give the warning to the user
         logger.warning('There is no proba function defined for Linear Regression '
                        'Matcher in scikit learn. So we return the probs as 1')
 
-        # return all the probs as 1
-        return np.ones(len(X))
+        self.classes_ = [0, 1]
+
+        y = self.predict(X)
+        p = np.ndarray(shape=[len(y), 2])
+
+        for i in range(len(y)):
+            if y[i] == 1:
+                p[i][0] = 0
+                p[i][1] = 1
+            elif y[i] == 0:
+                p[i][0] = 1
+                p[i][1] = 0
+
+        return p
 
     def get_params(self, deep=True):
         """
