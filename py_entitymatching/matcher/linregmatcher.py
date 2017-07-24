@@ -3,6 +3,7 @@ This module contains functions for linear regression classifier.
 """
 
 import logging
+from array import array
 
 from py_entitymatching.matcher.mlmatcher import MLMatcher
 from py_entitymatching.matcher.matcherutils import get_ts
@@ -29,6 +30,8 @@ class LinRegClassifierSKLearn(BaseEstimator, ClassifierMixin, TransformerMixin):
         self.clf = LinearRegression(*args, **kwargs)
         # Set the threshold to 0
         self.threshold = 0.0
+        # Set the classes_
+        self.classes_ = np.array([0, 1], np.int64)
 
     def fit(self, X, y):
         # Convert 0 and 1s to -1, and 1s
@@ -55,8 +58,6 @@ class LinRegClassifierSKLearn(BaseEstimator, ClassifierMixin, TransformerMixin):
         # give the warning to the user
         logger.warning('There is no proba function defined for Linear Regression '
                        'Matcher in scikit learn. So we return the probs as 1')
-
-        self.classes_ = [0, 1]
 
         y = self.predict(X)
         p = np.ndarray(shape=[len(y), 2])
