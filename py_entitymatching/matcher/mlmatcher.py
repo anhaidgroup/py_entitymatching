@@ -9,6 +9,7 @@ import pandas as pd
 
 import py_entitymatching.catalog.catalog_manager as cm
 from py_entitymatching.matcher.matcher import Matcher
+from py_entitymatching.matcher.matcherutils import get_true_lbl_index
 import py_entitymatching.utils.catalog_helper as ch
 import py_entitymatching.utils.generic_helper as gh
 
@@ -121,7 +122,7 @@ class MLMatcher(Matcher):
                 'The arguments supplied does not match the signatures '
                 'supported !!!')
 
-    def _predict_sklearn(self, x, check_rem=True):
+    def _predict_sklearn(self, x, check_rem=True, return_prob=False):
         # Function that implements, predict interface mimic-ing sk-learn's
         # predict interface.
 
@@ -134,10 +135,15 @@ class MLMatcher(Matcher):
         x = self._get_data_for_sklearn(x, check_rem=check_rem)
         # Call the underlying predict function.
         y = self.clf.predict(x)
-        # Return the predictions
-        return y
+        if not return_prob:
+            # Return the predictions
+            return y
+        else:
+            _p = self.clf.predict_proba(x)
+            true_index = get_true_lbl_index(self.clf)
+            return y, _p[:, true_index]
 
-    def _predict_ex_attrs(self, table, exclude_attrs):
+    def _predict_ex_attrs(self, table, exclude_attrs, return_prob=False):
         """
         Variant of predict method, where data is derived based on exclude
         attributes.
@@ -168,14 +174,25 @@ class MLMatcher(Matcher):
         # Get feature vectors and the target attribute
         x = table[attributes_to_project]
 
-        # Do the predictions using the ML-based matcher.
-        y = self._predict_sklearn(x, check_rem=False)
-        # Finally return the predictions
-        return y
+
+        # Do the predictions and return the probabilities (if required)
+        res = self._predict_sklearn(x, check_rem=False, return_prob=return_prob)
+        return res
+
+        # if not just do the predictions and return the result
+        # if not return_prob:
+        #     # Do the predictions using the ML-based matcher.
+        #     y = self._predict_sklearn(x, check_rem=False)
+        #
+        #     # Finally return the predictions
+        #     return y
+        # else:
+        #     res = self._predict_sklearn()
 
     # predict method
     def predict(self, x=None, table=None, exclude_attrs=None, target_attr=None,
-                append=False, inplace=True):
+                append=False, return_probs=False,
+                probs_attr=None, inplace=True):
         """
         Predict interface for the matcher.
 
@@ -197,9 +214,13 @@ class MLMatcher(Matcher):
             exclude_attrs (list): A list of attributes to be excluded from the
                 input table to get the feature vectors (defaults to None).
             target_attr (string): The attribute name where the predictions
-                need to stored in the input table (defaults to None).
+                need to be stored in the input table (defaults to None).
+            probs_attr (string): The attribute name where the prediction probabilities 
+                need to be stored in the input table (defaults to None).
             append (boolean): A flag to indicate whether the predictions need
                 to be appended in the input DataFrame (defaults to False).
+            return_probs (boolean): A flag to indicate where the prediction probabilities
+                need to be returned (defaults to False).
             inplace (boolean): A flag to indicate whether the append needs to be
                 done inplace (defaults to True).
 
@@ -210,22 +231,32 @@ class MLMatcher(Matcher):
         # If x is not none, call the predict method that mimics sk-learn
         # predict method.
         if x is not None:
-            y = self._predict_sklearn(x)
+            y = self._predict_sklearn(x, return_prob=return_probs)
         # If the input table and the exclude attributes are not None,
         # then call the appropriate predict method.
         elif table is not None and exclude_attrs is not None:
-            y = self._predict_ex_attrs(table, exclude_attrs)
+            y = self._predict_ex_attrs(table, exclude_attrs, return_prob=return_probs)
             # If the append is True, update the table
             if target_attr is not None and append is True:
                 # If inplace is True, then update the input table.
                 if inplace:
-                    table[target_attr] = y
-                    # Return the updated table
-                    return table
+                    if return_probs:
+                        table[target_attr] = y[0]
+                        table[probs_attr] = y[1]
+                        # Return the updated table
+                        return table
+                    else:
+                        # Return the updated table
+                        table[target_attr] = y
+                        return table
                 else:
                 # else, create a copy and update it.
                     table_copy = table.copy()
-                    table_copy[target_attr] = y
+                    if return_probs:
+                        table_copy[target_attr] = y[0]
+                        table_copy[probs_attr] = y[1]
+                    else:
+                        table_copy[target_attr] = y
                     # copy the properties from the input table to the output
                     # table.
                     cm.copy_properties(table, table_copy)

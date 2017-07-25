@@ -186,7 +186,6 @@ def impute_table(table, exclude_attrs=None, missing_val='NaN',
                                       ltable, rtable, l_key, r_key,
                                       logger, verbose)
 
-
     fv_columns = table.columns
 
     if exclude_attrs == None:
@@ -211,7 +210,6 @@ def impute_table(table, exclude_attrs=None, missing_val='NaN',
         # Drop the duplicates from the exclude attributes
         exclude_attrs = gh.list_drop_duplicates(exclude_attrs)
 
-
         cols = [c not in exclude_attrs for c in fv_columns]
         feature_names = fv_columns[cols]
     # print feature_names
@@ -230,3 +228,51 @@ def impute_table(table, exclude_attrs=None, missing_val='NaN',
     cm.copy_properties(table, table_copy)
 
     return table_copy
+
+
+def get_true_lbl_index(estimator, true_label=1):
+    classes = list(estimator.classes_)
+    if true_label not in classes:
+        raise AssertionError(
+            'True label ({0}) not in estimator classes.'.format(true_label))
+    else:
+        return classes.index(true_label)
+
+
+def get_false_lbl_index(estimator, false_label=0):
+    classes = list(estimator.classes_)
+    if false_label not in classes:
+        raise AssertionError(
+            'False label ({0}) not in estimator classes.'.format(false_label))
+    else:
+        return classes.index(false_label)
+
+
+def get_preds_probs(row, false_label=0):
+    if row['predictions'] == false_label:
+        return (row['predictions'], row['prob_false'])
+    else:
+        return (row['predictions'], row['prob_true'])
+
+
+def unpack_preds(s):
+    return s[0]
+
+
+def unpack_probs(s):
+    return s[1]
+
+
+def process_preds_probs(predictions, probs, estimator):
+
+    df = pd.DataFrame()
+    df['predictions'] = predictions
+    false_index = get_false_lbl_index(estimator)
+    true_index = get_true_lbl_index(estimator)
+    df['prob_true'] = probs[:, true_index]
+    df['prob_false'] = probs[:, false_index]
+
+    preds_probs = df.apply(get_preds_probs, axis=1)
+    preds = preds_probs.apply(unpack_preds)
+    probs = preds_probs.apply(unpack_probs)
+    return preds.values, probs.values

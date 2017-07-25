@@ -14,11 +14,12 @@ the following methods:
 
 Creating Learning-Based Matchers
 --------------------------------
-In py_entitymatching, there are six concrete ML-matchers implemented: (1) naive bayes, (2)
-logistic regression, (3) linear regression, (4) support vector machine, (5) decision
-trees, and (6) random forest.
+In py_entitymatching, there are seven concrete ML-matchers implemented: (1) naive bayes,
+(2) logistic regression, (3) linear regression, (4) support vector machine, (5) decision
+trees, (6) random forest, and (7) xgboost matcher.
 
-These concrete matchers are just wrappers of scikit-learn matchers and this is because
+These concrete matchers are just wrappers of scikit-learn matchers or that supports
+scikit-learn wrappers (for eg., xgboost) and this is because
 the fit/predict methods in scikit-learn are not metadata aware. The concrete matchers
 make the scikit-learn matchers metadata aware.
 
@@ -31,8 +32,9 @@ For example, a user can create a Decision Tree matcher like this:
     >>> dt = em.DTMatcher(max_depth=5)
 
 Please refer to :py:meth:`~py_entitymatching.DTMatcher`, :py:meth:`~py_entitymatching.RFMatcher`,
-:py:meth:`~py_entitymatching.NBMatcher`, :py:meth:`~py_entitymatching.LogRegMatcher`,
-:py:meth:`~py_entitymatching.LinRegMatcher` and :py:meth:`~py_entitymatching.SVMMatcher`
+:py:meth:`~py_entitymatching.NBMatcher`, :py:meth:`~py_entitymatching.LogisticRegressionMatcher`,
+:py:meth:`~py_entitymatching.LinearRegressionMatcher`, :py:meth:`~py_entitymatching.SVMMatcher`, and
+:py:meth:`~py_entitymatching.XGBoostMatcher`
 for more details.
 
 Training Learning-Based Matchers
@@ -52,15 +54,8 @@ Once the ML-matcher is trained, you can predict the matches using the
 `predict` command. An example of using the `predict` command for Decision Tree matcher
 is shown below:
 
-    >>> dt.predict(table=H, exclude_attrs=['_id', 'ltable_id', 'rtable_id'], target_attr='predicted_labels', append=True, inplace=True)
+    >>> dt.predict(table=H, exclude_attrs=['_id', 'ltable_id', 'rtable_id'], target_attr='predicted_labels', return_probs=True, probs_attr='proba', append=True,
+    inplace=True)
 
 There are other variants of `predict` method. As an example, Please refer to
 :py:meth:`~py_entitymatching.DTMatcher.predict` for more details.
-
-
-
-
-
-
-
-

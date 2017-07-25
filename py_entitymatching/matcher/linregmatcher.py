@@ -1,6 +1,10 @@
 """
 This module contains functions for linear regression classifier.
 """
+
+import logging
+from array import array
+
 from py_entitymatching.matcher.mlmatcher import MLMatcher
 from py_entitymatching.matcher.matcherutils import get_ts
 
@@ -9,6 +13,9 @@ from sklearn.base import BaseEstimator
 from sklearn.base import ClassifierMixin
 from sklearn.base import TransformerMixin
 
+import numpy as np
+
+logger = logging.getLogger(__name__)
 class LinRegClassifierSKLearn(BaseEstimator, ClassifierMixin, TransformerMixin):
     """
     This class implements Linear Regression classifer.
@@ -23,6 +30,8 @@ class LinRegClassifierSKLearn(BaseEstimator, ClassifierMixin, TransformerMixin):
         self.clf = LinearRegression(*args, **kwargs)
         # Set the threshold to 0
         self.threshold = 0.0
+        # Set the classes_
+        self.classes_ = np.array([0, 1], np.int64)
 
     def fit(self, X, y):
         # Convert 0 and 1s to -1, and 1s
@@ -41,6 +50,27 @@ class LinRegClassifierSKLearn(BaseEstimator, ClassifierMixin, TransformerMixin):
         y[y == -1] = 0
         # Return back the predictions
         return y
+
+    def predict_proba(self, X):
+        # There is no proba function defined for Linear Regression Matcher in scikit
+        # learn. So we return the probs as 0 or 1
+
+        # give the warning to the user
+        logger.warning('There is no proba function defined for Linear Regression '
+                       'Matcher in scikit learn. So we return the probs as 1')
+
+        y = self.predict(X)
+        p = np.ndarray(shape=[len(y), 2])
+
+        for i in range(len(y)):
+            if y[i] == 1:
+                p[i][0] = 0
+                p[i][1] = 1
+            elif y[i] == 0:
+                p[i][0] = 1
+                p[i][1] = 0
+
+        return p
 
     def get_params(self, deep=True):
         """

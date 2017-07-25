@@ -6,9 +6,9 @@ matrix:
 #  - os: linux
 #    python: 3.3
 #    env: PYTHON_VERSION=3.3
-  - os: linux
-    python: 3.4
-    env: PYTHON_VERSION=3.4
+#  - os: linux
+#    python: 3.4
+#    env: PYTHON_VERSION=3.4
   - os: linux
     python: 3.5
     env: PYTHON_VERSION=3.5
@@ -23,10 +23,10 @@ matrix:
 #    language: generic
 #    env:
 #    - PYTHON_VERSION=3.3
-  - os: osx
-    language: generic
-    env:
-    - PYTHON_VERSION=3.4
+#  - os: osx
+#    language: generic
+#    env:
+#    - PYTHON_VERSION=3.4
   - os: osx
     language: generic
     env:
@@ -47,9 +47,10 @@ before_install:
 #  - conda update --yes conda
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export DISPLAY=:99.0; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sh -e /etc/init.d/xvfb start; fi
+  - conda config --add channels conda-forge
 
 install:
-  - conda install --yes python=$PYTHON_VERSION pip nose pandas pyparsing six scikit-learn pyqt cloudpickle joblib ipython
+  - conda install --yes python=$PYTHON_VERSION pip nose pandas pyparsing six scikit-learn pyqt cloudpickle joblib ipython xgboost
   - pip install -r requirements.txt
 
 script:

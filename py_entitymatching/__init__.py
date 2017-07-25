@@ -1,7 +1,7 @@
 
 from py_entitymatching.catalog.catalog import Catalog
 
-__version__ = '0.1.0'
+__version__ = '0.2.0_rit'
 
 _catalog = Catalog.Instance()
 
@@ -66,6 +66,10 @@ from py_entitymatching.matcher.logregmatcher import LogRegMatcher
 from py_entitymatching.matcher.nbmatcher import NBMatcher
 from py_entitymatching.matcher.rfmatcher import RFMatcher
 from py_entitymatching.matcher.svmmatcher import SVMMatcher
+try:
+    from py_entitymatching.matcher.xgboostmatcher import XGBoostMatcher
+except ImportError:
+    pass
 
 # # matcher selector
 from py_entitymatching.matcherselector.mlmatcherselection import select_matcher
