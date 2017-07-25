@@ -1,4 +1,4 @@
-PyPrind == 2.9.8
+PyPrind
 py_stringmatching >= 0.2.1
 py_stringsimjoin
 

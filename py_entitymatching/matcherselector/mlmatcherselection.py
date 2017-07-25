@@ -9,14 +9,16 @@ from sklearn.model_selection import KFold, cross_val_score
 
 from py_entitymatching.utils.catalog_helper import check_attrs_present
 from py_entitymatching.utils.generic_helper import list_diff, list_drop_duplicates
+from py_entitymatching.utils.validation_helper import validate_object_type
 
 logger = logging.getLogger(__name__)
 
 
 def select_matcher(matchers, x=None, y=None, table=None, exclude_attrs=None,
                    target_attr=None,
-                   metric='precision', k=5, n_jobs = -1,
-                   random_state=None):
+                   metric_to_select_matcher='precision',
+                   metrics_to_display=['precision', 'recall', 'f1'],
+                   k=5, n_jobs = -1, random_state=None):
     """
     This function selects a matcher from a given list of matchers based on a
     given metric.
@@ -43,9 +45,12 @@ def select_matcher(matchers, x=None, y=None, table=None, exclude_attrs=None,
             excluded from the input table to get the feature vectors.
         target_attr (string): The target attribute in the input table (defaults
             to None).
-        metric (string): The metric based on which the matchers must be
+        metric_to_select_matcher (string): The metric based on which the matchers must be
             selected. The string can be one of 'precision', 'recall',
             'f1' (defaults to 'precision').
+        metrics_to_display (list): The metrics that will be displayed to
+            the user. It should be a list of any of the strings 'precision',
+            'recall', or 'f1' (defaults to ['precision']).
         k (int): The k value for cross-validation (defaults to 5).
         n_jobs (integer): The number of CPUs to use to do the computation.
             -1 means 'all CPUs'.
@@ -54,11 +59,12 @@ def select_matcher(matchers, x=None, y=None, table=None, exclude_attrs=None,
 
     Returns:
 
-        A dictionary containing two keys - selected matcher and the cv_stats.
+        A dictionary containing three keys - selected matcher, cv_stats, and drill_down_cv_stats.
 
-        The selected matcher has a value that is a matcher (MLMatcher) object
-        and cv_stats has a value that is a dictionary containing
-        cross-validation statistics.
+        The selected matcher has a value that is a matcher (MLMatcher) object,
+        cv_stats is a Dataframe containing average metrics for each matcher,
+        and drill_down_cv_stats is a dictionary containing a table for each metric
+        the user wants to display containing the score of the matchers for each fold.
 
     Examples:
         >>> dt = em.DTMatcher()
@@ -66,12 +72,22 @@ def select_matcher(matchers, x=None, y=None, table=None, exclude_attrs=None,
         # train is the feature vector containing user labels
         >>> result = em.select_matcher(matchers=[dt, rf], table=train, exclude_attrs=['_id', 'ltable_id', 'rtable_id'], target_attr='gold_labels', k=5)
 
-
     """
+    # Check that metrics_to_display is valid
+    if not isinstance(metrics_to_display, list):
+        metrics_to_display = [metrics_to_display]
+    for met in metrics_to_display:
+        if met not in ['precision', 'recall', 'f1']:
+            logger.error('Metrics must be either "precision", "recall", or "f1".')
+            raise AssertionError('Metrics must be either "precision", "recall", or "f1".')
+    # Check that metric_to_select_matcher is valid
+    if metric_to_select_matcher not in ['precision', 'recall', 'f1']:
+        logger.error('Metric must be either "precision", "recall", or "f1".')
+        raise AssertionError('Metric must be either "precision", "recall", or "f1".')
+
     # Based on the input, get the x, y data that can be used to call the
     # scikit-learn's cross validation method
     x, y = _get_xy_data(x, y, table, exclude_attrs, target_attr)
-    dict_list = []
     max_score = 0
     # Initialize the best matcher. As of now set it to be the first matcher.
     sel_matcher = matchers[0]
@@ -82,28 +98,47 @@ def select_matcher(matchers, x=None, y=None, table=None, exclude_attrs=None,
     header.extend(fold_header)
     # Finally, append the score.
     header.append('Mean score')
-
+    # Initialize the drill_down_cv_stats dictionary
+    drill_down_cv_stats = OrderedDict()
+    # Initialize the cv_stats_dictionary and set the first key to contain the matcher names
+    cv_stats_dict = OrderedDict()
+    matcher_names = []
     for m in matchers:
-        # Use scikit learn's cross validation to get the matcher and the list
-        #  of scores (one for each fold).
-        matcher, scores = cross_validation(m, x, y, metric, k, random_state, n_jobs)
-        # Fill a dictionary based on the matcher and the scores.
-        val_list = [matcher.get_name(), matcher, k]
-        val_list.extend(scores)
-        val_list.append(pd.np.mean(scores))
-        d = OrderedDict(zip(header, val_list))
-        dict_list.append(d)
-        # Select the matcher based on the mean scoere.
-        if pd.np.mean(scores) > max_score:
-            sel_matcher = m
-            max_score = pd.np.mean(scores)
-    # Create a DataFrame based on the list of dictionaries created
-    stats = pd.DataFrame(dict_list)
-    stats = stats[header]
+        matcher_names.append(m.get_name())
+    cv_stats_dict['Matcher'] = matcher_names
+
+    # Run the cross_validation for each metric
+    for met in metrics_to_display:
+        dict_list = []
+        mean_score_list = []
+        # Run the cross validation for each matcher
+        for m in matchers:
+            # Use scikit learn's cross validation to get the matcher and the list
+            #  of scores (one for each fold).
+            matcher, scores = cross_validation(m, x, y, met, k, random_state, n_jobs)
+            # Fill a dictionary based on the matcher and the scores.
+            val_list = [matcher.get_name(), matcher, k]
+            val_list.extend(scores)
+            val_list.append(pd.np.mean(scores))
+            d = OrderedDict(zip(header, val_list))
+            dict_list.append(d)
+            # Create a list of the mean scores for each matcher
+            mean_score_list.append(pd.np.mean(scores))
+            # Select the matcher based on the mean score, but only for metric_to_select_matcher
+            if met == metric_to_select_matcher and pd.np.mean(scores) > max_score:
+                sel_matcher = m
+                max_score = pd.np.mean(scores)
+        # Create a DataFrame based on the list of dictionaries created
+        stats = pd.DataFrame(dict_list)
+        stats = stats[header]
+        drill_down_cv_stats[met] = stats
+        # Add the mean scores for this metric to the cv_stats_dictionary
+        cv_stats_dict['Average ' + met] = mean_score_list
     res = OrderedDict()
     # Add selected matcher and the stats to a dictionary.
     res['selected_matcher'] = sel_matcher
-    res['cv_stats'] = stats
+    res['cv_stats'] = pd.DataFrame(cv_stats_dict)
+    res['drill_down_cv_stats'] = drill_down_cv_stats
     # Result the final dictionary containing selected matcher and the CV
     # statistics.
     return res
@@ -170,11 +205,7 @@ def _get_xy_data_prj(x, y):
 def _get_xy_data_ex(table, exclude_attrs, target_attr):
     # Validate the input parameters
     # # We expect the input table to be of type pandas DataFrame
-    if not isinstance(table, pd.DataFrame):
-        logger.error('Input table is not of type DataFrame')
-        raise AssertionError(
-            logger.error('Input table is not of type dataframe'))
-
+    validate_object_type(table, pd.DataFrame)
     # We expect exclude attributes to be of type list. If not convert it into
     #  a list.
     if not isinstance(exclude_attrs, list):

@@ -18,6 +18,7 @@ import py_entitymatching.catalog.catalog_manager as cm
 import py_entitymatching.utils.catalog_helper as ch
 import py_entitymatching.utils.generic_helper as gh
 from py_entitymatching.io.pickles import save_object, load_object
+from py_entitymatching.utils.validation_helper import validate_object_type
 
 logger = logging.getLogger(__name__)
 
@@ -85,9 +86,7 @@ def extract_feature_vecs(candset, attrs_before=None, feature_table=None,
     # Validate input parameters
 
     # # We expect the input candset to be of type pandas DataFrame.
-    if not isinstance(candset, pd.DataFrame):
-        logger.error('Input cand.set is not of type dataframe')
-        raise AssertionError('Input cand.set is not of type dataframe')
+    validate_object_type(candset, pd.DataFrame, error_prefix='Input cand.set')
 
     # # If the attrs_before is given, Check if the attrs_before are present in
     # the input candset

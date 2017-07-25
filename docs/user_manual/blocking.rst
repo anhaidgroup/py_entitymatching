@@ -82,7 +82,7 @@ for more details.
 The function `block_tuples` is used to check if a tuple pair would get blocked. An
 example of using `block_tuples` is shown below:
 
-    >>> status = ab.block_tuples(A.ix[0], B.ix[0])
+    >>> status = ab.block_tuples(A.ix[0], B.ix[0], 'age', 'age')
     >>> status
         True
 
@@ -95,6 +95,8 @@ Given two tables A and B, conceptually, `block_tables` in overlap blocker takes 
 attribute `x` of table A, an attribute `y` of table B, and returns True (that is, drop
 the tuple pair) if `x` and `y` do not share any token (where the token is a word or
 a q-gram).
+
+As part of the pre-processing for this blocker, the strings are first converted to lowercase.
 
 
 An example of using `block_tables` is shown below:

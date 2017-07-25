@@ -6,6 +6,8 @@ import logging
 import pandas as pd
 import six
 
+from py_entitymatching.utils.validation_helper import validate_object_type
+
 logger = logging.getLogger(__name__)
 
 
@@ -119,16 +121,10 @@ def get_attr_corres(ltable, rtable):
     # Validate input parameters
     # # We expect the input object (ltable) to be of type pandas
     # DataFrame
-    if not isinstance(ltable, pd.DataFrame):
-        logger.error('Input ltable is not of type pandas DataFrame')
-        raise AssertionError('Input rtable is not of type pandas '
-                             'DataFrame')
+    validate_object_type(ltable, pd.DataFrame, error_prefix='Input ltable')
     # # We expect the input object (rtable) to be of type pandas
     # DataFrame
-    if not isinstance(rtable, pd.DataFrame):
-        logger.error('Input rtable is not of type pandas DataFrame')
-        raise AssertionError('Input rtable is not of type pandas '
-                             'DataFrame')
+    validate_object_type(rtable, pd.DataFrame, error_prefix='Input rtable')
 
     # Initialize the correspondence list
     correspondence_list = []
@@ -172,11 +168,8 @@ def _get_type(column):
     #  we want to keep the types minimal. Further, explicitly recommend the
     # user to update the returned types later.
     if len(type_list) == 0:
-        logger.warning('Column %s does not seem to qualify as any atomic type. '
-                       'It may contain all NaNs. Currently, setting its type to '
-                       'be un_determined.We recommend the users to manually '
-                       'update '
-                       'the returned types or features later. \n' % column.name)
+        logger.warning("Column {0} does not seem to qualify as any atomic type. "
+                       "It may contain all NaNs. Please update the values of column {0}".format(column.name))
         return 'un_determined'
 
     # If the column qualifies to be of more than one type (for instance,

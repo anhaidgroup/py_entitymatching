@@ -9,6 +9,7 @@ import six
 
 import py_entitymatching.utils.catalog_helper as ch
 from py_entitymatching.catalog.catalog import Catalog
+from py_entitymatching.utils.validation_helper import validate_object_type
 
 logger = logging.getLogger(__name__)
 
@@ -47,14 +48,10 @@ def get_property(data_frame, property_name):
     # Validate input parameters
 
     # # The input object should be of type pandas DataFrame
-    if not isinstance(data_frame, pd.DataFrame):
-        logger.error('Input object is not of type pandas DataFrame')
-        raise AssertionError('Input object is not of type pandas DataFrame')
+    validate_object_type(data_frame, pd.DataFrame)
 
     # # The property name should be of type string
-    if not isinstance(property_name, six.string_types):
-        logger.error('Property name is not of type string')
-        raise AssertionError('Property name is not of type string')
+    validate_object_type(property_name, six.string_types, error_prefix='Property name')
 
     # Get the catalog instance, this is imported here because this object
     # used to validate the presence of a DataFrame in the catalog, and the
@@ -118,15 +115,11 @@ def set_property(data_frame, property_name, property_value):
     """
     # Validate input parameters
 
-    # # The input object is expected to be of type pandas DataFrame
-    if not isinstance(data_frame, pd.DataFrame):
-        logger.error('Input object is not of type pandas data frame')
-        raise AssertionError('Input object is not of type pandas data frame')
+    # # The input object should be of type pandas DataFrame
+    validate_object_type(data_frame, pd.DataFrame)
 
-    # # The property name is expected to be of type string.
-    if not isinstance(property_name, six.string_types):
-        logger.error('Property name is not of type string')
-        raise AssertionError('Property name is not of type string')
+    # # The property name should be of type string
+    validate_object_type(property_name, six.string_types, error_prefix='Property name')
 
     # Get the catalog instance
     catalog = Catalog.Instance()
@@ -161,10 +154,8 @@ def init_properties(data_frame):
     """
     # Validate input parameters
 
-    # # Input object is expected to be of type pandas DataFrame
-    if not isinstance(data_frame, pd.DataFrame):
-        logger.error('Input object is not of type pandas DataFrame')
-        raise AssertionError('Input object is not of type pandas DataFrame')
+    # # The input object should be of type pandas DataFrame
+    validate_object_type(data_frame, pd.DataFrame)
 
     # Get the catalog instance
     catalog = Catalog.Instance()
@@ -195,9 +186,8 @@ def get_all_properties(data_frame):
     """
     # Validate input parameters
     # # The input object is expected to be of type DataFrame
-    if not isinstance(data_frame, pd.DataFrame):
-        logger.error('Input object is not of type pandas DataFrame')
-        raise AssertionError('Input object is not of type pandas DataFrame')
+    # # The input object should be of type pandas DataFrame
+    validate_object_type(data_frame, pd.DataFrame)
 
     # Get the catalog instance
     catalog = Catalog.Instance()
@@ -248,14 +238,10 @@ def del_property(data_frame, property_name):
     # Validate input parameters
 
     # # The input object should be of type pandas DataFrame
-    if not isinstance(data_frame, pd.DataFrame):
-        logger.error('Input object is not of type pandas DataFrame')
-        raise AssertionError('Input object is not of type pandas DataFrame')
+    validate_object_type(data_frame, pd.DataFrame)
 
-    # # The input property name is expected to be of type string
-    if not isinstance(property_name, six.string_types):
-        logger.error('Property name is not of type string')
-        raise AssertionError('Property name is not of type string')
+    # # The property name should be of type string
+    validate_object_type(property_name, six.string_types, error_prefix='Property name')
 
     # Get the catalog instance
     catalog = Catalog.Instance()
@@ -415,9 +401,7 @@ def is_dfinfo_present(data_frame):
     """
     # Validate inputs
     # We expect the input object to be of type pandas DataFrame
-    if not isinstance(data_frame, pd.DataFrame):
-        logger.error('Input object is not of type pandas data frame')
-        raise AssertionError('Input object is not of type pandas data frame')
+    validate_object_type(data_frame, pd.DataFrame)
 
     # Get the catalog instance
     catalog = Catalog.Instance()
@@ -463,15 +447,11 @@ def is_property_present_for_df(data_frame, property_name):
     """
     # Input validations
 
-    # # We expect the input object to be of type pandas DataFrame.
-    if not isinstance(data_frame, pd.DataFrame):
-        logger.error('Input object is not of type pandas DataFrame')
-        raise AssertionError('Input object is not of type pandas DataFrame')
+    # # The input object should be of type pandas DataFrame
+    validate_object_type(data_frame, pd.DataFrame)
 
-    # # The input property name should be of type string
-    if not isinstance(property_name, six.string_types):
-        logger.error('The property name is not of type string.')
-        raise AssertionError('The property name is not of type string.')
+    # # The property name should be of type string
+    validate_object_type(property_name, six.string_types, error_prefix='Property name')
 
     # Get the catalog instance
     catalog = Catalog.Instance()
@@ -539,15 +519,10 @@ def set_properties(data_frame, properties, replace=True):
     """
     # Validate input parameters
     # # Input object is expected to be a pandas DataFrame
-    if not isinstance(data_frame, pd.DataFrame):
-        logger.error('Input object is not of type pandas DataFrame')
-        raise AssertionError('Input object is not of type pandas DataFrame')
+    validate_object_type(data_frame, pd.DataFrame)
 
     # # Input properties is expected to be of type Python dictionary
-    if not isinstance(properties, dict):
-        logger.error('The properties should be of type Python dictionary')
-        raise AssertionError(
-            'The properties should be of type Python dictionary')
+    validate_object_type(properties, dict, error_prefix='The properties')
 
     # Get the catalog instance
     catalog = Catalog.Instance()
@@ -626,18 +601,10 @@ def copy_properties(source_data_frame, target_data_frame, replace=True):
     # Validate input parameters
 
     # # The source_data_frame is expected to be of type pandas DataFrame
-    if not isinstance(source_data_frame, pd.DataFrame):
-        logger.error('Input object (source_data_frame) is not of type pandas '
-                     'DataFrame')
-        raise AssertionError(
-            'Input object (source_data_frame) is not of type pandas DataFrame')
+    validate_object_type(source_data_frame, pd.DataFrame, error_prefix='Input object (source_data_frame)')
 
     # # The target_data_frame is expected to be of type pandas DataFrame
-    if not isinstance(target_data_frame, pd.DataFrame):
-        logger.error('Input object (target_data_frame) is not of type pandas '
-                     'DataFrame')
-        raise AssertionError('Input object (target_data_frame) is not  of '
-                             'type pandas DataFrame')
+    validate_object_type(target_data_frame, pd.DataFrame, error_prefix='Input object (target_data_frame)')
 
     # Get the catalog instance
     catalog = Catalog.Instance()
@@ -740,13 +707,10 @@ def set_key(data_frame, key_attribute):
     # Validate input parameters
 
     # # We expect the input object (data_frame) to be of type pandas DataFrame
-    if not isinstance(data_frame, pd.DataFrame):
-        logger.error('Input object is not of type pandas DataFrame')
-        raise AssertionError('Input object is not of type pandas DataFrame')
+    validate_object_type(data_frame, pd.DataFrame)
 
     # # We expect input key attribute to be of type string
-    if not isinstance(key_attribute, six.string_types):
-        logger.error('Input key attribute is not of type string')
+    validate_object_type(key_attribute, six.string_types, error_prefix='Input key attribute')
 
     # Check if the key attribute is present as one of the columns in the
     # DataFrame
@@ -895,14 +859,10 @@ def set_fk_ltable(data_frame, fk_ltable):
     """
     # Validate the input parameters
     # # We expect the input object to be of type pandas DataFrame
-    if not isinstance(data_frame, pd.DataFrame):
-        logger.error('Input object is not of type pandas data frame')
-        raise AssertionError('Input object is not of type pandas data frame')
+    validate_object_type(data_frame, pd.DataFrame)
 
     # # We expect the input fk_ltable to be of type string
-    if not isinstance(fk_ltable, six.string_types):
-        logger.error('The input (fk_ltable) is not of type string')
-        raise AssertionError('The input (fk_ltable) is not of type string')
+    validate_object_type(fk_ltable, six.string_types, error_prefix='The input (fk_ltable)')
 
     # # The fk_ltable attribute should be one of the columns in the input
     # DataFrame
@@ -1068,15 +1028,9 @@ def set_fk_rtable(data_frame, foreign_key_rtable):
     """
     # Validate the input parameters
     # # The input object is expected to be of type pandas DataFrame
-    if not isinstance(data_frame, pd.DataFrame):
-        logger.error('Input object is not of type pandas data frame')
-        raise AssertionError('Input object is not of type pandas data frame')
+    validate_object_type(data_frame, pd.DataFrame)
 
-    if not isinstance(foreign_key_rtable, six.string_types):
-        logger.error('Input (foreign key ltable) is not of type pandas data '
-                     'frame')
-        raise AssertionError('Input (foreign key rtable) is not of type pandas '
-                             'data frame')
+    validate_object_type(foreign_key_rtable, six.string_types, error_prefix='Input (foreign key ltable)')
 
     # Check if the given attribute is present in the DataFrame
     if not ch.check_attrs_present(data_frame, foreign_key_rtable):
@@ -1211,25 +1165,19 @@ def _validate_metadata_for_table(table, key, output_string, lgr, verbose):
     """
     # Validate input parameters
     # # We expect the input table to be of type pandas DataFrame
-    if not isinstance(table, pd.DataFrame):
-        logger.error('Input object is not of type pandas DataFrame')
-        raise AssertionError('Input object is not of type pandas DataFrame')
+    validate_object_type(table, pd.DataFrame)
 
     # Check the key column is present in the table
     if not ch.check_attrs_present(table, key):
-        logger.error('Input key ( %s ) not in the DataFrame' % key)
         raise KeyError('Input key ( %s ) not in the DataFrame' % key)
 
     # Validate the key
     ch.log_info(lgr, 'Validating ' + output_string + ' key: ' + str(key),
                 verbose)
     # We expect the key to be of type string
-    if not isinstance(key, six.string_types):
-        logger.error('Key attribute must be of type string')
-        raise AssertionError('Key attribute must be of type string')
+    validate_object_type(key, six.string_types, error_prefix='Key attribute')
+
     if not ch.is_key_attribute(table, key, verbose):
-        logger.error('Attribute %s in the %s table does not '
-                     'qualify to be the key' % (str(key), output_string))
         raise AssertionError('Attribute %s in the %s table does not '
                              'qualify to be the key' % (
                                  str(key), output_string))
@@ -1248,48 +1196,35 @@ def _validate_metadata_for_candset(candset, key, foreign_key_ltable,
     """
     # Validate input parameters
     # # We expect candset to be of type pandas DataFrame
-    if not isinstance(candset, pd.DataFrame):
-        logger.error('Input candset is not of type pandas DataFrame')
-        raise AssertionError('Input candset is not of type pandas DataFrame')
+    validate_object_type(candset, pd.DataFrame, error_prefix='Input candset')
 
     # Check if the key column is present in the candset
     if not ch.check_attrs_present(candset, key):
-        logger.error('Input key ( %s ) not in the DataFrame' % key)
         raise KeyError('Input key ( %s ) not in the DataFrame' % key)
 
     # Check if the foreign key ltable column is present in the candset
     if not ch.check_attrs_present(candset, foreign_key_ltable):
-        logger.error('Input foreign_key_ltable ( %s ) not in the DataFrame'
-                     % foreign_key_ltable)
         raise KeyError(
             'Input foreign_key_ltable ( %s ) not in the DataFrame'
             % foreign_key_ltable)
 
     # Check if the foreign key rtable column is present in the candset
     if not ch.check_attrs_present(candset, foreign_key_rtable):
-        logger.error(
-            'Input fk_rtable ( %s ) not in the DataFrame' % foreign_key_rtable)
         raise KeyError(
             'Input fk_rtable ( %s ) not in the DataFrame' % foreign_key_rtable)
 
     # We expect the ltable to be of type pandas DataFrame
-    if not isinstance(ltable, pd.DataFrame):
-        logger.error('Input ltable is not of type pandas data frame')
-        raise AssertionError('Input ltable is not of type pandas data frame')
+    validate_object_type(ltable, pd.DataFrame, error_prefix='Input ltable')
 
     # We expect the rtable to be of type pandas DataFrame
-    if not isinstance(rtable, pd.DataFrame):
-        logger.error('Input rtable is not of type pandas data frame')
-        raise AssertionError('Input rtable is not of type pandas data frame')
+    validate_object_type(rtable, pd.DataFrame, error_prefix='Input rtable')
 
     # We expect the ltable key to be present in the ltable
     if not ch.check_attrs_present(ltable, ltable_key):
-        logger.error('ltable key ( %s ) not in ltable' % ltable_key)
         raise KeyError('ltable key ( %s ) not in ltable' % ltable_key)
 
     # We expect the rtable key to be present in the rtable
     if not ch.check_attrs_present(rtable, rtable_key):
-        logger.error('rtable key ( %s ) not in rtable' % rtable_key)
         raise KeyError('rtable key ( %s ) not in rtable' % rtable_key)
 
     # First validate metadata for the candidate set (as a table)
@@ -1300,16 +1235,12 @@ def _validate_metadata_for_candset(candset, key, foreign_key_ltable,
     # Second check foreign key constraints
     if not ch.check_fk_constraint(candset, foreign_key_ltable,
                                   ltable, ltable_key):
-        logger.error('Candset does not satisfy foreign key constraint with '
-                     'the left table')
         raise AssertionError(
             'Candset does not satisfy foreign key constraint with '
             'the left table')
 
     if not ch.check_fk_constraint(candset, foreign_key_rtable,
                                   rtable, rtable_key):
-        logger.error('Candset does not satisfy foreign key constraint with '
-                     'the right table')
         raise AssertionError(
             'Candset does not satisfy foreign key constraint with '
             'the right table')
@@ -1354,9 +1285,7 @@ def get_metadata_for_candset(candset, lgr, verbose):
 
     """
     # Validate input parameters
-    if not isinstance(candset, pd.DataFrame):
-        logger.error('Input candset is not of type pandas data frame')
-        raise AssertionError('Input candset is not of type pandas data frame')
+    validate_object_type(candset, pd.DataFrame, error_prefix='Input candset')
 
     ch.log_info(lgr, 'Getting metadata from the catalog', verbose)
     # Get the key, foreign keys, ltable, rtable and their keys

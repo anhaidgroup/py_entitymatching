@@ -2,6 +2,7 @@ import logging
 # from builtins import str
 
 import six
+import sys
 
 import py_entitymatching as em
 from py_entitymatching.utils.generic_helper import remove_non_ascii
@@ -21,21 +22,21 @@ def view_table(table, edit_flag=False, show_flag=True):
 
     """
     try:
-        from PyQt4 import QtGui
+        from PyQt5 import QtWidgets
     except ImportError:
-        raise ImportError('PyQt4 is not installed. Please install PyQt4 to use '
+        raise ImportError('PyQt5 is not installed. Please install PyQt5 to use '
                       'GUI related functions in py_entitymatching.')
 
-    em._viewapp = QtGui.QApplication.instance()
+    em._viewapp = QtWidgets.QApplication.instance()
     if em._viewapp is None:
-        em._viewapp = QtGui.QApplication([])
+        em._viewapp = QtWidgets.QApplication([])
     app = em._viewapp
 
-    datatable = QtGui.QTableWidget()
+    datatable = QtWidgets.QTableWidget()
 
     # disable edit
     if edit_flag == False:
-        datatable.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
+        datatable.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
 
     datatable.setRowCount(len(table.index))
     datatable.setColumnCount(len(table.columns))
@@ -44,7 +45,7 @@ def view_table(table, edit_flag=False, show_flag=True):
     for i in range(len(table.index)):
         for j in range(len(table.columns)):
             datatable.setItem(i, j,
-                              QtGui.QTableWidgetItem(str(table.iat[i, j])))
+                              QtWidgets.QTableWidgetItem(str(table.iat[i, j])))
 
     list_col = list(table.columns.values)
     datatable.setHorizontalHeaderLabels(list_col)
@@ -62,9 +63,9 @@ def view_table(table, edit_flag=False, show_flag=True):
     if show_flag:
         # show window
         datatable.show()
-        em._viewapp = QtGui.QApplication.instance()
+        em._viewapp = QtWidgets.QApplication.instance()
         if em._viewapp is None:
-            em._viewapp = QtGui.QApplication([])
+            em._viewapp = QtWidgets.QApplication([])
         app = em._viewapp
         app.exec_()
 
@@ -77,21 +78,22 @@ def edit_table(table, show_flag=True):
     Edit table
     """
     try:
-        from PyQt4 import QtGui
+        from PyQt5 import QtGui
     except ImportError:
-        raise ImportError('PyQt4 is not installed. Please install PyQt4 to use '
+        raise ImportError('PyQt5 is not installed. Please install PyQt5 to use '
                       'GUI related functions in py_entitymatching.')
 
     datatable = view_table(table, edit_flag=True, show_flag=show_flag)
     cols = list(table.columns)
     idxv = list(table.index)
+    j = len(table.columns) - 1
     for i in range(len(table.index)):
-        for j in range(len(table.columns)):
             val = datatable.item(i, j).text()
             inp = table.iat[i, j]
             val = _cast_val(val, inp)
             table.set_value(idxv[i], cols[j], val)
 
+            
 
 def _cast_val(v, i):
     # need to cast string values from edit window
@@ -104,9 +106,8 @@ def _cast_val(v, i):
     elif isinstance(i, int):
         return int(v)
     elif isinstance(i, six.string_types):
-        # if isinstance(i, bytes):
-        #     v = v.decode('utf-8')
-        # # v = remove_non_ascii(str(v))
+        if sys.version_info[0] < 3:
+            v = unicode(v.toUtf8(), encoding="UTF-8")
         return v
     elif isinstance(i, object):
         return v

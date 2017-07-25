@@ -54,7 +54,7 @@ class MLMatcherSelectionTestCases(unittest.TestCase):
                                 exclude_attrs=['ltable.id', 'rtable.id', '_id', 'gold'],
                                 target_attr='gold', k=7)
         header = ['Name', 'Matcher', 'Num folds']
-        result_df = result['cv_stats']
+        result_df = result['drill_down_cv_stats']['precision']
         self.assertEqual(set(header) == set(list(result_df.columns[[0, 1, 2]])), True)
         self.assertEqual('Mean score', result_df.columns[len(result_df.columns) - 1])
         d = result_df.set_index('Name')
@@ -90,7 +90,7 @@ class MLMatcherSelectionTestCases(unittest.TestCase):
         Y = feature_vectors['gold']
         result = select_matcher(matchers, x=X, y=Y)
         header = ['Name', 'Matcher', 'Num folds']
-        result_df = result['cv_stats']
+        result_df = result['drill_down_cv_stats']['precision']
         self.assertEqual(set(header) == set(list(result_df.columns[[0, 1, 2]])), True)
         self.assertEqual('Mean score', result_df.columns[len(result_df.columns) - 1])
         d = result_df.set_index('Name')
@@ -124,9 +124,9 @@ class MLMatcherSelectionTestCases(unittest.TestCase):
                                  'gold'])
         X = feature_vectors[l]
         Y = feature_vectors['gold']
-        result = select_matcher(matchers, x=X, y=Y, metric='recall')
+        result = select_matcher(matchers, x=X, y=Y, metric_to_select_matcher='recall', metrics_to_display=['recall'])
         header = ['Name', 'Matcher', 'Num folds']
-        result_df = result['cv_stats']
+        result_df = result['drill_down_cv_stats']['recall']
         self.assertEqual(set(header) == set(list(result_df.columns[[0, 1, 2]])), True)
         self.assertEqual('Mean score', result_df.columns[len(result_df.columns) - 1])
         d = result_df.set_index('Name')
@@ -160,9 +160,9 @@ class MLMatcherSelectionTestCases(unittest.TestCase):
                                  'gold'])
         X = feature_vectors[l]
         Y = feature_vectors['gold']
-        result = select_matcher(matchers, x=X, y=Y, metric='f1')
+        result = select_matcher(matchers, x=X, y=Y, metric_to_select_matcher='f1', metrics_to_display=['f1'])
         header = ['Name', 'Matcher', 'Num folds']
-        result_df = result['cv_stats']
+        result_df = result['drill_down_cv_stats']['f1']
         self.assertEqual(set(header) == set(list(result_df.columns[[0, 1, 2]])), True)
         self.assertEqual('Mean score', result_df.columns[len(result_df.columns) - 1])
         d = result_df.set_index('Name')
@@ -196,16 +196,15 @@ class MLMatcherSelectionTestCases(unittest.TestCase):
                                  'gold'])
         X = feature_vectors[l]
         Y = feature_vectors['gold']
-        result = select_matcher(matchers, x=X, y=Y, metric='f1', k=4)
+        result = select_matcher(matchers, x=X, y=Y, metric_to_select_matcher='f1', metrics_to_display=['f1'], k=4)
         header = ['Name', 'Matcher', 'Num folds']
-        result_df = result['cv_stats']
+        result_df = result['drill_down_cv_stats']['f1']
         self.assertEqual(set(header) == set(list(result_df.columns[[0, 1, 2]])), True)
         self.assertEqual('Mean score', result_df.columns[len(result_df.columns) - 1])
         d = result_df.set_index('Name')
         p_max = d.ix[result['selected_matcher'].name, 'Mean score']
         a_max = pd.np.max(d['Mean score'])
         self.assertEqual(p_max, a_max)
-
 
     def test_select_matcher_valid_6(self):
         A = read_csv_metadata(path_a, key='id')
@@ -234,7 +233,7 @@ class MLMatcherSelectionTestCases(unittest.TestCase):
         Y = feature_vectors['gold']
         result = select_matcher(matchers, x=X, y=Y)
         header = ['Name', 'Matcher', 'Num folds']
-        result_df = result['cv_stats']
+        result_df = result['drill_down_cv_stats']['precision']
         self.assertEqual(set(header) == set(list(result_df.columns[[0, 1, 2]])), True)
         self.assertEqual('Mean score', result_df.columns[len(result_df.columns) - 1])
         d = result_df.set_index('Name')
@@ -273,7 +272,7 @@ class MLMatcherSelectionTestCases(unittest.TestCase):
                                 target_attr='gold', k=2)
 
         header = ['Name', 'Matcher', 'Num folds']
-        result_df = result['cv_stats']
+        result_df = result['drill_down_cv_stats']['precision']
         self.assertEqual(set(header) == set(list(result_df.columns[[0, 1, 2]])), True)
         self.assertEqual('Mean score', result_df.columns[len(result_df.columns) - 1])
         d = result_df.set_index('Name')
@@ -379,3 +378,185 @@ class MLMatcherSelectionTestCases(unittest.TestCase):
         result = select_matcher(matchers, x=None, y=None, table=feature_vectors,
                                 exclude_attrs='_id',
                                 target_attr='labels1', k=2)
+
+    def test_select_matcher_valid_multiple_metrics(self):
+        A = read_csv_metadata(path_a, key='id')
+        B = read_csv_metadata(path_b, key='id')
+        feature_vectors = read_csv_metadata(path_f, ltable=A, rtable=B)
+        dtmatcher = DTMatcher()
+        nbmatcher = NBMatcher()
+        rfmatcher = RFMatcher()
+        svmmatcher = SVMMatcher()
+        linregmatcher = LinRegMatcher()
+        logregmatcher = LogRegMatcher()
+        matchers = [dtmatcher, nbmatcher, rfmatcher, svmmatcher, linregmatcher, logregmatcher]
+
+        result = select_matcher(matchers, x=None, y=None, table=feature_vectors,
+                                exclude_attrs=['ltable.id', 'rtable.id', '_id', 'gold'],
+                                target_attr='gold', k=7)
+        header = ['Name', 'Matcher', 'Num folds']
+        result_df_p = result['drill_down_cv_stats']['precision']
+        result_df_f = result['drill_down_cv_stats']['f1']
+        result_df_r = result['drill_down_cv_stats']['recall']
+        # Check header of precision dataframe
+        self.assertEqual(set(header) == set(list(result_df_p.columns[[0, 1, 2]])), True)
+        self.assertEqual('Mean score', result_df_p.columns[len(result_df_p.columns) - 1])
+        # Check header of f1 dataframe
+        self.assertEqual(set(header) == set(list(result_df_f.columns[[0, 1, 2]])), True)
+        self.assertEqual('Mean score', result_df_f.columns[len(result_df_f.columns) - 1])
+        # Check header of recall dataframe
+        self.assertEqual(set(header) == set(list(result_df_r.columns[[0, 1, 2]])), True)
+        self.assertEqual('Mean score', result_df_p.columns[len(result_df_r.columns) - 1])
+        d = result_df_p.set_index('Name')
+        p_max = d.ix[result['selected_matcher'].name, 'Mean score']
+        a_max = pd.np.max(d['Mean score'])
+        self.assertEqual(p_max, a_max)
+
+    def test_select_matcher_valid_cv_stats(self):
+        A = read_csv_metadata(path_a, key='id')
+        B = read_csv_metadata(path_b, key='id')
+        feature_vectors = read_csv_metadata(path_f, ltable=A, rtable=B)
+        dtmatcher = DTMatcher()
+        nbmatcher = NBMatcher()
+        rfmatcher = RFMatcher()
+        svmmatcher = SVMMatcher()
+        linregmatcher = LinRegMatcher()
+        logregmatcher = LogRegMatcher()
+        matchers = [dtmatcher, nbmatcher, rfmatcher, svmmatcher, linregmatcher, logregmatcher]
+
+        result = select_matcher(matchers, x=None, y=None, table=feature_vectors,
+                                exclude_attrs=['ltable.id', 'rtable.id', '_id', 'gold'],
+                                target_attr='gold', k=7)
+        header = ['Matcher', 'Average precision', 'Average recall', 'Average f1']
+        result_df = result['cv_stats']
+        result_df_p = result['drill_down_cv_stats']['precision']
+        self.assertEqual(set(header) == set(list(result_df.columns[[0, 1, 2, 3]])), True)
+        d = result_df.set_index('Matcher')
+        p_max = d.ix[result['selected_matcher'].name, 'Average precision']
+        a_max = pd.np.max(result_df_p['Mean score'])
+        self.assertEqual(p_max, a_max)
+
+    def test_select_matcher_valid_cv_stats_2(self):
+        A = read_csv_metadata(path_a, key='id')
+        B = read_csv_metadata(path_b, key='id')
+        feature_vectors = read_csv_metadata(path_f, ltable=A, rtable=B)
+        dtmatcher = DTMatcher()
+        nbmatcher = NBMatcher()
+        rfmatcher = RFMatcher()
+        svmmatcher = SVMMatcher()
+        linregmatcher = LinRegMatcher()
+        logregmatcher = LogRegMatcher()
+        matchers = [dtmatcher, nbmatcher, rfmatcher, svmmatcher, linregmatcher, logregmatcher]
+
+        result = select_matcher(matchers, x=None, y=None, table=feature_vectors,
+                                exclude_attrs=['ltable.id', 'rtable.id', '_id', 'gold'],
+                                metric_to_select_matcher='recall',
+                                metrics_to_display=['recall', 'f1'],
+                                target_attr='gold', k=7)
+        header = ['Matcher', 'Average recall', 'Average f1']
+        result_df = result['cv_stats']
+        result_df_r = result['drill_down_cv_stats']['recall']
+        self.assertEqual(set(header) == set(list(result_df.columns[[0, 1, 2]])), True)
+        d = result_df.set_index('Matcher')
+        p_max = d.ix[result['selected_matcher'].name, 'Average recall']
+        a_max = pd.np.max(result_df_r['Mean score'])
+        self.assertEqual(p_max, a_max)
+
+    def test_select_matcher_valid_cv_stats_3(self):
+        A = read_csv_metadata(path_a, key='id')
+        B = read_csv_metadata(path_b, key='id')
+        feature_vectors = read_csv_metadata(path_f, ltable=A, rtable=B)
+        dtmatcher = DTMatcher()
+        nbmatcher = NBMatcher()
+        rfmatcher = RFMatcher()
+        svmmatcher = SVMMatcher()
+        linregmatcher = LinRegMatcher()
+        logregmatcher = LogRegMatcher()
+        matchers = [dtmatcher, nbmatcher, rfmatcher, svmmatcher, linregmatcher, logregmatcher]
+
+        result = select_matcher(matchers, x=None, y=None, table=feature_vectors,
+                                exclude_attrs=['ltable.id', 'rtable.id', '_id', 'gold'],
+                                metric_to_select_matcher='recall',
+                                metrics_to_display='recall',
+                                target_attr='gold', k=7)
+        header = ['Matcher', 'Average recall']
+        result_df = result['cv_stats']
+        result_df_r = result['drill_down_cv_stats']['recall']
+        self.assertEqual(set(header) == set(list(result_df.columns[[0, 1]])), True)
+        d = result_df.set_index('Matcher')
+        p_max = d.ix[result['selected_matcher'].name, 'Average recall']
+        a_max = pd.np.max(result_df_r['Mean score'])
+        self.assertEqual(p_max, a_max)
+
+    @raises(KeyError)
+    def test_select_matcher_invalid_no_display_drill_down(self):
+        A = read_csv_metadata(path_a, key='id')
+        B = read_csv_metadata(path_b, key='id')
+        feature_vectors = read_csv_metadata(path_f, ltable=A, rtable=B)
+        dtmatcher = DTMatcher()
+        nbmatcher = NBMatcher()
+        rfmatcher = RFMatcher()
+        svmmatcher = SVMMatcher()
+        linregmatcher = LinRegMatcher()
+        logregmatcher = LogRegMatcher()
+        matchers = [dtmatcher, nbmatcher, rfmatcher, svmmatcher, linregmatcher, logregmatcher]
+
+        result = select_matcher(matchers, x=None, y=None, table=feature_vectors,
+                                exclude_attrs=['ltable.id', 'rtable.id', '_id', 'gold'],
+                                metrics_to_display=['precision'],
+                                target_attr='gold', k=7)
+        result_df_p = result['drill_down_cv_stats']['recall']
+
+    @raises(AssertionError)
+    def test_select_matcher_invalid_metrics_to_display_1(self):
+        A = read_csv_metadata(path_a, key='id')
+        B = read_csv_metadata(path_b, key='id')
+        feature_vectors = read_csv_metadata(path_f, ltable=A, rtable=B)
+        dtmatcher = DTMatcher()
+        nbmatcher = NBMatcher()
+        rfmatcher = RFMatcher()
+        svmmatcher = SVMMatcher()
+        linregmatcher = LinRegMatcher()
+        logregmatcher = LogRegMatcher()
+        matchers = [dtmatcher, nbmatcher, rfmatcher, svmmatcher, linregmatcher, logregmatcher]
+
+        result = select_matcher(matchers, x=None, y=None, table=feature_vectors,
+                                exclude_attrs=['ltable.id', 'rtable.id', '_id', 'gold'],
+                                metrics_to_display=None,
+                                target_attr='gold', k=7)
+
+    @raises(AssertionError)
+    def test_select_matcher_invalid_metrics_to_display_2(self):
+        A = read_csv_metadata(path_a, key='id')
+        B = read_csv_metadata(path_b, key='id')
+        feature_vectors = read_csv_metadata(path_f, ltable=A, rtable=B)
+        dtmatcher = DTMatcher()
+        nbmatcher = NBMatcher()
+        rfmatcher = RFMatcher()
+        svmmatcher = SVMMatcher()
+        linregmatcher = LinRegMatcher()
+        logregmatcher = LogRegMatcher()
+        matchers = [dtmatcher, nbmatcher, rfmatcher, svmmatcher, linregmatcher, logregmatcher]
+
+        result = select_matcher(matchers, x=None, y=None, table=feature_vectors,
+                                exclude_attrs=['ltable.id', 'rtable.id', '_id', 'gold'],
+                                metrics_to_display=['test'],
+                                target_attr='gold', k=7)
+
+    @raises(AssertionError)
+    def test_select_matcher_invalid_metric_to_select_matcher(self):
+        A = read_csv_metadata(path_a, key='id')
+        B = read_csv_metadata(path_b, key='id')
+        feature_vectors = read_csv_metadata(path_f, ltable=A, rtable=B)
+        dtmatcher = DTMatcher()
+        nbmatcher = NBMatcher()
+        rfmatcher = RFMatcher()
+        svmmatcher = SVMMatcher()
+        linregmatcher = LinRegMatcher()
+        logregmatcher = LogRegMatcher()
+        matchers = [dtmatcher, nbmatcher, rfmatcher, svmmatcher, linregmatcher, logregmatcher]
+
+        result = select_matcher(matchers, x=None, y=None, table=feature_vectors,
+                                exclude_attrs=['ltable.id', 'rtable.id', '_id', 'gold'],
+                                metric_to_select_matcher='test',
+                                target_attr='gold', k=7)

@@ -2,6 +2,8 @@ import os
 from nose.tools import *
 import unittest
 import pandas as pd
+import six
+from contextlib import contextmanager
 
 from py_entitymatching.utils.generic_helper import get_install_path
 from py_entitymatching.io.parsers import read_csv_metadata
@@ -19,6 +21,15 @@ bc_datasets_path = os.sep.join([get_install_path(), 'tests', 'test_datasets', 'b
 path_a = os.sep.join([datasets_path, 'A.csv'])
 path_b = os.sep.join([datasets_path, 'B.csv'])
 path_c = os.sep.join([datasets_path, 'C.csv'])
+
+# proxy for user input. Since we use six, the way to proxy the input is to use the moves module.
+# Specifically, for input we had to replace input with a function that will return the desired output
+@contextmanager
+def mockInput(mock):
+    original_input = six.moves.input
+    six.moves.input = lambda _: mock
+    yield
+    six.moves.input = original_input
 
 class AutoFeatureGenerationTestCases(unittest.TestCase):
     def setUp(self):
@@ -79,7 +90,7 @@ class AutoFeatureGenerationTestCases(unittest.TestCase):
     def test_get_features_for_blocking_valid(self):
         A = read_csv_metadata(path_a)
         B = read_csv_metadata(path_b, key='ID')
-        feat_table = afg.get_features_for_blocking(A, B)
+        feat_table = afg.get_features_for_blocking(A, B, validate_inferred_attr_types=False)
         self.assertEqual(isinstance(feat_table, pd.DataFrame), True)
         functions = feat_table['function']
         for f in functions:
@@ -90,18 +101,18 @@ class AutoFeatureGenerationTestCases(unittest.TestCase):
     def test_get_features_for_blocking_invalid_df1(self):
         # A = read_csv_metadata(path_a)
         B = read_csv_metadata(path_b, key='ID')
-        feat_table = afg.get_features_for_blocking(None, B)
+        feat_table = afg.get_features_for_blocking(None, B, validate_inferred_attr_types=False)
 
     @raises(AssertionError)
     def test_get_features_for_blocking_invalid_df2(self):
         A = read_csv_metadata(path_a)
         # B = read_csv_metadata(path_b, key='ID')
-        feat_table = afg.get_features_for_blocking(A, None)
+        feat_table = afg.get_features_for_blocking(A, None, validate_inferred_attr_types=False)
 
     def test_get_features_for_matching_valid(self):
         A = read_csv_metadata(path_a)
         B = read_csv_metadata(path_b, key='ID')
-        feat_table = afg.get_features_for_matching(A, B)
+        feat_table = afg.get_features_for_matching(A, B, validate_inferred_attr_types=False)
         self.assertEqual(isinstance(feat_table, pd.DataFrame), True)
         functions = feat_table['function']
         for f in functions:
@@ -112,13 +123,13 @@ class AutoFeatureGenerationTestCases(unittest.TestCase):
     def test_get_features_for_matching_invalid_df1(self):
         # A = read_csv_metadata(path_a)
         B = read_csv_metadata(path_b, key='ID')
-        feat_table = afg.get_features_for_matching(None, B)
+        feat_table = afg.get_features_for_matching(None, B, validate_inferred_attr_types=False)
 
     @raises(AssertionError)
     def test_get_features_for_matching_invalid_df2(self):
         A = read_csv_metadata(path_a)
         # B = read_csv_metadata(path_b, key='ID')
-        feat_table = afg.get_features_for_matching(A, None)
+        feat_table = afg.get_features_for_matching(A, None, validate_inferred_attr_types=False)
 
 
     def test_check_table_order_valid(self):
@@ -243,3 +254,135 @@ class AutoFeatureGenerationTestCases(unittest.TestCase):
     def test_get_fn_str_valid2(self):
         status = afg.get_fn_str('lev', ('year', 'year'))
         self.assertNotEqual(status, None)
+
+    def test_validate_attr_types_proceed_no(self):
+        A = read_csv_metadata(path_a)
+        B = read_csv_metadata(path_b, key='ID')
+        l_attr_types = au.get_attr_types(A)
+        r_attr_types = au.get_attr_types(B)
+        attr_corres = au.get_attr_corres(A, B)
+
+        with mockInput('n'):
+            status = afg.validate_attr_types(l_attr_types, r_attr_types, attr_corres, 't')
+            self.assertEqual(status is None, True)
+
+    def test_validate_attr_types_proceed_yes(self):
+        A = read_csv_metadata(path_a)
+        B = read_csv_metadata(path_b, key='ID')
+        l_attr_types = au.get_attr_types(A)
+        r_attr_types = au.get_attr_types(B)
+        attr_corres = au.get_attr_corres(A, B)
+
+        with mockInput('y'):
+            status = afg.validate_attr_types(l_attr_types, r_attr_types, attr_corres, 't')
+            self.assertEqual(status is None, False)
+
+    @raises(AssertionError)
+    def test_validate_attr_types_invalid_l_types(self):
+        A = read_csv_metadata(path_a)
+        B = read_csv_metadata(path_b, key='ID')
+        # l_attr_types = au.get_attr_types(A)
+        r_attr_types = au.get_attr_types(B)
+        attr_corres = au.get_attr_corres(A, B)
+        response = afg.validate_attr_types(None, r_attr_types, attr_corres, display_type='t')
+
+    @raises(AssertionError)
+    def test_validate_attr_types_invalid_r_types(self):
+        A = read_csv_metadata(path_a)
+        B = read_csv_metadata(path_b, key='ID')
+        l_attr_types = au.get_attr_types(A)
+        # r_attr_types = au.get_attr_types(B)
+        attr_corres = au.get_attr_corres(A, B)
+        response = afg.validate_attr_types(l_attr_types, None, attr_corres, display_type='t')
+
+    @raises(AssertionError)
+    def test_validate_attr_types_invalid_corres(self):
+        A = read_csv_metadata(path_a)
+        B = read_csv_metadata(path_b, key='ID')
+        l_attr_types = au.get_attr_types(A)
+        r_attr_types = au.get_attr_types(B)
+        # attr_corres = au.get_attr_corres(A, B)
+        response = afg.validate_attr_types(l_attr_types, r_attr_types, None, display_type='t')
+
+    def test_validate_attr_types_valid(self):
+        A = read_csv_metadata(path_a)
+        B = read_csv_metadata(path_b, key='ID')
+        l_attr_types = au.get_attr_types(A)
+        r_attr_types = au.get_attr_types(B)
+        attr_corres = au.get_attr_corres(A, B)
+
+        with mockInput('y'):
+            validate_table = afg.validate_attr_types(l_attr_types, r_attr_types, attr_corres, display_type='t')
+
+        self.assertEqual(isinstance(validate_table, pd.DataFrame), True)
+
+        actual_names = pd.Series(['ID', 'name', 'birth_year', 'hourly_wage', 'address', 'zipcode'])
+        actual_l_types = pd.Series(['short string (1 word)', 'short string (1 word to 5 words)', 'numeric',
+                          'numeric', 'short string (1 word to 5 words)', 'numeric'])
+        actual_r_types = pd.Series(['short string (1 word)', 'short string (1 word to 5 words)', 'numeric',
+                          'numeric', 'medium string (5 words to 10 words)', 'numeric'])
+        actual_features = pd.Series(['Levenshtein Distance; Levenshtein Similarity',
+                           'Jaccard Similarity [3-grams, 3-grams]; Cosine Similarity [Space Delimiter, Space Delimiter]',
+                           'Exact Match; Absolute Norm', 'Exact Match; Absolute Norm',
+                           'Not Applicable: Types do not match', 'Exact Match; Absolute Norm'])
+
+        names = validate_table['Left Attribute']
+        features = validate_table['Example Features']
+        l_types = validate_table['Left Attribute Type']
+        r_types = validate_table['Right Attribute Type']
+
+        self.assertEqual(actual_names.equals(names), True)
+        self.assertEqual(actual_features.equals(features), True)
+        self.assertEqual(actual_l_types.equals(l_types), True)
+        self.assertEqual(actual_r_types.equals(r_types), True)
+
+
+    @raises(AssertionError)
+    def test_get_features_for_blocking_invalid_bool(self):
+        A = read_csv_metadata(path_a)
+        B = read_csv_metadata(path_b, key='ID')
+        feat_table = afg.get_features_for_blocking(A, B, validate_inferred_attr_types=None)
+
+    def test_get_features_for_blocking_validate_types_valid_yes(self):
+        A = read_csv_metadata(path_a)
+        B = read_csv_metadata(path_b, key='ID')
+
+        with mockInput('y'):
+            feat_table = afg.get_features_for_blocking(A, B, validate_inferred_attr_types=True)
+
+        self.assertEqual(isinstance(feat_table, pd.DataFrame), True)
+        functions = feat_table['function']
+        for f in functions:
+            x = f(A.ix[1], B.ix[2])
+            self.assertEqual(x >= 0, True)
+
+    def test_get_features_for_matching_validate_types_valid_yes(self):
+        A = read_csv_metadata(path_a)
+        B = read_csv_metadata(path_b, key='ID')
+
+        with mockInput('y'):
+            feat_table = afg.get_features_for_matching(A, B, validate_inferred_attr_types=True)
+
+        self.assertEqual(isinstance(feat_table, pd.DataFrame), True)
+        functions = feat_table['function']
+        for f in functions:
+            x = f(A.ix[1], B.ix[2])
+            self.assertEqual(x >= 0, True)
+
+    def test_get_features_for_blocking_validate_types_valid_no(self):
+        A = read_csv_metadata(path_a)
+        B = read_csv_metadata(path_b, key='ID')
+
+        with mockInput('n'):
+            feat_table = afg.get_features_for_blocking(A, B, validate_inferred_attr_types=True)
+
+        self.assertEqual(feat_table, None)
+
+    def test_get_features_for_matching_validate_types_valid_no(self):
+        A = read_csv_metadata(path_a)
+        B = read_csv_metadata(path_b, key='ID')
+
+        with mockInput('n'):
+            feat_table = afg.get_features_for_matching(A, B, validate_inferred_attr_types=True)
+
+        self.assertEqual(feat_table, None)

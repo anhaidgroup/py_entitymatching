@@ -4,6 +4,7 @@ import logging
 import numpy
 from operator import attrgetter
 import pandas as pd
+from py_entitymatching.utils.validation_helper import validate_object_type
 
 import py_entitymatching as em
 import py_entitymatching.catalog.catalog_manager as cm
@@ -63,6 +64,19 @@ def debug_blocker(candset, ltable, rtable, output_size=200,
             not in the correct format (a list of tuples).
         AssertionError: If the attribute correspondence (`attr_corres`)
             cannot be built correctly.
+
+    Examples:
+        >>> import py_entitymatching as em
+        >>> ob = em.OverlapBlocker()
+        >>> C = ob.block_tables(A, B, l_overlap_attr='title', r_overlap_attr='title', overlap_size=3)
+        >>> corres = [('ID','ssn'), ('name', 'ename'), ('address', 'location'),('zipcode', 'zipcode')]
+        >>> D = em.debug_blocker(C, A, B, attr_corres=corres)
+
+        >>> import py_entitymatching as em
+        >>> ob = em.OverlapBlocker()
+        >>> C = ob.block_tables(A, B, l_overlap_attr='name', r_overlap_attr='name', overlap_size=3)
+        >>> D = em.debug_blocker(C, A, B, output_size=150)
+
     """
     # Check input types.
     _validate_types(ltable, rtable, candset, output_size,
@@ -147,21 +161,13 @@ def debug_blocker(candset, ltable, rtable, output_size=200,
 # Validate the types of input parameters.
 def _validate_types(ltable, rtable, candidate_set, output_size,
                     attr_corres, verbose):
-    if not isinstance(ltable, pd.DataFrame):
-        logger.error('Input left table is not of type pandas data frame')
-        raise AssertionError('Input left table is not of type pandas data frame')
+    validate_object_type(ltable, pd.DataFrame, 'Input left table')
 
-    if not isinstance(rtable, pd.DataFrame):
-        logger.error('Input right table is not of type pandas data frame')
-        raise AssertionError('Input right table is not of type pandas data frame')
+    validate_object_type(rtable, pd.DataFrame, 'Input right table')
 
-    if not isinstance(candidate_set, pd.DataFrame):
-        logger.error('Input candidate set is not of type pandas dataframe')
-        raise AssertionError('Input candidate set is not of type pandas dataframe')
+    validate_object_type(candidate_set, pd.DataFrame, 'Input candidate set')
 
-    if not isinstance(output_size, int):
-        logging.error('Output size is not of type int')
-        raise AssertionError('Output size is not of type int')
+    validate_object_type(output_size, int, 'Output size')
 
     if attr_corres is not None:
         if not isinstance(attr_corres, list):

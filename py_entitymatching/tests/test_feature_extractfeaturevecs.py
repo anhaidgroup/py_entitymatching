@@ -23,7 +23,7 @@ class ExtractFeaturesTestCases(unittest.TestCase):
         C = read_csv_metadata(path_c, ltable=A, rtable=B)
         col_pos = len(C.columns)
         C.insert(col_pos, 'label', [0] * len(C))
-        feature_table = get_features_for_matching(A, B)
+        feature_table = get_features_for_matching(A, B, validate_inferred_attr_types=False)
         F = extract_feature_vecs(C, attrs_before=['ltable_name', 'rtable_name'], feature_table=feature_table,
                                  attrs_after='label')
         self.assertEqual(isinstance(F, pd.DataFrame), True)
@@ -41,7 +41,7 @@ class ExtractFeaturesTestCases(unittest.TestCase):
         C = read_csv_metadata(path_c, ltable=A, rtable=B)
         col_pos = len(C.columns)
         C.insert(col_pos, 'label', [0] * len(C))
-        feature_table = get_features_for_matching(A, B)
+        feature_table = get_features_for_matching(A, B, validate_inferred_attr_types=False)
         F = extract_feature_vecs(C, attrs_before=['ltable_name', 'rtable_name'], feature_table=feature_table)
         self.assertEqual(isinstance(F, pd.DataFrame), True)
         self.assertEqual(F.columns[0], '_id')
@@ -58,7 +58,7 @@ class ExtractFeaturesTestCases(unittest.TestCase):
         C = read_csv_metadata(path_c, ltable=A, rtable=B)
         col_pos = len(C.columns)
         C.insert(col_pos, 'label', [0] * len(C))
-        feature_table = get_features_for_matching(A, B)
+        feature_table = get_features_for_matching(A, B, validate_inferred_attr_types=False)
         F = extract_feature_vecs(C, attrs_before=['ltable_name', 'rtable_name'], feature_table=feature_table, n_jobs=1)
         self.assertEqual(isinstance(F, pd.DataFrame), True)
         self.assertEqual(F.columns[0], '_id')
@@ -75,7 +75,7 @@ class ExtractFeaturesTestCases(unittest.TestCase):
         C = read_csv_metadata(path_c, ltable=A, rtable=B)
         col_pos = len(C.columns)
         C.insert(col_pos, 'label', [0] * len(C))
-        feature_table = get_features_for_matching(A, B)
+        feature_table = get_features_for_matching(A, B, validate_inferred_attr_types=False)
         F = extract_feature_vecs(C, attrs_before=['ltable_name', 'rtable_name'], feature_table=feature_table, n_jobs=2)
         self.assertEqual(isinstance(F, pd.DataFrame), True)
         self.assertEqual(F.columns[0], '_id')
@@ -91,7 +91,7 @@ class ExtractFeaturesTestCases(unittest.TestCase):
         C = read_csv_metadata(path_c, ltable=A, rtable=B)
         col_pos = len(C.columns)
         C.insert(col_pos, 'label', [0] * len(C))
-        feature_table = get_features_for_matching(A, B)
+        feature_table = get_features_for_matching(A, B, validate_inferred_attr_types=False)
         F = extract_feature_vecs(C, attrs_before=['ltable_name', 'rtable_name'], feature_table=feature_table, n_jobs=-1)
         self.assertEqual(isinstance(F, pd.DataFrame), True)
         self.assertEqual(F.columns[0], '_id')
@@ -107,7 +107,7 @@ class ExtractFeaturesTestCases(unittest.TestCase):
         C = read_csv_metadata(path_c, ltable=A, rtable=B)
         col_pos = len(C.columns)
         C.insert(col_pos, 'label', [0] * len(C))
-        feature_table = get_features_for_matching(A, B)
+        feature_table = get_features_for_matching(A, B, validate_inferred_attr_types=False)
         F = extract_feature_vecs(C, attrs_before=['ltable_name', 'rtable_name'],
                                  feature_table=pd.DataFrame(columns=feature_table.columns),
                                  attrs_after='label')
@@ -126,7 +126,7 @@ class ExtractFeaturesTestCases(unittest.TestCase):
         C = read_csv_metadata(path_c, ltable=A, rtable=B)
         col_pos = len(C.columns)
         C.insert(col_pos, 'label', [0] * len(C))
-        feature_table = get_features_for_matching(A, B)
+        feature_table = get_features_for_matching(A, B, validate_inferred_attr_types=False)
         F = extract_feature_vecs(C, attrs_before=['ltable_name', 'rtable_name', 'ltable_ID', 'rtable_ID'],
                                  feature_table=pd.DataFrame(columns=feature_table.columns),
                                  attrs_after='label')
@@ -145,7 +145,7 @@ class ExtractFeaturesTestCases(unittest.TestCase):
         C = read_csv_metadata(path_c, ltable=A, rtable=B)
         col_pos = len(C.columns)
         C.insert(col_pos, 'label', [0] * len(C))
-        feature_table = get_features_for_matching(A, B)
+        feature_table = get_features_for_matching(A, B, validate_inferred_attr_types=False)
         F = extract_feature_vecs(C, attrs_before=['ltable_name', 'rtable_name', 'ltable_ID', 'rtable_ID', '_id'],
                                  feature_table=pd.DataFrame(columns=feature_table.columns),
                                  attrs_after='label')
@@ -164,7 +164,7 @@ class ExtractFeaturesTestCases(unittest.TestCase):
         C = read_csv_metadata(path_c, ltable=A, rtable=B)
         col_pos = len(C.columns)
         C.insert(col_pos, 'label', [0] * len(C))
-        feature_table = get_features_for_matching(A, B)
+        feature_table = get_features_for_matching(A, B, validate_inferred_attr_types=False)
         F = extract_feature_vecs(C, attrs_before=['ltable_name', 'rtable_name', 'ltable_ID', 'rtable_ID', '_id'],
                                  feature_table=pd.DataFrame(columns=feature_table.columns),
                                  attrs_after=['label', '_id'])
@@ -183,7 +183,7 @@ class ExtractFeaturesTestCases(unittest.TestCase):
         C = read_csv_metadata(path_c, ltable=A, rtable=B)
         col_pos = len(C.columns)
         C.insert(col_pos, 'label', [0] * len(C))
-        feature_table = get_features_for_matching(A, B)
+        feature_table = get_features_for_matching(A, B, validate_inferred_attr_types=False)
         F = extract_feature_vecs(C, attrs_before='ltable_name',
                                  feature_table=pd.DataFrame(columns=feature_table.columns),
                                  attrs_after=['label', '_id'])
@@ -201,7 +201,7 @@ class ExtractFeaturesTestCases(unittest.TestCase):
         C = read_csv_metadata(path_c, ltable=A, rtable=B)
         col_pos = len(C.columns)
         C.insert(col_pos, 'label', [0] * len(C))
-        feature_table = get_features_for_matching(A, B)
+        feature_table = get_features_for_matching(A, B, validate_inferred_attr_types=False)
         F = extract_feature_vecs(C,
                                  feature_table=pd.DataFrame(columns=feature_table.columns),
                                  attrs_after=['label', '_id'])
@@ -226,7 +226,7 @@ class ExtractFeaturesTestCases(unittest.TestCase):
         C = read_csv_metadata(path_c, ltable=A, rtable=B)
         col_pos = len(C.columns)
         C.insert(col_pos, 'label', [0] * len(C))
-        feature_table = get_features_for_matching(A, B)
+        feature_table = get_features_for_matching(A, B, validate_inferred_attr_types=False)
         F = extract_feature_vecs(C, attrs_before='ltable_name1',
                                  feature_table=pd.DataFrame(columns=feature_table.columns),
                                  attrs_after=['label', '_id'])
@@ -238,7 +238,7 @@ class ExtractFeaturesTestCases(unittest.TestCase):
         C = read_csv_metadata(path_c, ltable=A, rtable=B)
         col_pos = len(C.columns)
         C.insert(col_pos, 'label', [0] * len(C))
-        feature_table = get_features_for_matching(A, B)
+        feature_table = get_features_for_matching(A, B, validate_inferred_attr_types=False)
         F = extract_feature_vecs(C, attrs_before='ltable_name',
                                  feature_table=pd.DataFrame(columns=feature_table.columns),
                                  attrs_after=['label1', '_id'])
@@ -250,7 +250,7 @@ class ExtractFeaturesTestCases(unittest.TestCase):
         C = read_csv_metadata(path_c, ltable=A, rtable=B)
         col_pos = len(C.columns)
         C.insert(col_pos, 'label', [0] * len(C))
-        feature_table = get_features_for_matching(A, B)
+        feature_table = get_features_for_matching(A, B, validate_inferred_attr_types=False)
         F = extract_feature_vecs(C, attrs_before='ltable_name',
                                  feature_table=None,
                                  attrs_after=['label', '_id'])

@@ -7,7 +7,6 @@ import pandas as pd
 import six
 
 import py_stringmatching as sm
-
 import py_entitymatching.utils.generic_helper as gh
 
 # These are the sim. function names
@@ -127,18 +126,24 @@ def affine(s1, s2):
         return pd.np.NaN
     if pd.isnull(s1) or pd.isnull(s2):
         return pd.np.NaN
-    # Remove non-ascii characters. This will be fixed in the next version
-    # if isinstance(s1, six.string_types):
-    #     s1 = gh.remove_non_ascii(s1)
-    # if isinstance(s2, six.string_types):
-    #     s2 = gh.remove_non_ascii(s2)
+
     # Create the similarity measure object
     measure = sm.Affine()
-    if not(isinstance(s1, six.string_types) or isinstance(s1, bytes)):
-        s1 = str(s1)
 
-    if not(isinstance(s2, six.string_types) or isinstance(s2, bytes)):
-        s2 = str(s2)
+    # if not isinstance(s1, six.string_types):
+    #     s1 = six.u(str(s1))
+    #
+    # if isinstance(s1, bytes):
+    #     s1 = s1.decode('utf-8', 'ignore')
+    #
+    # if not isinstance(s2, six.string_types):
+    #     s2 = six.u(str(s2))
+    #
+    # if isinstance(s2, bytes):
+    #     s2 = s2.decode('utf-8', 'ignore')
+
+    s1 = gh.convert_to_str_unicode(s1)
+    s2 = gh.convert_to_str_unicode(s2)
 
     # Call the function to compute the similarity
     return measure.get_raw_score(s1, s2)
@@ -170,18 +175,12 @@ def hamming_dist(s1, s2):
         return pd.np.NaN
     if pd.isnull(s1) or pd.isnull(s2):
         return pd.np.NaN
-    # if isinstance(s1, six.string_types):
-    #     s1 = gh.remove_non_ascii(s1)
-    # if isinstance(s2, six.string_types):
-    #     s2 = gh.remove_non_ascii(s2)
+
     # Create the similarity measure object
     measure = sm.HammingDistance()
 
-    if not(isinstance(s1, six.string_types) or isinstance(s1, bytes)):
-        s1 = str(s1)
-
-    if not(isinstance(s2, six.string_types) or isinstance(s2, bytes)):
-        s2 = str(s2)
+    s1 = gh.convert_to_str_unicode(s1)
+    s2 = gh.convert_to_str_unicode(s2)
 
 
     # Call the function to compute the distance
@@ -214,17 +213,12 @@ def hamming_sim(s1, s2):
         return pd.np.NaN
     if pd.isnull(s1) or pd.isnull(s2):
         return pd.np.NaN
-    # if isinstance(s1, six.string_types):
-    #     s1 = gh.remove_non_ascii(s1)
-    # if isinstance(s2, six.string_types):
-    #     s2 = gh.remove_non_ascii(s2)
+
     # Create the similarity measure object
     measure = sm.HammingDistance()
-    if not(isinstance(s1, six.string_types) or isinstance(s1, bytes)):
-        s1 = str(s1)
 
-    if not(isinstance(s2, six.string_types) or isinstance(s2, bytes)):
-        s2 = str(s2)
+    s1 = gh.convert_to_str_unicode(s1)
+    s2 = gh.convert_to_str_unicode(s2)
 
     # Call the function to compute the similarity score.
     return measure.get_sim_score(s1, s2)
@@ -256,17 +250,12 @@ def lev_dist(s1, s2):
         return pd.np.NaN
     if pd.isnull(s1) or pd.isnull(s2):
         return pd.np.NaN
-    # if isinstance(s1, six.string_types):
-    #     s1 = gh.remove_non_ascii(s1)
-    # if isinstance(s2, six.string_types):
-    #     s2 = gh.remove_non_ascii(s2)
+
     # Create the similarity measure object
     measure = sm.Levenshtein()
-    if not(isinstance(s1, six.string_types) or isinstance(s1, bytes)):
-        s1 = str(s1)
 
-    if not(isinstance(s2, six.string_types) or isinstance(s2, bytes)):
-        s2 = str(s2)
+    s1 = gh.convert_to_str_unicode(s1)
+    s2 = gh.convert_to_str_unicode(s2)
 
     # Call the function to compute the distance measure.
     return measure.get_raw_score(s1, s2)
@@ -298,17 +287,12 @@ def lev_sim(s1, s2):
         return pd.np.NaN
     if pd.isnull(s1) or pd.isnull(s2):
         return pd.np.NaN
-    # if isinstance(s1, six.string_types):
-    #     s1 = gh.remove_non_ascii(s1)
-    # if isinstance(s2, six.string_types):
-    #     s2 = gh.remove_non_ascii(s2)
+
     # Create the similarity measure object
     measure = sm.Levenshtein()
-    if not(isinstance(s1, six.string_types) or isinstance(s1, bytes)):
-        s1 = str(s1)
 
-    if not(isinstance(s2, six.string_types) or isinstance(s2, bytes)):
-        s2 = str(s2)
+    s1 = gh.convert_to_str_unicode(s1)
+    s2 = gh.convert_to_str_unicode(s2)
 
     # Call the function to compute the similarity measure
     return measure.get_sim_score(s1, s2)
@@ -339,17 +323,12 @@ def jaro(s1, s2):
         return pd.np.NaN
     if pd.isnull(s1) or pd.isnull(s2):
         return pd.np.NaN
-    # if isinstance(s1, six.string_types):
-    #     s1 = gh.remove_non_ascii(s1)
-    # if isinstance(s2, six.string_types):
-    #     s2 = gh.remove_non_ascii(s2)
+
     # Create the similarity measure object
     measure = sm.Jaro()
-    if not(isinstance(s1, six.string_types) or isinstance(s1, bytes)):
-        s1 = str(s1)
 
-    if not(isinstance(s2, six.string_types) or isinstance(s2, bytes)):
-        s2 = str(s2)
+    s1 = gh.convert_to_str_unicode(s1)
+    s2 = gh.convert_to_str_unicode(s2)
 
     # Call the function to compute the similarity measure
     return measure.get_raw_score(s1, s2)
@@ -381,17 +360,12 @@ def jaro_winkler(s1, s2):
         return pd.np.NaN
     if pd.isnull(s1) or pd.isnull(s2):
         return pd.np.NaN
-    # if isinstance(s1, six.string_types):
-    #     s1 = gh.remove_non_ascii(s1)
-    # if isinstance(s2, six.string_types):
-    #     s2 = gh.remove_non_ascii(s2)
+
     # Create the similarity measure object
     measure = sm.JaroWinkler()
-    if not(isinstance(s1, six.string_types) or isinstance(s1, bytes)):
-        s1 = str(s1)
 
-    if not(isinstance(s2, six.string_types) or isinstance(s2, bytes)):
-        s2 = str(s2)
+    s1 = gh.convert_to_str_unicode(s1)
+    s2 = gh.convert_to_str_unicode(s2)
 
     # Call the function to compute the similarity measure
     return measure.get_raw_score(s1, s2)
@@ -424,17 +398,12 @@ def needleman_wunsch(s1, s2):
         return pd.np.NaN
     if pd.isnull(s1) or pd.isnull(s2):
         return pd.np.NaN
-    # if isinstance(s1, six.string_types):
-    #     s1 = gh.remove_non_ascii(s1)
-    # if isinstance(s2, six.string_types):
-    #     s2 = gh.remove_non_ascii(s2)
+
     # Create the similarity measure object
     measure = sm.NeedlemanWunsch()
-    if not(isinstance(s1, six.string_types) or isinstance(s1, bytes)):
-        s1 = str(s1)
 
-    if not(isinstance(s2, six.string_types) or isinstance(s2, bytes)):
-        s2 = str(s2)
+    s1 = gh.convert_to_str_unicode(s1)
+    s2 = gh.convert_to_str_unicode(s2)
 
     # Call the function to compute the similarity measure
     return measure.get_raw_score(s1, s2)
@@ -465,17 +434,12 @@ def smith_waterman(s1, s2):
         return pd.np.NaN
     if pd.isnull(s1) or pd.isnull(s2):
         return pd.np.NaN
-    # if isinstance(s1, six.string_types):
-    #     s1 = gh.remove_non_ascii(s1)
-    # if isinstance(s2, six.string_types):
-    #     s2 = gh.remove_non_ascii(s2)
+
     # Create the similarity measure object
     measure = sm.SmithWaterman()
-    if not(isinstance(s1, six.string_types) or isinstance(s1, bytes)):
-        s1 = str(s1)
 
-    if not(isinstance(s2, six.string_types) or isinstance(s2, bytes)):
-        s2 = str(s2)
+    s1 = gh.convert_to_str_unicode(s1)
+    s2 = gh.convert_to_str_unicode(s2)
 
     # Call the function to compute the similarity measure
     return measure.get_raw_score(s1, s2)

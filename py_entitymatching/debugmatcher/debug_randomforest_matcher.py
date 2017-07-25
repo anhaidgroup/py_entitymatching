@@ -8,6 +8,7 @@ import pandas as pd
 from py_entitymatching.debugmatcher.debug_decisiontree_matcher import \
     _debug_decisiontree_matcher, _get_prob
 from py_entitymatching.matcher.rfmatcher import RFMatcher
+from py_entitymatching.utils.validation_helper import validate_object_type
 
 logger = logging.getLogger(__name__)
 
@@ -54,9 +55,7 @@ def debug_randomforest_matcher(random_forest, tuple_1, tuple_2,
     """
     # Validate input parameters.
     # # We expect the feature table to be of type pandas DataFrame
-    if not isinstance(feature_table, pd.DataFrame):
-        logger.error('The input feature table is not of type dataframe')
-        raise AssertionError('The input feature table is not of type dataframe')
+    validate_object_type(feature_table, pd.DataFrame, error_prefix='The input feature')
 
     # Get the classifier based on the input object.
     i = 1

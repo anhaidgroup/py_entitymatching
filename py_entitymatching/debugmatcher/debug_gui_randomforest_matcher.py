@@ -11,6 +11,7 @@ from py_entitymatching.debugmatcher.debug_gui_utils import _get_metric, \
     get_name_for_predict_column, _get_dataframe
 from py_entitymatching.utils.catalog_helper import check_attrs_present
 from py_entitymatching.utils.generic_helper import list_drop_duplicates
+from py_entitymatching.utils.validation_helper import validate_object_type
 
 logger = logging.getLogger(__name__)
 
@@ -50,10 +51,10 @@ def _vis_debug_rf(matcher, train, test, exclude_attrs, target_attr,
     Wrapper function for debugging the Random Forest matcher visually.
     """
     try:
-        from PyQt4 import QtGui
+        from PyQt5 import QtWidgets
         from py_entitymatching.gui.debug_gui_base import MainWindowManager
     except ImportError:
-        raise ImportError('PyQt4 is not installed. Please install PyQt4 to use '
+        raise ImportError('PyQt5 is not installed. Please install PyQt5 to use '
                       'GUI related functions in py_entitymatching.')
 
 
@@ -66,9 +67,7 @@ def _vis_debug_rf(matcher, train, test, exclude_attrs, target_attr,
                              'Random Forest matcher')
 
     # # We expect the target attribute to be of type string.
-    if not isinstance(target_attr, six.string_types):
-        logger.error('Target attribute is not of type string')
-        raise AssertionError('Target attribute is not of type string')
+    validate_object_type(target_attr, six.string_types, error_prefix='Target attribute')
 
     # # Check whether the exclude attributes are indeed present in the train
     #  DataFrame.
@@ -116,9 +115,9 @@ def _vis_debug_rf(matcher, train, test, exclude_attrs, target_attr,
 
     # Get the evaluation summary.
     eval_summary = em.eval_matches(predicted, target_attr, predict_attr_name)
-    em._viewapp = QtGui.QApplication.instance()
+    em._viewapp = QtWidgets.QApplication.instance()
     if em._viewapp is None:
-        em._viewapp = QtGui.QApplication([])
+        em._viewapp = QtWidgets.QApplication([])
 
     # Get metric in a form that can be displayed from the evaluation summary
     metric = _get_metric(eval_summary)

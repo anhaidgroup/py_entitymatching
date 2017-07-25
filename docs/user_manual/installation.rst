@@ -17,7 +17,7 @@ Dependencies
 * scikit-learn (provides implementations for common machine learning algorithms)
 * xgboost (provides an implementation for xgboost classifier)
 * joblib (provides multiprocessing capabilities)
-* pyqt4 (provides tools to build GUIs)
+* pyqt5 (provides tools to build GUIs)
 * py_stringsimjoin (provides implementations for string similarity joins)
 * py_stringmatching (provides a set of string tokenizers and string similarity functions)
 * cloudpickle (provides functions to serialize Python constructs)
@@ -27,6 +27,35 @@ Dependencies
 
 py_entitymatching can be installed using source distribution, as described below.
  
+ 
+Installing Using conda
+----------------------
+The easiest and recommended way to install the package is to use the command conda,
+which will retrieve py_entitymatching from Anaconda repository then install it::
+
+    conda install -c uwmagellan py_entitymatching
+
+The above command will install py_entitymatching and all of its dependencies.
+
+.. note::
+    To use the command conda, first you must install Miniconda or Anaconda. For
+    more details refer to this `conda page <http://conda.pydata
+    .org/docs/using/index
+    .html>`_.
+
+
+Installing Using pip
+--------------------
+To install the package using pip, execute the following
+command::
+
+    pip install -U numpy scipy py_entitymatching
+
+
+The above command will install py_entitymatching and all its dependencies, except PyQt5.
+This is because pip can only install the dependency packages that are available in PyPI and
+PyQt5 is not in PyPI. Refer to this `PyQt5 page <http://pyqt.sourceforge.net/Docs/PyQt5/installation.html>`_
+on how to install PyQt5.
 
 
 Installing from Source Distribution
@@ -51,11 +80,9 @@ For more information see this StackOverflow `link <http://stackoverflow.com/ques
 The above commands will install py_entitymatching and all of its
 dependencies, except PyQt5 and xgboost.
 
-This is  because, similar to pip,
-setup.py can only install the dependency packages that are available in PyPI and PyQt5
-xgboost are not in PyPI for Python 2.
+This is  because, similar to pip, setup.py can only install the dependency packages 
+that are available in PyPI and PyQt5 xgboost are not in PyPI for Python 2.
 
 * You can install PyQt5, using the instructions on `this page <http://pyqt.sourceforge.net/Docs/PyQt5/installation.html>`_.
 
 * You can install xgboost using the instructions on `this page <https://xgboost.readthedocs.io/en/latest/build.html>`_.
-

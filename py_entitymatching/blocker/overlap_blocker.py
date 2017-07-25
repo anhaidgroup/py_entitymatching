@@ -16,6 +16,7 @@ from py_entitymatching.blocker.blocker import Blocker
 from py_entitymatching.utils.catalog_helper import log_info, get_name_for_key, \
     add_key_column
 from py_entitymatching.utils.generic_helper import remove_non_ascii
+from py_entitymatching.utils.validation_helper import validate_object_type
 
 logger = logging.getLogger(__name__)
 
@@ -182,13 +183,13 @@ class OverlapBlocker(Blocker):
             >>> B = em.read_csv_metadata('path_to_csv_dir/table_B.csv', key='ID')
             >>> ob = em.OverlapBlocker()
             # Use word-level tokenizer
-            >>> C1 = ab.block_tables(A, B, 'address', 'address', l_output_attrs=['name'], r_output_attrs=['name'], word_level=True, overlap_size=1)
+            >>> C1 = ob.block_tables(A, B, 'address', 'address', l_output_attrs=['name'], r_output_attrs=['name'], word_level=True, overlap_size=1)
             # Use q-gram tokenizer
-            >>> C2 = ab.block_tables(A, B, 'address', 'address', l_output_attrs=['name'], r_output_attrs=['name'], word_level=False, q_val=2)
+            >>> C2 = ob.block_tables(A, B, 'address', 'address', l_output_attrs=['name'], r_output_attrs=['name'], word_level=False, q_val=2)
             # Include all possible missing values
-            >>> C3 = ab.block_tables(A, B, 'address', 'address', l_output_attrs=['name'], r_output_attrs=['name'], allow_missing=True)
+            >>> C3 = ob.block_tables(A, B, 'address', 'address', l_output_attrs=['name'], r_output_attrs=['name'], allow_missing=True)
             # Use all the cores in the machine
-            >>> C3 = ab.block_tables(A, B, 'address', 'address', l_output_attrs=['name'], r_output_attrs=['name'], n_jobs=-1)
+            >>> C3 = ob.block_tables(A, B, 'address', 'address', l_output_attrs=['name'], r_output_attrs=['name'], n_jobs=-1)
 
 
         """
@@ -459,7 +460,8 @@ class OverlapBlocker(Blocker):
                                                   l_df, r_df, l_key, r_key,
                                                   l_overlap_attr,
                                                   r_overlap_attr,
-                                                  n_jobs)
+                                                  n_jobs,
+                                                  show_progress=show_progress)
         # update catalog
         cm.set_candset_properties(out_table, key, fk_ltable, fk_rtable, ltable,
                                   rtable)
@@ -551,38 +553,17 @@ class OverlapBlocker(Blocker):
     def validate_types_other_params(self, l_overlap_attr, r_overlap_attr,
                                     rem_stop_words, q_val,
                                     word_level, overlap_size):
-        if not isinstance(l_overlap_attr, six.string_types):
-            logger.error(
-                'Overlap attribute name of left table is not of type string')
-            raise AssertionError(
-                'Overlap attribute name of left table is not of type string')
-        if not isinstance(r_overlap_attr, six.string_types):
-            logger.error(
-                'Overlap attribute name of right table is not of type string')
-            raise AssertionError(
-                'Overlap attribute name of right table is not of type string')
-        if not isinstance(rem_stop_words, bool):
-            logger.error('Parameter rem_stop_words is not of type bool')
-            raise AssertionError('Parameter rem_stop_words is not of type bool')
+        validate_object_type(l_overlap_attr, six.string_types, error_prefix='Overlap attribute name of left table')
+        validate_object_type(r_overlap_attr, six.string_types, error_prefix='Overlap attribute name of right table')
+
+        validate_object_type(rem_stop_words, bool, error_prefix='Parameter rem_stop_words')
+
         if q_val != None and not isinstance(q_val, int):
             logger.error('Parameter q_val is not of type int')
             raise AssertionError('Parameter q_val is not of type int')
-        if not isinstance(word_level, bool):
-            logger.error('Parameter word_level is not of type bool')
-            raise AssertionError('Parameter word_level is not of type bool')
-        if not isinstance(overlap_size, int):
-            logger.error('Parameter overlap_size is not of type int')
-            raise AssertionError('Parameter overlap_size is not of type int')
 
-    # check and copy overlap attributes if required
-
-    # def check_and_copy_overlap_attrs(self, ltable, rtable, l_overlap_attr,
-    #                                 r_overlap_attr, l_output_attrs,
-    #                                  r_output_attrs):
-    #     if l_output_attrs != None:
-    #         if len(set(l_output_attrs).intersection(l_overlap_attr)) > 0:
-
-
+        validate_object_type(word_level, bool, error_prefix='Parameter word_level')
+        validate_object_type(overlap_size, int, error_prefix='Parameter overlap_size')
 
 
     # validate the overlap attrs
@@ -612,6 +593,10 @@ class OverlapBlocker(Blocker):
                 'set to None by default, so if you want to use qgram then '
                 'explictiy set word_level=False and specify the q_val')
 
+
+
+
+
     # cleanup a table from non-ascii characters, punctuations and stop words
     def cleanup_table(self, table, overlap_attr, rem_stop_words):
 
@@ -623,19 +608,8 @@ class OverlapBlocker(Blocker):
             if pd.isnull(val):
                 values.append(val)
             else:
-                # remove non-ascii chars
-                val_no_non_ascii = remove_non_ascii(val)
-                # remove punctuations
-                val_no_punctuations = self.rem_punctuations(val_no_non_ascii)
-                # chop the attribute values and convert into a set
-                val_chopped = list(set(val_no_punctuations.split()))
-                # remove stop words
-                if rem_stop_words:
-                    val_chopped_no_stopwords = self.rem_stopwords(val_chopped)
-                    val_joined = ' '.join(val_chopped_no_stopwords)
-                else:
-                    val_joined = ' '.join(val_chopped)
-                values.append(val_joined)
+                processed_val = self.process_string(val, rem_stop_words)
+                values.append(processed_val)
 
         table.is_copy = False
         table[overlap_attr] = values
@@ -644,22 +618,39 @@ class OverlapBlocker(Blocker):
     def cleanup_tuple_val(self, val, rem_stop_words):
         if pd.isnull(val):
             return val
-        # remove non-ascii chars
-        val_no_non_ascii = remove_non_ascii(val)
-        # remove punctuations
-        val_no_punctuations = self.rem_punctuations(val_no_non_ascii)
+
+        return self.process_string(val, rem_stop_words)
+
+
+    def process_string(self, input_string, rem_stop_words):
+        if not input_string:
+            return input_string
+
+        if isinstance(input_string, bytes):
+            input_string = input_string.decode('utf-8', 'ignore')
+        input_string = input_string.lower()
+
+        input_string = self.rem_punctuations(input_string)
+
+        # remove stopwords
         # chop the attribute values and convert into a set
-        val_chopped = list(set(val_no_punctuations.split()))
+        val_chopped = list(set(input_string.strip().split()))
+
         # remove stop words
         if rem_stop_words:
             val_chopped_no_stopwords = self.rem_stopwords(val_chopped)
             val_joined = ' '.join(val_chopped_no_stopwords)
         else:
             val_joined = ' '.join(val_chopped)
+
         return val_joined
 
+
     def rem_punctuations(self, s):
-        return self.regex_punctuation.sub('', s).lower()
+        return self.regex_punctuation.sub('', s)
+
+
 
     def rem_stopwords(self, lst):
         return [t for t in lst if t not in self.stop_words]
+
