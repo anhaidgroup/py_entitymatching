@@ -99,6 +99,10 @@ from py_entitymatching.utils.generic_helper import get_install_path, load_datase
 from py_entitymatching.utils.pandas_helper import filter_rows, project_cols, \
     mutate_col, rename_col, preserve_metadata, drop_cols
 
+# # data exploration wrappers
+from py_entitymatching.explorer.openrefine.openrefine_wrapper import data_explore_openrefine
+from py_entitymatching.explorer.pandastable.pandastable_wrapper import data_explore_pandastable
+
 
 # global vars
 _block_t = None
