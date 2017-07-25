@@ -79,3 +79,5 @@ html/
 
 notebooks/how-to-guides/bdata/
 garage/
+
+.DS_Store
