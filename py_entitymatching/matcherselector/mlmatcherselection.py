@@ -18,7 +18,7 @@ def select_matcher(matchers, x=None, y=None, table=None, exclude_attrs=None,
                    target_attr=None,
                    metric_to_select_matcher='precision',
                    metrics_to_display=['precision', 'recall', 'f1'],
-                   k=5, n_jobs = -1, random_state=None):
+                   k=5, n_jobs=-1, random_state=None):
     """
     This function selects a matcher from a given list of matchers based on a
     given metric.
@@ -50,10 +50,10 @@ def select_matcher(matchers, x=None, y=None, table=None, exclude_attrs=None,
             'f1' (defaults to 'precision').
         metrics_to_display (list): The metrics that will be displayed to
             the user. It should be a list of any of the strings 'precision',
-            'recall', or 'f1' (defaults to ['precision']).
+            'recall', or 'f1' (defaults to ['precision', 'recall', 'f1']).
         k (int): The k value for cross-validation (defaults to 5).
         n_jobs (integer): The number of CPUs to use to do the computation.
-            -1 means 'all CPUs'.
+            -1 means 'all CPUs (defaults to -1)'.
         random_state (object): Pseudo random number generator that should be
             used for splitting the data into folds (defaults to None).
 
@@ -65,6 +65,12 @@ def select_matcher(matchers, x=None, y=None, table=None, exclude_attrs=None,
         cv_stats is a Dataframe containing average metrics for each matcher,
         and drill_down_cv_stats is a dictionary containing a table for each metric
         the user wants to display containing the score of the matchers for each fold.
+
+     Raises:
+        AssertionError: If `metric_to_select_matcher` is not one of 'precision', 'recall',
+            or 'f1'.
+        AssertionError: If each item in the list `metrics_to_display` is not one of
+            'precision', 'recall', or 'f1'.
 
     Examples:
         >>> dt = em.DTMatcher()

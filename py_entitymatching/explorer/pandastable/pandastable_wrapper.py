@@ -10,10 +10,10 @@ import pandas as pd
 def data_explore_pandastable(df):
     """
     Wrapper function for pandastable. Gives user a GUI to examine and edit
-    the dataframe passed in.
+    the dataframe passed in using pandastable.
 
     Args:
-        df (Dataframe): The pandas dataframe to be explored with pandastable
+        df (Dataframe): The pandas dataframe to be explored with pandastable.
 
     Raises:
         AssertionError: If `df` is not of type pandas DataFrame.
