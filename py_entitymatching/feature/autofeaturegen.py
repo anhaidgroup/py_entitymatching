@@ -172,7 +172,7 @@ def get_features(ltable, rtable, l_attr_types, r_attr_types,
     return feature_table
 
 
-def get_features_for_blocking(ltable, rtable, validate_inferred_attr_types=True, display='t'):
+def get_features_for_blocking(ltable, rtable, validate_inferred_attr_types=True):
     """
 
     This function automatically generates features that can be used for
@@ -209,6 +209,8 @@ def get_features_for_blocking(ltable, rtable, validate_inferred_attr_types=True,
             DataFrame.
         AssertionError: If `rtable` is not of type pandas
             DataFrame.
+        AssertionError: If `validate_inferred_attr_types` is not of type
+            pandas DataFrame.
 
     Examples:
         >>> import py_entitymatching as em
@@ -259,7 +261,7 @@ def get_features_for_blocking(ltable, rtable, validate_inferred_attr_types=True,
     # user permission to proceed
     if validate_inferred_attr_types:
         # if the user does not want to proceed, then exit the function
-        if validate_attr_types(attr_types_ltable, attr_types_rtable, attr_corres, display) is None:
+        if validate_attr_types(attr_types_ltable, attr_types_rtable, attr_corres) is None:
             return
 
     # Get features based on attr types, attr correspondences, sim functions
@@ -278,7 +280,7 @@ def get_features_for_blocking(ltable, rtable, validate_inferred_attr_types=True,
     return feature_table
 
 
-def get_features_for_matching(ltable, rtable, validate_inferred_attr_types=True, display='t'):
+def get_features_for_matching(ltable, rtable, validate_inferred_attr_types=True):
     """
     This function automatically generates features that can be used for
     matching purposes.
@@ -314,6 +316,8 @@ def get_features_for_matching(ltable, rtable, validate_inferred_attr_types=True,
             DataFrame.
         AssertionError: If `rtable` is not of type pandas
             DataFrame.
+        AssertionError: If `validate_inferred_attr_types` is not of type
+            pandas DataFrame.
 
     Examples:
         >>> import py_entitymatching as em
@@ -365,7 +369,7 @@ def get_features_for_matching(ltable, rtable, validate_inferred_attr_types=True,
     # user permission to proceed
     if validate_inferred_attr_types:
         # if the user does not want to proceed, then exit the function
-        if validate_attr_types(attr_types_ltable, attr_types_rtable, attr_corres, display) is None:
+        if validate_attr_types(attr_types_ltable, attr_types_rtable, attr_corres) is None:
             return
 
     # Get the features
@@ -676,7 +680,7 @@ def flatten_list(inp_list):
 
 # Show the user inferred attribute types and features and request
 # user permission to proceed
-def validate_attr_types(l_attr_types, r_attr_types, attr_corres, display_type):
+def validate_attr_types(l_attr_types, r_attr_types, attr_corres):
 
     # # We expect the l_attr_types to be of type dictionary
     validate_object_type(l_attr_types, dict, 'Left table attribute types')
@@ -690,11 +694,9 @@ def validate_attr_types(l_attr_types, r_attr_types, attr_corres, display_type):
     corres_features_list = []
 
     print('The table shows the corresponding attributes along with their respective '
-          'types. Please confirm that the information  has been correctly inferred. '
-          'If you would like to skip this validation process in the future, please set '
-          'the flag    validate_inferred_attr_types equal to false.')
-    if display_type == 's':
-        print('')
+          'types.\nPlease confirm that the information  has been correctly inferred.\n'
+          'If you would like to skip this validation process in the future,\nplease set '
+          'the flag validate_inferred_attr_types equal to false.')
 
     # Generate features for each attr. correspondence
     for ac in attr_corres['corres']:
@@ -729,27 +731,18 @@ def validate_attr_types(l_attr_types, r_attr_types, attr_corres, display_type):
         # Change the first 3 values in the list of features into a string
         readable_features_str = "; ".join(readable_features[:2])
 
-        # print information to user
-        if display_type == 's':
-            print('Left Attribute:  %s [Type: %s]' % (ac[0], readable_l_type))
-            print('Right Attribute: %s [Type: %s]' % (ac[1], readable_r_type))
-            print('Example Features: ' + readable_features_str + '\n')
-
         # Add information for each set of corresponding attributes to the list
         # corres_features_list.append([ac[0], readable_l_type, ac[1], readable_r_type, readable_features_str])
         corres_features_list.append([ac[0], ac[1], readable_l_type, readable_r_type, readable_features_str])
 
     # create and display table for the user
-    if display_type == 't':
-        # Create the pandas dataframe from the lists
-        # labels = ['Left Attribute', 'Left Attribute Type', 'Right Attribute', 'Right Attribute Type',
-        #        'Example Features']
-        labels = ['Left Attribute', 'Right Attribute', 'Left Attribute Type', 'Right Attribute Type',
-                'Example Features']
-        corres_feat_df = pd.DataFrame(corres_features_list, columns=labels)
+    # Create the pandas dataframe from the lists
+    labels = ['Left Attribute', 'Right Attribute', 'Left Attribute Type', 'Right Attribute Type',
+              'Example Features']
+    corres_feat_df = pd.DataFrame(corres_features_list, columns=labels)
 
-        # display the pandas dataframe
-        display(corres_feat_df)
+    # display the pandas dataframe
+    display(corres_feat_df)
 
     # Ask user if the inferred types are satisfactory. Repeat until satisfactory answer is reached
     while True:
@@ -757,8 +750,9 @@ def validate_attr_types(l_attr_types, r_attr_types, attr_corres, display_type):
         if response == 'y':
             return corres_feat_df
         elif response == 'n':
-            print('\nIf the attribute correspondences or types have been inferred incorrectly, use the get_features()'
-                  ' function with your  own correspondences and attribute types to get the correct features for your data')
+            print('\nIf the attribute correspondences or types have been inferred incorrectly,\n'
+                  'use the get_features() function with your  own correspondences and attribute\n'
+                  'types to get the correct features for your data')
             return None
         else:
             print("You must answer with either 'y' or 'n'")

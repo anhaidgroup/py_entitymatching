@@ -177,8 +177,8 @@ def down_sample(table_a, table_b, size, y_param, show_progress=True,
     B' respectively.
 
     Specifically, first it randomly selects `size` tuples
-    from the table B to be table B'. Next, it builds an inverted index I (
-    token, tuple_id) on table A. For each tuple x ∈ B', the algorithm
+    from the table B to be table B'. Next, it builds an inverted index I
+    (token, tuple_id) on table A. For each tuple x ∈ B', the algorithm
     finds a set P of k/2 tuples from I that match x,
     and a set Q of k/2 tuples randomly selected from A - P.
     The idea is for A' and B' to share some matches yet be
@@ -191,19 +191,22 @@ def down_sample(table_a, table_b, size, y_param, show_progress=True,
             Specifically, the down sampled size of table A should be close to
             size * y_param.
         show_progress (boolean): A flag to indicate whether a progress bar
-            should be displayed.
+            should be displayed (defaults to True).
         verbose (boolean): A flag to indicate whether the debug information
-         should be displayed.
-        seed (int): The seed for the random number generator.
+         should be displayed (defaults to False).
+        seed (int): The seed for the pseudo random number generator to select
+            the tuples from A and B (defaults to None).
 
     Returns:
         Down sampled tables A and B as pandas DataFrames.
 
     Raises:
         AssertionError: If any of the input tables (`table_a`, `table_b`) are
-         empty or not a DataFrame.
+            empty or not a DataFrame.
         AssertionError: If `size` or `y_param` is empty or 0 or not a
-         valid integer value.
+            valid integer value.
+        AssertionError: If `seed` is not a valid integer
+            value.
 
     Examples:
         >>> A = em.read_csv_metadata('path_to_csv_dir/table_A.csv', key='ID')

@@ -35,7 +35,8 @@ which will retrieve py_entitymatching from Anaconda repository then install it::
 
     conda install -c uwmagellan py_entitymatching
 
-The above command will install py_entitymatching and all of its dependencies.
+The above command will install py_entitymatching and all of its dependencies except
+for xgboost, which must be installed separately for Python 3.4 or lower.
 
 .. note::
     To use the command conda, first you must install Miniconda or Anaconda. For
@@ -81,7 +82,7 @@ The above commands will install py_entitymatching and all of its
 dependencies, except PyQt5 and xgboost.
 
 This is  because, similar to pip, setup.py can only install the dependency packages 
-that are available in PyPI and PyQt5 xgboost are not in PyPI for Python 2.
+that are available in PyPI and PyQt5 and xgboost are not in PyPI for Python 2.
 
 * You can install PyQt5, using the instructions on `this page <http://pyqt.sourceforge.net/Docs/PyQt5/installation.html>`_.
 

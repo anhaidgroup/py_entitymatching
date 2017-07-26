@@ -13,12 +13,13 @@ import pandas as pd
 def data_explore_openrefine(df, server='http://127.0.0.1:3333', name=None):
     """
     Wrapper function for using OpenRefine. Gives user a GUI to examine and edit
-    the dataframe passed in.
+    the dataframe passed in using OpenRefine.
 
     Args:
-        df (Dataframe): The pandas dataframe to be explored with pandastable
-        server (String): The address of the OpenRefine server
-        name (String): The name given to the file and project in OpenRefine
+        df (Dataframe): The pandas dataframe to be explored with pandastable.
+        server (String): The address of the OpenRefine server (defaults to
+            'http://127.0.0.1:3333').
+        name (String): The name given to the file and project in OpenRefine.
 
     Raises:
         AssertionError: If `df` is not of type pandas DataFrame.
