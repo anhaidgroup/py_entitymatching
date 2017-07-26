@@ -263,7 +263,7 @@ class AutoFeatureGenerationTestCases(unittest.TestCase):
         attr_corres = au.get_attr_corres(A, B)
 
         with mockInput('n'):
-            status = afg.validate_attr_types(l_attr_types, r_attr_types, attr_corres, 't')
+            status = afg.validate_attr_types(l_attr_types, r_attr_types, attr_corres)
             self.assertEqual(status is None, True)
 
     def test_validate_attr_types_proceed_yes(self):
@@ -274,7 +274,7 @@ class AutoFeatureGenerationTestCases(unittest.TestCase):
         attr_corres = au.get_attr_corres(A, B)
 
         with mockInput('y'):
-            status = afg.validate_attr_types(l_attr_types, r_attr_types, attr_corres, 't')
+            status = afg.validate_attr_types(l_attr_types, r_attr_types, attr_corres)
             self.assertEqual(status is None, False)
 
     @raises(AssertionError)
@@ -284,7 +284,7 @@ class AutoFeatureGenerationTestCases(unittest.TestCase):
         # l_attr_types = au.get_attr_types(A)
         r_attr_types = au.get_attr_types(B)
         attr_corres = au.get_attr_corres(A, B)
-        response = afg.validate_attr_types(None, r_attr_types, attr_corres, display_type='t')
+        response = afg.validate_attr_types(None, r_attr_types, attr_corres)
 
     @raises(AssertionError)
     def test_validate_attr_types_invalid_r_types(self):
@@ -293,7 +293,7 @@ class AutoFeatureGenerationTestCases(unittest.TestCase):
         l_attr_types = au.get_attr_types(A)
         # r_attr_types = au.get_attr_types(B)
         attr_corres = au.get_attr_corres(A, B)
-        response = afg.validate_attr_types(l_attr_types, None, attr_corres, display_type='t')
+        response = afg.validate_attr_types(l_attr_types, None, attr_corres)
 
     @raises(AssertionError)
     def test_validate_attr_types_invalid_corres(self):
@@ -302,7 +302,7 @@ class AutoFeatureGenerationTestCases(unittest.TestCase):
         l_attr_types = au.get_attr_types(A)
         r_attr_types = au.get_attr_types(B)
         # attr_corres = au.get_attr_corres(A, B)
-        response = afg.validate_attr_types(l_attr_types, r_attr_types, None, display_type='t')
+        response = afg.validate_attr_types(l_attr_types, r_attr_types, None)
 
     def test_validate_attr_types_valid(self):
         A = read_csv_metadata(path_a)
@@ -312,7 +312,7 @@ class AutoFeatureGenerationTestCases(unittest.TestCase):
         attr_corres = au.get_attr_corres(A, B)
 
         with mockInput('y'):
-            validate_table = afg.validate_attr_types(l_attr_types, r_attr_types, attr_corres, display_type='t')
+            validate_table = afg.validate_attr_types(l_attr_types, r_attr_types, attr_corres)
 
         self.assertEqual(isinstance(validate_table, pd.DataFrame), True)
 
