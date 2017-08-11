@@ -1,6 +1,6 @@
 package:
   name: py_entitymatching
-  version: "0.1.0"
+  version: "0.2.0"
 
 source:
     git_url: ../
@@ -14,8 +14,9 @@ requirements:
     - cloudpickle
     - pyparsing
     - scikit-learn
-    - pyqt ==4.11.4
-    - xgboost
+    - pyqt
+    - pandas-profiling
+#    - xgboost
 
   run:
     - python
@@ -23,8 +24,9 @@ requirements:
     - cloudpickle
     - pyparsing
     - scikit-learn
-    - pyqt ==4.11.4
-    - xgboost
+    - pyqt
+    - pandas-profiling
+#    - xgboost
 
 test:
   # Python imports
@@ -44,7 +46,7 @@ test:
     # - nose
 
 about:
-  home: https://sites.google.com/site/anhaidgroup/projects/py_entitymatching
+  home: https://sites.google.com/site/anhaidgroup/projects/magellan/py_entitymatching
   license: BSD License
   summary: 'Python library for entity matching.'
 

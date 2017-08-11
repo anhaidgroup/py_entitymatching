@@ -9,6 +9,7 @@ dependencies:
     - cloudpickle
     - pyparsing
     - scikit-learn >= 0.18
-    - pyqt ==4.11.4
+    - pyqt
     - py_stringmatching
-    - xgboost
+    - pandas-profiling
+#    - xgboost
