@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Magellan Labeller</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    {% include "common_css.html" %}
+    {% include "common_js.html" %}
+</head>
+<body>
+{% include "menu_bar.html" %}
+<div class="container-fluid">
+    <!-- todo: make this div a separate template ? -->
+    <!-- make this div a separate template -->
+    <div class="row" id="content-row">
+        <div class="col-sm-12" id="tuple-pair-pane">
+
+
+            {% for tuple_pair in tuple_pairs %}
+                {# Tuple pair tables #}
+                <div class="tuple-pair-div">
+                    <table class="{{ tuple_pair[label_column_name] + ' table table-bordered' }}" id={{tuple_pair['_id'] }}>
+                        <tr>
+                            {% for attribute in attributes %}
+                                <td>
+                                    <strong>{{ attribute }}</strong>
+                                </td>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            {% for attribute in attributes %}
+                                <td>
+                                    {{ tuple_pair["ltable_"+attribute]|string|truncate(tokens_per_attribute+3, True, '...', 0)}}
+                                </td>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            {% for attribute in attributes %}
+                                <td>
+                                    {{ tuple_pair["rtable_"+attribute]|string|truncate(tokens_per_attribute+3, True, '...', 0)}}
+                                </td>
+                            {% endfor %}
+                        </tr>
+                        <tr id="{{ 'comments_row_'+tuple_pair['_id']|string }}"
+                            style={% if tuple_pair[comments_col] %} '' {% else %} 'display:none;'{% endif %}
+                        >
+                        <td><strong>Comments</strong></td>
+                        <td colspan="{{ attributes|length - 1 }}">
+                            <em id="{{ 'comments_'+tuple_pair['_id']|string }}">{{ tuple_pair[comments_col] }}</em>
+                        </td>
+                        </tr>
+                        <tr id="{{ 'tags_row_'+tuple_pair['_id']|string }}"
+                            style={% if tuple_pair[tags_col] %} '' {% else %} 'display:none;'{% endif %}
+                        >
+                        <td><strong>Tags</strong></td>
+                        <td colspan="{{ attributes|length - 1 }}">
+                            <em id="{{ 'tags_'+tuple_pair['_id']|string }}">{{ tuple_pair[tags_col] }}</em>
+                        </td>
+                        </tr>
+                    </table>
+
+                    {# Change label buttons #}
+                    <div class=" tuple-pair-buttons-div">
+                        <button class="btn btn-md btn-success"
+                                onclick="change_label({{ tuple_pair['_id'] }}, '{{ tuple_pair[label_column_name] }}', 'Yes')">
+                            yes
+                        </button>
+                        <button class="btn btn-md btn-danger"
+                                onclick="change_label({{ tuple_pair['_id'] }}, '{{ tuple_pair[label_column_name] }}', 'Not-Matched')">no
+                        </button>
+                        <button class="btn btn-sm btn-warning"
+                                onclick="change_label({{ tuple_pair['_id'] }}, '{{ tuple_pair[label_column_name] }}', 'Not-Sure')">not sure
+                        </button>
+                        <button class="btn btn-sm btn-default"
+                                onclick="edit_comments({{ tuple_pair['_id'] }}, '{{ tuple_pair[comments_col] }}')">edit comments
+                        </button>
+                        <button class="btn btn-sm btn-default"
+                                onclick="edit_tags({{ tuple_pair['_id'] }}, '{{ tuple_pair[tags_col] }}')">edit tags
+                        </button>
+                        <!-- todo: check bootstrap modals -->
+                        <button class="btn btn-sm btn-default" data-toggle="modal"
+                                data-target={{ "#"+tuple_pair['_id']|string +"modal" }}>show entire tuple pair
+                        </button>
+
+                        <div class="modal fade" role="dialog" id={{ tuple_pair['_id']|string +"modal" }}>
+                            <div class="modal-dialog">
+
+                                <!-- Modal content-->
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        <h4 class="modal-title">Tuple pair id {{ tuple_pair['_id'] }}</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        {# todo: replace with actual tuple pair#}
+                                        <div>
+                                            <table class="{{ tuple_pair[label_column_name]+' table table-bordered show-tuple-pair' }}">
+                                                <tr>
+                                                    <td><strong>Attribute</strong></td>
+                                                    <td><strong>Table 1</strong></td>
+                                                    <td><strong>Table 2</strong></td>
+                                                </tr>
+                                                {% for attribute in attributes %}
+                                                    <tr>
+                                                        <td>
+                                                            <strong>{{ attribute }}</strong>
+                                                        </td>
+                                                        <td>
+                                                            {{ tuple_pair["ltable_"+attribute]|string }}
+                                                        </td>
+                                                        <td>
+                                                            {{ tuple_pair["rtable_"+attribute]|string }}
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            {% endfor %}
+            {# End of foreach tuple pair #}
+
+        </div>
+        <button class="btn btn-default" id="next-page-btn" onclick="change_page({{ current_page + 1 }})">Next page</button>
+    </div>
+    {% include "pagination.html" %}
+</div>
+</body>
+</html>

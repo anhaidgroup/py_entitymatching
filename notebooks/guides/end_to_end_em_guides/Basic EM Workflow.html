@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head><meta charset="utf-8" />
-<title>Basic EM Workflow Restaurants - 1</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<title>Basic EM Workflow</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 
 <style type="text/css">
@@ -11778,15 +11778,6 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Basic-EM-workflow-1-(Restaurants-data-set)">Basic EM workflow 1 (Restaurants data set)<a class="anchor-link" href="#Basic-EM-workflow-1-(Restaurants-data-set)">&#182;</a></h1>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="Introduction">Introduction<a class="anchor-link" href="#Introduction">&#182;</a></h1>
 </div>
 </div>
@@ -11796,7 +11787,7 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This IPython notebook explains a basic workflow to match two tables using <em>py_entitymatching</em>. Our goal is to match restaurants from Fodors and Zagat sites. The datasets contain information about the restaurants.</p>
+<p>This IPython notebook explains a basic workflow two tables using <em>py_entitymatching</em>. Our goal is to come up with a workflow to match DBLP and ACM datasets. Specifically, we want to achieve precision greater than 95% and get recall greater than 90%. The datasets contain information about the conference papers published in top databse conferences.</p>
 <p>First, we need to import <em>py_entitymatching</em> package and other libraries as follows:</p>
 
 </div>
@@ -11873,7 +11864,16 @@ magellan version: 0.2.0
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Read-input-tables">Read input tables<a class="anchor-link" href="#Read-input-tables">&#182;</a></h1><p>We begin by loading the input tables. For the purpose of this guide, we use the datasets that are included with the package.</p>
+<h1 id="Read-Input-Tables">Read Input Tables<a class="anchor-link" href="#Read-Input-Tables">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We begin by loading the input tables. For the purpose of this guide, we use the datasets that are included with the package.</p>
 
 </div>
 </div>
@@ -11884,8 +11884,8 @@ magellan version: 0.2.0
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Get the paths</span>
-<span class="n">path_A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_install_path</span><span class="p">()</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s1">&#39;datasets&#39;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s1">&#39;end-to-end&#39;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s1">&#39;restaurants/fodors.csv&#39;</span>
-<span class="n">path_B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_install_path</span><span class="p">()</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s1">&#39;datasets&#39;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s1">&#39;end-to-end&#39;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s1">&#39;restaurants/zagats.csv&#39;</span>
+<span class="n">path_A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_install_path</span><span class="p">()</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s1">&#39;datasets&#39;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s1">&#39;end-to-end&#39;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s1">&#39;dblp_demo.csv&#39;</span>
+<span class="n">path_B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_install_path</span><span class="p">()</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s1">&#39;datasets&#39;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s1">&#39;end-to-end&#39;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s1">&#39;acm_demo.csv&#39;</span>
 </pre></div>
 
 </div>
@@ -11898,27 +11898,12 @@ magellan version: 0.2.0
 <div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="n">path_A</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Load csv files as dataframes and set the key attribute in the dataframe</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="n">path_A</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
 <span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="n">path_B</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
 </pre></div>
 
 </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-<div class="prompt"></div>
-
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>No handlers could be found for logger &#34;py_entitymatching.io.parsers&#34;
-</pre>
-</div>
-</div>
-
 </div>
 </div>
 
@@ -11945,9 +11930,9 @@ magellan version: 0.2.0
 <div class="prompt"></div>
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Number of tuples in A: 533
-Number of tuples in B: 331
-Number of tuples in A X B (i.e the cartesian product): 176423
+<pre>Number of tuples in A: 1800
+Number of tuples in B: 1813
+Number of tuples in A X B (i.e the cartesian product): 3263400
 </pre>
 </div>
 </div>
@@ -11961,7 +11946,7 @@ Number of tuples in A X B (i.e the cartesian product): 176423
 <div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">A</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">A</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -11996,58 +11981,28 @@ Number of tuples in A X B (i.e the cartesian product): 176423
     <tr style="text-align: right;">
       <th></th>
       <th>id</th>
-      <th>name</th>
-      <th>addr</th>
-      <th>city</th>
-      <th>phone</th>
-      <th>type</th>
+      <th>title</th>
+      <th>authors</th>
+      <th>venue</th>
+      <th>paper year</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
-      <td>534</td>
-      <td>arnie mortons of chicago</td>
-      <td>435 s. la cienega blv.</td>
-      <td>los angeles</td>
-      <td>310/246-1501</td>
-      <td>american</td>
+      <td>l0</td>
+      <td>Paradise: A Database System for GIS Applications</td>
+      <td>Paradise Team</td>
+      <td>SIGMOD Conference</td>
+      <td>1995</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>535</td>
-      <td>arts delicatessen</td>
-      <td>12224 ventura blvd.</td>
-      <td>studio city</td>
-      <td>818/762-1221</td>
-      <td>american</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>536</td>
-      <td>hotel bel-air</td>
-      <td>701 stone canyon rd.</td>
-      <td>bel air</td>
-      <td>310/472-1211</td>
-      <td>californian</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>537</td>
-      <td>cafe bizou</td>
-      <td>14016 ventura blvd.</td>
-      <td>sherman oaks</td>
-      <td>818/788-3536</td>
-      <td>french</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>538</td>
-      <td>campanile</td>
-      <td>624 s. la brea ave.</td>
-      <td>los angeles</td>
-      <td>213/938-1447</td>
-      <td>american</td>
+      <td>l1</td>
+      <td>A Query Language and Optimization Techniques for Unstructured Data</td>
+      <td>Gerd G. Hillebrand, Peter Buneman, Susan B. Davidson, Dan Suciu</td>
+      <td>SIGMOD Conference</td>
+      <td>1996</td>
     </tr>
   </tbody>
 </table>
@@ -12065,7 +12020,7 @@ Number of tuples in A X B (i.e the cartesian product): 176423
 <div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">B</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">B</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -12100,58 +12055,28 @@ Number of tuples in A X B (i.e the cartesian product): 176423
     <tr style="text-align: right;">
       <th></th>
       <th>id</th>
-      <th>name</th>
-      <th>addr</th>
-      <th>city</th>
-      <th>phone</th>
-      <th>type</th>
+      <th>title</th>
+      <th>authors</th>
+      <th>venue</th>
+      <th>paper year</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
-      <td>1</td>
-      <td>apple pan  the</td>
-      <td>10801 w. pico blvd.</td>
-      <td>west la</td>
-      <td>310-475-3585</td>
-      <td>american</td>
+      <td>r0</td>
+      <td>An efficient bitmap encoding scheme for selection queries</td>
+      <td>Chee-Yong Chan, Yannis E. Ioannidis</td>
+      <td>International Conference on Management of Data</td>
+      <td>1999</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>2</td>
-      <td>asahi ramen</td>
-      <td>2027 sawtelle blvd.</td>
-      <td>west la</td>
-      <td>310-479-2231</td>
-      <td>noodle shops</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>3</td>
-      <td>baja fresh</td>
-      <td>3345 kimber dr.</td>
-      <td>westlake village</td>
-      <td>805-498-4049</td>
-      <td>mexican</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>4</td>
-      <td>belvedere  the</td>
-      <td>9882 little santa monica blvd.</td>
-      <td>beverly hills</td>
-      <td>310-788-2306</td>
-      <td>pacific new wave</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>5</td>
-      <td>benitas frites</td>
-      <td>1433 third st. promenade</td>
-      <td>santa monica</td>
-      <td>310-458-2889</td>
-      <td>fast food</td>
+      <td>r1</td>
+      <td>Integrating a Structured-Text Retrieval System with an Object-Oriented Database System</td>
+      <td>Tak W. Yan, Jurgen Annevelink</td>
+      <td>Very Large Data Bases</td>
+      <td>1994</td>
     </tr>
   </tbody>
 </table>
@@ -12169,7 +12094,7 @@ Number of tuples in A X B (i.e the cartesian product): 176423
 <div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Display the keys of the input tables</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Display the key attributes of table A and B.</span>
 <span class="n">em</span><span class="o">.</span><span class="n">get_key</span><span class="p">(</span><span class="n">A</span><span class="p">),</span> <span class="n">em</span><span class="o">.</span><span class="n">get_key</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
 </pre></div>
 
@@ -12201,9 +12126,9 @@ Number of tuples in A X B (i.e the cartesian product): 176423
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Block-tables-to-get-candidate-set">Block tables to get candidate set<a class="anchor-link" href="#Block-tables-to-get-candidate-set">&#182;</a></h1><p>Before we do the matching, we would like to remove the obviously non-matching tuple pairs from the input tables. This would reduce the number of tuple pairs considered for matching.
+<h1 id="Block-Tables-To-Get-Candidate-Set">Block Tables To Get Candidate Set<a class="anchor-link" href="#Block-Tables-To-Get-Candidate-Set">&#182;</a></h1><p>Before we do the matching, we would like to remove the obviously non-matching tuple pairs from the input tables. This would reduce the number of tuple pairs considered for matching.
 <em>py_entitymatching</em> provides four different blockers: (1) attribute equivalence, (2) overlap, (3) rule-based, and (4) black-box. The user can mix and match these blockers to form a blocking sequence applied to input tables.</p>
-<p>For the matching problem at hand, we know that two restaurants with no overlap between the names will not match. So we decide the apply blocking over names:</p>
+<p>For the matching problem at hand, we know that two conference papers published in different years cannot match, or if there are errors in the year then there should be at least some overlap between the paper titles. So we decide the apply the following blocking plan:</p>
 
 </div>
 </div>
@@ -12213,11 +12138,11 @@ Number of tuples in A X B (i.e the cartesian product): 176423
 <div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">ob</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">OverlapBlocker</span><span class="p">()</span>
-<span class="n">C</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">block_tables</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> 
-                    <span class="n">l_output_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;addr&#39;</span><span class="p">,</span> <span class="s1">&#39;city&#39;</span><span class="p">,</span> <span class="s1">&#39;phone&#39;</span><span class="p">],</span> 
-                    <span class="n">r_output_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;addr&#39;</span><span class="p">,</span> <span class="s1">&#39;city&#39;</span><span class="p">,</span> <span class="s1">&#39;phone&#39;</span><span class="p">],</span>
-                    <span class="n">overlap_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">show_progress</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Blocking plan</span>
+
+<span class="c1"># A, B -- AttrEquivalence blocker [year] --------------------|</span>
+<span class="c1">#                                                           |---&gt; candidate set</span>
+<span class="c1"># A, B -- Overlap blocker [title]---------------------------|</span>
 </pre></div>
 
 </div>
@@ -12230,7 +12155,14 @@ Number of tuples in A X B (i.e the cartesian product): 176423
 <div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">C</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Create attribute equivalence blocker</span>
+<span class="n">ab</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">AttrEquivalenceBlocker</span><span class="p">()</span>
+<span class="c1"># Block tables using &#39;year&#39; attribute : same year include in candidate set</span>
+<span class="n">C1</span> <span class="o">=</span> <span class="n">ab</span><span class="o">.</span><span class="n">block_tables</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="s1">&#39;paper year&#39;</span><span class="p">,</span> <span class="s1">&#39;paper year&#39;</span><span class="p">,</span> 
+                     <span class="n">l_output_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="s1">&#39;authors&#39;</span><span class="p">,</span> <span class="s1">&#39;paper year&#39;</span><span class="p">],</span>
+                     <span class="n">r_output_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="s1">&#39;authors&#39;</span><span class="p">,</span> <span class="s1">&#39;paper year&#39;</span><span class="p">]</span>
+                    <span class="p">)</span>
+<span class="nb">len</span><span class="p">(</span><span class="n">C1</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -12245,112 +12177,77 @@ Number of tuples in A X B (i.e the cartesian product): 176423
 <div class="prompt output_prompt">Out[10]:</div>
 
 
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
-<style>
-    .dataframe thead tr:only-child th {
-        text-align: right;
-    }
 
-    .dataframe thead th {
-        text-align: left;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>_id</th>
-      <th>ltable_id</th>
-      <th>rtable_id</th>
-      <th>ltable_name</th>
-      <th>ltable_addr</th>
-      <th>ltable_city</th>
-      <th>ltable_phone</th>
-      <th>rtable_name</th>
-      <th>rtable_addr</th>
-      <th>rtable_city</th>
-      <th>rtable_phone</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>0</td>
-      <td>543</td>
-      <td>1</td>
-      <td>grill on the alley</td>
-      <td>9560 dayton way</td>
-      <td>los angeles</td>
-      <td>310/276-0615</td>
-      <td>apple pan  the</td>
-      <td>10801 w. pico blvd.</td>
-      <td>west la</td>
-      <td>310-475-3585</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>1</td>
-      <td>549</td>
-      <td>1</td>
-      <td>the palm</td>
-      <td>9001 santa monica blvd.</td>
-      <td>los angeles</td>
-      <td>310/550-8811</td>
-      <td>apple pan  the</td>
-      <td>10801 w. pico blvd.</td>
-      <td>west la</td>
-      <td>310-475-3585</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>2</td>
-      <td>551</td>
-      <td>1</td>
-      <td>philippes the original</td>
-      <td>1001 n. alameda st.</td>
-      <td>los angeles</td>
-      <td>213/628-3781</td>
-      <td>apple pan  the</td>
-      <td>10801 w. pico blvd.</td>
-      <td>west la</td>
-      <td>310-475-3585</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>3</td>
-      <td>595</td>
-      <td>1</td>
-      <td>sign of the dove</td>
-      <td>1110 3rd ave. at 65th st.</td>
-      <td>new york</td>
-      <td>212/861-8080</td>
-      <td>apple pan  the</td>
-      <td>10801 w. pico blvd.</td>
-      <td>west la</td>
-      <td>310-475-3585</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>4</td>
-      <td>597</td>
-      <td>1</td>
-      <td>tavern on the green</td>
-      <td>in central park at 67th st.</td>
-      <td>new york</td>
-      <td>212/873-3200</td>
-      <td>apple pan  the</td>
-      <td>10801 w. pico blvd.</td>
-      <td>west la</td>
-      <td>310-475-3585</td>
-    </tr>
-  </tbody>
-</table>
+<div class="output_text output_subarea output_execute_result">
+<pre>327703</pre>
 </div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Initialize overlap blocker</span>
+<span class="n">ob</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">OverlapBlocker</span><span class="p">()</span>
+<span class="c1"># Block over title attribute</span>
+<span class="n">C2</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">block_tables</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="n">show_progress</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">overlap_size</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="nb">len</span><span class="p">(</span><span class="n">C2</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[13]:</div>
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>244220</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Combine the outputs from attr. equivalence blocker and overlap blocker</span>
+<span class="n">C</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">combine_blocker_outputs_via_union</span><span class="p">([</span><span class="n">C1</span><span class="p">,</span> <span class="n">C2</span><span class="p">])</span>
+<span class="nb">len</span><span class="p">(</span><span class="n">C</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[14]:</div>
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>544632</pre>
 </div>
 
 </div>
@@ -12364,7 +12261,7 @@ Number of tuples in A X B (i.e the cartesian product): 176423
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Match-tuple-pairs-in-candidate-set">Match tuple pairs in candidate set<a class="anchor-link" href="#Match-tuple-pairs-in-candidate-set">&#182;</a></h1>
+<h1 id="Match-Tuple-Pairs-in-Candidate-Set">Match Tuple Pairs in Candidate Set<a class="anchor-link" href="#Match-Tuple-Pairs-in-Candidate-Set">&#182;</a></h1>
 </div>
 </div>
 </div>
@@ -12377,8 +12274,9 @@ Number of tuples in A X B (i.e the cartesian product): 176423
 This typically involves the following four steps:</p>
 <ol>
 <li>Sampling and labeling the candidate set</li>
-<li>Train matcher using labeled data</li>
-<li>Predict the matches in the candidate set using trained matcher</li>
+<li>Splitting the labeled data into development and evaluation set</li>
+<li>Selecting the best learning based matcher using the development set</li>
+<li>Evaluating the selected matcher using the evaluation set</li>
 </ol>
 
 </div>
@@ -12405,7 +12303,7 @@ This typically involves the following four steps:</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="prompt input_prompt">In&nbsp;[15]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Sample  candidate set</span>
@@ -12429,11 +12327,11 @@ This typically involves the following four steps:</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[12]:</div>
+<div class="prompt input_prompt">In&nbsp;[16]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Label S</span>
-<span class="n">G</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">label_table</span><span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="s1">&#39;gold&#39;</span><span class="p">)</span>
+<span class="c1">#G = em.label_table(S, &#39;label&#39;)</span>
 </pre></div>
 
 </div>
@@ -12453,10 +12351,11 @@ This typically involves the following four steps:</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[12]:</div>
+<div class="prompt input_prompt">In&nbsp;[17]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">path_G</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_install_path</span><span class="p">()</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s1">&#39;datasets&#39;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s1">&#39;end-to-end&#39;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s1">&#39;restaurants/lbl_restnt_wf1.csv&#39;</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Load the pre-labeled data</span>
+<span class="n">path_G</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_install_path</span><span class="p">()</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s1">&#39;datasets&#39;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s1">&#39;end-to-end&#39;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s1">&#39;labeled_data_demo.csv&#39;</span>
 <span class="n">G</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="n">path_G</span><span class="p">,</span> 
                          <span class="n">key</span><span class="o">=</span><span class="s1">&#39;_id&#39;</span><span class="p">,</span>
                          <span class="n">ltable</span><span class="o">=</span><span class="n">A</span><span class="p">,</span> <span class="n">rtable</span><span class="o">=</span><span class="n">B</span><span class="p">,</span> 
@@ -12473,7 +12372,16 @@ This typically involves the following four steps:</p>
 
 
 <div class="output_area">
-<div class="prompt output_prompt">Out[12]:</div>
+<div class="prompt"></div>
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>No handlers could be found for logger &#34;py_entitymatching.io.parsers&#34;
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[17]:</div>
 
 
 
@@ -12492,7 +12400,7 @@ This typically involves the following four steps:</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Train-matcher-using-labeled-data">Train matcher using labeled data<a class="anchor-link" href="#Train-matcher-using-labeled-data">&#182;</a></h2>
+<h2 id="Splitting-the-labeled-data-into-development-and-evaluation-set">Splitting the labeled data into development and evaluation set<a class="anchor-link" href="#Splitting-the-labeled-data-into-development-and-evaluation-set">&#182;</a></h2>
 </div>
 </div>
 </div>
@@ -12501,18 +12409,20 @@ This typically involves the following four steps:</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>First, we need to create a set of features.<em>py_entitymatching</em> provides a way to automatically generate features based on the attributes in the input tables. For the purposes of this guide, we use the automatically generated features.</p>
+<p>In this step, we split the labeled data into two sets: development (I) and evaluation (J). Specifically, the development set is used to come up with the best learning-based matcher and the evaluation set used to evaluate the selected matcher on unseen data.</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="prompt input_prompt">In&nbsp;[18]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Generate features automatically </span>
-<span class="n">feature_table</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_features_for_matching</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">validate_inferred_attr_types</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Split S into development set (I) and evaluation set (J)</span>
+<span class="n">IJ</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">split_train_test</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">train_proportion</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">I</span> <span class="o">=</span> <span class="n">IJ</span><span class="p">[</span><span class="s1">&#39;train&#39;</span><span class="p">]</span>
+<span class="n">J</span> <span class="o">=</span> <span class="n">IJ</span><span class="p">[</span><span class="s1">&#39;test&#39;</span><span class="p">]</span>
 </pre></div>
 
 </div>
@@ -12525,25 +12435,46 @@ This typically involves the following four steps:</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Next, we convert the labeled data to feature vectors using the feature table</p>
+<h2 id="Selecting-the-best-learning-based-matcher">Selecting the best learning-based matcher<a class="anchor-link" href="#Selecting-the-best-learning-based-matcher">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Selecting the best learning-based matcher typically involves the following steps:</p>
+<ol>
+<li>Creating a set of learning-based matchers</li>
+<li>Creating features</li>
+<li>Converting the development set into feature vectors</li>
+<li>Selecting the best learning-based matcher using k-fold cross validation</li>
+</ol>
 
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Creating-a-Set-of-Learning-based-Matchers">Creating a Set of Learning-based Matchers<a class="anchor-link" href="#Creating-a-Set-of-Learning-based-Matchers">&#182;</a></h3>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[14]:</div>
+<div class="prompt input_prompt">In&nbsp;[19]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Select the attrs. to be included in the feature vector table</span>
-<span class="n">attrs_from_table</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ltable_name&#39;</span><span class="p">,</span> <span class="s1">&#39;ltable_addr&#39;</span><span class="p">,</span> <span class="s1">&#39;ltable_city&#39;</span><span class="p">,</span> <span class="s1">&#39;ltable_phone&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;rtable_name&#39;</span><span class="p">,</span> <span class="s1">&#39;rtable_addr&#39;</span><span class="p">,</span> <span class="s1">&#39;rtable_city&#39;</span><span class="p">,</span> <span class="s1">&#39;rtable_phone&#39;</span><span class="p">]</span>
-<span class="c1"># Convert the labeled data to feature vectors using the feature table</span>
-<span class="n">H</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">extract_feature_vecs</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> 
-                            <span class="n">feature_table</span><span class="o">=</span><span class="n">feature_table</span><span class="p">,</span> 
-                            <span class="n">attrs_before</span> <span class="o">=</span> <span class="n">attrs_from_table</span><span class="p">,</span>
-                            <span class="n">attrs_after</span><span class="o">=</span><span class="s1">&#39;gold&#39;</span><span class="p">,</span>
-                            <span class="n">show_progress</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Create a set of ML-matchers</span>
+<span class="n">dt</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">DTMatcher</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;DecisionTree&#39;</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">svm</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">SVMMatcher</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;SVM&#39;</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">rf</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">RFMatcher</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;RF&#39;</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">lg</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">LogRegMatcher</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;LogReg&#39;</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">ln</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">LinRegMatcher</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;LinReg&#39;</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -12556,61 +12487,7 @@ This typically involves the following four steps:</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Then, we train the learning-based matcher using the feature vectors. For the purposes of the guide, we will use Random Forest matcher that is included in the <em>py_entitymatching</em> package.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[15]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Instantiate the RF Matcher</span>
-<span class="n">rf</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">RFMatcher</span><span class="p">()</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[16]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Get the attributes to be projected while training</span>
-<span class="n">attrs_to_be_excluded</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">attrs_to_be_excluded</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;_id&#39;</span><span class="p">,</span> <span class="s1">&#39;ltable_id&#39;</span><span class="p">,</span> <span class="s1">&#39;rtable_id&#39;</span><span class="p">,</span> <span class="s1">&#39;gold&#39;</span><span class="p">])</span>
-<span class="n">attrs_to_be_excluded</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">attrs_from_table</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[17]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Train using feature vectors from the labeled data.</span>
-<span class="n">rf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="n">H</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="o">=</span><span class="n">attrs_to_be_excluded</span><span class="p">,</span> <span class="n">target_attr</span><span class="o">=</span><span class="s1">&#39;gold&#39;</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Predict-the-matches-in-the-candidate-set-using-trained-matcher">Predict the matches in the candidate set using trained matcher<a class="anchor-link" href="#Predict-the-matches-in-the-candidate-set-using-trained-matcher">&#182;</a></h2>
+<h3 id="Creating-Features">Creating Features<a class="anchor-link" href="#Creating-Features">&#182;</a></h3>
 </div>
 </div>
 </div>
@@ -12619,7 +12496,7 @@ This typically involves the following four steps:</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Now, we use the trained matcher to predict matches in the candidate set. To do that, first we need to convert the candidate set to feature vectors.</p>
+<p>Next, we need to create a set of features for the development set. <em>py_entitymatching</em> provides a way to automatically generate features based on the attributes in the input tables. For the purposes of this guide, we use the automatically generated features.</p>
 
 </div>
 </div>
@@ -12629,16 +12506,63 @@ This typically involves the following four steps:</p>
 <div class="prompt input_prompt">In&nbsp;[21]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Select the attrs. to be included in the feature vector table</span>
-<span class="n">attrs_from_table</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ltable_name&#39;</span><span class="p">,</span> <span class="s1">&#39;ltable_addr&#39;</span><span class="p">,</span> <span class="s1">&#39;ltable_city&#39;</span><span class="p">,</span> <span class="s1">&#39;ltable_phone&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;rtable_name&#39;</span><span class="p">,</span> <span class="s1">&#39;rtable_addr&#39;</span><span class="p">,</span> <span class="s1">&#39;rtable_city&#39;</span><span class="p">,</span> <span class="s1">&#39;rtable_phone&#39;</span><span class="p">]</span>
-<span class="c1"># Convert the cancidate set to feature vectors using the feature table</span>
-<span class="n">L</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">extract_feature_vecs</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">feature_table</span><span class="o">=</span><span class="n">feature_table</span><span class="p">,</span>
-                             <span class="n">attrs_before</span><span class="o">=</span> <span class="n">attrs_from_table</span><span class="p">,</span>
-                             <span class="n">show_progress</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Generate features</span>
+<span class="n">feature_table</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_features_for_matching</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">validate_inferred_attr_types</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 </pre></div>
 
 </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[22]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># List the names of the features generated</span>
+<span class="n">feature_table</span><span class="p">[</span><span class="s1">&#39;feature_name&#39;</span><span class="p">]</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[22]:</div>
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>0                          id_id_lev_dist
+1                           id_id_lev_sim
+2                               id_id_jar
+3                               id_id_jwn
+4                               id_id_exm
+5                   id_id_jac_qgm_3_qgm_3
+6             title_title_jac_qgm_3_qgm_3
+7         title_title_cos_dlm_dc0_dlm_dc0
+8                         title_title_mel
+9                    title_title_lev_dist
+10                    title_title_lev_sim
+11        authors_authors_jac_qgm_3_qgm_3
+12    authors_authors_cos_dlm_dc0_dlm_dc0
+13                    authors_authors_mel
+14               authors_authors_lev_dist
+15                authors_authors_lev_sim
+16              paper_year_paper_year_exm
+17              paper_year_paper_year_anm
+18         paper_year_paper_year_lev_dist
+19          paper_year_paper_year_lev_sim
+Name: feature_name, dtype: object</pre>
+</div>
+
+</div>
+
 </div>
 </div>
 
@@ -12648,35 +12572,20 @@ This typically involves the following four steps:</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Next, we predict the matches in the candidate set using the trained matcher and the feature vectors.</p>
-
+<h3 id="Converting-the-Development-Set-to--Feature-Vectors">Converting the Development Set to  Feature Vectors<a class="anchor-link" href="#Converting-the-Development-Set-to--Feature-Vectors">&#182;</a></h3>
 </div>
 </div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[22]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Get the attributes to be excluded while predicting </span>
-<span class="n">attrs_to_be_excluded</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">attrs_to_be_excluded</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;_id&#39;</span><span class="p">,</span> <span class="s1">&#39;ltable_id&#39;</span><span class="p">,</span> <span class="s1">&#39;rtable_id&#39;</span><span class="p">])</span>
-<span class="n">attrs_to_be_excluded</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">attrs_from_table</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[23]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Predict the matches</span>
-<span class="n">predictions</span> <span class="o">=</span> <span class="n">rf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="n">L</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="o">=</span><span class="n">attrs_to_be_excluded</span><span class="p">,</span>                          
-              <span class="n">append</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">target_attr</span><span class="o">=</span><span class="s1">&#39;predicted&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Convert the I into a set of feature vectors using F</span>
+<span class="n">H</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">extract_feature_vecs</span><span class="p">(</span><span class="n">I</span><span class="p">,</span> 
+                            <span class="n">feature_table</span><span class="o">=</span><span class="n">feature_table</span><span class="p">,</span> 
+                            <span class="n">attrs_after</span><span class="o">=</span><span class="s1">&#39;label&#39;</span><span class="p">,</span>
+                            <span class="n">show_progress</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span> 
 </pre></div>
 
 </div>
@@ -12689,7 +12598,8 @@ This typically involves the following four steps:</p>
 <div class="prompt input_prompt">In&nbsp;[24]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">predictions</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Display first few rows</span>
+<span class="n">H</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -12726,150 +12636,102 @@ This typically involves the following four steps:</p>
       <th>_id</th>
       <th>ltable_id</th>
       <th>rtable_id</th>
-      <th>ltable_name</th>
-      <th>ltable_addr</th>
-      <th>ltable_city</th>
-      <th>ltable_phone</th>
-      <th>rtable_name</th>
-      <th>rtable_addr</th>
-      <th>rtable_city</th>
+      <th>id_id_lev_dist</th>
+      <th>id_id_lev_sim</th>
+      <th>id_id_jar</th>
+      <th>id_id_jwn</th>
+      <th>id_id_exm</th>
+      <th>id_id_jac_qgm_3_qgm_3</th>
+      <th>title_title_jac_qgm_3_qgm_3</th>
       <th>...</th>
-      <th>city_city_sw</th>
-      <th>type_type_jac_qgm_3_qgm_3</th>
-      <th>type_type_cos_dlm_dc0_dlm_dc0</th>
-      <th>type_type_jac_dlm_dc0_dlm_dc0</th>
-      <th>type_type_mel</th>
-      <th>type_type_lev_dist</th>
-      <th>type_type_lev_sim</th>
-      <th>type_type_nmw</th>
-      <th>type_type_sw</th>
-      <th>predicted</th>
+      <th>authors_authors_jac_qgm_3_qgm_3</th>
+      <th>authors_authors_cos_dlm_dc0_dlm_dc0</th>
+      <th>authors_authors_mel</th>
+      <th>authors_authors_lev_dist</th>
+      <th>authors_authors_lev_sim</th>
+      <th>paper_year_paper_year_exm</th>
+      <th>paper_year_paper_year_anm</th>
+      <th>paper_year_paper_year_lev_dist</th>
+      <th>paper_year_paper_year_lev_sim</th>
+      <th>label</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th>0</th>
+      <th>221</th>
+      <td>221</td>
+      <td>l1114</td>
+      <td>r597</td>
+      <td>5</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
       <td>0</td>
-      <td>543</td>
-      <td>1</td>
-      <td>grill on the alley</td>
-      <td>9560 dayton way</td>
-      <td>los angeles</td>
-      <td>310/276-0615</td>
-      <td>apple pan  the</td>
-      <td>10801 w. pico blvd.</td>
-      <td>west la</td>
+      <td>0.0</td>
+      <td>0.057692</td>
       <td>...</td>
-      <td>2.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
+      <td>0.035294</td>
+      <td>0.0</td>
+      <td>0.548358</td>
+      <td>41.0</td>
+      <td>0.226415</td>
+      <td>1</td>
       <td>1.0</td>
       <td>0.0</td>
       <td>1.0</td>
-      <td>8.0</td>
-      <td>8.0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>1</td>
-      <td>549</td>
-      <td>1</td>
-      <td>the palm</td>
-      <td>9001 santa monica blvd.</td>
-      <td>los angeles</td>
-      <td>310/550-8811</td>
-      <td>apple pan  the</td>
-      <td>10801 w. pico blvd.</td>
-      <td>west la</td>
-      <td>...</td>
-      <td>2.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>1.0</td>
-      <td>8.0</td>
-      <td>8.0</td>
       <td>0</td>
     </tr>
     <tr>
-      <th>2</th>
-      <td>2</td>
-      <td>551</td>
-      <td>1</td>
-      <td>philippes the original</td>
-      <td>1001 n. alameda st.</td>
-      <td>los angeles</td>
-      <td>213/628-3781</td>
-      <td>apple pan  the</td>
-      <td>10801 w. pico blvd.</td>
-      <td>west la</td>
+      <th>439</th>
+      <td>439</td>
+      <td>l1577</td>
+      <td>r688</td>
+      <td>5</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.052980</td>
       <td>...</td>
-      <td>2.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
+      <td>0.088235</td>
+      <td>0.0</td>
+      <td>0.536692</td>
+      <td>61.0</td>
+      <td>0.140845</td>
+      <td>1</td>
       <td>1.0</td>
       <td>0.0</td>
       <td>1.0</td>
-      <td>8.0</td>
-      <td>8.0</td>
       <td>0</td>
     </tr>
     <tr>
-      <th>3</th>
-      <td>3</td>
-      <td>595</td>
-      <td>1</td>
-      <td>sign of the dove</td>
-      <td>1110 3rd ave. at 65th st.</td>
-      <td>new york</td>
-      <td>212/861-8080</td>
-      <td>apple pan  the</td>
-      <td>10801 w. pico blvd.</td>
-      <td>west la</td>
-      <td>...</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
+      <th>191</th>
+      <td>191</td>
+      <td>l1174</td>
+      <td>r588</td>
+      <td>5</td>
       <td>0.0</td>
-      <td>1.0</td>
-      <td>8.0</td>
-      <td>8.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
       <td>0</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>4</td>
-      <td>597</td>
-      <td>1</td>
-      <td>tavern on the green</td>
-      <td>in central park at 67th st.</td>
-      <td>new york</td>
-      <td>212/873-3200</td>
-      <td>apple pan  the</td>
-      <td>10801 w. pico blvd.</td>
-      <td>west la</td>
+      <td>0.0</td>
+      <td>0.072464</td>
       <td>...</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>1.0</td>
+      <td>0.044444</td>
+      <td>0.0</td>
+      <td>0.515819</td>
+      <td>45.0</td>
+      <td>0.166667</td>
+      <td>1</td>
       <td>1.0</td>
       <td>0.0</td>
       <td>1.0</td>
-      <td>8.0</td>
-      <td>8.0</td>
       <td>0</td>
     </tr>
   </tbody>
 </table>
-<p>5 rows × 48 columns</p>
+<p>3 rows × 24 columns</p>
 </div>
 </div>
 
@@ -12884,37 +12746,31 @@ This typically involves the following four steps:</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Finally, project the attributes and the predictions from the predicted table.</p>
+<h3 id="Selecting-the-Best-Matcher-Using-Cross-validation">Selecting the Best Matcher Using Cross-validation<a class="anchor-link" href="#Selecting-the-Best-Matcher-Using-Cross-validation">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now, we select the best matcher using k-fold cross-validation. For the purposes of this guide, we use five fold cross validation and use 'precision' and 'recall' metric to select the best matcher.</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[25]:</div>
+<div class="prompt input_prompt">In&nbsp;[27]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Get the attributes to be projected out</span>
-<span class="n">attrs_proj</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">attrs_proj</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;_id&#39;</span><span class="p">,</span> <span class="s1">&#39;ltable_id&#39;</span><span class="p">,</span> <span class="s1">&#39;rtable_id&#39;</span><span class="p">])</span>
-<span class="n">attrs_proj</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">attrs_from_table</span><span class="p">)</span>
-<span class="n">attrs_proj</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;predicted&#39;</span><span class="p">)</span>
-
-<span class="c1"># Project the attributes</span>
-<span class="n">predictions</span> <span class="o">=</span> <span class="n">predictions</span><span class="p">[</span><span class="n">attrs_proj</span><span class="p">]</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[26]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">predictions</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Select the best ML matcher using CV</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">select_matcher</span><span class="p">([</span><span class="n">dt</span><span class="p">,</span> <span class="n">rf</span><span class="p">,</span> <span class="n">svm</span><span class="p">,</span> <span class="n">ln</span><span class="p">,</span> <span class="n">lg</span><span class="p">],</span> <span class="n">table</span><span class="o">=</span><span class="n">H</span><span class="p">,</span> 
+        <span class="n">exclude_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;_id&#39;</span><span class="p">,</span> <span class="s1">&#39;ltable_id&#39;</span><span class="p">,</span> <span class="s1">&#39;rtable_id&#39;</span><span class="p">,</span> <span class="s1">&#39;label&#39;</span><span class="p">],</span>
+        <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+        <span class="n">target_attr</span><span class="o">=</span><span class="s1">&#39;label&#39;</span><span class="p">,</span> <span class="n">metric_to_select_matcher</span><span class="o">=</span><span class="s1">&#39;precision&#39;</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">result</span><span class="p">[</span><span class="s1">&#39;cv_stats&#39;</span><span class="p">]</span>
 </pre></div>
 
 </div>
@@ -12926,7 +12782,7 @@ This typically involves the following four steps:</p>
 
 
 <div class="output_area">
-<div class="prompt output_prompt">Out[26]:</div>
+<div class="prompt output_prompt">Out[27]:</div>
 
 
 <div class="output_html rendered_html output_subarea output_execute_result">
@@ -12948,101 +12804,342 @@ This typically involves the following four steps:</p>
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>_id</th>
-      <th>ltable_id</th>
-      <th>rtable_id</th>
-      <th>ltable_name</th>
-      <th>ltable_addr</th>
-      <th>ltable_city</th>
-      <th>ltable_phone</th>
-      <th>rtable_name</th>
-      <th>rtable_addr</th>
-      <th>rtable_city</th>
-      <th>rtable_phone</th>
-      <th>predicted</th>
+      <th>Matcher</th>
+      <th>Average precision</th>
+      <th>Average recall</th>
+      <th>Average f1</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
-      <td>0</td>
-      <td>543</td>
-      <td>1</td>
-      <td>grill on the alley</td>
-      <td>9560 dayton way</td>
-      <td>los angeles</td>
-      <td>310/276-0615</td>
-      <td>apple pan  the</td>
-      <td>10801 w. pico blvd.</td>
-      <td>west la</td>
-      <td>310-475-3585</td>
-      <td>0</td>
+      <td>DecisionTree</td>
+      <td>0.905960</td>
+      <td>0.922281</td>
+      <td>0.909402</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>1</td>
-      <td>549</td>
-      <td>1</td>
-      <td>the palm</td>
-      <td>9001 santa monica blvd.</td>
-      <td>los angeles</td>
-      <td>310/550-8811</td>
-      <td>apple pan  the</td>
-      <td>10801 w. pico blvd.</td>
-      <td>west la</td>
-      <td>310-475-3585</td>
-      <td>0</td>
+      <td>RF</td>
+      <td>1.000000</td>
+      <td>0.922281</td>
+      <td>0.957971</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>2</td>
-      <td>551</td>
-      <td>1</td>
-      <td>philippes the original</td>
-      <td>1001 n. alameda st.</td>
-      <td>los angeles</td>
-      <td>213/628-3781</td>
-      <td>apple pan  the</td>
-      <td>10801 w. pico blvd.</td>
-      <td>west la</td>
-      <td>310-475-3585</td>
-      <td>0</td>
+      <td>SVM</td>
+      <td>1.000000</td>
+      <td>0.842432</td>
+      <td>0.911244</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>3</td>
-      <td>595</td>
-      <td>1</td>
-      <td>sign of the dove</td>
-      <td>1110 3rd ave. at 65th st.</td>
-      <td>new york</td>
-      <td>212/861-8080</td>
-      <td>apple pan  the</td>
-      <td>10801 w. pico blvd.</td>
-      <td>west la</td>
-      <td>310-475-3585</td>
-      <td>0</td>
+      <td>LinReg</td>
+      <td>1.000000</td>
+      <td>0.912281</td>
+      <td>0.951622</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>4</td>
-      <td>597</td>
-      <td>1</td>
-      <td>tavern on the green</td>
-      <td>in central park at 67th st.</td>
-      <td>new york</td>
-      <td>212/873-3200</td>
-      <td>apple pan  the</td>
-      <td>10801 w. pico blvd.</td>
-      <td>west la</td>
-      <td>310-475-3585</td>
-      <td>0</td>
+      <td>LogReg</td>
+      <td>0.988889</td>
+      <td>0.922281</td>
+      <td>0.952866</td>
     </tr>
   </tbody>
 </table>
 </div>
 </div>
 
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[29]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Select the best ML matcher using CV</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">select_matcher</span><span class="p">([</span><span class="n">dt</span><span class="p">,</span> <span class="n">rf</span><span class="p">,</span> <span class="n">svm</span><span class="p">,</span> <span class="n">ln</span><span class="p">,</span> <span class="n">lg</span><span class="p">],</span> <span class="n">table</span><span class="o">=</span><span class="n">H</span><span class="p">,</span> 
+        <span class="n">exclude_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;_id&#39;</span><span class="p">,</span> <span class="s1">&#39;ltable_id&#39;</span><span class="p">,</span> <span class="s1">&#39;rtable_id&#39;</span><span class="p">,</span> <span class="s1">&#39;label&#39;</span><span class="p">],</span>
+        <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+        <span class="n">target_attr</span><span class="o">=</span><span class="s1">&#39;label&#39;</span><span class="p">,</span> <span class="n">metric_to_select_matcher</span><span class="o">=</span><span class="s1">&#39;recall&#39;</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">result</span><span class="p">[</span><span class="s1">&#39;cv_stats&#39;</span><span class="p">]</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[29]:</div>
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Matcher</th>
+      <th>Average precision</th>
+      <th>Average recall</th>
+      <th>Average f1</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>DecisionTree</td>
+      <td>0.905960</td>
+      <td>0.922281</td>
+      <td>0.909402</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>RF</td>
+      <td>1.000000</td>
+      <td>0.922281</td>
+      <td>0.957971</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>SVM</td>
+      <td>1.000000</td>
+      <td>0.842432</td>
+      <td>0.911244</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>LinReg</td>
+      <td>1.000000</td>
+      <td>0.912281</td>
+      <td>0.951622</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>LogReg</td>
+      <td>0.988889</td>
+      <td>0.922281</td>
+      <td>0.952866</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We observe that the best matcher (RF) is  getting us to the precision and recall that we expect (i.e P &gt; 95% and R &gt; 90%). So, we select this matcher and now we can proceed on to evaluating the best matcher on the unseen data (the evaluation set).</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Evaluating-the-Matching-Output">Evaluating the Matching Output<a class="anchor-link" href="#Evaluating-the-Matching-Output">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Evaluating the matching outputs for the evaluation set typically involves the following four steps:</p>
+<ol>
+<li>Converting the evaluation set to feature vectors</li>
+<li>Training matcher using the feature vectors extracted from the development set</li>
+<li>Predicting the evaluation set using the trained matcher</li>
+<li>Evaluating the predicted matches</li>
+</ol>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Converting-the-Evaluation-Set-to--Feature-Vectors">Converting the Evaluation Set to  Feature Vectors<a class="anchor-link" href="#Converting-the-Evaluation-Set-to--Feature-Vectors">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>As before, we convert to the feature vectors (using the feature table and the evaluation set)</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[30]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Convert J into a set of feature vectors using feature table</span>
+<span class="n">L</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">extract_feature_vecs</span><span class="p">(</span><span class="n">J</span><span class="p">,</span> <span class="n">feature_table</span><span class="o">=</span><span class="n">feature_table</span><span class="p">,</span>
+                            <span class="n">attrs_after</span><span class="o">=</span><span class="s1">&#39;label&#39;</span><span class="p">,</span> <span class="n">show_progress</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Training-the-Selected-Matcher">Training the Selected Matcher<a class="anchor-link" href="#Training-the-Selected-Matcher">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now, we train the matcher using all of the feature vectors from the development set. For the purposes of this guide we use random forest as the selected matcher.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[31]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Train using feature vectors from I </span>
+<span class="n">dt</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="n">H</span><span class="p">,</span> 
+       <span class="n">exclude_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;_id&#39;</span><span class="p">,</span> <span class="s1">&#39;ltable_id&#39;</span><span class="p">,</span> <span class="s1">&#39;rtable_id&#39;</span><span class="p">,</span> <span class="s1">&#39;label&#39;</span><span class="p">],</span> 
+       <span class="n">target_attr</span><span class="o">=</span><span class="s1">&#39;label&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Predicting-the-Matches">Predicting the Matches<a class="anchor-link" href="#Predicting-the-Matches">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Next, we predict the matches for the evaluation set (using the feature vectors extracted from it).</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[33]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Predict on L </span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="n">L</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;_id&#39;</span><span class="p">,</span> <span class="s1">&#39;ltable_id&#39;</span><span class="p">,</span> <span class="s1">&#39;rtable_id&#39;</span><span class="p">,</span> <span class="s1">&#39;label&#39;</span><span class="p">],</span> 
+              <span class="n">append</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">target_attr</span><span class="o">=</span><span class="s1">&#39;predicted&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Evaluating-the-Matching-Output">Evaluating the Matching Output<a class="anchor-link" href="#Evaluating-the-Matching-Output">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Finally, we evaluate the accuracy of predicted outputs</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[34]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Evaluate the predictions</span>
+<span class="n">eval_result</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">eval_matches</span><span class="p">(</span><span class="n">predictions</span><span class="p">,</span> <span class="s1">&#39;label&#39;</span><span class="p">,</span> <span class="s1">&#39;predicted&#39;</span><span class="p">)</span>
+<span class="n">em</span><span class="o">.</span><span class="n">print_eval_summary</span><span class="p">(</span><span class="n">eval_result</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt"></div>
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Precision : 95.12% (39/41)
+Recall : 97.5% (39/40)
+F1 : 96.3%
+False positives : 2 (out of 41 positive predictions)
+False negatives : 1 (out of 94 negative predictions)
+</pre>
+</div>
 </div>
 
 </div>

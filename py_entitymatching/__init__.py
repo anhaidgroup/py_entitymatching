@@ -47,6 +47,11 @@ from py_entitymatching.gui.table_gui import view_table, edit_table
 
 # # labeling
 from py_entitymatching.labeler.labeler import label_table
+try:
+    import PyQt5
+    from py_entitymatching.labeler.new_labeler.new_labeler import new_label_table
+except:
+    None
 
 # # feature related stuff
 from py_entitymatching.feature.simfunctions import *

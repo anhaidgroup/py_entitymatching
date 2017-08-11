@@ -220,7 +220,8 @@ class MLMatcher(Matcher):
             append (boolean): A flag to indicate whether the predictions need
                 to be appended in the input DataFrame (defaults to False).
             return_probs (boolean): A flag to indicate where the prediction probabilities
-                need to be returned (defaults to False).
+                need to be returned (defaults to False). If set to True, returns the 
+                probability if the pair was a match.
             inplace (boolean): A flag to indicate whether the append needs to be
                 done inplace (defaults to True).
 

@@ -1,0 +1,5 @@
+{% for col in headers %}
+    {% for data in row %}
+        {{ col }} : {{ data['ltable_'+col] }} , {{ data['rtable_'+col] }} |
+    {% endfor %}
+{% endfor %}

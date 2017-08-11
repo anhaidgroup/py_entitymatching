@@ -758,6 +758,7 @@ def validate_attr_types(l_attr_types, r_attr_types, attr_corres):
             print("You must answer with either 'y' or 'n'")
 
 
+
 # get look up table to generate readable type names
 def _get_type_name_lkp_tbl():
     # Initialize a lookup table
@@ -770,7 +771,7 @@ def _get_type_name_lkp_tbl():
     lookup_table['str_gt_10w'] = 'short string (1 word)'
     lookup_table['numeric'] = 'numeric'
     lookup_table['boolean'] = 'boolean'
-    lookup_table['ud_determined'] = 'un-determined type'
+    lookup_table['un_determined'] = 'un-determined type'
 
     return lookup_table
 
