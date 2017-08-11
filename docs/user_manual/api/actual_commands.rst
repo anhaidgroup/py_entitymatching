@@ -9,6 +9,7 @@ Commands in py_entitymatching
     loading_and_saving_objects
     handling_metadata
     downsampling
+    data_exploration
     blocking
     debugging_blocker_output
     combining_blocker_outputs

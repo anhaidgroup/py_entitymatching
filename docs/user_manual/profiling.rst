@@ -22,30 +22,31 @@ Example Usage
 After reading in a CSV file into a Dataframe, pandas-profiling shows the user a
 report containing useful profiling information. For example:
 
-    # Read in csv file
+
     >>> import pandas_profiling
+    >>> # Read in csv file
     >>> A = em.read_csv_metadata('path_to_csv_dir/table.csv', key='ID')
-    # Use the profiler
+    >>> # Use the profiler
     >>> pandas_profiling.ProfileReport(A)
 
-The user can also check to see if any variables are highly correclated:
+The user can also check to see if any variables are highly correlated:
 
-    # Read in csv file
+    >>> # Read in csv file
     >>> import pandas_profiling
     >>> A = em.read_csv_metadata('path_to_csv_dir/table.csv', key='ID')
-    # Use the profiler
+    >>> #Use the profiler
     >>> profile = pandas_profiling.ProfileReport(A)
-    # Check for rejected variables
+    >>> # Check for rejected variables
     >>> rejected_variables = profile.get_rejected_variables(threshold=0.9)
 
 The report generated can also be saved into an html file:
 
-    # Read in csv file
+
     >>> import pandas_profiling
     >>> A = em.read_csv_metadata('path_to_csv_dir/table.csv', key='ID')
-    # Save report to a variable
+    >>> # Save report to a variable
     >>> profile = pandas_profiling.ProfileReport(A)
-    # Save report to an html file
+    >>> # Save report to an html file
     >>> profile.to_file(outputfile="/tmp/myoutputfile.html")
 
 For more information about pandas-profiling please go to the github page

@@ -6,6 +6,8 @@ Steps of Supported EM Workflows
 
     read_csv_files
     down_sampling
+    profiling
+    data_exploration
     blocking
     create_feats_for_blocking
     debugging_blocking

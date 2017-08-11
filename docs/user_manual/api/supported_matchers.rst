@@ -1,6 +1,6 @@
-===================
+==================
 Supported Matchers
-===================
+==================
 
 .. autoclass:: py_entitymatching.DTMatcher
     :inherited-members:

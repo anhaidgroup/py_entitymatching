@@ -16,8 +16,8 @@ Please refer to the API reference of :py:meth:`~py_entitymatching.label_table`
 for more details.
 
 
-`new_label_table`
------------------
+New tool for labeling (experimental)
+------------------------------------
 
 WARNING: This labeler is still in pre-alpha stage! Use at your own risk!
 

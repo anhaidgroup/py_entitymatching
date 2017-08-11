@@ -26,6 +26,11 @@ from py_entitymatching.catalog.catalog_manager import get_key, set_key, set_fk_l
     get_fk_ltable
 
 
+# # data exploration wrappers
+from py_entitymatching.explorer.openrefine.openrefine_wrapper import data_explore_openrefine
+from py_entitymatching.explorer.pandastable.pandastable_wrapper import data_explore_pandastable
+
+
 #
 # # blockers
 from py_entitymatching.blocker.attr_equiv_blocker import AttrEquivalenceBlocker
@@ -103,11 +108,6 @@ from py_entitymatching.utils.generic_helper import get_install_path, load_datase
 # # pandas helper functions
 from py_entitymatching.utils.pandas_helper import filter_rows, project_cols, \
     mutate_col, rename_col, preserve_metadata, drop_cols
-
-# # data exploration wrappers
-from py_entitymatching.explorer.openrefine.openrefine_wrapper import data_explore_openrefine
-from py_entitymatching.explorer.pandastable.pandastable_wrapper import data_explore_pandastable
-
 
 # global vars
 _block_t = None
