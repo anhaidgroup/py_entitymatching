@@ -51,7 +51,7 @@ before_install:
 
 install:
   - conda install --yes python=$PYTHON_VERSION pip nose pandas pyparsing six
-  scikit-learn pyqt cloudpickle joblib ipython py_stringsimjoin
+  scikit-learn pyqt cloudpickle joblib ipython py_stringsimjoin gcc
   - pip install -r requirements.txt
 
 script:
