@@ -104,8 +104,7 @@ that are available in PyPI and PyQt5, pandastable, XGBoost are not in PyPI for P
 
 * To install PyQt5, follow the instructions at `this page <http://pyqt.sourceforge.net/Docs/PyQt5/installation.html>`_.
 
-* To install XGBoost, follow the instructions at `this page <https://XGBoost.readthedocs
-.io/en/latest/build.html>`_.
+* To install XGBoost, follow the instructions at `this page <https://XGBoost.readthedocs.io/en/latest/build.html>`_.
 
 * To install pandastable follow the instructions at `this page <https://github.com/dmnfarrell/pandastable>`_.
 
