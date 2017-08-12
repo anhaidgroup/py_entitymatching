@@ -50,7 +50,8 @@ before_install:
   - conda config --add channels conda-forge
 
 install:
-  - conda install --yes python=$PYTHON_VERSION pip nose pandas pyparsing six scikit-learn pyqt cloudpickle joblib ipython py_stringsimjoin gcc
+  - conda install --yes python=$PYTHON_VERSION pip nose pandas pyparsing six scikit-learn pyqt cloudpickle joblib ipython  gcc
+  - conda install -c uwmagellan py_stringsimjoin
   - pip install -r requirements.txt
 
 script:
