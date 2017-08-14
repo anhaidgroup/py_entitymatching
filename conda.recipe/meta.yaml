@@ -17,6 +17,7 @@ requirements:
     - pyqt
     - pandas-profiling
     - requests
+    - ipython
 #    - xgboost
 
   run:
@@ -28,6 +29,7 @@ requirements:
     - pyqt
     - pandas-profiling
     - requests
+    - ipython
 #    - xgboost
 
 test:
