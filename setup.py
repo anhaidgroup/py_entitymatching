@@ -34,10 +34,10 @@ if __name__ == "__main__":
 
     setuptools.setup(
         name='py_entitymatching',
-        version='0.1.1_rit',
+        version='0.2.0',
         description='Python library for end to end Entity Matching.',
         long_description=LONG_DESCRIPTION,
-        url='https://sites.google.com/site/anhaidgroup/projects/py_entitymatching',
+        url='https://sites.google.com/site/anhaidgroup/projects/magellan/py_entitymatching',
         author='UW Magellan Team',
         author_email='uwmagellan@gmail.com',
         license='BSD',
