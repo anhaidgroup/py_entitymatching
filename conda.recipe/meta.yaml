@@ -16,6 +16,7 @@ requirements:
     - scikit-learn
     - pyqt
     - pandas-profiling
+    - requests
 #    - xgboost
 
   run:
@@ -26,6 +27,7 @@ requirements:
     - scikit-learn
     - pyqt
     - pandas-profiling
+    - requests
 #    - xgboost
 
 test:
