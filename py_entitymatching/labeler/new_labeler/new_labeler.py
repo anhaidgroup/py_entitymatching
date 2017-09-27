@@ -141,7 +141,18 @@ class MainPage(QWebEnginePage):
 
 def _validate_inputs(data_frame, label_column_name):
     validate_object_type(data_frame, pd.DataFrame)
+    if data_frame.empty:
+        raise AssertionError
     validate_object_type(label_column_name, six.string_types, error_prefix='Input attr.')
+
+    # If the label column already exists, validate that the label column has only one of the 3 allowed values
+    if label_column_name in data_frame.columns:
+        label_values = data_frame[label_column_name].unique()
+        if label_values.size == 0 or label_values.size > 4:
+            raise AssertionError
+        for label in label_values:
+            if label not in ["Not-Labeled", "Not-Matched", "Not-Sure", "Yes"]:
+                raise AssertionError
     return True
 
 
@@ -149,7 +160,7 @@ def new_label_table(df, label_column_name):
     """ Method to be invoked to launch the Labeler application.
 
     Args:
-        df (Dataframe): A Dataframe containing the tuple pairs
+        df (Dataframe): A Dataframe containing the tuple pairs that are possible matches
         label_column_name (str): Name of column to be used to save tuple pair labels.
                                 This column will be created if it doesn't already exist.
 
