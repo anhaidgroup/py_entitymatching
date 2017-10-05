@@ -205,3 +205,30 @@ def convert_to_str_unicode(input_string):
         input_string = input_string.decode('utf-8', 'ignore')
 
     return input_string
+
+def parse_conjunct(conjunct, rule_name, feature_table):
+    # TODO: Make parsing more robust using pyparsing
+    vals = conjunct.split('(')
+    feature_name = vals[0].strip()
+
+    if feature_name not in feature_table.feature_name.values:
+        logger.error('Feature ' + feature_name + ' is not present in ' +
+                     'supplied feature table. Cannot apply rules.')
+        raise AssertionError(
+            'Feature ' + feature_name + ' is not present ' +
+            'in supplied feature table. Cannot apply rules.')
+
+    vals1 = vals[1].split(')')
+    vals2 = vals1[1].strip()
+    vals3 = vals2.split()
+    operator = vals3[0].strip()
+    threshold = vals3[1].strip()
+    ft_df = feature_table.set_index('feature_name')
+
+    return (ft_df.ix[feature_name]['is_auto_generated'],
+            ft_df.ix[feature_name]['simfunction'],
+            ft_df.ix[feature_name]['left_attribute'],
+            ft_df.ix[feature_name]['right_attribute'],
+            ft_df.ix[feature_name]['left_attr_tokenizer'],
+            ft_df.ix[feature_name]['right_attr_tokenizer'],
+            operator, threshold)

@@ -8,6 +8,8 @@ import logging
 import py_entitymatching.catalog.catalog_manager as cm
 from py_entitymatching.matcher.rulematcher import RuleMatcher
 from py_entitymatching.matcher.matcherutils import get_ts
+from py_entitymatching.utils.validation_helper import validate_object_type
+import pandas as pd
 import six
 
 logger = logging.getLogger(__name__)
@@ -23,10 +25,11 @@ class BooleanRuleMatcher(RuleMatcher):
         self.rule_source = OrderedDict()
         self.rule_conjunct_list = OrderedDict()
         self.rule_cnt = 0
+        feature_table = kwargs.pop('feature_table', None)
+        self.feature_table = feature_table
 
     def fit(self):
         pass
-
 
     def _predict_candset(self, candset, verbose=False):
         # # get metadata
@@ -61,7 +64,34 @@ class BooleanRuleMatcher(RuleMatcher):
         return predictions
 
     def predict(self, table=None, target_attr=None, append=False, inplace=True):
-        if table  is not None:
+        # Validate input parameters
+        # # We expect the table to be of type pandas DataFrame
+        validate_object_type(table, pd.DataFrame, 'Input table')
+
+        # # We expect the target_attr to be of type string if not None
+        if target_attr is not None and not isinstance(target_attr, str):
+                logger.error('Input target_attr must be a string.')
+                raise AssertionError('Input target_attr must be a string.')
+
+        # # We expect the append to be of type boolean
+        validate_object_type(append, bool, 'Input append')
+
+        # # We expect the inplace to be of type boolean
+        validate_object_type(inplace, bool, 'Input inplace')
+
+        # # get metadata
+        key, fk_ltable, fk_rtable, ltable, rtable, l_key, r_key = cm.get_metadata_for_candset(
+            table, logger, False)
+
+        # # validate metadata
+        cm._validate_metadata_for_candset(table, key, fk_ltable, fk_rtable,
+                                          ltable, rtable, l_key, r_key,
+                                          logger, False)
+
+        # Validate that there are some rules
+        assert len(self.rules.keys()) > 0, 'There are no rules to apply'
+
+        if table is not None:
             y = self._predict_candset(table)
             if target_attr is not None and append is True:
                 if inplace == True:
@@ -76,15 +106,14 @@ class BooleanRuleMatcher(RuleMatcher):
         else:
             raise SyntaxError('The arguments supplied does not match the signatures supported !!!')
 
-
-    def create_rule(self, conjunct_list, feature_table, name=None):
-        if feature_table is None:
-            logger.error('Feature table is not given')
-            return False
+    def _create_rule(self, conjunct_list, feature_table, rule_name=None):
         # set the name
-        if name is None:
+        if rule_name is None:
             name = '_rule_' + str(self.rule_cnt)
             self.rule_cnt += 1
+        else:
+            # use the name supplied by the user
+            name = rule_name
 
         fn_str = self.get_function_str(name, conjunct_list)
 
@@ -97,22 +126,35 @@ class BooleanRuleMatcher(RuleMatcher):
         six.exec_(fn_str, feat_dict)
         return feat_dict[name], name, fn_str
 
-    def add_rule(self, conjunct_list, feature_table):
+    def add_rule(self, conjunct_list, feature_table=None, rule_name=None):
+
+        if rule_name is not None and rule_name in self.rules.keys():
+            logger.error('A rule with the specified rule_name already exists.')
+            raise AssertionError('A rule with the specified rule_name already exists.')
+
+        if feature_table is None and self.feature_table is None:
+            logger.error('Either feature table should be given as parameter ' +
+                         'or use set_feature_table to set the feature table.')
+            raise AssertionError('Either feature table should be given as ' +
+                                 'parameter or use set_feature_table to set ' +
+                                 'the feature table.')
+
         if not isinstance(conjunct_list, list):
             conjunct_list = [conjunct_list]
 
-        fn, name, fn_str = self.create_rule(conjunct_list, feature_table)
+        if feature_table is None:
+            feature_table = self.feature_table
+
+        fn, name, fn_str = self._create_rule(conjunct_list, feature_table, rule_name)
 
         self.rules[name] = fn
         self.rule_source[name] = fn_str
         self.rule_conjunct_list[name] = conjunct_list
 
-        return True
+        return name
 
-    def del_rule(self, rule_name):
-        if rule_name not in self.rules.keys():
-            logger.error('Rule name not present in current set of rules')
-            return False
+    def delete_rule(self, rule_name):
+        assert rule_name in self.rules.keys(), 'Rule name not in current set of rules'
 
         del self.rules[rule_name]
         del self.rule_source[rule_name]
@@ -121,16 +163,14 @@ class BooleanRuleMatcher(RuleMatcher):
         return True
 
     def view_rule(self, rule_name):
-        if rule_name not in self.rules.keys():
-            logger.error('Rule name not present in current set of rules')
+        assert rule_name in self.rules.keys(), 'Rule name not in current set of rules'
         print(self.rule_source[rule_name])
 
     def get_rule_names(self):
         return self.rules.keys()
 
     def get_rule(self, rule_name):
-        if rule_name not in self.rules.keys():
-            logger.error('Rule name not present in current set of rules')
+        assert rule_name in self.rules.keys(), 'Rule name not in current set of rules'
         return self.rules[rule_name]
 
     def apply_rules(self, ltuple, rtuple):
@@ -147,3 +187,10 @@ class BooleanRuleMatcher(RuleMatcher):
         fn_str += '    '
         fn_str += 'return ' + ' and '.join(conjunct_list)
         return fn_str
+
+    def set_feature_table(self, feature_table):
+        if self.feature_table is not None:
+            logger.warning(
+                'Feature table is already set, changing it now will not recompile '
+                'existing rules')
+        self.feature_table = feature_table
