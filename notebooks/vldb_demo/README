@@ -1,0 +1,10 @@
+1. Prerequisites: Python 2.7 or Python 3.4+
+2. First, Install the following packages:
+   - py_entitymatching
+   - seaborn
+   - Jupyter notebook
+   you can install the packages using conda like this:
+   $ conda install py_entitymatching -c uwmagellan
+   $ conda install seaborn jupyter
+3. Next, launch the Jupyter notebook and open demo.ipynb
+4. Now you can run the cells to recreate the demo scenario.
