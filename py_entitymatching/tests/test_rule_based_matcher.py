@@ -17,24 +17,24 @@ r_output_attrs = ['zipcode', 'birth_year']
 l_output_prefix = 'l_'
 r_output_prefix = 'r_'
 
-# filterable rule with single conjunct using Jaccard sim_fn, 3g tokenization
+# rule with single conjunct using Jaccard sim_fn, 3g tokenization
 rule_1 = ['name_name_jac_qgm_3_qgm_3(ltuple,rtuple) > 0.4']
 expected_labels_1 = [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
 
-# filterable rule with single conjunct using edit distance function
+# rule with single conjunct using edit distance function
 rule_2 = ['birth_year_birth_year_lev_dist(ltuple, rtuple) < 1']
 expected_labels_2 = [0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1]
 
 expected_labels_1_and_2 = [0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1]
 
-# filterable rule with multiple conjuncts - (Jaccard, 3g) & (edit dist)
+# rule with multiple conjuncts - (Jaccard, 3g) & (edit dist)
 rule_3 = ['name_name_jac_qgm_3_qgm_3(ltuple, rtuple) > 0.4',
           'birth_year_birth_year_lev_dist(ltuple, rtuple) < 1']
 expected_labels_3 = [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
 
 expected_labels_2_and_3 = [0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1]
 
-# filterable rule with multiple conjuncts - (Jaccard, 3g) & (cosine, ws)
+# rule with multiple conjuncts - (Jaccard, 3g) & (cosine, ws)
 rule_4 = ['name_name_jac_qgm_3_qgm_3(ltuple,rtuple) > 0.4',
           'name_name_cos_dlm_dc0_dlm_dc0(ltuple, rtuple) > 0.25']
 expected_labels_4 = [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
@@ -43,13 +43,13 @@ expected_labels_4 = [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
 rule_5 = ['name_name_jac_dlm_dc0_dlm_dc0(ltuple,rtuple) > 0.5']
 expected_labels_all_zeroes = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
-# non filterable rule with single conjunct
+# rule with single conjunct
 rule_6 = ['name_name_mel(ltuple,rtuple) > 0.6']
 expected_labels_6 = [0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1]
 
 expected_labels_1_and_6 = [0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1]
 
-# non filterable rule with multiple conjuncts
+# rule with multiple conjuncts
 rule_7 = ['name_name_jac_qgm_3_qgm_3(ltuple,rtuple) > 0.3',
           'name_name_mel(ltuple,rtuple) > 0.6']
 expected_labels_7 = [0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1]
@@ -109,11 +109,10 @@ class RuleBasedMatcherTestCases(unittest.TestCase):
         self.brm.add_rule(rule_1, feature_table=None)
         self.brm.predict(self.C)
 
-    '''
     @raises(AssertionError)
     def test_rulebased_matcher_rule_with_bogus_feature(self):
         self.brm.add_rule(['bogus_feature(ltuple, rtuple) < 0.5'], self.feature_table)
-        self.brm.predict(self.C)'''
+        self.brm.predict(self.C)
 
     @raises(AssertionError)
     def test_rulebased_matcher_delete_nonexisting_rule(self):
