@@ -50,9 +50,6 @@ class FilterControllerTestCases(unittest.TestCase):
         A[ApplicationContext.LABEL_COLUMN] = "Not-Labeled"
         ApplicationContext.COMPLETE_DATA_FRAME = A
         ApplicationContext.FILTER_CONTROLLER = FilterController(None)
-        ApplicationContext.STATS_CONTROLLER = StatsController(None)
-
-        # FilterController.ApplicationContext.COMPLETE_DATA_FRAME = A
 
     def tearDown(self):
         return None
@@ -75,7 +72,7 @@ class FilterControllerTestCases(unittest.TestCase):
     @istest
     def test_get_not_labeled_tuple_pairs(self):
         rows = ApplicationContext.FILTER_CONTROLLER.get_non_sure_tuple_pairs()
-        assert rows.shape[1] is 7
+        self.assertEqual(rows.shape[1], 7)
 
 
 class StatsControllerTestCases(unittest.TestCase):
@@ -83,7 +80,6 @@ class StatsControllerTestCases(unittest.TestCase):
         # setup Application Context
         ApplicationContext.LABEL_COLUMN = "label"
         ApplicationContext.COMPLETE_DATA_FRAME = read_csv_metadata(path_d)
-        # ApplicationContext.FILTER_CONTROLLER = FilterController(None)
         ApplicationContext.STATS_CONTROLLER = StatsController(None)
 
     def tearDown(self):
@@ -91,23 +87,23 @@ class StatsControllerTestCases(unittest.TestCase):
 
     @istest
     def test_count_matched_tuple_pairs(self):
-        assert ApplicationContext.STATS_CONTROLLER.count_matched_tuple_pairs(ApplicationContext.COMPLETE_DATA_FRAME,
-                                                                             ApplicationContext.LABEL_COLUMN) is 8
+        self.assertEqual(ApplicationContext.STATS_CONTROLLER.count_matched_tuple_pairs(ApplicationContext.COMPLETE_DATA_FRAME,
+                                                                                       ApplicationContext.LABEL_COLUMN), 8)
 
     @istest
     def test_count_non_matched_tuple_pairs(self):
-        assert ApplicationContext.STATS_CONTROLLER.count_non_matched_tuple_pairs(ApplicationContext.COMPLETE_DATA_FRAME,
-                                                                                 ApplicationContext.LABEL_COLUMN) is 3
+        self.assertEqual(ApplicationContext.STATS_CONTROLLER.count_non_matched_tuple_pairs(ApplicationContext.COMPLETE_DATA_FRAME,
+                                                                                           ApplicationContext.LABEL_COLUMN), 3)
 
     @istest
     def test_count_not_labeled_tuple_pairs(self):
-        assert ApplicationContext.STATS_CONTROLLER.count_not_labeled_tuple_pairs(ApplicationContext.COMPLETE_DATA_FRAME,
-                                                                                 ApplicationContext.LABEL_COLUMN) is 1
+        self.assertEqual(ApplicationContext.STATS_CONTROLLER.count_not_labeled_tuple_pairs(ApplicationContext.COMPLETE_DATA_FRAME,
+                                                                                           ApplicationContext.LABEL_COLUMN), 1)
 
     @istest
     def test_count_not_sure_tuple_pairs(self):
-        assert ApplicationContext.STATS_CONTROLLER.count_not_sure_tuple_pairs(ApplicationContext.COMPLETE_DATA_FRAME,
-                                                                              ApplicationContext.LABEL_COLUMN) is 3
+        self.assertEqual(ApplicationContext.STATS_CONTROLLER.count_not_sure_tuple_pairs(ApplicationContext.COMPLETE_DATA_FRAME,
+                                                                                        ApplicationContext.LABEL_COLUMN), 3)
 
 
 class TuplePairDisplayControllerTestCases(unittest.TestCase):
