@@ -17,6 +17,7 @@ LABEL_COLUMN = "label"
 COMPLETE_DATA_FRAME = None
 TOTAL_NUMBER_OF_TUPLE_PAIRS = 0
 VALID_LAYOUTS = ('horizontal', 'vertical', 'single')
+VALID_LABELS = (MATCH, NON_MATCH, NOT_LABELED, NOT_SURE)
 # Application values that change during runtime. These are used for operations such as:
 # - Filtering attributes to be displayed
 # - Change display layout

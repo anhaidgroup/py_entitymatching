@@ -51,9 +51,10 @@ class TuplePairDisplayController(QObject):
             None.
             
         Raises:
-        
+            ValueError if current page is negative
         """
-        assert current_page >= 0
+        if current_page < 0:
+            raise ValueError
         ApplicationContext.current_page_number = current_page
 
     def set_current_layout(self, layout):
@@ -129,7 +130,11 @@ class TuplePairDisplayController(QObject):
             Number of pages (int): Number of pages in DataFrame.
             
         Raises:         
+            ValueError if data_frame is None
         """
+        if data_frame is None:
+            raise ValueError("None passed as data frame")
+
         return ceil(data_frame.shape[0] / ApplicationContext.tuple_pair_count_per_page)
 
     @pyqtSlot(int)
@@ -142,7 +147,8 @@ class TuplePairDisplayController(QObject):
         Returns:
             None.
             
-        Raises:         
+        Raises:
+            ValueError if current page is negative
         """
         self.set_current_page(page_number)
         self.main_page.setHtml(

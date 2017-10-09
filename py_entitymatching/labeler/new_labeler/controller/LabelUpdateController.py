@@ -4,7 +4,7 @@ try:
     from PyQt5.QtCore import QObject
 except ImportError:
     raise ImportError('PyQt5 is not installed. Please install PyQt5 to use '
-                          'GUI related functions in py_entitymatching.')
+                      'GUI related functions in py_entitymatching.')
 
 from py_entitymatching.labeler.new_labeler.utils import ApplicationContext
 from py_entitymatching.labeler.new_labeler.view import Renderer
@@ -31,7 +31,14 @@ class LabelUpdateController(QObject):
             None.
             
         Raises:
+            ValueError if new_label is an invalid label value
+            KeyError if tuple_pair_id does not exist in dataframe
         """
+        if new_label not in ApplicationContext.VALID_LABELS:
+            raise ValueError("label value {new_label} is not a valid label".format(new_label=new_label))
+        if tuple_pair_id not in ApplicationContext.COMPLETE_DATA_FRAME.index:
+            raise KeyError("tuple with given id {tuple_id} does not exist in dataframe".format(tuple_id=tuple_pair_id))
+
         ApplicationContext.COMPLETE_DATA_FRAME.loc[ApplicationContext.COMPLETE_DATA_FRAME['_id']
                                                    == int(tuple_pair_id), ApplicationContext.LABEL_COLUMN] = new_label
         self.main_page.setHtml(
@@ -65,7 +72,15 @@ class LabelUpdateController(QObject):
             None.
             
         Raises:
+             KeyError if tuple_pair_id does not exist in dataframe
+             ValueError if tags is not an str
         """
+        if type(tags) != str:
+            raise ValueError("tags are expected to be of type str")
+
+        if tuple_pair_id not in ApplicationContext.COMPLETE_DATA_FRAME.index:
+            raise KeyError("tuple with given id {tuple_id} does not exist in dataframe".format(tuple_id=tuple_pair_id))
+
         ApplicationContext.COMPLETE_DATA_FRAME.loc[
             ApplicationContext.COMPLETE_DATA_FRAME['_id'] == int(tuple_pair_id), ApplicationContext.TAGS_COLUMN] = tags
 
@@ -81,6 +96,10 @@ class LabelUpdateController(QObject):
             None.
             
         Raises:
+            KeyError if tuple_pair_id does not exist in dataframe
         """
+        if tuple_pair_id not in ApplicationContext.COMPLETE_DATA_FRAME.index:
+            raise KeyError("tuple with given id {tuple_id} does not exist in dataframe".format(tuple_id=tuple_pair_id))
+
         ApplicationContext.COMPLETE_DATA_FRAME.loc[
             ApplicationContext.COMPLETE_DATA_FRAME['_id'] == int(tuple_pair_id), ApplicationContext.COMMENTS_COLUMN] = comments

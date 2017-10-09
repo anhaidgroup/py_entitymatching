@@ -89,9 +89,12 @@ class FilterController(QObject):
             None
             
         Raises:
-            
+            Value error if label is not a valid value for label column
         """
         data = None
+        if label not in ApplicationContext.VALID_LABELS and label != ApplicationContext.ALL:
+            raise ValueError("{label_value} is not a valid value for label column {label_column}".format(label_value=label,
+                                                                                                         label_column=ApplicationContext.LABEL_COLUMN))
         if label == ApplicationContext.MATCH:
             data = self.get_matching_tuple_pairs()
         elif label == ApplicationContext.NON_MATCH:

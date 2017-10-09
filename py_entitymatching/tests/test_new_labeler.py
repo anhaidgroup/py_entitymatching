@@ -87,21 +87,29 @@ class StatsControllerTestCases(unittest.TestCase):
 
     @istest
     def test_count_matched_tuple_pairs(self):
+        self.assertRaises(KeyError, ApplicationContext.STATS_CONTROLLER.count_matched_tuple_pairs, ApplicationContext.COMPLETE_DATA_FRAME,
+                          "non-existent-column-name")
         self.assertEqual(ApplicationContext.STATS_CONTROLLER.count_matched_tuple_pairs(ApplicationContext.COMPLETE_DATA_FRAME,
                                                                                        ApplicationContext.LABEL_COLUMN), 8)
 
     @istest
     def test_count_non_matched_tuple_pairs(self):
+        self.assertRaises(KeyError, ApplicationContext.STATS_CONTROLLER.count_non_matched_tuple_pairs, ApplicationContext.COMPLETE_DATA_FRAME,
+                          "non-existent-column-name")
         self.assertEqual(ApplicationContext.STATS_CONTROLLER.count_non_matched_tuple_pairs(ApplicationContext.COMPLETE_DATA_FRAME,
                                                                                            ApplicationContext.LABEL_COLUMN), 3)
 
     @istest
     def test_count_not_labeled_tuple_pairs(self):
+        self.assertRaises(KeyError, ApplicationContext.STATS_CONTROLLER.count_not_labeled_tuple_pairs, ApplicationContext.COMPLETE_DATA_FRAME,
+                          "non-existent-column-name")
         self.assertEqual(ApplicationContext.STATS_CONTROLLER.count_not_labeled_tuple_pairs(ApplicationContext.COMPLETE_DATA_FRAME,
                                                                                            ApplicationContext.LABEL_COLUMN), 1)
 
     @istest
     def test_count_not_sure_tuple_pairs(self):
+        self.assertRaises(KeyError, ApplicationContext.STATS_CONTROLLER.count_not_sure_tuple_pairs, ApplicationContext.COMPLETE_DATA_FRAME,
+                          "non-existent-column-name")
         self.assertEqual(ApplicationContext.STATS_CONTROLLER.count_not_sure_tuple_pairs(ApplicationContext.COMPLETE_DATA_FRAME,
                                                                                         ApplicationContext.LABEL_COLUMN), 3)
 
@@ -144,9 +152,13 @@ class TuplePairDisplayControllerTestCases(unittest.TestCase):
         ApplicationContext.TUPLE_PAIR_DISPLAY_CONTROLLER.set_current_page(5)
         self.assertEqual(ApplicationContext.TUPLE_PAIR_DISPLAY_CONTROLLER.get_current_page(), 5)
 
+        self.assertRaises(ValueError, ApplicationContext.TUPLE_PAIR_DISPLAY_CONTROLLER.set_current_page, -1)
+
     @istest
     def test_get_number_of_pages(self):
         # def get_number_of_pages(self, data_frame=ApplicationContext.current_data_frame):
+        self.assertRaises(ValueError, ApplicationContext.TUPLE_PAIR_DISPLAY_CONTROLLER.get_number_of_pages, None)
+
         # default per page count
         ApplicationContext.TUPLE_PAIR_DISPLAY_CONTROLLER.set_per_page_count(5)
         self.assertEqual(ApplicationContext.TUPLE_PAIR_DISPLAY_CONTROLLER.get_per_page_count(), 5)
@@ -178,7 +190,19 @@ class TuplePairDisplayControllerTestCases(unittest.TestCase):
     @istest
     def test_change_page(self):
         # def change_page(self, page_number):
-        return None
+        orig_render_main_page = Renderer.render_main_page
+
+        # mock renderer
+        def mock_render_main_page(current_page_tuple_pairs, match_count, not_match_count, not_sure_count, unlabeled_count):
+            return None
+
+        try:
+            Renderer.render_main_page = mock_render_main_page
+            self.assertRaises(ValueError, ApplicationContext.TUPLE_PAIR_DISPLAY_CONTROLLER.change_page, -1)
+            ApplicationContext.TUPLE_PAIR_DISPLAY_CONTROLLER.change_page(2)
+            self.assertEqual(ApplicationContext.current_page_number, 2)
+        finally:
+            Renderer.render_main_page = orig_render_main_page
 
     @istest
     def test_change_layout(self):
