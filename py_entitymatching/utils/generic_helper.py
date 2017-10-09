@@ -206,7 +206,7 @@ def convert_to_str_unicode(input_string):
 
     return input_string
 
-def parse_conjunct(conjunct, rule_name, feature_table):
+def parse_conjunct(conjunct, feature_table):
     # TODO: Make parsing more robust using pyparsing
     vals = conjunct.split('(')
     feature_name = vals[0].strip()

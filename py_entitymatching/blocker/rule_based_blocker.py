@@ -14,6 +14,7 @@ import py_entitymatching.catalog.catalog_manager as cm
 from py_entitymatching.blocker.blocker import Blocker
 import py_stringsimjoin as ssj
 from py_entitymatching.utils.catalog_helper import log_info, get_name_for_key, add_key_column
+from py_entitymatching.utils.generic_helper import parse_conjunct
 
 logger = logging.getLogger(__name__)
 
@@ -687,38 +688,13 @@ class RuleBasedBlocker(Blocker):
                 [c for c in r_output_attrs if c not in r_proj_attrs])
         for rule_name, conjunct_list in six.iteritems(self.rule_str):
             for conjunct in conjunct_list:
-                is_auto_gen, sim_fn, l_attr, r_attr, l_tok, r_tok, op, th = self.parse_conjunct(
-                    conjunct, rule_name)
+                is_auto_gen, sim_fn, l_attr, r_attr, l_tok, r_tok, op, th = parse_conjunct(
+                    conjunct, self.rule_ft[rule_name])
                 if l_attr not in l_proj_attrs:
                     l_proj_attrs.append(l_attr)
                 if r_attr not in r_proj_attrs:
                     r_proj_attrs.append(r_attr)
         return l_proj_attrs, r_proj_attrs
-
-    def parse_conjunct(self, conjunct, rule_name):
-        # TODO: Make parsing more robust using pyparsing
-        feature_table = self.rule_ft[rule_name]
-        vals = conjunct.split('(')
-        feature_name = vals[0].strip()
-        if feature_name not in feature_table.feature_name.values:
-            logger.error('Feature ' + feature_name + ' is not present in ' +
-                         'supplied feature table. Cannot apply rules.')
-            raise AssertionError(
-                'Feature ' + feature_name + ' is not present ' +
-                'in supplied feature table. Cannot apply rules.')
-        vals1 = vals[1].split(')')
-        vals2 = vals1[1].strip()
-        vals3 = vals2.split()
-        operator = vals3[0].strip()
-        threshold = vals3[1].strip()
-        ft_df = feature_table.set_index('feature_name')
-        return (ft_df.ix[feature_name]['is_auto_generated'],
-                ft_df.ix[feature_name]['simfunction'],
-                ft_df.ix[feature_name]['left_attribute'],
-                ft_df.ix[feature_name]['right_attribute'],
-                ft_df.ix[feature_name]['left_attr_tokenizer'],
-                ft_df.ix[feature_name]['right_attr_tokenizer'],
-                operator, threshold)
 
     def block_tables_with_filters(self, l_df, r_df, l_key, r_key,
                                   l_output_attrs, r_output_attrs,
@@ -753,8 +729,8 @@ class RuleBasedBlocker(Blocker):
         # a conjunct is filterable if it uses
         # a filterable sim function (jaccard, cosine, dice, ...),
         # an allowed operator (<, <=),
-        is_auto_gen, sim_fn, l_attr, r_attr, l_tok, r_tok, op, th = self.parse_conjunct(
-            conjunct, rule_name)
+        is_auto_gen, sim_fn, l_attr, r_attr, l_tok, r_tok, op, th = parse_conjunct(
+            conjunct, self.rule_ft[rule_name])
         if is_auto_gen != True:
             # conjunct not filterable as the feature is not auto generated
             return False
@@ -783,8 +759,8 @@ class RuleBasedBlocker(Blocker):
         candset = None
         conjunct_list = self.rule_str[rule_name]
         for conjunct in conjunct_list:
-            is_auto_gen, sim_fn, l_attr, r_attr, l_tok, r_tok, op, th = self.parse_conjunct(
-                conjunct, rule_name)
+            is_auto_gen, sim_fn, l_attr, r_attr, l_tok, r_tok, op, th = parse_conjunct(
+                conjunct, self.rule_ft[rule_name])
 
             if l_tok == 'dlm_dc0':
                 tokenizer = WhitespaceTokenizer(return_set=True)

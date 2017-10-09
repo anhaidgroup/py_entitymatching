@@ -9,6 +9,7 @@ import py_entitymatching.catalog.catalog_manager as cm
 from py_entitymatching.matcher.rulematcher import RuleMatcher
 from py_entitymatching.matcher.matcherutils import get_ts
 from py_entitymatching.utils.validation_helper import validate_object_type
+from py_entitymatching.utils.generic_helper import parse_conjunct
 import pandas as pd
 import six
 
@@ -27,6 +28,7 @@ class BooleanRuleMatcher(RuleMatcher):
         self.rule_cnt = 0
         feature_table = kwargs.pop('feature_table', None)
         self.feature_table = feature_table
+        self.rule_ft = OrderedDict()
 
     def fit(self):
         pass
@@ -91,6 +93,11 @@ class BooleanRuleMatcher(RuleMatcher):
         # Validate that there are some rules
         assert len(self.rules.keys()) > 0, 'There are no rules to apply'
 
+        # Parse conjuncts to validate that the features are in the feature table
+        for rule in self.rule_conjunct_list:
+            for conjunct in self.rule_conjunct_list[rule]:
+                parse_conjunct(conjunct, self.rule_ft[rule])
+
         if table is not None:
             y = self._predict_candset(table)
             if target_attr is not None and append is True:
@@ -150,6 +157,10 @@ class BooleanRuleMatcher(RuleMatcher):
         self.rules[name] = fn
         self.rule_source[name] = fn_str
         self.rule_conjunct_list[name] = conjunct_list
+        if feature_table is not None:
+            self.rule_ft[name] = feature_table
+        else:
+            self.rule_ft[name] = self.feature_table
 
         return name
 
