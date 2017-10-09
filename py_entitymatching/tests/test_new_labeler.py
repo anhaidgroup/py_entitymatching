@@ -7,6 +7,7 @@ from py_entitymatching.io.parsers import read_csv_metadata
 from py_entitymatching.labeler.new_labeler.utils import ApplicationContext
 from py_entitymatching.labeler.new_labeler.controller.FilterController import FilterController
 from py_entitymatching.labeler.new_labeler.controller.StatsController import StatsController
+from py_entitymatching.labeler.new_labeler.controller.LabelUpdateController import LabelUpdateController
 from py_entitymatching.labeler.new_labeler.controller.TuplePairDisplayController import TuplePairDisplayController
 from py_entitymatching.labeler.new_labeler.view import Renderer
 
@@ -268,3 +269,79 @@ class TuplePairDisplayControllerTestCases(unittest.TestCase):
                              ApplicationContext.COMPLETE_DATA_FRAME.shape[1])
 
         # def get_tuples_for_page(self, page_number):
+
+
+class LabelUpdateControllerTestCases(unittest.TestCase):
+    def setUp(self):
+        ApplicationContext.LABEL_COLUMN = "label"
+        ApplicationContext.COMPLETE_DATA_FRAME = read_csv_metadata(path_d)
+        ApplicationContext.COMPLETE_DATA_FRAME.set_index("_id", inplace=True, drop=False)
+        ApplicationContext.current_data_frame = ApplicationContext.COMPLETE_DATA_FRAME
+        # ApplicationContext.COMPLETE_DATA_FRAME[ApplicationContext.LABEL_COLUMN] = "Not-Labeled"
+        ApplicationContext.LABEL_CONTROLLER = LabelUpdateController(DummyPage())
+        ApplicationContext.TAGS_COLUMN = "tags"
+        ApplicationContext.COMMENTS_COLUMN = "comments"
+        ApplicationContext.TUPLE_PAIR_DISPLAY_CONTROLLER = TuplePairDisplayController(DummyPage())
+
+    def tearDown(self):
+        pass
+
+    @istest
+    def test_change_label(self):
+        orig_render_main_page = Renderer.render_main_page
+
+        # mock renderer
+        def mock_render_main_page(current_page_tuple_pairs, match_count, not_match_count, not_sure_count, unlabeled_count):
+            return None
+
+        try:
+            Renderer.render_main_page = mock_render_main_page
+
+            self.assertRaises(KeyError, ApplicationContext.LABEL_CONTROLLER.change_label, 99, ApplicationContext.MATCH)
+            self.assertRaises(ValueError, ApplicationContext.LABEL_CONTROLLER.change_label, 1, "non-existent-column")
+
+            self.assertEqual(ApplicationContext.COMPLETE_DATA_FRAME.loc[4][ApplicationContext.LABEL_COLUMN], ApplicationContext.NON_MATCH)
+            ApplicationContext.LABEL_CONTROLLER.change_label("4", ApplicationContext.MATCH)
+            self.assertEqual(ApplicationContext.COMPLETE_DATA_FRAME.loc[4][ApplicationContext.LABEL_COLUMN], ApplicationContext.MATCH)
+        finally:
+            Renderer.render_main_page = orig_render_main_page
+
+    @istest
+    def test_edit_tags(self):
+        # ApplicationContext.LABEL_CONTROLLER.edit_tags()
+        self.assertRaises(ValueError, ApplicationContext.LABEL_CONTROLLER.edit_tags, "1", 1234)
+        self.assertRaises(KeyError, ApplicationContext.LABEL_CONTROLLER.edit_tags, -3, "value")
+
+        self.assertNotIn(ApplicationContext.TAGS_COLUMN, ApplicationContext.COMPLETE_DATA_FRAME.columns)
+        ApplicationContext.LABEL_CONTROLLER.edit_tags("3", "new_tag")
+        self.assertEqual(ApplicationContext.COMPLETE_DATA_FRAME.loc[3][ApplicationContext.TAGS_COLUMN], "new_tag")
+        self.assertEqual(ApplicationContext.COMPLETE_DATA_FRAME.count()[ApplicationContext.TAGS_COLUMN], 1)
+
+        ApplicationContext.LABEL_CONTROLLER.edit_tags("3", "changed_tag")
+        self.assertEqual(ApplicationContext.COMPLETE_DATA_FRAME.loc[3][ApplicationContext.TAGS_COLUMN], "changed_tag")
+        self.assertEqual(ApplicationContext.COMPLETE_DATA_FRAME.count()[ApplicationContext.TAGS_COLUMN], 1)
+
+        ApplicationContext.LABEL_CONTROLLER.edit_tags("4", "added_tag")
+        self.assertEqual(ApplicationContext.COMPLETE_DATA_FRAME.loc[4][ApplicationContext.TAGS_COLUMN], "added_tag")
+        self.assertEqual(ApplicationContext.COMPLETE_DATA_FRAME.loc[3][ApplicationContext.TAGS_COLUMN], "changed_tag")
+        self.assertEqual(ApplicationContext.COMPLETE_DATA_FRAME.count()[ApplicationContext.TAGS_COLUMN], 2)
+
+    @istest
+    def test_edit_comments(self):
+        # ApplicationContext.LABEL_CONTROLLER.edit_tags()
+        self.assertRaises(ValueError, ApplicationContext.LABEL_CONTROLLER.edit_comments, "1", 1234)
+        self.assertRaises(KeyError, ApplicationContext.LABEL_CONTROLLER.edit_comments, -3, "value")
+
+        self.assertNotIn(ApplicationContext.TAGS_COLUMN, ApplicationContext.COMPLETE_DATA_FRAME.columns)
+        ApplicationContext.LABEL_CONTROLLER.edit_comments("3", "3_new_comment")
+        self.assertEqual(ApplicationContext.COMPLETE_DATA_FRAME.loc[3][ApplicationContext.COMMENTS_COLUMN], "3_new_comment")
+        self.assertEqual(ApplicationContext.COMPLETE_DATA_FRAME.count()[ApplicationContext.COMMENTS_COLUMN], 1)
+
+        ApplicationContext.LABEL_CONTROLLER.edit_comments("3", "3_changed_comment")
+        self.assertEqual(ApplicationContext.COMPLETE_DATA_FRAME.loc[3][ApplicationContext.COMMENTS_COLUMN], "3_changed_comment")
+        self.assertEqual(ApplicationContext.COMPLETE_DATA_FRAME.count()[ApplicationContext.COMMENTS_COLUMN], 1)
+
+        ApplicationContext.LABEL_CONTROLLER.edit_comments("4", "4_new_comment")
+        self.assertEqual(ApplicationContext.COMPLETE_DATA_FRAME.loc[4][ApplicationContext.COMMENTS_COLUMN], "4_new_comment")
+        self.assertEqual(ApplicationContext.COMPLETE_DATA_FRAME.loc[3][ApplicationContext.COMMENTS_COLUMN], "3_changed_comment")
+        self.assertEqual(ApplicationContext.COMPLETE_DATA_FRAME.count()[ApplicationContext.COMMENTS_COLUMN], 2)

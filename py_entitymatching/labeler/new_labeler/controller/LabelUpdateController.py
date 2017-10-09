@@ -36,7 +36,7 @@ class LabelUpdateController(QObject):
         """
         if new_label not in ApplicationContext.VALID_LABELS:
             raise ValueError("label value {new_label} is not a valid label".format(new_label=new_label))
-        if tuple_pair_id not in ApplicationContext.COMPLETE_DATA_FRAME.index:
+        if int(tuple_pair_id) not in ApplicationContext.COMPLETE_DATA_FRAME.index:
             raise KeyError("tuple with given id {tuple_id} does not exist in dataframe".format(tuple_id=tuple_pair_id))
 
         ApplicationContext.COMPLETE_DATA_FRAME.loc[ApplicationContext.COMPLETE_DATA_FRAME['_id']
@@ -75,11 +75,11 @@ class LabelUpdateController(QObject):
              KeyError if tuple_pair_id does not exist in dataframe
              ValueError if tags is not an str
         """
+        if int(tuple_pair_id) not in ApplicationContext.COMPLETE_DATA_FRAME.index:
+            raise KeyError("tuple with given id {tuple_id} does not exist in dataframe".format(tuple_id=tuple_pair_id))
+
         if type(tags) != str:
             raise ValueError("tags are expected to be of type str")
-
-        if tuple_pair_id not in ApplicationContext.COMPLETE_DATA_FRAME.index:
-            raise KeyError("tuple with given id {tuple_id} does not exist in dataframe".format(tuple_id=tuple_pair_id))
 
         ApplicationContext.COMPLETE_DATA_FRAME.loc[
             ApplicationContext.COMPLETE_DATA_FRAME['_id'] == int(tuple_pair_id), ApplicationContext.TAGS_COLUMN] = tags
@@ -97,9 +97,13 @@ class LabelUpdateController(QObject):
             
         Raises:
             KeyError if tuple_pair_id does not exist in dataframe
+            ValueError if comments is not an str
         """
-        if tuple_pair_id not in ApplicationContext.COMPLETE_DATA_FRAME.index:
+        if int(tuple_pair_id) not in ApplicationContext.COMPLETE_DATA_FRAME.index:
             raise KeyError("tuple with given id {tuple_id} does not exist in dataframe".format(tuple_id=tuple_pair_id))
+
+        if type(comments) != str:
+            raise ValueError("comments are expected to be of type str")
 
         ApplicationContext.COMPLETE_DATA_FRAME.loc[
             ApplicationContext.COMPLETE_DATA_FRAME['_id'] == int(tuple_pair_id), ApplicationContext.COMMENTS_COLUMN] = comments
