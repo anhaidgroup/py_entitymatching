@@ -97,6 +97,9 @@ from py_entitymatching.debugmatcher.debug_gui_decisiontree_matcher import \
 from py_entitymatching.debugmatcher.debug_gui_randomforest_matcher import \
     vis_debug_rf, vis_tuple_debug_rf_matcher
 
+# # match trigger
+from py_entitymatching.triggers.matchtrigger import MatchTrigger
+
 # # evaluation
 from py_entitymatching.evaluation.evaluation import eval_matches, \
     get_false_negatives_as_df, get_false_positives_as_df, print_eval_summary
