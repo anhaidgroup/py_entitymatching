@@ -49,7 +49,7 @@ class MatchTrigger(object):
         else:
             self.rule_ft[name] = self.feature_table
 
-        return True
+        return name
 
     def add_cond_status(self, status):
         if not isinstance(status, bool):
@@ -93,6 +93,11 @@ class MatchTrigger(object):
         assert ltable is not None, 'Left table is not set'
         assert rtable is not None, 'Right table is not set'
         assert label_column in input_table.columns, 'Label column not in the input table'
+
+        # Parse conjuncts to validate that the features are in the feature table
+        for rule in self.rule_conjunct_list:
+            for conjunct in self.rule_conjunct_list[rule]:
+                parse_conjunct(conjunct, self.rule_ft[rule])
 
         if inplace == False:
             table = input_table.copy()
