@@ -41,21 +41,24 @@ class LabelUpdateController(QObject):
 
         ApplicationContext.COMPLETE_DATA_FRAME.loc[ApplicationContext.COMPLETE_DATA_FRAME['_id']
                                                    == int(tuple_pair_id), ApplicationContext.LABEL_COLUMN] = new_label
+        ApplicationContext.current_data_frame.loc[ApplicationContext.current_data_frame['_id']
+                                                  == int(tuple_pair_id), ApplicationContext.LABEL_COLUMN] = new_label
+
         self.main_page.setHtml(
             Renderer.render_main_page(
                 current_page_tuple_pairs=
                 ApplicationContext.TUPLE_PAIR_DISPLAY_CONTROLLER.get_tuples_for_page(ApplicationContext.current_page_number),
                 match_count=
-                ApplicationContext.current_data_frame[ApplicationContext.current_data_frame[ApplicationContext.LABEL_COLUMN]
+                ApplicationContext.COMPLETE_DATA_FRAME[ApplicationContext.COMPLETE_DATA_FRAME[ApplicationContext.LABEL_COLUMN]
                                                       == ApplicationContext.MATCH].shape[0],
                 not_match_count=
-                ApplicationContext.current_data_frame[ApplicationContext.current_data_frame[ApplicationContext.LABEL_COLUMN]
+                ApplicationContext.COMPLETE_DATA_FRAME[ApplicationContext.COMPLETE_DATA_FRAME[ApplicationContext.LABEL_COLUMN]
                                                       == ApplicationContext.NON_MATCH].shape[0],
                 not_sure_count=
-                ApplicationContext.current_data_frame[ApplicationContext.current_data_frame[ApplicationContext.LABEL_COLUMN]
+                ApplicationContext.COMPLETE_DATA_FRAME[ApplicationContext.COMPLETE_DATA_FRAME[ApplicationContext.LABEL_COLUMN]
                                                       == ApplicationContext.NOT_SURE].shape[0],
                 unlabeled_count=
-                ApplicationContext.current_data_frame[ApplicationContext.current_data_frame[ApplicationContext.LABEL_COLUMN]
+                ApplicationContext.COMPLETE_DATA_FRAME[ApplicationContext.COMPLETE_DATA_FRAME[ApplicationContext.LABEL_COLUMN]
                                                       == ApplicationContext.NOT_LABELED].shape[0],
             )
         )

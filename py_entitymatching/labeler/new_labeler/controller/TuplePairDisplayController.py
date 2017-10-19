@@ -156,16 +156,16 @@ class TuplePairDisplayController(QObject):
                 current_page_tuple_pairs=
                 self.get_tuples_for_page(page_number),
                 match_count=
-                ApplicationContext.current_data_frame[ApplicationContext.current_data_frame[ApplicationContext.LABEL_COLUMN]
+                ApplicationContext.COMPLETE_DATA_FRAME[ApplicationContext.COMPLETE_DATA_FRAME[ApplicationContext.LABEL_COLUMN]
                                                       == ApplicationContext.MATCH].shape[0],
                 not_match_count=
-                ApplicationContext.current_data_frame[ApplicationContext.current_data_frame[ApplicationContext.LABEL_COLUMN]
+                ApplicationContext.COMPLETE_DATA_FRAME[ApplicationContext.COMPLETE_DATA_FRAME[ApplicationContext.LABEL_COLUMN]
                                                       == ApplicationContext.NON_MATCH].shape[0],
                 not_sure_count=
-                ApplicationContext.current_data_frame[ApplicationContext.current_data_frame[ApplicationContext.LABEL_COLUMN]
+                ApplicationContext.COMPLETE_DATA_FRAME[ApplicationContext.COMPLETE_DATA_FRAME[ApplicationContext.LABEL_COLUMN]
                                                       == ApplicationContext.NOT_SURE].shape[0],
                 unlabeled_count=
-                ApplicationContext.current_data_frame[ApplicationContext.current_data_frame[ApplicationContext.LABEL_COLUMN]
+                ApplicationContext.COMPLETE_DATA_FRAME[ApplicationContext.COMPLETE_DATA_FRAME[ApplicationContext.LABEL_COLUMN]
                                                       == ApplicationContext.NOT_LABELED].shape[0],
             )
         )
