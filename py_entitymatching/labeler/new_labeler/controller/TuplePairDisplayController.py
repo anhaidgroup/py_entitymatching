@@ -157,16 +157,16 @@ class TuplePairDisplayController(QObject):
                 self.get_tuples_for_page(page_number),
                 match_count=
                 ApplicationContext.COMPLETE_DATA_FRAME[ApplicationContext.COMPLETE_DATA_FRAME[ApplicationContext.LABEL_COLUMN]
-                                                      == ApplicationContext.MATCH].shape[0],
+                                                       == ApplicationContext.MATCH].shape[0],
                 not_match_count=
                 ApplicationContext.COMPLETE_DATA_FRAME[ApplicationContext.COMPLETE_DATA_FRAME[ApplicationContext.LABEL_COLUMN]
-                                                      == ApplicationContext.NON_MATCH].shape[0],
+                                                       == ApplicationContext.NON_MATCH].shape[0],
                 not_sure_count=
                 ApplicationContext.COMPLETE_DATA_FRAME[ApplicationContext.COMPLETE_DATA_FRAME[ApplicationContext.LABEL_COLUMN]
-                                                      == ApplicationContext.NOT_SURE].shape[0],
+                                                       == ApplicationContext.NOT_SURE].shape[0],
                 unlabeled_count=
                 ApplicationContext.COMPLETE_DATA_FRAME[ApplicationContext.COMPLETE_DATA_FRAME[ApplicationContext.LABEL_COLUMN]
-                                                      == ApplicationContext.NOT_LABELED].shape[0],
+                                                       == ApplicationContext.NOT_LABELED].shape[0],
             )
         )
 
@@ -208,7 +208,7 @@ class TuplePairDisplayController(QObject):
         # path.remove("/")
         # path.remove("")
 
-        if os.path.isdir("/".join(path[:len(path) - 1])):
+        if os.path.isdir(ApplicationContext.SAVEPATH + "/".join(path[:len(path) - 1])):
             ApplicationContext.save_file_name = save_file_name
             ApplicationContext.COMPLETE_DATA_FRAME.to_csv(ApplicationContext.SAVEPATH + save_file_name)
         else:

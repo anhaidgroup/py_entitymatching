@@ -6,7 +6,7 @@
 
     var save_file_name = "{{ save_file_name}}";
     var current_page = {{ current_page|int }};
-    var valid_file_name = /^[\w\- ]+$/;
+    var valid_file_name = /^[\w\-\/\\. ]+$/;
 
     function change_page(page_number) {
         current_page = page_number;
@@ -19,14 +19,14 @@
 
     function change_token_count() {
         var token_count = document.getElementById("token_number_input").value;
-        if ($.isNumeric(token_count) && Math.floor(parseInt(token_count, 10)) >= 0) {
+        if ($.isNumeric(token_count) && Math.floor(parseInt(token_count, 10)) > 0) {
             token_count = Math.floor(parseInt(token_count, 10));
             new QWebChannel(qt.webChannelTransport, function (channel) {
                 channel.objects.tuple_pair_display_controller.change_token_count(token_count);
             });
         }
         else {
-            alert("Alphabet count value has to be a positive integer (0 or more)");
+            alert("Alphabet count value has to be a positive integer (more than 0)");
         }
     }
 
