@@ -91,7 +91,7 @@ class StatsControllerTestCases(unittest.TestCase):
         self.assertRaises(KeyError, ApplicationContext.STATS_CONTROLLER.count_matched_tuple_pairs, ApplicationContext.COMPLETE_DATA_FRAME,
                           "non-existent-column-name")
         self.assertEqual(ApplicationContext.STATS_CONTROLLER.count_matched_tuple_pairs(ApplicationContext.COMPLETE_DATA_FRAME,
-                                                                                       ApplicationContext.LABEL_COLUMN), 8)
+                                                                                       ApplicationContext.LABEL_COLUMN), 7)
 
     @istest
     def test_count_non_matched_tuple_pairs(self):

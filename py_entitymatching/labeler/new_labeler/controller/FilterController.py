@@ -106,7 +106,6 @@ class FilterController(QObject):
         elif label == ApplicationContext.ALL:
             data = ApplicationContext.COMPLETE_DATA_FRAME
 
-        # todo 5/7/17 check if data is still null
         ApplicationContext.current_data_frame = data
         data = data.iloc[
                0 * ApplicationContext.tuple_pair_count_per_page: 0 * ApplicationContext.tuple_pair_count_per_page +
@@ -146,7 +145,8 @@ class FilterController(QObject):
             ApplicationContext.current_attributes = ApplicationContext.ALL_ATTRIBUTES
         else:
             # todo 5/7/17 check if attributes are valid
-            attributes.remove("")
+            if "" in attributes:
+                attributes.remove("")
             ApplicationContext.current_attributes = attributes
         html = Renderer.render_main_page(
             current_page_tuple_pairs=ApplicationContext.TUPLE_PAIR_DISPLAY_CONTROLLER.get_tuples_for_page(ApplicationContext.current_page_number),
