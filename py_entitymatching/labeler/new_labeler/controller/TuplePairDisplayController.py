@@ -3,7 +3,7 @@ try:
     from PyQt5.QtCore import pyqtSlot
 except ImportError:
     raise ImportError('PyQt5 is not installed. Please install PyQt5 to use '
-                          'GUI related functions in py_entitymatching.')
+                      'GUI related functions in py_entitymatching.')
 
 from math import ceil
 
@@ -34,9 +34,11 @@ class TuplePairDisplayController(QObject):
             None.
             
         Raises:
-                
+            ValueError if count_per_page is negative
         """
-        assert count_per_page > 0, "count of tuple pairs per page can not be negative"
+        if count_per_page <= 0:
+            raise ValueError("count of tuple pairs per page can not be negative")
+
         ApplicationContext.tuple_pair_count_per_page = count_per_page
 
     def set_current_page(self, current_page):
@@ -49,9 +51,10 @@ class TuplePairDisplayController(QObject):
             None.
             
         Raises:
-        
+            ValueError if current page is negative
         """
-        assert current_page >= 0
+        if current_page < 0:
+            raise ValueError
         ApplicationContext.current_page_number = current_page
 
     def set_current_layout(self, layout):
@@ -64,11 +67,11 @@ class TuplePairDisplayController(QObject):
             None.
             
         Raises:
-         
+            ValueError if parameter is not in list of valid layouts
         """
         # todo 5/7/17 better way to see allowed layouts
-        if layout != "horizontal" and layout != "vertical" and layout != "single":
-            assert 1 < 0
+        if layout not in ApplicationContext.VALID_LAYOUTS:
+            raise ValueError("not a valid layout")
         else:
             ApplicationContext.current_layout = layout
 
@@ -81,9 +84,12 @@ class TuplePairDisplayController(QObject):
         Returns:
             Tuple Pairs (DataFrame).
             
-        Raises:    
+        Raises:
+            ValueError if page number is not positive
         """
-        assert page_number >= 0
+        if page_number < 0:
+            raise ValueError("page number parameter must be non-negative")
+
         return ApplicationContext.current_data_frame.iloc[
                page_number * ApplicationContext.tuple_pair_count_per_page: page_number * ApplicationContext.tuple_pair_count_per_page + ApplicationContext.tuple_pair_count_per_page]
 
@@ -124,7 +130,11 @@ class TuplePairDisplayController(QObject):
             Number of pages (int): Number of pages in DataFrame.
             
         Raises:         
+            ValueError if data_frame is None
         """
+        if data_frame is None:
+            raise ValueError("None passed as data frame")
+
         return ceil(data_frame.shape[0] / ApplicationContext.tuple_pair_count_per_page)
 
     @pyqtSlot(int)
@@ -137,7 +147,8 @@ class TuplePairDisplayController(QObject):
         Returns:
             None.
             
-        Raises:         
+        Raises:
+            ValueError if current page is negative
         """
         self.set_current_page(page_number)
         self.main_page.setHtml(
@@ -145,17 +156,17 @@ class TuplePairDisplayController(QObject):
                 current_page_tuple_pairs=
                 self.get_tuples_for_page(page_number),
                 match_count=
-                ApplicationContext.current_data_frame[ApplicationContext.current_data_frame[ApplicationContext.LABEL_COLUMN]
-                                                      == ApplicationContext.MATCH].shape[0],
+                ApplicationContext.COMPLETE_DATA_FRAME[ApplicationContext.COMPLETE_DATA_FRAME[ApplicationContext.LABEL_COLUMN]
+                                                       == ApplicationContext.MATCH].shape[0],
                 not_match_count=
-                ApplicationContext.current_data_frame[ApplicationContext.current_data_frame[ApplicationContext.LABEL_COLUMN]
-                                                      == ApplicationContext.NON_MATCH].shape[0],
+                ApplicationContext.COMPLETE_DATA_FRAME[ApplicationContext.COMPLETE_DATA_FRAME[ApplicationContext.LABEL_COLUMN]
+                                                       == ApplicationContext.NON_MATCH].shape[0],
                 not_sure_count=
-                ApplicationContext.current_data_frame[ApplicationContext.current_data_frame[ApplicationContext.LABEL_COLUMN]
-                                                      == ApplicationContext.NOT_SURE].shape[0],
+                ApplicationContext.COMPLETE_DATA_FRAME[ApplicationContext.COMPLETE_DATA_FRAME[ApplicationContext.LABEL_COLUMN]
+                                                       == ApplicationContext.NOT_SURE].shape[0],
                 unlabeled_count=
-                ApplicationContext.current_data_frame[ApplicationContext.current_data_frame[ApplicationContext.LABEL_COLUMN]
-                                                      == ApplicationContext.NOT_LABELED].shape[0],
+                ApplicationContext.COMPLETE_DATA_FRAME[ApplicationContext.COMPLETE_DATA_FRAME[ApplicationContext.LABEL_COLUMN]
+                                                       == ApplicationContext.NOT_LABELED].shape[0],
             )
         )
 
@@ -169,7 +180,8 @@ class TuplePairDisplayController(QObject):
         Returns:
             None.
 
-        Raises:         
+        Raises:
+            ValueError if parameter is not in list of valid layouts
         """
         self.set_current_layout(layout)
         if layout == 'single':
@@ -193,10 +205,10 @@ class TuplePairDisplayController(QObject):
         """
         # todo WINDOWS
         path = save_file_name.split("/")
-        #path.remove("/")
-        #path.remove("")
+        # path.remove("/")
+        # path.remove("")
 
-        if os.path.isdir("/".join(path[:len(path) - 1])):
+        if os.path.isdir(ApplicationContext.SAVEPATH + "/".join(path[:len(path) - 1])):
             ApplicationContext.save_file_name = save_file_name
             ApplicationContext.COMPLETE_DATA_FRAME.to_csv(ApplicationContext.SAVEPATH + save_file_name)
         else:
@@ -213,7 +225,9 @@ class TuplePairDisplayController(QObject):
             None.
         
         Raises:
-            
+            ValueError if new token_count is not positive
         """
+        if token_count <= 0:
+            raise ValueError
         ApplicationContext.alphabets_per_attribute_display = token_count
         self.change_page(ApplicationContext.current_page_number)
