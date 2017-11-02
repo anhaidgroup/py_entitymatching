@@ -224,7 +224,7 @@ class RuleBasedBlocker(Blocker):
                 >>> block_f = em.get_features_for_blocking(A, B)
                 >>> rule = ['name_name_lev(ltuple, rtuple) > 3']
                 >>> rb.add_rule(rule, feature_table=block_f, rule_name='rule_1')
-                >>> rb.get_rule_names()
+                >>> rb.get_rule()
 
         """
         assert rule_name in self.rules.keys(), 'Rule name not in current set of rules'
