@@ -50,7 +50,6 @@ before_install:
   - conda config --add channels conda-forge
 
 install:
-  - conda install --yes python=$PYTHON_VERSION pip
   - pip install PySocks
   - conda install --yes python=$PYTHON_VERSION nose pandas pyparsing six scikit-learn cloudpickle joblib ipython
   - conda install --yes -c uwmagellan py_stringsimjoin=0.1.0
