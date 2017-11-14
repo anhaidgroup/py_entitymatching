@@ -788,6 +788,51 @@ class DebugblockerTestCases(unittest.TestCase):
         self.assertEqual(list(ret_dataframe.ix[1]), expected_recs[1])
         self.assertEqual(list(ret_dataframe.ix[2]), expected_recs[2])
     
+    def test_debugblocker_config_cython_1(self):
+        ltable_field_token_sum = {1}
+        rtable_field_token_sum = {1}
+        py_num_fields = 1
+        config_list = db.debugblocker_config_cython(ltable_field_token_sum, rtable_field_token_sum, 
+                                    py_num_fields, 2, 2)
+        expected_config_list = [[0]]
+        self.assertEqual(config_list, expected_config_list)
+
+    def test_debugblocker_config_cython_2(self):
+        ltable_field_token_sum = {4, 3, 2, 1}
+        rtable_field_token_sum = {4, 3, 2, 1}
+        py_num_fields = 4
+        config_list = db.debugblocker_config_cython(ltable_field_token_sum, rtable_field_token_sum, 
+                                    py_num_fields, 2, 2)
+        expected_config_list = [[0, 1, 2, 3], [1, 2, 3], [0, 2, 3], [0, 1, 3],
+                [0, 1, 2], [1, 2], [0, 2], [0, 1], [1], [0]]
+        self.assertEqual(config_list, expected_config_list)
+
+    def test_debugblocker_merge_topk_cython_1(self):
+        rec_lists = []
+        rec_list = db.debugblocker_merge_topk_cython(rec_lists);
+        expected_rec_list = []
+        self.assertEqual(rec_list, expected_rec_list)
+
+    def test_debugblocker_merge_topk_cython_2(self):
+        rec_lists = [[[1, 2, 1]], [[1, 2, 2]], [[1, 2, 3]]]
+        rec_list = db.debugblocker_merge_topk_cython(rec_lists);
+        expected_rec_list = [(2, 1, 2)]
+        self.assertEqual(rec_list, expected_rec_list)
+
+    def test_debugblocker_merge_topk_cython_3(self):
+        rec_lists = [[[1, 2, 1], [2, 3, 2]], [[1, 2, 2], [2, 3, 3]], [[1, 2, 3],
+            [2, 3, 4]]]
+        rec_list = db.debugblocker_merge_topk_cython(rec_lists);
+        expected_rec_list = [(2, 1, 2), (3, 2, 3)]
+        self.assertEqual(rec_list, expected_rec_list)
+
+    def test_debugblocker_merge_topk_cython_4(self):
+        rec_lists = [[(1, 2, 1)], [(1, 2, 2)], [(1, 2, 3)]]
+        rec_list = db.debugblocker_merge_topk_cython(rec_lists);
+        expected_rec_list = [(2, 1, 2)]
+        self.assertEqual(rec_list, expected_rec_list)
+
+
     @raises(AssertionError)
     def test_debugblocker_1(self):
         A = []
