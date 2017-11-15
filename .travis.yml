@@ -57,6 +57,7 @@ install:
   - conda install --yes -c uwmagellan py_stringsimjoin=0.1.0
   - pip install requests
   - pip install -r requirements.txt
+  - pip install sip
   - pip install PyQt5
 
 script:
