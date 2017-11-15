@@ -807,6 +807,85 @@ class DebugblockerTestCases(unittest.TestCase):
                 [0, 1, 2], [1, 2], [0, 2], [0, 1], [1], [0]]
         self.assertEqual(config_list, expected_config_list)
 
+    def test_debugblocker_topk_cython_1(self):
+        py_config = []
+        lrecord_token_list = [[]]
+        rrecord_token_list = [[]]
+        lrecord_index_list = [[]]
+        rrecord_index_list = [[]]
+        py_cand_set = []
+        py_output_size = 100
+        rec_list = db.debugblocker_topk_cython(py_config, lrecord_token_list, rrecord_token_list,
+                        lrecord_index_list, rrecord_index_list, py_cand_set, py_output_size)
+        expected_rec_list = []
+        self.assertEqual(rec_list, expected_rec_list)
+
+    def test_debugblocker_topk_cython_2(self):
+        py_config = []
+        lrecord_token_list = [[]]
+        rrecord_token_list = [[]]
+        lrecord_index_list = [[]]
+        rrecord_index_list = [[]]
+        py_cand_set = None
+        py_output_size = 100
+        rec_list = db.debugblocker_topk_cython(py_config, lrecord_token_list, rrecord_token_list,
+                        lrecord_index_list, rrecord_index_list, py_cand_set, py_output_size)
+        expected_rec_list = []
+        self.assertEqual(rec_list, expected_rec_list)
+
+    def test_debugblocker_topk_cython_3(self):
+        py_config = [0, 1]
+        lrecord_token_list = [[1, 2]]
+        rrecord_token_list = [[0, 1]]
+        lrecord_index_list = [[1, 2]]
+        rrecord_index_list = [[0, 1]]
+        py_cand_set = None
+        py_output_size = 100
+        rec_list = db.debugblocker_topk_cython(py_config, lrecord_token_list, rrecord_token_list,
+                        lrecord_index_list, rrecord_index_list, py_cand_set, py_output_size)
+        expected_rec_list = [[0, 0, 1]]
+        self.assertEqual(rec_list, expected_rec_list)
+
+    def test_debugblocker_topk_cython_4(self):
+        A = read_csv_metadata(path_a, key='ID')
+        B = read_csv_metadata(path_b, key='ID')
+        C = read_csv_metadata(path_c, ltable=A, rtable=B, fk_ltable='ltable_ID',
+                fk_rtable='rtable_ID', key = '_id')
+        py_config = [0, 1]
+        lrecord_token_list = [array('I', [5, 12, 15, 22, 37, 38, 39]), 
+                              array('I', [26, 30, 32, 34, 37, 38, 39]), 
+                              array('I', [24, 27, 28, 36, 37, 38, 39]), 
+                              array('I', [4, 10, 13, 21, 37, 38, 39]), 
+                              array('I', [2, 7, 31, 33, 35, 38, 39])]
+        rrecord_token_list = [array('I', [17, 18, 25, 29, 37, 38, 39]), 
+                              array('I', [9, 27, 28, 36, 37, 38L, 39]), 
+                              array('I', [19, 26, 30, 34, 37, 38, 39]), 
+                              array('I', [14, 16, 20, 23, 25, 38, 39]), 
+                              array('I', [1, 3, 6L, 8, 31, 33, 37, 38, 39]), 
+                              array('I', [0, 11, 29, 32, 35, 38, 39])]
+        lrecord_index_list = [array('I', [1, 1, 0, 0, 1, 1, 1]), 
+                              array('I', [1, 0, 0, 1, 1, 1, 1]), 
+                              array('I', [0, 1, 0, 1, 1, 1, 1]), 
+                              array('I', [1, 0, 0, 1, 1, 1, 1]), 
+                              array('I', [1, 0, 0, 1, 1, 1, 1])]
+        rrecord_index_list = [array('I', [0, 0, 1, 1, 1, 1, 1]), 
+                              array('I', [0, 1, 0, 1, 1, 1, 1]), 
+                              array('I', [0, 1, 0, 1, 1, 1, 1]), 
+                              array('I', [0, 0, 1, 1, 1, 1, 1]), 
+                              array('I', [1, 1, 0, 1, 0, 1, 1, 1, 1]), 
+                              array('I', [1, 0, 1, 0, 1, 1, 1])]
+        py_cand_set = {0: set([0, 1, 5]), 1: set([2, 3, 4]), 2: set([0, 1, 5]), 3: set([2, 3, 4]), 4: set([2, 3, 4])}
+        py_output_size = 100
+
+        rec_list = db.debugblocker_topk_cython(py_config, lrecord_token_list, rrecord_token_list,
+                        lrecord_index_list, rrecord_index_list, py_cand_set, py_output_size)
+
+        expected_rec_list = [[0, 2, 13], [0, 3, 3], [0, 4, 6], [1, 0, 12], [1, 1, 11], 
+                            [1, 5, 10], [2, 2, 9], [2, 3, 2], [2, 4, 7], [3, 0, 14], 
+                            [3, 1, 15], [3, 5, 5], [4, 0, 1], [4, 1, 4], [4, 5, 8]]
+
+        self.assertEqual(rec_list, expected_rec_list)
+
     def test_debugblocker_merge_topk_cython_1(self):
         rec_lists = []
         rec_list = db.debugblocker_merge_topk_cython(rec_lists);

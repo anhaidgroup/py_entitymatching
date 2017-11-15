@@ -159,6 +159,13 @@ def debugblocker_topk_cython(py_config, lrecord_token_list, rrecord_token_list,
                         lrecord_index_list, rrecord_index_list,
                         py_cand_set, py_output_size):
 
+    print py_config
+    print lrecord_token_list
+    print rrecord_token_list
+    print lrecord_index_list
+    print rrecord_index_list
+    print py_cand_set
+    print py_output_size
     ### Convert py objs to c++ objs
     cdef vector[int] config
     convert_py_list_to_vector(py_config, config)
