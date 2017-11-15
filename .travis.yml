@@ -53,7 +53,7 @@ before_install:
   - source activate testenv
 
 install:
-  - conda install --yes python=$PYTHON_VERSION nose pandas pyparsing six scikit-learn cloudpickle joblib ipython pip
+  - conda install --yes python=$PYTHON_VERSION nose pandas pyparsing six scikit-learn cloudpickle joblib ipython pip pyqt
   - conda install --yes -c uwmagellan py_stringsimjoin=0.1.0
   - pip install -r requirements.txt
 
