@@ -186,12 +186,12 @@ def debug_blocker(candidate_set, ltable, rtable, output_size=200, attr_corres=No
                         ltable_field_token_sum, rtable_field_token_sum,
                         new_formatted_candidate_set, len(feature_list), output_size)
 
-    for i in xrange(len(rec_list)):
-        print rec_list[i]
+    #for i in xrange(len(rec_list)):
+    #    print rec_list[i]
 
     total_end = time.time()
     total_time = total_end - total_start
-    print 'total time:', total_time
+    #print 'total time:', total_time
 
     ret_dataframe = _assemble_topk_table(rec_list[0:output_size], ltable_filtered, rtable_filtered, l_key, r_key)
     return total_time
@@ -215,12 +215,10 @@ def debugblocker_cython_parallel(lrecord_token_list, rrecord_token_list,
                         py_num_fields, py_output_size):
 
     # pickle list of list to accelate in multi-process
-    print "pickle file  start cloudpickle", time.time()
     lrecord_token_list = pickle.dumps(lrecord_token_list)
     rrecord_token_list = pickle.dumps(rrecord_token_list)
     lrecord_index_list = pickle.dumps(lrecord_index_list)
     rrecord_index_list = pickle.dumps(rrecord_index_list)
-    print "pickle file  end cloudpickle", time.time()
 
     # generate config lists
 

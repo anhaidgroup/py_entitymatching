@@ -10,9 +10,10 @@ import py_entitymatching.catalog.catalog_manager as cm
 import py_entitymatching.utils.catalog_helper as ch
 from py_entitymatching.io.parsers import read_csv_metadata
 
-import sys
-sys.path.insert(0, '../debugblocker')
-import debugblocker as db
+#import sys
+#sys.path.insert(0, '../debugblocker')
+#import debugblocker as db
+import py_entitymatching.debugblocker.debugblocker as db
 
 from operator import itemgetter
 from array import array
