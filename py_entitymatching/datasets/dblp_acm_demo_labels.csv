@@ -1,8 +1,3 @@
-#key=_id
-#ltable=POINTER
-#rtable=POINTER
-#foreign_key_ltable=ltable.id
-#foreign_key_rtable=rtable.id
 _id,ltable.id,rtable.id,ltable.authors,ltable.title,ltable.venue,ltable.year,rtable.authors,rtable.title,rtable.venue,rtable.year,gold
 0,conf/sigmod/AbadiCCCCEGHMRSSTXYZ03,335476,"Nesime Tatbul, Daniel J. Abadi, C. Erwin, Anurag Maskey, Mitch Cherniack, Alex Rasin, Christian Convey, A. Singer, Eduardo F. Galvez, R. Yan, Ugur etintemel, Ying Xing, Stanley B. Zdonik, Michael Stonebraker, Donald Carney, M. Hatoun",Aurora: A Data Stream Management System,SIGMOD Conference,2003.0,"Jennifer Widom, Adam Bosworth, Bruce Lindsay, Michael Stonebraker, Dan Suciu",Of XML and databases (panel session): where's the beef?,International Conference on Management of Data,2000,0
 1,conf/sigmod/AbadiCCCCEGHMRSSTXYZ03,672966,"Nesime Tatbul, Daniel J. Abadi, C. Erwin, Anurag Maskey, Mitch Cherniack, Alex Rasin, Christian Convey, A. Singer, Eduardo F. Galvez, R. Yan, Ugur etintemel, Ying Xing, Stanley B. Zdonik, Michael Stonebraker, Donald Carney, M. Hatoun",Aurora: A Data Stream Management System,SIGMOD Conference,2003.0,"Sarabjot S. Anand, David A. Bell, John G. Hughes",An Empirical Performance Study of the Ingres Search Accelerator for a Large Property Management Database System,Very Large Data Bases,1994,0
