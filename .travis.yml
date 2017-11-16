@@ -57,8 +57,8 @@ install:
   - conda install --yes -c uwmagellan py_stringsimjoin=0.1.0
   - pip install requests
   - pip install -r requirements.txt
+  - python setup.py build_ext --inplace
 
 script:
-    - cd ~
-    - nosetests -s py_entitymatching -m test_
+    - nosetests -s 
 
