@@ -859,7 +859,7 @@ class DebugblockerTestCases(unittest.TestCase):
                               array('I', [4, 10, 13, 21, 37, 38, 39]), 
                               array('I', [2, 7, 31, 33, 35, 38, 39])]
         rrecord_token_list = [array('I', [17, 18, 25, 29, 37, 38, 39]), 
-                              array('I', [9, 27, 28, 36, 37, 38L, 39]), 
+                              array('I', [9, 27, 28, 36, 37, 38, 39]), 
                               array('I', [19, 26, 30, 34, 37, 38, 39]), 
                               array('I', [14, 16, 20, 23, 25, 38, 39]), 
                               array('I', [1, 3, 6L, 8, 31, 33, 37, 38, 39]), 
