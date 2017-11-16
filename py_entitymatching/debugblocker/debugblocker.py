@@ -11,7 +11,8 @@ from py_entitymatching.utils.validation_helper import validate_object_type
 import py_entitymatching as mg
 import py_entitymatching.catalog.catalog_manager as cm
 
-from debugblocker_cython import debugblocker_cython, debugblocker_config_cython, debugblocker_topk_cython, debugblocker_merge_topk_cython
+from py_entitymatching.debugblocker.debugblocker_cython import \
+        debugblocker_cython, debugblocker_config_cython, debugblocker_topk_cython, debugblocker_merge_topk_cython
 
 from joblib import Parallel, delayed
 import py_entitymatching as em
