@@ -191,10 +191,10 @@ class DebugblockerTestCases(unittest.TestCase):
 
     @raises(AssertionError)
     def test_filter_corres_list_1(self):
-        A = pd.DataFrame([[0, 20, 0.11, 04576]])
+        A = pd.DataFrame([[0, 20, 0.11, '04576']])
         A.columns = ['ID', 'age', 'price', 'zip code']
         em.set_key(A, 'ID')
-        B = pd.DataFrame([[0, 240, 0.311, 04474]])
+        B = pd.DataFrame([[0, 240, 0.311, '04474']])
         B.columns = ['ID', 'age', 'price', 'zip code']
         em.set_key(A, 'ID')
         A_key = 'ID'
