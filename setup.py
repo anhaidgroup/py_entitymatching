@@ -29,7 +29,7 @@ from setuptools.command.build_ext import build_ext as _build_ext
 
 class build_ext(_build_ext):
     def build_extensions(self):
-        import pkg_resources                                                            
+        import pkg_resources
         numpy_incl = pkg_resources.resource_filename('numpy', 'core/include')
 
         for ext in self.extensions:
@@ -70,8 +70,8 @@ if __name__ == "__main__":
     with open('README.rst') as f:
         LONG_DESCRIPTION = f.read()
 
-    extensions = [setuptools.Extension("py_entitymatching/debugblocker/debugblocker_cython",
-                                       ["py_entitymatching/debugblocker/debugblocker_cython.pyx", 
+    extensions = [setuptools.Extension("py_entitymatching.debugblocker.debugblocker_cython",
+                                       ["py_entitymatching/debugblocker/debugblocker_cython.pyx",
                                         "py_entitymatching/debugblocker/TopPair.cpp",
                                         "py_entitymatching/debugblocker/PrefixEvent.cpp",
                                         "py_entitymatching/debugblocker/GenerateRecomLists.cpp",
