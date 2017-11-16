@@ -67,7 +67,7 @@ TopkRankList GenerateRecomLists::generate_topk_with_config(
     return topkrank;
 }
 
-bool cmp(RecPair& lhs, RecPair& rhs) {
+bool cmp(const RecPair& lhs, const RecPair& rhs) {
   return lhs.rank < rhs.rank;
 }
 
