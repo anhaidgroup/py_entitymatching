@@ -1087,6 +1087,51 @@ class DebugblockerTestCases(unittest.TestCase):
         attr_corres = [('ID', 'ID'), ('birth_year', 'birth_year')]
         db.debug_blocker(C, A, B, 200, attr_corres)
 
+    def test_debugblocker_16(self):
+        A = read_csv_metadata(path_a, key='ID')
+        B = read_csv_metadata(path_b, key='ID')
+        C = read_csv_metadata(path_c, ltable=A, rtable=B,
+                              fk_ltable='ltable_ID', fk_rtable='rtable_ID',
+                              key='_id')
+
+        ret_table = db.debug_blocker(C, A, B, n_jobs = -1)
+
+    def test_debugblocker_17(self):
+        A = read_csv_metadata(path_a, key='ID')
+        B = read_csv_metadata(path_b, key='ID')
+        C = read_csv_metadata(path_c, ltable=A, rtable=B,
+                              fk_ltable='ltable_ID', fk_rtable='rtable_ID',
+                              key='_id')
+
+        ret_table = db.debug_blocker(C, A, B, n_jobs = -2)
+
+    def test_debugblocker_18(self):
+        A = read_csv_metadata(path_a, key='ID')
+        B = read_csv_metadata(path_b, key='ID')
+        C = read_csv_metadata(path_c, ltable=A, rtable=B,
+                              fk_ltable='ltable_ID', fk_rtable='rtable_ID',
+                              key='_id')
+
+        ret_table = db.debug_blocker(C, A, B, n_jobs = 2)
+
+
+def read_record_list(path):
+    record_list = []
+    f = open(path, 'r')
+    for line in f:
+        record_list.append(line.strip().split(' '))
+    return record_list
+
+
+def read_formatted_cand_set(path):
+    cand_set = set()
+    f = open(path, 'r')
+    for line in f:
+        pair = line.strip().split(' ')
+        cand_set.add((int(pair[0]), int(pair[1])))
+    return cand_set
+
+
 def read_record_list(path):
     record_list = []
     f = open(path, 'r')

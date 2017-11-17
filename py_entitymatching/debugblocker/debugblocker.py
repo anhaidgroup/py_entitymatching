@@ -25,7 +25,8 @@ logger = logging.getLogger(__name__)
 SELECTED_FIELDS_UPPER_BOUND = 8
 
 
-def debug_blocker(candidate_set, ltable, rtable, output_size=200, attr_corres=None, verbose=True):
+def debug_blocker(candidate_set, ltable, rtable, output_size=200,
+        attr_corres=None, verbose=True, n_jobs=1):
     """
     This function debugs the blocker output and reports a list of potential
     matches that are discarded by a blocker (or a blocker sequence).
@@ -54,6 +55,14 @@ def debug_blocker(candidate_set, ltable, rtable, output_size=200, attr_corres=No
             identical (defaults to None).
         verbose (boolean):  A flag to indicate whether the debug information
          should be logged (defaults to False).
+        n_jobs (int): The number of parallel jobs to be used for computation
+            (defaults to 1). If -1 all CPUs are used. If 0 or 1,
+            no parallel computation is used at all, which is useful for
+            debugging. For n_jobs below -1, (n_cpus + 1 + n_jobs) are
+            used (where n_cpus are the total number of CPUs in the
+            machine).Thus, for n_jobs = -2, all CPUs but one are used.
+            If (n_cpus + 1 + n_jobs) is less than 1, then no parallel
+            computation is used (i.e., equivalent to the default).
     Returns:
         A pandas DataFrame with 'output_size' number of rows. Each row in the
         DataFrame is a tuple pair which has potential of being a true
@@ -83,12 +92,9 @@ def debug_blocker(candidate_set, ltable, rtable, output_size=200, attr_corres=No
         >>> C = ob.block_tables(A, B, l_overlap_attr='name', r_overlap_attr='name', overlap_size=3)
         >>> D = em.debug_blocker(C, A, B, output_size=150)
     """
-    # logging.info('\nstart blocking')
     # Check input types.
     _validate_types(ltable, rtable, candidate_set, output_size,
                     attr_corres, verbose)
-
-    total_start = time.time()
 
     # Basic checks.
     # Check table size.
@@ -185,14 +191,8 @@ def debug_blocker(candidate_set, ltable, rtable, output_size=200, attr_corres=No
     rec_list = debugblocker_cython_parallel(lrecord_token_list, rrecord_token_list,
                         lrecord_index_list, rrecord_index_list,
                         ltable_field_token_sum, rtable_field_token_sum,
-                        new_formatted_candidate_set, len(feature_list), output_size)
-
-    #for i in range(len(rec_list)):
-    #    print(rec_list[i])
-
-    total_end = time.time()
-    total_time = total_end - total_start
-    #print 'total time:', total_time
+                        new_formatted_candidate_set, len(feature_list),
+                        output_size, n_jobs)
 
     ret_dataframe = _assemble_topk_table(rec_list[0:output_size], ltable_filtered, rtable_filtered, l_key, r_key)
     return ret_dataframe
@@ -213,7 +213,7 @@ def debugblocker_topk_cython_wrapper(config, lrecord_token_list,
 def debugblocker_cython_parallel(lrecord_token_list, rrecord_token_list,
                         lrecord_index_list, rrecord_index_list,
                         ltable_field_token_sum, rtable_field_token_sum, py_cand_set,
-                        py_num_fields, py_output_size):
+                        py_num_fields, py_output_size, n_jobs):
 
     # pickle list of list to accelate in multi-process
     lrecord_token_list = pickle.dumps(lrecord_token_list)
@@ -227,7 +227,7 @@ def debugblocker_cython_parallel(lrecord_token_list, rrecord_token_list,
                             py_num_fields, len(lrecord_token_list), len(rrecord_token_list))
 
     # parallel computer topk based on config lists
-    rec_lists = Parallel(n_jobs = -1, verbose = 50)(delayed(debugblocker_topk_cython_wrapper)
+    rec_lists = Parallel(n_jobs=n_jobs)(delayed(debugblocker_topk_cython_wrapper)
         (py_config_lists[i], lrecord_token_list, rrecord_token_list,
         lrecord_index_list, rrecord_index_list, py_cand_set,
         py_output_size) for i in range(len(py_config_lists)))

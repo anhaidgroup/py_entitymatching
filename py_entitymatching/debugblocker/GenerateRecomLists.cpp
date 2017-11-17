@@ -60,7 +60,6 @@ TopkRankList GenerateRecomLists::generate_topk_with_config(
     TopkRankList topkrank;
     int count = 0;
     while(!topkheap.empty()) {
-      //cout << topkheap.top().l_rec << ' ' << topkheap.top().r_rec << ' ' << topkheap.top().sim << ' ' << count << endl;
       topkrank[make_pair(topkheap.top().l_rec, topkheap.top().r_rec)] = ++ count;
       topkheap.pop();
     }
