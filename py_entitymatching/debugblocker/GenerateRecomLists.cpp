@@ -81,6 +81,7 @@ vector<RecPair> GenerateRecomLists::merge_topk_lists(vector<TopkRankList >& rec_
       full_set.insert(make_pair(it->first.first, it->first.second));
     }
   }
+  if (rec_lists.empty()) return rec_list;
   int list_size = rec_lists[0].size();
 
   // Get the median of each topk recommendation

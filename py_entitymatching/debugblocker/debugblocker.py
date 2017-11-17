@@ -187,15 +187,15 @@ def debug_blocker(candidate_set, ltable, rtable, output_size=200, attr_corres=No
                         ltable_field_token_sum, rtable_field_token_sum,
                         new_formatted_candidate_set, len(feature_list), output_size)
 
-    #for i in xrange(len(rec_list)):
-    #    print rec_list[i]
+    #for i in range(len(rec_list)):
+    #    print(rec_list[i])
 
     total_end = time.time()
     total_time = total_end - total_start
     #print 'total time:', total_time
 
     ret_dataframe = _assemble_topk_table(rec_list[0:output_size], ltable_filtered, rtable_filtered, l_key, r_key)
-    return total_time
+    return ret_dataframe
 
 def debugblocker_topk_cython_wrapper(config, lrecord_token_list,
         rrecord_token_list, lrecord_index_list, rrecord_index_list, py_cand_set,

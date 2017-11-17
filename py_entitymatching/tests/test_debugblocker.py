@@ -37,7 +37,7 @@ class DebugblockerTestCases(unittest.TestCase):
         B_key = em.get_key(B)
         attr_corres = None
         db._validate_types(A, B, C, 100, attr_corres, False)
-        
+
     def test_validate_types_2(self):
         A = read_csv_metadata(path_a, key='ID')
         B = read_csv_metadata(path_b, key='ID')
@@ -912,7 +912,6 @@ class DebugblockerTestCases(unittest.TestCase):
         expected_rec_list = [(2, 1, 2)]
         self.assertEqual(rec_list, expected_rec_list)
 
-
     @raises(AssertionError)
     def test_debugblocker_1(self):
         A = []
@@ -1024,7 +1023,6 @@ class DebugblockerTestCases(unittest.TestCase):
 
         db.debug_blocker(cand_set, ltable, rtable)
 
-    '''
     def test_debugblocker_13(self):
         A = read_csv_metadata(path_a, key='ID')
         B = read_csv_metadata(path_b, key='ID')
@@ -1070,15 +1068,13 @@ class DebugblockerTestCases(unittest.TestCase):
                             'rtable_author', 'rtable_publisher']
         self.assertEqual(list(ret_dataframe.columns), expected_columns)
         ret_record = list(ret_dataframe.ix[0])
-        expected_record = [0, 2, 'B002',
-                           'Thinking in Java',
-                           'learn how to program in Java', 2000, 'ENG',
-                           'Johnnie Doe', pd.np.nan, 'Thinking in C',
-                           'learn programming in C++', '1990', pd.np.nan,
-                           'Jane Doe', 'BCD publisher']
+        expected_record = [0, 1, 'B001', 'data analysis', 'introduction to data analysis',
+            2015, 'ENG', 'Jane Doe', 'BCD publisher', 'introduction to data analysis', 
+            float('nan'), 'English', 'introduction to data analysis', 'John Doe', 'ABC publisher10.00']
+        print(ret_record)
+        print(expected_record)
         self.assertEqual(expected_record[2], ret_record[2])
         self.assertEqual(expected_record[3], ret_record[3])
-    '''
 
     @raises(AssertionError)
     def test_debugblocker_15(self):
