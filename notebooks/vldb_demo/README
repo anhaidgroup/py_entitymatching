@@ -1,0 +1,15 @@
+1. Prerequisites: Python 2.7 or Python 3.4+
+
+2. First, Install the following packages:
+   - py_entitymatching
+   - seaborn
+   - Jupyter notebook
+   you can install the packages using conda like this:
+   $ conda install py_entitymatching -c uwmagellan
+   $ conda install seaborn jupyter
+
+3. Next, launch the Jupyter notebook from the current directory and open demo.  ipynb
+    NOTE: demo.ipynb assumes that the datafiles (*.csv) and helper scripts (profiler.py) are  present in the same directory (as demo.ipynb), 
+    so do not remove those files from the directory.
+
+4. Now you can run the cells in demo.ipynb to recreate the demo scenario.
