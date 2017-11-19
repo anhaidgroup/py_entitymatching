@@ -155,14 +155,11 @@ void original_topk_sim_join_plain_impl(const Table& ltoken_vector, const Table& 
 
         }
     }
-    //printf("number of compared pairs: %ld\n", total_compared_pairs);
 }
 
 
 Heap original_topk_sim_join_plain(const Table& ltoken_vector, const Table& rtoken_vector,
                                   CandSet& cand_set, const unsigned int output_size) {
-    //cout << "In original topk sim plain" << endl;
-
     PrefixHeap prefix_events;
     original_generate_prefix_events(ltoken_vector, rtoken_vector, prefix_events);
 
