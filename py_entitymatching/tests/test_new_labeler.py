@@ -1,6 +1,7 @@
 from nose.tools import *
 import unittest
 import os
+import sys
 from py_entitymatching.labeler.new_labeler.new_labeler import new_label_table
 from py_entitymatching.utils.generic_helper import get_install_path
 from py_entitymatching.io.parsers import read_csv_metadata
@@ -23,6 +24,7 @@ class DummyPage:
         pass
 
 
+@unittest.skipIf(sys.version_info < (3, 5), "New labeler not supported in this version. Skipping tests")
 class NewLabelerTestCases(unittest.TestCase):
     @raises(AssertionError)
     def test_label_table_invalid_df(self):
@@ -42,7 +44,7 @@ class NewLabelerTestCases(unittest.TestCase):
 
 
 # Test Controlers
-
+@unittest.skipIf(sys.version_info < (3, 5), "New labeler not supported in this version. Skipping tests for FilterController")
 class FilterControllerTestCases(unittest.TestCase):
     def setUp(self):
         # setup Application Context
@@ -76,6 +78,7 @@ class FilterControllerTestCases(unittest.TestCase):
         self.assertEqual(rows.shape[1], 7)
 
 
+@unittest.skipIf(sys.version_info < (3, 5), "New labeler not supported in this version. Skipping test for StatsController")
 class StatsControllerTestCases(unittest.TestCase):
     def setUp(self):
         # setup Application Context
@@ -115,6 +118,7 @@ class StatsControllerTestCases(unittest.TestCase):
                                                                                         ApplicationContext.LABEL_COLUMN), 3)
 
 
+@unittest.skipIf(sys.version_info < (3, 5), "New labeler not supported in this version. Skipping test for TupleDisplayController")
 class TuplePairDisplayControllerTestCases(unittest.TestCase):
     def setUp(self):
         # setup Application Context
@@ -271,6 +275,7 @@ class TuplePairDisplayControllerTestCases(unittest.TestCase):
         # def get_tuples_for_page(self, page_number):
 
 
+@unittest.skipIf(sys.version_info < (3, 5), "New labeler not supported in this version. Skipping test for LabelUpdateController")
 class LabelUpdateControllerTestCases(unittest.TestCase):
     def setUp(self):
         ApplicationContext.LABEL_COLUMN = "label"
