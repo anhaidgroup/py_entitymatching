@@ -19,7 +19,7 @@ for more details.
 New tool for labeling (experimental)
 ------------------------------------
 
-WARNING: This labeler is still in pre-alpha stage! Use at your own risk!
+WARNING: The new labeler is only available in python version 3.5 and above only.
 
 A new command `new_label_table` has been added to label the samples. This new
 labeler is currently in pre-alpha stage and is still incomplete. Use at your
