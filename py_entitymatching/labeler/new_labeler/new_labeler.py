@@ -1,6 +1,8 @@
 import pandas as pd
 
 # import PyQt5
+import sys
+
 try:
     from PyQt5.QtCore import QFile
     from PyQt5.QtCore import QIODevice
@@ -170,7 +172,10 @@ def new_label_table(df, label_column_name):
     Raises:
         AssertionError: If `table` is not of type pandas DataFrame.
         AssertionError: If `label_column_name` is not of type string.
+        ImportError: If python version is less than 3.5
     """
+    if sys.version_info < (3, 5):
+        raise ImportError("Python 3.3 or greater is required")
     _validate_inputs(df, label_column_name)
 
     # Remove warning for this case
