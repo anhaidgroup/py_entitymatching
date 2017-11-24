@@ -2,11 +2,11 @@ from nose.tools import *
 import unittest
 import os
 from py_entitymatching.utils.generic_helper import get_install_path
-from py_entitymatching.labeler.new_labeler.utils import ApplicationContext
 from py_entitymatching.io.parsers import read_csv_metadata
 import sys
 
 if sys.version_info >= (3, 5):
+    from py_entitymatching.labeler.new_labeler.utils import ApplicationContext
     from py_entitymatching.labeler.new_labeler.view import Renderer
     from py_entitymatching.labeler.new_labeler.controller.FilterController import FilterController
     from py_entitymatching.labeler.new_labeler.controller.StatsController import StatsController
