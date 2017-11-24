@@ -1,11 +1,11 @@
 matrix:
   include:
-#  - os: linux
-#    python: 2.7
-#    env: PYTHON_VERSION=2.7
-#  - os: linux
-#    python: 3.3
-#    env: PYTHON_VERSION=3.3
+ - os: linux
+    python: 2.7
+    env: PYTHON_VERSION=2.7
+  - os: linux
+    python: 3.3
+    env: PYTHON_VERSION=3.3
   - os: linux
     python: 3.4
     env: PYTHON_VERSION=3.4
@@ -15,10 +15,10 @@ matrix:
   - os: linux
     python: 3.6
     env: PYTHON_VERSION=3.6
-#  - os: osx
-#    language: generic
-#    env:
-#    - PYTHON_VERSION=2.7
+  - os: osx
+    language: generic
+    env:
+    - PYTHON_VERSION=2.7
 #  - os: osx
 #    language: generic
 #    env:
@@ -57,8 +57,6 @@ install:
   - conda install --yes -c uwmagellan py_stringsimjoin=0.1.0
   - pip install requests
   - pip install -r requirements.txt
-  - pip install sip
-  - pip install PyQt5
 
 script:
     - nosetests -s
