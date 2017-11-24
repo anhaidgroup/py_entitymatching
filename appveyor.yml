@@ -39,8 +39,8 @@ install:
   - conda install --yes setuptools nose numpy pip coverage scipy pandas pyparsing six scikit-learn Cython cloudpickle joblib ipython
   - pip install -r requirements.txt
   - python setup.py install
-  - if %PYTHON_VERSION% == "3.5" (pip install PyQt5)
-  - if %PYTHON_VERSION% == "3.6" (pip install PyQt5)
+  - if %PYTHON_VERSION%==3.5 (pip install PyQt5)
+  - if %PYTHON_VERSION%==3.6 (pip install PyQt5)
 
 build: false
 
