@@ -4,13 +4,16 @@ import os
 from py_entitymatching.utils.generic_helper import get_install_path
 from py_entitymatching.labeler.new_labeler.utils import ApplicationContext
 from py_entitymatching.io.parsers import read_csv_metadata
+import sys
 
-from py_entitymatching.labeler.new_labeler.view import Renderer
-from py_entitymatching.labeler.new_labeler.controller.FilterController import FilterController
-from py_entitymatching.labeler.new_labeler.controller.StatsController import StatsController
-from py_entitymatching.labeler.new_labeler.controller.LabelUpdateController import LabelUpdateController
-from py_entitymatching.labeler.new_labeler.controller.TuplePairDisplayController import TuplePairDisplayController
-
+if sys.version_info >= (3, 5):
+    from py_entitymatching.labeler.new_labeler.view import Renderer
+    from py_entitymatching.labeler.new_labeler.controller.FilterController import FilterController
+    from py_entitymatching.labeler.new_labeler.controller.StatsController import StatsController
+    from py_entitymatching.labeler.new_labeler.controller.LabelUpdateController import LabelUpdateController
+    from py_entitymatching.labeler.new_labeler.controller.TuplePairDisplayController import TuplePairDisplayController
+else:
+    print('Skipping new_labeler imports for {0}'.format(sys.version_info))
 datasets_path = os.sep.join([get_install_path(), 'tests', 'test_datasets'])
 path_c = os.sep.join([datasets_path, 'C1.csv'])
 
@@ -21,6 +24,7 @@ class DummyPage:
         pass
 
 
+@unittest.skipIf(sys.version_info < (3, 5), "New labeler not supported in this version. Skipping tests")
 class WorkflowTest(unittest.TestCase):
     def setUp(self):
         # setup Application Context
