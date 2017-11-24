@@ -1,6 +1,6 @@
 matrix:
   include:
- - os: linux
+  - os: linux
     python: 2.7
     env: PYTHON_VERSION=2.7
   - os: linux
@@ -59,4 +59,4 @@ install:
   - pip install -r requirements.txt
 
 script:
-    - nosetests -s
+   - nosetests -s
