@@ -35,8 +35,9 @@ install:
 
   # Don't install from requirements-pip.txt, python-coveralls has broken dependencies on windows it seems.
   - conda install --yes setuptools nose numpy pip coverage scipy pandas pyparsing six scikit-learn Cython pyqt cloudpickle joblib ipython
+  - pip install requests
   - pip install -r requirements.txt
-  - python setup.py install
+  - python setup.py build_ext --inplace
 
 build: false
 
