@@ -1,5 +1,6 @@
-
-
+import subprocess
+import sys
+import os
 # check if pip is installed. If not, raise an ImportError
 PIP_INSTALLED = True
 
@@ -24,7 +25,44 @@ def install_and_import(package):
 # automatically using pip.
 install_and_import('setuptools')
 
+from setuptools.command.build_ext import build_ext as _build_ext
+
+class build_ext(_build_ext):
+    def build_extensions(self):
+        import pkg_resources
+        numpy_incl = pkg_resources.resource_filename('numpy', 'core/include')
+
+        for ext in self.extensions:
+            if (hasattr(ext, 'include_dirs') and
+                    not numpy_incl in ext.include_dirs):
+                ext.include_dirs.append(numpy_incl)
+        _build_ext.build_extensions(self)
+
+def generate_cython():
+    cwd = os.path.abspath(os.path.dirname(__file__))
+    print("Cythonizing sources")
+    p = subprocess.call([sys.executable, os.path.join(cwd,
+                                                      'build_tools',
+                                                      'cythonize.py'),
+                         'py_entitymatching'],
+                        cwd=cwd)
+    if p != 0:
+        raise RuntimeError("Running cythonize failed!")
+
+
+cmdclass = {"build_ext": build_ext}
+
 if __name__ == "__main__":
+
+    no_frills = (len(sys.argv) >= 2 and ('--help' in sys.argv[1:] or
+                                         sys.argv[1] in ('--help-commands',
+                                                         'egg_info', '--version',
+                                                         'clean')))
+
+    cwd = os.path.abspath(os.path.dirname(__file__))
+    if not os.path.exists(os.path.join(cwd, 'PKG-INFO')) and not no_frills:
+        # Generate Cython sources, unless building from source release
+        generate_cython()
 
     # find packages to be included.
     packages = setuptools.find_packages()
@@ -32,6 +70,16 @@ if __name__ == "__main__":
     with open('README.rst') as f:
         LONG_DESCRIPTION = f.read()
 
+    extensions = [setuptools.Extension("py_entitymatching.debugblocker.debugblocker_cython",
+                                       ["py_entitymatching/debugblocker/debugblocker_cython.pyx",
+                                        "py_entitymatching/debugblocker/TopPair.cpp",
+                                        "py_entitymatching/debugblocker/PrefixEvent.cpp",
+                                        "py_entitymatching/debugblocker/GenerateRecomLists.cpp",
+                                        "py_entitymatching/debugblocker/TopkHeader.cpp",
+                                        "py_entitymatching/debugblocker/OriginalTopkPlain.cpp",
+                                           ], language='c++',
+                                       include_dirs=[])
+                 ]
     setuptools.setup(
         name='py_entitymatching',
         version='0.2.0',
@@ -74,6 +122,8 @@ if __name__ == "__main__":
             'pandas-profiling >= 1.4.0',
             'requests'
         ],
+        ext_modules=extensions,
+        cmdclass=cmdclass,
         include_package_data=True,
         zip_safe=False
     )
