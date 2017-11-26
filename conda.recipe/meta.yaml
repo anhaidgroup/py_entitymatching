@@ -9,6 +9,7 @@ source:
 requirements:
   build:
     - python
+    - cython
     - setuptools
     - pyprind
     - py_stringsimjoin 0.1.0
@@ -23,6 +24,7 @@ requirements:
 
   run:
     - python
+    - cython
     - pyprind
     - py_stringsimjoin 0.1.0
     - cloudpickle
