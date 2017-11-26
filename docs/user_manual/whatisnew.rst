@@ -1,5 +1,10 @@
 What is New?
 ============
+Compared to version 0.2.0, the followings are new:
+  * Updated debug blocker code to use Cython
+  * Added rule-based matcher and rule-based trigger
+  * Updated new labeler with unit test cases
+
 Compared to version 0.1.0, the followings are new:
   * Updated the down sampler command to let  the user to set the random seed.
   * Updated documentation to profile dataframe using pandas-profiling package.
