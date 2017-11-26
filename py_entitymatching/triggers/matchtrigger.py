@@ -50,11 +50,10 @@ class MatchTrigger(object):
             Returns:
                 The name of the rule added (string).
 
-                Raises:
-                    AssertionError: If `rule_name` already exists.
+            Raises:
+                AssertionError: If `rule_name` already exists.
 
-                    AssertionError: If `feature_table` is not a valid value
-                         parameter.
+                AssertionError: If `feature_table` is not a valid value parameter.
 
             Examples:
                 >>> import py_entitymatching as em

@@ -66,7 +66,7 @@ The current package supports EM workflows that consist of a blocking step follow
     :align: center
     :alt: 'An example of EM workflow'
  
-Further, the current package only supports learning-based matchers. Specifically, it will require the user to label a set of tuple pairs (as "match" or "no-match"), then use the labeled data to train matchers. In the future, we will consider extending the package to support more powerful EM workflows, such as using multiple matchers, including rule-based ones, or being able to add rules to process the output of the matchers. 
+Further, the current package supports both rule-based and learning-based matchers. Specifically, rule-based matchers will require the user to write domain specific match rules and learning-based matchers  will require the user to label a set of tuple pairs (as "match" or "no-match"), then use the labeled data to train matchers. In the future, we will consider extending the package to support more powerful EM workflows, such as using multiple matchers, or being able to add rules to process the output of the matchers. 
 
 The Development and Production Stages
 -------------------------------------

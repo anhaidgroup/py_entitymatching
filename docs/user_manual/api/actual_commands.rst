@@ -18,4 +18,5 @@ Commands in py_entitymatching
     handling_features
     matching
     debugging_matcher
+    triggers
     evaluating_the_matching_output

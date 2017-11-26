@@ -18,7 +18,7 @@ def data_explore_openrefine(df, server='http://127.0.0.1:3333', name=None):
     Args:
         df (Dataframe): The pandas dataframe to be explored with pandastable.
         server (String): The address of the OpenRefine server (defaults to
-            'http://127.0.0.1:3333').
+            http://127.0.0.1:3333).
         name (String): The name given to the file and project in OpenRefine.
 
     Raises:

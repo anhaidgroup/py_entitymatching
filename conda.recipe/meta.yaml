@@ -1,6 +1,6 @@
 package:
   name: py_entitymatching
-  version: "0.2.0"
+  version: "0.2.1"
 
 source:
     git_url: ../
@@ -16,6 +16,7 @@ requirements:
     - scikit-learn
     - pyqt
     - pandas-profiling
+    - requests
 #    - xgboost
 
   run:
@@ -26,6 +27,7 @@ requirements:
     - scikit-learn
     - pyqt
     - pandas-profiling
+    - requests
 #    - xgboost
 
 test:
