@@ -1,6 +1,6 @@
 package:
   name: py_entitymatching
-  version: "0.2.1"
+  version: "0.3.0"
 
 source:
     git_url: ../
@@ -10,8 +10,8 @@ requirements:
   build:
     - python
     - setuptools
-    - py_stringsimjoin==0.1.0
     - pyprind
+    - py_stringsimjoin 0.1.0
     - cloudpickle
     - pyparsing
     - scikit-learn
@@ -22,8 +22,8 @@ requirements:
 
   run:
     - python
-    - py_stringsimjoin==0.1.0
     - pyprind
+    - py_stringsimjoin 0.1.0
     - cloudpickle
     - pyparsing
     - scikit-learn
