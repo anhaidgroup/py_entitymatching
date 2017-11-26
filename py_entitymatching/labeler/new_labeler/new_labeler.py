@@ -1,6 +1,8 @@
 import pandas as pd
 
 # import PyQt5
+import sys
+
 try:
     from PyQt5.QtCore import QFile
     from PyQt5.QtCore import QIODevice
@@ -10,8 +12,7 @@ try:
     from PyQt5.QtWidgets import QApplication
 except ImportError:
     raise ImportError('PyQt5 is not installed. Please install PyQt5 to use '
-                          'GUI related functions in py_entitymatching.')
-
+                      'GUI related functions in py_entitymatching.')
 
 from py_entitymatching.labeler.new_labeler.controller.FilterController import FilterController
 from py_entitymatching.labeler.new_labeler.controller.LabelUpdateController import LabelUpdateController
@@ -21,6 +22,8 @@ from py_entitymatching.labeler.new_labeler.utils import ApplicationContext
 from py_entitymatching.labeler.new_labeler.view import Renderer
 
 import py_entitymatching as em
+import six
+from py_entitymatching.utils.validation_helper import validate_object_type
 
 
 def initialize_tags_comments(df, comments_col, tags_col):
@@ -138,11 +141,28 @@ class MainPage(QWebEnginePage):
         self.setHtml(html_str)
 
 
+def _validate_inputs(data_frame, label_column_name):
+    validate_object_type(data_frame, pd.DataFrame)
+    if data_frame.empty:
+        raise AssertionError
+    validate_object_type(label_column_name, six.string_types, error_prefix='Input attr.')
+
+    # If the label column already exists, validate that the label column has only one of the 3 allowed values
+    if label_column_name in data_frame.columns:
+        label_values = data_frame[label_column_name].unique()
+        if label_values.size == 0 or label_values.size > 4:
+            raise AssertionError
+        for label in label_values:
+            if label not in ["Not-Labeled", "Not-Matched", "Not-Sure", "Yes"]:
+                raise AssertionError
+    return True
+
+
 def new_label_table(df, label_column_name):
     """ Method to be invoked to launch the Labeler application.
 
     Args:
-        df (Dataframe): A Dataframe containing the tuple pairs
+        df (Dataframe): A Dataframe containing the tuple pairs that are possible matches
         label_column_name (str): Name of column to be used to save tuple pair labels.
                                 This column will be created if it doesn't already exist.
 
@@ -150,8 +170,13 @@ def new_label_table(df, label_column_name):
         The updated Dataframe with the label column, comments, and tags
 
     Raises:
-        None.
+        AssertionError: If `table` is not of type pandas DataFrame.
+        AssertionError: If `label_column_name` is not of type string.
+        ImportError: If python version is less than 3.5
     """
+    if sys.version_info < (3, 5):
+        raise ImportError("Python 3.3 or greater is required")
+    _validate_inputs(df, label_column_name)
 
     # Remove warning for this case
     pd.options.mode.chained_assignment = None  # default='warn'
@@ -220,4 +245,4 @@ def new_label_table(df, label_column_name):
     app.exec_()
 
     return df
-    #return ApplicationContext.COMPLETE_DATA_FRAME
+    # return ApplicationContext.COMPLETE_DATA_FRAME

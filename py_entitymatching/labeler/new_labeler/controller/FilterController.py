@@ -3,8 +3,8 @@ try:
     from PyQt5.QtCore import pyqtSlot
     from PyQt5.QtCore import QObject
 except ImportError:
-    raise ImportError('PyQt5 is not installed. Please install PyQt5 to use '
-                          'GUI related functions in py_entitymatching.')
+    raise ImportError("PyQt5 is not installed. Please install PyQt5 to use "
+                      "GUI related functions in py_entitymatching.")
 
 from py_entitymatching.labeler.new_labeler.utils import ApplicationContext
 from py_entitymatching.labeler.new_labeler.view import Renderer
@@ -31,7 +31,8 @@ class FilterController(QObject):
         Raises:
                 
         """
-        return ApplicationContext.COMPLETE_DATA_FRAME[ApplicationContext.COMPLETE_DATA_FRAME[ApplicationContext.LABEL_COLUMN] == ApplicationContext.MATCH]
+        return ApplicationContext.COMPLETE_DATA_FRAME[
+            ApplicationContext.COMPLETE_DATA_FRAME[ApplicationContext.LABEL_COLUMN] == ApplicationContext.MATCH]
 
     def get_non_matched_tuple_pairs(self):
         """Gets tuple pairs whose label value is currently NON-MATCH from complete data frame.
@@ -44,7 +45,8 @@ class FilterController(QObject):
             
         Raises:
         """
-        return ApplicationContext.COMPLETE_DATA_FRAME[ApplicationContext.COMPLETE_DATA_FRAME[ApplicationContext.LABEL_COLUMN] == ApplicationContext.NON_MATCH]
+        return ApplicationContext.COMPLETE_DATA_FRAME[
+            ApplicationContext.COMPLETE_DATA_FRAME[ApplicationContext.LABEL_COLUMN] == ApplicationContext.NON_MATCH]
 
     def get_non_sure_tuple_pairs(self):
         """Gets tuple pairs whose label value is currently NON-MATCH from complete data frame.
@@ -58,7 +60,8 @@ class FilterController(QObject):
         Raises:    
             
         """
-        return ApplicationContext.COMPLETE_DATA_FRAME[ApplicationContext.COMPLETE_DATA_FRAME[ApplicationContext.LABEL_COLUMN] == ApplicationContext.NOT_SURE]
+        return ApplicationContext.COMPLETE_DATA_FRAME[
+            ApplicationContext.COMPLETE_DATA_FRAME[ApplicationContext.LABEL_COLUMN] == ApplicationContext.NOT_SURE]
 
     def get_not_labeled_tuple_pairs(self):
         """Gets tuple pairs whose label value is currently NON-MATCH from complete data frame.
@@ -71,7 +74,8 @@ class FilterController(QObject):
             
         Raises:
         """
-        return ApplicationContext.COMPLETE_DATA_FRAME[ApplicationContext.COMPLETE_DATA_FRAME[ApplicationContext.LABEL_COLUMN] == ApplicationContext.NOT_LABELED]
+        return ApplicationContext.COMPLETE_DATA_FRAME[
+            ApplicationContext.COMPLETE_DATA_FRAME[ApplicationContext.LABEL_COLUMN] == ApplicationContext.NOT_LABELED]
 
     @pyqtSlot(str)
     def get_filtered_tuple_pairs(self, label):
@@ -85,9 +89,12 @@ class FilterController(QObject):
             None
             
         Raises:
-            
+            Value error if label is not a valid value for label column
         """
         data = None
+        if label not in ApplicationContext.VALID_LABELS and label != ApplicationContext.ALL:
+            raise ValueError("{label_value} is not a valid value for label column {label_column}".format(label_value=label,
+                                                                                                         label_column=ApplicationContext.LABEL_COLUMN))
         if label == ApplicationContext.MATCH:
             data = self.get_matching_tuple_pairs()
         elif label == ApplicationContext.NON_MATCH:
@@ -99,7 +106,6 @@ class FilterController(QObject):
         elif label == ApplicationContext.ALL:
             data = ApplicationContext.COMPLETE_DATA_FRAME
 
-        # todo 5/7/17 check if data is still null
         ApplicationContext.current_data_frame = data
         data = data.iloc[
                0 * ApplicationContext.tuple_pair_count_per_page: 0 * ApplicationContext.tuple_pair_count_per_page +
@@ -139,7 +145,8 @@ class FilterController(QObject):
             ApplicationContext.current_attributes = ApplicationContext.ALL_ATTRIBUTES
         else:
             # todo 5/7/17 check if attributes are valid
-            attributes.remove("")
+            if "" in attributes:
+                attributes.remove("")
             ApplicationContext.current_attributes = attributes
         html = Renderer.render_main_page(
             current_page_tuple_pairs=ApplicationContext.TUPLE_PAIR_DISPLAY_CONTROLLER.get_tuples_for_page(ApplicationContext.current_page_number),
