@@ -11,6 +11,7 @@ requirements:
     - python
     - setuptools
     - py_stringsimjoin
+    - pyprind
     - cloudpickle
     - pyparsing
     - scikit-learn
@@ -22,6 +23,7 @@ requirements:
   run:
     - python
     - py_stringsimjoin
+    - pyprind
     - cloudpickle
     - pyparsing
     - scikit-learn
