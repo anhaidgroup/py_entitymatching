@@ -10,7 +10,7 @@ requirements:
   build:
     - python
     - setuptools
-    - py_stringsimjoin
+    - py_stringsimjoin=0.1.0
     - pyprind
     - cloudpickle
     - pyparsing
@@ -22,7 +22,7 @@ requirements:
 
   run:
     - python
-    - py_stringsimjoin
+    - py_stringsimjoin=0.1.0
     - pyprind
     - cloudpickle
     - pyparsing
