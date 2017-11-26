@@ -1,0 +1,1303 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Blocking &#8212; py_entitymatching 0.3.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Debugging Blocker Output" href="debugging_blocker_output.html" />
+    <link rel="prev" title="Data Exploration" href="data_exploration.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="debugging_blocker_output.html" title="Debugging Blocker Output"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="data_exploration.html" title="Data Exploration"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">py_entitymatching 0.3.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="actual_commands.html" accesskey="U">Commands in py_entitymatching</a> &#187;</li> 
+      </ul>
+    </div>
+<div class="content-wrapper">
+    <div class="content">
+        <div class="document">
+            <div class="sphinxsidebar">
+                <h3>Table Of Contents</h3>
+                <p class="caption"><span class="caption-text">How To Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../how_to_guide.html">How to Guide To Do Entity Matching</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../whatisnew.html">What is New?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview of Supported EM Processes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides.html">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datastructures.html">Data Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../steps_supp_em_workflows.html">Steps of Supported EM Workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc.html">Miscellaneous</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview of Command Organization</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="actual_commands.html">Commands in py_entitymatching</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="reading_and_writing_data.html">Reading and Writing Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loading_and_saving_objects.html">Loading and Saving Objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="handling_metadata.html">Handling Metadata</a></li>
+<li class="toctree-l2"><a class="reference internal" href="downsampling.html">Downsampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_exploration.html">Data Exploration</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Blocking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="debugging_blocker_output.html">Debugging Blocker Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="combining_blocker_outputs.html">Combining Blocker Outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sampling.html">Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="labeling.html">Labeling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="handling_features.html">Handling Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="matching.html">Matching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="debugging_matcher.html">Debugging Matcher</a></li>
+<li class="toctree-l2"><a class="reference internal" href="triggers.html">Triggers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evaluating_the_matching_output.html">Evaluating the Matching Output</a></li>
+</ul>
+</li>
+</ul>
+
+                <h3 style="margin-top: 1.5em;">Search</h3>
+
+                <form class="search" action="../../search.html" method="get">
+                    <input type="text" name="q" size="18"/>
+                    <input type="submit" value="Go"/>
+                    <input type="hidden" name="check_keywords" value="yes"/>
+                    <input type="hidden" name="area" value="default"/>
+                </form>
+                <p class="searchtip" style="font-size: 90%">
+                    Enter search terms or a module, class or function name.
+                </p>
+
+            </div>
+             
+            <div class="documentwrapper">
+                <div class="bodywrapper">
+                    <div class="body">
+                        
+  <div class="section" id="blocking">
+<h1>Blocking<a class="headerlink" href="#blocking" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="py_entitymatching.AttrEquivalenceBlocker">
+<em class="property">class </em><code class="descclassname">py_entitymatching.</code><code class="descname">AttrEquivalenceBlocker</code><a class="headerlink" href="#py_entitymatching.AttrEquivalenceBlocker" title="Permalink to this definition">¶</a></dt>
+<dd><p>Blocks based on the equivalence of attribute values.</p>
+<dl class="method">
+<dt id="py_entitymatching.AttrEquivalenceBlocker.block_candset">
+<code class="descname">block_candset</code><span class="sig-paren">(</span><em>candset</em>, <em>l_block_attr</em>, <em>r_block_attr</em>, <em>allow_missing=False</em>, <em>verbose=False</em>, <em>show_progress=True</em>, <em>n_jobs=1</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.AttrEquivalenceBlocker.block_candset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Blocks an input candidate set of tuple pairs based on attribute equivalence.</p>
+<p>Finds tuple pairs from an input candidate set of tuple pairs
+such that the value of attribute l_block_attr of the left tuple in a
+tuple pair exactly matches the value of attribute r_block_attr of the
+right tuple in the tuple pair.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>candset</strong> (<em>DataFrame</em>) – The input candidate set of tuple pairs.</li>
+<li><strong>l_block_attr</strong> (<em>string</em>) – The blocking attribute in left table.</li>
+<li><strong>r_block_attr</strong> (<em>string</em>) – The blocking attribute in right table.</li>
+<li><strong>allow_missing</strong> (<em>boolean</em>) – A flag to indicate whether tuple pairs
+with missing value in at least one of the
+blocking attributes should be included in
+the output candidate set (defaults to
+False). If this flag is set to True, a
+tuple pair with missing value in either
+blocking attribute will be retained in the
+output candidate set.</li>
+<li><strong>verbose</strong> (<em>boolean</em>) – A flag to indicate whether the debug
+information should be logged (defaults to False).</li>
+<li><strong>show_progress</strong> (<em>boolean</em>) – A flag to indicate whether progress should
+be displayed to the user (defaults to True).</li>
+<li><strong>n_jobs</strong> (<em>int</em>) – The number of parallel jobs to be used for computation
+(defaults to 1). If -1 all CPUs are used. If 0 or 1,
+no parallel computation is used at all, which is useful for
+debugging. For n_jobs below -1, (n_cpus + 1 + n_jobs) are
+used (where n_cpus is the total number of CPUs in the
+machine). Thus, for n_jobs = -2, all CPUs but one are used.
+If (n_cpus + 1 + n_jobs) is less than 1, then no parallel
+computation is used (i.e., equivalent to the default).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A candidate set of tuple pairs that survived blocking (DataFrame).</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>candset</cite> is not of type pandas
+DataFrame.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>l_block_attr</cite> is not of type string.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>r_block_attr</cite> is not of type string.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>verbose</cite> is not of type
+boolean.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>n_jobs</cite> is not of type
+int.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>l_block_attr</cite> is not in the ltable columns.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>r_block_attr</cite> is not in the rtable columns.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ab</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">AttrEquivalenceBlocker</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">C</span> <span class="o">=</span> <span class="n">ab</span><span class="o">.</span><span class="n">block_tables</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="s1">&#39;zipcode&#39;</span><span class="p">,</span> <span class="s1">&#39;zipcode&#39;</span><span class="p">,</span> <span class="n">l_output_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">r_output_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">D1</span> <span class="o">=</span> <span class="n">ab</span><span class="o">.</span><span class="n">block_candset</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">,</span> <span class="n">allow_missing</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go"># Include all possible tuple pairs with missing values</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">D2</span> <span class="o">=</span> <span class="n">ab</span><span class="o">.</span><span class="n">block_candset</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">,</span> <span class="n">allow_missing</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go"># Execute blocking using multiple cores</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">D3</span> <span class="o">=</span> <span class="n">ab</span><span class="o">.</span><span class="n">block_candset</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="py_entitymatching.AttrEquivalenceBlocker.block_tables">
+<code class="descname">block_tables</code><span class="sig-paren">(</span><em>ltable</em>, <em>rtable</em>, <em>l_block_attr</em>, <em>r_block_attr</em>, <em>l_output_attrs=None</em>, <em>r_output_attrs=None</em>, <em>l_output_prefix=’ltable_’</em>, <em>r_output_prefix=’rtable_’</em>, <em>allow_missing=False</em>, <em>verbose=False</em>, <em>n_jobs=1</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.AttrEquivalenceBlocker.block_tables" title="Permalink to this definition">¶</a></dt>
+<dd><p>Blocks two tables based on attribute equivalence.</p>
+<p>Conceptually, this will check <cite>l_block_attr=r_block_attr</cite> for each tuple
+pair from the Cartesian product of tables <cite>ltable</cite> and <cite>rtable</cite>. It outputs a
+Pandas dataframe object with tuple pairs that satisfy the equality condition.
+The dataframe will include attributes ‘_id’, key attribute from
+ltable, key attributes from rtable, followed by lists <cite>l_output_attrs</cite> and
+<cite>r_output_attrs</cite> if they are specified. Each of these output and key attributes will be
+prefixed with given <cite>l_output_prefix</cite> and <cite>r_output_prefix</cite>. If <cite>allow_missing</cite> is set
+to <cite>True</cite> then all tuple pairs with missing value in at least one of the tuples will be
+included in the output dataframe.
+Further, this will update the following metadata in the catalog for the output table:
+(1) key, (2) ltable, (3) rtable, (4) fk_ltable, and (5) fk_rtable.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ltable</strong> (<em>DataFrame</em>) – The left input table.</li>
+<li><strong>rtable</strong> (<em>DataFrame</em>) – The right input table.</li>
+<li><strong>l_block_attr</strong> (<em>string</em>) – The blocking attribute in left table.</li>
+<li><strong>r_block_attr</strong> (<em>string</em>) – The blocking attribute in right table.</li>
+<li><strong>l_output_attrs</strong> (<em>list</em>) – A list of attribute names from the left
+table to be included in the
+output candidate set (defaults to None).</li>
+<li><strong>r_output_attrs</strong> (<em>list</em>) – A list of attribute names from the right
+table to be included in the
+output candidate set (defaults to None).</li>
+<li><strong>l_output_prefix</strong> (<em>string</em>) – The prefix to be used for the attribute names
+coming from the left table in the output
+candidate set (defaults to ‘ltable_’).</li>
+<li><strong>r_output_prefix</strong> (<em>string</em>) – The prefix to be used for the attribute names
+coming from the right table in the output
+candidate set (defaults to ‘rtable_’).</li>
+<li><strong>allow_missing</strong> (<em>boolean</em>) – A flag to indicate whether tuple pairs
+with missing value in at least one of the
+blocking attributes should be included in
+the output candidate set (defaults to
+False). If this flag is set to True, a
+tuple in ltable with missing value in the
+blocking attribute will be matched with
+every tuple in rtable and vice versa.</li>
+<li><strong>verbose</strong> (<em>boolean</em>) – A flag to indicate whether the debug information
+should be logged (defaults to False).</li>
+<li><strong>n_jobs</strong> (<em>int</em>) – The number of parallel jobs to be used for computation
+(defaults to 1). If -1 all CPUs are used. If 0 or 1,
+no parallel computation is used at all, which is useful for
+debugging. For n_jobs below -1, (n_cpus + 1 + n_jobs) are
+used (where n_cpus is the total number of CPUs in the
+machine). Thus, for n_jobs = -2, all CPUs but one are used.
+If (n_cpus + 1 + n_jobs) is less than 1, then no parallel
+computation is used (i.e., equivalent to the default).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A candidate set of tuple pairs that survived blocking (DataFrame).</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>ltable</cite> is not of type pandas
+DataFrame.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>rtable</cite> is not of type pandas
+DataFrame.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>l_block_attr</cite> is not of type string.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>r_block_attr</cite> is not of type string.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>l_output_attrs</cite> is not of type of
+list.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>r_output_attrs</cite> is not of type of
+list.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If the values in <cite>l_output_attrs</cite> is not of type
+string.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If the values in <cite>r_output_attrs</cite> is not of type
+string.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>l_output_prefix</cite> is not of type
+string.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>r_output_prefix</cite> is not of type
+string.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>verbose</cite> is not of type
+boolean.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>allow_missing</cite> is not of type boolean.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>n_jobs</cite> is not of type
+int.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>l_block_attr</cite> is not in the ltable columns.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>r_block_attr</cite> is not in the rtable columns.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>l_out_attrs</cite> are not in the ltable.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>r_out_attrs</cite> are not in the rtable.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ab</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">AttrEquivalenceBlocker</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">C1</span> <span class="o">=</span> <span class="n">ab</span><span class="o">.</span><span class="n">block_tables</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="s1">&#39;zipcode&#39;</span><span class="p">,</span> <span class="s1">&#39;zipcode&#39;</span><span class="p">,</span> <span class="n">l_output_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">r_output_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+<span class="go"># Include all possible tuple pairs with missing values</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">C2</span> <span class="o">=</span> <span class="n">ab</span><span class="o">.</span><span class="n">block_tables</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="s1">&#39;zipcode&#39;</span><span class="p">,</span> <span class="s1">&#39;zipcode&#39;</span><span class="p">,</span> <span class="n">l_output_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">r_output_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">allow_missing</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="py_entitymatching.AttrEquivalenceBlocker.block_tuples">
+<code class="descname">block_tuples</code><span class="sig-paren">(</span><em>ltuple</em>, <em>rtuple</em>, <em>l_block_attr</em>, <em>r_block_attr</em>, <em>allow_missing=False</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.AttrEquivalenceBlocker.block_tuples" title="Permalink to this definition">¶</a></dt>
+<dd><p>Blocks a tuple pair based on attribute equivalence.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ltuple</strong> (<em>Series</em>) – The input left tuple.</li>
+<li><strong>rtuple</strong> (<em>Series</em>) – The input right tuple.</li>
+<li><strong>l_block_attr</strong> (<em>string</em>) – The blocking attribute in left tuple.</li>
+<li><strong>r_block_attr</strong> (<em>string</em>) – The blocking attribute in right tuple.</li>
+<li><strong>allow_missing</strong> (<em>boolean</em>) – A flag to indicate whether a tuple pair
+with missing value in at least one of the
+blocking attributes should be blocked
+(defaults to False). If this flag is set
+to True, the pair will be kept if either
+ltuple has missing value in l_block_attr
+or rtuple has missing value in r_block_attr
+or both.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A status indicating if the tuple pair is blocked, i.e., the values
+of l_block_attr in ltuple and r_block_attr in rtuple are different
+(boolean).</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ab</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">AttrEquivalenceBlocker</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">status</span> <span class="o">=</span> <span class="n">ab</span><span class="o">.</span><span class="n">block_tuples</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">B</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;zipcode&#39;</span><span class="p">,</span> <span class="s1">&#39;zipcode&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="py_entitymatching.OverlapBlocker">
+<em class="property">class </em><code class="descclassname">py_entitymatching.</code><code class="descname">OverlapBlocker</code><a class="headerlink" href="#py_entitymatching.OverlapBlocker" title="Permalink to this definition">¶</a></dt>
+<dd><p>Blocks  based on the overlap of token sets of attribute values.</p>
+<dl class="method">
+<dt id="py_entitymatching.OverlapBlocker.block_candset">
+<code class="descname">block_candset</code><span class="sig-paren">(</span><em>candset</em>, <em>l_overlap_attr</em>, <em>r_overlap_attr</em>, <em>rem_stop_words=False</em>, <em>q_val=None</em>, <em>word_level=True</em>, <em>overlap_size=1</em>, <em>allow_missing=False</em>, <em>verbose=False</em>, <em>show_progress=True</em>, <em>n_jobs=1</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.OverlapBlocker.block_candset" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Blocks an input candidate set of tuple pairs based on the overlap</dt>
+<dd>of token sets of attribute values.</dd>
+</dl>
+<p>Finds tuple pairs from an input candidate set of tuple pairs such that
+the overlap between (a) the set of tokens obtained by tokenizing the
+value of attribute l_overlap_attr of the left tuple in a tuple pair,
+and (b) the set of tokens obtained by tokenizing the value of
+attribute r_overlap_attr of the right tuple in the tuple pair,
+is above a certain threshold.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>candset</strong> (<em>DataFrame</em>) – The input candidate set of tuple pairs.</li>
+<li><strong>l_overlap_attr</strong> (<em>string</em>) – The overlap attribute in left table.</li>
+<li><strong>r_overlap_attr</strong> (<em>string</em>) – The overlap attribute in right table.</li>
+<li><strong>rem_stop_words</strong> (<em>boolean</em>) – A flag to indicate whether stop words
+(e.g., a, an, the) should be removed
+from the token sets of the overlap
+attribute values (defaults to False).</li>
+<li><strong>q_val</strong> (<em>int</em>) – The value of q to use if the overlap attributes values
+are to be tokenized as qgrams (defaults to None).</li>
+<li><strong>word_level</strong> (<em>boolean</em>) – A flag to indicate whether the overlap
+attributes should be tokenized as words
+(i.e, using whitespace as delimiter)
+(defaults to True).</li>
+<li><strong>overlap_size</strong> (<em>int</em>) – The minimum number of tokens that must overlap
+(defaults to 1).</li>
+<li><strong>allow_missing</strong> (<em>boolean</em>) – A flag to indicate whether tuple pairs
+with missing value in at least one of the
+blocking attributes should be included in
+the output candidate set (defaults to
+False). If this flag is set to True, a
+tuple pair with missing value in either
+blocking attribute will be retained in the
+output candidate set.</li>
+<li><strong>verbose</strong> (<em>boolean</em>) – <p>A flag to indicate whether the debug information</p>
+<p>should be logged (defaults to False).</p>
+</li>
+<li><strong>show_progress</strong> (<em>boolean</em>) – A flag to indicate whether progress should
+be displayed to the user (defaults to True).</li>
+<li><strong>n_jobs</strong> (<em>int</em>) – The number of parallel jobs to be used for computation
+(defaults to 1). If -1 all CPUs are used. If 0 or 1,
+no parallel computation is used at all, which is useful for
+debugging. For n_jobs below -1, (n_cpus + 1 + n_jobs) are
+used (where n_cpus are the total number of CPUs in the
+machine).Thus, for n_jobs = -2, all CPUs but one are used.
+If (n_cpus + 1 + n_jobs) is less than 1, then no parallel
+computation is used (i.e., equivalent to the default).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A candidate set of tuple pairs that survived blocking (DataFrame).</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>candset</cite> is not of type pandas
+DataFrame.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>l_overlap_attr</cite> is not of type string.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>r_overlap_attr</cite> is not of type string.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>q_val</cite> is not of type int.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>word_level</cite> is not of type boolean.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>overlap_size</cite> is not of type int.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>verbose</cite> is not of type
+boolean.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>allow_missing</cite> is not of type boolean.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>show_progress</cite> is not of type
+boolean.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>n_jobs</cite> is not of type
+int.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>l_overlap_attr</cite> is not in the ltable
+columns.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>r_block_attr</cite> is not in the rtable columns.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">SyntaxError</span></code> – If <cite>q_val</cite> is set to a valid value and
+<cite>word_level</cite> is set to True.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">SyntaxError</span></code> – If <cite>q_val</cite> is set to None and
+<cite>word_level</cite> is set to False.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ob</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">OverlapBlocker</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">C</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">block_tables</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="s1">&#39;address&#39;</span><span class="p">,</span> <span class="s1">&#39;address&#39;</span><span class="p">,</span> <span class="n">l_output_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">r_output_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">D1</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">block_candset</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="n">allow_missing</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go"># Include all possible tuple pairs with missing values</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">D2</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">block_candset</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="n">allow_missing</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go"># Execute blocking using multiple cores</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">D3</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">block_candset</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="go"># Use q-gram tokenizer</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">D2</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">block_candset</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="n">word_level</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">q_val</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="py_entitymatching.OverlapBlocker.block_tables">
+<code class="descname">block_tables</code><span class="sig-paren">(</span><em>ltable</em>, <em>rtable</em>, <em>l_overlap_attr</em>, <em>r_overlap_attr</em>, <em>rem_stop_words=False</em>, <em>q_val=None</em>, <em>word_level=True</em>, <em>overlap_size=1</em>, <em>l_output_attrs=None</em>, <em>r_output_attrs=None</em>, <em>l_output_prefix=’ltable_’</em>, <em>r_output_prefix=’rtable_’</em>, <em>allow_missing=False</em>, <em>verbose=False</em>, <em>show_progress=True</em>, <em>n_jobs=1</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.OverlapBlocker.block_tables" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Blocks two tables based on the overlap of token sets of attribute</dt>
+<dd>values.</dd>
+</dl>
+<p>Finds tuple pairs from left and right tables such that the overlap
+between (a) the set of tokens obtained by tokenizing the value of
+attribute l_overlap_attr of a tuple from the left table, and (b) the
+set of tokens obtained by tokenizing the value of attribute
+r_overlap_attr of a tuple from the right table, is above a certain
+threshold.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ltable</strong> (<em>DataFrame</em>) – The left input table.</li>
+<li><strong>rtable</strong> (<em>DataFrame</em>) – The right input table.</li>
+<li><strong>l_overlap_attr</strong> (<em>string</em>) – The overlap attribute in left table.</li>
+<li><strong>r_overlap_attr</strong> (<em>string</em>) – The overlap attribute in right table.</li>
+<li><strong>rem_stop_words</strong> (<em>boolean</em>) – A flag to indicate whether stop words
+(e.g., a, an, the) should be removed from the token sets of the
+overlap attribute values (defaults to False).</li>
+<li><strong>q_val</strong> (<em>int</em>) – The value of q to use if the overlap attributes
+values are to be tokenized as qgrams (defaults to None).</li>
+<li><strong>word_level</strong> (<em>boolean</em>) – A flag to indicate whether the overlap
+attributes should be tokenized as words (i.e, using whitespace
+as delimiter) (defaults to True).</li>
+<li><strong>overlap_size</strong> (<em>int</em>) – The minimum number of tokens that must
+overlap (defaults to 1).</li>
+<li><strong>l_output_attrs</strong> (<em>list</em>) – A list of attribute names from the left
+table to be included in the output candidate set (defaults
+to None).</li>
+<li><strong>r_output_attrs</strong> (<em>list</em>) – A list of attribute names from the right
+table to be included in the output candidate set  (defaults
+to None).</li>
+<li><strong>l_output_prefix</strong> (<em>string</em>) – The prefix to be used for the attribute names
+coming from the left table in the output
+candidate set (defaults to ‘ltable_’).</li>
+<li><strong>r_output_prefix</strong> (<em>string</em>) – The prefix to be used for the attribute names
+coming from the right table in the output
+candidate set (defaults to ‘rtable_’).</li>
+<li><strong>allow_missing</strong> (<em>boolean</em>) – A flag to indicate whether tuple pairs
+with missing value in at least one of the
+blocking attributes should be included in
+the output candidate set (defaults to
+False). If this flag is set to True, a
+tuple in ltable with missing value in the
+blocking attribute will be matched with
+every tuple in rtable and vice versa.</li>
+<li><strong>verbose</strong> (<em>boolean</em>) – A flag to indicate whether the debug
+information should be logged (defaults to False).</li>
+<li><strong>show_progress</strong> (<em>boolean</em>) – A flag to indicate whether progress should
+be displayed to the user (defaults to True).</li>
+<li><strong>n_jobs</strong> (<em>int</em>) – The number of parallel jobs to be used for computation
+(defaults to 1). If -1 all CPUs are used. If 0 or 1,
+no parallel computation is used at all, which is useful for
+debugging. For n_jobs below -1, (n_cpus + 1 + n_jobs) are
+used (where n_cpus is the total number of CPUs in the
+machine). Thus, for n_jobs = -2, all CPUs but one are used.
+If (n_cpus + 1 + n_jobs) is less than 1, then no parallel
+computation is used (i.e., equivalent to the default).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A candidate set of tuple pairs that survived blocking (DataFrame).</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>ltable</cite> is not of type pandas
+DataFrame.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>rtable</cite> is not of type pandas
+DataFrame.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>l_overlap_attr</cite> is not of type string.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>r_overlap_attr</cite> is not of type string.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>l_output_attrs</cite> is not of type of
+list.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>r_output_attrs</cite> is not of type of
+list.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If the values in <cite>l_output_attrs</cite> is not of type
+string.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If the values in <cite>r_output_attrs</cite> is not of type
+string.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>l_output_prefix</cite> is not of type
+string.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>r_output_prefix</cite> is not of type
+string.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>q_val</cite> is not of type int.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>word_level</cite> is not of type boolean.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>overlap_size</cite> is not of type int.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>verbose</cite> is not of type
+boolean.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>allow_missing</cite> is not of type boolean.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>show_progress</cite> is not of type
+boolean.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>n_jobs</cite> is not of type
+int.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>l_overlap_attr</cite> is not in the ltable
+columns.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>r_block_attr</cite> is not in the rtable columns.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>l_output_attrs</cite> are not in the ltable.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>r_output_attrs</cite> are not in the rtable.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">SyntaxError</span></code> – If <cite>q_val</cite> is set to a valid value and
+<cite>word_level</cite> is set to True.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">SyntaxError</span></code> – If <cite>q_val</cite> is set to None and
+<cite>word_level</cite> is set to False.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ob</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">OverlapBlocker</span><span class="p">()</span>
+<span class="go"># Use word-level tokenizer</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">C1</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">block_tables</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="s1">&#39;address&#39;</span><span class="p">,</span> <span class="s1">&#39;address&#39;</span><span class="p">,</span> <span class="n">l_output_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">r_output_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">word_level</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">overlap_size</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="go"># Use q-gram tokenizer</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">C2</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">block_tables</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="s1">&#39;address&#39;</span><span class="p">,</span> <span class="s1">&#39;address&#39;</span><span class="p">,</span> <span class="n">l_output_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">r_output_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">word_level</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">q_val</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="go"># Include all possible missing values</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">C3</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">block_tables</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="s1">&#39;address&#39;</span><span class="p">,</span> <span class="s1">&#39;address&#39;</span><span class="p">,</span> <span class="n">l_output_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">r_output_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">allow_missing</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go"># Use all the cores in the machine</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">C3</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">block_tables</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="s1">&#39;address&#39;</span><span class="p">,</span> <span class="s1">&#39;address&#39;</span><span class="p">,</span> <span class="n">l_output_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">r_output_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="py_entitymatching.OverlapBlocker.block_tuples">
+<code class="descname">block_tuples</code><span class="sig-paren">(</span><em>ltuple</em>, <em>rtuple</em>, <em>l_overlap_attr</em>, <em>r_overlap_attr</em>, <em>rem_stop_words=False</em>, <em>q_val=None</em>, <em>word_level=True</em>, <em>overlap_size=1</em>, <em>allow_missing=False</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.OverlapBlocker.block_tuples" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Blocks a tuple pair based on the overlap of token sets of attribute</dt>
+<dd>values.</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ltuple</strong> (<em>Series</em>) – The input left tuple.</li>
+<li><strong>rtuple</strong> (<em>Series</em>) – The input right tuple.</li>
+<li><strong>l_overlap_attr</strong> (<em>string</em>) – The overlap attribute in left tuple.</li>
+<li><strong>r_overlap_attr</strong> (<em>string</em>) – The overlap attribute in right tuple.</li>
+<li><strong>rem_stop_words</strong> (<em>boolean</em>) – A flag to indicate whether stop words
+(e.g., a, an, the) should be removed
+from the token sets of the overlap
+attribute values (defaults to False).</li>
+<li><strong>q_val</strong> (<em>int</em>) – A value of q to use if the overlap attributes values
+are to be tokenized as qgrams (defaults to None).</li>
+<li><strong>word_level</strong> (<em>boolean</em>) – A flag to indicate whether the overlap
+attributes should be tokenized as words
+(i.e, using whitespace as delimiter)
+(defaults to True).</li>
+<li><strong>overlap_size</strong> (<em>int</em>) – The minimum number of tokens that must overlap
+(defaults to 1).</li>
+<li><strong>allow_missing</strong> (<em>boolean</em>) – A flag to indicate whether a tuple pair
+with missing value in at least one of the
+blocking attributes should be blocked
+(defaults to False). If this flag is set
+to True, the pair will be kept if either
+ltuple has missing value in l_block_attr
+or rtuple has missing value in r_block_attr
+or both.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A status indicating if the tuple pair is blocked (boolean).</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ob</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">OverlapBlocker</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">status</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">block_tuples</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">B</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;address&#39;</span><span class="p">,</span> <span class="s1">&#39;address&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="py_entitymatching.RuleBasedBlocker">
+<em class="property">class </em><code class="descclassname">py_entitymatching.</code><code class="descname">RuleBasedBlocker</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.RuleBasedBlocker" title="Permalink to this definition">¶</a></dt>
+<dd><p>Blocks  based on a sequence of blocking rules supplied by the user.</p>
+<dl class="method">
+<dt id="py_entitymatching.RuleBasedBlocker.add_rule">
+<code class="descname">add_rule</code><span class="sig-paren">(</span><em>conjunct_list</em>, <em>feature_table=None</em>, <em>rule_name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.RuleBasedBlocker.add_rule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a rule to the rule-based blocker.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>conjunct_list</strong> (<em>list</em>) – A list of conjuncts specifying the rule.</li>
+<li><strong>feature_table</strong> (<em>DataFrame</em>) – A DataFrame containing all the
+features that are being referenced by
+the rule (defaults to None). If the
+feature_table is not supplied here,
+then it must have been specified
+during the creation of the rule-based
+blocker or using set_feature_table
+function. Otherwise an AssertionError
+will be raised and the rule will not
+be added to the rule-based blocker.</li>
+<li><strong>rule_name</strong> (<em>string</em>) – A string specifying the name of the rule to
+be added (defaults to None). If the
+rule_name is not specified then a name will
+be automatically chosen. If there is already
+a rule with the specified rule_name, then
+an AssertionError will be raised and the
+rule will not be added to the rule-based
+blocker.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The name of the rule added (string).</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>rule_name</cite> already exists.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>feature_table</cite> is not a valid value
+parameter.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rb</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">RuleBasedBlocker</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">block_f</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_features_for_blocking</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rule</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;name_name_lev(ltuple, rtuple) &gt; 3&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rb</span><span class="o">.</span><span class="n">add_rule</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">rule_name</span><span class="o">=</span><span class="s1">&#39;rule1&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="py_entitymatching.RuleBasedBlocker.block_candset">
+<code class="descname">block_candset</code><span class="sig-paren">(</span><em>candset</em>, <em>verbose=False</em>, <em>show_progress=True</em>, <em>n_jobs=1</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.RuleBasedBlocker.block_candset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Blocks an input candidate set of tuple pairs based on a sequence of
+blocking rules supplied by the user.</p>
+<p>Finds tuple pairs from an input candidate set of tuple pairs that
+survive the sequence of blocking rules. A tuple pair survives the
+sequence of blocking rules if none of the rules in the sequence returns
+True for that pair. If any of the rules returns True, then the pair is
+blocked (dropped).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>candset</strong> (<em>DataFrame</em>) – The input candidate set of tuple pairs.</li>
+<li><strong>verbose</strong> (<em>boolean</em>) – A flag to indicate whether the debug
+information  should be logged (defaults to False).</li>
+<li><strong>show_progress</strong> (<em>boolean</em>) – A flag to indicate whether progress should
+be displayed to the user (defaults to True).</li>
+<li><strong>n_jobs</strong> (<em>int</em>) – The number of parallel jobs to be used for computation
+(defaults to 1). If -1 all CPUs are used. If 0 or 1,
+no parallel computation is used at all, which is useful for
+debugging. For n_jobs below -1, (n_cpus + 1 + n_jobs) are
+used (where n_cpus are the total number of CPUs in the
+machine).Thus, for n_jobs = -2, all CPUs but one are used.
+If (n_cpus + 1 + n_jobs) is less than 1, then no parallel
+computation is used (i.e., equivalent to the default).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A candidate set of tuple pairs that survived blocking (DataFrame).</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>candset</cite> is not of type pandas
+DataFrame.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>verbose</cite> is not of type
+boolean.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>n_jobs</cite> is not of type
+int.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>show_progress</cite> is not of type boolean.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>l_block_attr</cite> is not in the ltable columns.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>r_block_attr</cite> is not in the rtable columns.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If there are no rules to apply.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rb</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">RuleBasedBlocker</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">block_f</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_features_for_blocking</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rule</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;name_name_lev(ltuple, rtuple) &gt; 3&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rb</span><span class="o">.</span><span class="n">add_rule</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">feature_table</span><span class="o">=</span><span class="n">block_f</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">rb</span><span class="o">.</span><span class="n">block_tables</span><span class="p">(</span><span class="n">C</span><span class="p">)</span> <span class="c1"># C is the candidate set.</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="py_entitymatching.RuleBasedBlocker.block_tables">
+<code class="descname">block_tables</code><span class="sig-paren">(</span><em>ltable</em>, <em>rtable</em>, <em>l_output_attrs=None</em>, <em>r_output_attrs=None</em>, <em>l_output_prefix=’ltable_’</em>, <em>r_output_prefix=’rtable_’</em>, <em>verbose=False</em>, <em>show_progress=True</em>, <em>n_jobs=1</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.RuleBasedBlocker.block_tables" title="Permalink to this definition">¶</a></dt>
+<dd><p>Blocks two tables based on the sequence of rules supplied by the user.</p>
+<p>Finds tuple pairs from left and right tables that survive the sequence
+of blocking rules. A tuple pair survives the sequence of blocking rules
+if none of the rules in the sequence returns True for that pair. If any
+of the rules returns True, then the pair is blocked.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ltable</strong> (<em>DataFrame</em>) – The left input table.</li>
+<li><strong>rtable</strong> (<em>DataFrame</em>) – The right input table.</li>
+<li><strong>l_output_attrs</strong> (<em>list</em>) – A list of attribute names from the left
+table to be included in the
+output candidate set (defaults to None).</li>
+<li><strong>r_output_attrs</strong> (<em>list</em>) – A list of attribute names from the right
+table to be included in the
+output candidate set (defaults to None).</li>
+<li><strong>l_output_prefix</strong> (<em>string</em>) – The prefix to be used for the attribute names
+coming from the left table in the output
+candidate set (defaults to ‘ltable_’).</li>
+<li><strong>r_output_prefix</strong> (<em>string</em>) – The prefix to be used for the attribute names
+coming from the right table in the output
+candidate set (defaults to ‘rtable_’).</li>
+<li><strong>verbose</strong> (<em>boolean</em>) – A flag to indicate whether the debug
+information  should be logged (defaults to False).</li>
+<li><strong>show_progress</strong> (<em>boolean</em>) – A flag to indicate whether progress should
+be displayed to the user (defaults to True).</li>
+<li><strong>n_jobs</strong> (<em>int</em>) – The number of parallel jobs to be used for computation
+(defaults to 1). If -1 all CPUs are used. If 0 or 1,
+no parallel computation is used at all, which is useful for
+debugging. For n_jobs below -1, (n_cpus + 1 + n_jobs) are
+used (where n_cpus is the total number of CPUs in the
+machine).Thus, for n_jobs = -2, all CPUs but one are used.
+If (n_cpus + 1 + n_jobs) is less than 1, then no parallel
+computation is used (i.e., equivalent to the default).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A candidate set of tuple pairs that survived the sequence of
+blocking rules (DataFrame).</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>ltable</cite> is not of type pandas
+DataFrame.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>rtable</cite> is not of type pandas
+DataFrame.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>l_output_attrs</cite> is not of type of
+list.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>r_output_attrs</cite> is not of type of
+list.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If the values in <cite>l_output_attrs</cite> is not of type
+string.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If the values in <cite>r_output_attrs</cite> is not of type
+string.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If the input <cite>l_output_prefix</cite> is not of type
+string.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If the input <cite>r_output_prefix</cite> is not of type
+string.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>verbose</cite> is not of type
+boolean.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>show_progress</cite> is not of type
+boolean.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>n_jobs</cite> is not of type
+int.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>l_out_attrs</cite> are not in the ltable.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>r_out_attrs</cite> are not in the rtable.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If there are no rules to apply.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rb</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">RuleBasedBlocker</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">block_f</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_features_for_blocking</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rule</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;name_name_lev(ltuple, rtuple) &gt; 3&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rb</span><span class="o">.</span><span class="n">add_rule</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">feature_table</span><span class="o">=</span><span class="n">block_f</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">C</span> <span class="o">=</span> <span class="n">rb</span><span class="o">.</span><span class="n">block_tables</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="py_entitymatching.RuleBasedBlocker.block_tuples">
+<code class="descname">block_tuples</code><span class="sig-paren">(</span><em>ltuple</em>, <em>rtuple</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.RuleBasedBlocker.block_tuples" title="Permalink to this definition">¶</a></dt>
+<dd><p>Blocks a tuple pair based on a sequence of blocking rules supplied
+by the user.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ltuple</strong> (<em>Series</em>) – The input left tuple.</li>
+<li><strong>rtuple</strong> (<em>Series</em>) – The input right tuple.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A status indicating if the tuple pair is blocked by applying the
+sequence of blocking rules (boolean).</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rb</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">RuleBasedBlocker</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">block_f</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_features_for_blocking</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rule</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;name_name_lev(ltuple, rtuple) &gt; 3&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rb</span><span class="o">.</span><span class="n">add_rule</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">feature_table</span><span class="o">=</span><span class="n">block_f</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">rb</span><span class="o">.</span><span class="n">block_tuples</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">B</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="py_entitymatching.RuleBasedBlocker.delete_rule">
+<code class="descname">delete_rule</code><span class="sig-paren">(</span><em>rule_name</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.RuleBasedBlocker.delete_rule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes a rule from the rule-based blocker.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>rule_name</strong> (<em>string</em>) – Name of the rule to be deleted.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rb</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">RuleBasedBlocker</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">block_f</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_features_for_blocking</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rule</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;name_name_lev(ltuple, rtuple) &gt; 3&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rb</span><span class="o">.</span><span class="n">add_rule</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">block_f</span><span class="p">,</span> <span class="n">rule_name</span><span class="o">=</span><span class="s1">&#39;rule_1&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rb</span><span class="o">.</span><span class="n">delete_rule</span><span class="p">(</span><span class="s1">&#39;rule_1&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="py_entitymatching.RuleBasedBlocker.get_rule">
+<code class="descname">get_rule</code><span class="sig-paren">(</span><em>rule_name</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.RuleBasedBlocker.get_rule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the function corresponding to a rule.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>rule_name</strong> (<em>string</em>) – Name of the rule.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A function object corresponding to the specified rule.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rb</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">RuleBasedBlocker</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">block_f</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_features_for_blocking</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rule</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;name_name_lev(ltuple, rtuple) &gt; 3&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rb</span><span class="o">.</span><span class="n">add_rule</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">feature_table</span><span class="o">=</span><span class="n">block_f</span><span class="p">,</span> <span class="n">rule_name</span><span class="o">=</span><span class="s1">&#39;rule_1&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rb</span><span class="o">.</span><span class="n">get_rule</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="py_entitymatching.RuleBasedBlocker.get_rule_names">
+<code class="descname">get_rule_names</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.RuleBasedBlocker.get_rule_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the names of all the rules in the rule-based blocker.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of names of all the rules in the rule-based blocker (list).</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rb</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">RuleBasedBlocker</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">block_f</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_features_for_blocking</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rule</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;name_name_lev(ltuple, rtuple) &gt; 3&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rb</span><span class="o">.</span><span class="n">add_rule</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">block_f</span><span class="p">,</span> <span class="n">rule_name</span><span class="o">=</span><span class="s1">&#39;rule_1&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rb</span><span class="o">.</span><span class="n">get_rule_names</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="py_entitymatching.RuleBasedBlocker.set_feature_table">
+<code class="descname">set_feature_table</code><span class="sig-paren">(</span><em>feature_table</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.RuleBasedBlocker.set_feature_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets feature table for the rule-based blocker.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>feature_table</strong> (<em>DataFrame</em>) – A DataFrame containing features.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rb</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">RuleBasedBlocker</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">block_f</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_features_for_blocking</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rb</span><span class="o">.</span><span class="n">set_feature_table</span><span class="p">(</span><span class="n">block_f</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="py_entitymatching.RuleBasedBlocker.view_rule">
+<code class="descname">view_rule</code><span class="sig-paren">(</span><em>rule_name</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.RuleBasedBlocker.view_rule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints the source code of the function corresponding to a rule.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>rule_name</strong> (<em>string</em>) – Name of the rule to be viewed.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rb</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">RuleBasedBlocker</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">block_f</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_features_for_blocking</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rule</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;name_name_lev(ltuple, rtuple) &gt; 3&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rb</span><span class="o">.</span><span class="n">add_rule</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">block_f</span><span class="p">,</span> <span class="n">rule_name</span><span class="o">=</span><span class="s1">&#39;rule_1&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rb</span><span class="o">.</span><span class="n">view_rule</span><span class="p">(</span><span class="s1">&#39;rule_1&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="py_entitymatching.BlackBoxBlocker">
+<em class="property">class </em><code class="descclassname">py_entitymatching.</code><code class="descname">BlackBoxBlocker</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.BlackBoxBlocker" title="Permalink to this definition">¶</a></dt>
+<dd><p>Blocks based on a black box function specified by the user.</p>
+<dl class="method">
+<dt id="py_entitymatching.BlackBoxBlocker.block_candset">
+<code class="descname">block_candset</code><span class="sig-paren">(</span><em>candset</em>, <em>verbose=True</em>, <em>show_progress=True</em>, <em>n_jobs=1</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.BlackBoxBlocker.block_candset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Blocks an input candidate set of tuple pairs based on a black box
+blocking function specified by the user.</p>
+<p>Finds tuple pairs from an input candidate set of tuple pairs that
+survive the black box function. A tuple pair survives the black box
+blocking function if the function returns False for that pair,
+otherwise the tuple pair is dropped.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>candset</strong> (<em>DataFrame</em>) – The input candidate set of tuple pairs.</li>
+<li><strong>verbose</strong> (<em>boolean</em>) – A flag to indicate whether logging should be done
+(defaults to False).</li>
+<li><strong>show_progress</strong> (<em>boolean</em>) – A flag to indicate whether progress should
+be displayed to the user (defaults to True).</li>
+<li><strong>n_jobs</strong> (<em>int</em>) – The number of parallel jobs to be used for computation
+(defaults to 1). If -1 all CPUs are used. If 0 or 1,
+no parallel computation is used at all, which is useful for
+debugging. For n_jobs below -1, (n_cpus + 1 + n_jobs) are
+used (where n_cpus is the total number of CPUs in the
+machine).Thus, for n_jobs = -2, all CPUs but one are used.
+If (n_cpus + 1 + n_jobs) is less than 1, then no parallel
+computation is used (i.e., equivalent to the default).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A candidate set of tuple pairs that survived blocking (DataFrame).</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>candset</cite> is not of type pandas
+DataFrame.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>verbose</cite> is not of type
+boolean.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>n_jobs</cite> is not of type
+int.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>show_progress</cite> is not of type boolean.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>l_block_attr</cite> is not in the ltable columns.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>r_block_attr</cite> is not in the rtable columns.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">match_last_name</span><span class="p">(</span><span class="n">ltuple</span><span class="p">,</span> <span class="n">rtuple</span><span class="p">):</span>
+<span class="go">    # assume that there is a &#39;name&#39; attribute in the input tables</span>
+<span class="go">    # and each value in it has two words</span>
+<span class="go">    l_last_name = ltuple[&#39;name&#39;].split()[1]</span>
+<span class="go">    r_last_name = rtuple[&#39;name&#39;].split()[1]</span>
+<span class="go">    if l_last_name != r_last_name:</span>
+<span class="go">        return True</span>
+<span class="go">    else:</span>
+<span class="go">        return False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bb</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">BlackBoxBlocker</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bb</span><span class="o">.</span><span class="n">set_black_box_function</span><span class="p">(</span><span class="n">match_last_name</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">bb</span><span class="o">.</span><span class="n">block_candset</span><span class="p">(</span><span class="n">C</span><span class="p">)</span> <span class="c1"># C is an output from block_tables</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="py_entitymatching.BlackBoxBlocker.block_tables">
+<code class="descname">block_tables</code><span class="sig-paren">(</span><em>ltable</em>, <em>rtable</em>, <em>l_output_attrs=None</em>, <em>r_output_attrs=None</em>, <em>l_output_prefix=’ltable_’</em>, <em>r_output_prefix=’rtable_’</em>, <em>verbose=False</em>, <em>show_progress=True</em>, <em>n_jobs=1</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.BlackBoxBlocker.block_tables" title="Permalink to this definition">¶</a></dt>
+<dd><p>Blocks two tables based on a black box blocking function specified
+by the user.</p>
+<p>Finds tuple pairs from left and right tables that survive the black
+box function. A tuple pair survives the black box blocking function if
+the function returns False for that pair, otherwise the tuple pair is
+dropped.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ltable</strong> (<em>DataFrame</em>) – The left input table.</li>
+<li><strong>rtable</strong> (<em>DataFrame</em>) – The right input table.</li>
+<li><strong>l_output_attrs</strong> (<em>list</em>) – A list of attribute names from the left
+table to be included in the
+output candidate set (defaults to None).</li>
+<li><strong>r_output_attrs</strong> (<em>list</em>) – A list of attribute names from the right
+table to be included in the
+output candidate set (defaults to None).</li>
+<li><strong>l_output_prefix</strong> (<em>string</em>) – The prefix to be used for the attribute names
+coming from the left table in the output
+candidate set (defaults to ‘ltable_’).</li>
+<li><strong>r_output_prefix</strong> (<em>string</em>) – The prefix to be used for the attribute names
+coming from the right table in the output
+candidate set (defaults to ‘rtable_’).</li>
+<li><strong>verbose</strong> (<em>boolean</em>) – A flag to indicate whether the debug
+information should be logged (defaults to False).</li>
+<li><strong>show_progress</strong> (<em>boolean</em>) – A flag to indicate whether progress should
+be displayed to the user (defaults to True).</li>
+<li><strong>n_jobs</strong> (<em>int</em>) – The number of parallel jobs to be used for computation
+(defaults to 1). If -1 all CPUs are used. If 0 or 1,
+no parallel computation is used at all, which is useful for
+debugging. For n_jobs below -1, (n_cpus + 1 + n_jobs) are
+used (where n_cpus are the total number of CPUs in the
+machine).Thus, for n_jobs = -2, all CPUs but one are used.
+If (n_cpus + 1 + n_jobs) is less than 1, then no parallel
+computation is used (i.e., equivalent to the default).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A candidate set of tuple pairs that survived blocking (DataFrame).</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>ltable</cite> is not of type pandas
+DataFrame.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>rtable</cite> is not of type pandas
+DataFrame.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>l_output_attrs</cite> is not of type of
+list.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>r_output_attrs</cite> is not of type of
+list.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If values in <cite>l_output_attrs</cite> is not of type
+string.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If values in <cite>r_output_attrs</cite> is not of type
+string.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>l_output_prefix</cite> is not of type
+string.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>r_output_prefix</cite> is not of type
+string.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>verbose</cite> is not of type
+boolean.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>show_progress</cite> is not of type boolean.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>n_jobs</cite> is not of type
+int.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>l_out_attrs</cite> are not in the ltable.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>r_out_attrs</cite> are not in the rtable.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">match_last_name</span><span class="p">(</span><span class="n">ltuple</span><span class="p">,</span> <span class="n">rtuple</span><span class="p">):</span>
+<span class="go">    # assume that there is a &#39;name&#39; attribute in the input tables</span>
+<span class="go">    # and each value in it has two words</span>
+<span class="go">    l_last_name = ltuple[&#39;name&#39;].split()[1]</span>
+<span class="go">    r_last_name = rtuple[&#39;name&#39;].split()[1]</span>
+<span class="go">    if l_last_name != r_last_name:</span>
+<span class="go">        return True</span>
+<span class="go">    else:</span>
+<span class="go">        return False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bb</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">BlackBoxBlocker</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bb</span><span class="o">.</span><span class="n">set_black_box_function</span><span class="p">(</span><span class="n">match_last_name</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">C</span> <span class="o">=</span> <span class="n">bb</span><span class="o">.</span><span class="n">block_tables</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">l_output_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">r_output_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="py_entitymatching.BlackBoxBlocker.block_tuples">
+<code class="descname">block_tuples</code><span class="sig-paren">(</span><em>ltuple</em>, <em>rtuple</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.BlackBoxBlocker.block_tuples" title="Permalink to this definition">¶</a></dt>
+<dd><p>Blocks a tuple pair based on a black box blocking function specified
+by the user.</p>
+<p>Takes a tuple pair as input, applies the black box blocking function to
+it, and returns True (if the intention is to drop the pair) or False
+(if the intention is to keep the tuple pair).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ltuple</strong> (<em>Series</em>) – input left tuple.</li>
+<li><strong>rtuple</strong> (<em>Series</em>) – input right tuple.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A status indicating if the tuple pair should be dropped or kept,
+based on the black box blocking function (boolean).</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">match_last_name</span><span class="p">(</span><span class="n">ltuple</span><span class="p">,</span> <span class="n">rtuple</span><span class="p">):</span>
+<span class="go">    # assume that there is a &#39;name&#39; attribute in the input tables</span>
+<span class="go">    # and each value in it has two words</span>
+<span class="go">    l_last_name = ltuple[&#39;name&#39;].split()[1]</span>
+<span class="go">    r_last_name = rtuple[&#39;name&#39;].split()[1]</span>
+<span class="go">    if l_last_name != r_last_name:</span>
+<span class="go">        return True</span>
+<span class="go">    else:</span>
+<span class="go">        return False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bb</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">BlackBoxBlocker</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bb</span><span class="o">.</span><span class="n">set_black_box_function</span><span class="p">(</span><span class="n">match_last_name</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">status</span> <span class="o">=</span> <span class="n">bb</span><span class="o">.</span><span class="n">block_tuples</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">B</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="c1"># A, B are input tables.</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="py_entitymatching.BlackBoxBlocker.set_black_box_function">
+<code class="descname">set_black_box_function</code><span class="sig-paren">(</span><em>function</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.BlackBoxBlocker.set_black_box_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets black box function to be used for blocking.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>function</strong> (<em>function</em>) – the black box function to be used for blocking .</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="clearer"></div>
+        </div>
+    </div>
+</div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="debugging_blocker_output.html" title="Debugging Blocker Output"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="data_exploration.html" title="Data Exploration"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">py_entitymatching 0.3.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="actual_commands.html" >Commands in py_entitymatching</a> &#187;</li> 
+      </ul>
+    </div>
+<style type="text/css">
+    .scrollToTop {
+        text-align: center;
+        font-weight: bold;
+        position: fixed;
+        bottom: 60px;
+        right: 40px;
+        display: none;
+    }
+</style>
+<a href="#" class="scrollToTop">Scroll To Top</a>
+<script type="text/javascript">
+$(document).ready(function() {
+    //Check to see if the window is top if not then display button
+    $(window).scroll(function() {
+        if ($(this).scrollTop() > 200) {
+            $('.scrollToTop').fadeIn();
+        } else {
+            $('.scrollToTop').fadeOut();
+        }
+    });
+
+    //Click event to scroll to top
+    $('.scrollToTop').click(function() {
+        $('html, body').animate({
+            scrollTop: 0
+        }, 500);
+        return false;
+    });
+});
+</script>
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-27880019-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+  </body>
+</html>

@@ -1,0 +1,490 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Creating the Features Manually &#8212; py_entitymatching 0.3.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Adding Features to Feature Table" href="adding_features.html" />
+    <link rel="prev" title="Creating the Features Automatically" href="creating_the_features_automatically.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="adding_features.html" title="Adding Features to Feature Table"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="creating_the_features_automatically.html" title="Creating the Features Automatically"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">py_entitymatching 0.3.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="actual_commands.html" >Commands in py_entitymatching</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="handling_features.html" accesskey="U">Handling Features</a> &#187;</li> 
+      </ul>
+    </div>
+<div class="content-wrapper">
+    <div class="content">
+        <div class="document">
+            <div class="sphinxsidebar">
+                <h3>Table Of Contents</h3>
+                <p class="caption"><span class="caption-text">How To Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../how_to_guide.html">How to Guide To Do Entity Matching</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../whatisnew.html">What is New?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview of Supported EM Processes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides.html">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datastructures.html">Data Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../steps_supp_em_workflows.html">Steps of Supported EM Workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc.html">Miscellaneous</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview of Command Organization</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="actual_commands.html">Commands in py_entitymatching</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="reading_and_writing_data.html">Reading and Writing Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loading_and_saving_objects.html">Loading and Saving Objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="handling_metadata.html">Handling Metadata</a></li>
+<li class="toctree-l2"><a class="reference internal" href="downsampling.html">Downsampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_exploration.html">Data Exploration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blocking.html">Blocking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="debugging_blocker_output.html">Debugging Blocker Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="combining_blocker_outputs.html">Combining Blocker Outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sampling.html">Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="labeling.html">Labeling</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="handling_features.html">Handling Features</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="creating_the_features_automatically.html">Creating the Features Automatically</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Creating the Features Manually</a></li>
+<li class="toctree-l3"><a class="reference internal" href="adding_features.html">Adding Features to Feature Table</a></li>
+<li class="toctree-l3"><a class="reference internal" href="extracting_feature_vectors.html">Extracting Feature Vectors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="imputing_missing_values.html">Imputing Missing Values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="supported_similarity_functions.html">Supported Similarity Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="supported_tokenizers.html">Supported Tokenizers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="matching.html">Matching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="debugging_matcher.html">Debugging Matcher</a></li>
+<li class="toctree-l2"><a class="reference internal" href="triggers.html">Triggers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evaluating_the_matching_output.html">Evaluating the Matching Output</a></li>
+</ul>
+</li>
+</ul>
+
+                <h3 style="margin-top: 1.5em;">Search</h3>
+
+                <form class="search" action="../../search.html" method="get">
+                    <input type="text" name="q" size="18"/>
+                    <input type="submit" value="Go"/>
+                    <input type="hidden" name="check_keywords" value="yes"/>
+                    <input type="hidden" name="area" value="default"/>
+                </form>
+                <p class="searchtip" style="font-size: 90%">
+                    Enter search terms or a module, class or function name.
+                </p>
+
+            </div>
+             
+            <div class="documentwrapper">
+                <div class="bodywrapper">
+                    <div class="body">
+                        
+  <div class="section" id="creating-the-features-manually">
+<h1>Creating the Features Manually<a class="headerlink" href="#creating-the-features-manually" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="py_entitymatching.get_features">
+<code class="descclassname">py_entitymatching.</code><code class="descname">get_features</code><span class="sig-paren">(</span><em>ltable</em>, <em>rtable</em>, <em>l_attr_types</em>, <em>r_attr_types</em>, <em>attr_corres</em>, <em>tok_funcs</em>, <em>sim_funcs</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.get_features" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function will automatically generate a set of features based on the
+attributes of the input tables.</p>
+<p>Specifically, this function will go through the attribute
+correspondences between the input tables. For each correspondence ,
+it examines the types of the involved attributes, then apply the
+appropriate tokenizers and sim functions to generate all appropriate
+features for this correspondence.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ltable</strong><strong>,</strong><strong>rtable</strong> (<em>DataFrame</em>) – The pandas DataFrames for which the
+features must be generated.</li>
+<li><strong>l_attr_types</strong><strong>,</strong><strong>r_attr_types</strong> (<em>dictionary</em>) – The attribute types for the
+input DataFrames. Typically this is generated using the
+function ‘get_attr_types’.</li>
+<li><strong>attr_corres</strong> (<em>dictionary</em>) – The attribute correspondences between the
+input DataFrames.</li>
+<li><strong>tok_funcs</strong> (<em>dictionary</em>) – A Python dictionary containing tokenizer
+functions.</li>
+<li><strong>sim_funcs</strong> (<em>dictionary</em>) – A Python dictionary containing similarity
+functions.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A pandas DataFrame containing automatically generated features.
+Specifically, the DataFrame contains the following attributes:
+‘feature_name’, ‘left_attribute’, ‘right_attribute’,
+‘left_attr_tokenizer’, ‘right_attr_tokenizer’, ‘simfunction’,
+‘function’, ‘function_source’, ‘is_auto_generated’.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>ltable</cite> is not of type pandas
+DataFrame.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>rtable</cite> is not of type pandas
+DataFrame.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>l_attr_types</cite> is not of type
+python dictionary.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>r_attr_types</cite> is not of type
+python dictionary.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>attr_corres</cite> is not of type
+python dictionary.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>sim_funcs</cite> is not of type
+python dictionary.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>tok_funcs</cite> is not of type
+python dictionary.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If the <cite>ltable</cite> and <cite>rtable</cite> order is same as mentioned
+in the <cite>l_attr_types</cite>/<cite>r_attr_types</cite> and <cite>attr_corres</cite>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">match_t</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_tokenizers_for_matching</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">match_s</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_sim_funs_for_matching</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">atypes1</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_attr_types</span><span class="p">(</span><span class="n">A</span><span class="p">)</span> <span class="c1"># don&#39;t need, if atypes1 exists from blocking step</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">atypes2</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_attr_types</span><span class="p">(</span><span class="n">B</span><span class="p">)</span> <span class="c1"># don&#39;t need, if atypes2 exists from blocking step</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">match_c</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_attr_corres</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">match_f</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_features</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">atypes1</span><span class="p">,</span> <span class="n">atype2</span><span class="p">,</span> <span class="n">match_c</span><span class="p">,</span> <span class="n">match_t</span><span class="p">,</span> <span class="n">match_s</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#py_entitymatching.get_attr_corres" title="py_entitymatching.get_attr_corres"><code class="xref py py-meth docutils literal"><span class="pre">py_entitymatching.get_attr_corres()</span></code></a>, <a class="reference internal" href="#py_entitymatching.get_attr_types" title="py_entitymatching.get_attr_types"><code class="xref py py-meth docutils literal"><span class="pre">py_entitymatching.get_attr_types()</span></code></a>,
+<a class="reference internal" href="#py_entitymatching.get_sim_funs_for_blocking" title="py_entitymatching.get_sim_funs_for_blocking"><code class="xref py py-meth docutils literal"><span class="pre">py_entitymatching.get_sim_funs_for_blocking()</span></code></a>,
+<a class="reference internal" href="#py_entitymatching.get_tokenizers_for_blocking" title="py_entitymatching.get_tokenizers_for_blocking"><code class="xref py py-meth docutils literal"><span class="pre">py_entitymatching.get_tokenizers_for_blocking()</span></code></a>,
+<a class="reference internal" href="#py_entitymatching.get_sim_funs_for_matching" title="py_entitymatching.get_sim_funs_for_matching"><code class="xref py py-meth docutils literal"><span class="pre">py_entitymatching.get_sim_funs_for_matching()</span></code></a>,
+<a class="reference internal" href="#py_entitymatching.get_tokenizers_for_matching" title="py_entitymatching.get_tokenizers_for_matching"><code class="xref py py-meth docutils literal"><span class="pre">py_entitymatching.get_tokenizers_for_matching()</span></code></a></p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">In the output DataFrame, two
+attributes demand some explanation: (1)function, and (2)
+is_auto_generated. The function, points to the actual python function
+that implements feature. Specifically, the function takes in two
+tuples (one from each input table) and returns a numeric value. The
+attribute is_auto_generated contains either True or False. The flag
+is True only if the feature is automatically generated by py_entitymatching.
+This is important because this flag is used to make some assumptions
+about the semantics of the similarity function used and use that
+information for scaling purposes.</p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.get_attr_corres">
+<code class="descclassname">py_entitymatching.</code><code class="descname">get_attr_corres</code><span class="sig-paren">(</span><em>ltable</em>, <em>rtable</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.get_attr_corres" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function gets the attribute correspondences between the attributes
+of ltable and rtable.</p>
+<p>The user may need to get the correspondences so
+that he/she can generate features based those correspondences.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>ltable</strong><strong>,</strong><strong>rtable</strong> (<em>DataFrame</em>) – Input DataFrames for which
+the attribute correspondences must be obtained.</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p>A Python dictionary is returned containing the attribute
+correspondences.</p>
+<p>Specifically, this returns a dictionary with the following key-value
+pairs:</p>
+<p>corres: points to the list correspondences as tuples. Each
+correspondence is a tuple with two attributes: one from ltable
+and the other from rtable.</p>
+<p>ltable: points to ltable.</p>
+<p>rtable: points to rtable.</p>
+<p>Currently, ‘corres’ contains only pairs of attributes with exact
+names in ltable and rtable.</p>
+</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>ltable</cite> is not of type
+pandas DataFrame.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>rtable</cite> is not of type
+pandas DataFrame.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">match_c</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_attr_corres</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.get_attr_types">
+<code class="descclassname">py_entitymatching.</code><code class="descname">get_attr_types</code><span class="sig-paren">(</span><em>data_frame</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.get_attr_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function gets the attribute types for a DataFrame.</p>
+<p>Specifically this function gets the attribute types based on the
+statistics of the attributes. These attribute types can be str_eq_1w,
+str_bt_1w_5w, str_bt_5w_10w, str_gt_10w, boolean or numeric.</p>
+<p>The types roughly capture whether the attribute is of type string,
+boolean or numeric. Further, with in the string type the subtypes are
+capture the average number of tokens in the column values. For example,
+str_bt_1w_5w means the average number of tokens in that column is
+greater than one word but less than 5 words.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data_frame</strong> (<em>DataFrame</em>) – The input DataFrame for which types of
+attributes must be determined.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A Python dictionary is returned containing the attribute types.<p>Specifically, in the dictionary key is an attribute name, value
+is the type of that attribute.</p>
+<p>Further, the dictionary will have a  key _table, and the value of
+that should be a pointer to the input DataFrame.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If <cite>data_frame</cite> is not of type
+pandas DataFrame.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">atypes1</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_attr_types</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">atypes2</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_attr_types</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.get_sim_funs_for_blocking">
+<code class="descclassname">py_entitymatching.</code><code class="descname">get_sim_funs_for_blocking</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.get_sim_funs_for_blocking" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function returns the similarity functions that can be used for
+blocking purposes.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A Python dictionary containing the similarity functions.<p>Specifically, the key is the similarity function name and the value
+is the actual similary function.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">block_s</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_sim_funs_for_blocking</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.get_sim_funs_for_matching">
+<code class="descclassname">py_entitymatching.</code><code class="descname">get_sim_funs_for_matching</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.get_sim_funs_for_matching" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function returns the similarity functions that can be used for
+matching purposes.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A Python dictionary containing the similarity functions.<p>Specifically, the key is the similarity function name and the value
+is the actual similarity function.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">match_s</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_sim_funs_for_matching</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.get_tokenizers_for_blocking">
+<code class="descclassname">py_entitymatching.</code><code class="descname">get_tokenizers_for_blocking</code><span class="sig-paren">(</span><em>q=[2, 3], dlm_char=[‘ ‘]</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.get_tokenizers_for_blocking" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function returns the single argument tokenizers that can be used for
+blocking purposes (typically in rule-based blocking).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>q</strong> (<em>list</em>) – The list of integers (i.e q value) for which the q-gram
+tokenizer must be generated (defaults to [2, 3]).</li>
+<li><strong>dlm_char</strong> (<em>list</em>) – The list of characters (i.e delimiter character) for
+which the delimiter tokenizer must be generated (defaults to [` ‘]).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A Python dictionary with tokenizer name as the key and tokenizer
+function as the value.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If both <cite>q</cite> and <cite>dlm_char</cite> are set to None.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">block_t</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_tokenizers_for_blocking</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">block_t</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_tokenizers_for_blocking</span><span class="p">(</span><span class="n">q</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">dlm_char</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">block_t</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_tokenizers_for_blocking</span><span class="p">(</span><span class="n">q</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dlm_char</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39; &#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.get_tokenizers_for_matching">
+<code class="descclassname">py_entitymatching.</code><code class="descname">get_tokenizers_for_matching</code><span class="sig-paren">(</span><em>q=[2, 3], dlm_char=[‘ ‘]</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.get_tokenizers_for_matching" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function returns the single argument tokenizers that can be used for
+matching purposes.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>q</strong> (<em>list</em>) – The list of integers (i.e q value) for which the q-gram
+tokenizer must be generated (defaults to [2, 3]).</li>
+<li><strong>dlm_char</strong> (<em>list</em>) – The list of characters (i.e delimiter character) for
+which the delimiter tokenizer must be generated (defaults to [` ‘]).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A Python dictionary with tokenizer name as the key and tokenizer
+function as the value.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></code> – If both <cite>q</cite> and <cite>dlm_char</cite> are set to None.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">match_t</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_tokenizers_for_blocking</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">match_t</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_tokenizers_for_blocking</span><span class="p">(</span><span class="n">q</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">dlm_char</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">match_t</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_tokenizers_for_blocking</span><span class="p">(</span><span class="n">q</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dlm_char</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39; &#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="clearer"></div>
+        </div>
+    </div>
+</div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="adding_features.html" title="Adding Features to Feature Table"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="creating_the_features_automatically.html" title="Creating the Features Automatically"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">py_entitymatching 0.3.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="actual_commands.html" >Commands in py_entitymatching</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="handling_features.html" >Handling Features</a> &#187;</li> 
+      </ul>
+    </div>
+<style type="text/css">
+    .scrollToTop {
+        text-align: center;
+        font-weight: bold;
+        position: fixed;
+        bottom: 60px;
+        right: 40px;
+        display: none;
+    }
+</style>
+<a href="#" class="scrollToTop">Scroll To Top</a>
+<script type="text/javascript">
+$(document).ready(function() {
+    //Check to see if the window is top if not then display button
+    $(window).scroll(function() {
+        if ($(this).scrollTop() > 200) {
+            $('.scrollToTop').fadeIn();
+        } else {
+            $('.scrollToTop').fadeOut();
+        }
+    });
+
+    //Click event to scroll to top
+    $('.scrollToTop').click(function() {
+        $('html, body').animate({
+            scrollTop: 0
+        }, 500);
+        return false;
+    });
+});
+</script>
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-27880019-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+  </body>
+</html>
