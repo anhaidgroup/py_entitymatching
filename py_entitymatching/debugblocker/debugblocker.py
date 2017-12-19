@@ -238,7 +238,7 @@ def debugblocker_cython_parallel(lrecord_token_list, rrecord_token_list,
     rec_lists = Parallel(n_jobs=n_jobs)(delayed(debugblocker_topk_cython_wrapper)
         (py_config_lists[i], lrecord_token_list, rrecord_token_list,
         lrecord_index_list, rrecord_index_list, py_cand_set,
-        py_output_size) for i in range(len(py_config_lists)))
+        py_output_size) for i in range(n_configs))
 
     py_rec_list = debugblocker_merge_topk_cython(rec_lists)
     
@@ -254,7 +254,8 @@ def _get_config_num(n_configs, n_total_configs):
 
     if n_configs < n_total_configs:
         return n_configs
-    else return n_total_configs
+    else:
+        return n_total_configs
 
 # Validate the types of input parameters.
 def _validate_types(ltable, rtable, candidate_set, output_size,
