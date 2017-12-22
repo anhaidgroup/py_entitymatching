@@ -1,24 +1,24 @@
-from collections import namedtuple
+import cloudpickle
 import heapq as hq
 import logging
 import numpy
-from operator import attrgetter
-import pandas as pd
-import time
-from array import array
+import multiprocessing
 import os
-from py_entitymatching.utils.validation_helper import validate_object_type
+import pickle
+import pandas as pd
 import py_entitymatching as mg
 import py_entitymatching.catalog.catalog_manager as cm
-
-from py_entitymatching.debugblocker.debugblocker_cython import \
-        debugblocker_cython, debugblocker_config_cython, debugblocker_topk_cython, debugblocker_merge_topk_cython
-
-from joblib import Parallel, delayed
 import py_entitymatching as em
 import sys
-import cloudpickle
-import pickle
+import time
+
+from array import array
+from collections import namedtuple
+from joblib import Parallel, delayed
+from operator import attrgetter
+from py_entitymatching.debugblocker.debugblocker_cython import \
+        debugblocker_cython, debugblocker_config_cython, debugblocker_topk_cython, debugblocker_merge_topk_cython
+from py_entitymatching.utils.validation_helper import validate_object_type
 
 logger = logging.getLogger(__name__)
 
@@ -233,7 +233,7 @@ def debugblocker_cython_parallel(lrecord_token_list, rrecord_token_list,
     py_config_lists = debugblocker_config_cython(ltable_field_token_sum, rtable_field_token_sum, 
                             py_num_fields, len(lrecord_token_list), len(rrecord_token_list))
 
-    n_configs = _get_config_num(n_configs, len(py_config_lists))
+    n_configs = _get_config_num(n_jobs, n_configs, len(py_config_lists))
     # parallel computer topk based on config lists
     rec_lists = Parallel(n_jobs=n_jobs)(delayed(debugblocker_topk_cython_wrapper)
         (py_config_lists[i], lrecord_token_list, rrecord_token_list,
@@ -245,12 +245,19 @@ def debugblocker_cython_parallel(lrecord_token_list, rrecord_token_list,
     return py_rec_list
 
 # get the number of configs according the input value of n_configs
-def _get_config_num(n_configs, n_total_configs):
+def _get_config_num(n_jobs, n_configs, n_total_configs):
+    if n_jobs == 0 or n_configs == 0 or n_configs < -2 :
+      raise ValueError('n_jobs != 0 && n_configs != 0 && n_configs >= -2')
+
+    n_cpus = multiprocessing.cpu_count()
     if n_configs == -2 :
         n_configs = n_total_configs
     elif n_configs == -1 :
         # set n_configs as the number of the cpu cores
-        n_configs = 4
+        if n_jobs < 0 :
+          n_configs = n_cpus + 1 + n_jobs
+        else:
+          n_configs = n_jobs
 
     if n_configs < n_total_configs:
         return n_configs
