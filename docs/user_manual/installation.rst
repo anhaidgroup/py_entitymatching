@@ -38,9 +38,11 @@ which will retrieve py_entitymatching from Anaconda repository then install it::
     conda install -c uwmagellan py_entitymatching
 
 The above command will install py_entitymatching and all of its dependencies except
-XGBoost, pandastable and openrefine. As these packages are either not available from
+XGBoost, pandastable, openrefine and PyQt5. As these packages are either not available from
 anaconda cloud (for some Python versions or operating systems) or they are not Python
 packages (openrefine).
+
+* To install PyQt5, follow the instructions at `this page <http://pyqt.sourceforge.net/Docs/PyQt5/installation.html>`_.
 
 * To install XGBoost manually from the source follow the instructions on `this page <https://XGBoost.readthedocs.io/en/latest/build.html>`_.
 

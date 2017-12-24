@@ -255,27 +255,27 @@ class AutoFeatureGenerationTestCases(unittest.TestCase):
         status = afg.get_fn_str('lev', ('year', 'year'))
         self.assertNotEqual(status, None)
 
-    def test_validate_attr_types_proceed_no(self):
-        A = read_csv_metadata(path_a)
-        B = read_csv_metadata(path_b, key='ID')
-        l_attr_types = au.get_attr_types(A)
-        r_attr_types = au.get_attr_types(B)
-        attr_corres = au.get_attr_corres(A, B)
+#     def test_validate_attr_types_proceed_no(self):
+#         A = read_csv_metadata(path_a)
+#         B = read_csv_metadata(path_b, key='ID')
+#         l_attr_types = au.get_attr_types(A)
+#         r_attr_types = au.get_attr_types(B)
+#         attr_corres = au.get_attr_corres(A, B)
 
-        with mockInput('n'):
-            status = afg.validate_attr_types(l_attr_types, r_attr_types, attr_corres)
-            self.assertEqual(status is None, True)
+#         with mockInput('n'):
+#             status = afg.validate_attr_types(l_attr_types, r_attr_types, attr_corres)
+#             self.assertEqual(status is None, True)
 
-    def test_validate_attr_types_proceed_yes(self):
-        A = read_csv_metadata(path_a)
-        B = read_csv_metadata(path_b, key='ID')
-        l_attr_types = au.get_attr_types(A)
-        r_attr_types = au.get_attr_types(B)
-        attr_corres = au.get_attr_corres(A, B)
+#     def test_validate_attr_types_proceed_yes(self):
+#         A = read_csv_metadata(path_a)
+#         B = read_csv_metadata(path_b, key='ID')
+#         l_attr_types = au.get_attr_types(A)
+#         r_attr_types = au.get_attr_types(B)
+#         attr_corres = au.get_attr_corres(A, B)
 
-        with mockInput('y'):
-            status = afg.validate_attr_types(l_attr_types, r_attr_types, attr_corres)
-            self.assertEqual(status is None, False)
+#         with mockInput('y'):
+#             status = afg.validate_attr_types(l_attr_types, r_attr_types, attr_corres)
+#             self.assertEqual(status is None, False)
 
     @raises(AssertionError)
     def test_validate_attr_types_invalid_l_types(self):
@@ -304,37 +304,37 @@ class AutoFeatureGenerationTestCases(unittest.TestCase):
         # attr_corres = au.get_attr_corres(A, B)
         response = afg.validate_attr_types(l_attr_types, r_attr_types, None)
 
-    def test_validate_attr_types_valid(self):
-        A = read_csv_metadata(path_a)
-        B = read_csv_metadata(path_b, key='ID')
-        l_attr_types = au.get_attr_types(A)
-        r_attr_types = au.get_attr_types(B)
-        attr_corres = au.get_attr_corres(A, B)
+#     def test_validate_attr_types_valid(self):
+#         A = read_csv_metadata(path_a)
+#         B = read_csv_metadata(path_b, key='ID')
+#         l_attr_types = au.get_attr_types(A)
+#         r_attr_types = au.get_attr_types(B)
+#         attr_corres = au.get_attr_corres(A, B)
 
-        with mockInput('y'):
-            validate_table = afg.validate_attr_types(l_attr_types, r_attr_types, attr_corres)
+#         with mockInput('y'):
+#             validate_table = afg.validate_attr_types(l_attr_types, r_attr_types, attr_corres)
 
-        self.assertEqual(isinstance(validate_table, pd.DataFrame), True)
+#         self.assertEqual(isinstance(validate_table, pd.DataFrame), True)
 
-        actual_names = pd.Series(['ID', 'name', 'birth_year', 'hourly_wage', 'address', 'zipcode'])
-        actual_l_types = pd.Series(['short string (1 word)', 'short string (1 word to 5 words)', 'numeric',
-                          'numeric', 'short string (1 word to 5 words)', 'numeric'])
-        actual_r_types = pd.Series(['short string (1 word)', 'short string (1 word to 5 words)', 'numeric',
-                          'numeric', 'medium string (5 words to 10 words)', 'numeric'])
-        actual_features = pd.Series(['Levenshtein Distance; Levenshtein Similarity',
-                           'Jaccard Similarity [3-grams, 3-grams]; Cosine Similarity [Space Delimiter, Space Delimiter]',
-                           'Exact Match; Absolute Norm', 'Exact Match; Absolute Norm',
-                           'Not Applicable: Types do not match', 'Exact Match; Absolute Norm'])
+#         actual_names = pd.Series(['ID', 'name', 'birth_year', 'hourly_wage', 'address', 'zipcode'])
+#         actual_l_types = pd.Series(['short string (1 word)', 'short string (1 word to 5 words)', 'numeric',
+#                           'numeric', 'short string (1 word to 5 words)', 'numeric'])
+#         actual_r_types = pd.Series(['short string (1 word)', 'short string (1 word to 5 words)', 'numeric',
+#                           'numeric', 'medium string (5 words to 10 words)', 'numeric'])
+#         actual_features = pd.Series(['Levenshtein Distance; Levenshtein Similarity',
+#                            'Jaccard Similarity [3-grams, 3-grams]; Cosine Similarity [Space Delimiter, Space Delimiter]',
+#                            'Exact Match; Absolute Norm', 'Exact Match; Absolute Norm',
+#                            'Not Applicable: Types do not match', 'Exact Match; Absolute Norm'])
 
-        names = validate_table['Left Attribute']
-        features = validate_table['Example Features']
-        l_types = validate_table['Left Attribute Type']
-        r_types = validate_table['Right Attribute Type']
+#         names = validate_table['Left Attribute']
+#         features = validate_table['Example Features']
+#         l_types = validate_table['Left Attribute Type']
+#         r_types = validate_table['Right Attribute Type']
 
-        self.assertEqual(actual_names.equals(names), True)
-        self.assertEqual(actual_features.equals(features), True)
-        self.assertEqual(actual_l_types.equals(l_types), True)
-        self.assertEqual(actual_r_types.equals(r_types), True)
+#         self.assertEqual(actual_names.equals(names), True)
+#         self.assertEqual(actual_features.equals(features), True)
+#         self.assertEqual(actual_l_types.equals(l_types), True)
+#         self.assertEqual(actual_r_types.equals(r_types), True)
 
 
     @raises(AssertionError)
@@ -343,46 +343,46 @@ class AutoFeatureGenerationTestCases(unittest.TestCase):
         B = read_csv_metadata(path_b, key='ID')
         feat_table = afg.get_features_for_blocking(A, B, validate_inferred_attr_types=None)
 
-    def test_get_features_for_blocking_validate_types_valid_yes(self):
-        A = read_csv_metadata(path_a)
-        B = read_csv_metadata(path_b, key='ID')
+#     def test_get_features_for_blocking_validate_types_valid_yes(self):
+#         A = read_csv_metadata(path_a)
+#         B = read_csv_metadata(path_b, key='ID')
 
-        with mockInput('y'):
-            feat_table = afg.get_features_for_blocking(A, B, validate_inferred_attr_types=True)
+#         with mockInput('y'):
+#             feat_table = afg.get_features_for_blocking(A, B, validate_inferred_attr_types=True)
 
-        self.assertEqual(isinstance(feat_table, pd.DataFrame), True)
-        functions = feat_table['function']
-        for f in functions:
-            x = f(A.ix[1], B.ix[2])
-            self.assertEqual(x >= 0, True)
+#         self.assertEqual(isinstance(feat_table, pd.DataFrame), True)
+#         functions = feat_table['function']
+#         for f in functions:
+#             x = f(A.ix[1], B.ix[2])
+#             self.assertEqual(x >= 0, True)
 
-    def test_get_features_for_matching_validate_types_valid_yes(self):
-        A = read_csv_metadata(path_a)
-        B = read_csv_metadata(path_b, key='ID')
+#     def test_get_features_for_matching_validate_types_valid_yes(self):
+#         A = read_csv_metadata(path_a)
+#         B = read_csv_metadata(path_b, key='ID')
 
-        with mockInput('y'):
-            feat_table = afg.get_features_for_matching(A, B, validate_inferred_attr_types=True)
+#         with mockInput('y'):
+#             feat_table = afg.get_features_for_matching(A, B, validate_inferred_attr_types=True)
 
-        self.assertEqual(isinstance(feat_table, pd.DataFrame), True)
-        functions = feat_table['function']
-        for f in functions:
-            x = f(A.ix[1], B.ix[2])
-            self.assertEqual(x >= 0, True)
+#         self.assertEqual(isinstance(feat_table, pd.DataFrame), True)
+#         functions = feat_table['function']
+#         for f in functions:
+#             x = f(A.ix[1], B.ix[2])
+#             self.assertEqual(x >= 0, True)
 
-    def test_get_features_for_blocking_validate_types_valid_no(self):
-        A = read_csv_metadata(path_a)
-        B = read_csv_metadata(path_b, key='ID')
+#     def test_get_features_for_blocking_validate_types_valid_no(self):
+#         A = read_csv_metadata(path_a)
+#         B = read_csv_metadata(path_b, key='ID')
 
-        with mockInput('n'):
-            feat_table = afg.get_features_for_blocking(A, B, validate_inferred_attr_types=True)
+#         with mockInput('n'):
+#             feat_table = afg.get_features_for_blocking(A, B, validate_inferred_attr_types=True)
 
-        self.assertEqual(feat_table, None)
+#         self.assertEqual(feat_table, None)
 
-    def test_get_features_for_matching_validate_types_valid_no(self):
-        A = read_csv_metadata(path_a)
-        B = read_csv_metadata(path_b, key='ID')
+#     def test_get_features_for_matching_validate_types_valid_no(self):
+#         A = read_csv_metadata(path_a)
+#         B = read_csv_metadata(path_b, key='ID')
 
-        with mockInput('n'):
-            feat_table = afg.get_features_for_matching(A, B, validate_inferred_attr_types=True)
+#         with mockInput('n'):
+#             feat_table = afg.get_features_for_matching(A, B, validate_inferred_attr_types=True)
 
-        self.assertEqual(feat_table, None)
+#         self.assertEqual(feat_table, None)

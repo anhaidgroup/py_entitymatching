@@ -1,7 +1,7 @@
 
 from py_entitymatching.catalog.catalog import Catalog
 
-__version__ = '0.2.0'
+__version__ = '0.3.0'
 
 _catalog = Catalog.Instance()
 
@@ -71,6 +71,7 @@ from py_entitymatching.matcher.logregmatcher import LogRegMatcher
 from py_entitymatching.matcher.nbmatcher import NBMatcher
 from py_entitymatching.matcher.rfmatcher import RFMatcher
 from py_entitymatching.matcher.svmmatcher import SVMMatcher
+from py_entitymatching.matcher.booleanrulematcher import BooleanRuleMatcher
 try:
     from py_entitymatching.matcher.xgboostmatcher import XGBoostMatcher
 except ImportError:
@@ -90,6 +91,9 @@ from py_entitymatching.debugmatcher.debug_gui_decisiontree_matcher import \
 
 from py_entitymatching.debugmatcher.debug_gui_randomforest_matcher import \
     vis_debug_rf, vis_tuple_debug_rf_matcher
+
+# # match trigger
+from py_entitymatching.triggers.matchtrigger import MatchTrigger
 
 # # evaluation
 from py_entitymatching.evaluation.evaluation import eval_matches, \
