@@ -7,9 +7,11 @@ import logging
 import math
 import os
 import random
+import string
 from py_entitymatching.utils.catalog_helper import log_info
 
 
+from collections import Counter
 import pandas as pd
 import pyprind
 from numpy.random import RandomState
@@ -43,7 +45,6 @@ def _get_str_cols_list(table):
     col_list = []
     for attr_x in cols:
         col_list.append(table.columns.get_loc(attr_x))
-
     return col_list
 
 
@@ -64,19 +65,29 @@ def _inv_index(table):
     inv_index = dict()
     pos = 0
 
-    # For each row in the DataFrame of the input table, we will fetch all string values from string column indices
-    # and will concatenate them. Next step would be to tokenize them using set and remove all the stop words
-    # from the list of tokens. Once we have the list of tokens, we will iterate through the list of tokens
+    # First project the input table to include only the string columns
+    proj_table = table[table.columns[str_cols_ix]]
+
+    # For each row in the DataFrame of the projected input table, we will fetch all
+    # string values from string column indices
+    # and will concatenate them. Next step would be to tokenize them using set and
+    # remove all the stop words from the list of tokens.
+    # Once we have the list of tokens, we will iterate through the list of tokens
     # to identify its position and will create an inverted index.
-    for row in table.itertuples(index=False):
-        str_val = ''
-        for list_item in str_cols_ix:
-            str_val += str(row[list_item]).lower() + ' '
+
+    for row in proj_table.itertuples(index=False):
+        # str_val = ''
+        # for list_item in str_cols_ix:
+        #     str_val += str(row[list_item]).lower() + ' '
+
+        str_val = ' '.join(col_val.lower().strip() for col_val in row[:] if not
+        pd.isnull(col_val))
+        str_val = str_val.translate(None, string.punctuation)
         str_val = str_val.rstrip()
 
         # tokenize them
         str_val = set(str_val.split())
-        #str_val = str_val.difference(stop_words)
+        str_val = str_val.difference(stop_words)
 
         # building inverted index I from set of tokens
         for token in str_val:
@@ -84,7 +95,7 @@ def _inv_index(table):
             if lst is None:
                 inv_index[token] = [pos]
             else:
-                lst.append(pos)
+                lst += [pos]
         pos += 1
     return inv_index
 
@@ -106,18 +117,23 @@ def _probe_index(table_b, y_param, s_tbl_sz, s_inv_index, show_progress=True, se
     if show_progress:
         bar = pyprind.ProgBar(len(table_b))
 
+    proj_table_b = table_b[table_b.columns[str_cols_ix]]
     # For each tuple x ∈ B', we will probe inverted index I built in the previous step to find all tuples in A
     # (inverted index) that share tokens with x. We will rank these tuples in decreasing order of shared tokens, then
     # take (up to) the top k/2 tuples to be the set P.
 
-    for row in table_b.itertuples(index=False):
+    for row in proj_table_b.itertuples(index=False):
+        id_freq_counter = Counter()  # keeps track of ids->frequency while probing inverted
+        # index.
         if show_progress:
             bar.update()
-        str_val = ''
 
         # For all string column in the table, fetch all string values and concatenate them
-        for list_ix in str_cols_ix:
-            str_val += str(row[list_ix]).lower() + ' '
+        # for list_ix in str_cols_ix:
+        #     str_val += str(row[list_ix]).lower() + ' '
+        str_val = ' '.join(col_val.lower().strip() for col_val in row[:] if not
+        pd.isnull(col_val))
+        str_val = str_val.translate(None, string.punctuation)
         str_val = str_val.rstrip()
 
         # Tokenizing the string value and removing stop words before we start probing into inverted index I
@@ -125,33 +141,41 @@ def _probe_index(table_b, y_param, s_tbl_sz, s_inv_index, show_progress=True, se
         str_val = str_val.difference(stop_words)
 
         # For each token in the set, we will probe the token into inverted index I to get set of y/2 positive matches
-        ids_dict = {}
-        match = set()
+
         for token in str_val:
             ids = s_inv_index.get(token, None)
             if ids is not None:
-                for id in ids:
-                    if id not in ids_dict:
-                        ids_dict[id] = 1
-                    else:
-                        ids_dict[id] = ids_dict[id] + 1
+                id_freq_counter.update(Counter(ids))
+
+
+        # ids_dict = {}
+        # for token in str_val:
+        #     ids = s_inv_index.get(token, None)
+        #     if ids is not None:
+        #         for id in ids:
+        #             if id not in ids_dict:
+        #                 ids_dict[id] = 1
+        #             else:
+        #                 ids_dict[id] = ids_dict[id] + 1
 
                         # match.update(ids)
 
         # Pick y/2 elements from match
-        m = min(y_pos, len(ids_dict))
+        m = min(y_pos, len(id_freq_counter))
         # match = list(match)
-        smpl_pos_neg = set()
 
-        num_pos = 0
-        sorted_key_values = [(k, v) for v, k in sorted(
-            [(v, k) for k, v in ids_dict.items()], reverse=True
-        )]
-        for t in sorted_key_values:
-            if num_pos >= m:
-                break
-            smpl_pos_neg.add(t[0])
-            num_pos += 1
+        most_common_id_freqs = id_freq_counter.most_common(int(m))
+        smpl_pos_neg = set(key for key, val in most_common_id_freqs)
+
+        # num_pos = 0
+        # sorted_key_values = [(k, v) for v, k in sorted(
+        #     [(v, k) for k, v in ids_dict.items()], reverse=True
+        # )]
+        # for t in sorted_key_values:
+        #     if num_pos >= m:
+        #         break
+        #     smpl_pos_neg.add(t[0])
+        #     num_pos += 1
 
         # while len(smpl_pos_neg) < k:
         #     num = random.choice(match)
