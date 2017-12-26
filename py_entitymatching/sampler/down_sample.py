@@ -351,7 +351,7 @@ def down_sample(table_a, table_b, size, y_param, show_progress=True,
                                            len(table_a), s_inv_index, show_progress,
                                            seed, rem_stop_words, rem_puncs)
     else:
-        sample_table_splits = pd.np.array_split(sample_table_b, n_procs)
+        sample_table_splits = pd.np.array_split(sample_table_b, n_jobs)
         results = Parallel(n_jobs=n_jobs)(
             delayed(_probe_index_split)(sample_table_splits[job_index], y_param,
                                        len(table_a), s_inv_index,
@@ -360,7 +360,7 @@ def down_sample(table_a, table_b, size, y_param, show_progress=True,
             for job_index in range(n_jobs)
         )
         results = map(list, results)
-        s_tbl_indices = sum(results, [])
+        s_tbl_indices = set(sum(results, []))
 
     s_tbl_indices = list(s_tbl_indices)
     l_sampled = table_a.iloc[list(s_tbl_indices)]

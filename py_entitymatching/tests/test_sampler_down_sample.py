@@ -74,11 +74,48 @@ class DownSampleTestCases(unittest.TestCase):
     def test_down_sample_invalid_seed(self):
         C, D = down_sample(self.A, self.B, 100, 10, seed="test")
 
+    @raises(AssertionError)
+    def test_down_sample_invalid_njobs(self):
+        C, D = down_sample(self.A, self.B, 100, 10, n_jobs="10")
+
+    @raises(AssertionError)
+    def test_down_sample_invalid_rem_stop_words(self):
+        C, D = down_sample(self.A, self.B, 100, 10, rem_stop_words="False")
+
+    @raises(AssertionError)
+    def test_down_sample_invalid_rem_puncs(self):
+        C, D = down_sample(self.A, self.B, 100, 10, rem_puncs="False")
+
     def test_down_sample_seed(self):
         C, D = down_sample(self.A, self.B, 100, 10, seed=0, show_progress=False)
         E, F = down_sample(self.A, self.B, 100, 10, seed=0, show_progress=False)
         self.assertEqual(D.equals(F), True)
         self.assertEqual(C.equals(E), True)
+
+    def test_down_sample_norm_njobs(self):
+        C, D = down_sample(self.A, self.B, 100, 1, seed=0, n_jobs=1, show_progress=False)
+        C = C.sort_values("ID")
+        D = D.sort_values("ID")
+
+        E, F = down_sample(self.A, self.B, 100, 1, seed=0, n_jobs=-1,
+                           show_progress=False)
+        E = E.sort_values("ID")
+        F = F.sort_values("ID")
+
+        self.assertEqual(D.equals(F), True)
+        self.assertEqual(C.equals(E), True)
+
+    def test_down_sample_njobs_fixed(self):
+        C, D = down_sample(self.A, self.B, 100, 10, seed=0, n_jobs=2, show_progress=False)
+        assert(len(C) > 0)
+        assert(len(D) > 0)
+
+    def test_down_sample_njobs_all(self):
+        C, D = down_sample(self.A, self.B, 100, 10, seed=0, n_jobs=-1,
+                           show_progress=False)
+
+
+
 
 
 class InvertedIndexTestCases(unittest.TestCase):
