@@ -10,6 +10,7 @@ import math
 import multiprocessing
 import os
 import random
+import re
 import string
 from collections import Counter
 
@@ -23,7 +24,7 @@ from py_entitymatching.utils.generic_helper import get_install_path
 from py_entitymatching.utils.validation_helper import validate_object_type
 
 logger = logging.getLogger(__name__)
-
+regex = re.compile('[%s]' % re.escape('!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~'))
 
 def get_num_procs(n_jobs, min_procs):
     # determine number of processes to launch parallely
@@ -46,6 +47,9 @@ def _get_stop_words():
 
     return stop_words_set
 
+def remove_punctuations(s):
+    return regex.sub('', s)
+
 
 # get string column list
 def _get_str_cols_list(table):
@@ -62,7 +66,7 @@ def _get_str_cols_list(table):
 
 
 # create inverted index from token to position
-def _inv_index(table):
+def _inv_index(table, rem_stop_words=True, rem_puncs=True):
     """
 
     This is inverted index function that builds inverted index of tokens on a table
@@ -95,12 +99,14 @@ def _inv_index(table):
 
         str_val = ' '.join(col_val.lower().strip() for col_val in row[:] if not
         pd.isnull(col_val))
-        str_val = str_val.translate(None, string.punctuation)
+        if rem_puncs:
+            str_val = remove_punctuations(str_val)
         str_val = str_val.rstrip()
 
         # tokenize them
         str_val = set(str_val.split())
-        str_val = str_val.difference(stop_words)
+        if rem_stop_words:
+            str_val = str_val.difference(stop_words)
 
         # building inverted index I from set of tokens
         for token in str_val:
@@ -114,7 +120,7 @@ def _inv_index(table):
 
 
 def _probe_index_split(table_b, y_param, s_tbl_sz, s_inv_index, show_progress=True,
-                       seed=None):
+                       seed=None, rem_stop_words=True, rem_puncs=True):
     """
     This is probe index function that probes the second table into inverted index to get
     good coverage in the down sampled output
@@ -146,12 +152,14 @@ def _probe_index_split(table_b, y_param, s_tbl_sz, s_inv_index, show_progress=Tr
         #     str_val += str(row[list_ix]).lower() + ' '
         str_val = ' '.join(col_val.lower().strip() for col_val in row[:] if not
         pd.isnull(col_val))
-        str_val = str_val.translate(None, string.punctuation)
+        if rem_puncs:
+            str_val = remove_punctuations(str_val)
         str_val = str_val.rstrip()
 
         # Tokenizing the string value and removing stop words before we start probing into inverted index I
         str_val = set(str_val.split())
-        str_val = str_val.difference(stop_words)
+        if rem_stop_words:
+            str_val = str_val.difference(stop_words)
 
         # For each token in the set, we will probe the token into inverted index I to get set of y/2 positive matches
 
@@ -208,7 +216,8 @@ def _probe_index_split(table_b, y_param, s_tbl_sz, s_inv_index, show_progress=Tr
 
 # down sample of two tables : based on sanjib's index based solution
 def down_sample(table_a, table_b, size, y_param, show_progress=True,
-                verbose=False, seed=None, n_jobs=2):
+                verbose=False, seed=None, rem_stop_words=True,
+                rem_puncs=True, n_jobs=1):
     """
     This function down samples two tables A and B into smaller tables A' and
     B' respectively.
@@ -233,6 +242,10 @@ def down_sample(table_a, table_b, size, y_param, show_progress=True,
          should be displayed (defaults to False).
         seed (int): The seed for the pseudo random number generator to select
             the tuples from A and B (defaults to None).
+        rem_stop_words (boolean): A flag to indicate whether a default set of stop words 
+         must be removed.
+        rem_puncs (boolean): A flag to indicate whether the punctuations must be 
+         removed from the strings.
         n_jobs (int): The number of parallel jobs to be used for computation
             (defaults to 1). If -1 all CPUs are used. If 0 or 1,
             no parallel computation is used at all, which is useful for
@@ -299,6 +312,8 @@ def down_sample(table_a, table_b, size, y_param, show_progress=True,
 
     validate_object_type(verbose, bool, 'Parameter verbose')
     validate_object_type(show_progress, bool, 'Parameter show_progress')
+    validate_object_type(rem_stop_words, bool, 'Parameter rem_stop_words')
+    validate_object_type(rem_puncs, bool, 'Parameter rem_puncs')
     validate_object_type(n_jobs, int, 'Parameter n_jobs')
 
     # get and validate required metadata
@@ -316,7 +331,7 @@ def down_sample(table_a, table_b, size, y_param, show_progress=True,
 
     # Inverted index built on table A will consist of all tuples in such P's and Q's - central idea is to have
     # good coverage in the down sampled A' and B'.
-    s_inv_index = _inv_index(table_a)
+    s_inv_index = _inv_index(table_a, rem_stop_words, rem_puncs)
 
     # Randomly select size tuples from table B to be B'
     # If a seed value has been give, use a RandomState with the given seed
@@ -327,21 +342,21 @@ def down_sample(table_a, table_b, size, y_param, show_progress=True,
         rand = RandomState()
     b_tbl_indices = list(rand.choice(len(table_b), int(b_sample_size), replace=False))
 
-    n_procs = get_num_procs(n_jobs, len(table_b))
+    n_jobs = get_num_procs(n_jobs, len(table_b))
 
     sample_table_b = table_b.ix[b_tbl_indices]
     if n_jobs <= 1:
         # Probe inverted index to find all tuples in A that share tokens with tuples in B'.
         s_tbl_indices = _probe_index_split(sample_table_b, y_param,
                                            len(table_a), s_inv_index, show_progress,
-                                           seed=seed)
+                                           seed, rem_stop_words, rem_puncs)
     else:
         sample_table_splits = pd.np.array_split(sample_table_b, n_procs)
         results = Parallel(n_jobs=n_jobs)(
             delayed(_probe_index_split)(sample_table_splits[job_index], y_param,
                                        len(table_a), s_inv_index,
                                         (show_progress and (job_index == n_jobs - 1)),
-                                       seed)
+                                       seed, rem_stop_words, rem_puncs)
             for job_index in range(n_jobs)
         )
         results = map(list, results)
