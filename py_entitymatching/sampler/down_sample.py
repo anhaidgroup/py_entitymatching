@@ -3,23 +3,36 @@
 This module contains sampling related routines
 """
 from __future__ import division
+
+from joblib import Parallel, delayed
 import logging
 import math
+import multiprocessing
 import os
 import random
 import string
-from py_entitymatching.utils.catalog_helper import log_info
-
-
 from collections import Counter
+
 import pandas as pd
 import pyprind
 from numpy.random import RandomState
 
 import py_entitymatching.catalog.catalog_manager as cm
+from py_entitymatching.utils.catalog_helper import log_info
 from py_entitymatching.utils.generic_helper import get_install_path
+from py_entitymatching.utils.validation_helper import validate_object_type
 
 logger = logging.getLogger(__name__)
+
+
+def get_num_procs(n_jobs, min_procs):
+    # determine number of processes to launch parallely
+    n_cpus = multiprocessing.cpu_count()
+    n_procs = n_jobs
+    if n_jobs < 0:
+        n_procs = n_cpus + 1 + n_jobs
+    # cannot launch less than min_procs to safeguard against small tables
+    return min(n_procs, min_procs)
 
 
 def _get_stop_words():
@@ -100,8 +113,8 @@ def _inv_index(table):
     return inv_index
 
 
-def _probe_index(table_b, y_param, s_tbl_sz, s_inv_index, show_progress=True, seed=None):
-
+def _probe_index_split(table_b, y_param, s_tbl_sz, s_inv_index, show_progress=True,
+                       seed=None):
     """
     This is probe index function that probes the second table into inverted index to get
     good coverage in the down sampled output
@@ -148,17 +161,17 @@ def _probe_index(table_b, y_param, s_tbl_sz, s_inv_index, show_progress=True, se
                 id_freq_counter.update(Counter(ids))
 
 
-        # ids_dict = {}
-        # for token in str_val:
-        #     ids = s_inv_index.get(token, None)
-        #     if ids is not None:
-        #         for id in ids:
-        #             if id not in ids_dict:
-        #                 ids_dict[id] = 1
-        #             else:
-        #                 ids_dict[id] = ids_dict[id] + 1
+                # ids_dict = {}
+                # for token in str_val:
+                #     ids = s_inv_index.get(token, None)
+                #     if ids is not None:
+                #         for id in ids:
+                #             if id not in ids_dict:
+                #                 ids_dict[id] = 1
+                #             else:
+                #                 ids_dict[id] = ids_dict[id] + 1
 
-                        # match.update(ids)
+                # match.update(ids)
 
         # Pick y/2 elements from match
         m = min(y_pos, len(id_freq_counter))
@@ -195,7 +208,7 @@ def _probe_index(table_b, y_param, s_tbl_sz, s_inv_index, show_progress=True, se
 
 # down sample of two tables : based on sanjib's index based solution
 def down_sample(table_a, table_b, size, y_param, show_progress=True,
-                verbose=False, seed=None):
+                verbose=False, seed=None, n_jobs=2):
     """
     This function down samples two tables A and B into smaller tables A' and
     B' respectively.
@@ -220,6 +233,15 @@ def down_sample(table_a, table_b, size, y_param, show_progress=True,
          should be displayed (defaults to False).
         seed (int): The seed for the pseudo random number generator to select
             the tuples from A and B (defaults to None).
+        n_jobs (int): The number of parallel jobs to be used for computation
+            (defaults to 1). If -1 all CPUs are used. If 0 or 1,
+            no parallel computation is used at all, which is useful for
+            debugging. For n_jobs below -1, (n_cpus + 1 + n_jobs) are
+            used (where n_cpus is the total number of CPUs in the
+            machine). Thus, for n_jobs = -2, all CPUs but one are used.
+            If (n_cpus + 1 + n_jobs) is less than 1, then no parallel
+            computation is used (i.e., equivalent to the default).
+            
 
     Returns:
         Down sampled tables A and B as pandas DataFrames.
@@ -231,17 +253,20 @@ def down_sample(table_a, table_b, size, y_param, show_progress=True,
             valid integer value.
         AssertionError: If `seed` is not a valid integer
             value.
+        AssertionError: If `verbose` is not of type bool.
+        AssertionError: If `show_progress` is not of type bool.
+        AssertionError: If `n_jobs` is not of type int.
 
     Examples:
         >>> A = em.read_csv_metadata('path_to_csv_dir/table_A.csv', key='ID')
         >>> B = em.read_csv_metadata('path_to_csv_dir/table_B.csv', key='ID')
-        >>> sample_A, sample_B = em.down_sample(A, B, 500, 1)
+        >>> sample_A, sample_B = em.down_sample(A, B, 500, 1, n_jobs=-1)
 
         # Example with seed = 0. This means the same sample data set will be returned
         # each time this function is run.
         >>> A = em.read_csv_metadata('path_to_csv_dir/table_A.csv', key='ID')
         >>> B = em.read_csv_metadata('path_to_csv_dir/table_B.csv', key='ID')
-        >>> sample_A, sample_B = em.down_sample(A, B, 500, 1, seed=0)
+        >>> sample_A, sample_B = em.down_sample(A, B, 500, 1, seed=0, n_jobs=-1)
     """
 
     if not isinstance(table_a, pd.DataFrame):
@@ -272,6 +297,10 @@ def down_sample(table_a, table_b, size, y_param, show_progress=True,
         logger.warning(
             'Size of table B is less than b_size parameter - using entire table B')
 
+    validate_object_type(verbose, bool, 'Parameter verbose')
+    validate_object_type(show_progress, bool, 'Parameter show_progress')
+    validate_object_type(n_jobs, int, 'Parameter n_jobs')
+
     # get and validate required metadata
     log_info(logger, 'Required metadata: ltable key, rtable key', verbose)
 
@@ -298,9 +327,26 @@ def down_sample(table_a, table_b, size, y_param, show_progress=True,
         rand = RandomState()
     b_tbl_indices = list(rand.choice(len(table_b), int(b_sample_size), replace=False))
 
-    # Probe inverted index to find all tuples in A that share tokens with tuples in B'.
-    s_tbl_indices = _probe_index(table_b.ix[b_tbl_indices], y_param,
-                                 len(table_a), s_inv_index, show_progress, seed=seed)
+    n_procs = get_num_procs(n_jobs, len(table_b))
+
+    sample_table_b = table_b.ix[b_tbl_indices]
+    if n_jobs <= 1:
+        # Probe inverted index to find all tuples in A that share tokens with tuples in B'.
+        s_tbl_indices = _probe_index_split(sample_table_b, y_param,
+                                           len(table_a), s_inv_index, show_progress,
+                                           seed=seed)
+    else:
+        sample_table_splits = pd.np.array_split(sample_table_b, n_procs)
+        results = Parallel(n_jobs=n_jobs)(
+            delayed(_probe_index_split)(sample_table_splits[job_index], y_param,
+                                       len(table_a), s_inv_index,
+                                        (show_progress and (job_index == n_jobs - 1)),
+                                       seed)
+            for job_index in range(n_jobs)
+        )
+        results = map(list, results)
+        s_tbl_indices = sum(results, [])
+
     s_tbl_indices = list(s_tbl_indices)
     l_sampled = table_a.iloc[list(s_tbl_indices)]
     r_sampled = table_b.iloc[list(b_tbl_indices)]

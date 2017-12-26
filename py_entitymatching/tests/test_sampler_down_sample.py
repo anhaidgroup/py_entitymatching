@@ -8,7 +8,7 @@ import pandas as pd
 import six
 
 from py_entitymatching.utils.generic_helper import get_install_path
-from py_entitymatching.sampler.down_sample import _inv_index, _probe_index, down_sample, _get_str_cols_list
+from py_entitymatching.sampler.down_sample import _inv_index, _probe_index_split, down_sample, _get_str_cols_list
 import py_entitymatching.catalog.catalog_manager as cm
 from py_entitymatching.io.parsers import read_csv_metadata
 
@@ -115,12 +115,12 @@ class ProbeIndexTestCases(unittest.TestCase):
         A = read_csv_metadata(path_a)
         B = read_csv_metadata(path_b, key='ID')
         in_index = _inv_index(A)
-        s_tbl_indices = _probe_index(B, 5, len(A), in_index)
+        s_tbl_indices = _probe_index_split(B, 5, len(A), in_index)
         self.assertTrue(type(s_tbl_indices) is set)
 
     def test_down_sample_probe_index_validchk1(self):
         A = read_csv_metadata(path_a)
         B = read_csv_metadata(path_b, key='ID')
         in_index = _inv_index(A)
-        s_tbl_indices = _probe_index(B, 5, len(A), in_index)
+        s_tbl_indices = _probe_index_split(B, 5, len(A), in_index)
         self.assertNotEqual(len(s_tbl_indices), 0)
