@@ -101,7 +101,7 @@ class DownSampleTestCases(unittest.TestCase):
                            show_progress=False)
         E = E.sort_values("ID")
         F = F.sort_values("ID")
-
+        print(len(C), len(E))
         self.assertEqual(D.equals(F), True)
         self.assertEqual(C.equals(E), True)
 
