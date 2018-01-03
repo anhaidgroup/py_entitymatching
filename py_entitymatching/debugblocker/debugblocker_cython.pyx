@@ -31,6 +31,8 @@ cdef extern from "GenerateRecomLists.h" nogil:
                               vector[int]& rtoken_sum_vector, double
                               field_remove_ratio, uint lvector_size, uint
                               rvector_size);
+        
+        vector[vector[int]] sort_config(vector[vector[int]]& config_lists);
 
         cmap[cpair[int, int], int] generate_topk_with_config(vector[int]& config, vector[vector[int]]& ltoken_vector, vector[vector[int]]& rtoken_vector,
                               vector[vector[int]]& lindex_vector, vector[vector[int]]& rindex_vector,
@@ -42,7 +44,7 @@ cdef extern from "GenerateRecomLists.h" nogil:
 FIELD_REMOVE_RATIO = 0.1
 
 
-def debugblocker_cython_old(lrecord_token_list, rrecord_token_list,
+def debugblocker_cython(lrecord_token_list, rrecord_token_list,
                         lrecord_index_list, rrecord_index_list,
                         ltable_field_token_sum, rtable_field_token_sum, py_cand_set,
                         py_num_fields, py_output_size):
@@ -79,44 +81,14 @@ def debugblocker_cython_old(lrecord_token_list, rrecord_token_list,
 
     cdef GenerateRecomLists generator
 
-    cdef vector[vector[int]] config_lists;
-    config_lists = generator.generate_config(field_list, ltoken_sum, rtoken_sum, 
-                                            field_remove_ratio,
-                                            ltoken_vector.size(),
-                                            rtoken_vector.size());
-
-    cdef vector[cmap[cpair[int, int], int]] rec_lists;
-    for i in xrange(config_lists.size()):
-        rec_lists.push_back(generator.generate_topk_with_config(config_lists[i], ltoken_vector, rtoken_vector,
-                              lindex_vector, rindex_vector, cand_set,
-                              output_size));
-
     cdef vector[RecPair] rec_list;
-        
-    rec_list = generator.merge_topk_lists(rec_lists);
+    rec_list = generator.generate_recom_lists(ltoken_vector, rtoken_vector, lindex_vector, rindex_vector,
+                          ltoken_sum, rtoken_sum, field_list,
+                          cand_set, field_remove_ratio,
+                          output_size);
     py_rec_list = []
     for i in xrange(rec_list.size()):
         py_rec_list.append((rec_list[i].rank, rec_list[i].l_rec, rec_list[i].r_rec))
-    
-    return py_rec_list
-
-
-def debugblocker_cython(lrecord_token_list, rrecord_token_list,
-                        lrecord_index_list, rrecord_index_list,
-                        ltable_field_token_sum, rtable_field_token_sum, py_cand_set,
-                        py_num_fields, py_output_size):
-
-    # generate config lists
-    py_config_lists = debugblocker_config_cython(ltable_field_token_sum, rtable_field_token_sum, 
-                        py_num_fields, len(lrecord_token_list), len(rrecord_token_list))
-
-    rec_lists = []
-    for i in xrange(len(py_config_lists)):
-        rec_lists.append(debugblocker_topk_cython(py_config_lists[i], lrecord_token_list, rrecord_token_list,
-        lrecord_index_list, rrecord_index_list, py_cand_set,
-        py_output_size))
-        
-    py_rec_list = debugblocker_merge_topk_cython(rec_lists)
     
     return py_rec_list
 
@@ -145,6 +117,7 @@ def debugblocker_config_cython(ltable_field_token_sum, rtable_field_token_sum,
     config_lists = generator.generate_config(field_list, ltoken_sum, rtoken_sum, 
                                             field_remove_ratio,
                                             ltable_size, rtable_size);
+    config_lists = generator.sort_config(config_lists);
     py_config_list = []
     for i in range(config_lists.size()):
         tmp_list = []

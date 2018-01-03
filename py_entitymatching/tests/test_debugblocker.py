@@ -804,8 +804,8 @@ class DebugblockerTestCases(unittest.TestCase):
         py_num_fields = 4
         config_list = db.debugblocker_config_cython(ltable_field_token_sum, rtable_field_token_sum, 
                                     py_num_fields, 2, 2)
-        expected_config_list = [[0, 1, 2, 3], [1, 2, 3], [0, 2, 3], [0, 1, 3],
-                [0, 1, 2], [1, 2], [0, 2], [0, 1], [1], [0]]
+        expected_config_list = [[0, 1, 2, 3], [0, 1, 2], [0, 1], [0], [1, 2, 3], [0, 2, 3], [0, 1, 3],
+                [1, 2], [0, 2], [1]]
         self.assertEqual(config_list, expected_config_list)
 
     def test_debugblocker_topk_cython_1(self):

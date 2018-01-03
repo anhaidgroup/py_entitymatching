@@ -30,6 +30,7 @@ public:
     Table generate_config(const vector<int>& field_list, const vector<int>& ltoken_sum_vector,
                               const vector<int>& rtoken_sum_vector, const double field_remove_ratio,
                               const unsigned int ltable_size, const unsigned int rtable_size);
+    Table sort_config(Table& config_lists);
 
     TopkRankList generate_topk_with_config(vector<int>& config, Table& ltoken_vector, Table& rtoken_vector,
                                   Table& lindex_vector, Table& rindex_vector,

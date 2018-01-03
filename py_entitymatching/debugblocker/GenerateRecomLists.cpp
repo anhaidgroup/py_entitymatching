@@ -143,8 +143,16 @@ Table GenerateRecomLists::generate_config(const vector<int>& field_list, const v
         if (removed_field_index < 0) {
             removed_field_index = feat_list_copy.size() - 1;
         }
-
+        // add the one does not contain removed_field_index first.
+        vector<int> temp = feat_list_copy;
+        temp.erase(temp.begin() + removed_field_index);
+        if (temp.size() > 0) {
+            config_lists.push_back(temp);
+        }
         for (unsigned int i = 0; i < feat_list_copy.size(); ++i) {
+            if ((int) i == removed_field_index) {
+              continue;
+            }
             vector<int> temp = feat_list_copy;
             temp.erase(temp.begin() + i);
             if (temp.size() <= 0) {
@@ -156,6 +164,26 @@ Table GenerateRecomLists::generate_config(const vector<int>& field_list, const v
     }
 
     return config_lists;
+}
+
+Table GenerateRecomLists::sort_config(Table& config_lists) {
+  if (config_lists.empty()) {
+    return config_lists;
+  }
+  Table sorted_config_lists;
+  Table temp;
+  sorted_config_lists.push_back(config_lists[0]);
+  for (unsigned int i = 1; i < config_lists.size(); i ++) {
+    if (config_lists[i].size() == config_lists[i - 1].size()) {
+      temp.push_back(config_lists[i]);
+    } else {
+      sorted_config_lists.push_back(config_lists[i]);
+    }
+  }
+  for (unsigned int i = 0; i < temp.size(); i ++) {
+    sorted_config_lists.push_back(temp[i]);
+  }
+  return sorted_config_lists;
 }
 
 
