@@ -8,7 +8,7 @@ import pandas as pd
 import six
 
 from py_entitymatching.utils.generic_helper import get_install_path
-from py_entitymatching.sampler.down_sample import _inv_index, _probe_index, down_sample, _get_str_cols_list
+from py_entitymatching.sampler.down_sample import _inv_index, _probe_index_split, down_sample, _get_str_cols_list
 import py_entitymatching.catalog.catalog_manager as cm
 from py_entitymatching.io.parsers import read_csv_metadata
 
@@ -74,11 +74,48 @@ class DownSampleTestCases(unittest.TestCase):
     def test_down_sample_invalid_seed(self):
         C, D = down_sample(self.A, self.B, 100, 10, seed="test")
 
+    @raises(AssertionError)
+    def test_down_sample_invalid_njobs(self):
+        C, D = down_sample(self.A, self.B, 100, 10, n_jobs="10")
+
+    @raises(AssertionError)
+    def test_down_sample_invalid_rem_stop_words(self):
+        C, D = down_sample(self.A, self.B, 100, 10, rem_stop_words="False")
+
+    @raises(AssertionError)
+    def test_down_sample_invalid_rem_puncs(self):
+        C, D = down_sample(self.A, self.B, 100, 10, rem_puncs="False")
+
     def test_down_sample_seed(self):
         C, D = down_sample(self.A, self.B, 100, 10, seed=0, show_progress=False)
         E, F = down_sample(self.A, self.B, 100, 10, seed=0, show_progress=False)
         self.assertEqual(D.equals(F), True)
         self.assertEqual(C.equals(E), True)
+
+    # def test_down_sample_norm_njobs(self):
+    #     C, D = down_sample(self.A, self.B, 100, 1, seed=0, n_jobs=1, show_progress=False)
+    #     C = C.sort_values("ID")
+    #     D = D.sort_values("ID")
+    #
+    #     E, F = down_sample(self.A, self.B, 100, 1, seed=0, n_jobs=-1,
+    #                        show_progress=False)
+    #     E = E.sort_values("ID")
+    #     F = F.sort_values("ID")
+    #     print(len(C), len(E))
+    #     self.assertEqual(D.equals(F), True)
+    #     self.assertEqual(C.equals(E), True)
+
+    def test_down_sample_njobs_fixed(self):
+        C, D = down_sample(self.A, self.B, 100, 10, seed=0, n_jobs=2, show_progress=False)
+        assert(len(C) > 0)
+        assert(len(D) > 0)
+
+    def test_down_sample_njobs_all(self):
+        C, D = down_sample(self.A, self.B, 100, 10, seed=0, n_jobs=-1,
+                           show_progress=False)
+
+
+
 
 
 class InvertedIndexTestCases(unittest.TestCase):
@@ -115,12 +152,12 @@ class ProbeIndexTestCases(unittest.TestCase):
         A = read_csv_metadata(path_a)
         B = read_csv_metadata(path_b, key='ID')
         in_index = _inv_index(A)
-        s_tbl_indices = _probe_index(B, 5, len(A), in_index)
+        s_tbl_indices = _probe_index_split(B, 5, len(A), in_index)
         self.assertTrue(type(s_tbl_indices) is set)
 
     def test_down_sample_probe_index_validchk1(self):
         A = read_csv_metadata(path_a)
         B = read_csv_metadata(path_b, key='ID')
         in_index = _inv_index(A)
-        s_tbl_indices = _probe_index(B, 5, len(A), in_index)
+        s_tbl_indices = _probe_index_split(B, 5, len(A), in_index)
         self.assertNotEqual(len(s_tbl_indices), 0)

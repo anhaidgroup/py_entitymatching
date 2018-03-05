@@ -232,3 +232,4 @@ def parse_conjunct(conjunct, feature_table):
             ft_df.ix[feature_name]['left_attr_tokenizer'],
             ft_df.ix[feature_name]['right_attr_tokenizer'],
             operator, threshold)
+
