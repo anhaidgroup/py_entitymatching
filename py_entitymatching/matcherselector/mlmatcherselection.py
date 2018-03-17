@@ -5,6 +5,8 @@ import logging
 from collections import OrderedDict
 
 import pandas as pd
+import six
+from sklearn.preprocessing import MinMaxScaler, MaxAbsScaler, StandardScaler
 from sklearn.model_selection import KFold, cross_val_score
 
 from py_entitymatching.utils.catalog_helper import check_attrs_present
@@ -14,8 +16,9 @@ from py_entitymatching.utils.validation_helper import validate_object_type
 logger = logging.getLogger(__name__)
 
 
-def select_matcher(matchers, x=None, y=None, table=None, exclude_attrs=None,
-                   target_attr=None,
+def select_matcher(matchers, x=None, y=None, table=None,
+                   exclude_attrs=None, target_attr=None,
+                   scaling_method=None, scaler=None,
                    metric_to_select_matcher='precision',
                    metrics_to_display=['precision', 'recall', 'f1'],
                    k=5, n_jobs=-1, random_state=None):
@@ -45,6 +48,10 @@ def select_matcher(matchers, x=None, y=None, table=None, exclude_attrs=None,
             excluded from the input table to get the feature vectors.
         target_attr (string): The target attribute in the input table (defaults
             to None).
+        scaling_method (string): The method used for re-scaling and normalizing
+            feature vectors (defaults to None).
+        scaler (Scaler object): The scaler created from training data
+            (defaults to None).
         metric_to_select_matcher (string): The metric based on which the matchers must be
             selected. The string can be one of 'precision', 'recall',
             'f1' (defaults to 'precision').
@@ -94,6 +101,7 @@ def select_matcher(matchers, x=None, y=None, table=None, exclude_attrs=None,
     # Based on the input, get the x, y data that can be used to call the
     # scikit-learn's cross validation method
     x, y = _get_xy_data(x, y, table, exclude_attrs, target_attr)
+    x = _scale(x, scaling_method, scaler)
     max_score = 0
     # Initialize the best matcher. As of now set it to be the first matcher.
     sel_matcher = matchers[0]
@@ -251,3 +259,47 @@ def _get_xy_data_ex(table, exclude_attrs, target_attr):
     y = y.ravel()  # to mute warnings from svm and cross validation
     # Return x and y
     return x, y
+
+
+def _scale(x, scaling_method, scaler):
+    """
+    Scale X, Y with the specified scaling function.
+    """
+    if scaler is not None:
+        try:
+            x = scaler.transform(x)
+        except ValueError("Error with scaler accepted."):
+            return x
+    elif scaling_method is None:
+        # no scaling is specified
+        pass
+    elif isinstance(scaling_method, six.string_types):
+        # get the lookup table for scaling methods
+        lookup_table = _get_scaler_funs()
+        if scaling_method in lookup_table:
+            scale = lookup_table[scaling_method]
+            scaler = scale().fit(x)
+            x = scaler.transform(x)
+        else:
+            raise AssertionError('Scaling method is not present in lookup table')
+    else:
+        raise AssertionError('Wrong data type of scaling method found')
+    return x
+
+
+def _get_scaler_funs():
+    """
+    This function returns the scaling functions specified by scaler.
+
+    """
+    # Get all the scaler names
+    scaler_names = ['MinMax',
+                    'MaxAbs',
+                    'Standard']
+    # Get all the functions
+    scaler_funs = [MinMaxScaler,
+                   MaxAbsScaler,
+                   StandardScaler]
+    # Return a dictionary with the functions names as the key and the actual
+    # functions as values.
+    return dict(zip(scaler_names, scaler_funs))
