@@ -448,39 +448,28 @@ def _get_feat_lkp_tbl():
     # Initialize a lookup table
     lookup_table = dict()
 
-    # Features for type strings
-    lookup_table['STR'] = [('exact_match'),
-                           ('lev_dist'), ('lev_sim'),
-                           ('jaro'), ('jaro_winkler'),
-                           ('monge_elkan'),
-                           ('needleman_wunsch'),
-                           ('smith_waterman'),
-                           ('jaccard', 'qgm_3', 'qgm_3'),
-                           ('jaccard', 'dlm_dc0', 'dlm_dc0'),
-                           ('cosine', 'dlm_dc0', 'dlm_dc0')]
+    # Features for type str_eq_1w
+    lookup_table['STR_EQ_1W'] = [('lev_dist'), ('lev_sim'), ('jaro'),
+                                ('jaro_winkler'),
+                                 ('exact_match'),
+                                 ('jaccard', 'qgm_3', 'qgm_3')]
 
-    # # Features for type str_eq_1w
-    # lookup_table['STR_EQ_1W'] = [('lev_dist'), ('lev_sim'), ('jaro'),
-    #                             ('jaro_winkler'),
-    #                              ('exact_match'),
-    #                              ('jaccard', 'qgm_3', 'qgm_3')]
-    #
-    # # Features for type str_bt_1w_5w
-    # lookup_table['STR_BT_1W_5W'] = [('jaccard', 'qgm_3', 'qgm_3'),
-    #                                 ('cosine', 'dlm_dc0', 'dlm_dc0'),
-    #                                 ('jaccard', 'dlm_dc0', 'dlm_dc0'),
-    #                                 ('monge_elkan'), ('lev_dist'), ('lev_sim'),
-    #                                 ('needleman_wunsch'),
-    #                                 ('smith_waterman')]  # dlm_dc0 is the concrete space tokenizer
-    #
-    # # Features for type str_bt_5w_10w
-    # lookup_table['STR_BT_5W_10W'] = [('jaccard', 'qgm_3', 'qgm_3'),
-    #                                  ('cosine', 'dlm_dc0', 'dlm_dc0'),
-    #                                  ('monge_elkan'), ('lev_dist'), ('lev_sim')]
-    #
-    # # Features for type str_gt_10w
-    # lookup_table['STR_GT_10W'] = [('jaccard', 'qgm_3', 'qgm_3'),
-    #                               ('cosine', 'dlm_dc0', 'dlm_dc0')]
+    # Features for type str_bt_1w_5w
+    lookup_table['STR_BT_1W_5W'] = [('jaccard', 'qgm_3', 'qgm_3'),
+                                    ('cosine', 'dlm_dc0', 'dlm_dc0'),
+                                    ('jaccard', 'dlm_dc0', 'dlm_dc0'),
+                                    ('monge_elkan'), ('lev_dist'), ('lev_sim'),
+                                    ('needleman_wunsch'),
+                                    ('smith_waterman')]  # dlm_dc0 is the concrete space tokenizer
+
+    # Features for type str_bt_5w_10w
+    lookup_table['STR_BT_5W_10W'] = [('jaccard', 'qgm_3', 'qgm_3'),
+                                     ('cosine', 'dlm_dc0', 'dlm_dc0'),
+                                     ('monge_elkan'), ('lev_dist'), ('lev_sim')]
+
+    # Features for type str_gt_10w
+    lookup_table['STR_GT_10W'] = [('jaccard', 'qgm_3', 'qgm_3'),
+                                  ('cosine', 'dlm_dc0', 'dlm_dc0')]
 
     # Features for NUMERIC type
     lookup_table['NUM'] = [('exact_match'), ('abs_norm'), ('lev_dist'),
@@ -505,16 +494,14 @@ def _get_features_for_type(column_type):
 
     # Based on the column type, return the feature functions that should be
     # generated.
-    # if column_type is 'str_eq_1w':
-    #     features = lookup_table['STR_EQ_1W']
-    # elif column_type is 'str_bt_1w_5w':
-    #     features = lookup_table['STR_BT_1W_5W']
-    # elif column_type is 'str_bt_5w_10w':
-    #     features = lookup_table['STR_BT_5W_10W']
-    # elif column_type is 'str_gt_10w':
-    #     features = lookup_table['STR_GT_10W']
-    if column_type is 'string':
-        features = lookup_table['STR']
+    if column_type is 'str_eq_1w':
+        features = lookup_table['STR_EQ_1W']
+    elif column_type is 'str_bt_1w_5w':
+        features = lookup_table['STR_BT_1W_5W']
+    elif column_type is 'str_bt_5w_10w':
+        features = lookup_table['STR_BT_5W_10W']
+    elif column_type is 'str_gt_10w':
+        features = lookup_table['STR_GT_10W']
     elif column_type is 'numeric':
         features = lookup_table['NUM']
     elif column_type is 'boolean':
@@ -778,11 +765,10 @@ def _get_type_name_lkp_tbl():
     lookup_table = dict()
 
     # Map type names to more human readable names
-    # lookup_table['str_eq_1w'] = 'short string (1 word)'
-    # lookup_table['str_bt_1w_5w'] = 'short string (1 word to 5 words)'
-    # lookup_table['str_bt_5w_10w'] = 'medium string (5 words to 10 words)'
-    # lookup_table['str_gt_10w'] = 'short string (1 word)'
-    lookup_table['string'] = 'string'
+    lookup_table['str_eq_1w'] = 'short string (1 word)'
+    lookup_table['str_bt_1w_5w'] = 'short string (1 word to 5 words)'
+    lookup_table['str_bt_5w_10w'] = 'medium string (5 words to 10 words)'
+    lookup_table['str_gt_10w'] = 'short string (1 word)'
     lookup_table['numeric'] = 'numeric'
     lookup_table['boolean'] = 'boolean'
     lookup_table['un_determined'] = 'un-determined type'

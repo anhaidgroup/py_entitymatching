@@ -235,18 +235,17 @@ def _get_type(column):
 
         # Consider string and unicode as same
         elif returned_type == str or returned_type == six.unichr or returned_type == six.text_type:
-            return "string"
             # get average token length
-            # average_token_len = \
-            #     pd.Series.mean(column.str.split().apply(_len_handle_nan))
-            # if average_token_len == 1:
-            #     return "str_eq_1w"
-            # elif average_token_len <= 5:
-            #     return "str_bt_1w_5w"
-            # elif average_token_len <= 10:
-            #     return "str_bt_5w_10w"
-            # else:
-            #     return "str_gt_10w"
+            average_token_len = \
+                pd.Series.mean(column.str.split().apply(_len_handle_nan))
+            if average_token_len == 1:
+                return "str_eq_1w"
+            elif average_token_len <= 5:
+                return "str_bt_1w_5w"
+            elif average_token_len <= 10:
+                return "str_bt_5w_10w"
+            else:
+                return "str_gt_10w"
         else:
             # Finally, return numeric if it does not qualify for any of the
             # types above.
