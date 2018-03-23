@@ -2,7 +2,6 @@ name: py_entitymatching_dev
 channels:
   - conda-forge
   - uwmagellan
-  - pchrapka
   - defaults
 dependencies:
     - setuptools
@@ -10,7 +9,6 @@ dependencies:
     - cloudpickle
     - pyparsing
     - scikit-learn >= 0.18
-    - scikit-feature == 1.0.0
     - pyqt
     - py_stringmatching
     - pandas-profiling
