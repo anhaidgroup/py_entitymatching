@@ -138,22 +138,14 @@ def get_features(ltable, rtable, l_attr_types, r_attr_types,
         l_attr_type = l_attr_types[ac[0]]
         r_attr_type = r_attr_types[ac[1]]
 
-        # Generate a feature only if the attribute types are same
+        # Generate the union of features if the attribute types are different
         if l_attr_type != r_attr_type:
-            logger.info('py_entitymatching types: %s type (%s) and %s type (%s) '
-                           'are different.'
-                           'If you want to set them to be same and '
-                           'generate features, '
-                           'update output from get_attr_types and '
-                           'use get_features command.\n.'
-                           % (ac[0], l_attr_type, ac[1], r_attr_type))
-            # features_1 = _get_features_for_type(l_attr_type)
-            # features_2 = _get_features_for_type(r_attr_type)
-            # features = set(features_1).union(features_2)
-            continue
-
-        # Generate features
-        features = _get_features_for_type(l_attr_type)
+            features_1 = _get_features_for_type(l_attr_type)
+            features_2 = _get_features_for_type(r_attr_type)
+            features = set(features_1).union(features_2)
+        else:
+            # Generate features if the attribute types are the same
+            features = _get_features_for_type(l_attr_type)
 
         # Convert features to function objects
         fn_objs = _conv_func_objs(features, ac, tok_funcs, sim_funcs)
