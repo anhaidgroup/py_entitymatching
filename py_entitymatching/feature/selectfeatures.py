@@ -3,18 +3,21 @@ This module contains functions for selecting most relevant features.
 """
 
 import six
+import pandas as pd
+from py_entitymatching.utils.validation_helper import validate_object_type
 from py_entitymatching.feature.attributeutils import get_attrs_to_project
 from sklearn.feature_selection import chi2, f_classif, mutual_info_classif
 from sklearn.feature_selection import GenericUnivariateSelect
 
 
-def select_features_univariate(feature_table=None, table=None,
-                              target_attr=None, exclude_attrs=None,
-                              score='f_score', mode='k_best', parameter=2):
-    # get attributes to project, validate parameters
-    project_attrs = get_attrs_to_project(table=table,
-                                         target_attr=target_attr,
-                                         exclude_attrs=exclude_attrs)
+def select_features_univariate(feature_table, table,
+                               target_attr=None, exclude_attrs=None,
+                               score='f_score', mode='k_best', parameter=2):
+    # Validate the input parameters
+    # We expect the input object feature_table and table to be of type pandas DataFrame
+    validate_object_type(feature_table, pd.DataFrame, 'Input feature_table')
+    validate_object_type(table, pd.DataFrame, 'Input table')
+
     # validate parameters
     if not isinstance(score, six.string_types):
         raise AssertionError("Received wrong type of score function")
@@ -25,8 +28,22 @@ def select_features_univariate(feature_table=None, table=None,
 
     # get score function
     score_dict = _get_score_funs()
-    score_fun = score_dict[score]
+    # get mode names allowed
+    mode_list = _get_mode_names()
+    if score not in score_dict:
+        raise AssertionError("Unknown score functions specified")
+    if mode not in mode_list:
+        raise AssertionError("Unknown mode specified")
 
+    if target_attr not in list(table.columns):
+        raise AssertionError("Must specify the target attribute for feature selection")
+
+    # get attributes to project, validate parameters
+    project_attrs = get_attrs_to_project(table=table,
+                                         target_attr=target_attr,
+                                         exclude_attrs=exclude_attrs)
+
+    score_fun = score_dict[score]
     # initialize selector with the given specification
     selector = GenericUnivariateSelect(score_func=score_fun,
                                        mode=mode,
@@ -63,3 +80,8 @@ def _get_score_funs():
     # Return a dictionary with the scores names as the key and the actual
     # score functions as values.
     return dict(zip(score_names, score_funs))
+
+
+def _get_mode_names():
+    # Get names of all modes allowed
+    return ['percentile', 'k_best', 'fpr', 'fdr', 'fwe']

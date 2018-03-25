@@ -20,6 +20,7 @@ F = extract_feature_vecs(C,
                          attrs_before=['_id', 'ltable_ID', 'rtable_ID'],
                          feature_table=feature_table)
 
+
 class ScalersTestCases(unittest.TestCase):
     @raises(AssertionError)
     def test_scale_features_invalid_data_type(self):
