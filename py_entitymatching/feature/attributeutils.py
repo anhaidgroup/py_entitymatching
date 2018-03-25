@@ -22,30 +22,46 @@ def get_attrs_to_project(table=None, exclude_attrs=None, target_attr=None):
     validate_object_type(table, pd.DataFrame)
     # We expect exclude attributes to be of type list. If not convert it into
     #  a list.
-    if not isinstance(exclude_attrs, list):
-        exclude_attrs = [exclude_attrs]
+    if exclude_attrs is not None:
+        if not isinstance(exclude_attrs, list):
+            exclude_attrs = [exclude_attrs]
 
-    # Check if the exclude attributes are present in the input table
-    if not check_attrs_present(table, exclude_attrs):
-        logger.error('The attributes mentioned in exclude_attrs '
-                     'is not present '
-                     'in the input table')
-        raise AssertionError(
-            'The attributes mentioned in exclude_attrs '
-            'is not present '
-            'in the input table')
+        # Check if the exclude attributes are present in the input table
+        if not check_attrs_present(table, exclude_attrs):
+            logger.error('The attributes mentioned in exclude_attrs '
+                         'is not present '
+                         'in the input table')
+            raise AssertionError(
+                'The attributes mentioned in exclude_attrs '
+                'is not present '
+                'in the input table')
+    else:
+        exclude_attrs = []
 
-    # Drop the duplicates from the exclude attributes
-    exclude_attrs = list_drop_duplicates(exclude_attrs)
+    if target_attr is not None:
+        # Check if the target attribute is present in the input table
+        if not check_attrs_present(table, target_attr):
+            logger.error('The attributes mentioned in target_attr '
+                         'is not present '
+                         'in the input table')
+            raise AssertionError(
+                'The attributes mentioned in target_attr '
+                'is not present '
+                'in the input table')
 
-    # Explicitly add the target attribute to exclude attribute (if it is not
-    # already present)
-    if target_attr and target_attr not in exclude_attrs:
-        exclude_attrs.append(target_attr)
+        # Explicitly add the target attribute to exclude attribute (if it is not
+        # already present)
+        if target_attr not in exclude_attrs:
+            exclude_attrs.append(target_attr)
 
-    # Project the list of attributes that should be used for scikit-learn's
-    # functions.
-    attrs_to_project = list_diff(list(table.columns), exclude_attrs)
+    if exclude_attrs:
+        # Drop the duplicates from the exclude attributes
+        exclude_attrs = list_drop_duplicates(exclude_attrs)
+        # Project the list of attributes that should be used for scikit-learn's
+        # functions.
+        attrs_to_project = list_diff(list(table.columns), exclude_attrs)
+    else:
+        attrs_to_project = list(table.columns)
 
     return attrs_to_project
 
