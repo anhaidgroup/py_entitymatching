@@ -16,7 +16,65 @@ logger = logging.getLogger(__name__)
 def scale_features(table, exclude_attrs=None,
                    scaling_method=None, scaler=None):
     """
-    Scale features with the specified scaling function.
+    This function will re-scale/normalize features with the specified scaling function.
+
+    Specifically, this function will project the table by excluding attributes
+    that are to our concerns. Then, it will first try to apply an existing scaler
+    (if any). If it fails to apply any existing scaler, it will try to fit a scaler
+    with the specified scaling_method. If that failed again, it will return the table
+    and a None scaler.
+
+    Args:
+        table (DataFrame): The pandas DataFrames which contains all the features,
+            keys, and target.
+        exclude_attrs (list): A list of attributes to be excluded from the table,
+            these attributes will keep the same during re-scaling/normalizing.
+        scaling_method (str): The scaling method specified by user, can be one of
+            "MinMax", "MaxAbs", "Standard".
+        scaler (object): An existing pre-fitted scaler, note that this is not
+            guaranteed to fit table used in this function.
+
+    Returns:
+        A pandas DataFrame with projected attributes scaled according to the
+        specified scaling method or pre-fitted scaler.
+        A scaler Object that is fitted with the given projected table. This scaler
+        Object can be passed to other scale_features functions.
+
+    Raises:
+        AssertionError: If `table` is not of type pandas
+            DataFrame.
+        AssertionError: If `table[attr]` is not of type
+            numeric.
+
+    Examples:
+
+        >>> import py_entitymatching as em
+        >>> A = em.read_csv_metadata('path_to_csv_dir/table_A.csv', key='ID')
+        >>> B = em.read_csv_metadata('path_to_csv_dir/table_B.csv', key='ID')
+        >>> C = em.read_csv_metadata('path_to_csv_dir/table_C.csv', key='_id')
+        >>> feature_table = get_features_for_matching(A, B, validate_inferred_attr_types=False)
+        >>> F = extract_feature_vecs(C,
+        >>>                          attrs_before=['_id', 'ltable.id', 'rtable.id'],
+        >>>                          attrs_after=['gold'],
+        >>>                          feature_table=feature_table)
+        >>> x, scaler = scale_features(F,
+        >>>                            exclude_attrs=['_id', 'ltable_ID', 'rtable_ID'],
+        >>>                            scaling_method='MinMax')
+        >>> y, _ = scale_features(F,
+        >>>                       exclude_attrs=['_id', 'ltable_ID', 'rtable_ID'],
+        >>>                       scaler=scaler)
+
+    See Also:
+     :meth:`py_entitymatching.get_features_for_matching`,
+     :meth:`py_entitymatching.extract_feature_vecs`,
+     :meth:`py_entitymatching.scale_vectors`
+
+    Note:
+        `exclude_attrs` serves as a mask before applying a pre-fitted scaler or
+        the specified scaling_method. If there exists any pre-fitted scaler, it will
+        be applied to the table regardless of the scaling_method specified. If not,
+        scaling_method is applied.
+
     """
     # Validate the input parameters
     # We expect the input object ltable to be of type pandas DataFrame
