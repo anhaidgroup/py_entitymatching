@@ -9,7 +9,8 @@ from py_entitymatching.io.parsers import read_csv_metadata
 from py_entitymatching.feature.simfunctions import get_sim_funs_for_matching
 from py_entitymatching.feature.tokenizers import get_tokenizers_for_matching
 from py_entitymatching.feature.autofeaturegen import get_features_for_matching
-from py_entitymatching.feature.attributeutils import get_attr_corres, get_attr_types, _get_type, _len_handle_nan
+from py_entitymatching.feature.attributeutils import get_attrs_to_project, \
+    get_attr_corres, get_attr_types, _get_type, _len_handle_nan
 
 import py_entitymatching.catalog.catalog_manager as cm
 
@@ -19,6 +20,44 @@ path_b = os.sep.join([datasets_path, 'B.csv'])
 
 
 class AttributeUtilsTestCases(unittest.TestCase):
+    def test_get_attrs_to_project_types_valid(self):
+        A = read_csv_metadata(path_a)
+        attrs = get_attrs_to_project(table=A)
+
+    @raises(AssertionError)
+    def test_get_attrs_to_project_types_invalid(self):
+        A = read_csv_metadata(path_a)
+        attrs = get_attrs_to_project(table=A.values)
+
+    def test_get_attrs_to_project_exclude_None(self):
+        A = read_csv_metadata(path_a)
+        attrs = get_attrs_to_project(table=A, exclude_attrs=None)
+        self.assertEqual(attrs, list(A.columns))
+
+    @raises(AssertionError)
+    def test_get_attrs_to_project_invalid_exclude_attrs(self):
+        A = read_csv_metadata(path_a)
+        exclude_attrs = ['Weird_ID']
+        attrs = get_attrs_to_project(table=A, exclude_attrs=exclude_attrs)
+
+    def test_get_attrs_to_project_exclude_attrs(self):
+        A = read_csv_metadata(path_a)
+        exclude_attrs = ['name']
+        attrs = get_attrs_to_project(table=A, exclude_attrs=exclude_attrs)
+        self.assertEqual(set(attrs), set(A.columns).difference(set(exclude_attrs)))
+
+    @raises(AssertionError)
+    def test_get_attrs_to_project_invalid_target_attr(self):
+        A = read_csv_metadata(path_a)
+        target = 'Weird_target'
+        attrs = get_attrs_to_project(table=A, target_attr=target)
+
+    def test_get_attrs_to_project_target_attr(self):
+        A = read_csv_metadata(path_a)
+        target = 'address'
+        attrs = get_attrs_to_project(table=A, target_attr=target)
+        self.assertEqual(set(attrs), set(A.columns).difference(set([target])))
+
     def test_get_attr_types_valid(self):
         A = read_csv_metadata(path_a)
         x = get_attr_types(A)
