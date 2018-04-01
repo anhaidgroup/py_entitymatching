@@ -94,7 +94,7 @@ def scale_features(table, exclude_attrs=None,
     return table, scaler
 
 
-def scale_vectors(x: object, scaling_method: object = None, scaler: object = None) -> object:
+def scale_vectors(x, scaling_method=None, scaler=None):
     """
     Scale X with the specified scaling function.
     """
