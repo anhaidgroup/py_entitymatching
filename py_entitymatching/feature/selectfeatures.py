@@ -8,6 +8,62 @@ from py_entitymatching.utils.validation_helper import validate_object_type
 from py_entitymatching.feature.attributeutils import get_attrs_to_project
 from sklearn.feature_selection import chi2, f_classif, mutual_info_classif
 from sklearn.feature_selection import GenericUnivariateSelect
+from sklearn.feature_selection import mutual_info_classif as mi_d
+from sklearn.feature_selection import mutual_info_regression as mi_c
+
+
+def select_features_mrmr(feature_table, table,
+                         target_attr=None, exclude_attrs=None,
+                         number=2):
+
+    # get attributes to project, validate parameters
+    project_attrs = get_attrs_to_project(table=table,
+                                         target_attr=target_attr,
+                                         exclude_attrs=exclude_attrs)
+
+    # project feature vectors into features:x and target:y
+    x, y = table[project_attrs], table[target_attr]
+
+    feature_names_selected = []
+
+    #
+    feature_names = project_attrs
+    mutual_info = list(mi_d(x, y))
+    scored_features = list(zip(mutual_info, feature_names))
+
+    max_rel = max(scored_features, key=lambda x: x[0])
+    feature_names_selected.append(max_rel[1])
+
+    # iteratively select features based on
+    # minimum redundancy maximum relevance (mRMR) criteria
+    for _ in range(number - 1):
+        feature_names = [fn for fn in feature_names
+                         if fn not in feature_names_selected]
+        mutual_info = list(mi_d(x[feature_names], y))
+        scored_features = list(zip(mutual_info, feature_names))
+
+        mrmr_scored_features = []
+        for mi, fn in scored_features:
+            xx = x[feature_names_selected]
+            yy = x[fn]
+            dep = mi_c(xx, yy)
+            mi -= sum(dep) / len(dep)
+            mrmr_scored_features.append((mi, fn))
+
+        mrmr_mi, fn = max(mrmr_scored_features, key=lambda x: x[0])
+        feature_names_selected.append(fn)
+
+    # get selected features in feature_table
+    # feature_table_selected = \
+    #     feature_table.loc[feature_table['feature_name'].isin(feature_names_selected)]
+    feature_table_selected = pd.DataFrame(columns=feature_table.columns)
+    for fn in feature_names_selected:
+        ft = feature_table.loc[feature_table['feature_name'] == fn]
+        feature_table_selected = pd.concat([feature_table_selected, ft])
+
+    feature_table_selected.reset_index(inplace=True, drop=True)
+
+    return feature_table_selected
 
 
 def select_features_univariate(feature_table, table,
