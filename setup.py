@@ -82,7 +82,7 @@ if __name__ == "__main__":
                  ]
     setuptools.setup(
         name='py_entitymatching',
-        version='0.3.0',
+        version='0.3.1',
         description='Python library for end to end Entity Matching.',
         long_description=LONG_DESCRIPTION,
         url='https://sites.google.com/site/anhaidgroup/projects/magellan/py_entitymatching',
@@ -114,13 +114,12 @@ if __name__ == "__main__":
         packages=packages,
         install_requires=[
             'PyPrind',
-            'py_stringsimjoin==0.1.0',
+            'py_stringsimjoin==0.3.0',
             # dependencies such as py_stringmatching, joblib, pyprind
             'cloudpickle >= 0.2.1',
             'pyparsing >= 2.1.4',
             'scikit-learn >= 0.18',
-            'pandas-profiling >= 1.4.0',
-            'requests'
+            'pandas-profiling >= 1.4.0'
         ],
         ext_modules=extensions,
         cmdclass=cmdclass,
