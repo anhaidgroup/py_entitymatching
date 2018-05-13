@@ -62,6 +62,8 @@ from py_entitymatching.feature.autofeaturegen import get_features, get_features_
 from py_entitymatching.feature.addfeatures import get_feature_fn, add_feature, \
     add_blackbox_feature, create_feature_table
 from py_entitymatching.feature.extractfeatures import extract_feature_vecs
+from py_entitymatching.feature.scalers import scale_features
+from py_entitymatching.feature.selectfeatures import select_features_univariate
 
 # # matcher related stuff
 from py_entitymatching.matcher.matcherutils import split_train_test, impute_table
