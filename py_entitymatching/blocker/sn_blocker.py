@@ -140,13 +140,13 @@ class SortedNeighborhoodBlocker(Blocker):
         log_info(logger, 'Required metadata: ltable key, rtable key', verbose)
 
         # check if ltable or rtable are empty.
-        if (ltable.empty):
+        if ltable.empty:
             raise AssertionError('Left table is empty')
-        if (rtable.empty):
+        if rtable.empty:
             raise AssertionError('Right table is empty')
 
         # check if window_size < 2
-        if (window_size < 2):
+        if window_size < 2:
             raise AssertionError(
                 'window_size is < 2')
 
@@ -163,18 +163,18 @@ class SortedNeighborhoodBlocker(Blocker):
 
         # do blocking
         # # determine number of processes to launch parallely
-        n_procs = self.get_num_procs(n_jobs, min(len(ltable),len(rtable)))
+        n_procs = self.get_num_procs(n_jobs, min(len(ltable), len(rtable)))
 
         # handle potential missing values
-        c_missing = pd.DataFrame();
-        
+        c_missing = pd.DataFrame()
+
         if n_procs <= 1:
             # single process
             c_splits, c_missing = _sn_block_tables_split(ltable, rtable, l_key, r_key,
-                                             l_block_attr, r_block_attr, window_size,
-                                             l_output_attrs, r_output_attrs,
-                                             l_output_prefix, r_output_prefix,
-                                             allow_missing)
+                                                         l_block_attr, r_block_attr, window_size,
+                                                         l_output_attrs, r_output_attrs,
+                                                         l_output_prefix, r_output_prefix,
+                                                         allow_missing)
         else:
             # multiprocessing
             # Split l and r into n_procs chunks.
@@ -185,10 +185,10 @@ class SortedNeighborhoodBlocker(Blocker):
 
             p_answer = Parallel(n_jobs=n_procs)(
                 delayed(_sn_block_tables_split)(l_splits[i], r_splits[i], l_key, r_key,
-                                             l_block_attr, r_block_attr, window_size,
-                                             l_output_attrs, r_output_attrs,
-                                             l_output_prefix, r_output_prefix,
-                                             allow_missing)
+                                                l_block_attr, r_block_attr, window_size,
+                                                l_output_attrs, r_output_attrs,
+                                                l_output_prefix, r_output_prefix,
+                                                allow_missing)
                 for i in range(n_procs))
 
             c_splits, c_missing = zip(*p_answer)
@@ -205,43 +205,47 @@ class SortedNeighborhoodBlocker(Blocker):
         # If single core, generator is trivial (see fn below)
 
         for row in _gen_iter_merge(c_splits):
-            row=row._asdict()
+            row = row._asdict()
 
-            # if the sliding window is full, remove the largest.  The new tuple will be compared against the (window_size-1) previously seen tuples.
+            # if the sliding window is full, remove the largest.  The new tuple will be
+            #   compared against the (window_size-1) previously seen tuples.
             # (if at the beginning just compare with whatever we have)
-            if (len(sliding_window) >= window_size):
+            if len(sliding_window) >= window_size:
                 sliding_window.popleft()
 
-            # Now, iterate over the sliding window (plus any tuples missing BKV's, if that was called for):
+            # Now, iterate over the sliding window (plus any tuples missing BKV's,
+            #   if that was called for):
             for window_element in chain(sliding_window, c_missing):
-                l=window_element
-                r=row
+                ltable = window_element
+                rtable = row
 
                 # SN blocking is often implemented on a single table.
-                # In this implementation, we are only considering tuples that are between the left and right tables.
+                # In this implementation, we are only considering tuples that have
+                #   one tuple from the left table and one tuple from the right table.
                 # Thus, only keep candidates that span both tables.
-                # However, the restriction is that matchines need to be (left, right) so if we end up with (right, left) flip it.
+                # However, the restriction is that matches need to be (left, right) so
+                #   if we end up with (right, left) flip it.
 
-                if (l["source"] != r["source"]): # Span both tables
-                    if (l["source"] == 'r'): # Left is right, so flip it to make it sane again
-                        l, r = r, l      # This is valid Python.  This explains things.
+                if ltable["source"] != rtable["source"]: # Span both tables
+                    if ltable["source"] == 'r': # Left is right, so flip it to make it sane again
+                        ltable, rtable = rtable, ltable
 
-                    m = OrderedDict()
-                    m[l_output_prefix+"ID"] = l[l_key]
-                    m[r_output_prefix+"ID"] = r[r_key]
-                    m[l_output_prefix+l_key] = l[l_key]
-                    m[r_output_prefix+r_key] = r[r_key]
+                    merged = OrderedDict()
+                    merged[l_output_prefix+"ID"] = ltable[l_key]
+                    merged[r_output_prefix+"ID"] = rtable[r_key]
+                    merged[l_output_prefix+l_key] = ltable[l_key]
+                    merged[r_output_prefix+r_key] = rtable[r_key]
 
                     # # add l/r output attributes to the ordered dictionary
                     if l_output_attrs is not None:
-                        for a in l_output_attrs:
-                            m[l_output_prefix + a] = l[a]
+                        for attr in l_output_attrs:
+                            merged[l_output_prefix + attr] = ltable[attr]
                     if r_output_attrs is not None:
-                        for a in r_output_attrs:
-                            m[r_output_prefix + a] = r[a]
+                        for attr in r_output_attrs:
+                            merged[r_output_prefix + attr] = rtable[attr]
 
                     # # add the ordered dict to the list
-                    result.append(m)
+                    result.append(merged)
 
             sliding_window.append(row)
         candset = pd.DataFrame(result, columns=result[0].keys())
@@ -250,21 +254,23 @@ class SortedNeighborhoodBlocker(Blocker):
         # update catalog
         key = get_name_for_key(candset.columns)
         candset = add_key_column(candset, key)
-        
+
         cm.set_candset_properties(candset, key, l_output_prefix + l_key,
                                   r_output_prefix + r_key, ltable, rtable)
 
         return candset
 
-    def block_candset(self, candset, l_block_attr, r_block_attr,
-                      allow_missing=False, verbose=False, show_progress=True,
-                      n_jobs=1):
+    @staticmethod
+    def block_candset(farg, *args):
+        """block_candset does not apply to sn_blocker, return unimplemented"""
 
         #  It isn't clear what SN on a candidate set would mean, throw an Assersion error
         raise AssertionError('unimplemented')
 
-    def block_tuples(self, ltuple, rtuple, l_block_attr, r_block_attr,
-                     allow_missing=False):
+    @staticmethod
+    def block_tuples(farg, *args):
+        """block_tuples does not apply to sn_blocker, return unimplemented"""
+
         #  It also isn't clear what SN on a tuple pair would mean, throw an Assersion error
         raise AssertionError('unimplemented')
 
@@ -272,8 +278,11 @@ class SortedNeighborhoodBlocker(Blocker):
     # ------------------------------------------------------------
     # utility functions specific to sorted neighborhood blocking
 
-    # validate the data types of the blocking attributes 
-    def validate_types_block_attrs(self, l_block_attr, r_block_attr):
+    # validate the data types of the blocking attributes
+    @staticmethod
+    def validate_types_block_attrs(l_block_attr, r_block_attr):
+        """validate the data types of the blocking attributes"""
+
         if not isinstance(l_block_attr, six.string_types):
             logger.error(
                 'Blocking attribute name of left table is not of type string')
@@ -287,7 +296,9 @@ class SortedNeighborhoodBlocker(Blocker):
                 'Blocking attribute name of right table is not of type string')
 
     # validate the blocking attributes
-    def validate_block_attrs(self, ltable, rtable, l_block_attr, r_block_attr):
+    @staticmethod
+    def validate_block_attrs(ltable, rtable, l_block_attr, r_block_attr):
+        """validate the blocking attributes"""
         if l_block_attr not in ltable.columns:
             raise AssertionError(
                 'Left block attribute is not in the left table')
@@ -300,8 +311,8 @@ def _get_attrs_to_project(key, output_attrs):
     proj_attrs = []
     if output_attrs is not None:
         proj_attrs.extend(output_attrs)
-    if key not in proj_attrs:                                             
-        proj_attrs.append(key)                                            
+    if key not in proj_attrs:
+        proj_attrs.append(key)
     return proj_attrs
 
 def _sn_block_tables_split(ltable, rtable, l_key, r_key, l_block_attr, r_block_attr, window_size,
@@ -321,15 +332,15 @@ def _sn_block_tables_split(ltable, rtable, l_key, r_key, l_block_attr, r_block_a
     else:
         lconv = ltable[[l_key]]
     lconv = lconv.copy() # Make a full copy
-    lconv.loc[:,'source']='l'
-    lconv.loc[:,'BKV__']=ltable[l_block_attr]
+    lconv.loc[:, 'source'] = 'l'
+    lconv.loc[:, 'BKV__'] = ltable[l_block_attr]
     if r_output_attrs:
         rconv = rtable[[r_key] + r_output_attrs]
     else:
         rconv = rtable[[r_key]]
     rconv = rconv.copy() # Make a full copy
-    rconv.loc[:,'source']='r'
-    rconv.loc[:,'BKV__']=rtable[r_block_attr]
+    rconv.loc[:, 'source'] = 'r'
+    rconv.loc[:, 'BKV__'] = rtable[r_block_attr]
 
     # Now, if allow_missing=True, yank out "missing" values
     lmissing = pd.DataFrame()
@@ -341,7 +352,7 @@ def _sn_block_tables_split(ltable, rtable, l_key, r_key, l_block_attr, r_block_a
         lconv = lconv[pd.notnull(lconv['BKV__'])]
         rconv = rconv[pd.notnull(rconv['BKV__'])]
 
-    return pd.concat([lconv,rconv]).sort_values(by='BKV__'), pd.concat([lmissing,rmissing])
+    return pd.concat([lconv, rconv]).sort_values(by='BKV__'), pd.concat([lmissing, rmissing])
 
 
 def _prefix_columns(col_names, output_prefix):
