@@ -19,12 +19,8 @@ logger = logging.getLogger(__name__)
 
 class SortedNeighborhoodBlocker(Blocker):
     """
-    Blocks based on sorted neighborhood
+    Blocks based on the sorted neighborhood blocking method
     """
-
-    # Will need a single-table version of this: block_table
-
-    # Add an attribute list -> blocking fn helper fn
 
     def block_tables(self, ltable, rtable, l_block_attr, r_block_attr, window_size=2,
                      l_output_attrs=None, r_output_attrs=None,
@@ -46,8 +42,7 @@ class SortedNeighborhoodBlocker(Blocker):
 
             r_block_attr (string): The blocking attribute for right table.
 
-        window_size (int): size of sliding window
-            Defaults to 2
+            window_size (int): size of sliding window. Defaults to 2
 
             l_output_attrs (list): A list of attribute names from the left
                                    table to be included in the
@@ -171,9 +166,8 @@ class SortedNeighborhoodBlocker(Blocker):
         if n_procs <= 1:
             # single process
             c_splits, c_missing = _sn_block_tables_split(ltable, rtable, l_key, r_key,
-                                                         l_block_attr, r_block_attr, window_size,
+                                                         l_block_attr, r_block_attr,
                                                          l_output_attrs, r_output_attrs,
-                                                         l_output_prefix, r_output_prefix,
                                                          allow_missing)
         else:
             # multiprocessing
@@ -185,9 +179,8 @@ class SortedNeighborhoodBlocker(Blocker):
 
             p_answer = Parallel(n_jobs=n_procs)(
                 delayed(_sn_block_tables_split)(l_splits[i], r_splits[i], l_key, r_key,
-                                                l_block_attr, r_block_attr, window_size,
+                                                l_block_attr, r_block_attr,
                                                 l_output_attrs, r_output_attrs,
-                                                l_output_prefix, r_output_prefix,
                                                 allow_missing)
                 for i in range(n_procs))
 
@@ -261,14 +254,14 @@ class SortedNeighborhoodBlocker(Blocker):
         return candset
 
     @staticmethod
-    def block_candset(farg, *args):
+    def block_candset(*args, **kwargs):
         """block_candset does not apply to sn_blocker, return unimplemented"""
 
         #  It isn't clear what SN on a candidate set would mean, throw an Assersion error
         raise AssertionError('unimplemented')
 
     @staticmethod
-    def block_tuples(farg, *args):
+    def block_tuples(*args, **kwargs):
         """block_tuples does not apply to sn_blocker, return unimplemented"""
 
         #  It also isn't clear what SN on a tuple pair would mean, throw an Assersion error
@@ -315,9 +308,8 @@ def _get_attrs_to_project(key, output_attrs):
         proj_attrs.append(key)
     return proj_attrs
 
-def _sn_block_tables_split(ltable, rtable, l_key, r_key, l_block_attr, r_block_attr, window_size,
-                           l_output_attrs, r_output_attrs, l_output_prefix,
-                           r_output_prefix, allow_missing):
+def _sn_block_tables_split(ltable, rtable, l_key, r_key, l_block_attr, r_block_attr,
+                           l_output_attrs, r_output_attrs, allow_missing):
 
     #project the key + output attributes
     #copy bkv column from each table into a common column, named BKV__
@@ -369,31 +361,31 @@ def _output_columns(l_key, r_key, col_names, l_output_attrs, r_output_attrs,
     ret_cols = [_retain_names(l_key, col_names, '_ltable')]
     ret_cols.append(_retain_names(r_key, col_names, '_rtable'))
 
-    # final columns in the output                                           
+    # final columns in the output
     fin_cols = [_final_names(l_key, l_output_prefix)]
     fin_cols.append(_final_names(r_key, r_output_prefix))
 
-    # retain output attrs from merge                                        
+    # retain output attrs from merge
     if l_output_attrs:
-        for at in l_output_attrs:
-            if at != l_key:
-                ret_cols.append(_retain_names(at, col_names, '_ltable'))
-                fin_cols.append(_final_names(at, l_output_prefix))
+        for attr in l_output_attrs:
+            if attr != l_key:
+                ret_cols.append(_retain_names(attr, col_names, '_ltable'))
+                fin_cols.append(_final_names(attr, l_output_prefix))
 
     if r_output_attrs:
-        for at in r_output_attrs:
-            if at != r_key:
-                ret_cols.append(_retain_names(at, col_names, '_rtable'))
-                fin_cols.append(_final_names(at, r_output_prefix))
+        for attr in r_output_attrs:
+            if attr != r_key:
+                ret_cols.append(_retain_names(attr, col_names, '_rtable'))
+                fin_cols.append(_final_names(attr, r_output_prefix))
 
     return ret_cols, fin_cols
 
 
-def _retain_names(x, col_names, suffix):
-    if x in col_names:
-        return x
+def _retain_names(the_name, col_names, suffix):
+    if the_name in col_names:
+        return the_name
     else:
-        return str(x) + suffix
+        return str(the_name) + suffix
 
 
 def _final_names(col, prefix):
@@ -415,49 +407,47 @@ def _gen_iter_merge(*things):
             yield value
     else:
         # We will have a list of iters, iter_list
-        #make heapq for heads of each entry of iter_list
-        #pull from min from heapq for smallest of all iter_list
-        #refill deque if the particular thing it came from, if not empty
+        # make heapq for heads of each entry of iter_list
+        # pull from min from heapq for smallest of all iter_list
+        # refill deque if the particular thing it came from, if not empty
 
         iter_list = []
         # Priority queue for the heapq
-        pq = []
+        priority_queue = []
         value_offset = 0
 
-        # load the heads of the queues into the pq
+        # load the heads of the queues into the priority_queue
         for value in things[0]:
             this_iter = value.itertuples(index=True)
             try:
                 next_value = next(this_iter)
                 next_bkv = next_value.BKV__
                 thing_for_heap = (next_bkv, next_value, value_offset)
-                heapq.heappush(pq, (thing_for_heap))
+                heapq.heappush(priority_queue, (thing_for_heap))
             except:
                 raise
             # Append this iterator on the iter_list
             iter_list.append(this_iter)
             value_offset += 1
-    
+
         while True:
-            # If the pq has gone to zero, we're done!
-            if len(pq) == 0:
+            # If the priority_queue has gone to zero, we're done!
+            if len(priority_queue) == 0:
                 raise StopIteration
 
-            # .... otherwise, take the next smallest thing off the pq.
+            # .... otherwise, take the next smallest thing off the priority_queue.
             try:
-                this_tuple = heapq.heappop(pq)
+                this_tuple = heapq.heappop(priority_queue)
             except:
                 raise
 
-            this_bkv = this_tuple[0]
+            #this_bkv = this_tuple[0]
             this_object = this_tuple[1]
             load_next = this_tuple[2]
 
             try:
                 load_object = next(iter_list[load_next])
-                heapq.heappush(pq, (load_object.BKV__, load_object, load_next))
+                heapq.heappush(priority_queue, (load_object.BKV__, load_object, load_next))
             except StopIteration:
-                a=1 # Ignore the StopIteration
-            yield this_object 
-            
-
+                pass # Ignore the StopIteration
+            yield this_object
