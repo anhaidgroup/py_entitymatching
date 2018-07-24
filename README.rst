@@ -12,7 +12,7 @@ practice involves many steps than just blocking and matching. While performing E
 users often execute many steps, e.g. exploring, cleaning, debugging, sampling,
 estimating accuracy, etc. Current EM systems however do not cover the entire
 EM pipeline, providing support only for a few steps (e.g., blocking, matching), while
-ignoring less well-known yet equally critical steps (e.g., debgging, sampling).
+ignoring less well-known yet equally critical steps (e.g., debugging, sampling).
 This package seeks to support all the steps involved in EM pipeline.
 
 The package is free, open-source, and BSD-licensed.
