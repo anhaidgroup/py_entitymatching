@@ -6,12 +6,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
     <title>Installation &#8212; py_entitymatching 0.3.0 documentation</title>
-    
     <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
@@ -62,7 +59,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#platforms">Platforms</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#dependencies">Dependencies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#installing-using-conda">Installing Using conda</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c-compiler-required">C Compiler Required</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#installing-using-pip">Installing Using pip</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#installing-from-source-distribution">Installing from Source Distribution</a></li>
 </ul>
@@ -127,30 +124,13 @@
 <li>pandas-profiling (provides implementation for profiling pandas dataframe)</li>
 <li>pandas-table (provides data exploration tool for pandas dataframe)</li>
 <li>openrefine (provides data exploration tool for tables)</li>
+<li>ipython (provides better tools for displaying tables in notebooks)</li>
+<li>scipy (dependency for skikit-learn)</li>
 </ul>
 </div>
-<div class="section" id="installing-using-conda">
-<h2>Installing Using conda<a class="headerlink" href="#installing-using-conda" title="Permalink to this headline">¶</a></h2>
-<p>The easiest and recommended way to install the package is to use the command conda,
-which will retrieve py_entitymatching from Anaconda repository then install it:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">install</span> <span class="o">-</span><span class="n">c</span> <span class="n">uwmagellan</span> <span class="n">py_entitymatching</span>
-</pre></div>
-</div>
-<p>The above command will install py_entitymatching and all of its dependencies except
-XGBoost, pandastable, openrefine and PyQt5. As these packages are either not available from
-anaconda cloud (for some Python versions or operating systems) or they are not Python
-packages (openrefine).</p>
-<ul class="simple">
-<li>To install PyQt5, follow the instructions at <a class="reference external" href="http://pyqt.sourceforge.net/Docs/PyQt5/installation.html">this page</a>.</li>
-<li>To install XGBoost manually from the source follow the instructions on <a class="reference external" href="https://XGBoost.readthedocs.io/en/latest/build.html">this page</a>.</li>
-<li>To install pandastable follow the instructions at <a class="reference external" href="https://github.com/dmnfarrell/pandastable">this page</a>.</li>
-<li>To install openrefine follow the instructions at <a class="reference external" href="https://github.com/OpenRefine/OpenRefine/wiki/Installation-Instructions">this page</a>.</li>
-</ul>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">To use the command conda, first you must install Miniconda or Anaconda. For
-more details refer to this <a class="reference external" href="http://conda.pydata.org/docs/using/index.html">conda page</a>.</p>
-</div>
+<div class="section" id="c-compiler-required">
+<h2>C Compiler Required<a class="headerlink" href="#c-compiler-required" title="Permalink to this headline">¶</a></h2>
+<p>Before installing this package, you need to make sure that you have a C compiler installed. This is necessary because this package contains Cython files. Go <a class="reference external" href="https://sites.google.com/site/anhaidgroup/projects/magellan/issues">here</a> for more information about how to check whether you already have a C compiler and how to install a C compiler. After you have confirmed that you have a C compiler installed, you are ready to install py_entitymatching.</p>
 </div>
 <div class="section" id="installing-using-pip">
 <h2>Installing Using pip<a class="headerlink" href="#installing-using-pip" title="Permalink to this headline">¶</a></h2>

@@ -6,12 +6,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
     <title>py_entitymatching 0.3.0 documentation</title>
-    
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
@@ -150,30 +147,13 @@ section “For Contributors and Developers”.</p>
 <li>pandas-profiling (provides implementation for profiling pandas dataframe)</li>
 <li>pandas-table (provides data exploration tool for pandas dataframe)</li>
 <li>openrefine (provides data exploration tool for tables)</li>
+<li>ipython (provides better tools for displaying tables in notebooks)</li>
+<li>scipy (dependency for skikit-learn)</li>
 </ul>
 </div>
-<div class="section" id="installing-using-conda">
-<h3>Installing Using conda<a class="headerlink" href="#installing-using-conda" title="Permalink to this headline">¶</a></h3>
-<p>The easiest and recommended way to install the package is to use the command conda,
-which will retrieve py_entitymatching from Anaconda repository then install it:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">install</span> <span class="o">-</span><span class="n">c</span> <span class="n">uwmagellan</span> <span class="n">py_entitymatching</span>
-</pre></div>
-</div>
-<p>The above command will install py_entitymatching and all of its dependencies except
-XGBoost, pandastable, openrefine and PyQt5. As these packages are either not available from
-anaconda cloud (for some Python versions or operating systems) or they are not Python
-packages (openrefine).</p>
-<ul class="simple">
-<li>To install PyQt5, follow the instructions at <a class="reference external" href="http://pyqt.sourceforge.net/Docs/PyQt5/installation.html">this page</a>.</li>
-<li>To install XGBoost manually from the source follow the instructions on <a class="reference external" href="https://XGBoost.readthedocs.io/en/latest/build.html">this page</a>.</li>
-<li>To install pandastable follow the instructions at <a class="reference external" href="https://github.com/dmnfarrell/pandastable">this page</a>.</li>
-<li>To install openrefine follow the instructions at <a class="reference external" href="https://github.com/OpenRefine/OpenRefine/wiki/Installation-Instructions">this page</a>.</li>
-</ul>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">To use the command conda, first you must install Miniconda or Anaconda. For
-more details refer to this <a class="reference external" href="http://conda.pydata.org/docs/using/index.html">conda page</a>.</p>
-</div>
+<div class="section" id="c-compiler-required">
+<h3>C Compiler Required<a class="headerlink" href="#c-compiler-required" title="Permalink to this headline">¶</a></h3>
+<p>Before installing this package, you need to make sure that you have a C compiler installed. This is necessary because this package contains Cython files. Go <a class="reference external" href="https://sites.google.com/site/anhaidgroup/projects/magellan/issues">here</a> for more information about how to check whether you already have a C compiler and how to install a C compiler. After you have confirmed that you have a C compiler installed, you are ready to install py_entitymatching.</p>
 </div>
 <div class="section" id="installing-using-pip">
 <h3>Installing Using pip<a class="headerlink" href="#installing-using-pip" title="Permalink to this headline">¶</a></h3>
@@ -2063,7 +2043,7 @@ DataFrame.</li>
 <h3>Loading and Saving Objects<a class="headerlink" href="#loading-and-saving-objects" title="Permalink to this headline">¶</a></h3>
 <dl class="function">
 <dt id="py_entitymatching.load_table">
-<code class="descclassname">py_entitymatching.</code><code class="descname">load_table</code><span class="sig-paren">(</span><em>file_path</em>, <em>metadata_ext=’.pklmetadata’</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.load_table" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">py_entitymatching.</code><code class="descname">load_table</code><span class="sig-paren">(</span><em>file_path</em>, <em>metadata_ext='.pklmetadata'</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.load_table" title="Permalink to this definition">¶</a></dt>
 <dd><p>Loads a pickled DataFrame from a file along with its metadata.</p>
 <p>This function loads a DataFrame from a file stored in pickle format.</p>
 <p>Further, this function looks for a metadata file with the same file name
@@ -2119,7 +2099,7 @@ table stored in a pickle format.</p>
 
 <dl class="function">
 <dt id="py_entitymatching.save_table">
-<code class="descclassname">py_entitymatching.</code><code class="descname">save_table</code><span class="sig-paren">(</span><em>data_frame</em>, <em>file_path</em>, <em>metadata_ext=’.pklmetadata’</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.save_table" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">py_entitymatching.</code><code class="descname">save_table</code><span class="sig-paren">(</span><em>data_frame</em>, <em>file_path</em>, <em>metadata_ext='.pklmetadata'</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.save_table" title="Permalink to this definition">¶</a></dt>
 <dd><p>Saves a DataFrame to disk along with its metadata in a pickle format.</p>
 <p>This function saves a  DataFrame to disk along with its metadata from
 the catalog.</p>
@@ -2210,7 +2190,7 @@ blockers, matchers, feature table, etc.</p>
 </div>
 <div class="admonition seealso">
 <p class="first admonition-title">See also</p>
-<p class="last"><code class="xref py py-meth docutils literal"><span class="pre">save_object()</span></code></p>
+<p class="last"><a class="reference internal" href="#py_entitymatching.save_object" title="py_entitymatching.save_object"><code class="xref py py-meth docutils literal"><span class="pre">save_object()</span></code></a></p>
 </div>
 </dd></dl>
 
@@ -2260,7 +2240,7 @@ a rule-based blocker, feature vectors, etc.</li>
 </div>
 <div class="admonition seealso">
 <p class="first admonition-title">See also</p>
-<p class="last"><code class="xref py py-meth docutils literal"><span class="pre">load_object()</span></code></p>
+<p class="last"><a class="reference internal" href="#py_entitymatching.load_object" title="py_entitymatching.load_object"><code class="xref py py-meth docutils literal"><span class="pre">load_object()</span></code></a></p>
 </div>
 </dd></dl>
 
@@ -3289,7 +3269,7 @@ int.</li>
 
 <dl class="method">
 <dt id="py_entitymatching.AttrEquivalenceBlocker.block_tables">
-<code class="descname">block_tables</code><span class="sig-paren">(</span><em>ltable</em>, <em>rtable</em>, <em>l_block_attr</em>, <em>r_block_attr</em>, <em>l_output_attrs=None</em>, <em>r_output_attrs=None</em>, <em>l_output_prefix=’ltable_’</em>, <em>r_output_prefix=’rtable_’</em>, <em>allow_missing=False</em>, <em>verbose=False</em>, <em>n_jobs=1</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.AttrEquivalenceBlocker.block_tables" title="Permalink to this definition">¶</a></dt>
+<code class="descname">block_tables</code><span class="sig-paren">(</span><em>ltable</em>, <em>rtable</em>, <em>l_block_attr</em>, <em>r_block_attr</em>, <em>l_output_attrs=None</em>, <em>r_output_attrs=None</em>, <em>l_output_prefix='ltable_'</em>, <em>r_output_prefix='rtable_'</em>, <em>allow_missing=False</em>, <em>verbose=False</em>, <em>n_jobs=1</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.AttrEquivalenceBlocker.block_tables" title="Permalink to this definition">¶</a></dt>
 <dd><p>Blocks two tables based on attribute equivalence.</p>
 <p>Conceptually, this will check <cite>l_block_attr=r_block_attr</cite> for each tuple
 pair from the Cartesian product of tables <cite>ltable</cite> and <cite>rtable</cite>. It outputs a
@@ -3547,7 +3527,7 @@ columns.</li>
 
 <dl class="method">
 <dt id="py_entitymatching.OverlapBlocker.block_tables">
-<code class="descname">block_tables</code><span class="sig-paren">(</span><em>ltable</em>, <em>rtable</em>, <em>l_overlap_attr</em>, <em>r_overlap_attr</em>, <em>rem_stop_words=False</em>, <em>q_val=None</em>, <em>word_level=True</em>, <em>overlap_size=1</em>, <em>l_output_attrs=None</em>, <em>r_output_attrs=None</em>, <em>l_output_prefix=’ltable_’</em>, <em>r_output_prefix=’rtable_’</em>, <em>allow_missing=False</em>, <em>verbose=False</em>, <em>show_progress=True</em>, <em>n_jobs=1</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.OverlapBlocker.block_tables" title="Permalink to this definition">¶</a></dt>
+<code class="descname">block_tables</code><span class="sig-paren">(</span><em>ltable</em>, <em>rtable</em>, <em>l_overlap_attr</em>, <em>r_overlap_attr</em>, <em>rem_stop_words=False</em>, <em>q_val=None</em>, <em>word_level=True</em>, <em>overlap_size=1</em>, <em>l_output_attrs=None</em>, <em>r_output_attrs=None</em>, <em>l_output_prefix='ltable_'</em>, <em>r_output_prefix='rtable_'</em>, <em>allow_missing=False</em>, <em>verbose=False</em>, <em>show_progress=True</em>, <em>n_jobs=1</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.OverlapBlocker.block_tables" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="docutils">
 <dt>Blocks two tables based on the overlap of token sets of attribute</dt>
 <dd>values.</dd>
@@ -3855,7 +3835,7 @@ int.</li>
 
 <dl class="method">
 <dt id="py_entitymatching.RuleBasedBlocker.block_tables">
-<code class="descname">block_tables</code><span class="sig-paren">(</span><em>ltable</em>, <em>rtable</em>, <em>l_output_attrs=None</em>, <em>r_output_attrs=None</em>, <em>l_output_prefix=’ltable_’</em>, <em>r_output_prefix=’rtable_’</em>, <em>verbose=False</em>, <em>show_progress=True</em>, <em>n_jobs=1</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.RuleBasedBlocker.block_tables" title="Permalink to this definition">¶</a></dt>
+<code class="descname">block_tables</code><span class="sig-paren">(</span><em>ltable</em>, <em>rtable</em>, <em>l_output_attrs=None</em>, <em>r_output_attrs=None</em>, <em>l_output_prefix='ltable_'</em>, <em>r_output_prefix='rtable_'</em>, <em>verbose=False</em>, <em>show_progress=True</em>, <em>n_jobs=1</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.RuleBasedBlocker.block_tables" title="Permalink to this definition">¶</a></dt>
 <dd><p>Blocks two tables based on the sequence of rules supplied by the user.</p>
 <p>Finds tuple pairs from left and right tables that survive the sequence
 of blocking rules. A tuple pair survives the sequence of blocking rules
@@ -4176,7 +4156,7 @@ int.</li>
 
 <dl class="method">
 <dt id="py_entitymatching.BlackBoxBlocker.block_tables">
-<code class="descname">block_tables</code><span class="sig-paren">(</span><em>ltable</em>, <em>rtable</em>, <em>l_output_attrs=None</em>, <em>r_output_attrs=None</em>, <em>l_output_prefix=’ltable_’</em>, <em>r_output_prefix=’rtable_’</em>, <em>verbose=False</em>, <em>show_progress=True</em>, <em>n_jobs=1</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.BlackBoxBlocker.block_tables" title="Permalink to this definition">¶</a></dt>
+<code class="descname">block_tables</code><span class="sig-paren">(</span><em>ltable</em>, <em>rtable</em>, <em>l_output_attrs=None</em>, <em>r_output_attrs=None</em>, <em>l_output_prefix='ltable_'</em>, <em>r_output_prefix='rtable_'</em>, <em>verbose=False</em>, <em>show_progress=True</em>, <em>n_jobs=1</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.BlackBoxBlocker.block_tables" title="Permalink to this definition">¶</a></dt>
 <dd><p>Blocks two tables based on a black box blocking function specified
 by the user.</p>
 <p>Finds tuple pairs from left and right tables that survive the black
@@ -4418,7 +4398,7 @@ cannot be built correctly.</li>
 <h3>Combining Blocker Outputs<a class="headerlink" href="#combining-blocker-outputs" title="Permalink to this headline">¶</a></h3>
 <dl class="function">
 <dt id="py_entitymatching.combine_blocker_outputs_via_union">
-<code class="descclassname">py_entitymatching.</code><code class="descname">combine_blocker_outputs_via_union</code><span class="sig-paren">(</span><em>blocker_output_list</em>, <em>l_prefix=’ltable_’</em>, <em>r_prefix=’rtable_’</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.combine_blocker_outputs_via_union" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">py_entitymatching.</code><code class="descname">combine_blocker_outputs_via_union</code><span class="sig-paren">(</span><em>blocker_output_list</em>, <em>l_prefix='ltable_'</em>, <em>r_prefix='rtable_'</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.combine_blocker_outputs_via_union" title="Permalink to this definition">¶</a></dt>
 <dd><p>Combines multiple blocker outputs by doing a union of their tuple pair
 ids (foreign key ltable, foreign key rtable).</p>
 <p>Specifically, this function takes in a list of DataFrames (candidate
@@ -5035,7 +5015,7 @@ is the actual similarity function.</p>
 
 <dl class="function">
 <dt id="py_entitymatching.get_tokenizers_for_blocking">
-<code class="descclassname">py_entitymatching.</code><code class="descname">get_tokenizers_for_blocking</code><span class="sig-paren">(</span><em>q=[2, 3], dlm_char=[‘ ‘]</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.get_tokenizers_for_blocking" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">py_entitymatching.</code><code class="descname">get_tokenizers_for_blocking</code><span class="sig-paren">(</span><em>q=[2, 3], dlm_char=[' ']</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.get_tokenizers_for_blocking" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function returns the single argument tokenizers that can be used for
 blocking purposes (typically in rule-based blocking).</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -5070,7 +5050,7 @@ function as the value.</p>
 
 <dl class="function">
 <dt id="py_entitymatching.get_tokenizers_for_matching">
-<code class="descclassname">py_entitymatching.</code><code class="descname">get_tokenizers_for_matching</code><span class="sig-paren">(</span><em>q=[2, 3], dlm_char=[‘ ‘]</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.get_tokenizers_for_matching" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">py_entitymatching.</code><code class="descname">get_tokenizers_for_matching</code><span class="sig-paren">(</span><em>q=[2, 3], dlm_char=[' ']</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.get_tokenizers_for_matching" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function returns the single argument tokenizers that can be used for
 matching purposes.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -5378,7 +5358,7 @@ are not present in the input candset.</li>
 <h4>Imputing Missing Values<a class="headerlink" href="#imputing-missing-values" title="Permalink to this headline">¶</a></h4>
 <dl class="function">
 <dt id="py_entitymatching.impute_table">
-<code class="descclassname">py_entitymatching.</code><code class="descname">impute_table</code><span class="sig-paren">(</span><em>table</em>, <em>exclude_attrs=None</em>, <em>missing_val=’NaN’</em>, <em>strategy=’mean’</em>, <em>axis=0</em>, <em>val_all_nans=0</em>, <em>verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.impute_table" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">py_entitymatching.</code><code class="descname">impute_table</code><span class="sig-paren">(</span><em>table</em>, <em>exclude_attrs=None</em>, <em>missing_val='NaN'</em>, <em>strategy='mean'</em>, <em>axis=0</em>, <em>val_all_nans=0</em>, <em>verbose=True</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.impute_table" title="Permalink to this definition">¶</a></dt>
 <dd><p>Impute table containing missing values.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -6789,7 +6769,7 @@ done inplace (defaults to True).</li>
 <h4>Selecting Matcher<a class="headerlink" href="#selecting-matcher" title="Permalink to this headline">¶</a></h4>
 <dl class="function">
 <dt id="py_entitymatching.select_matcher">
-<code class="descclassname">py_entitymatching.</code><code class="descname">select_matcher</code><span class="sig-paren">(</span><em>matchers, x=None, y=None, table=None, exclude_attrs=None, target_attr=None, metric_to_select_matcher=’precision’, metrics_to_display=[‘precision’, ‘recall’, ‘f1’], k=5, n_jobs=-1, random_state=None</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.select_matcher" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">py_entitymatching.</code><code class="descname">select_matcher</code><span class="sig-paren">(</span><em>matchers, x=None, y=None, table=None, exclude_attrs=None, target_attr=None, metric_to_select_matcher='precision', metrics_to_display=['precision', 'recall', 'f1'], k=5, n_jobs=-1, random_state=None</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.select_matcher" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function selects a matcher from a given list of matchers based on a
 given metric.</p>
 <p>Specifically, this function internally uses scikit-learn’s
