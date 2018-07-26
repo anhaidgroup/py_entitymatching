@@ -9,3 +9,5 @@ Blocking
     :members:
 .. autoclass:: py_entitymatching.BlackBoxBlocker
     :members:
+.. autoclass:: py_entitymatching.SortedNeighborhoodBlocker
+    :members:

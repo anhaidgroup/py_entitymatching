@@ -4,6 +4,7 @@ import sys
 import pandas as pd
 import pyprind
 import six
+import warnings
 from joblib import Parallel, delayed
 from collections import deque, OrderedDict
 import heapq
@@ -19,19 +20,30 @@ logger = logging.getLogger(__name__)
 
 class SortedNeighborhoodBlocker(Blocker):
     """
+    WARNING: THIS IS AN EXPERIMENTAL CLASS. THIS CLASS IS NOT TESTED. 
+    USE AT YOUR OWN RISK.
+
     Blocks based on the sorted neighborhood blocking method
     """
+
+    def __init__(self):
+        # display warning message upon object initialization
+        print("WARNING: THIS IS AN EXPERIMENTAL COMMAND. THIS COMMAND IS NOT TESTED. USE AT YOUR OWN RISK.")
 
     def block_tables(self, ltable, rtable, l_block_attr, r_block_attr, window_size=2,
                      l_output_attrs=None, r_output_attrs=None,
                      l_output_prefix='ltable_', r_output_prefix='rtable_',
                      allow_missing=False, verbose=False, n_jobs=1):
-        """Blocks two tables based on sorted neighborhood.
+        """
+        WARNING: THIS IS AN EXPERIMENTAL COMMAND. THIS COMMAND IS NOT TESTED. 
+        USE AT YOUR OWN RISK.
 
-    Finds tuple pairs from left and right tables such that when each table
-    is sorted based upon a blocking attribute, tuple pairs are within a
-    distance w of each other. The blocking attribute is created prior to calling
-    this function.
+        Blocks two tables based on sorted neighborhood.
+
+        Finds tuple pairs from left and right tables such that when each table
+        is sorted based upon a blocking attribute, tuple pairs are within a
+        distance w of each other. The blocking attribute is created prior to calling
+        this function.
 
         Args:
             ltable (DataFrame): The left input table.
@@ -113,6 +125,10 @@ class SortedNeighborhoodBlocker(Blocker):
             AssertionError: If `r_out_attrs` are not in the rtable.
 
         """
+
+        # Warning that this code is still in alpha stage
+        # display warning message
+        print("WARNING: THIS IS AN EXPERIMENTAL COMMAND. THIS COMMAND IS NOT TESTED. USE AT YOUR OWN RISK.")
 
         # validate data types of input parameters
         self.validate_types_params_tables(ltable, rtable,
