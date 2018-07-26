@@ -27,34 +27,12 @@ Dependencies
 * pandas-profiling (provides implementation for profiling pandas dataframe)
 * pandas-table (provides data exploration tool for pandas dataframe)
 * openrefine (provides data exploration tool for tables)
+* ipython (provides better tools for displaying tables in notebooks)
+* scipy (dependency for skikit-learn)
 
-
-
-Installing Using conda
-----------------------
-The easiest and recommended way to install the package is to use the command conda,
-which will retrieve py_entitymatching from Anaconda repository then install it::
-
-    conda install -c uwmagellan py_entitymatching
-
-The above command will install py_entitymatching and all of its dependencies except
-XGBoost, pandastable, openrefine and PyQt5. As these packages are either not available from
-anaconda cloud (for some Python versions or operating systems) or they are not Python
-packages (openrefine).
-
-* To install PyQt5, follow the instructions at `this page <http://pyqt.sourceforge.net/Docs/PyQt5/installation.html>`_.
-
-* To install XGBoost manually from the source follow the instructions on `this page <https://XGBoost.readthedocs.io/en/latest/build.html>`_.
-
-* To install pandastable follow the instructions at `this page <https://github.com/dmnfarrell/pandastable>`_.
-
-* To install openrefine follow the instructions at `this page <https://github.com/OpenRefine/OpenRefine/wiki/Installation-Instructions>`_.
-
-
-.. note::
-    To use the command conda, first you must install Miniconda or Anaconda. For
-    more details refer to this `conda page <http://conda.pydata.org/docs/using/index.html>`_.
-
+C Compiler Required
+-------------------
+Before installing this package, you need to make sure that you have a C compiler installed. This is necessary because this package contains Cython files. Go `here <https://sites.google.com/site/anhaidgroup/projects/magellan/issues>`_ for more information about how to check whether you already have a C compiler and how to install a C compiler. After you have confirmed that you have a C compiler installed, you are ready to install py_entitymatching. 
 
 Installing Using pip
 --------------------
@@ -77,8 +55,6 @@ in PyPI for Python 2.
 * To install pandastable follow the instructions at `this page <https://github.com/dmnfarrell/pandastable>`_.
 
 * To install openrefine follow the instructions at `this page <https://github.com/OpenRefine/OpenRefine/wiki/Installation-Instructions>`_.
-
-
 
 Installing from Source Distribution
 -----------------------------------
