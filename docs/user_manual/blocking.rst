@@ -51,7 +51,7 @@ The class diagram of Blocker and the concrete blockers inherited from it is show
 Built-In Blockers
 -----------------
 Built-in blockers are those that have been built into *py_entitymatching* and you can just
-simply call them. *py_entitymatching* currently offers two built-in blockers.
+simply call them. *py_entitymatching* currently offers three built-in blockers.
 
 **Attribute Equivalence Blocker**
 
@@ -128,6 +128,49 @@ example of using `block_tuples` is shown below:
 
 Please look at the API reference of :py:meth:`~py_entitymatching.OverlapBlocker.block_tuples`
 for more details.
+
+**Sorted Neighborhood Blocker**
+
+Given two tables A and B, conceptually, `block_tables` works in the following manner.
+First, for table A, `block_tables` creates a blocking attribute for every tuple using the output of `l_block_attr`.
+Next, for table B, `block_tables` similarly creates a blocking attribute using the output of `r_block_attr`.
+Then, tables A and B are combined and sorted on the blocking attribute.
+
+Finally, a sliding window of size `window_size` is passed through the sorted dataset.
+If two tuples are within `window_size` positions of each other in sorted order, and the two tuples come from different tables, then the two tuples are returned in the candidate set.
+
+An example of using `block_tables` is shown below:
+
+    >>> import py_entitymatching as em
+    >>> A = em.read_csv_metadata('path_to_csv_dir/table_A.csv', key='ID')
+    >>> B = em.read_csv_metadata('path_to_csv_dir/table_B.csv', key='ID')
+    >>> sn = em.SortedNeighborhoodBlocker()
+    >>> C = sn.block_tables(A, B, l_block_attr='zipcode', r_block_attr='zipcode', l_output_attrs=['name'], r_output_attrs=['name'], window_size=3 )
+
+Please look at the API reference of :py:meth:`~py_entitymatching.SortedNeighborhoodBlocker.block_tables`
+for more details.
+
+Unlike the other two blockers, since the sorted neighborhood blocker requires the sorted order of all tuples in the database, `block_candset` and `block_tuples` are not applicable and will raise an assertion if called.
+
+Two things to note.
+First, consider the trade-off of possible values to `window_size`.
+If the size is too small, actually-matching tuples will not be returned in the candidate set (and thus, missed).
+If the window size is very large, the resulting candidate set will also be excessively large, hurting performance.
+The exact size needed is unique to each dataset.
+
+Second, if `window_size` is smaller than a range of matching tuples, and actually-matching tuples will be missed, not be returned in the candidate set.
+However, if the blocking attribute is not sufficient to make a unique sorted order, than the resulting sorted order is one of a set of potential sorted orders.
+If the method of sorting changes, for instance if more cores are used, a different sorted order may be returned.
+This sorted order may result in a different candidate set being returned.
+To avoid this situation it is recommended to add some uniqueness into the blocking attribute (such as the ID), so that there is only one correct sorted order.
+This will help ensure the same set of results are returned from the same inputs.
+An example of this is:
+
+    >>> A["birth_year_plus_id"]=A["birth_year"].map(str)+'-'+A["ID"].map(str)
+    >>> B["birth_year_plus_id"]=B["birth_year"].map(str)+'-'+A["ID"].map(str)
+    >>> C3 = sn.block_tables(A, B, l_block_attr='birth_year_plus_id', r_block_attr='birth_year_plus_id', l_output_attrs=['name', 'birth_year_plus_id', 'birth_year', 'zipcode'], r_output_attrs=['name', 'birth_year_plus_id', 'birth_year', 'zipcode'], l_output_prefix='l_', r_output_prefix='r_', window_size=5)
+
+In this example a new attribute `birth_year_plus_id` is used as the blocking attribute, and will always have the same sorted order.
 
 Blackbox Blockers
 -----------------
