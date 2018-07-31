@@ -1794,6 +1794,96 @@ outcome may differ between current tuple pair and the actual feature vector used
 prediction).</p>
 </div>
 </div>
+<span id="document-user_manual/triggers"></span><div class="section" id="using-triggers-to-update-matching-results">
+<h3>Using Triggers to Update Matching Results<a class="headerlink" href="#using-triggers-to-update-matching-results" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="match-triggers">
+<h4>Match Triggers<a class="headerlink" href="#match-triggers" title="Permalink to this headline">¶</a></h4>
+<p>Once you have used a matcher to predict results on a table, you might find
+that there is some pattern of false positives or false negatives. Often, it
+is useful to be able to create a set of rules to reevaluate tuple pair
+predictions to correct these patterns of mistakes.</p>
+<div class="section" id="creating-the-trigger">
+<h5>Creating the Trigger<a class="headerlink" href="#creating-the-trigger" title="Permalink to this headline">¶</a></h5>
+<p>Each trigger can be created by calling its constructor. For example, a user can
+create a trigger like this:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mt</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">MatchTrigger</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Please refer to <a class="reference internal" href="singlepage.html#py_entitymatching.MatchTrigger" title="py_entitymatching.MatchTrigger"><code class="xref py py-meth docutils literal"><span class="pre">MatchTrigger()</span></code></a> for more details.</p>
+<p>If you have already used a matcher, you should have already created a set of features
+for matching. More information on this can be found in the section
+<span class="xref std std-ref">label-create-features-matching</span>.</p>
+<p>Once the features are created, py_entitymatching stores this set of features in a
+feature table. We refer to this feature table as <cite>match_f</cite>. Then you will be able
+to instantiate a match trigger and add rules.</p>
+</div>
+<div class="section" id="adding-and-deleting-rules">
+<h5>Adding and Deleting Rules<a class="headerlink" href="#adding-and-deleting-rules" title="Permalink to this headline">¶</a></h5>
+<p>Once you have created the features, you can create rules like this:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mt</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">MatchTrigger</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mt</span><span class="o">.</span><span class="n">add_cond_rule</span><span class="p">(</span><span class="n">rule1</span><span class="p">,</span> <span class="n">match_f</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mt</span><span class="o">.</span><span class="n">add_cond_rule</span><span class="p">(</span><span class="n">rule2</span><span class="p">,</span> <span class="n">match_f</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In the above, <cite>match_f</cite> is a set of features stored as a Dataframe (see section
+<span class="xref std std-ref">label-create-features-matching</span>).</p>
+<p>Each rule is a list of strings. Each string specifies a conjunction of predicates. Each
+predicate has three parts: (1) an expression, (2) a comparison operator, and (3) a
+value. The expression is evaluated over a tuple pair, producing a numeric value.
+Currently, in py_entitymatching an expression is limited to contain a single feature
+(being applied to a tuple pair). So an example predicate will look like this:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">name_name_lev</span><span class="p">(</span><span class="n">ltuple</span><span class="p">,</span> <span class="n">rtuple</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">3</span>
+</pre></div>
+</div>
+<p>In the above <cite>name_name_lev</cite> is feature. Concretely, this feature computes
+Levenshtein distance between the <cite>name</cite> values in the input tuple pair.</p>
+<p>As an example, the rules <cite>rule1</cite> and <cite>rule2</cite> can look like this:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">rule1</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;name_name_lev(ltuple, rtuple) &gt; 3&#39;</span><span class="p">,</span> <span class="s1">&#39;age_age_exact_match(ltuple, rtuple) !=0&#39;</span><span class="p">]</span>
+<span class="n">rule2</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;address_address_lev(ltuple, rtuple) &gt; 6&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>In the above, <cite>rule1</cite> contains two predicates and <cite>rule2</cite> contains just a single
+predicate. Each rule is a conjunction of predicates. That is, each rule will return True
+only if all the predicates return True. The matcher is then a disjunction of rules.
+That is, even if one of the rules return True, then the result for the tuple pair will
+be true.</p>
+<p>You also need to add a condition status and action when using match triggers. If the
+result is the same value as the condition status, then the action will be carried out.
+For example, the action and condition status can be declared like so:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mt</span><span class="o">.</span><span class="n">add_cond_status</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mt</span><span class="o">.</span><span class="n">add_action</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The condition status and action in the above example mean that if the rules in the
+trigger return the value False, then the prediction will be changed to a 0.</p>
+<p>Rules can also be deleted once they have been added:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rule_name</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">add_cond_rule</span><span class="p">(</span><span class="n">rule_1</span><span class="p">,</span> <span class="n">match_f</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mt</span><span class="o">.</span><span class="n">delete_rule</span><span class="p">(</span><span class="n">rule_name</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The command delete_rule must be given the name of the rule to be deleted. Rule names
+and information on rules can be found using the following commands:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># get a list of rule names</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rule_names</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">get_rule_names</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># view rule source</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mt</span><span class="o">.</span><span class="n">view_rule</span><span class="p">(</span><span class="s1">&#39;rule_name&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># get rule fn</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mt</span><span class="o">.</span><span class="n">get_rule</span><span class="p">(</span><span class="s1">&#39;rule_name&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="executing-the-triggers">
+<h5>Executing the Triggers<a class="headerlink" href="#executing-the-triggers" title="Permalink to this headline">¶</a></h5>
+<p>Once the rules, condition status, and action have been specified, the trigger can be
+used to refine the predictions. An example of using the execute command is shown below:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mt</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">input_table</span><span class="o">=</span><span class="n">H</span><span class="p">,</span> <span class="n">label_column</span><span class="o">=</span><span class="s1">&#39;prediction_labels&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For more information on the <cite>execute</cite> method, please refer to
+<a class="reference internal" href="singlepage.html#py_entitymatching.MatchTrigger.execute" title="py_entitymatching.MatchTrigger.execute"><code class="xref py py-meth docutils literal"><span class="pre">execute()</span></code></a> for more details.</p>
+</div>
+</div>
+</div>
 <span id="document-user_manual/evaluate_matching"></span><div class="section" id="evaluating-the-matching-output">
 <h3>Evaluating the Matching Output<a class="headerlink" href="#evaluating-the-matching-output" title="Permalink to this headline">¶</a></h3>
 <p>Once you have predicted matches using ML-based matcher, then you would have to
