@@ -21,4 +21,5 @@ Steps of Supported EM Workflows
     select_best_matcher
     debugging_matcher
     matchercombiner
+    triggers
     evaluate_matching
