@@ -136,3 +136,5 @@ Once the rules are specified, you can predict the matches using the
 
 For more information on the `predict` method, please refer to
 :py:meth:`~py_entitymatching.BooleanRuleMatcher.predict` for more details.
+
+
