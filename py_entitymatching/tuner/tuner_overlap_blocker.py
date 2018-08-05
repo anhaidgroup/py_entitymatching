@@ -19,7 +19,7 @@ def tuner_overlap_blocker(ltable, rtable, l_key, r_key, l_overlap_attr, r_overla
     """
     WARNING THIS COMMAND IS EXPERIMENTAL AND NOT TESTED. USE AT YOUR OWN RISK.
     
-    Tunes the parameters for down sampling command implemented using Dask. 
+    Tunes the parameters for blocking two tables command implemented using Dask. 
 
     Given the input tables and the parameters for Dask-based overlap blocker command, 
     this command returns the configuration including whether the input tables need to 
@@ -78,9 +78,9 @@ def tuner_overlap_blocker(ltable, rtable, l_key, r_key, l_overlap_attr, r_overla
         z) then x indicates if the tables need to be swapped or not, y indicates the number of 
         left table partitions (if the tables need to be swapped, then this indicates the 
         number of left table partitions after swapping), and z indicates the number of 
-       right table partitions. 
+        right table partitions. 
        
-     Examples:
+    Examples:
         >>> from py_entitymatching.tuner.tuner_overlap_blocker import tuner_overlap_blocker
         >>> from py_entitymatching.dask.dask_overlap_blocker import DaskOverlapBlocker
         >>> obj = DaskOverlapBlocker()

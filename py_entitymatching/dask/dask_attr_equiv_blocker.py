@@ -250,7 +250,7 @@ class DaskAttrEquivalenceBlocker(Blocker):
                       n_chunks=1):
         """
 
-        WARNING THIS COMMAND IS EXPERIMENTAL AND NOT TESTED. USE AT YOUR OWN RISK
+        WARNING THIS COMMAND IS EXPERIMENTAL AND NOT TESTED. USE AT YOUR OWN RISK.
 
         Blocks an input candidate set of tuple pairs based on attribute equivalence.
         Finds tuple pairs from an input candidate set of tuple pairs
@@ -398,19 +398,19 @@ class DaskAttrEquivalenceBlocker(Blocker):
                      allow_missing=False):
         """
         Blocks a tuple pair based on attribute equivalence.
+        
         Args:
             ltuple (Series): The input left tuple.
             rtuple (Series): The input right tuple.
             l_block_attr (string): The blocking attribute in left tuple.
             r_block_attr (string): The blocking attribute in right tuple.
             allow_missing (boolean): A flag to indicate whether a tuple pair
-                                     with missing value in at least one of the
-                                     blocking attributes should be blocked
-                                     (defaults to False). If this flag is set
-                                     to True, the pair will be kept if either
-                                     ltuple has missing value in l_block_attr
-                                     or rtuple has missing value in r_block_attr
-                                     or both.
+                with missing value in at least one of the blocking attributes 
+                should be blocked (defaults to False). If this flag is set
+                to True, the pair will be kept if either ltuple has missing value in 
+                l_block_attr or rtuple has missing value in r_block_attr
+                or both.
+                
         Returns:
             A status indicating if the tuple pair is blocked, i.e., the values
             of l_block_attr in ltuple and r_block_attr in rtuple are different

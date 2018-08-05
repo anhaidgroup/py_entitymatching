@@ -83,6 +83,7 @@ class DaskRuleBasedBlocker(Blocker):
 
     def add_rule(self, conjunct_list, feature_table=None, rule_name=None):
         """Adds a rule to the rule-based blocker.
+        
             Args:
                conjunct_list (list): A list of conjuncts specifying the rule.
                feature_table (DataFrame): A DataFrame containing all the
@@ -105,10 +106,12 @@ class DaskRuleBasedBlocker(Blocker):
                                    blocker.
             Returns:
                 The name of the rule added (string).
+        
             Raises:
                 AssertionError: If `rule_name` already exists.
                 AssertionError: If `feature_table` is not a valid value
                  parameter.
+        
             Examples:
                 >>> import py_entitymatching 
                 >>> from py_entitymatching.dask.dask_rule_based_blocker import DaskRuleBasedBlocker
@@ -148,8 +151,10 @@ class DaskRuleBasedBlocker(Blocker):
 
     def delete_rule(self, rule_name):
         """Deletes a rule from the rule-based blocker.
+        
             Args:
                rule_name (string): Name of the rule to be deleted.
+        
             Examples:
                 >>> import py_entitymatching as em
                 >>> from py_entitymatching.dask.dask_rule_based_blocker import DaskRuleBasedBlocker
@@ -172,8 +177,10 @@ class DaskRuleBasedBlocker(Blocker):
 
     def view_rule(self, rule_name):
         """Prints the source code of the function corresponding to a rule.
+        
             Args:
                rule_name (string): Name of the rule to be viewed.
+        
             Examples:
                 >>> import py_entitymatching as em
                 >>> rb = em.DaskRuleBasedBlocker()
@@ -190,8 +197,10 @@ class DaskRuleBasedBlocker(Blocker):
 
     def get_rule_names(self):
         """Returns the names of all the rules in the rule-based blocker.
+        
            Returns:
                A list of names of all the rules in the rule-based blocker (list).
+        
            Examples:
                 >>> import py_entitymatching as em
                 >>> rb = em.DaskRuleBasedBlocker()
@@ -206,10 +215,13 @@ class DaskRuleBasedBlocker(Blocker):
 
     def get_rule(self, rule_name):
         """Returns the function corresponding to a rule.
+        
            Args:
                rule_name (string): Name of the rule.
+        
            Returns:
                A function object corresponding to the specified rule.
+        
            Examples:
                 >>> import py_entitymatching as em
                 >>> rb = em.DaskRuleBasedBlocker()
@@ -225,8 +237,10 @@ class DaskRuleBasedBlocker(Blocker):
 
     def set_feature_table(self, feature_table):
         """Sets feature table for the rule-based blocker.
+        
             Args:
                feature_table (DataFrame): A DataFrame containing features.
+        
             Examples:
                 >>> import py_entitymatching as em
                 >>> rb = em.DaskRuleBasedBlocker()
@@ -667,12 +681,15 @@ class DaskRuleBasedBlocker(Blocker):
         """
         Blocks a tuple pair based on a sequence of blocking rules supplied
         by the user.
+        
         Args:
             ltuple (Series): The input left tuple.
             rtuple (Series): The input right tuple.
+        
         Returns:
             A status indicating if the tuple pair is blocked by applying the
             sequence of blocking rules (boolean).
+        
         Examples:
                 >>> import py_entitymatching as em
                 >>> from py_entitymatching.dask.dask_rule_based_blocker import DaskRuleBasedBlocker

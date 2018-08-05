@@ -55,9 +55,7 @@ class DaskOverlapBlocker(Blocker):
         WARNING THIS COMMAND IS EXPERIMENTAL AND NOT TESTED. USE AT YOUR OWN RISK.
 
         Blocks two tables based on the overlap of token sets of attribute
-         values.
-
-        Finds tuple pairs from left and right tables such that the overlap
+        values. Finds tuple pairs from left and right tables such that the overlap
         between (a) the set of tokens obtained by tokenizing the value of
         attribute l_overlap_attr of a tuple from the left table, and (b) the
         set of tokens obtained by tokenizing the value of attribute
@@ -362,9 +360,8 @@ class DaskOverlapBlocker(Blocker):
         WARNING THIS COMMAND IS EXPERIMENTAL AND NOT TESTED. USE AT YOUR OWN RISK.
         
         Blocks an input candidate set of tuple pairs based on the overlap
-           of token sets of attribute values.
-
-        Finds tuple pairs from an input candidate set of tuple pairs such that
+        of token sets of attribute values. Finds tuple pairs from an input 
+        candidate set of tuple pairs such that
         the overlap between (a) the set of tokens obtained by tokenizing the
         value of attribute l_overlap_attr of the left tuple in a tuple pair,
         and (b) the set of tokens obtained by tokenizing the value of
@@ -723,8 +720,7 @@ class DaskOverlapBlocker(Blocker):
     def block_tuples(self, ltuple, rtuple, l_overlap_attr, r_overlap_attr,
                      rem_stop_words=False, q_val=None, word_level=True,
                      overlap_size=1, allow_missing=False):
-        """Blocks a tuple pair based on the overlap of token sets of attribute
-           values.
+        """Blocks a tuple pair based on the overlap of token sets of attribute values.
 
         Args:
             ltuple (Series): The input left tuple.

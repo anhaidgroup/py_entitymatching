@@ -112,3 +112,10 @@ that are available in PyPI and PyQt5, pandastable, XGBoost are not in PyPI for P
 
 * To install openrefine follow the instructions at `this page <https://github.com/OpenRefine/OpenRefine/wiki/Installation-Instructions>`_.
 
+
+.. note::
+    Currently, py_entitymatching supports a set of experimental commands that help users
+    create an EM workflow. Some of these commands will require installing Dask. To
+    install dask refer to this `page <http://dask.pydata.org/en/latest/install.html`_.
+
+

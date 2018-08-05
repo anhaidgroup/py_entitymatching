@@ -23,7 +23,7 @@ regex = re.compile('[%s]' % re.escape('!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~'))
 
 
 
-def down_sample(ltable, rtable, size, y_param, show_progress=True, verbose=False,
+def dask_down_sample(ltable, rtable, size, y_param, show_progress=True, verbose=False,
                 seed=None, rem_stop_words=True, rem_puncs=True, n_ltable_chunks=1,
                 n_sample_rtable_chunks=1):
 
@@ -32,8 +32,7 @@ def down_sample(ltable, rtable, size, y_param, show_progress=True, verbose=False
         WARNING THIS COMMAND IS EXPERIMENTAL AND NOT TESTED. USE AT YOUR OWN RISK.
          
         This command down samples two tables A and B into smaller tables A' and
-        B' respectively.
-    
+        B' respectively.    
         Specifically, first it randomly selects `size` tuples
         from the table B to be table B'. Next, it builds an inverted index I
         (token, tuple_id) on table A. For each tuple x ∈ B', the algorithm
@@ -58,11 +57,11 @@ def down_sample(ltable, rtable, size, y_param, show_progress=True, verbose=False
             rem_stop_words (boolean): A flag to indicate whether a default set of stop words 
              must be removed.
             rem_puncs (boolean): A flag to indicate whether the punctuations must be 
-             removed from the strings.
-             n_ltable_chunks (int): The number of partitions for ltable (defaults to 1). If it 
-                            is set to -1, the number of partitions will be set to the 
-                            number of cores in the machine.  
-             n_sample_rtable_chunks (int): The number of partitions for the 
+             removed from the strings.             
+            n_ltable_chunks (int): The number of partitions for ltable (defaults to 1). If it 
+              is set to -1, the number of partitions will be set to the 
+              number of cores in the machine.  
+            n_sample_rtable_chunks (int): The number of partitions for the 
               sampled rtable (defaults to 1)
                 
     
@@ -86,12 +85,12 @@ def down_sample(ltable, rtable, size, y_param, show_progress=True, verbose=False
             >>> A = em.read_csv_metadata('path_to_csv_dir/table_A.csv', key='ID')
             >>> B = em.read_csv_metadata('path_to_csv_dir/table_B.csv', key='ID')
             >>> sample_A, sample_B = dask_down_sample(A, B, 500, 1, n_ltable_chunks=-1, n_sample_rtable_chunks=-1)
-    
             # Example with seed = 0. This means the same sample data set will be returned
             # each time this function is run.
             >>> A = em.read_csv_metadata('path_to_csv_dir/table_A.csv', key='ID')
             >>> B = em.read_csv_metadata('path_to_csv_dir/table_B.csv', key='ID')
             >>> sample_A, sample_B = dask_down_sample(A, B, 500, 1, seed=0, n_ltable_chunks=-1, n_sample_rtable_chunks=-1)
+            
         """
 
     logger.warning(

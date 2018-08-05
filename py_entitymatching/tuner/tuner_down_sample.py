@@ -49,9 +49,8 @@ def tuner_down_sample(ltable, rtable, size, y_param, seed, rem_stop_words,
     y indicates the number of left table partitions (if the tables need to be swapped, 
     then this indicates the number of left table partitions after swapping), 
     and z indicates the number of down sampled right table partitions. 
-     
-     
-     Args:
+    
+    Args:
         ltable (DataFrame): The left input table, i.e., table A.
         rtable (DataFrame): The right input table, i.e., table B. 
         size (int): The size that table B should be down sampled to.
@@ -77,7 +76,7 @@ def tuner_down_sample(ltable, rtable, size, y_param, seed, rem_stop_words,
         number of left table partitions after swapping), and z indicates the number of 
         down sampled right table partitions. 
             
-     Examples:
+    Examples:
         >>> from py_entitymatching.tuner.tuner_down_sample import tuner_down_sample
         >>> (swap_or_not, n_ltable_chunks, n_sample_rtable_chunks) = tuner_down_sample(ltable, rtable, size, y_param, seed, rem_stop_words, rem_puncs)
      

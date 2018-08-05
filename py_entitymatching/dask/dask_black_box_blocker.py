@@ -41,8 +41,10 @@ class DaskBlackBoxBlocker(Blocker):
 
     def set_black_box_function(self, function):
         """Sets black box function to be used for blocking.
+        
         Args:
             function (function): the black box function to be used for blocking .
+        
         """
         self.black_box_function = function
 
