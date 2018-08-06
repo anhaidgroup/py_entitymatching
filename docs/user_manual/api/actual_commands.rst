@@ -29,5 +29,6 @@ Experimental Commands
 
     dask_commands
     tuners
+    combiner
 
 
