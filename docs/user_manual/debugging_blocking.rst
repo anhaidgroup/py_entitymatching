@@ -48,5 +48,9 @@ An example of using `debug_blocker` is shown below:
 Please refer to the API reference of :py:meth:`~py_entitymatching.debug_blocker`
 for more details.
 
-
+The blocker debugger is implemented in Cython. In case this version of the 
+command is not working properly, there is also a python version of the command, 
+called `backup_debug_blocker`, available that can be used instead. Please refer 
+to the API reference of :py:meth:`~py_entitymatching.backup_debug_blocker` for
+more details.
 
