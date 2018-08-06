@@ -20,3 +20,14 @@ Commands in py_entitymatching
     debugging_matcher
     triggers
     evaluating_the_matching_output
+
+=====================
+Experimental Commands
+=====================
+.. toctree::
+    :maxdepth: 3
+
+    dask_commands
+    tuners
+
+
