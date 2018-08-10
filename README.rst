@@ -29,16 +29,16 @@ Dependencies
 
 The required dependencies to build the packages are:
 
-* pandas (provides data structures to store and manage tables)
-* scikit-learn (provides implementations for common machine learning algorithms)
-* joblib (provides multiprocessing capabilities)
-* pyqt5 (provides tools to build GUIs)
-* py_stringsimjoin (provides implementations for string similarity joins)
-* py_stringmatching (provides a set of string tokenizers and string similarity functions)
-* cloudpickle (provides functions to serialize Python constructs)
-* pyprind (library to display progress indicators)
-* pyparsing (library to parse strings)
-* six (provides functions to write compatible code across Python 2 and 3)
+* pandas (provides data structures to store and manage tables). Tested on version 0.23.2.
+* scikit-learn (provides implementations for common machine learning algorithms). Tested on version 0.19.1.
+* joblib (provides multiprocessing capabilities). Tested on version 0.12.0.
+* pyqt5 (provides tools to build GUIs). Tested on version 5.6.0.
+* py_stringsimjoin (provides implementations for string similarity joins). Tested on version 0.3.0.
+* py_stringmatching (provides a set of string tokenizers and string similarity functions). Tested on version 0.4.0.
+* cloudpickle (provides functions to serialize Python constructs). Tested on version 0.5.3.
+* pyprind (library to display progress indicators). Tested on version 2.10.0.
+* pyparsing (library to parse strings). Tested on version 2.2.0.
+* six (provides functions to write compatible code across Python 2 and 3). Tested on version 2.11.0.
 
 Platforms
 =========
