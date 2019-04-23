@@ -13,4 +13,5 @@ dependencies:
     - py_stringmatching
     - pandas-profiling
     - requests
+    - ipython
 #    - xgboost

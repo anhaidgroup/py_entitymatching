@@ -113,6 +113,8 @@ if __name__ == "__main__":
         ],
         packages=packages,
         install_requires=[
+            'requests',
+            'ipython',
             'PyPrind',
             'py_stringsimjoin==0.3.0',
             # dependencies such as py_stringmatching, joblib, pyprind
