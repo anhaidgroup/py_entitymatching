@@ -81,7 +81,7 @@ if __name__ == "__main__":
                                        include_dirs=[])
                  ]
     setuptools.setup(
-        name='py_entitymatching',
+        name='py_entitymatching_test',
         version='0.3.1',
         description='Python library for end to end Entity Matching.',
         long_description=LONG_DESCRIPTION,

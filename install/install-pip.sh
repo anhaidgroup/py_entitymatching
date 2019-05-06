@@ -8,4 +8,4 @@ source activate py_entitymatching_test_env
 pip install -r requirements.txt
 
 # Install from TestPyPI
-pip install -i https://test.pypi.org/simple/ py-stringsimjoin
+pip install -i https://test.pypi.org/simple/ py-entitymatching-test
