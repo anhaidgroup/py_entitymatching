@@ -44,7 +44,7 @@ def generate_cython():
     p = subprocess.call([sys.executable, os.path.join(cwd,
                                                       'build_tools',
                                                       'cythonize.py'),
-                         'py_entitymatching'],
+                         'py_entitymatching_test'],
                         cwd=cwd)
     if p != 0:
         raise RuntimeError("Running cythonize failed!")
