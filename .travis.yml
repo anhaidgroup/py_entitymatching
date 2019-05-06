@@ -2,64 +2,102 @@ matrix:
   include:
   - os: linux
     python: 2.7
-    env: PYTHON_VERSION=2.7
-#  - os: linux
-#    python: 3.3
-#    env: PYTHON_VERSION=3.3
+    env:
+      - PYTHON_VERSION=2.7
+      - INSTALL_METHOD=src
   - os: linux
-    python: 3.4
-    env: PYTHON_VERSION=3.4
+    python: 2.7
+    env:
+      - PYTHON_VERSION=2.7
+      - INSTALL_METHOD=pip
   - os: linux
     python: 3.5
-    env: PYTHON_VERSION=3.5
+    env:
+      - PYTHON_VERSION=3.5
+      - INSTALL_METHOD=src
   - os: linux
-    python: 3.6
-    env: PYTHON_VERSION=3.6
+    python: 3.5
+    env:
+      - PYTHON_VERSION=3.5
+      - INSTALL_METHOD=pip
+  - os: linux                                                                   
+    python: 3.6                                                                 
+    env:
+      - PYTHON_VERSION=3.6
+      - INSTALL_METHOD=src
+  - os: linux                                                                   
+    python: 3.6                                                                 
+    env:
+      - PYTHON_VERSION=3.6
+      - INSTALL_METHOD=pip
+  - os: linux
+    python: 3.7
+    env:
+      - PYTHON_VERSION=3.7
+      - INSTALL_METHOD=src
+  - os: linux
+    python: 3.7
+    env:
+      - PYTHON_VERSION=3.7
+      - INSTALL_METHOD=pip
   - os: osx
     language: generic
     env:
-    - PYTHON_VERSION=2.7
-#  - os: osx
-#    language: generic
-#    env:
-#    - PYTHON_VERSION=3.3
+      - PYTHON_VERSION=2.7
+      - INSTALL_METHOD=src
   - os: osx
     language: generic
     env:
-    - PYTHON_VERSION=3.4
+      - PYTHON_VERSION=2.7
+      - INSTALL_METHOD=pip
   - os: osx
     language: generic
     env:
-    - PYTHON_VERSION=3.5
+      - PYTHON_VERSION=3.5
+      - INSTALL_METHOD=src
   - os: osx
     language: generic
     env:
-    - PYTHON_VERSION=3.6
+      - PYTHON_VERSION=3.5
+      - INSTALL_METHOD=pip
+  - os: osx                                                                     
+    language: generic                                                           
+    env:                                                                        
+      - PYTHON_VERSION=3.6
+      - INSTALL_METHOD=src
+  - os: osx                                                                     
+    language: generic                                                           
+    env:                                                                        
+      - PYTHON_VERSION=3.6
+      - INSTALL_METHOD=pip
+  - os: osx
+    language: generic
+    env:
+      - PYTHON_VERSION=3.7
+      - INSTALL_METHOD=src
+  - os: osx
+    language: generic
+    env:
+      - PYTHON_VERSION=3.7
+      - INSTALL_METHOD=pip
 
+compiler:
+    - gcc
 
 before_install:
-  - if [[ "$TRAVIS_OS_NAME" == "linux" && "$PYTHON_VERSION" == 2.* ]]; then wget http://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" && "$PYTHON_VERSION" == 3.* ]]; then wget http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" && "$PYTHON_VERSION" == 2.* ]]; then wget https://repo.continuum.io/miniconda/Miniconda2-latest-MacOSX-x86_64.sh -O miniconda.sh; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" && "$PYTHON_VERSION" == 3.* ]]; then wget https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -O miniconda.sh; fi
+  - if [ "$TRAVIS_OS_NAME" == linux ]; then MINICONDAVERSION="Linux"; else MINICONDAVERSION="MacOSX"; fi
+  - if [ "$PYTHON_VERSION" == "2.7" ]; then wget http://repo.continuum.io/miniconda/Miniconda2-latest-$MINICONDAVERSION-x86_64.sh -O miniconda.sh; fi
+  - if [ "$PYTHON_VERSION" != "2.7" ]; then wget http://repo.continuum.io/miniconda/Miniconda3-latest-$MINICONDAVERSION-x86_64.sh -O miniconda.sh; fi
   - bash miniconda.sh -b -p $HOME/miniconda
   - export PATH="$HOME/miniconda/bin:$PATH"
-#  - conda update --yes conda
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export DISPLAY=:99.0; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sh -e /etc/init.d/xvfb start; fi
-  - conda config --add channels conda-forge
-  - echo $PYTHON_VERSION
-  - conda create -n testenv python=$PYTHON_VERSION  --yes
-  - source activate testenv
-  - if [[ "$PYTHON_VERSION" == 3.5 ]]; then pip install PyQt5; fi
-  - if [[ "$PYTHON_VERSION" == 3.6 ]]; then pip install PyQt5; fi
+  - conda create --yes -n py_entitymatching_test_env python=$PYTHON_VERSION
+  - source activate py_entitymatching_env
+  - python --version  
 
-install:
-  - conda install --yes python=$PYTHON_VERSION nose pandas pyparsing six scikit-learn cloudpickle joblib ipython pip ipython
-  - conda install --yes -c uwmagellan py_stringsimjoin=0.1.0
-  - pip install requests
-  - pip install -r requirements.txt
-  - python setup.py build_ext --inplace
-  
-script:  
-  - nosetests -s
+install: TRAVIS_OS_NAME="$TRAVIS_OS_NAME" ./install/install-${INSTALL_METHOD}.sh
+
+script:
+  - source activate py_entitymatching_test_env
+  - cd ~
+  - pwd
+  - python -c "import py_entitymatching; print(py_entitymatching.__version__)"
