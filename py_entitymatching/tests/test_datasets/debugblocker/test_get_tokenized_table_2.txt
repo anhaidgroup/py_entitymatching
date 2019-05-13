@@ -1,0 +1,6 @@
+b1 mark levene 30
+b2 bill bridge 32
+b3 mike franklin 28
+b4 joseph kuan 26
+b5 alfons kemper 35
+b6 michael brodie 32

@@ -1,0 +1,16 @@
+_id,ltable_ID,rtable_ID,ltable_name,ltable_zipcode,ltable_birth_year,rtable_name,rtable_zipcode,rtable_birth_year
+0,a1,b1,Kevin Smith,94107,1989,Mark Levene,94107,1987
+1,a1,b2,Kevin Smith,94107,1989,Bill Bridge,94107,1986
+2,a1,b6,Kevin Smith,94107,1989,Michael Brodie,94107,1987
+3,a3,b1,William Bridge,94107,1986,Mark Levene,94107,1987
+4,a3,b2,William Bridge,94107,1986,Bill Bridge,94107,1986
+5,a3,b6,William Bridge,94107,1986,Michael Brodie,94107,1987
+6,a2,b3,Michael Franklin,94122,1988,Mike Franklin,94122,1988
+7,a2,b4,Michael Franklin,94122,1988,Joseph Kuan,94122,1982
+8,a2,b5,Michael Franklin,94122,1988,Alfons Kemper,94122,1984
+9,a4,b3,Binto George,94122,1987,Mike Franklin,94122,1988
+10,a4,b4,Binto George,94122,1987,Joseph Kuan,94122,1982
+11,a4,b5,Binto George,94122,1987,Alfons Kemper,94122,1984
+12,a5,b3,Alphonse Kemper,94122,1984,Mike Franklin,94122,1988
+13,a5,b4,Alphonse Kemper,94122,1984,Joseph Kuan,94122,1982
+14,a5,b5,Alphonse Kemper,94122,1984,Alfons Kemper,94122,1984
