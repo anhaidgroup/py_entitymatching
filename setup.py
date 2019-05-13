@@ -117,7 +117,7 @@ if __name__ == "__main__":
             'ipython==5.6',
             'matplotlib==2.0.2',
             'PyPrind',
-            'py-stringsimjoin==0.3.0',
+            'py-stringsimjoin>=0.3.0',
             # dependencies such as py_stringmatching, joblib, pyprind
             'cloudpickle >= 0.2.1',
             'pyparsing >= 2.1.4',
