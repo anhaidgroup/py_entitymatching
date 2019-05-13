@@ -44,7 +44,7 @@ def generate_cython():
     p = subprocess.call([sys.executable, os.path.join(cwd,
                                                       'build_tools',
                                                       'cythonize.py'),
-                         'py_entitymatching_test'],
+                         'py_entitymatching'],
                         cwd=cwd)
     if p != 0:
         raise RuntimeError("Running cythonize failed!")
@@ -81,7 +81,7 @@ if __name__ == "__main__":
                                        include_dirs=[])
                  ]
     setuptools.setup(
-        name='py_entitymatching_test',
+        name='py_entitymatching',
         version='0.3.1',
         description='Python library for end to end Entity Matching.',
         long_description=LONG_DESCRIPTION,
