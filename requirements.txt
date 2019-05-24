@@ -1,10 +1,10 @@
 requests
 ipython==5.6
-matplotlib==2.0.2
+matplotlib>=3.1.0
 PyPrind
 py-stringmatching>=0.2.1
 py-stringsimjoin>=0.3.0
 pandas-profiling==1.4.0
 numpy
-scikit-learn==0.18
-scipy
+scikit-learn==0.20
+scipy==1.2.0
