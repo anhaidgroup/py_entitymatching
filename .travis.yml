@@ -48,6 +48,7 @@ before_install:
   - if [[ "$PYTHON_VERSION" == 3.6 ]]; then pip install PyQt5; fi
 
 install:
+  - conda install --yes python=$PYTHON_VERSION nose
   - pip install requests
   - pip install -r requirements.txt
   - python setup.py build_ext --inplace
