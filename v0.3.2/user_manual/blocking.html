@@ -160,7 +160,7 @@ is, drop the tuple pair) if <cite>x</cite> and <cite>y</cite> are not of the sam
 <span class="gp">&gt;&gt;&gt; </span><span class="n">C</span> <span class="o">=</span> <span class="n">ab</span><span class="o">.</span><span class="n">block_tables</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="s1">&#39;zipcode&#39;</span><span class="p">,</span> <span class="s1">&#39;zipcode&#39;</span><span class="p">,</span> <span class="n">l_output_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">r_output_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
-<p>Please look at the API reference of <code class="xref py py-meth docutils literal notranslate"><span class="pre">block_tables()</span></code>
+<p>Please look at the API reference of <a class="reference internal" href="api/blocking.html#py_entitymatching.AttrEquivalenceBlocker.block_tables" title="py_entitymatching.AttrEquivalenceBlocker.block_tables"><code class="xref py py-meth docutils literal notranslate"><span class="pre">block_tables()</span></code></a>
 for more details.</p>
 <p>The function <cite>block_candset</cite> is similar to <cite>block_tables</cite> except <cite>block_candset</cite> is
 applied to the candidate set, i.e. the output from <cite>block_tables</cite>. An example of using
@@ -168,7 +168,7 @@ applied to the candidate set, i.e. the output from <cite>block_tables</cite>. An
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">ab</span><span class="o">.</span><span class="n">block_candset</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Please look at the API reference of <code class="xref py py-meth docutils literal notranslate"><span class="pre">block_candset()</span></code>
+<p>Please look at the API reference of <a class="reference internal" href="api/blocking.html#py_entitymatching.AttrEquivalenceBlocker.block_candset" title="py_entitymatching.AttrEquivalenceBlocker.block_candset"><code class="xref py py-meth docutils literal notranslate"><span class="pre">block_candset()</span></code></a>
 for more details.</p>
 <p>The function <cite>block_tuples</cite> is used to check if a tuple pair would get blocked. An
 example of using <cite>block_tuples</cite> is shown below:</p>
@@ -177,7 +177,7 @@ example of using <cite>block_tuples</cite> is shown below:</p>
 <span class="go">    True</span>
 </pre></div>
 </div>
-<p>Please look at the API reference of <code class="xref py py-meth docutils literal notranslate"><span class="pre">block_tuples()</span></code>
+<p>Please look at the API reference of <a class="reference internal" href="api/blocking.html#py_entitymatching.AttrEquivalenceBlocker.block_tuples" title="py_entitymatching.AttrEquivalenceBlocker.block_tuples"><code class="xref py py-meth docutils literal notranslate"><span class="pre">block_tuples()</span></code></a>
 for more details.</p>
 <p><strong>Overlap Blocker</strong></p>
 <p>Given two tables A and B, conceptually, <cite>block_tables</cite> in overlap blocker takes an
@@ -193,7 +193,7 @@ a q-gram).</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">C</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">block_tables</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="s1">&#39;zipcode&#39;</span><span class="p">,</span> <span class="s1">&#39;zipcode&#39;</span><span class="p">,</span> <span class="n">overlap_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">l_output_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">r_output_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="p">)</span>
 </pre></div>
 </div>
-<p>Please look at the API reference of <code class="xref py py-meth docutils literal notranslate"><span class="pre">block_tables()</span></code>
+<p>Please look at the API reference of <a class="reference internal" href="api/blocking.html#py_entitymatching.OverlapBlocker.block_tables" title="py_entitymatching.OverlapBlocker.block_tables"><code class="xref py py-meth docutils literal notranslate"><span class="pre">block_tables()</span></code></a>
 for more details.</p>
 <p>The function <cite>block_candset</cite> is similar to <cite>block_tables</cite> except <cite>block_candset</cite> is
 applied to the candidate set, i.e. the output from <cite>block_tables</cite>.</p>
@@ -201,7 +201,7 @@ applied to the candidate set, i.e. the output from <cite>block_tables</cite>.</p
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">block_candset</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Please look at the API reference of <code class="xref py py-meth docutils literal notranslate"><span class="pre">block_candset()</span></code>
+<p>Please look at the API reference of <a class="reference internal" href="api/blocking.html#py_entitymatching.OverlapBlocker.block_candset" title="py_entitymatching.OverlapBlocker.block_candset"><code class="xref py py-meth docutils literal notranslate"><span class="pre">block_candset()</span></code></a>
 for more details.</p>
 <p>The function <cite>block_tuples</cite> is used to check if a tuple pair would get blocked. An
 example of using <cite>block_tuples</cite> is shown below:</p>
@@ -210,7 +210,7 @@ example of using <cite>block_tuples</cite> is shown below:</p>
 <span class="go">    True</span>
 </pre></div>
 </div>
-<p>Please look at the API reference of <code class="xref py py-meth docutils literal notranslate"><span class="pre">block_tuples()</span></code>
+<p>Please look at the API reference of <a class="reference internal" href="api/blocking.html#py_entitymatching.OverlapBlocker.block_tuples" title="py_entitymatching.OverlapBlocker.block_tuples"><code class="xref py py-meth docutils literal notranslate"><span class="pre">block_tuples()</span></code></a>
 for more details.</p>
 <p><strong>Sorted Neighborhood Blocker</strong></p>
 <p>WARNING: THIS IS AN EXPERIMENTAL COMMAND. THIS COMMAND IS NOT TESTED. USE AT YOUR OWN RISK.</p>
@@ -229,7 +229,7 @@ come from different tables, then the two tuples are returned in the candidate se
 <span class="gp">&gt;&gt;&gt; </span><span class="n">C</span> <span class="o">=</span> <span class="n">sn</span><span class="o">.</span><span class="n">block_tables</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">l_block_attr</span><span class="o">=</span><span class="s1">&#39;zipcode&#39;</span><span class="p">,</span> <span class="n">r_block_attr</span><span class="o">=</span><span class="s1">&#39;zipcode&#39;</span><span class="p">,</span> <span class="n">l_output_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">r_output_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">window_size</span><span class="o">=</span><span class="mi">3</span> <span class="p">)</span>
 </pre></div>
 </div>
-<p>Please look at the API reference of <code class="xref py py-meth docutils literal notranslate"><span class="pre">block_tables()</span></code>
+<p>Please look at the API reference of <a class="reference internal" href="api/blocking.html#py_entitymatching.SortedNeighborhoodBlocker.block_tables" title="py_entitymatching.SortedNeighborhoodBlocker.block_tables"><code class="xref py py-meth docutils literal notranslate"><span class="pre">block_tables()</span></code></a>
 for more details.</p>
 <p>Unlike the other two blockers, since the sorted neighborhood blocker requires the sorted order
 of all tuples in the database, <cite>block_candset</cite> and <cite>block_tuples</cite> are not applicable and will raise an assertion if called.</p>
@@ -284,7 +284,7 @@ return a candidate set of tuple pairs.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">C</span> <span class="o">=</span> <span class="n">bb</span><span class="o">.</span><span class="n">block_tables</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">l_output_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">r_output_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="p">)</span>
 </pre></div>
 </div>
-<p>Please look at the API reference of <code class="xref py py-meth docutils literal notranslate"><span class="pre">block_tables()</span></code>
+<p>Please look at the API reference of <a class="reference internal" href="api/blocking.html#py_entitymatching.BlackBoxBlocker.block_tables" title="py_entitymatching.BlackBoxBlocker.block_tables"><code class="xref py py-meth docutils literal notranslate"><span class="pre">block_tables()</span></code></a>
 for more details.</p>
 <p>The function <cite>block_candset</cite> is similar to <cite>block_tables</cite> except <cite>block_candset</cite> is
 applied to the candidate set, i.e. the output from <cite>block_tables</cite>.</p>
@@ -292,7 +292,7 @@ applied to the candidate set, i.e. the output from <cite>block_tables</cite>.</p
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">bb</span><span class="o">.</span><span class="n">block_candset</span><span class="p">(</span><span class="n">C</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Please look at the API reference of <code class="xref py py-meth docutils literal notranslate"><span class="pre">block_candset()</span></code>
+<p>Please look at the API reference of <a class="reference internal" href="api/blocking.html#py_entitymatching.BlackBoxBlocker.block_candset" title="py_entitymatching.BlackBoxBlocker.block_candset"><code class="xref py py-meth docutils literal notranslate"><span class="pre">block_candset()</span></code></a>
 for more details.</p>
 <p>Further, <cite>block_tuples</cite> is used to check if a tuple pair would get blocked. An
 example of using <cite>block_tuples</cite> is shown below:</p>
@@ -301,7 +301,7 @@ example of using <cite>block_tuples</cite> is shown below:</p>
 <span class="go">    True</span>
 </pre></div>
 </div>
-<p>Please look at the API reference of <code class="xref py py-meth docutils literal notranslate"><span class="pre">block_tuples()</span></code>
+<p>Please look at the API reference of <a class="reference internal" href="api/blocking.html#py_entitymatching.BlackBoxBlocker.block_tuples" title="py_entitymatching.BlackBoxBlocker.block_tuples"><code class="xref py py-meth docutils literal notranslate"><span class="pre">block_tuples()</span></code></a>
 for more details.</p>
 </div>
 <div class="section" id="rule-based-blockers">
@@ -348,7 +348,7 @@ return a candidate set of tuple pairs.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">C</span> <span class="o">=</span> <span class="n">rb</span><span class="o">.</span><span class="n">block_tables</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">l_output_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">r_output_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="p">)</span>
 </pre></div>
 </div>
-<p>Please look at the API reference of <code class="xref py py-meth docutils literal notranslate"><span class="pre">block_tables()</span></code>
+<p>Please look at the API reference of <a class="reference internal" href="api/blocking.html#py_entitymatching.RuleBasedBlocker.block_tables" title="py_entitymatching.RuleBasedBlocker.block_tables"><code class="xref py py-meth docutils literal notranslate"><span class="pre">block_tables()</span></code></a>
 for more details.</p>
 <p>The function <cite>block_candset</cite> is similar to <cite>block_tables</cite> except <cite>block_candset</cite> is
 applied to the candidate set, i.e. the output from <cite>block_tables</cite>.</p>
@@ -356,7 +356,7 @@ applied to the candidate set, i.e. the output from <cite>block_tables</cite>.</p
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">rb</span><span class="o">.</span><span class="n">block_candset</span><span class="p">(</span><span class="n">C</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Please look at the API reference of <code class="xref py py-meth docutils literal notranslate"><span class="pre">block_candset()</span></code>
+<p>Please look at the API reference of <a class="reference internal" href="api/blocking.html#py_entitymatching.RuleBasedBlocker.block_candset" title="py_entitymatching.RuleBasedBlocker.block_candset"><code class="xref py py-meth docutils literal notranslate"><span class="pre">block_candset()</span></code></a>
 for more details.</p>
 <p>The function <cite>block_tuples</cite> is used to check if a tuple pair would get blocked. An
 example of using <cite>block_tuples</cite> is shown below:</p>
@@ -365,7 +365,7 @@ example of using <cite>block_tuples</cite> is shown below:</p>
 <span class="go">    True</span>
 </pre></div>
 </div>
-<p>Please look at the API reference of <code class="xref py py-meth docutils literal notranslate"><span class="pre">block_tuples()</span></code>
+<p>Please look at the API reference of <a class="reference internal" href="api/blocking.html#py_entitymatching.RuleBasedBlocker.block_tuples" title="py_entitymatching.RuleBasedBlocker.block_tuples"><code class="xref py py-meth docutils literal notranslate"><span class="pre">block_tuples()</span></code></a>
 for more details.</p>
 </div>
 <div class="section" id="combining-multiple-blockers">
@@ -393,7 +393,7 @@ combining.</p>
 <p>Conceptually, the command takes in a list of blocker outputs (i.e. pandas Dataframes) and
 produces a consolidated table. The output table contains the union of tuple pair ids and
 other attributes from the input list.</p>
-<p>Please look at the API reference of <code class="xref py py-meth docutils literal notranslate"><span class="pre">combine_blocker_outputs_via_union()</span></code>
+<p>Please look at the API reference of <a class="reference internal" href="api/combining_blocker_outputs.html#py_entitymatching.combine_blocker_outputs_via_union" title="py_entitymatching.combine_blocker_outputs_via_union"><code class="xref py py-meth docutils literal notranslate"><span class="pre">combine_blocker_outputs_via_union()</span></code></a>
 for more details.</p>
 </div>
 </div>

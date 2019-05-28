@@ -97,6 +97,76 @@
                         
   <div class="section" id="downsampling">
 <h1>Downsampling<a class="headerlink" href="#downsampling" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="py_entitymatching.down_sample">
+<code class="descclassname">py_entitymatching.</code><code class="descname">down_sample</code><span class="sig-paren">(</span><em>table_a</em>, <em>table_b</em>, <em>size</em>, <em>y_param</em>, <em>show_progress=True</em>, <em>verbose=False</em>, <em>seed=None</em>, <em>rem_stop_words=True</em>, <em>rem_puncs=True</em>, <em>n_jobs=1</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.down_sample" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function down samples two tables A and B into smaller tables A’ and
+B’ respectively.</p>
+<p>Specifically, first it randomly selects <cite>size</cite> tuples
+from the table B to be table B’. Next, it builds an inverted index I
+(token, tuple_id) on table A. For each tuple x ∈ B’, the algorithm
+finds a set P of k/2 tuples from I that match x,
+and a set Q of k/2 tuples randomly selected from A - P.
+The idea is for A’ and B’ to share some matches yet be
+as representative of A and B as possible.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>table_a</strong><strong>,</strong><strong>table_b</strong> (<em>DataFrame</em>) – The input tables A and B.</p></li>
+<li><p><strong>size</strong> (<em>int</em>) – The size that table B should be down sampled to.</p></li>
+<li><p><strong>y_param</strong> (<em>int</em>) – The parameter to control the down sample size of table A.
+Specifically, the down sampled size of table A should be close to
+size * y_param.</p></li>
+<li><p><strong>show_progress</strong> (<em>boolean</em>) – A flag to indicate whether a progress bar
+should be displayed (defaults to True).</p></li>
+<li><p><strong>verbose</strong> (<em>boolean</em>) – A flag to indicate whether the debug information
+should be displayed (defaults to False).</p></li>
+<li><p><strong>seed</strong> (<em>int</em>) – The seed for the pseudo random number generator to select
+the tuples from A and B (defaults to None).</p></li>
+<li><p><strong>rem_stop_words</strong> (<em>boolean</em>) – A flag to indicate whether a default set of stop words
+must be removed.</p></li>
+<li><p><strong>rem_puncs</strong> (<em>boolean</em>) – A flag to indicate whether the punctuations must be
+removed from the strings.</p></li>
+<li><p><strong>n_jobs</strong> (<em>int</em>) – The number of parallel jobs to be used for computation
+(defaults to 1). If -1 all CPUs are used. If 0 or 1,
+no parallel computation is used at all, which is useful for
+debugging. For n_jobs below -1, (n_cpus + 1 + n_jobs) are
+used (where n_cpus is the total number of CPUs in the
+machine). Thus, for n_jobs = -2, all CPUs but one are used.
+If (n_cpus + 1 + n_jobs) is less than 1, then no parallel
+computation is used (i.e., equivalent to the default).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Down sampled tables A and B as pandas DataFrames.</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>AssertionError</strong> – If any of the input tables (<cite>table_a</cite>, <cite>table_b</cite>) are
+    empty or not a DataFrame.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>size</cite> or <cite>y_param</cite> is empty or 0 or not a
+    valid integer value.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>seed</cite> is not a valid integer
+    value.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>verbose</cite> is not of type bool.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>show_progress</cite> is not of type bool.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>n_jobs</cite> is not of type int.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sample_A</span><span class="p">,</span> <span class="n">sample_B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">down_sample</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p># Example with seed = 0. This means the same sample data set will be returned
+# each time this function is run.
+&gt;&gt;&gt; A = em.read_csv_metadata(‘path_to_csv_dir/table_A.csv’, key=’ID’)
+&gt;&gt;&gt; B = em.read_csv_metadata(‘path_to_csv_dir/table_B.csv’, key=’ID’)
+&gt;&gt;&gt; sample_A, sample_B = em.down_sample(A, B, 500, 1, seed=0, n_jobs=-1)</p>
+</dd></dl>
+
 </div>
 
 

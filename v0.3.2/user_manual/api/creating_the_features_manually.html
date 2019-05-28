@@ -107,6 +107,281 @@
                         
   <div class="section" id="creating-the-features-manually">
 <h1>Creating the Features Manually<a class="headerlink" href="#creating-the-features-manually" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="py_entitymatching.get_features">
+<code class="descclassname">py_entitymatching.</code><code class="descname">get_features</code><span class="sig-paren">(</span><em>ltable</em>, <em>rtable</em>, <em>l_attr_types</em>, <em>r_attr_types</em>, <em>attr_corres</em>, <em>tok_funcs</em>, <em>sim_funcs</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.get_features" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function will automatically generate a set of features based on the
+attributes of the input tables.</p>
+<p>Specifically, this function will go through the attribute
+correspondences between the input tables. For each correspondence ,
+it examines the types of the involved attributes, then apply the
+appropriate tokenizers and sim functions to generate all appropriate
+features for this correspondence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ltable</strong><strong>,</strong><strong>rtable</strong> (<em>DataFrame</em>) – The pandas DataFrames for which the
+features must be generated.</p></li>
+<li><p><strong>l_attr_types</strong><strong>,</strong><strong>r_attr_types</strong> (<em>dictionary</em>) – The attribute types for the
+input DataFrames. Typically this is generated using the
+function ‘get_attr_types’.</p></li>
+<li><p><strong>attr_corres</strong> (<em>dictionary</em>) – The attribute correspondences between the
+input DataFrames.</p></li>
+<li><p><strong>tok_funcs</strong> (<em>dictionary</em>) – A Python dictionary containing tokenizer
+functions.</p></li>
+<li><p><strong>sim_funcs</strong> (<em>dictionary</em>) – A Python dictionary containing similarity
+functions.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A pandas DataFrame containing automatically generated features.
+Specifically, the DataFrame contains the following attributes:
+‘feature_name’, ‘left_attribute’, ‘right_attribute’,
+‘left_attr_tokenizer’, ‘right_attr_tokenizer’, ‘simfunction’,
+‘function’, ‘function_source’, ‘is_auto_generated’.</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>AssertionError</strong> – If <cite>ltable</cite> is not of type pandas
+    DataFrame.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>rtable</cite> is not of type pandas
+    DataFrame.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>l_attr_types</cite> is not of type
+    python dictionary.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>r_attr_types</cite> is not of type
+    python dictionary.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>attr_corres</cite> is not of type
+    python dictionary.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>sim_funcs</cite> is not of type
+    python dictionary.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>tok_funcs</cite> is not of type
+    python dictionary.</p></li>
+<li><p><strong>AssertionError</strong> – If the <cite>ltable</cite> and <cite>rtable</cite> order is same as mentioned
+    in the <cite>l_attr_types</cite>/<cite>r_attr_types</cite> and <cite>attr_corres</cite>.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">match_t</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_tokenizers_for_matching</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">match_s</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_sim_funs_for_matching</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">atypes1</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_attr_types</span><span class="p">(</span><span class="n">A</span><span class="p">)</span> <span class="c1"># don&#39;t need, if atypes1 exists from blocking step</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">atypes2</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_attr_types</span><span class="p">(</span><span class="n">B</span><span class="p">)</span> <span class="c1"># don&#39;t need, if atypes2 exists from blocking step</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">match_c</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_attr_corres</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">match_f</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_features</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">atypes1</span><span class="p">,</span> <span class="n">atype2</span><span class="p">,</span> <span class="n">match_c</span><span class="p">,</span> <span class="n">match_t</span><span class="p">,</span> <span class="n">match_s</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#py_entitymatching.get_attr_corres" title="py_entitymatching.get_attr_corres"><code class="xref py py-meth docutils literal notranslate"><span class="pre">py_entitymatching.get_attr_corres()</span></code></a>, <a class="reference internal" href="#py_entitymatching.get_attr_types" title="py_entitymatching.get_attr_types"><code class="xref py py-meth docutils literal notranslate"><span class="pre">py_entitymatching.get_attr_types()</span></code></a>,
+<a class="reference internal" href="#py_entitymatching.get_sim_funs_for_blocking" title="py_entitymatching.get_sim_funs_for_blocking"><code class="xref py py-meth docutils literal notranslate"><span class="pre">py_entitymatching.get_sim_funs_for_blocking()</span></code></a>,
+<a class="reference internal" href="#py_entitymatching.get_tokenizers_for_blocking" title="py_entitymatching.get_tokenizers_for_blocking"><code class="xref py py-meth docutils literal notranslate"><span class="pre">py_entitymatching.get_tokenizers_for_blocking()</span></code></a>,
+<a class="reference internal" href="#py_entitymatching.get_sim_funs_for_matching" title="py_entitymatching.get_sim_funs_for_matching"><code class="xref py py-meth docutils literal notranslate"><span class="pre">py_entitymatching.get_sim_funs_for_matching()</span></code></a>,
+<a class="reference internal" href="#py_entitymatching.get_tokenizers_for_matching" title="py_entitymatching.get_tokenizers_for_matching"><code class="xref py py-meth docutils literal notranslate"><span class="pre">py_entitymatching.get_tokenizers_for_matching()</span></code></a></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In the output DataFrame, two
+attributes demand some explanation: (1)function, and (2)
+is_auto_generated. The function, points to the actual python function
+that implements feature. Specifically, the function takes in two
+tuples (one from each input table) and returns a numeric value. The
+attribute is_auto_generated contains either True or False. The flag
+is True only if the feature is automatically generated by py_entitymatching.
+This is important because this flag is used to make some assumptions
+about the semantics of the similarity function used and use that
+information for scaling purposes.</p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.get_attr_corres">
+<code class="descclassname">py_entitymatching.</code><code class="descname">get_attr_corres</code><span class="sig-paren">(</span><em>ltable</em>, <em>rtable</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.get_attr_corres" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function gets the attribute correspondences between the attributes
+of ltable and rtable.</p>
+<p>The user may need to get the correspondences so
+that he/she can generate features based those correspondences.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ltable</strong><strong>,</strong><strong>rtable</strong> (<em>DataFrame</em>) – Input DataFrames for which
+the attribute correspondences must be obtained.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>A Python dictionary is returned containing the attribute
+correspondences.</p>
+<p>Specifically, this returns a dictionary with the following key-value
+pairs:</p>
+<p>corres: points to the list correspondences as tuples. Each
+correspondence is a tuple with two attributes: one from ltable
+and the other from rtable.</p>
+<p>ltable: points to ltable.</p>
+<p>rtable: points to rtable.</p>
+<p>Currently, ‘corres’ contains only pairs of attributes with exact
+names in ltable and rtable.</p>
+</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>AssertionError</strong> – If <cite>ltable</cite> is not of type
+    pandas DataFrame.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>rtable</cite> is not of type
+    pandas DataFrame.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">match_c</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_attr_corres</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.get_attr_types">
+<code class="descclassname">py_entitymatching.</code><code class="descname">get_attr_types</code><span class="sig-paren">(</span><em>data_frame</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.get_attr_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function gets the attribute types for a DataFrame.</p>
+<p>Specifically this function gets the attribute types based on the
+statistics of the attributes. These attribute types can be str_eq_1w,
+str_bt_1w_5w, str_bt_5w_10w, str_gt_10w, boolean or numeric.</p>
+<p>The types roughly capture whether the attribute is of type string,
+boolean or numeric. Further, with in the string type the subtypes are
+capture the average number of tokens in the column values. For example,
+str_bt_1w_5w means the average number of tokens in that column is
+greater than one word but less than 5 words.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data_frame</strong> (<em>DataFrame</em>) – The input DataFrame for which types of
+attributes must be determined.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>A Python dictionary is returned containing the attribute types.</p>
+<p>Specifically, in the dictionary key is an attribute name, value
+is the type of that attribute.</p>
+<p>Further, the dictionary will have a  key _table, and the value of
+that should be a pointer to the input DataFrame.</p>
+</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>AssertionError</strong> – If <cite>data_frame</cite> is not of type
+    pandas DataFrame.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">atypes1</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_attr_types</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">atypes2</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_attr_types</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.get_sim_funs_for_blocking">
+<code class="descclassname">py_entitymatching.</code><code class="descname">get_sim_funs_for_blocking</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.get_sim_funs_for_blocking" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function returns the similarity functions that can be used for
+blocking purposes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><p>A Python dictionary containing the similarity functions.</p>
+<p>Specifically, the key is the similarity function name and the value
+is the actual similary function.</p>
+</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">block_s</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_sim_funs_for_blocking</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.get_sim_funs_for_matching">
+<code class="descclassname">py_entitymatching.</code><code class="descname">get_sim_funs_for_matching</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.get_sim_funs_for_matching" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function returns the similarity functions that can be used for
+matching purposes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><p>A Python dictionary containing the similarity functions.</p>
+<p>Specifically, the key is the similarity function name and the value
+is the actual similarity function.</p>
+</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">match_s</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_sim_funs_for_matching</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.get_tokenizers_for_blocking">
+<code class="descclassname">py_entitymatching.</code><code class="descname">get_tokenizers_for_blocking</code><span class="sig-paren">(</span><em>q=[2, 3], dlm_char=[' ']</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.get_tokenizers_for_blocking" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function returns the single argument tokenizers that can be used for
+blocking purposes (typically in rule-based blocking).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>q</strong> (<em>list</em>) – The list of integers (i.e q value) for which the q-gram
+tokenizer must be generated (defaults to [2, 3]).</p></li>
+<li><p><strong>dlm_char</strong> (<em>list</em>) – The list of characters (i.e delimiter character) for
+which the delimiter tokenizer must be generated (defaults to [` ‘]).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A Python dictionary with tokenizer name as the key and tokenizer
+function as the value.</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>AssertionError</strong> – If both <cite>q</cite> and <cite>dlm_char</cite> are set to None.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">block_t</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_tokenizers_for_blocking</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">block_t</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_tokenizers_for_blocking</span><span class="p">(</span><span class="n">q</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">dlm_char</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">block_t</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_tokenizers_for_blocking</span><span class="p">(</span><span class="n">q</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dlm_char</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39; &#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.get_tokenizers_for_matching">
+<code class="descclassname">py_entitymatching.</code><code class="descname">get_tokenizers_for_matching</code><span class="sig-paren">(</span><em>q=[2, 3], dlm_char=[' ']</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.get_tokenizers_for_matching" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function returns the single argument tokenizers that can be used for
+matching purposes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>q</strong> (<em>list</em>) – The list of integers (i.e q value) for which the q-gram
+tokenizer must be generated (defaults to [2, 3]).</p></li>
+<li><p><strong>dlm_char</strong> (<em>list</em>) – The list of characters (i.e delimiter character) for
+which the delimiter tokenizer must be generated (defaults to [` ‘]).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A Python dictionary with tokenizer name as the key and tokenizer
+function as the value.</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>AssertionError</strong> – If both <cite>q</cite> and <cite>dlm_char</cite> are set to None.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">match_t</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_tokenizers_for_blocking</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">match_t</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_tokenizers_for_blocking</span><span class="p">(</span><span class="n">q</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">dlm_char</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">match_t</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_tokenizers_for_blocking</span><span class="p">(</span><span class="n">q</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dlm_char</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39; &#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</dd></dl>
+
 </div>
 
 

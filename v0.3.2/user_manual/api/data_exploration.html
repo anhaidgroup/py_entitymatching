@@ -97,6 +97,53 @@
                         
   <div class="section" id="data-exploration">
 <h1>Data Exploration<a class="headerlink" href="#data-exploration" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="py_entitymatching.data_explore_openrefine">
+<em class="property">class </em><code class="descclassname">py_entitymatching.</code><code class="descname">data_explore_openrefine</code><a class="headerlink" href="#py_entitymatching.data_explore_openrefine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper function for using OpenRefine. Gives user a GUI to examine and edit
+the dataframe passed in using OpenRefine.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>Dataframe</em>) – The pandas dataframe to be explored with pandastable.</p></li>
+<li><p><strong>server</strong> (<em>String</em>) – The address of the OpenRefine server (defaults to
+<a class="reference external" href="http://127.0.0.1:3333">http://127.0.0.1:3333</a>).</p></li>
+<li><p><strong>name</strong> (<em>String</em>) – The name given to the file and project in OpenRefine.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>AssertionError</strong> – If <cite>df</cite> is not of type pandas DataFrame.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">data_explore_openrefine</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Table&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="class">
+<dt id="py_entitymatching.data_explore_pandastable">
+<em class="property">class </em><code class="descclassname">py_entitymatching.</code><code class="descname">data_explore_pandastable</code><a class="headerlink" href="#py_entitymatching.data_explore_pandastable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper function for pandastable. Gives user a GUI to examine and edit
+the dataframe passed in using pandastable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>df</strong> (<em>Dataframe</em>) – The pandas dataframe to be explored with pandastable.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>AssertionError</strong> – If <cite>df</cite> is not of type pandas DataFrame.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">data_explore_pandastable</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
 </div>
 
 

@@ -107,6 +107,446 @@
                         
   <div class="section" id="supported-similarity-functions">
 <h1>Supported Similarity Functions<a class="headerlink" href="#supported-similarity-functions" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="py_entitymatching.affine">
+<code class="descclassname">py_entitymatching.</code><code class="descname">affine</code><span class="sig-paren">(</span><em>s1</em>, <em>s2</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.affine" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function computes the affine measure between the two input strings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>s1</strong><strong>,</strong><strong>s2</strong> (<em>string</em>) – The input strings for which the similarity measure
+should be computed.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The affine measure if both the strings are not missing (i.e NaN or
+None), else  returns NaN.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">affine</span><span class="p">(</span><span class="s1">&#39;dva&#39;</span><span class="p">,</span> <span class="s1">&#39;deeva&#39;</span><span class="p">)</span>
+<span class="go">1.5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">affine</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;deeva&#39;</span><span class="p">)</span>
+<span class="go">nan</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.hamming_dist">
+<code class="descclassname">py_entitymatching.</code><code class="descname">hamming_dist</code><span class="sig-paren">(</span><em>s1</em>, <em>s2</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.hamming_dist" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function computes the Hamming distance between the two input
+strings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>s1</strong><strong>,</strong><strong>s2</strong> (<em>string</em>) – The input strings for which the similarity measure should
+be computed.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The Hamming distance if both the strings are not missing (i.e NaN),
+else  returns NaN.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">hamming_dist</span><span class="p">(</span><span class="s1">&#39;alex&#39;</span><span class="p">,</span> <span class="s1">&#39;john&#39;</span><span class="p">)</span>
+<span class="go">4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">hamming_dist</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;john&#39;</span><span class="p">)</span>
+<span class="go">nan</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.hamming_sim">
+<code class="descclassname">py_entitymatching.</code><code class="descname">hamming_sim</code><span class="sig-paren">(</span><em>s1</em>, <em>s2</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.hamming_sim" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function computes the Hamming similarity between the two input
+strings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>s1</strong><strong>,</strong><strong>s2</strong> (<em>string</em>) – The input strings for which the similarity measure should
+be computed.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The Hamming similarity if both the strings are not missing (i.e NaN),
+else  returns NaN.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">hamming_sim</span><span class="p">(</span><span class="s1">&#39;alex&#39;</span><span class="p">,</span> <span class="s1">&#39;alxe&#39;</span><span class="p">)</span>
+<span class="go">0.5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">hamming_sim</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;alex&#39;</span><span class="p">)</span>
+<span class="go">nan</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.lev_dist">
+<code class="descclassname">py_entitymatching.</code><code class="descname">lev_dist</code><span class="sig-paren">(</span><em>s1</em>, <em>s2</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.lev_dist" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function computes the Levenshtein distance between the two input
+strings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>s1</strong><strong>,</strong><strong>s2</strong> (<em>string</em>) – The input strings for which the similarity measure should
+be computed.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The Levenshtein distance if both the strings are not missing (i.e NaN),
+else  returns NaN.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">lev_dist</span><span class="p">(</span><span class="s1">&#39;alex&#39;</span><span class="p">,</span> <span class="s1">&#39;alxe&#39;</span><span class="p">)</span>
+<span class="go">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">lev_dist</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;alex&#39;</span><span class="p">)</span>
+<span class="go">nan</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.lev_sim">
+<code class="descclassname">py_entitymatching.</code><code class="descname">lev_sim</code><span class="sig-paren">(</span><em>s1</em>, <em>s2</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.lev_sim" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function computes the Levenshtein similarity between the two input
+strings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>s1</strong><strong>,</strong><strong>s2</strong> (<em>string</em>) – The input strings for which the similarity measure should
+be computed.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The Levenshtein similarity if both the strings are not missing (i.e
+NaN), else  returns NaN.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">lev_sim</span><span class="p">(</span><span class="s1">&#39;alex&#39;</span><span class="p">,</span> <span class="s1">&#39;alxe&#39;</span><span class="p">)</span>
+<span class="go">0.5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">lev_dist</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;alex&#39;</span><span class="p">)</span>
+<span class="go">nan</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.jaro">
+<code class="descclassname">py_entitymatching.</code><code class="descname">jaro</code><span class="sig-paren">(</span><em>s1</em>, <em>s2</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.jaro" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function computes the Jaro measure between the two input
+strings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>s1</strong><strong>,</strong><strong>s2</strong> (<em>string</em>) – The input strings for which the similarity measure should
+be computed.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The Jaro measure if both the strings are not missing (i.e NaN),
+else  returns NaN.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">jaro</span><span class="p">(</span><span class="s1">&#39;MARTHA&#39;</span><span class="p">,</span> <span class="s1">&#39;MARHTA&#39;</span><span class="p">)</span>
+<span class="go">0.9444444444444445</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">jaro</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;MARTHA&#39;</span><span class="p">)</span>
+<span class="go">nan</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.jaro_winkler">
+<code class="descclassname">py_entitymatching.</code><code class="descname">jaro_winkler</code><span class="sig-paren">(</span><em>s1</em>, <em>s2</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.jaro_winkler" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function computes the Jaro Winkler measure between the two input
+strings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>s1</strong><strong>,</strong><strong>s2</strong> (<em>string</em>) – The input strings for which the similarity measure should
+be computed.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The Jaro Winkler measure if both the strings are not missing (i.e NaN),
+else  returns NaN.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">jaro_winkler</span><span class="p">(</span><span class="s1">&#39;MARTHA&#39;</span><span class="p">,</span> <span class="s1">&#39;MARHTA&#39;</span><span class="p">)</span>
+<span class="go">0.9611111111111111</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="o">&gt;&gt;&gt;</span> <span class="n">em</span><span class="o">.</span><span class="n">jaro_winkler</span><span class="p">(</span><span class="s1">&#39;MARTHA&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<span class="go">nan</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.needleman_wunsch">
+<code class="descclassname">py_entitymatching.</code><code class="descname">needleman_wunsch</code><span class="sig-paren">(</span><em>s1</em>, <em>s2</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.needleman_wunsch" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function computes the Needleman-Wunsch measure between the two input
+strings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>s1</strong><strong>,</strong><strong>s2</strong> (<em>string</em>) – The input strings for which the similarity measure should
+be computed.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The Needleman-Wunsch measure if both the strings are not missing (i.e
+NaN), else  returns NaN.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">needleman_wunsch</span><span class="p">(</span><span class="s1">&#39;dva&#39;</span><span class="p">,</span> <span class="s1">&#39;deeva&#39;</span><span class="p">)</span>
+<span class="go">1.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">needleman_wunsch</span><span class="p">(</span><span class="s1">&#39;dva&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<span class="go">nan</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.smith_waterman">
+<code class="descclassname">py_entitymatching.</code><code class="descname">smith_waterman</code><span class="sig-paren">(</span><em>s1</em>, <em>s2</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.smith_waterman" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function computes the Smith-Waterman measure between the two input
+strings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>s1</strong><strong>,</strong><strong>s2</strong> (<em>string</em>) – The input strings for which the similarity measure should
+be computed.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The Smith-Waterman measure if both the strings are not missing (i.e
+NaN), else  returns NaN.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">smith_waterman</span><span class="p">(</span><span class="s1">&#39;cat&#39;</span><span class="p">,</span> <span class="s1">&#39;hat&#39;</span><span class="p">)</span>
+<span class="go">2.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">smith_waterman</span><span class="p">(</span><span class="s1">&#39;cat&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<span class="go">nan</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.jaccard">
+<code class="descclassname">py_entitymatching.</code><code class="descname">jaccard</code><span class="sig-paren">(</span><em>arr1</em>, <em>arr2</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.jaccard" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function computes the Jaccard measure between the two input
+lists/sets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>arr1</strong><strong>,</strong><strong>arr2</strong> (<em>list</em><em> or </em><em>set</em>) – The input list or sets for which the Jaccard
+measure should be computed.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The Jaccard measure if both the lists/set are not None and do not have
+any missing tokens (i.e NaN), else  returns NaN.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">jaccard</span><span class="p">([</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;science&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">])</span>
+<span class="go">0.5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">jaccard</span><span class="p">([</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;science&#39;</span><span class="p">],</span> <span class="kc">None</span><span class="p">)</span>
+<span class="go">nan</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.cosine">
+<code class="descclassname">py_entitymatching.</code><code class="descname">cosine</code><span class="sig-paren">(</span><em>arr1</em>, <em>arr2</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.cosine" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function computes the cosine measure between the two input
+lists/sets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>arr1</strong><strong>,</strong><strong>arr2</strong> (<em>list</em><em> or </em><em>set</em>) – The input list or sets for which the cosine
+measure should be computed.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The cosine measure if both the lists/set are not None and do not have
+any missing tokens (i.e NaN), else  returns NaN.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">cosine</span><span class="p">([</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;science&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">])</span>
+<span class="go">0.7071067811865475</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">cosine</span><span class="p">([</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;science&#39;</span><span class="p">],</span> <span class="kc">None</span><span class="p">)</span>
+<span class="go">nan</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.overlap_coeff">
+<code class="descclassname">py_entitymatching.</code><code class="descname">overlap_coeff</code><span class="sig-paren">(</span><em>arr1</em>, <em>arr2</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.overlap_coeff" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function computes the overlap coefficient between the two input
+lists/sets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>arr1</strong><strong>,</strong><strong>arr2</strong> (<em>list</em><em> or </em><em>set</em>) – The input lists or sets for which the overlap
+coefficient should be computed.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The overlap coefficient if both the lists/sets are not None and do not
+have any missing tokens (i.e NaN), else  returns NaN.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">overlap_coeff</span><span class="p">([</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;science&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">])</span>
+<span class="go">1.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">overlap_coeff</span><span class="p">([</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;science&#39;</span><span class="p">],</span> <span class="kc">None</span><span class="p">)</span>
+<span class="go">nan</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.dice">
+<code class="descclassname">py_entitymatching.</code><code class="descname">dice</code><span class="sig-paren">(</span><em>arr1</em>, <em>arr2</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.dice" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function computes the Dice score between the two input
+lists/sets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>arr1</strong><strong>,</strong><strong>arr2</strong> (<em>list</em><em> or </em><em>set</em>) – The input list or sets for which the Dice
+score should be computed.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The Dice score if both the lists/set are not None and do not
+have any missing tokens (i.e NaN), else  returns NaN.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">dice</span><span class="p">([</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;science&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">])</span>
+<span class="go">0.6666666666666666</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">dice</span><span class="p">([</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;science&#39;</span><span class="p">],</span> <span class="kc">None</span><span class="p">)</span>
+<span class="go">nan</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.monge_elkan">
+<code class="descclassname">py_entitymatching.</code><code class="descname">monge_elkan</code><span class="sig-paren">(</span><em>arr1</em>, <em>arr2</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.monge_elkan" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function computes the Monge-Elkan measure between the two input
+lists/sets. Specifically, this function uses Jaro-Winkler measure as the
+secondary function to compute the similarity score.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>arr1</strong><strong>,</strong><strong>arr2</strong> (<em>list</em><em> or </em><em>set</em>) – The input list or sets for which the
+Monge-Elkan measure should be computed.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The Monge-Elkan measure if both the lists/set are not None and do not
+have any missing tokens (i.e NaN), else  returns NaN.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">monge_elkan</span><span class="p">([</span><span class="s1">&#39;Niall&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;Neal&#39;</span><span class="p">])</span>
+<span class="go">0.8049999999999999</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">monge_elkan</span><span class="p">([</span><span class="s1">&#39;Niall&#39;</span><span class="p">],</span> <span class="kc">None</span><span class="p">)</span>
+<span class="go">nan</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.exact_match">
+<code class="descclassname">py_entitymatching.</code><code class="descname">exact_match</code><span class="sig-paren">(</span><em>d1</em>, <em>d2</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.exact_match" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function check if two objects are match exactly. Typically the
+objects are string, boolean and ints.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>d1</strong><strong>,</strong><strong>d2</strong> (<em>str</em><em>, </em><em>boolean</em><em>, </em><em>int</em>) – The input objects which should checked
+whether they match exactly.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A value of 1 is returned if they match exactly,
+else returns 0. Further if one of the objects is NaN or None,
+it returns NaN.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">exact_match</span><span class="p">(</span><span class="s1">&#39;Niall&#39;</span><span class="p">,</span> <span class="s1">&#39;Neal&#39;</span><span class="p">)</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">exact_match</span><span class="p">(</span><span class="s1">&#39;Niall&#39;</span><span class="p">,</span> <span class="s1">&#39;Niall&#39;</span><span class="p">)</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">exact_match</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">exact_match</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">exact_match</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">exact_match</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">exact_match</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<span class="go">nan</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.rel_diff">
+<code class="descclassname">py_entitymatching.</code><code class="descname">rel_diff</code><span class="sig-paren">(</span><em>d1</em>, <em>d2</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.rel_diff" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function computes the relative difference between two numbers</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>d1</strong><strong>,</strong><strong>d2</strong> (<em>float</em>) – The input numbers for which the relative difference
+must be computed.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A float value of relative difference between the input numbers (if
+they are valid). Further if one of the input objects is NaN or None,
+it returns NaN.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">rel_diff</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+<span class="go">0.6666666666666666</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">rel_diff</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="go">0.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">rel_diff</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<span class="go">nan</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.abs_norm">
+<code class="descclassname">py_entitymatching.</code><code class="descname">abs_norm</code><span class="sig-paren">(</span><em>d1</em>, <em>d2</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.abs_norm" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function computes the absolute norm similarity between two numbers</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>d1</strong><strong>,</strong><strong>d2</strong> (<em>float</em>) – Input numbers for which the absolute norm must
+be computed.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A float value of absolute norm between the input numbers (if
+they are valid). Further if one of the input objects is NaN or None,
+it returns NaN.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">abs_norm</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+<span class="go">0.5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">abs_norm</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="go">1.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">abs_norm</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<span class="go">nan</span>
+</pre></div>
+</div>
+</dd></dl>
+
 </div>
 
 

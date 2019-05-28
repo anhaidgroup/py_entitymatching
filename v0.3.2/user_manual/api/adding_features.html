@@ -107,6 +107,195 @@
                         
   <div class="section" id="adding-features-to-feature-table">
 <h1>Adding Features to Feature Table<a class="headerlink" href="#adding-features-to-feature-table" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="py_entitymatching.get_feature_fn">
+<code class="descclassname">py_entitymatching.</code><code class="descname">get_feature_fn</code><span class="sig-paren">(</span><em>feature_string</em>, <em>tokenizers</em>, <em>similarity_functions</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.get_feature_fn" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function creates a feature in a declarative manner.</p>
+<p>Specifically, this function uses the feature string, parses it and
+compiles it into a function using the given tokenizers and similarity
+functions. This compiled function will take in two tuples and return a
+feature value (typically a number).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>feature_string</strong> (<em>string</em>) – A feature expression
+to be converted into a function.</p></li>
+<li><p><strong>tokenizers</strong> (<em>dictionary</em>) – A Python dictionary containing tokenizers.
+Specifically, the dictionary contains tokenizer names as keys and
+tokenizer functions as values. The tokenizer function typically
+takes in a string and returns a list of tokens.</p></li>
+<li><p><strong>similarity_functions</strong> (<em>dictionary</em>) – A Python dictionary containing
+similarity functions. Specifically, the dictionary contains
+similarity function names as keys and similarity functions as
+values. The similarity function typically
+takes in a string or two lists of tokens and returns a number.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>This function returns a Python dictionary which contains sufficient
+information (such as attributes, tokenizers, function code) to be added
+to the feature table.</p>
+<p>Specifically the Python dictionary contains the following keys:
+‘left_attribute’, ‘right_attribute’,
+‘left_attr_tokenizer’,
+‘right_attr_tokenizer’, ‘simfunction’, ‘function’, and
+‘function_source’.</p>
+<p>For all the keys except the ‘function’ and ‘function_source’ the
+value will be either a valid string (if the input feature string is
+parsed correctly) or PARSE_EXP (if the parsing was not successful).
+The ‘function’ will have a valid Python function as value,
+and ‘function_source’ will have the Python function’s source in
+string format.</p>
+<p>The created function is a self-contained function
+which means that the tokenizers and sim functions that it calls are
+bundled along with the returned function code.</p>
+</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>AssertionError</strong> – If <cite>feature_string</cite> is not of type string.</p></li>
+<li><p><strong>AssertionError</strong> – If the input <cite>tokenizers</cite> is not of type
+    dictionary.</p></li>
+<li><p><strong>AssertionError</strong> – If the input <cite>similarity_functions</cite> is not of
+    type dictionary.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">block_t</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_tokenizers_for_blocking</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">block_s</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_sim_funs_for_blocking</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">block_f</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_features_for_blocking</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">get_feature_fn</span><span class="p">(</span><span class="s1">&#39;jaccard(qgm_3(ltuple.name), qgm_3(rtuple.name)&#39;</span><span class="p">,</span> <span class="n">block_t</span><span class="p">,</span> <span class="n">block_s</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">block_f</span><span class="p">,</span> <span class="s1">&#39;name_name_jac_qgm3_qgm3&#39;</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">match_t</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_tokenizers_for_matching</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">match_s</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_sim_funs_for_matching</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">match_f</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_features_for_matching</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">get_feature_fn</span><span class="p">(</span><span class="s1">&#39;jaccard(qgm_3(ltuple.name), qgm_3(rtuple.name)&#39;</span><span class="p">,</span> <span class="n">match_t</span><span class="p">,</span> <span class="n">match_s</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">match_f</span><span class="p">,</span> <span class="s1">&#39;name_name_jac_qgm3_qgm3&#39;</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="creating_the_features_manually.html#py_entitymatching.get_sim_funs_for_blocking" title="py_entitymatching.get_sim_funs_for_blocking"><code class="xref py py-meth docutils literal notranslate"><span class="pre">py_entitymatching.get_sim_funs_for_blocking()</span></code></a>,
+<a class="reference internal" href="creating_the_features_manually.html#py_entitymatching.get_tokenizers_for_blocking" title="py_entitymatching.get_tokenizers_for_blocking"><code class="xref py py-meth docutils literal notranslate"><span class="pre">py_entitymatching.get_tokenizers_for_blocking()</span></code></a>,
+<a class="reference internal" href="creating_the_features_manually.html#py_entitymatching.get_sim_funs_for_matching" title="py_entitymatching.get_sim_funs_for_matching"><code class="xref py py-meth docutils literal notranslate"><span class="pre">py_entitymatching.get_sim_funs_for_matching()</span></code></a>,
+<a class="reference internal" href="creating_the_features_manually.html#py_entitymatching.get_tokenizers_for_matching" title="py_entitymatching.get_tokenizers_for_matching"><code class="xref py py-meth docutils literal notranslate"><span class="pre">py_entitymatching.get_tokenizers_for_matching()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.add_feature">
+<code class="descclassname">py_entitymatching.</code><code class="descname">add_feature</code><span class="sig-paren">(</span><em>feature_table</em>, <em>feature_name</em>, <em>feature_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.add_feature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a feature to the feature table.</p>
+<p>Specifically, this function is used in combination with
+<a class="reference internal" href="#py_entitymatching.get_feature_fn" title="py_entitymatching.get_feature_fn"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_feature_fn()</span></code></a>.
+First the user creates a dictionary using <a class="reference internal" href="#py_entitymatching.get_feature_fn" title="py_entitymatching.get_feature_fn"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_feature_fn()</span></code></a>,
+then the user uses this function to add feature_dict to the feature table.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>feature_table</strong> (<em>DataFrame</em>) – A DataFrame containing features.</p></li>
+<li><p><strong>feature_name</strong> (<em>string</em>) – The name that should be given to the feature.</p></li>
+<li><p><strong>feature_dict</strong> (<em>dictionary</em>) – A Python dictionary, that is typically
+returned by executing <a class="reference internal" href="#py_entitymatching.get_feature_fn" title="py_entitymatching.get_feature_fn"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_feature_fn()</span></code></a>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A Boolean value of True is returned if the addition was successful.</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>AssertionError</strong> – If the input <cite>feature_table</cite> is not of type
+    pandas DataFrame.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>feature_name</cite> is not of type
+    string.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>feature_dict</cite> is not of type
+    Python dictionary.</p></li>
+<li><p><strong>AssertionError</strong> – If the <cite>feature_table</cite> does not have necessary columns
+    such as ‘feature_name’, ‘left_attribute’, ‘right_attribute’,
+    ‘left_attr_tokenizer’,
+    ‘right_attr_tokenizer’, ‘simfunction’, ‘function’, and
+    ‘function_source’ in the DataFrame.</p></li>
+<li><p><strong>AssertionError</strong> – If the <cite>feature_name</cite> is already present in the feature
+    table.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">block_t</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_tokenizers_for_blocking</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">block_s</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_sim_funs_for_blocking</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">block_f</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_features_for_blocking</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">get_feature_fn</span><span class="p">(</span><span class="s1">&#39;jaccard(qgm_3(ltuple.name), qgm_3(rtuple.name)&#39;</span><span class="p">,</span> <span class="n">block_t</span><span class="p">,</span> <span class="n">block_s</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">block_f</span><span class="p">,</span> <span class="s1">&#39;name_name_jac_qgm3_qgm3&#39;</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">match_t</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_tokenizers_for_matching</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">match_s</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_sim_funs_for_matching</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">match_f</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_features_for_matching</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">get_feature_fn</span><span class="p">(</span><span class="s1">&#39;jaccard(qgm_3(ltuple.name), qgm_3(rtuple.name)&#39;</span><span class="p">,</span> <span class="n">match_t</span><span class="p">,</span> <span class="n">match_s</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">match_f</span><span class="p">,</span> <span class="s1">&#39;name_name_jac_qgm3_qgm3&#39;</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.add_blackbox_feature">
+<code class="descclassname">py_entitymatching.</code><code class="descname">add_blackbox_feature</code><span class="sig-paren">(</span><em>feature_table</em>, <em>feature_name</em>, <em>feature_function</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.add_blackbox_feature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a black box feature to the feature table.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>feature_table</strong> (<em>DataFrame</em>) – The input DataFrame (typically a feature
+table) to which the feature must be added.</p></li>
+<li><p><strong>feature_name</strong> (<em>string</em>) – The name that should be given to the feature.</p></li>
+<li><p><strong>feature_function</strong> (<em>Python function</em>) – A Python function for the black box
+feature.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A Boolean value of True is returned if the addition was successful.</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>AssertionError</strong> – If the input <cite>feature_table</cite> is not of type
+    DataFrame.</p></li>
+<li><p><strong>AssertionError</strong> – If the input <cite>feature_name</cite> is not of type
+    string.</p></li>
+<li><p><strong>AssertionError</strong> – If the <cite>feature_table</cite> does not have necessary columns
+    such as ‘feature_name’, ‘left_attribute’, ‘right_attribute’,
+    ‘left_attr_tokenizer’,
+    ‘right_attr_tokenizer’, ‘simfunction’, ‘function’, and
+    ‘function_source’ in the DataFrame.</p></li>
+<li><p><strong>AssertionError</strong> – If the <cite>feature_name</cite> is already present in the
+    feature table.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">block_f</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_features_for_blocking</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">age_diff</span><span class="p">(</span><span class="n">ltuple</span><span class="p">,</span> <span class="n">rtuple</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="c1"># assume that the tuples have age attribute and values are valid numbers.</span>
+<span class="gp">&gt;&gt;&gt; </span>  <span class="k">return</span> <span class="n">ltuple</span><span class="p">[</span><span class="s1">&#39;age&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">rtuple</span><span class="p">[</span><span class="s1">&#39;age&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">status</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">add_blackbox_feature</span><span class="p">(</span><span class="n">block_f</span><span class="p">,</span> <span class="s1">&#39;age_difference&#39;</span><span class="p">,</span> <span class="n">age_diff</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
 </div>
 
 

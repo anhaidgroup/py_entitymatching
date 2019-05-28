@@ -97,6 +97,149 @@
                         
   <div class="section" id="debugging-matcher">
 <h1>Debugging Matcher<a class="headerlink" href="#debugging-matcher" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="py_entitymatching.vis_debug_dt">
+<code class="descclassname">py_entitymatching.</code><code class="descname">vis_debug_dt</code><span class="sig-paren">(</span><em>matcher</em>, <em>train</em>, <em>test</em>, <em>exclude_attrs</em>, <em>target_attr</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.vis_debug_dt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Visual debugger for Decision Tree matcher.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>matcher</strong> (<a class="reference internal" href="supported_matchers.html#py_entitymatching.DTMatcher" title="py_entitymatching.DTMatcher"><em>DTMatcher</em></a>) – The Decision tree matcher that should be debugged.</p></li>
+<li><p><strong>train</strong> (<em>DataFrame</em>) – The pandas DataFrame that will be used to train the
+matcher.</p></li>
+<li><p><strong>test</strong> (<em>DataFrame</em>) – The pandas DataFrame that will be used to test the
+matcher.</p></li>
+<li><p><strong>exclude_attrs</strong> (<em>list</em>) – The list of attributes to be excluded from train
+and test, for training and testing.</p></li>
+<li><p><strong>target_attr</strong> (<em>string</em>) – The attribute name in the ‘train’ containing the
+true labels.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dt</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">DTMatcher</span><span class="p">()</span>
+<span class="go"># &#39;devel&#39; is the labeled set used for development (e.g., selecting the best matcher) purposes</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">train_test</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">split_train_test</span><span class="p">(</span><span class="n">devel</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">train</span><span class="p">,</span> <span class="n">test</span> <span class="o">=</span> <span class="n">train_test</span><span class="p">[</span><span class="s1">&#39;train&#39;</span><span class="p">],</span> <span class="n">train_test</span><span class="p">[</span><span class="s1">&#39;test&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">vis_debug_dt</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">train</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;_id&#39;</span><span class="p">,</span> <span class="s1">&#39;ltable_id&#39;</span><span class="p">,</span> <span class="s1">&#39;rtable_id&#39;</span><span class="p">],</span> <span class="n">target_attr</span><span class="o">=</span><span class="s1">&#39;gold_labels&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.vis_debug_rf">
+<code class="descclassname">py_entitymatching.</code><code class="descname">vis_debug_rf</code><span class="sig-paren">(</span><em>matcher</em>, <em>train</em>, <em>test</em>, <em>exclude_attrs</em>, <em>target_attr</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.vis_debug_rf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Visual debugger for Random Forest matcher.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>matcher</strong> (<a class="reference internal" href="supported_matchers.html#py_entitymatching.RFMatcher" title="py_entitymatching.RFMatcher"><em>RFMatcher</em></a>) – The Random Forest matcher that should be debugged.</p></li>
+<li><p><strong>train</strong> (<em>DataFrame</em>) – The pandas DataFrame that will be used to train the
+matcher.</p></li>
+<li><p><strong>test</strong> (<em>DataFrame</em>) – The pandas DataFrame that will be used to test the
+matcher.</p></li>
+<li><p><strong>exclude_attrs</strong> (<em>list</em>) – The list of attributes to be excluded from train
+and test, for training and testing.</p></li>
+<li><p><strong>target_attr</strong> (<em>string</em>) – The attribute name in the ‘train’ containing the
+true labels.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rf</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">RFMatcher</span><span class="p">()</span>
+<span class="go"># &#39;devel&#39; is the labeled set used for development (e.g., selecting the best matcher) purposes</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">train_test</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">split_train_test</span><span class="p">(</span><span class="n">devel</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">train</span><span class="p">,</span> <span class="n">test</span> <span class="o">=</span> <span class="n">train_test</span><span class="p">[</span><span class="s1">&#39;train&#39;</span><span class="p">],</span> <span class="n">train_test</span><span class="p">[</span><span class="s1">&#39;test&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">vis_debug_rf</span><span class="p">(</span><span class="n">rf</span><span class="p">,</span> <span class="n">train</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;_id&#39;</span><span class="p">,</span> <span class="s1">&#39;ltable_id&#39;</span><span class="p">,</span> <span class="s1">&#39;rtable_id&#39;</span><span class="p">],</span> <span class="n">target_attr</span><span class="o">=</span><span class="s1">&#39;gold_labels&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.debug_decisiontree_matcher">
+<code class="descclassname">py_entitymatching.</code><code class="descname">debug_decisiontree_matcher</code><span class="sig-paren">(</span><em>decision_tree</em>, <em>tuple_1</em>, <em>tuple_2</em>, <em>feature_table</em>, <em>table_columns</em>, <em>exclude_attrs=None</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.debug_decisiontree_matcher" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function is used to debug a decision tree matcher using two input
+tuples.</p>
+<p>Specifically, this function takes in two tuples, gets the feature vector
+using the feature table and finally passes it to the decision tree and
+displays the path that the feature vector takes in the decision tree.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>decision_tree</strong> (<a class="reference internal" href="supported_matchers.html#py_entitymatching.DTMatcher" title="py_entitymatching.DTMatcher"><em>DTMatcher</em></a>) – The input
+decision tree object that should be debugged.</p></li>
+<li><p><strong>tuple_1</strong><strong>,</strong><strong>tuple_2</strong> (<em>Series</em>) – Input tuples that should be debugged.</p></li>
+<li><p><strong>feature_table</strong> (<em>DataFrame</em>) – Feature table containing the functions
+for the features.</p></li>
+<li><p><strong>table_columns</strong> (<em>list</em>) – List of all columns that will be outputted
+after generation of feature vectors.</p></li>
+<li><p><strong>exclude_attrs</strong> (<em>list</em>) – List of attributes that should be removed from
+the table columns.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>AssertionError</strong> – If the input feature table is not of type pandas
+    DataFrame.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># devel is the labeled data used for development purposes, match_f is the feature table</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">extract_feat_vecs</span><span class="p">(</span><span class="n">devel</span><span class="p">,</span> <span class="n">feat_table</span><span class="o">=</span><span class="n">match_f</span><span class="p">,</span> <span class="n">attrs_after</span><span class="o">=</span><span class="s1">&#39;gold_labels&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dt</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">DTMatcher</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dt</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="n">H</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;_id&#39;</span><span class="p">,</span> <span class="s1">&#39;ltable_id&#39;</span><span class="p">,</span> <span class="s1">&#39;rtable_id&#39;</span><span class="p">,</span> <span class="s1">&#39;gold_labels&#39;</span><span class="p">],</span> <span class="n">target_attr</span><span class="o">=</span><span class="s1">&#39;gold_labels&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># F is the feature vector got from evaluation set of the labeled data.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">out</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="n">F</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;_id&#39;</span><span class="p">,</span> <span class="s1">&#39;ltable_id&#39;</span><span class="p">,</span> <span class="s1">&#39;rtable_id&#39;</span><span class="p">,</span> <span class="s1">&#39;gold_labels&#39;</span><span class="p">],</span> <span class="n">target_attr</span><span class="o">=</span><span class="s1">&#39;gold_labels&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># A and B are input tables</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">debug_decisiontree_matcher</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">A</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">B</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">match_f</span><span class="p">,</span> <span class="n">H</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;_id&#39;</span><span class="p">,</span> <span class="s1">&#39;ltable_id&#39;</span><span class="p">,</span> <span class="s1">&#39;rtable_id&#39;</span><span class="p">,</span> <span class="s1">&#39;gold_labels&#39;</span><span class="p">],</span> <span class="n">target_attr</span><span class="o">=</span><span class="s1">&#39;gold_labels&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.debug_randomforest_matcher">
+<code class="descclassname">py_entitymatching.</code><code class="descname">debug_randomforest_matcher</code><span class="sig-paren">(</span><em>random_forest</em>, <em>tuple_1</em>, <em>tuple_2</em>, <em>feature_table</em>, <em>table_columns</em>, <em>exclude_attrs=None</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.debug_randomforest_matcher" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function is used to debug a random forest matcher using two input
+tuples.</p>
+<p>Specifically, this function takes in two tuples, gets the feature vector
+using the feature table and finally passes it to the random forest  and
+displays the path that the feature vector takes in each of the decision
+trees that make up the random forest matcher.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>random_forest</strong> (<a class="reference internal" href="supported_matchers.html#py_entitymatching.RFMatcher" title="py_entitymatching.RFMatcher"><em>RFMatcher</em></a>) – The input
+random forest object that should be debugged.</p></li>
+<li><p><strong>tuple_1</strong><strong>,</strong><strong>tuple_2</strong> (<em>Series</em>) – Input tuples that should be debugged.</p></li>
+<li><p><strong>feature_table</strong> (<em>DataFrame</em>) – Feature table containing the functions
+for the features.</p></li>
+<li><p><strong>table_columns</strong> (<em>list</em>) – List of all columns that will be outputted
+after generation of feature vectors.</p></li>
+<li><p><strong>exclude_attrs</strong> (<em>list</em>) – List of attributes that should be removed from
+the table columns.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>AssertionError</strong> – If the input feature table is not of type pandas
+    DataFrame.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># devel is the labeled data used for development purposes, match_f is the feature table</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">extract_feat_vecs</span><span class="p">(</span><span class="n">devel</span><span class="p">,</span> <span class="n">feat_table</span><span class="o">=</span><span class="n">match_f</span><span class="p">,</span> <span class="n">attrs_after</span><span class="o">=</span><span class="s1">&#39;gold_labels&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rf</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">RFMatcher</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="n">H</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;_id&#39;</span><span class="p">,</span> <span class="s1">&#39;ltable_id&#39;</span><span class="p">,</span> <span class="s1">&#39;rtable_id&#39;</span><span class="p">,</span> <span class="s1">&#39;gold_labels&#39;</span><span class="p">],</span> <span class="n">target_attr</span><span class="o">=</span><span class="s1">&#39;gold_labels&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># F is the feature vector got from evaluation set of the labeled data.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">out</span> <span class="o">=</span> <span class="n">rf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="n">F</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;_id&#39;</span><span class="p">,</span> <span class="s1">&#39;ltable_id&#39;</span><span class="p">,</span> <span class="s1">&#39;rtable_id&#39;</span><span class="p">,</span> <span class="s1">&#39;gold_labels&#39;</span><span class="p">],</span> <span class="n">target_attr</span><span class="o">=</span><span class="s1">&#39;gold_labels&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># A and B are input tables</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">debug_randomforest_matcher</span><span class="p">(</span><span class="n">rf</span><span class="p">,</span> <span class="n">A</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">B</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">match_f</span><span class="p">,</span> <span class="n">H</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;_id&#39;</span><span class="p">,</span> <span class="s1">&#39;ltable_id&#39;</span><span class="p">,</span> <span class="s1">&#39;rtable_id&#39;</span><span class="p">,</span> <span class="s1">&#39;gold_labels&#39;</span><span class="p">],</span> <span class="n">target_attr</span><span class="o">=</span><span class="s1">&#39;gold_labels&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
 </div>
 
 

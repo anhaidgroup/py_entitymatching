@@ -97,6 +97,193 @@
                         
   <div class="section" id="loading-and-saving-objects">
 <h1>Loading and Saving Objects<a class="headerlink" href="#loading-and-saving-objects" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="py_entitymatching.load_table">
+<code class="descclassname">py_entitymatching.</code><code class="descname">load_table</code><span class="sig-paren">(</span><em>file_path</em>, <em>metadata_ext='.pklmetadata'</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.load_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads a pickled DataFrame from a file along with its metadata.</p>
+<p>This function loads a DataFrame from a file stored in pickle format.</p>
+<p>Further, this function looks for a metadata file with the same file name
+but with an extension given by the user (defaults to ‘.pklmetadata’. If the
+metadata file is present, the function will update the metadata for that
+DataFrame in the catalog.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_path</strong> (<em>string</em>) – The file path to load the file from.</p></li>
+<li><p><strong>metadata_ext</strong> (<em>string</em>) – The metadata file extension (defaults to
+‘.pklmetadata’) that should be used to generate metadata file name.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>If the loading is successful, the function will return a pandas
+DataFrame read from the file. The catalog will be updated with the
+metadata read from the metadata file (if the file was present).</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>AssertionError</strong> – If <cite>file_path</cite> is not of type string.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>metadata_ext</cite> is not of type string.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">load_table</span><span class="p">(</span><span class="s1">&#39;./A.pkl&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">load_table</span><span class="p">(</span><span class="s1">&#39;./A.pkl&#39;</span><span class="p">,</span> <span class="n">metadata_ext</span><span class="o">=</span><span class="s1">&#39;.pklmeta&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#py_entitymatching.save_table" title="py_entitymatching.save_table"><code class="xref py py-meth docutils literal notranslate"><span class="pre">save_table()</span></code></a></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This function is different from read_csv_metadata in two aspects.
+First, this function currently does not support reading in candidate
+set tables, where there are more metadata such as ltable,
+rtable than just ‘key’, and conceptually the user is expected to
+provide ltable and rtable information while calling this function. (
+this support will be added shortly). Second, this function loads the
+table stored in a pickle format.</p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.save_table">
+<code class="descclassname">py_entitymatching.</code><code class="descname">save_table</code><span class="sig-paren">(</span><em>data_frame</em>, <em>file_path</em>, <em>metadata_ext='.pklmetadata'</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.save_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves a DataFrame to disk along with its metadata in a pickle format.</p>
+<p>This function saves a  DataFrame to disk along with its metadata from
+the catalog.</p>
+<p>Specifically, this function saves the DataFrame in the given
+file path, and saves the metadata in the same directory (as the
+file path) but with a different extension. This extension can be
+optionally given by the user (defaults to ‘.pklmetadata’).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_frame</strong> (<em>DataFrame</em>) – The DataFrame that should be saved.</p></li>
+<li><p><strong>file_path</strong> (<em>string</em>) – The file path where the DataFrame must be stored.</p></li>
+<li><p><strong>metadata_ext</strong> (<em>string</em>) – The metadata extension that should be used while
+storing the metadata information. The default value is
+‘.pklmetadata’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A Boolean value of True is returned if the DataFrame is successfully
+saved.</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>AssertionError</strong> – If <cite>data_frame</cite> is not of type pandas
+    DataFrame.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>file_path</cite> is not of type string.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>metadata_ext</cite> is not of type string.</p></li>
+<li><p><strong>AssertionError</strong> – If a file cannot written in the given <cite>file_path</cite>.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;id&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="s1">&#39;colA&#39;</span><span class="p">:[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">],</span> <span class="s1">&#39;colB&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">]})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">save_table</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="s1">&#39;./A.pkl&#39;</span><span class="p">)</span> <span class="c1"># will store two files ./A.pkl and ./A.pklmetadata</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;id&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="s1">&#39;colA&#39;</span><span class="p">:[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">],</span> <span class="s1">&#39;colB&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">]})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">save_table</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="s1">&#39;./A.pkl&#39;</span><span class="p">,</span> <span class="n">metadata_ext</span><span class="o">=</span><span class="s1">&#39;.pklmeta&#39;</span><span class="p">)</span> <span class="c1"># will store two files ./A.pkl and ./A.pklmeta</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#py_entitymatching.load_table" title="py_entitymatching.load_table"><code class="xref py py-meth docutils literal notranslate"><span class="pre">load_table()</span></code></a></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This function is a bit different from to_csv_metadata, where the
+DataFrame is stored in a CSV file format. The CSV file format can be
+viewed using a text editor. But a DataFrame stored using ‘save_table’ is
+stored in a special format, which cannot be viewed with a text editor.
+The reason we have save_table is, for larger DataFrames it is
+efficient to pickle the DataFrame to disk than writing the DataFrame
+in CSV format.</p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.load_object">
+<code class="descclassname">py_entitymatching.</code><code class="descname">load_object</code><span class="sig-paren">(</span><em>file_path</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.load_object" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads a Python object from disk.</p>
+<p>This function loads py_entitymatching objects from disk such as
+blockers, matchers, feature table, etc.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>file_path</strong> (<em>string</em>) – The file path to load the object from.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A Python object read from the file path.</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>AssertionError</strong> – If <cite>file_path</cite> is not of type string.</p></li>
+<li><p><strong>AssertionError</strong> – If a file does not exist at the given <cite>file_path</cite>.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rb</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">load_object</span><span class="p">(</span><span class="s1">&#39;./rule_blocker.pkl&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#py_entitymatching.save_object" title="py_entitymatching.save_object"><code class="xref py py-meth docutils literal notranslate"><span class="pre">save_object()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="py_entitymatching.save_object">
+<code class="descclassname">py_entitymatching.</code><code class="descname">save_object</code><span class="sig-paren">(</span><em>object_to_save</em>, <em>file_path</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.save_object" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves a Python object to disk.</p>
+<p>This function is intended to be used to save py_entitymatching objects such as
+rule-based blocker, feature vectors, etc. A user would like to store
+py_entitymatching objects to disk, when he/she wants to save the workflow and
+resume it later. This function provides a way to save the required
+objects to disk.</p>
+<p>This function takes in the object to save the file path. It pickles the object and
+stores it in the file path specified.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>object_to_save</strong> (<em>Python object</em>) – The Python object to save. This can be
+a rule-based blocker, feature vectors, etc.</p></li>
+<li><p><strong>file_path</strong> (<em>string</em>) – The file path where the object must be saved.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A Boolean value of True is returned, if the saving was successful.</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>AssertionError</strong> – If <cite>file_path</cite> is not of type string.</p></li>
+<li><p><strong>AssertionError</strong> – If a file cannot be written in the given <cite>file_path</cite>.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;id&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="s1">&#39;colA&#39;</span><span class="p">:[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">],</span> <span class="s1">&#39;colB&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">]})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;id&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="s1">&#39;colA&#39;</span><span class="p">:[</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">],</span> <span class="s1">&#39;colB&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">]})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rb</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">RuleBasebBlocker</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">block_f</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_features_for_blocking</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rule1</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;colA_colA_lev_dist(ltuple, rtuple) &gt; 3&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rb</span><span class="o">.</span><span class="n">add_rule</span><span class="p">(</span><span class="n">rule1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">save_object</span><span class="p">(</span><span class="n">rb</span><span class="p">,</span> <span class="s1">&#39;./rule_blocker.pkl&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#py_entitymatching.load_object" title="py_entitymatching.load_object"><code class="xref py py-meth docutils literal notranslate"><span class="pre">load_object()</span></code></a></p>
+</div>
+</dd></dl>
+
 </div>
 
 

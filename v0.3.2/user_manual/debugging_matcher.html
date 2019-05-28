@@ -136,8 +136,8 @@ is displayed.</p>
 <p>The usage of <cite>vis_debug_rf</cite> is same as <cite>vis_debug_dt</cite>. The command would display a GUI
 similar to <cite>vis_debug_dt</cite>, except the debug window would list a set of trees. You can
 expand each tree to see the path taken by the features in that tree.</p>
-<p>Please refer to the API reference of <code class="xref py py-meth docutils literal notranslate"><span class="pre">vis_debug_dt()</span></code> and
-<code class="xref py py-meth docutils literal notranslate"><span class="pre">vis_debug_rf()</span></code> for more details.</p>
+<p>Please refer to the API reference of <a class="reference internal" href="api/debugging_matcher.html#py_entitymatching.vis_debug_dt" title="py_entitymatching.vis_debug_dt"><code class="xref py py-meth docutils literal notranslate"><span class="pre">vis_debug_dt()</span></code></a> and
+<a class="reference internal" href="api/debugging_matcher.html#py_entitymatching.vis_debug_rf" title="py_entitymatching.vis_debug_rf"><code class="xref py py-meth docutils literal notranslate"><span class="pre">vis_debug_rf()</span></code></a> for more details.</p>
 <p>If you want to debug a Decision Tree matcher or Random Forest matcher using GUI,
 then we recommend the following steps:</p>
 <ol class="arabic simple">
@@ -174,13 +174,13 @@ evaluation status at each node and the actual feature value at each node.</p>
 <p>The usage of <cite>debug_randomforest_matcher</cite> is same as <cite>debug_decisiontree_matcher</cite>.
 Similar to <cite>debug_decisiontree_matcher</cite> command, it prints the path taken by the feature
 vector, except that it displays the path taken in each tree of the Random Forest.</p>
-<p>Please refer to the API reference of <code class="xref py py-meth docutils literal notranslate"><span class="pre">debug_decisiontree_matcher()</span></code>
-and <code class="xref py py-meth docutils literal notranslate"><span class="pre">debug_randomforest_matcher()</span></code> for more details.</p>
+<p>Please refer to the API reference of <a class="reference internal" href="api/debugging_matcher.html#py_entitymatching.debug_decisiontree_matcher" title="py_entitymatching.debug_decisiontree_matcher"><code class="xref py py-meth docutils literal notranslate"><span class="pre">debug_decisiontree_matcher()</span></code></a>
+and <a class="reference internal" href="api/debugging_matcher.html#py_entitymatching.debug_randomforest_matcher" title="py_entitymatching.debug_randomforest_matcher"><code class="xref py py-meth docutils literal notranslate"><span class="pre">debug_randomforest_matcher()</span></code></a> for more details.</p>
 <p>If you want to debug a Decision Tree matcher or Random
 Forest matcher using the command line, then we recommend the following steps:</p>
 <ol class="arabic simple">
 <li><p>Evaluate the accuracy of predictions using user created labels. The evaluation can
-be done using <code class="xref py py-meth docutils literal notranslate"><span class="pre">eval_matches()</span></code> command.</p></li>
+be done using <a class="reference internal" href="api/evaluating_the_matching_output.html#py_entitymatching.eval_matches" title="py_entitymatching.eval_matches"><code class="xref py py-meth docutils literal notranslate"><span class="pre">eval_matches()</span></code></a> command.</p></li>
 <li><p>If you want to improve precision, then he/she should debug false positives.</p></li>
 <li><p>If you want to improve recall, then he/she should debug false negatives.</p></li>
 <li><p>You should then retrieve the tuples from the tuple id pairs listed in evaluation
