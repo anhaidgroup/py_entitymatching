@@ -1,0 +1,178 @@
+
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Commands Implemented Using Dask &#8212; py_entitymatching 0.3.2 documentation</title>
+    <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Tuners for the Dask-based Commands" href="tuners.html" />
+    <link rel="prev" title="Evaluating the Matching Output" href="evaluating_the_matching_output.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="tuners.html" title="Tuners for the Dask-based Commands"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="evaluating_the_matching_output.html" title="Evaluating the Matching Output"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">py_entitymatching 0.3.2 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="actual_commands.html" accesskey="U">Commands in py_entitymatching</a> &#187;</li> 
+      </ul>
+    </div>
+<div class="content-wrapper">
+    <div class="content">
+        <div class="document">
+            <div class="sphinxsidebar">
+                <h3>Table Of Contents</h3>
+                <p class="caption"><span class="caption-text">How To Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../how_to_guide.html">How to Guide To Do Entity Matching</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../whatisnew.html">What is New?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview of Supported EM Processes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides.html">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datastructures.html">Data Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../steps_supp_em_workflows.html">Steps of Supported EM Workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc.html">Miscellaneous</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview of Command Organization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="actual_commands.html">Commands in py_entitymatching</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="actual_commands.html#experimental-commands">Experimental Commands</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Commands Implemented Using Dask</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#downsampling">Downsampling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#blocking">Blocking</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#extracting-feature-vectors">Extracting Feature Vectors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ml-matchers">ML-Matchers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tuners.html">Tuners for the Dask-based Commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="combiner.html">Matcher Combiner</a></li>
+</ul>
+</li>
+</ul>
+
+                <h3 style="margin-top: 1.5em;">Search</h3>
+
+                <form class="search" action="../../search.html" method="get">
+                    <input type="text" name="q" size="18"/>
+                    <input type="submit" value="Go"/>
+                    <input type="hidden" name="check_keywords" value="yes"/>
+                    <input type="hidden" name="area" value="default"/>
+                </form>
+                <p class="searchtip" style="font-size: 90%">
+                    Enter search terms or a module, class or function name.
+                </p>
+
+            </div>
+             
+            <div class="documentwrapper">
+                <div class="bodywrapper">
+                    <div class="body">
+                        
+  <div class="section" id="commands-implemented-using-dask">
+<h1>Commands Implemented Using Dask<a class="headerlink" href="#commands-implemented-using-dask" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="downsampling">
+<h2>Downsampling<a class="headerlink" href="#downsampling" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="blocking">
+<h2>Blocking<a class="headerlink" href="#blocking" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="extracting-feature-vectors">
+<h2>Extracting Feature Vectors<a class="headerlink" href="#extracting-feature-vectors" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="ml-matchers">
+<h2>ML-Matchers<a class="headerlink" href="#ml-matchers" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="clearer"></div>
+        </div>
+    </div>
+</div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="tuners.html" title="Tuners for the Dask-based Commands"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="evaluating_the_matching_output.html" title="Evaluating the Matching Output"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">py_entitymatching 0.3.2 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="actual_commands.html" >Commands in py_entitymatching</a> &#187;</li> 
+      </ul>
+    </div>
+<style type="text/css">
+    .scrollToTop {
+        text-align: center;
+        font-weight: bold;
+        position: fixed;
+        bottom: 60px;
+        right: 40px;
+        display: none;
+    }
+</style>
+<a href="#" class="scrollToTop">Scroll To Top</a>
+<script type="text/javascript">
+$(document).ready(function() {
+    //Check to see if the window is top if not then display button
+    $(window).scroll(function() {
+        if ($(this).scrollTop() > 200) {
+            $('.scrollToTop').fadeIn();
+        } else {
+            $('.scrollToTop').fadeOut();
+        }
+    });
+
+    //Click event to scroll to top
+    $('.scrollToTop').click(function() {
+        $('html, body').animate({
+            scrollTop: 0
+        }, 500);
+        return false;
+    });
+});
+</script>
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-27880019-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+  </body>
+</html>

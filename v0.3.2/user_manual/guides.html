@@ -1,0 +1,222 @@
+
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Guides &#8212; py_entitymatching 0.3.2 documentation</title>
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Data Structures" href="datastructures.html" />
+    <link rel="prev" title="Overview of Supported EM Processes" href="overview.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="datastructures.html" title="Data Structures"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="overview.html" title="Overview of Supported EM Processes"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">py_entitymatching 0.3.2 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+<div class="content-wrapper">
+    <div class="content">
+        <div class="document">
+            <div class="sphinxsidebar">
+                <h3>Table Of Contents</h3>
+                <p class="caption"><span class="caption-text">How To Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../how_to_guide.html">How to Guide To Do Entity Matching</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="whatisnew.html">What is New?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview of Supported EM Processes</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Guides</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#a-quick-tour-of-jupyter-notebook">A Quick Tour of Jupyter Notebook</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#end-to-end-em-workflows">End-to-End EM Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#stepwise-guides">Stepwise Guides</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="datastructures.html">Data Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="steps_supp_em_workflows.html">Steps of Supported EM Workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="misc.html">Miscellaneous</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/overview.html">Overview of Command Organization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/actual_commands.html">Commands in py_entitymatching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/actual_commands.html#experimental-commands">Experimental Commands</a></li>
+</ul>
+
+                <h3 style="margin-top: 1.5em;">Search</h3>
+
+                <form class="search" action="../search.html" method="get">
+                    <input type="text" name="q" size="18"/>
+                    <input type="submit" value="Go"/>
+                    <input type="hidden" name="check_keywords" value="yes"/>
+                    <input type="hidden" name="area" value="default"/>
+                </form>
+                <p class="searchtip" style="font-size: 90%">
+                    Enter search terms or a module, class or function name.
+                </p>
+
+            </div>
+             
+            <div class="documentwrapper">
+                <div class="bodywrapper">
+                    <div class="body">
+                        
+  <div class="section" id="guides">
+<h1>Guides<a class="headerlink" href="#guides" title="Permalink to this headline">¶</a></h1>
+<p>The goal of this page  is to give you some concrete examples for using py_entitymatching.
+These are examples with sample data that is already bundled along with the package. The
+examples are in the form of Jupyter notebooks.</p>
+<div class="section" id="a-quick-tour-of-jupyter-notebook">
+<h2>A Quick Tour of Jupyter Notebook<a class="headerlink" href="#a-quick-tour-of-jupyter-notebook" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://jupyter-notebook-beginner-guide.readthedocs.io/en/latest/index.html">This tutorial</a>
+gives a quick tour on installing and using Jupyter notebook.</p>
+</div>
+<div class="section" id="end-to-end-em-workflows">
+<h2>End-to-End EM Workflows<a class="headerlink" href="#end-to-end-em-workflows" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>EM workflow with blocking using a overlap blocker and matching using Random Forest
+matcher: <a class="reference external" href="http://nbviewer.jupyter.org/github/anhaidgroup/py_entitymatching/blob/master/notebooks/guides/end_to_end_em_guides/Basic%20EM%20Workflow%20Restaurants%20-%201.ipynb">Jupyter notebook</a></p></li>
+<li><p>EM workflow with blocking using a overlap blocker, selecting among multiple matchers,
+using the selected matcher to predict matches, and evaluating the predicted matches: <a class="reference external" href="http://nbviewer.jupyter.org/github/anhaidgroup/py_entitymatching/blob/master/notebooks/guides/end_to_end_em_guides/Basic%20EM%20Workflow%20Restaurants%20-%202.ipynb">Jupyter notebook</a></p></li>
+<li><p>EM workflow with blocking using multiple blockers (overlap and attribute equivalence
+blocker), debugging the blocker output, selecting among multiple matchers, debugging the
+matcher output, using the selected matcher to predict matches, and evaluating the
+predicted matches: <a class="reference external" href="http://nbviewer.jupyter.org/github/anhaidgroup/py_entitymatching/blob/master/notebooks/guides/end_to_end_em_guides/Basic%20EM%20Workflow%20Restaurants%20-%203.ipynb">Jupyter notebook</a></p></li>
+</ul>
+</div>
+<div class="section" id="stepwise-guides">
+<h2>Stepwise Guides<a class="headerlink" href="#stepwise-guides" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p>Reading CSV files from disk: <a class="reference external" href="http://nbviewer.jupyter.org/github/anhaidgroup/py_entitymatching/blob/master/notebooks/guides/step_wise_em_guides/Reading%20CSV%20Files%20from%20Disk.ipynb">Jupyter notebook</a></p></li>
+<li><p>Down sampling: <a class="reference external" href="http://nbviewer.jupyter.org/github/anhaidgroup/py_entitymatching/blob/master/notebooks/guides/step_wise_em_guides/Down%20Sampling.ipynb">Jupyter notebook</a></p></li>
+<li><p>Data profiling: <a class="reference external" href="http://nbviewer.jupyter.org/github/anhaidgroup/py_entitymatching/blob/master/notebooks/guides/step_wise_em_guides/Data%20Profiling.ipynb">Jupyter notebook</a></p></li>
+<li><p>Data exploration: <a class="reference external" href="http://nbviewer.jupyter.org/github/anhaidgroup/py_entitymatching/blob/master/notebooks/guides/step_wise_em_guides/Data%20Exploration.ipynb">Jupyter notebook</a></p></li>
+<li><p>Blocking:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Using overlap blocker: <a class="reference external" href="http://nbviewer.jupyter.org/github/anhaidgroup/py_entitymatching/blob/master/notebooks/guides/step_wise_em_guides/Performing%20Blocking%20Using%20Built-In%20Blockers%20%28Overlap%20Blocker%29.ipynb">Jupyter notebook</a></p></li>
+<li><p>Using attribute equivalence blocker: <a class="reference external" href="http://nbviewer.jupyter.org/github/anhaidgroup/py_entitymatching/blob/master/notebooks/guides/step_wise_em_guides/Performing%20Blocking%20Using%20Built-In%20Blockers%20%28Attr.%20Equivalence%20Blocker%29.ipynb">Jupyter notebook</a></p></li>
+<li><p>Using rule-based blocker: <a class="reference external" href="http://nbviewer.jupyter.org/github/anhaidgroup/py_entitymatching/blob/master/notebooks/guides/step_wise_em_guides/Performing%20Blocking%20Using%20Rule-Based%20Blocking.ipynb">Jupyter notebook</a></p></li>
+<li><p>Using blackbox blocker: <a class="reference external" href="http://nbviewer.jupyter.org/github/anhaidgroup/py_entitymatching/blob/master/notebooks/guides/step_wise_em_guides/Performing%20Blocking%20Using%20Blackbox%20Blocker.ipynb">Jupyter notebook</a></p></li>
+<li><p>Combining multiple blockers: <a class="reference external" href="http://nbviewer.jupyter.org/github/anhaidgroup/py_entitymatching/blob/master/notebooks/guides/step_wise_em_guides/Combining%20Multiple%20Blockers.ipynb">Jupyter notebook</a></p></li>
+<li><p>Debugging blocker output: <a class="reference external" href="http://nbviewer.jupyter.org/github/anhaidgroup/py_entitymatching/blob/master/notebooks/guides/step_wise_em_guides/Debugging%20Blocker%20Output.ipynb">Jupyter notebook</a></p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Handling features:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Generating features manually: <a class="reference external" href="http://nbviewer.jupyter.org/github/anhaidgroup/py_entitymatching/blob/master/notebooks/guides/step_wise_em_guides/Generating%20Features%20Manually.ipynb">Jupyter notebook</a></p></li>
+<li><p>Editing attribute types and generating features manually: <a class="reference external" href="http://nbviewer.jupyter.org/github/anhaidgroup/py_entitymatching/blob/master/notebooks/guides/step_wise_em_guides/Editing%20and%20Generating%20Features%20Manually.ipynb">Jupyter notebook</a></p></li>
+<li><p>Adding features to feature table: <a class="reference external" href="http://nbviewer.jupyter.org/github/anhaidgroup/py_entitymatching/blob/master/notebooks/guides/step_wise_em_guides/Adding%20Features%20to%20Feature%20Table.ipynb">Jupyter notebook</a></p></li>
+<li><p>Removing features from feature table: <a class="reference external" href="http://nbviewer.jupyter.org/github/anhaidgroup/py_entitymatching/blob/master/notebooks/guides/step_wise_em_guides/Removing%20Features%20From%20Feature%20Table.ipynb">Jupyter notebook</a></p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Sampling and labeling: <a class="reference external" href="http://nbviewer.jupyter.org/github/anhaidgroup/py_entitymatching/blob/master/notebooks/guides/step_wise_em_guides/Sampling%20and%20Labeling.ipynb">Jupyter notebook</a></p></li>
+<li><p>Matching:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Selecting the best learning-based matcher (involves splitting the labeled data, generating features,
+instantiating multiple matchers, debugging the matcher output): <a class="reference external" href="http://nbviewer.jupyter.org/github/anhaidgroup/py_entitymatching/blob/master/notebooks/guides/step_wise_em_guides/Selecting%20the%20Best%20Learning%20Matcher.ipynb">Jupyter notebook</a></p></li>
+<li><p>Performing matching using rule-based matcher: <a class="reference external" href="http://nbviewer.jupyter.org/github/anhaidgroup/py_entitymatching/blob/master/notebooks/guides/step_wise_em_guides/Performing%20Matching%20with%20a%20Rule-Based%20Matcher.ipynb">Jupyter notebook</a></p></li>
+<li><p>Improving matching results using triggers: <a class="reference external" href="http://nbviewer.jupyter.org/github/anhaidgroup/py_entitymatching/blob/master/notebooks/guides/step_wise_em_guides/Using%20Match%20Triggers%20to%20Improve%20Results.ipynb">Jupyter notebook</a></p></li>
+<li><p>Evaluating the predictions from a matcher:  <a class="reference external" href="http://nbviewer.jupyter.org/github/anhaidgroup/py_entitymatching/blob/master/notebooks/guides/step_wise_em_guides/Evaluating%20the%20Selected%20Matcher.ipynb">Jupyter notebook</a></p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div>
+</div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="clearer"></div>
+        </div>
+    </div>
+</div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="datastructures.html" title="Data Structures"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="overview.html" title="Overview of Supported EM Processes"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">py_entitymatching 0.3.2 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+<style type="text/css">
+    .scrollToTop {
+        text-align: center;
+        font-weight: bold;
+        position: fixed;
+        bottom: 60px;
+        right: 40px;
+        display: none;
+    }
+</style>
+<a href="#" class="scrollToTop">Scroll To Top</a>
+<script type="text/javascript">
+$(document).ready(function() {
+    //Check to see if the window is top if not then display button
+    $(window).scroll(function() {
+        if ($(this).scrollTop() > 200) {
+            $('.scrollToTop').fadeIn();
+        } else {
+            $('.scrollToTop').fadeOut();
+        }
+    });
+
+    //Click event to scroll to top
+    $('.scrollToTop').click(function() {
+        $('html, body').animate({
+            scrollTop: 0
+        }, 500);
+        return false;
+    });
+});
+</script>
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-27880019-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+  </body>
+</html>
