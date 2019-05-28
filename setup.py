@@ -122,8 +122,8 @@ if __name__ == "__main__":
             'cloudpickle >= 0.2.1',
             'pyparsing >= 2.1.4',
             'scikit-learn >= 0.18',
-            'pandas-profiling >= 1.4.0',
-            'scipy'
+            'scipy',
+            'numpy==1.16.2'
         ],
         ext_modules=extensions,
         cmdclass=cmdclass,
