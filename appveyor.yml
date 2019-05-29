@@ -8,11 +8,6 @@ environment:
       PYTHON_ARCH: "64"
       CONDA_PY: "27"
 
-    - PYTHON: "C:\\Python34_64"
-      PYTHON_VERSION: "3.4"
-      PYTHON_ARCH: "64"
-      CONDA_PY: "34"
-
     - PYTHON: "C:\\Python35_64"
       PYTHON_VERSION: "3.5"
       PYTHON_ARCH: "64"
@@ -23,10 +18,10 @@ environment:
       PYTHON_ARCH: "64"
       CONDA_PY: "36"
 
-    - PYTHON: "C:\\Python36_64"
-      PYTHON_VERSION: "3.6"
+    - PYTHON: "C:\\Python37_64"
+      PYTHON_VERSION: "3.7"
       PYTHON_ARCH: "64"
-      CONDA_PY: "36"
+      CONDA_PY: "37"
 
 install:
   # this installs the appropriate Miniconda (Py2/Py3, 32/64 bit)
@@ -38,6 +33,7 @@ install:
   - pip install -r requirements.txt
   - if %PYTHON_VERSION%==3.5 (pip install PyQt5)
   - if %PYTHON_VERSION%==3.6 (pip install PyQt5)
+  - if %PYTHON_VERSION%==3.7 (pip install PyQt5)
   - python setup.py build_ext --inplace
 
 build: false
