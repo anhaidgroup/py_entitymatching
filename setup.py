@@ -113,13 +113,17 @@ if __name__ == "__main__":
         ],
         packages=packages,
         install_requires=[
+            'requests',
+            'ipython==5.6',
+            'matplotlib>=2.2.4',
             'PyPrind',
-            'py_stringsimjoin==0.3.0',
+            'py-stringsimjoin>=0.3.0',
             # dependencies such as py_stringmatching, joblib, pyprind
             'cloudpickle >= 0.2.1',
             'pyparsing >= 2.1.4',
             'scikit-learn >= 0.18',
-            'pandas-profiling >= 1.4.0'
+            'scipy',
+            'numpy==1.16.2'
         ],
         ext_modules=extensions,
         cmdclass=cmdclass,

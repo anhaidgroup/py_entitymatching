@@ -3,30 +3,19 @@ matrix:
   - os: linux
     python: 2.7
     env: PYTHON_VERSION=2.7
-#  - os: linux
-#    python: 3.3
-#    env: PYTHON_VERSION=3.3
-  - os: linux
-    python: 3.4
-    env: PYTHON_VERSION=3.4
   - os: linux
     python: 3.5
     env: PYTHON_VERSION=3.5
   - os: linux
     python: 3.6
     env: PYTHON_VERSION=3.6
+  - os: linux
+    python: 3.7
+    env: PYTHON_VERSION=3.7
   - os: osx
     language: generic
     env:
     - PYTHON_VERSION=2.7
-#  - os: osx
-#    language: generic
-#    env:
-#    - PYTHON_VERSION=3.3
-  - os: osx
-    language: generic
-    env:
-    - PYTHON_VERSION=3.4
   - os: osx
     language: generic
     env:
@@ -35,6 +24,10 @@ matrix:
     language: generic
     env:
     - PYTHON_VERSION=3.6
+  - os: osx
+    language: generic
+    env:
+    - PYTHON_VERSION=3.7
 
 
 before_install:
@@ -55,8 +48,7 @@ before_install:
   - if [[ "$PYTHON_VERSION" == 3.6 ]]; then pip install PyQt5; fi
 
 install:
-  - conda install --yes python=$PYTHON_VERSION nose pandas pyparsing six scikit-learn cloudpickle joblib ipython pip ipython
-  - conda install --yes -c uwmagellan py_stringsimjoin=0.1.0
+  - conda install --yes python=$PYTHON_VERSION nose
   - pip install requests
   - pip install -r requirements.txt
   - python setup.py build_ext --inplace
