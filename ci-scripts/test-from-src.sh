@@ -2,6 +2,8 @@
 
 # Test the package from source install.
 
+set -e
+
 source activate py_entitymatching_test_env
 
 # Unit tests

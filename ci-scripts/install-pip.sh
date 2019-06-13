@@ -2,6 +2,8 @@
 
 # Install this package and its dependencies using pip.
 
+set -e
+
 source activate py_entitymatching_test_env
 
 # Package dependencies (TODO: factor this out)
