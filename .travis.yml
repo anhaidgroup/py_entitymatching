@@ -91,13 +91,8 @@ before_install:
   - bash miniconda.sh -b -p $HOME/miniconda
   - export PATH="$HOME/miniconda/bin:$PATH"
   - conda create --yes -n py_entitymatching_test_env python=$PYTHON_VERSION --no-default-packages
-  - source activate py_entitymatching_test_env
   - python --version  
 
-install: TRAVIS_OS_NAME="$TRAVIS_OS_NAME" ./install/install-${INSTALL_METHOD}.sh
+install: TRAVIS_OS_NAME="$TRAVIS_OS_NAME" ./ci-scripts/install-${INSTALL_METHOD}.sh
 
-script:
-  - source activate py_entitymatching_test_env
-  - cd ~
-  - pwd
-  - python -c "import py_entitymatching; print(py_entitymatching.__version__)"
+script: ./ci-scripts/test-from-${INSTALL_METHOD}.sh
