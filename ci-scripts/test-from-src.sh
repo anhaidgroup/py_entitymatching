@@ -7,7 +7,7 @@ set -e
 source activate py_entitymatching_test_env
 
 # Unit tests
-pip install nosetests
+pip install nose
 python setup.py build_ext --inplace
 nosetests -s
 
