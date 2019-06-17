@@ -1,7 +1,7 @@
 
 from py_entitymatching.catalog.catalog import Catalog
 
-__version__ = '0.3.2'
+__version__ = '0.3.test'
 
 _catalog = Catalog.Instance()
 
@@ -27,7 +27,10 @@ from py_entitymatching.catalog.catalog_manager import get_key, set_key, set_fk_l
 
 
 # # data exploration wrappers
-from py_entitymatching.explorer.openrefine.openrefine_wrapper import data_explore_openrefine
+try:
+    from py_entitymatching.explorer.openrefine.openrefine_wrapper import data_explore_openrefine
+except ImportError:
+    pass
 from py_entitymatching.explorer.pandastable.pandastable_wrapper import data_explore_pandastable
 
 

@@ -115,7 +115,6 @@ if __name__ == "__main__":
         install_requires=[
             'requests',
             'ipython==5.6',
-            'matplotlib>=2.2.4',
             'PyPrind',
             'py-stringsimjoin>=0.3.0',
             # dependencies such as py_stringmatching, joblib, pyprind

@@ -2,7 +2,12 @@ import os.path
 import json
 import pandas
 import webbrowser
-import requests
+try:
+    import requests
+except ImportError:
+    raise ImportError('Please install the requests package before using openrefine. '
+                      'You can install requests be following the instructions at '
+                      'https://2.python-requests.org/en/master/')
 import six
 from six.moves import urllib
 import tempfile
