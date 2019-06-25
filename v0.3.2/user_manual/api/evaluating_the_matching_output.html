@@ -99,7 +99,7 @@
 <h1>Evaluating the Matching Output<a class="headerlink" href="#evaluating-the-matching-output" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="py_entitymatching.eval_matches">
-<code class="descclassname">py_entitymatching.</code><code class="descname">eval_matches</code><span class="sig-paren">(</span><em>data_frame</em>, <em>gold_label_attr</em>, <em>predicted_label_attr</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.eval_matches" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">py_entitymatching.</code><code class="sig-name descname">eval_matches</code><span class="sig-paren">(</span><em class="sig-param">data_frame</em>, <em class="sig-param">gold_label_attr</em>, <em class="sig-param">predicted_label_attr</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.eval_matches" title="Permalink to this definition">¶</a></dt>
 <dd><p>Evaluates the matches from the matcher.</p>
 <p>Specifically, given a DataFrame containing golden labels and predicted
 labels, this function would evaluate the matches and return the accuracy
@@ -148,7 +148,7 @@ precision, recall, F1.</p>
 
 <dl class="function">
 <dt id="py_entitymatching.print_eval_summary">
-<code class="descclassname">py_entitymatching.</code><code class="descname">print_eval_summary</code><span class="sig-paren">(</span><em>eval_summary</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.print_eval_summary" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">py_entitymatching.</code><code class="sig-name descname">print_eval_summary</code><span class="sig-paren">(</span><em class="sig-param">eval_summary</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.print_eval_summary" title="Permalink to this definition">¶</a></dt>
 <dd><p>Prints a summary of evaluation results.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -171,7 +171,7 @@ typically from ‘eval_matches’ function.</p>
 
 <dl class="function">
 <dt id="py_entitymatching.get_false_positives_as_df">
-<code class="descclassname">py_entitymatching.</code><code class="descname">get_false_positives_as_df</code><span class="sig-paren">(</span><em>table</em>, <em>eval_summary</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.get_false_positives_as_df" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">py_entitymatching.</code><code class="sig-name descname">get_false_positives_as_df</code><span class="sig-paren">(</span><em class="sig-param">table</em>, <em class="sig-param">eval_summary</em>, <em class="sig-param">verbose=False</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.get_false_positives_as_df" title="Permalink to this definition">¶</a></dt>
 <dd><p>Select only the false positives from the input table and return as a
 DataFrame based on the evaluation results.</p>
 <dl class="field-list simple">
@@ -207,7 +207,7 @@ DataFrame.</p>
 
 <dl class="function">
 <dt id="py_entitymatching.get_false_negatives_as_df">
-<code class="descclassname">py_entitymatching.</code><code class="descname">get_false_negatives_as_df</code><span class="sig-paren">(</span><em>table</em>, <em>eval_summary</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.get_false_negatives_as_df" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">py_entitymatching.</code><code class="sig-name descname">get_false_negatives_as_df</code><span class="sig-paren">(</span><em class="sig-param">table</em>, <em class="sig-param">eval_summary</em>, <em class="sig-param">verbose=False</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.get_false_negatives_as_df" title="Permalink to this definition">¶</a></dt>
 <dd><p>Select only the false negatives from the input table and return as a
 DataFrame based on the evaluation results.</p>
 <dl class="field-list simple">

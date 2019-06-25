@@ -109,7 +109,7 @@
 <h1>Adding Features to Feature Table<a class="headerlink" href="#adding-features-to-feature-table" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="py_entitymatching.get_feature_fn">
-<code class="descclassname">py_entitymatching.</code><code class="descname">get_feature_fn</code><span class="sig-paren">(</span><em>feature_string</em>, <em>tokenizers</em>, <em>similarity_functions</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.get_feature_fn" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">py_entitymatching.</code><code class="sig-name descname">get_feature_fn</code><span class="sig-paren">(</span><em class="sig-param">feature_string</em>, <em class="sig-param">tokenizers</em>, <em class="sig-param">similarity_functions</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.get_feature_fn" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function creates a feature in a declarative manner.</p>
 <p>Specifically, this function uses the feature string, parses it and
 compiles it into a function using the given tokenizers and similarity
@@ -192,7 +192,7 @@ bundled along with the returned function code.</p>
 
 <dl class="function">
 <dt id="py_entitymatching.add_feature">
-<code class="descclassname">py_entitymatching.</code><code class="descname">add_feature</code><span class="sig-paren">(</span><em>feature_table</em>, <em>feature_name</em>, <em>feature_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.add_feature" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">py_entitymatching.</code><code class="sig-name descname">add_feature</code><span class="sig-paren">(</span><em class="sig-param">feature_table</em>, <em class="sig-param">feature_name</em>, <em class="sig-param">feature_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.add_feature" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a feature to the feature table.</p>
 <p>Specifically, this function is used in combination with
 <a class="reference internal" href="#py_entitymatching.get_feature_fn" title="py_entitymatching.get_feature_fn"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_feature_fn()</span></code></a>.
@@ -252,7 +252,7 @@ returned by executing <a class="reference internal" href="#py_entitymatching.get
 
 <dl class="function">
 <dt id="py_entitymatching.add_blackbox_feature">
-<code class="descclassname">py_entitymatching.</code><code class="descname">add_blackbox_feature</code><span class="sig-paren">(</span><em>feature_table</em>, <em>feature_name</em>, <em>feature_function</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.add_blackbox_feature" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">py_entitymatching.</code><code class="sig-name descname">add_blackbox_feature</code><span class="sig-paren">(</span><em class="sig-param">feature_table</em>, <em class="sig-param">feature_name</em>, <em class="sig-param">feature_function</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.add_blackbox_feature" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a black box feature to the feature table.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>

@@ -91,9 +91,136 @@
 <h1>Tuners for the Dask-based Commands<a class="headerlink" href="#tuners-for-the-dask-based-commands" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="downsampling">
 <h2>Downsampling<a class="headerlink" href="#downsampling" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="py_entitymatching.tuner.tuner_down_sample.tuner_down_sample">
+<code class="sig-prename descclassname">py_entitymatching.tuner.tuner_down_sample.</code><code class="sig-name descname">tuner_down_sample</code><span class="sig-paren">(</span><em class="sig-param">ltable</em>, <em class="sig-param">rtable</em>, <em class="sig-param">size</em>, <em class="sig-param">y_param</em>, <em class="sig-param">seed</em>, <em class="sig-param">rem_stop_words</em>, <em class="sig-param">rem_puncs</em>, <em class="sig-param">n_bins=50</em>, <em class="sig-param">sample_proportion=0.1</em>, <em class="sig-param">repeat=1</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.tuner.tuner_down_sample.tuner_down_sample" title="Permalink to this definition">¶</a></dt>
+<dd><p>WARNING THIS COMMAND IS EXPERIMENTAL AND NOT TESTED. USE AT YOUR OWN RISK.</p>
+<p>Tunes the parameters for down sampling command implemented using Dask.</p>
+<p>Given the input tables and the parameters for Dask-based down sampling command,
+this command returns the configuration including whether the input tables need to
+be swapped, the number of left table chunks, and the number of right table chunks.
+It uses “Staged Tuning” approach to select the configuration setting. The key idea
+of this approach select the configuration for one parameter at a time.</p>
+<p>Conceptually, this command performs the following steps. First, it samples the
+left table and down sampled rtable using stratified sampling. Next, it uses the
+sampled tables to decide if they need to be swapped or not (by running the down
+sample command and comparing the runtimes). Next, it finds the number of rtable
+partitions using the sampled tables (by trying the a fixed set of partitions and
+comparing the runtimes). The number of partitions is selected to be the number
+before which the runtime starts increasing. Then it finds the number of right table
+partitions similar to selecting the number of left table partitions. while doing
+this, set the number of right table partitions is set to the value found in the
+previous step. Finally, it returns the configuration setting back to the user as a
+triplet (x, y, z) where x indicates if the tables need to be swapped or not,
+y indicates the number of left table partitions (if the tables need to be swapped,
+then this indicates the number of left table partitions after swapping),
+and z indicates the number of down sampled right table partitions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ltable</strong> (<em>DataFrame</em>) – The left input table, i.e., table A.</p></li>
+<li><p><strong>rtable</strong> (<em>DataFrame</em>) – The right input table, i.e., table B.</p></li>
+<li><p><strong>size</strong> (<em>int</em>) – The size that table B should be down sampled to.</p></li>
+<li><p><strong>y_param</strong> (<em>int</em>) – The parameter to control the down sample size of table A.
+Specifically, the down sampled size of table A should be close to
+size * y_param.</p></li>
+<li><p><strong>seed</strong> (<em>int</em>) – The seed for the pseudo random number generator to select
+the tuples from A and B (defaults to None).</p></li>
+<li><p><strong>rem_stop_words</strong> (<em>boolean</em>) – A flag to indicate whether a default set of stop words
+must be removed.</p></li>
+<li><p><strong>rem_puncs</strong> (<em>boolean</em>) – A flag to indicate whether the punctuations must be
+removed from the strings.</p></li>
+<li><p><strong>n_bins</strong> (<em>int</em>) – The number of bins to be used for stratified sampling.</p></li>
+<li><p><strong>sample_proportion</strong> (<em>float</em>) – The proportion used to sample the tables. This value
+is expected to be greater than 0 and less thank 1.</p></li>
+<li><p><strong>repeat</strong> (<em>int</em>) – The number of times to execute the down sample command while
+selecting the values for the parameters.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A tuple containing 3 values. For example if the tuple is represented as (x, y,
+z) then x indicates if the tables need to be swapped or not, y indicates the number of
+left table partitions (if the tables need to be swapped, then this indicates the
+number of left table partitions after swapping), and z indicates the number of
+down sampled right table partitions.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">py_entitymatching.tuner.tuner_down_sample</span> <span class="k">import</span> <span class="n">tuner_down_sample</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">swap_or_not</span><span class="p">,</span> <span class="n">n_ltable_chunks</span><span class="p">,</span> <span class="n">n_sample_rtable_chunks</span><span class="p">)</span> <span class="o">=</span> <span class="n">tuner_down_sample</span><span class="p">(</span><span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">y_param</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="n">rem_stop_words</span><span class="p">,</span> <span class="n">rem_puncs</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
 </div>
 <div class="section" id="overlap-blocker">
 <h2>Overlap Blocker<a class="headerlink" href="#overlap-blocker" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="py_entitymatching.tuner.tuner_overlap_blocker.tuner_overlap_blocker">
+<code class="sig-prename descclassname">py_entitymatching.tuner.tuner_overlap_blocker.</code><code class="sig-name descname">tuner_overlap_blocker</code><span class="sig-paren">(</span><em class="sig-param">ltable</em>, <em class="sig-param">rtable</em>, <em class="sig-param">l_key</em>, <em class="sig-param">r_key</em>, <em class="sig-param">l_overlap_attr</em>, <em class="sig-param">r_overlap_attr</em>, <em class="sig-param">rem_stop_words</em>, <em class="sig-param">q_val</em>, <em class="sig-param">word_level</em>, <em class="sig-param">overlap_size</em>, <em class="sig-param">ob_obj</em>, <em class="sig-param">n_bins=50</em>, <em class="sig-param">sample_proportion=0.1</em>, <em class="sig-param">seed=0</em>, <em class="sig-param">repeat=1</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.tuner.tuner_overlap_blocker.tuner_overlap_blocker" title="Permalink to this definition">¶</a></dt>
+<dd><p>WARNING THIS COMMAND IS EXPERIMENTAL AND NOT TESTED. USE AT YOUR OWN RISK.</p>
+<p>Tunes the parameters for blocking two tables command implemented using Dask.</p>
+<p>Given the input tables and the parameters for Dask-based overlap blocker command,
+this command returns the configuration including whether the input tables need to
+be swapped, the number of left table chunks, and the number of right table chunks.
+It uses “Staged Tuning” approach to select the configuration setting. The key idea
+of this approach select the configuration for one parameter at a time.</p>
+<p>Conceptually, this command performs the following steps. First, it samples the
+left table and rtable using stratified sampling. Next, it uses the
+sampled tables to decide if they need to be swapped or not (by running the down
+sample command and comparing the runtimes). Next, it finds the number of rtable
+partitions using the sampled tables (by trying the a fixed set of partitions and
+comparing the runtimes). The number of partitions is selected to be the number
+before which the runtime starts increasing. Then it finds the number of right table
+partitions similar to selecting the number of left table partitions. while doing
+this, set the number of right table partitions is set to the value found in the
+previous step. Finally, it returns the configuration setting back to the user as a
+triplet (x, y, z) where x indicates if the tables need to be swapped or not,
+y indicates the number of left table partitions (if the tables need to be swapped,
+then this indicates the number of left table partitions after swapping),
+and z indicates the number of right table partitions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ltable</strong> (<em>DataFrame</em>) – The left input table.</p></li>
+<li><p><strong>rtable</strong> (<em>DataFrame</em>) – The right input table.</p></li>
+<li><p><strong>l_overlap_attr</strong> (<em>string</em>) – The overlap attribute in left table.</p></li>
+<li><p><strong>r_overlap_attr</strong> (<em>string</em>) – The overlap attribute in right table.</p></li>
+<li><p><strong>rem_stop_words</strong> (<em>boolean</em>) – A flag to indicate whether stop words
+(e.g., a, an, the) should be removed from the token sets of the
+overlap attribute values (defaults to False).</p></li>
+<li><p><strong>q_val</strong> (<em>int</em>) – The value of q to use if the overlap attributes
+values are to be tokenized as qgrams (defaults to None).</p></li>
+<li><p><strong>word_level</strong> (<em>boolean</em>) – A flag to indicate whether the overlap
+attributes should be tokenized as words (i.e, using whitespace
+as delimiter) (defaults to True).</p></li>
+<li><p><strong>overlap_size</strong> (<em>int</em>) – The minimum number of tokens that must overlap.</p></li>
+<li><p><strong>ob_obj</strong> (<a class="reference internal" href="blocking.html#py_entitymatching.OverlapBlocker" title="py_entitymatching.OverlapBlocker"><em>OverlapBlocker</em></a>) – The object used to call commands to block two tables
+and a candidate set</p></li>
+<li><p><strong>n_bins</strong> (<em>int</em>) – The number of bins to be used for stratified sampling.</p></li>
+<li><p><strong>sample_proportion</strong> (<em>float</em>) – The proportion used to sample the tables. This value
+is expected to be greater than 0 and less thank 1.</p></li>
+<li><p><strong>repeat</strong> (<em>int</em>) – The number of times to execute the down sample command while
+selecting the values for the parameters.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A tuple containing 3 values. For example if the tuple is represented as (x, y,
+z) then x indicates if the tables need to be swapped or not, y indicates the number of
+left table partitions (if the tables need to be swapped, then this indicates the
+number of left table partitions after swapping), and z indicates the number of
+right table partitions.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">py_entitymatching.tuner.tuner_overlap_blocker</span> <span class="k">import</span> <span class="n">tuner_overlap_blocker</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">py_entitymatching.dask.dask_overlap_blocker</span> <span class="k">import</span> <span class="n">DaskOverlapBlocker</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obj</span> <span class="o">=</span> <span class="n">DaskOverlapBlocker</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">swap_or_not</span><span class="p">,</span> <span class="n">n_ltable_chunks</span><span class="p">,</span> <span class="n">n_sample_rtable_chunks</span><span class="p">)</span> <span class="o">=</span> <span class="n">tuner_overlap_blocker</span><span class="p">(</span><span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s2">&quot;title&quot;</span><span class="p">,</span> <span class="s2">&quot;title&quot;</span><span class="p">,</span> <span class="n">rem_stop_words</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">q_val</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">word_level</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">overlap_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ob_obj</span><span class="o">=</span><span class="n">obj</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
 </div>
 </div>
 

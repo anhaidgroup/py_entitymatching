@@ -99,10 +99,10 @@
 <h1>Triggers<a class="headerlink" href="#triggers" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="py_entitymatching.MatchTrigger">
-<em class="property">class </em><code class="descclassname">py_entitymatching.</code><code class="descname">MatchTrigger</code><a class="headerlink" href="#py_entitymatching.MatchTrigger" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">py_entitymatching.</code><code class="sig-name descname">MatchTrigger</code><a class="headerlink" href="#py_entitymatching.MatchTrigger" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="method">
 <dt id="py_entitymatching.MatchTrigger.add_action">
-<code class="descname">add_action</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.MatchTrigger.add_action" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">add_action</code><span class="sig-paren">(</span><em class="sig-param">value</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.MatchTrigger.add_action" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds an action to the match trigger. If the result of a rule is the
 same value as the condition status, then the action will be carried
 out. The condition status can be added with the function add_cond_status.</p>
@@ -128,7 +128,7 @@ out. The condition status can be added with the function add_cond_status.</p>
 
 <dl class="method">
 <dt id="py_entitymatching.MatchTrigger.add_cond_rule">
-<code class="descname">add_cond_rule</code><span class="sig-paren">(</span><em>conjunct_list</em>, <em>feature_table</em>, <em>rule_name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.MatchTrigger.add_cond_rule" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">add_cond_rule</code><span class="sig-paren">(</span><em class="sig-param">conjunct_list</em>, <em class="sig-param">feature_table</em>, <em class="sig-param">rule_name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.MatchTrigger.add_cond_rule" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a rule to the match trigger.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -178,7 +178,7 @@ blocker.</p></li>
 
 <dl class="method">
 <dt id="py_entitymatching.MatchTrigger.add_cond_status">
-<code class="descname">add_cond_status</code><span class="sig-paren">(</span><em>status</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.MatchTrigger.add_cond_status" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">add_cond_status</code><span class="sig-paren">(</span><em class="sig-param">status</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.MatchTrigger.add_cond_status" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a condition status to the match trigger. If the result of a rule
 is the same value as the condition status, then the action will be
 carried out. The action can be added with the function add_action.</p>
@@ -204,7 +204,7 @@ carried out. The action can be added with the function add_action.</p>
 
 <dl class="method">
 <dt id="py_entitymatching.MatchTrigger.delete_rule">
-<code class="descname">delete_rule</code><span class="sig-paren">(</span><em>rule_name</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.MatchTrigger.delete_rule" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">delete_rule</code><span class="sig-paren">(</span><em class="sig-param">rule_name</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.MatchTrigger.delete_rule" title="Permalink to this definition">¶</a></dt>
 <dd><p>Deletes a rule from the match trigger.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -226,7 +226,7 @@ carried out. The action can be added with the function add_action.</p>
 
 <dl class="method">
 <dt id="py_entitymatching.MatchTrigger.execute">
-<code class="descname">execute</code><span class="sig-paren">(</span><em>input_table</em>, <em>label_column</em>, <em>inplace=True</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.MatchTrigger.execute" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">execute</code><span class="sig-paren">(</span><em class="sig-param">input_table</em>, <em class="sig-param">label_column</em>, <em class="sig-param">inplace=True</em>, <em class="sig-param">verbose=False</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.MatchTrigger.execute" title="Permalink to this definition">¶</a></dt>
 <dd><p>Executes the rules of the match trigger for a table of matcher
 results.</p>
 <dl class="field-list simple">
@@ -264,7 +264,7 @@ should be logged (defaults to False).</p></li>
 
 <dl class="method">
 <dt id="py_entitymatching.MatchTrigger.get_rule">
-<code class="descname">get_rule</code><span class="sig-paren">(</span><em>rule_name</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.MatchTrigger.get_rule" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_rule</code><span class="sig-paren">(</span><em class="sig-param">rule_name</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.MatchTrigger.get_rule" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the function corresponding to a rule.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -289,7 +289,7 @@ should be logged (defaults to False).</p></li>
 
 <dl class="method">
 <dt id="py_entitymatching.MatchTrigger.get_rule_names">
-<code class="descname">get_rule_names</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.MatchTrigger.get_rule_names" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_rule_names</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.MatchTrigger.get_rule_names" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the names of all the rules in the match trigger.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -311,7 +311,7 @@ should be logged (defaults to False).</p></li>
 
 <dl class="method">
 <dt id="py_entitymatching.MatchTrigger.set_feature_table">
-<code class="descname">set_feature_table</code><span class="sig-paren">(</span><em>feature_table</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.MatchTrigger.set_feature_table" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">set_feature_table</code><span class="sig-paren">(</span><em class="sig-param">feature_table</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.MatchTrigger.set_feature_table" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets feature table for the match trigger.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -331,7 +331,7 @@ should be logged (defaults to False).</p></li>
 
 <dl class="method">
 <dt id="py_entitymatching.MatchTrigger.view_rule">
-<code class="descname">view_rule</code><span class="sig-paren">(</span><em>rule_name</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.MatchTrigger.view_rule" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">view_rule</code><span class="sig-paren">(</span><em class="sig-param">rule_name</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.MatchTrigger.view_rule" title="Permalink to this definition">¶</a></dt>
 <dd><p>Prints the source code of the function corresponding to a rule.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>

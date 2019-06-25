@@ -109,7 +109,7 @@
 <h1>Creating the Features Manually<a class="headerlink" href="#creating-the-features-manually" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="py_entitymatching.get_features">
-<code class="descclassname">py_entitymatching.</code><code class="descname">get_features</code><span class="sig-paren">(</span><em>ltable</em>, <em>rtable</em>, <em>l_attr_types</em>, <em>r_attr_types</em>, <em>attr_corres</em>, <em>tok_funcs</em>, <em>sim_funcs</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.get_features" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">py_entitymatching.</code><code class="sig-name descname">get_features</code><span class="sig-paren">(</span><em class="sig-param">ltable</em>, <em class="sig-param">rtable</em>, <em class="sig-param">l_attr_types</em>, <em class="sig-param">r_attr_types</em>, <em class="sig-param">attr_corres</em>, <em class="sig-param">tok_funcs</em>, <em class="sig-param">sim_funcs</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.get_features" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function will automatically generate a set of features based on the
 attributes of the input tables.</p>
 <p>Specifically, this function will go through the attribute
@@ -198,7 +198,7 @@ information for scaling purposes.</p>
 
 <dl class="function">
 <dt id="py_entitymatching.get_attr_corres">
-<code class="descclassname">py_entitymatching.</code><code class="descname">get_attr_corres</code><span class="sig-paren">(</span><em>ltable</em>, <em>rtable</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.get_attr_corres" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">py_entitymatching.</code><code class="sig-name descname">get_attr_corres</code><span class="sig-paren">(</span><em class="sig-param">ltable</em>, <em class="sig-param">rtable</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.get_attr_corres" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function gets the attribute correspondences between the attributes
 of ltable and rtable.</p>
 <p>The user may need to get the correspondences so
@@ -242,7 +242,7 @@ names in ltable and rtable.</p>
 
 <dl class="function">
 <dt id="py_entitymatching.get_attr_types">
-<code class="descclassname">py_entitymatching.</code><code class="descname">get_attr_types</code><span class="sig-paren">(</span><em>data_frame</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.get_attr_types" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">py_entitymatching.</code><code class="sig-name descname">get_attr_types</code><span class="sig-paren">(</span><em class="sig-param">data_frame</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.get_attr_types" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function gets the attribute types for a DataFrame.</p>
 <p>Specifically this function gets the attribute types based on the
 statistics of the attributes. These attribute types can be str_eq_1w,
@@ -282,7 +282,7 @@ that should be a pointer to the input DataFrame.</p>
 
 <dl class="function">
 <dt id="py_entitymatching.get_sim_funs_for_blocking">
-<code class="descclassname">py_entitymatching.</code><code class="descname">get_sim_funs_for_blocking</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.get_sim_funs_for_blocking" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">py_entitymatching.</code><code class="sig-name descname">get_sim_funs_for_blocking</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.get_sim_funs_for_blocking" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function returns the similarity functions that can be used for
 blocking purposes.</p>
 <dl class="field-list simple">
@@ -302,7 +302,7 @@ is the actual similary function.</p>
 
 <dl class="function">
 <dt id="py_entitymatching.get_sim_funs_for_matching">
-<code class="descclassname">py_entitymatching.</code><code class="descname">get_sim_funs_for_matching</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.get_sim_funs_for_matching" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">py_entitymatching.</code><code class="sig-name descname">get_sim_funs_for_matching</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.get_sim_funs_for_matching" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function returns the similarity functions that can be used for
 matching purposes.</p>
 <dl class="field-list simple">
@@ -322,7 +322,7 @@ is the actual similarity function.</p>
 
 <dl class="function">
 <dt id="py_entitymatching.get_tokenizers_for_blocking">
-<code class="descclassname">py_entitymatching.</code><code class="descname">get_tokenizers_for_blocking</code><span class="sig-paren">(</span><em>q=[2, 3], dlm_char=[' ']</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.get_tokenizers_for_blocking" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">py_entitymatching.</code><code class="sig-name descname">get_tokenizers_for_blocking</code><span class="sig-paren">(</span><em class="sig-param">q=[2, 3], dlm_char=[' ']</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.get_tokenizers_for_blocking" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function returns the single argument tokenizers that can be used for
 blocking purposes (typically in rule-based blocking).</p>
 <dl class="field-list simple">
@@ -353,7 +353,7 @@ function as the value.</p>
 
 <dl class="function">
 <dt id="py_entitymatching.get_tokenizers_for_matching">
-<code class="descclassname">py_entitymatching.</code><code class="descname">get_tokenizers_for_matching</code><span class="sig-paren">(</span><em>q=[2, 3], dlm_char=[' ']</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.get_tokenizers_for_matching" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">py_entitymatching.</code><code class="sig-name descname">get_tokenizers_for_matching</code><span class="sig-paren">(</span><em class="sig-param">q=[2, 3], dlm_char=[' ']</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.get_tokenizers_for_matching" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function returns the single argument tokenizers that can be used for
 matching purposes.</p>
 <dl class="field-list simple">

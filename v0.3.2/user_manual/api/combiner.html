@@ -83,7 +83,7 @@
 <h1>Matcher Combiner<a class="headerlink" href="#matcher-combiner" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="py_entitymatching.matchercombiner.matchercombiner.MajorityVote">
-<em class="property">class </em><code class="descclassname">py_entitymatching.matchercombiner.matchercombiner.</code><code class="descname">MajorityVote</code><a class="headerlink" href="#py_entitymatching.matchercombiner.matchercombiner.MajorityVote" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">py_entitymatching.matchercombiner.matchercombiner.</code><code class="sig-name descname">MajorityVote</code><a class="headerlink" href="#py_entitymatching.matchercombiner.matchercombiner.MajorityVote" title="Permalink to this definition">¶</a></dt>
 <dd><p>THIS CLASS EXPERIMENTAL AND NOT TESTED. USE AT YOUR OWN RISK.</p>
 <p>The goal of this combiner is to combine a list of predictions from multiple
 matchers to produce a consolidated prediction. In this majority voting-based
@@ -95,7 +95,7 @@ class must be given as a parameter. Based on this parameter, the combiner comman
 will use this object to combine the predictions.</p>
 <dl class="method">
 <dt id="py_entitymatching.matchercombiner.matchercombiner.MajorityVote.combine">
-<code class="descname">combine</code><span class="sig-paren">(</span><em>predictions</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.matchercombiner.matchercombiner.MajorityVote.combine" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">combine</code><span class="sig-paren">(</span><em class="sig-param">predictions</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.matchercombiner.matchercombiner.MajorityVote.combine" title="Permalink to this definition">¶</a></dt>
 <dd><p>Combine a list of predictions from matchers using majority voting.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -126,7 +126,7 @@ matchers.</p>
 
 <dl class="class">
 <dt id="py_entitymatching.matchercombiner.matchercombiner.WeightedVote">
-<em class="property">class </em><code class="descclassname">py_entitymatching.matchercombiner.matchercombiner.</code><code class="descname">WeightedVote</code><span class="sig-paren">(</span><em>weights=None</em>, <em>threshold=None</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.matchercombiner.matchercombiner.WeightedVote" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">py_entitymatching.matchercombiner.matchercombiner.</code><code class="sig-name descname">WeightedVote</code><span class="sig-paren">(</span><em class="sig-param">weights=None</em>, <em class="sig-param">threshold=None</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.matchercombiner.matchercombiner.WeightedVote" title="Permalink to this definition">¶</a></dt>
 <dd><p>THIS CLASS EXPERIMENTAL AND NOT TESTED. USE AT YOUR OWN RISK.</p>
 <p>The goal of this combiner is to combine a list of predictions from multiple
 matchers to produce a consolidated prediction. In this weighted voting-based
@@ -139,7 +139,7 @@ class must be given as a parameter. Based on this parameter, the combiner comman
 will use this object to combine the predictions.</p>
 <dl class="method">
 <dt id="py_entitymatching.matchercombiner.matchercombiner.WeightedVote.combine">
-<code class="descname">combine</code><span class="sig-paren">(</span><em>predictions</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.matchercombiner.matchercombiner.WeightedVote.combine" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">combine</code><span class="sig-paren">(</span><em class="sig-param">predictions</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.matchercombiner.matchercombiner.WeightedVote.combine" title="Permalink to this definition">¶</a></dt>
 <dd><p>Combine a list of predictions from matchers using weighted voting.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>

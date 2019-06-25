@@ -93,15 +93,1661 @@
 <h1>Commands Implemented Using Dask<a class="headerlink" href="#commands-implemented-using-dask" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="downsampling">
 <h2>Downsampling<a class="headerlink" href="#downsampling" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="py_entitymatching.dask.dask_down_sample.dask_down_sample">
+<code class="sig-prename descclassname">py_entitymatching.dask.dask_down_sample.</code><code class="sig-name descname">dask_down_sample</code><span class="sig-paren">(</span><em class="sig-param">ltable</em>, <em class="sig-param">rtable</em>, <em class="sig-param">size</em>, <em class="sig-param">y_param</em>, <em class="sig-param">show_progress=True</em>, <em class="sig-param">verbose=False</em>, <em class="sig-param">seed=None</em>, <em class="sig-param">rem_stop_words=True</em>, <em class="sig-param">rem_puncs=True</em>, <em class="sig-param">n_ltable_chunks=1</em>, <em class="sig-param">n_sample_rtable_chunks=1</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.dask.dask_down_sample.dask_down_sample" title="Permalink to this definition">¶</a></dt>
+<dd><p>WARNING THIS COMMAND IS EXPERIMENTAL AND NOT TESTED. USE AT YOUR OWN RISK.</p>
+<p>This command down samples two tables A and B into smaller tables A’ and
+B’ respectively.
+Specifically, first it randomly selects <cite>size</cite> tuples
+from the table B to be table B’. Next, it builds an inverted index I
+(token, tuple_id) on table A. For each tuple x ∈ B’, the algorithm
+finds a set P of k/2 tuples from I that match x,
+and a set Q of k/2 tuples randomly selected from A - P.
+The idea is for A’ and B’ to share some matches yet be
+as representative of A and B as possible.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ltable</strong> (<em>DataFrame</em>) – The left input table, i.e., table A.</p></li>
+<li><p><strong>rtable</strong> (<em>DataFrame</em>) – The right input table, i.e., table B.</p></li>
+<li><p><strong>size</strong> (<em>int</em>) – The size that table B should be down sampled to.</p></li>
+<li><p><strong>y_param</strong> (<em>int</em>) – The parameter to control the down sample size of table A.
+Specifically, the down sampled size of table A should be close to
+size * y_param.</p></li>
+<li><p><strong>show_progress</strong> (<em>boolean</em>) – A flag to indicate whether a progress bar
+should be displayed (defaults to True).</p></li>
+<li><p><strong>verbose</strong> (<em>boolean</em>) – A flag to indicate whether the debug information
+should be displayed (defaults to False).</p></li>
+<li><p><strong>seed</strong> (<em>int</em>) – The seed for the pseudo random number generator to select
+the tuples from A and B (defaults to None).</p></li>
+<li><p><strong>rem_stop_words</strong> (<em>boolean</em>) – A flag to indicate whether a default set of stop words
+must be removed.</p></li>
+<li><p><strong>rem_puncs</strong> (<em>boolean</em>) – A flag to indicate whether the punctuations must be
+removed from the strings.</p></li>
+<li><p><strong>n_ltable_chunks</strong> (<em>int</em>) – The number of partitions for ltable (defaults to 1). If it
+is set to -1, the number of partitions will be set to the
+number of cores in the machine.</p></li>
+<li><p><strong>n_sample_rtable_chunks</strong> (<em>int</em>) – The number of partitions for the
+sampled rtable (defaults to 1)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Down sampled tables A and B as pandas DataFrames.</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>AssertionError</strong> – If any of the input tables (<cite>table_a</cite>, <cite>table_b</cite>) are
+    empty or not a DataFrame.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>size</cite> or <cite>y_param</cite> is empty or 0 or not a
+    valid integer value.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>seed</cite> is not a valid integer
+    value.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>verbose</cite> is not of type bool.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>show_progress</cite> is not of type bool.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>n_ltable_chunks</cite> is not of type int.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>n_sample_rtable_chunks</cite> is not of type int.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">py_entitymatching.dask.dask_down_sample</span> <span class="k">import</span> <span class="n">dask_down_sample</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sample_A</span><span class="p">,</span> <span class="n">sample_B</span> <span class="o">=</span> <span class="n">dask_down_sample</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n_ltable_chunks</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_sample_rtable_chunks</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="go"># Example with seed = 0. This means the same sample data set will be returned</span>
+<span class="go"># each time this function is run.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sample_A</span><span class="p">,</span> <span class="n">sample_B</span> <span class="o">=</span> <span class="n">dask_down_sample</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_ltable_chunks</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_sample_rtable_chunks</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
 </div>
 <div class="section" id="blocking">
 <h2>Blocking<a class="headerlink" href="#blocking" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="py_entitymatching.dask.dask_attr_equiv_blocker.DaskAttrEquivalenceBlocker">
+<em class="property">class </em><code class="sig-prename descclassname">py_entitymatching.dask.dask_attr_equiv_blocker.</code><code class="sig-name descname">DaskAttrEquivalenceBlocker</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.dask.dask_attr_equiv_blocker.DaskAttrEquivalenceBlocker" title="Permalink to this definition">¶</a></dt>
+<dd><p>WARNING THIS BLOCKER IS EXPERIMENTAL AND NOT TESTED. USE AT YOUR OWN RISK.</p>
+<p>Blocks based on the equivalence of attribute values.</p>
+<dl class="method">
+<dt id="py_entitymatching.dask.dask_attr_equiv_blocker.DaskAttrEquivalenceBlocker.block_candset">
+<code class="sig-name descname">block_candset</code><span class="sig-paren">(</span><em class="sig-param">candset</em>, <em class="sig-param">l_block_attr</em>, <em class="sig-param">r_block_attr</em>, <em class="sig-param">allow_missing=False</em>, <em class="sig-param">verbose=False</em>, <em class="sig-param">show_progress=True</em>, <em class="sig-param">n_chunks=1</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.dask.dask_attr_equiv_blocker.DaskAttrEquivalenceBlocker.block_candset" title="Permalink to this definition">¶</a></dt>
+<dd><p>WARNING THIS COMMAND IS EXPERIMENTAL AND NOT TESTED. USE AT YOUR OWN RISK.</p>
+<p>Blocks an input candidate set of tuple pairs based on attribute equivalence.
+Finds tuple pairs from an input candidate set of tuple pairs
+such that the value of attribute l_block_attr of the left tuple in a
+tuple pair exactly matches the value of attribute r_block_attr of the
+right tuple in the tuple pair.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>candset</strong> (<em>DataFrame</em>) – The input candidate set of tuple pairs.</p></li>
+<li><p><strong>l_block_attr</strong> (<em>string</em>) – The blocking attribute in left table.</p></li>
+<li><p><strong>r_block_attr</strong> (<em>string</em>) – The blocking attribute in right table.</p></li>
+<li><p><strong>allow_missing</strong> (<em>boolean</em>) – A flag to indicate whether tuple pairs
+with missing value in at least one of the
+blocking attributes should be included in
+the output candidate set (defaults to
+False). If this flag is set to True, a
+tuple pair with missing value in either
+blocking attribute will be retained in the
+output candidate set.</p></li>
+<li><p><strong>verbose</strong> (<em>boolean</em>) – A flag to indicate whether the debug
+information should be logged (defaults to False).</p></li>
+<li><p><strong>show_progress</strong> (<em>boolean</em>) – A flag to indicate whether progress should
+be displayed to the user (defaults to True).</p></li>
+<li><p><strong>n_chunks</strong> (<em>int</em>) – The number of partitions to split the candidate set. If it
+is set to -1, the number of partitions will be set to the
+number of cores in the machine.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A candidate set of tuple pairs that survived blocking (DataFrame).</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>AssertionError</strong> – If <cite>candset</cite> is not of type pandas
+    DataFrame.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>l_block_attr</cite> is not of type string.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>r_block_attr</cite> is not of type string.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>verbose</cite> is not of type
+    boolean.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>n_chunks</cite> is not of type
+    int.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>l_block_attr</cite> is not in the ltable columns.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>r_block_attr</cite> is not in the rtable columns.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">py_entitymatching.dask.dask_attr_equiv_blocker</span> <span class="k">import</span> <span class="n">DaskAttrEquivalenceBlocker</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ab</span> <span class="o">=</span> <span class="n">DaskAttrEquivalenceBlocker</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">C</span> <span class="o">=</span> <span class="n">ab</span><span class="o">.</span><span class="n">block_tables</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="s1">&#39;zipcode&#39;</span><span class="p">,</span> <span class="s1">&#39;zipcode&#39;</span><span class="p">,</span> <span class="n">l_output_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">r_output_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">D1</span> <span class="o">=</span> <span class="n">ab</span><span class="o">.</span><span class="n">block_candset</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">,</span> <span class="n">allow_missing</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go"># Include all possible tuple pairs with missing values</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">D2</span> <span class="o">=</span> <span class="n">ab</span><span class="o">.</span><span class="n">block_candset</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">,</span> <span class="n">allow_missing</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go"># Execute blocking using multiple cores</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">D3</span> <span class="o">=</span> <span class="n">ab</span><span class="o">.</span><span class="n">block_candset</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">,</span> <span class="n">n_chunks</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="py_entitymatching.dask.dask_attr_equiv_blocker.DaskAttrEquivalenceBlocker.block_tables">
+<code class="sig-name descname">block_tables</code><span class="sig-paren">(</span><em class="sig-param">ltable</em>, <em class="sig-param">rtable</em>, <em class="sig-param">l_block_attr</em>, <em class="sig-param">r_block_attr</em>, <em class="sig-param">l_output_attrs=None</em>, <em class="sig-param">r_output_attrs=None</em>, <em class="sig-param">l_output_prefix='ltable_'</em>, <em class="sig-param">r_output_prefix='rtable_'</em>, <em class="sig-param">allow_missing=False</em>, <em class="sig-param">verbose=False</em>, <em class="sig-param">n_ltable_chunks=1</em>, <em class="sig-param">n_rtable_chunks=1</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.dask.dask_attr_equiv_blocker.DaskAttrEquivalenceBlocker.block_tables" title="Permalink to this definition">¶</a></dt>
+<dd><p>WARNING THIS COMMAND IS EXPERIMENTAL AND NOT TESTED. USE AT YOUR OWN RISK</p>
+<p>Blocks two tables based on attribute equivalence.
+Conceptually, this will check <cite>l_block_attr=r_block_attr</cite> for each tuple
+pair from the Cartesian product of tables <cite>ltable</cite> and <cite>rtable</cite>. It outputs a
+Pandas dataframe object with tuple pairs that satisfy the equality condition.
+The dataframe will include attributes ‘_id’, key attribute from
+ltable, key attributes from rtable, followed by lists <cite>l_output_attrs</cite> and
+<cite>r_output_attrs</cite> if they are specified. Each of these output and key attributes will be
+prefixed with given <cite>l_output_prefix</cite> and <cite>r_output_prefix</cite>. If <cite>allow_missing</cite> is set
+to <cite>True</cite> then all tuple pairs with missing value in at least one of the tuples will be
+included in the output dataframe.
+Further, this will update the following metadata in the catalog for the output table:
+(1) key, (2) ltable, (3) rtable, (4) fk_ltable, and (5) fk_rtable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ltable</strong> (<em>DataFrame</em>) – The left input table.</p></li>
+<li><p><strong>rtable</strong> (<em>DataFrame</em>) – The right input table.</p></li>
+<li><p><strong>l_block_attr</strong> (<em>string</em>) – The blocking attribute in left table.</p></li>
+<li><p><strong>r_block_attr</strong> (<em>string</em>) – The blocking attribute in right table.</p></li>
+<li><p><strong>l_output_attrs</strong> (<em>list</em>) – A list of attribute names from the left
+table to be included in the
+output candidate set (defaults to None).</p></li>
+<li><p><strong>r_output_attrs</strong> (<em>list</em>) – A list of attribute names from the right
+table to be included in the
+output candidate set (defaults to None).</p></li>
+<li><p><strong>l_output_prefix</strong> (<em>string</em>) – The prefix to be used for the attribute names
+coming from the left table in the output
+candidate set (defaults to ‘ltable_’).</p></li>
+<li><p><strong>r_output_prefix</strong> (<em>string</em>) – The prefix to be used for the attribute names
+coming from the right table in the output
+candidate set (defaults to ‘rtable_’).</p></li>
+<li><p><strong>allow_missing</strong> (<em>boolean</em>) – A flag to indicate whether tuple pairs
+with missing value in at least one of the
+blocking attributes should be included in
+the output candidate set (defaults to
+False). If this flag is set to True, a
+tuple in ltable with missing value in the
+blocking attribute will be matched with
+every tuple in rtable and vice versa.</p></li>
+<li><p><strong>verbose</strong> (<em>boolean</em>) – A flag to indicate whether the debug information
+should be logged (defaults to False).</p></li>
+<li><p><strong>n_ltable_chunks</strong> (<em>int</em>) – The number of partitions to split the left table (
+defaults to 1). If it is set to -1, then the number of
+partitions is set to the number of cores in the
+machine.</p></li>
+<li><p><strong>n_rtable_chunks</strong> (<em>int</em>) – The number of partitions to split the right table (
+defaults to 1). If it is set to -1, then the number of
+partitions is set to the number of cores in the
+machine.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A candidate set of tuple pairs that survived blocking (DataFrame).</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>AssertionError</strong> – If <cite>ltable</cite> is not of type pandas
+    DataFrame.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>rtable</cite> is not of type pandas
+    DataFrame.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>l_block_attr</cite> is not of type string.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>r_block_attr</cite> is not of type string.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>l_output_attrs</cite> is not of type of
+    list.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>r_output_attrs</cite> is not of type of
+    list.</p></li>
+<li><p><strong>AssertionError</strong> – If the values in <cite>l_output_attrs</cite> is not of type
+    string.</p></li>
+<li><p><strong>AssertionError</strong> – If the values in <cite>r_output_attrs</cite> is not of type
+    string.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>l_output_prefix</cite> is not of type
+    string.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>r_output_prefix</cite> is not of type
+    string.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>verbose</cite> is not of type
+    boolean.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>allow_missing</cite> is not of type boolean.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>n_ltable_chunks</cite> is not of type
+    int.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>n_rtable_chunks</cite> is not of type
+    int.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>l_block_attr</cite> is not in the ltable columns.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>r_block_attr</cite> is not in the rtable columns.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>l_out_attrs</cite> are not in the ltable.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>r_out_attrs</cite> are not in the rtable.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">py_entitymatching.dask.dask_attr_equiv_blocker</span> <span class="k">import</span> <span class="n">DaskAttrEquivalenceBlocker</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ab</span> <span class="o">=</span> <span class="n">DaskAttrEquivalenceBlocker</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">C1</span> <span class="o">=</span> <span class="n">ab</span><span class="o">.</span><span class="n">block_tables</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="s1">&#39;zipcode&#39;</span><span class="p">,</span> <span class="s1">&#39;zipcode&#39;</span><span class="p">,</span> <span class="n">l_output_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">r_output_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+<span class="go"># Include all possible tuple pairs with missing values</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">C2</span> <span class="o">=</span> <span class="n">ab</span><span class="o">.</span><span class="n">block_tables</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="s1">&#39;zipcode&#39;</span><span class="p">,</span> <span class="s1">&#39;zipcode&#39;</span><span class="p">,</span> <span class="n">l_output_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">r_output_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">allow_missing</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="py_entitymatching.dask.dask_attr_equiv_blocker.DaskAttrEquivalenceBlocker.block_tuples">
+<code class="sig-name descname">block_tuples</code><span class="sig-paren">(</span><em class="sig-param">ltuple</em>, <em class="sig-param">rtuple</em>, <em class="sig-param">l_block_attr</em>, <em class="sig-param">r_block_attr</em>, <em class="sig-param">allow_missing=False</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.dask.dask_attr_equiv_blocker.DaskAttrEquivalenceBlocker.block_tuples" title="Permalink to this definition">¶</a></dt>
+<dd><p>Blocks a tuple pair based on attribute equivalence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ltuple</strong> (<em>Series</em>) – The input left tuple.</p></li>
+<li><p><strong>rtuple</strong> (<em>Series</em>) – The input right tuple.</p></li>
+<li><p><strong>l_block_attr</strong> (<em>string</em>) – The blocking attribute in left tuple.</p></li>
+<li><p><strong>r_block_attr</strong> (<em>string</em>) – The blocking attribute in right tuple.</p></li>
+<li><p><strong>allow_missing</strong> (<em>boolean</em>) – A flag to indicate whether a tuple pair
+with missing value in at least one of the blocking attributes
+should be blocked (defaults to False). If this flag is set
+to True, the pair will be kept if either ltuple has missing value in
+l_block_attr or rtuple has missing value in r_block_attr
+or both.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A status indicating if the tuple pair is blocked, i.e., the values
+of l_block_attr in ltuple and r_block_attr in rtuple are different
+(boolean).</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">py_entitymatching.dask.dask_attr_equiv_blocker</span> <span class="k">import</span> <span class="n">DaskAttrEquivalenceBlocker</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ab</span> <span class="o">=</span> <span class="n">DaskAttrEquivalenceBlocker</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">status</span> <span class="o">=</span> <span class="n">ab</span><span class="o">.</span><span class="n">block_tuples</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">B</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;zipcode&#39;</span><span class="p">,</span> <span class="s1">&#39;zipcode&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="py_entitymatching.dask.dask_overlap_blocker.DaskOverlapBlocker">
+<em class="property">class </em><code class="sig-prename descclassname">py_entitymatching.dask.dask_overlap_blocker.</code><code class="sig-name descname">DaskOverlapBlocker</code><a class="headerlink" href="#py_entitymatching.dask.dask_overlap_blocker.DaskOverlapBlocker" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="py_entitymatching.dask.dask_overlap_blocker.DaskOverlapBlocker.block_candset">
+<code class="sig-name descname">block_candset</code><span class="sig-paren">(</span><em class="sig-param">candset</em>, <em class="sig-param">l_overlap_attr</em>, <em class="sig-param">r_overlap_attr</em>, <em class="sig-param">rem_stop_words=False</em>, <em class="sig-param">q_val=None</em>, <em class="sig-param">word_level=True</em>, <em class="sig-param">overlap_size=1</em>, <em class="sig-param">allow_missing=False</em>, <em class="sig-param">verbose=False</em>, <em class="sig-param">show_progress=True</em>, <em class="sig-param">n_chunks=-1</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.dask.dask_overlap_blocker.DaskOverlapBlocker.block_candset" title="Permalink to this definition">¶</a></dt>
+<dd><p>WARNING THIS COMMAND IS EXPERIMENTAL AND NOT TESTED. USE AT YOUR OWN RISK.</p>
+<p>Blocks an input candidate set of tuple pairs based on the overlap
+of token sets of attribute values. Finds tuple pairs from an input
+candidate set of tuple pairs such that
+the overlap between (a) the set of tokens obtained by tokenizing the
+value of attribute l_overlap_attr of the left tuple in a tuple pair,
+and (b) the set of tokens obtained by tokenizing the value of
+attribute r_overlap_attr of the right tuple in the tuple pair,
+is above a certain threshold.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>candset</strong> (<em>DataFrame</em>) – The input candidate set of tuple pairs.</p></li>
+<li><p><strong>l_overlap_attr</strong> (<em>string</em>) – The overlap attribute in left table.</p></li>
+<li><p><strong>r_overlap_attr</strong> (<em>string</em>) – The overlap attribute in right table.</p></li>
+<li><p><strong>rem_stop_words</strong> (<em>boolean</em>) – A flag to indicate whether stop words
+(e.g., a, an, the) should be removed
+from the token sets of the overlap
+attribute values (defaults to False).</p></li>
+<li><p><strong>q_val</strong> (<em>int</em>) – The value of q to use if the overlap attributes values
+are to be tokenized as qgrams (defaults to None).</p></li>
+<li><p><strong>word_level</strong> (<em>boolean</em>) – A flag to indicate whether the overlap
+attributes should be tokenized as words
+(i.e, using whitespace as delimiter)
+(defaults to True).</p></li>
+<li><p><strong>overlap_size</strong> (<em>int</em>) – The minimum number of tokens that must overlap
+(defaults to 1).</p></li>
+<li><p><strong>allow_missing</strong> (<em>boolean</em>) – A flag to indicate whether tuple pairs
+with missing value in at least one of the
+blocking attributes should be included in
+the output candidate set (defaults to
+False). If this flag is set to True, a
+tuple pair with missing value in either
+blocking attribute will be retained in the
+output candidate set.</p></li>
+<li><p><strong>verbose</strong> (<em>boolean</em>) – <p>A flag to indicate whether the debug information</p>
+<p>should be logged (defaults to False).</p>
+</p></li>
+<li><p><strong>show_progress</strong> (<em>boolean</em>) – A flag to indicate whether progress should
+be displayed to the user (defaults to True).</p></li>
+<li><p><strong>n_chunks</strong> (<em>int</em>) – The number of partitions to split the candidate set. If it
+is set to -1, the number of partitions will be set to the
+number of cores in the machine.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A candidate set of tuple pairs that survived blocking (DataFrame).</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>AssertionError</strong> – If <cite>candset</cite> is not of type pandas
+    DataFrame.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>l_overlap_attr</cite> is not of type string.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>r_overlap_attr</cite> is not of type string.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>q_val</cite> is not of type int.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>word_level</cite> is not of type boolean.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>overlap_size</cite> is not of type int.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>verbose</cite> is not of type
+    boolean.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>allow_missing</cite> is not of type boolean.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>show_progress</cite> is not of type
+    boolean.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>n_chunks</cite> is not of type
+    int.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>l_overlap_attr</cite> is not in the ltable
+    columns.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>r_block_attr</cite> is not in the rtable columns.</p></li>
+<li><p><strong>SyntaxError</strong> – If <cite>q_val</cite> is set to a valid value and
+    <cite>word_level</cite> is set to True.</p></li>
+<li><p><strong>SyntaxError</strong> – If <cite>q_val</cite> is set to None and
+    <cite>word_level</cite> is set to False.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">py_entitymatching.dask.dask_overlap_blocker</span> <span class="k">import</span> <span class="n">DaskOverlapBlocker</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ob</span> <span class="o">=</span> <span class="n">DaskOverlapBlocker</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">C</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">block_tables</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="s1">&#39;address&#39;</span><span class="p">,</span> <span class="s1">&#39;address&#39;</span><span class="p">,</span> <span class="n">l_output_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">r_output_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">D1</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">block_candset</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="n">allow_missing</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go"># Include all possible tuple pairs with missing values</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">D2</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">block_candset</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="n">allow_missing</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go"># Execute blocking using multiple cores</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">D3</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">block_candset</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="n">n_chunks</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="go"># Use q-gram tokenizer</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">D2</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">block_candset</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="n">word_level</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">q_val</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="py_entitymatching.dask.dask_overlap_blocker.DaskOverlapBlocker.block_tables">
+<code class="sig-name descname">block_tables</code><span class="sig-paren">(</span><em class="sig-param">ltable</em>, <em class="sig-param">rtable</em>, <em class="sig-param">l_overlap_attr</em>, <em class="sig-param">r_overlap_attr</em>, <em class="sig-param">rem_stop_words=False</em>, <em class="sig-param">q_val=None</em>, <em class="sig-param">word_level=True</em>, <em class="sig-param">overlap_size=1</em>, <em class="sig-param">l_output_attrs=None</em>, <em class="sig-param">r_output_attrs=None</em>, <em class="sig-param">l_output_prefix='ltable_'</em>, <em class="sig-param">r_output_prefix='rtable_'</em>, <em class="sig-param">allow_missing=False</em>, <em class="sig-param">verbose=False</em>, <em class="sig-param">show_progress=True</em>, <em class="sig-param">n_ltable_chunks=1</em>, <em class="sig-param">n_rtable_chunks=1</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.dask.dask_overlap_blocker.DaskOverlapBlocker.block_tables" title="Permalink to this definition">¶</a></dt>
+<dd><p>WARNING THIS COMMAND IS EXPERIMENTAL AND NOT TESTED. USE AT YOUR OWN RISK.</p>
+<p>Blocks two tables based on the overlap of token sets of attribute
+values. Finds tuple pairs from left and right tables such that the overlap
+between (a) the set of tokens obtained by tokenizing the value of
+attribute l_overlap_attr of a tuple from the left table, and (b) the
+set of tokens obtained by tokenizing the value of attribute
+r_overlap_attr of a tuple from the right table, is above a certain
+threshold.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ltable</strong> (<em>DataFrame</em>) – The left input table.</p></li>
+<li><p><strong>rtable</strong> (<em>DataFrame</em>) – The right input table.</p></li>
+<li><p><strong>l_overlap_attr</strong> (<em>string</em>) – The overlap attribute in left table.</p></li>
+<li><p><strong>r_overlap_attr</strong> (<em>string</em>) – The overlap attribute in right table.</p></li>
+<li><p><strong>rem_stop_words</strong> (<em>boolean</em>) – A flag to indicate whether stop words
+(e.g., a, an, the) should be removed from the token sets of the
+overlap attribute values (defaults to False).</p></li>
+<li><p><strong>q_val</strong> (<em>int</em>) – The value of q to use if the overlap attributes
+values are to be tokenized as qgrams (defaults to None).</p></li>
+<li><p><strong>word_level</strong> (<em>boolean</em>) – A flag to indicate whether the overlap
+attributes should be tokenized as words (i.e, using whitespace
+as delimiter) (defaults to True).</p></li>
+<li><p><strong>overlap_size</strong> (<em>int</em>) – The minimum number of tokens that must
+overlap (defaults to 1).</p></li>
+<li><p><strong>l_output_attrs</strong> (<em>list</em>) – A list of attribute names from the left
+table to be included in the output candidate set (defaults
+to None).</p></li>
+<li><p><strong>r_output_attrs</strong> (<em>list</em>) – A list of attribute names from the right
+table to be included in the output candidate set  (defaults
+to None).</p></li>
+<li><p><strong>l_output_prefix</strong> (<em>string</em>) – The prefix to be used for the attribute names
+coming from the left table in the output
+candidate set (defaults to ‘ltable_’).</p></li>
+<li><p><strong>r_output_prefix</strong> (<em>string</em>) – The prefix to be used for the attribute names
+coming from the right table in the output
+candidate set (defaults to ‘rtable_’).</p></li>
+<li><p><strong>allow_missing</strong> (<em>boolean</em>) – A flag to indicate whether tuple pairs
+with missing value in at least one of the
+blocking attributes should be included in
+the output candidate set (defaults to
+False). If this flag is set to True, a
+tuple in ltable with missing value in the
+blocking attribute will be matched with
+every tuple in rtable and vice versa.</p></li>
+<li><p><strong>verbose</strong> (<em>boolean</em>) – A flag to indicate whether the debug
+information should be logged (defaults to False).</p></li>
+<li><p><strong>show_progress</strong> (<em>boolean</em>) – A flag to indicate whether progress should
+be displayed to the user (defaults to True).</p></li>
+<li><p><strong>n_ltable_chunks</strong> (<em>int</em>) – The number of partitions to split the left table (
+defaults to 1). If it is set to -1, then the number of
+partitions is set to the number of cores in the
+machine.</p></li>
+<li><p><strong>n_rtable_chunks</strong> (<em>int</em>) – The number of partitions to split the right table (
+defaults to 1). If it is set to -1, then the number of
+partitions is set to the number of cores in the
+machine.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A candidate set of tuple pairs that survived blocking (DataFrame).</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>AssertionError</strong> – If <cite>ltable</cite> is not of type pandas
+    DataFrame.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>rtable</cite> is not of type pandas
+    DataFrame.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>l_overlap_attr</cite> is not of type string.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>r_overlap_attr</cite> is not of type string.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>l_output_attrs</cite> is not of type of
+    list.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>r_output_attrs</cite> is not of type of
+    list.</p></li>
+<li><p><strong>AssertionError</strong> – If the values in <cite>l_output_attrs</cite> is not of type
+    string.</p></li>
+<li><p><strong>AssertionError</strong> – If the values in <cite>r_output_attrs</cite> is not of type
+    string.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>l_output_prefix</cite> is not of type
+    string.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>r_output_prefix</cite> is not of type
+    string.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>q_val</cite> is not of type int.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>word_level</cite> is not of type boolean.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>overlap_size</cite> is not of type int.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>verbose</cite> is not of type
+    boolean.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>allow_missing</cite> is not of type boolean.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>show_progress</cite> is not of type
+    boolean.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>n_ltable_chunks</cite> is not of type
+    int.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>n_rtable_chunks</cite> is not of type
+    int.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>l_overlap_attr</cite> is not in the ltable
+    columns.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>r_block_attr</cite> is not in the rtable columns.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>l_output_attrs</cite> are not in the ltable.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>r_output_attrs</cite> are not in the rtable.</p></li>
+<li><p><strong>SyntaxError</strong> – If <cite>q_val</cite> is set to a valid value and
+    <cite>word_level</cite> is set to True.</p></li>
+<li><p><strong>SyntaxError</strong> – If <cite>q_val</cite> is set to None and
+    <cite>word_level</cite> is set to False.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">py_entitymatching.dask.dask_overlap_blocker</span> <span class="k">import</span> <span class="n">DaskOverlapBlocker</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ob</span> <span class="o">=</span> <span class="n">DaskOverlapBlocker</span><span class="p">()</span>
+<span class="go"># Use all cores</span>
+<span class="go"># # Use word-level tokenizer</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">C1</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">block_tables</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="s1">&#39;address&#39;</span><span class="p">,</span> <span class="s1">&#39;address&#39;</span><span class="p">,</span> <span class="n">l_output_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">r_output_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">word_level</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">overlap_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_ltable_chunks</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_rtable_chunks</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="go"># # Use q-gram tokenizer</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">C2</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">block_tables</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="s1">&#39;address&#39;</span><span class="p">,</span> <span class="s1">&#39;address&#39;</span><span class="p">,</span> <span class="n">l_output_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">r_output_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">word_level</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">q_val</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">n_ltable_chunks</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_rtable_chunks</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="go"># # Include all possible missing values</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">C3</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">block_tables</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="s1">&#39;address&#39;</span><span class="p">,</span> <span class="s1">&#39;address&#39;</span><span class="p">,</span> <span class="n">l_output_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">r_output_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">allow_missing</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">n_ltable_chunks</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_rtable_chunks</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="py_entitymatching.dask.dask_overlap_blocker.DaskOverlapBlocker.block_tuples">
+<code class="sig-name descname">block_tuples</code><span class="sig-paren">(</span><em class="sig-param">ltuple</em>, <em class="sig-param">rtuple</em>, <em class="sig-param">l_overlap_attr</em>, <em class="sig-param">r_overlap_attr</em>, <em class="sig-param">rem_stop_words=False</em>, <em class="sig-param">q_val=None</em>, <em class="sig-param">word_level=True</em>, <em class="sig-param">overlap_size=1</em>, <em class="sig-param">allow_missing=False</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.dask.dask_overlap_blocker.DaskOverlapBlocker.block_tuples" title="Permalink to this definition">¶</a></dt>
+<dd><p>Blocks a tuple pair based on the overlap of token sets of attribute values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ltuple</strong> (<em>Series</em>) – The input left tuple.</p></li>
+<li><p><strong>rtuple</strong> (<em>Series</em>) – The input right tuple.</p></li>
+<li><p><strong>l_overlap_attr</strong> (<em>string</em>) – The overlap attribute in left tuple.</p></li>
+<li><p><strong>r_overlap_attr</strong> (<em>string</em>) – The overlap attribute in right tuple.</p></li>
+<li><p><strong>rem_stop_words</strong> (<em>boolean</em>) – A flag to indicate whether stop words
+(e.g., a, an, the) should be removed
+from the token sets of the overlap
+attribute values (defaults to False).</p></li>
+<li><p><strong>q_val</strong> (<em>int</em>) – A value of q to use if the overlap attributes values
+are to be tokenized as qgrams (defaults to None).</p></li>
+<li><p><strong>word_level</strong> (<em>boolean</em>) – A flag to indicate whether the overlap
+attributes should be tokenized as words
+(i.e, using whitespace as delimiter)
+(defaults to True).</p></li>
+<li><p><strong>overlap_size</strong> (<em>int</em>) – The minimum number of tokens that must overlap
+(defaults to 1).</p></li>
+<li><p><strong>allow_missing</strong> (<em>boolean</em>) – A flag to indicate whether a tuple pair
+with missing value in at least one of the
+blocking attributes should be blocked
+(defaults to False). If this flag is set
+to True, the pair will be kept if either
+ltuple has missing value in l_block_attr
+or rtuple has missing value in r_block_attr
+or both.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A status indicating if the tuple pair is blocked (boolean).</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ob</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">OverlapBlocker</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">status</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">block_tuples</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">B</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;address&#39;</span><span class="p">,</span> <span class="s1">&#39;address&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="py_entitymatching.dask.dask_rule_based_blocker.DaskRuleBasedBlocker">
+<em class="property">class </em><code class="sig-prename descclassname">py_entitymatching.dask.dask_rule_based_blocker.</code><code class="sig-name descname">DaskRuleBasedBlocker</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.dask.dask_rule_based_blocker.DaskRuleBasedBlocker" title="Permalink to this definition">¶</a></dt>
+<dd><p>WARNING THIS BLOCKER IS EXPERIMENTAL AND NOT TESTED. USE AT YOUR OWN RISK.</p>
+<p>Blocks  based on a sequence of blocking rules supplied by the user.</p>
+<dl class="method">
+<dt id="py_entitymatching.dask.dask_rule_based_blocker.DaskRuleBasedBlocker.add_rule">
+<code class="sig-name descname">add_rule</code><span class="sig-paren">(</span><em class="sig-param">conjunct_list</em>, <em class="sig-param">feature_table=None</em>, <em class="sig-param">rule_name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.dask.dask_rule_based_blocker.DaskRuleBasedBlocker.add_rule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a rule to the rule-based blocker.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>conjunct_list</strong> (<em>list</em>) – A list of conjuncts specifying the rule.</p></li>
+<li><p><strong>feature_table</strong> (<em>DataFrame</em>) – A DataFrame containing all the
+features that are being referenced by
+the rule (defaults to None). If the
+feature_table is not supplied here,
+then it must have been specified
+during the creation of the rule-based
+blocker or using set_feature_table
+function. Otherwise an AssertionError
+will be raised and the rule will not
+be added to the rule-based blocker.</p></li>
+<li><p><strong>rule_name</strong> (<em>string</em>) – A string specifying the name of the rule to
+be added (defaults to None). If the
+rule_name is not specified then a name will
+be automatically chosen. If there is already
+a rule with the specified rule_name, then
+an AssertionError will be raised and the
+rule will not be added to the rule-based
+blocker.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The name of the rule added (string).</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>AssertionError</strong> – If <cite>rule_name</cite> already exists.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>feature_table</cite> is not a valid value
+    parameter.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">py_entitymatching.dask.dask_rule_based_blocker</span> <span class="k">import</span> <span class="n">DaskRuleBasedBlocker</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rb</span> <span class="o">=</span> <span class="n">DaskRuleBasedBlocker</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">block_f</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_features_for_blocking</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rule</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;name_name_lev(ltuple, rtuple) &gt; 3&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rb</span><span class="o">.</span><span class="n">add_rule</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">rule_name</span><span class="o">=</span><span class="s1">&#39;rule1&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="py_entitymatching.dask.dask_rule_based_blocker.DaskRuleBasedBlocker.block_candset">
+<code class="sig-name descname">block_candset</code><span class="sig-paren">(</span><em class="sig-param">candset</em>, <em class="sig-param">verbose=False</em>, <em class="sig-param">show_progress=True</em>, <em class="sig-param">n_chunks=1</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.dask.dask_rule_based_blocker.DaskRuleBasedBlocker.block_candset" title="Permalink to this definition">¶</a></dt>
+<dd><p>WARNING THIS COMMAND IS EXPERIMENTAL AND NOT TESTED. USE AT YOUR OWN RISK</p>
+<p>Blocks an input candidate set of tuple pairs based on a sequence of
+blocking rules supplied by the user.
+Finds tuple pairs from an input candidate set of tuple pairs that
+survive the sequence of blocking rules. A tuple pair survives the
+sequence of blocking rules if none of the rules in the sequence returns
+True for that pair. If any of the rules returns True, then the pair is
+blocked (dropped).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>candset</strong> (<em>DataFrame</em>) – The input candidate set of tuple pairs.</p></li>
+<li><p><strong>verbose</strong> (<em>boolean</em>) – A flag to indicate whether the debug
+information  should be logged (defaults to False).</p></li>
+<li><p><strong>show_progress</strong> (<em>boolean</em>) – A flag to indicate whether progress should
+be displayed to the user (defaults to True).</p></li>
+<li><p><strong>n_chunks</strong> (<em>int</em>) – The number of partitions to split the candidate set. If it
+is set to -1, the number of partitions will be set to the
+number of cores in the machine.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A candidate set of tuple pairs that survived blocking (DataFrame).</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>AssertionError</strong> – If <cite>candset</cite> is not of type pandas
+    DataFrame.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>verbose</cite> is not of type
+    boolean.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>n_chunks</cite> is not of type
+    int.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>show_progress</cite> is not of type boolean.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>l_block_attr</cite> is not in the ltable columns.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>r_block_attr</cite> is not in the rtable columns.</p></li>
+<li><p><strong>AssertionError</strong> – If there are no rules to apply.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">py_entitymatching.dask.dask_rule_based_blocker</span> <span class="k">import</span> <span class="n">DaskRuleBasedBlocker</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rb</span> <span class="o">=</span> <span class="n">DaskRuleBasedBlocker</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">block_f</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_features_for_blocking</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rule</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;name_name_lev(ltuple, rtuple) &gt; 3&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rb</span><span class="o">.</span><span class="n">add_rule</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">feature_table</span><span class="o">=</span><span class="n">block_f</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">rb</span><span class="o">.</span><span class="n">block_tables</span><span class="p">(</span><span class="n">C</span><span class="p">)</span> <span class="c1"># C is the candidate set.</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="py_entitymatching.dask.dask_rule_based_blocker.DaskRuleBasedBlocker.block_tables">
+<code class="sig-name descname">block_tables</code><span class="sig-paren">(</span><em class="sig-param">ltable</em>, <em class="sig-param">rtable</em>, <em class="sig-param">l_output_attrs=None</em>, <em class="sig-param">r_output_attrs=None</em>, <em class="sig-param">l_output_prefix='ltable_'</em>, <em class="sig-param">r_output_prefix='rtable_'</em>, <em class="sig-param">verbose=False</em>, <em class="sig-param">show_progress=True</em>, <em class="sig-param">n_ltable_chunks=1</em>, <em class="sig-param">n_rtable_chunks=1</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.dask.dask_rule_based_blocker.DaskRuleBasedBlocker.block_tables" title="Permalink to this definition">¶</a></dt>
+<dd><p>WARNING THIS COMMAND IS EXPERIMENTAL AND NOT TESTED. USE AT YOUR OWN RISK</p>
+<p>Blocks two tables based on the sequence of rules supplied by the user.
+Finds tuple pairs from left and right tables that survive the sequence
+of blocking rules. A tuple pair survives the sequence of blocking rules
+if none of the rules in the sequence returns True for that pair. If any
+of the rules returns True, then the pair is blocked.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ltable</strong> (<em>DataFrame</em>) – The left input table.</p></li>
+<li><p><strong>rtable</strong> (<em>DataFrame</em>) – The right input table.</p></li>
+<li><p><strong>l_output_attrs</strong> (<em>list</em>) – A list of attribute names from the left
+table to be included in the
+output candidate set (defaults to None).</p></li>
+<li><p><strong>r_output_attrs</strong> (<em>list</em>) – A list of attribute names from the right
+table to be included in the
+output candidate set (defaults to None).</p></li>
+<li><p><strong>l_output_prefix</strong> (<em>string</em>) – The prefix to be used for the attribute names
+coming from the left table in the output
+candidate set (defaults to ‘ltable_’).</p></li>
+<li><p><strong>r_output_prefix</strong> (<em>string</em>) – The prefix to be used for the attribute names
+coming from the right table in the output
+candidate set (defaults to ‘rtable_’).</p></li>
+<li><p><strong>verbose</strong> (<em>boolean</em>) – A flag to indicate whether the debug
+information  should be logged (defaults to False).</p></li>
+<li><p><strong>show_progress</strong> (<em>boolean</em>) – A flag to indicate whether progress should
+be displayed to the user (defaults to True).</p></li>
+<li><p><strong>n_ltable_chunks</strong> (<em>int</em>) – The number of partitions to split the left table (
+defaults to 1). If it is set to -1, then the number of
+partitions is set to the number of cores in the
+machine.</p></li>
+<li><p><strong>n_rtable_chunks</strong> (<em>int</em>) – The number of partitions to split the right table (
+defaults to 1). If it is set to -1, then the number of
+partitions is set to the number of cores in the
+machine.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A candidate set of tuple pairs that survived the sequence of
+blocking rules (DataFrame).</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>AssertionError</strong> – If <cite>ltable</cite> is not of type pandas
+    DataFrame.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>rtable</cite> is not of type pandas
+    DataFrame.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>l_output_attrs</cite> is not of type of
+    list.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>r_output_attrs</cite> is not of type of
+    list.</p></li>
+<li><p><strong>AssertionError</strong> – If the values in <cite>l_output_attrs</cite> is not of type
+    string.</p></li>
+<li><p><strong>AssertionError</strong> – If the values in <cite>r_output_attrs</cite> is not of type
+    string.</p></li>
+<li><p><strong>AssertionError</strong> – If the input <cite>l_output_prefix</cite> is not of type
+    string.</p></li>
+<li><p><strong>AssertionError</strong> – If the input <cite>r_output_prefix</cite> is not of type
+    string.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>verbose</cite> is not of type
+    boolean.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>show_progress</cite> is not of type
+    boolean.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>n_ltable_chunks</cite> is not of type
+    int.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>n_rtable_chunks</cite> is not of type
+    int.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>l_out_attrs</cite> are not in the ltable.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>r_out_attrs</cite> are not in the rtable.</p></li>
+<li><p><strong>AssertionError</strong> – If there are no rules to apply.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">py_entitymatching.dask.dask_rule_based_blocker</span> <span class="k">import</span> <span class="n">DaskRuleBasedBlocker</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rb</span> <span class="o">=</span> <span class="n">DaskRuleBasedBlocker</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">block_f</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_features_for_blocking</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rule</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;name_name_lev(ltuple, rtuple) &gt; 3&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rb</span><span class="o">.</span><span class="n">add_rule</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">feature_table</span><span class="o">=</span><span class="n">block_f</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">C</span> <span class="o">=</span> <span class="n">rb</span><span class="o">.</span><span class="n">block_tables</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="py_entitymatching.dask.dask_rule_based_blocker.DaskRuleBasedBlocker.block_tuples">
+<code class="sig-name descname">block_tuples</code><span class="sig-paren">(</span><em class="sig-param">ltuple</em>, <em class="sig-param">rtuple</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.dask.dask_rule_based_blocker.DaskRuleBasedBlocker.block_tuples" title="Permalink to this definition">¶</a></dt>
+<dd><p>Blocks a tuple pair based on a sequence of blocking rules supplied
+by the user.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ltuple</strong> (<em>Series</em>) – The input left tuple.</p></li>
+<li><p><strong>rtuple</strong> (<em>Series</em>) – The input right tuple.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A status indicating if the tuple pair is blocked by applying the
+sequence of blocking rules (boolean).</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">py_entitymatching.dask.dask_rule_based_blocker</span> <span class="k">import</span> <span class="n">DaskRuleBasedBlocker</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rb</span> <span class="o">=</span> <span class="n">DaskRuleBasedBlocker</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">block_f</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_features_for_blocking</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rule</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;name_name_lev(ltuple, rtuple) &gt; 3&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rb</span><span class="o">.</span><span class="n">add_rule</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">feature_table</span><span class="o">=</span><span class="n">block_f</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">rb</span><span class="o">.</span><span class="n">block_tuples</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">B</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="py_entitymatching.dask.dask_rule_based_blocker.DaskRuleBasedBlocker.delete_rule">
+<code class="sig-name descname">delete_rule</code><span class="sig-paren">(</span><em class="sig-param">rule_name</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.dask.dask_rule_based_blocker.DaskRuleBasedBlocker.delete_rule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes a rule from the rule-based blocker.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>rule_name</strong> (<em>string</em>) – Name of the rule to be deleted.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">py_entitymatching.dask.dask_rule_based_blocker</span> <span class="k">import</span> <span class="n">DaskRuleBasedBlocker</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rb</span> <span class="o">=</span> <span class="n">DaskRuleBasedBlocker</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">block_f</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_features_for_blocking</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rule</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;name_name_lev(ltuple, rtuple) &gt; 3&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rb</span><span class="o">.</span><span class="n">add_rule</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">block_f</span><span class="p">,</span> <span class="n">rule_name</span><span class="o">=</span><span class="s1">&#39;rule_1&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rb</span><span class="o">.</span><span class="n">delete_rule</span><span class="p">(</span><span class="s1">&#39;rule_1&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="py_entitymatching.dask.dask_rule_based_blocker.DaskRuleBasedBlocker.get_rule">
+<code class="sig-name descname">get_rule</code><span class="sig-paren">(</span><em class="sig-param">rule_name</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.dask.dask_rule_based_blocker.DaskRuleBasedBlocker.get_rule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the function corresponding to a rule.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>rule_name</strong> (<em>string</em>) – Name of the rule.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A function object corresponding to the specified rule.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rb</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">DaskRuleBasedBlocker</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">block_f</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_features_for_blocking</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rule</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;name_name_lev(ltuple, rtuple) &gt; 3&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rb</span><span class="o">.</span><span class="n">add_rule</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">feature_table</span><span class="o">=</span><span class="n">block_f</span><span class="p">,</span> <span class="n">rule_name</span><span class="o">=</span><span class="s1">&#39;rule_1&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rb</span><span class="o">.</span><span class="n">get_rule</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="py_entitymatching.dask.dask_rule_based_blocker.DaskRuleBasedBlocker.get_rule_names">
+<code class="sig-name descname">get_rule_names</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.dask.dask_rule_based_blocker.DaskRuleBasedBlocker.get_rule_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the names of all the rules in the rule-based blocker.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A list of names of all the rules in the rule-based blocker (list).</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rb</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">DaskRuleBasedBlocker</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">block_f</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_features_for_blocking</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rule</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;name_name_lev(ltuple, rtuple) &gt; 3&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rb</span><span class="o">.</span><span class="n">add_rule</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">block_f</span><span class="p">,</span> <span class="n">rule_name</span><span class="o">=</span><span class="s1">&#39;rule_1&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rb</span><span class="o">.</span><span class="n">get_rule_names</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="py_entitymatching.dask.dask_rule_based_blocker.DaskRuleBasedBlocker.set_feature_table">
+<code class="sig-name descname">set_feature_table</code><span class="sig-paren">(</span><em class="sig-param">feature_table</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.dask.dask_rule_based_blocker.DaskRuleBasedBlocker.set_feature_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets feature table for the rule-based blocker.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>feature_table</strong> (<em>DataFrame</em>) – A DataFrame containing features.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rb</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">DaskRuleBasedBlocker</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">block_f</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_features_for_blocking</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rb</span><span class="o">.</span><span class="n">set_feature_table</span><span class="p">(</span><span class="n">block_f</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="py_entitymatching.dask.dask_rule_based_blocker.DaskRuleBasedBlocker.view_rule">
+<code class="sig-name descname">view_rule</code><span class="sig-paren">(</span><em class="sig-param">rule_name</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.dask.dask_rule_based_blocker.DaskRuleBasedBlocker.view_rule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints the source code of the function corresponding to a rule.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>rule_name</strong> (<em>string</em>) – Name of the rule to be viewed.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rb</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">DaskRuleBasedBlocker</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">block_f</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_features_for_blocking</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rule</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;name_name_lev(ltuple, rtuple) &gt; 3&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rb</span><span class="o">.</span><span class="n">add_rule</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">block_f</span><span class="p">,</span> <span class="n">rule_name</span><span class="o">=</span><span class="s1">&#39;rule_1&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rb</span><span class="o">.</span><span class="n">view_rule</span><span class="p">(</span><span class="s1">&#39;rule_1&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="py_entitymatching.dask.dask_black_box_blocker.DaskBlackBoxBlocker">
+<em class="property">class </em><code class="sig-prename descclassname">py_entitymatching.dask.dask_black_box_blocker.</code><code class="sig-name descname">DaskBlackBoxBlocker</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.dask.dask_black_box_blocker.DaskBlackBoxBlocker" title="Permalink to this definition">¶</a></dt>
+<dd><p>WARNING THIS BLOCKER IS EXPERIMENTAL AND NOT TESTED. USE A0T YOUR OWN RISK.</p>
+<p>Blocks based on a black box function specified by the user.</p>
+<dl class="method">
+<dt id="py_entitymatching.dask.dask_black_box_blocker.DaskBlackBoxBlocker.block_candset">
+<code class="sig-name descname">block_candset</code><span class="sig-paren">(</span><em class="sig-param">candset</em>, <em class="sig-param">verbose=True</em>, <em class="sig-param">show_progress=True</em>, <em class="sig-param">n_chunks=1</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.dask.dask_black_box_blocker.DaskBlackBoxBlocker.block_candset" title="Permalink to this definition">¶</a></dt>
+<dd><p>WARNING THIS COMMAND IS EXPERIMENTAL AND NOT TESTED. USE AT YOUR OWN RISK.</p>
+<p>Blocks an input candidate set of tuple pairs based on a black box
+blocking function specified by the user.</p>
+<p>Finds tuple pairs from an input candidate set of tuple pairs that
+survive the black box function. A tuple pair survives the black box
+blocking function if the function returns False for that pair,
+otherwise the tuple pair is dropped.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>candset</strong> (<em>DataFrame</em>) – The input candidate set of tuple pairs.</p></li>
+<li><p><strong>verbose</strong> (<em>boolean</em>) – A flag to indicate whether logging should be done
+(defaults to False).</p></li>
+<li><p><strong>show_progress</strong> (<em>boolean</em>) – A flag to indicate whether progress should
+be displayed to the user (defaults to True).</p></li>
+<li><p><strong>n_chunks</strong> (<em>int</em>) – The number of partitions to split the candidate set. If it
+is set to -1, the number of partitions will be set to the
+number of cores in the machine.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A candidate set of tuple pairs that survived blocking (DataFrame).</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>AssertionError</strong> – If <cite>candset</cite> is not of type pandas
+    DataFrame.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>verbose</cite> is not of type
+    boolean.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>n_chunks</cite> is not of type
+    int.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>show_progress</cite> is not of type boolean.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>l_block_attr</cite> is not in the ltable columns.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>r_block_attr</cite> is not in the rtable columns.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">match_last_name</span><span class="p">(</span><span class="n">ltuple</span><span class="p">,</span> <span class="n">rtuple</span><span class="p">):</span>
+<span class="go">    # assume that there is a &#39;name&#39; attribute in the input tables</span>
+<span class="go">    # and each value in it has two words</span>
+<span class="go">    l_last_name = ltuple[&#39;name&#39;].split()[1]</span>
+<span class="go">    r_last_name = rtuple[&#39;name&#39;].split()[1]</span>
+<span class="go">    if l_last_name != r_last_name:</span>
+<span class="go">        return True</span>
+<span class="go">    else:</span>
+<span class="go">        return False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">py_entitymatching.dask.dask_black_box_blocker</span> <span class="k">import</span> <span class="n">DaskBlackBoxBlocker</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bb</span> <span class="o">=</span> <span class="n">DaskBlackBoxBlocker</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bb</span><span class="o">.</span><span class="n">set_black_box_function</span><span class="p">(</span><span class="n">match_last_name</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">bb</span><span class="o">.</span><span class="n">block_candset</span><span class="p">(</span><span class="n">C</span><span class="p">)</span> <span class="c1"># C is an output from block_tables</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="py_entitymatching.dask.dask_black_box_blocker.DaskBlackBoxBlocker.block_tables">
+<code class="sig-name descname">block_tables</code><span class="sig-paren">(</span><em class="sig-param">ltable</em>, <em class="sig-param">rtable</em>, <em class="sig-param">l_output_attrs=None</em>, <em class="sig-param">r_output_attrs=None</em>, <em class="sig-param">l_output_prefix='ltable_'</em>, <em class="sig-param">r_output_prefix='rtable_'</em>, <em class="sig-param">verbose=False</em>, <em class="sig-param">show_progress=True</em>, <em class="sig-param">n_ltable_chunks=1</em>, <em class="sig-param">n_rtable_chunks=1</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.dask.dask_black_box_blocker.DaskBlackBoxBlocker.block_tables" title="Permalink to this definition">¶</a></dt>
+<dd><p>WARNING THIS COMMAND IS EXPERIMENTAL AND NOT TESTED. USE AT YOUR OWN RISK.</p>
+<p>Blocks two tables based on a black box blocking function specified
+by the user.
+Finds tuple pairs from left and right tables that survive the black
+box function. A tuple pair survives the black box blocking function if
+the function returns False for that pair, otherwise the tuple pair is
+dropped.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ltable</strong> (<em>DataFrame</em>) – The left input table.</p></li>
+<li><p><strong>rtable</strong> (<em>DataFrame</em>) – The right input table.</p></li>
+<li><p><strong>l_output_attrs</strong> (<em>list</em>) – A list of attribute names from the left
+table to be included in the
+output candidate set (defaults to None).</p></li>
+<li><p><strong>r_output_attrs</strong> (<em>list</em>) – A list of attribute names from the right
+table to be included in the
+output candidate set (defaults to None).</p></li>
+<li><p><strong>l_output_prefix</strong> (<em>string</em>) – The prefix to be used for the attribute names
+coming from the left table in the output
+candidate set (defaults to ‘ltable_’).</p></li>
+<li><p><strong>r_output_prefix</strong> (<em>string</em>) – The prefix to be used for the attribute names
+coming from the right table in the output
+candidate set (defaults to ‘rtable_’).</p></li>
+<li><p><strong>verbose</strong> (<em>boolean</em>) – A flag to indicate whether the debug
+information should be logged (defaults to False).</p></li>
+<li><p><strong>show_progress</strong> (<em>boolean</em>) – A flag to indicate whether progress should
+be displayed to the user (defaults to True).</p></li>
+<li><p><strong>n_ltable_chunks</strong> (<em>int</em>) – The number of partitions to split the left table (
+defaults to 1). If it is set to -1, then the number of
+partitions is set to the number of cores in the
+machine.</p></li>
+<li><p><strong>n_rtable_chunks</strong> (<em>int</em>) – The number of partitions to split the right table (
+defaults to 1). If it is set to -1, then the number of
+partitions is set to the number of cores in the
+machine.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A candidate set of tuple pairs that survived blocking (DataFrame).</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>AssertionError</strong> – If <cite>ltable</cite> is not of type pandas
+    DataFrame.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>rtable</cite> is not of type pandas
+    DataFrame.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>l_output_attrs</cite> is not of type of
+    list.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>r_output_attrs</cite> is not of type of
+    list.</p></li>
+<li><p><strong>AssertionError</strong> – If values in <cite>l_output_attrs</cite> is not of type
+    string.</p></li>
+<li><p><strong>AssertionError</strong> – If values in <cite>r_output_attrs</cite> is not of type
+    string.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>l_output_prefix</cite> is not of type
+    string.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>r_output_prefix</cite> is not of type
+    string.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>verbose</cite> is not of type
+    boolean.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>show_progress</cite> is not of type boolean.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>n_ltable_chunks</cite> is not of type
+    int.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>n_rtable_chunks</cite> is not of type
+    int.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>l_out_attrs</cite> are not in the ltable.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>r_out_attrs</cite> are not in the rtable.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">match_last_name</span><span class="p">(</span><span class="n">ltuple</span><span class="p">,</span> <span class="n">rtuple</span><span class="p">):</span>
+<span class="go">    # assume that there is a &#39;name&#39; attribute in the input tables</span>
+<span class="go">    # and each value in it has two words</span>
+<span class="go">    l_last_name = ltuple[&#39;name&#39;].split()[1]</span>
+<span class="go">    r_last_name = rtuple[&#39;name&#39;].split()[1]</span>
+<span class="go">    if l_last_name != r_last_name:</span>
+<span class="go">        return True</span>
+<span class="go">    else:</span>
+<span class="go">        return False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">py_entitymatching.dask.dask_black_box_blocker</span> <span class="n">DaskBlackBoxBlocker</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bb</span> <span class="o">=</span> <span class="n">DaskBlackBoxBlocker</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bb</span><span class="o">.</span><span class="n">set_black_box_function</span><span class="p">(</span><span class="n">match_last_name</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">C</span> <span class="o">=</span> <span class="n">bb</span><span class="o">.</span><span class="n">block_tables</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">l_output_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">r_output_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="py_entitymatching.dask.dask_black_box_blocker.DaskBlackBoxBlocker.block_tuples">
+<code class="sig-name descname">block_tuples</code><span class="sig-paren">(</span><em class="sig-param">ltuple</em>, <em class="sig-param">rtuple</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.dask.dask_black_box_blocker.DaskBlackBoxBlocker.block_tuples" title="Permalink to this definition">¶</a></dt>
+<dd><p>Blocks a tuple pair based on a black box blocking function specified
+by the user.</p>
+<p>Takes a tuple pair as input, applies the black box blocking function to
+it, and returns True (if the intention is to drop the pair) or False
+(if the intention is to keep the tuple pair).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ltuple</strong> (<em>Series</em>) – input left tuple.</p></li>
+<li><p><strong>rtuple</strong> (<em>Series</em>) – input right tuple.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A status indicating if the tuple pair should be dropped or kept,
+based on the black box blocking function (boolean).</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">match_last_name</span><span class="p">(</span><span class="n">ltuple</span><span class="p">,</span> <span class="n">rtuple</span><span class="p">):</span>
+<span class="go">    # assume that there is a &#39;name&#39; attribute in the input tables</span>
+<span class="go">    # and each value in it has two words</span>
+<span class="go">    l_last_name = ltuple[&#39;name&#39;].split()[1]</span>
+<span class="go">    r_last_name = rtuple[&#39;name&#39;].split()[1]</span>
+<span class="go">    if l_last_name != r_last_name:</span>
+<span class="go">        return True</span>
+<span class="go">    else:</span>
+<span class="go">        return False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">py_entitymatching.dask.dask_black_box_blocker</span> <span class="k">import</span> <span class="n">DaskBlackBoxBlocker</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bb</span> <span class="o">=</span> <span class="n">DaskBlackBoxBlocker</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bb</span><span class="o">.</span><span class="n">set_black_box_function</span><span class="p">(</span><span class="n">match_last_name</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">status</span> <span class="o">=</span> <span class="n">bb</span><span class="o">.</span><span class="n">block_tuples</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">B</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="c1"># A, B are input tables.</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="py_entitymatching.dask.dask_black_box_blocker.DaskBlackBoxBlocker.set_black_box_function">
+<code class="sig-name descname">set_black_box_function</code><span class="sig-paren">(</span><em class="sig-param">function</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.dask.dask_black_box_blocker.DaskBlackBoxBlocker.set_black_box_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets black box function to be used for blocking.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>function</strong> (<em>function</em>) – the black box function to be used for blocking .</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 <div class="section" id="extracting-feature-vectors">
 <h2>Extracting Feature Vectors<a class="headerlink" href="#extracting-feature-vectors" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="py_entitymatching.dask.dask_extract_features.dask_extract_feature_vecs">
+<code class="sig-prename descclassname">py_entitymatching.dask.dask_extract_features.</code><code class="sig-name descname">dask_extract_feature_vecs</code><span class="sig-paren">(</span><em class="sig-param">candset</em>, <em class="sig-param">attrs_before=None</em>, <em class="sig-param">feature_table=None</em>, <em class="sig-param">attrs_after=None</em>, <em class="sig-param">verbose=False</em>, <em class="sig-param">show_progress=True</em>, <em class="sig-param">n_chunks=1</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.dask.dask_extract_features.dask_extract_feature_vecs" title="Permalink to this definition">¶</a></dt>
+<dd><p>WARNING THIS COMMAND IS EXPERIMENTAL AND NOT TESTED. USE AT YOUR OWN RISK</p>
+<p>This function extracts feature vectors from a DataFrame (typically a
+labeled candidate set).</p>
+<p>Specifically, this function uses feature
+table, ltable and rtable (that is present in the <cite>candset</cite>’s
+metadata) to extract feature vectors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>candset</strong> (<em>DataFrame</em>) – The input candidate set for which the features
+vectors should be extracted.</p></li>
+<li><p><strong>attrs_before</strong> (<em>list</em>) – The list of attributes from the input candset,
+that should be added before the feature vectors (defaults to None).</p></li>
+<li><p><strong>feature_table</strong> (<em>DataFrame</em>) – A DataFrame containing a list of
+features that should be used to compute the feature vectors (
+defaults to None).</p></li>
+<li><p><strong>attrs_after</strong> (<em>list</em>) – The list of attributes from the input candset
+that should be added after the feature vectors (defaults to None).</p></li>
+<li><p><strong>verbose</strong> (<em>boolean</em>) – A flag to indicate whether the debug information
+should be displayed (defaults to False).</p></li>
+<li><p><strong>show_progress</strong> (<em>boolean</em>) – A flag to indicate whether the progress of
+extracting feature vectors must be displayed (defaults to True).</p></li>
+<li><p><strong>n_chunks</strong> (<em>int</em>) – The number of partitions to split the candidate set. If it
+is set to -1, the number of partitions will be set to the
+number of cores in the machine.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>A pandas DataFrame containing feature vectors.</p>
+<p>The DataFrame will have metadata ltable and rtable, pointing
+to the same ltable and rtable as the input candset.</p>
+<p>Also, the output
+DataFrame will have three columns: key, foreign key ltable, foreign
+key rtable copied from input candset to the output DataFrame. These
+three columns precede the columns mentioned in <cite>attrs_before</cite>.</p>
+</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>AssertionError</strong> – If <cite>candset</cite> is not of type pandas
+    DataFrame.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>attrs_before</cite> has attributes that
+    are not present in the input candset.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>attrs_after</cite> has attribtues that
+    are not present in the input candset.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>feature_table</cite> is set to None.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>n_chunks</cite> is not of type
+    int.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">py_entitymatching.dask.dask_extract_features</span> <span class="k">import</span> <span class="n">dask_extract_feature_vecs</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">match_f</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_features_for_matching</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># G is the labeled dataframe which should be converted into feature vectors</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span> <span class="o">=</span> <span class="n">dask_extract_feature_vecs</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="n">match_f</span><span class="p">,</span> <span class="n">attrs_before</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">],</span> <span class="n">attrs_after</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;gold_labels&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</dd></dl>
+
 </div>
 <div class="section" id="ml-matchers">
 <h2>ML-Matchers<a class="headerlink" href="#ml-matchers" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="py_entitymatching.dask.dask_dtmatcher.DaskDTMatcher">
+<em class="property">class </em><code class="sig-prename descclassname">py_entitymatching.dask.dask_dtmatcher.</code><code class="sig-name descname">DaskDTMatcher</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.dask.dask_dtmatcher.DaskDTMatcher" title="Permalink to this definition">¶</a></dt>
+<dd><p>WARNING THIS MATCHER IS EXPERIMENTAL AND NOT TESTED. USE AT YOUR OWN RISK.</p>
+<p>Decision Tree matcher.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong><strong>,</strong><strong>**kwargs</strong> – The arguments to scikit-learn’s Decision Tree
+classifier.</p></li>
+<li><p><strong>name</strong> (<em>string</em>) – The name of this matcher (defaults to None). If the
+matcher name is None, the class automatically generates a string
+and assigns it as the name.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="py_entitymatching.dask.dask_dtmatcher.DaskDTMatcher.fit">
+<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">x=None</em>, <em class="sig-param">y=None</em>, <em class="sig-param">table=None</em>, <em class="sig-param">exclude_attrs=None</em>, <em class="sig-param">target_attr=None</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.dask.dask_dtmatcher.DaskDTMatcher.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit interface for the matcher.</p>
+<p>Specifically, there are two ways the user can call the fit method.
+First, interface similar to scikit-learn where the feature vectors
+and target attribute given as projected DataFrame.
+Second, give the DataFrame and explicitly specify the feature vectors
+(by specifying the attributes to be excluded) and the target attribute.</p>
+<p>A point to note is all the input parameters have a default value of
+None. This is done to support both the interfaces in a single function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>DataFrame</em>) – The input feature vectors given as pandas
+DataFrame (defaults to None).</p></li>
+<li><p><strong>y</strong> (<em>DatFrame</em>) – The input target attribute given as pandas
+DataFrame with a single column (defaults to None).</p></li>
+<li><p><strong>table</strong> (<em>DataFrame</em>) – The input pandas DataFrame containing feature
+vectors and target attribute (defaults to None).</p></li>
+<li><p><strong>exclude_attrs</strong> (<em>list</em>) – The list of attributes that should be
+excluded from the input table to get the feature vectors.</p></li>
+<li><p><strong>target_attr</strong> (<em>string</em>) – The target attribute in the input table.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="py_entitymatching.dask.dask_dtmatcher.DaskDTMatcher.predict">
+<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param">x=None</em>, <em class="sig-param">table=None</em>, <em class="sig-param">exclude_attrs=None</em>, <em class="sig-param">target_attr=None</em>, <em class="sig-param">append=False</em>, <em class="sig-param">return_probs=False</em>, <em class="sig-param">probs_attr=None</em>, <em class="sig-param">inplace=True</em>, <em class="sig-param">show_progress=False</em>, <em class="sig-param">n_chunks=1</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.dask.dask_dtmatcher.DaskDTMatcher.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>WARNING THIS COMMAND IS EXPERIMENTAL AND NOT TESTED. USE AT YOUR OWN RISK.</p>
+<p>Predict interface for the matcher.</p>
+<p>Specifically, there are two ways the user can call the predict method.
+First, interface similar to scikit-learn where the feature vectors
+given as projected DataFrame.
+Second, give the DataFrame and explicitly specify the feature vectors
+(by specifying the attributes to be excluded) .</p>
+<p>A point to note is all the input parameters have a default value of
+None. This is done to support both the interfaces in a single function.</p>
+<p>Currently, the Dask implementation supports only the cases when the table is not
+None and the flags inplace, append are False.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>DataFrame</em>) – The input pandas DataFrame containing only feature
+vectors (defaults to None).</p></li>
+<li><p><strong>table</strong> (<em>DataFrame</em>) – The input pandas DataFrame containing feature
+vectors, and may be other attributes (defaults to None).</p></li>
+<li><p><strong>exclude_attrs</strong> (<em>list</em>) – A list of attributes to be excluded from the
+input table to get the feature vectors (defaults to None).</p></li>
+<li><p><strong>target_attr</strong> (<em>string</em>) – The attribute name where the predictions
+need to be stored in the input table (defaults to None).</p></li>
+<li><p><strong>probs_attr</strong> (<em>string</em>) – The attribute name where the prediction probabilities
+need to be stored in the input table (defaults to None).</p></li>
+<li><p><strong>append</strong> (<em>boolean</em>) – A flag to indicate whether the predictions need
+to be appended in the input DataFrame (defaults to False).</p></li>
+<li><p><strong>return_probs</strong> (<em>boolean</em>) – A flag to indicate where the prediction probabilities
+need to be returned (defaults to False). If set to True, returns the
+probability if the pair was a match.</p></li>
+<li><p><strong>inplace</strong> (<em>boolean</em>) – A flag to indicate whether the append needs to be
+done inplace (defaults to True).</p></li>
+<li><p><strong>show_progress</strong> (<em>boolean</em>) – A flag to indicate whether the progress of
+extracting feature vectors must be displayed (defaults to True).</p></li>
+<li><p><strong>n_chunks</strong> (<em>int</em>) – The number of partitions to split the candidate set. If it
+is set to -1, the number of partitions will be set to the
+number of cores in the machine.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An array of predictions or a DataFrame with predictions updated.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="py_entitymatching.dask.dask_rfmatcher.DaskRFMatcher">
+<em class="property">class </em><code class="sig-prename descclassname">py_entitymatching.dask.dask_rfmatcher.</code><code class="sig-name descname">DaskRFMatcher</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.dask.dask_rfmatcher.DaskRFMatcher" title="Permalink to this definition">¶</a></dt>
+<dd><p>WARNING THIS MATCHER IS EXPERIMENTAL AND NOT TESTED. USE AT YOUR OWN RISK.</p>
+<p>Random Forest matcher.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong><strong>,</strong><strong>**kwargs</strong> – The arguments to scikit-learn’s Random Forest
+classifier.</p></li>
+<li><p><strong>name</strong> (<em>string</em>) – The name of this matcher (defaults to None). If the
+matcher name is None, the class automatically generates a string
+and assigns it as the name.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="py_entitymatching.dask.dask_rfmatcher.DaskRFMatcher.fit">
+<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">x=None</em>, <em class="sig-param">y=None</em>, <em class="sig-param">table=None</em>, <em class="sig-param">exclude_attrs=None</em>, <em class="sig-param">target_attr=None</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.dask.dask_rfmatcher.DaskRFMatcher.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit interface for the matcher.</p>
+<p>Specifically, there are two ways the user can call the fit method.
+First, interface similar to scikit-learn where the feature vectors
+and target attribute given as projected DataFrame.
+Second, give the DataFrame and explicitly specify the feature vectors
+(by specifying the attributes to be excluded) and the target attribute.</p>
+<p>A point to note is all the input parameters have a default value of
+None. This is done to support both the interfaces in a single function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>DataFrame</em>) – The input feature vectors given as pandas
+DataFrame (defaults to None).</p></li>
+<li><p><strong>y</strong> (<em>DatFrame</em>) – The input target attribute given as pandas
+DataFrame with a single column (defaults to None).</p></li>
+<li><p><strong>table</strong> (<em>DataFrame</em>) – The input pandas DataFrame containing feature
+vectors and target attribute (defaults to None).</p></li>
+<li><p><strong>exclude_attrs</strong> (<em>list</em>) – The list of attributes that should be
+excluded from the input table to get the feature vectors.</p></li>
+<li><p><strong>target_attr</strong> (<em>string</em>) – The target attribute in the input table.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="py_entitymatching.dask.dask_rfmatcher.DaskRFMatcher.predict">
+<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param">x=None</em>, <em class="sig-param">table=None</em>, <em class="sig-param">exclude_attrs=None</em>, <em class="sig-param">target_attr=None</em>, <em class="sig-param">append=False</em>, <em class="sig-param">return_probs=False</em>, <em class="sig-param">probs_attr=None</em>, <em class="sig-param">inplace=True</em>, <em class="sig-param">show_progress=False</em>, <em class="sig-param">n_chunks=1</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.dask.dask_rfmatcher.DaskRFMatcher.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>WARNING THIS COMMAND IS EXPERIMENTAL AND NOT TESTED. USE AT YOUR OWN RISK.</p>
+<p>Predict interface for the matcher.</p>
+<p>Specifically, there are two ways the user can call the predict method.
+First, interface similar to scikit-learn where the feature vectors
+given as projected DataFrame.
+Second, give the DataFrame and explicitly specify the feature vectors
+(by specifying the attributes to be excluded) .</p>
+<p>A point to note is all the input parameters have a default value of
+None. This is done to support both the interfaces in a single function.</p>
+<p>Currently, the Dask implementation supports only the cases when the table is not
+None and the flags inplace, append are False.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>DataFrame</em>) – The input pandas DataFrame containing only feature
+vectors (defaults to None).</p></li>
+<li><p><strong>table</strong> (<em>DataFrame</em>) – The input pandas DataFrame containing feature
+vectors, and may be other attributes (defaults to None).</p></li>
+<li><p><strong>exclude_attrs</strong> (<em>list</em>) – A list of attributes to be excluded from the
+input table to get the feature vectors (defaults to None).</p></li>
+<li><p><strong>target_attr</strong> (<em>string</em>) – The attribute name where the predictions
+need to be stored in the input table (defaults to None).</p></li>
+<li><p><strong>probs_attr</strong> (<em>string</em>) – The attribute name where the prediction probabilities
+need to be stored in the input table (defaults to None).</p></li>
+<li><p><strong>append</strong> (<em>boolean</em>) – A flag to indicate whether the predictions need
+to be appended in the input DataFrame (defaults to False).</p></li>
+<li><p><strong>return_probs</strong> (<em>boolean</em>) – A flag to indicate where the prediction probabilities
+need to be returned (defaults to False). If set to True, returns the
+probability if the pair was a match.</p></li>
+<li><p><strong>inplace</strong> (<em>boolean</em>) – A flag to indicate whether the append needs to be
+done inplace (defaults to True).</p></li>
+<li><p><strong>show_progress</strong> (<em>boolean</em>) – A flag to indicate whether the progress of
+extracting feature vectors must be displayed (defaults to True).</p></li>
+<li><p><strong>n_chunks</strong> (<em>int</em>) – The number of partitions to split the candidate set. If it
+is set to -1, the number of partitions will be set to the
+number of cores in the machine.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An array of predictions or a DataFrame with predictions updated.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="py_entitymatching.dask.dask_nbmatcher.DaskNBMatcher">
+<em class="property">class </em><code class="sig-prename descclassname">py_entitymatching.dask.dask_nbmatcher.</code><code class="sig-name descname">DaskNBMatcher</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.dask.dask_nbmatcher.DaskNBMatcher" title="Permalink to this definition">¶</a></dt>
+<dd><p>WARNING THIS MATCHER IS EXPERIMENTAL AND NOT TESTED. USE AT YOUR OWN RISK.</p>
+<p>Naive Bayes matcher.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong><strong>,</strong><strong>**kwargs</strong> – The arguments to scikit-learn’s Naive Bayes
+classifier.</p></li>
+<li><p><strong>name</strong> (<em>string</em>) – The name of this matcher (defaults to None). If the
+matcher name is None, the class automatically generates a string
+and assigns it as the name.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="py_entitymatching.dask.dask_nbmatcher.DaskNBMatcher.fit">
+<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">x=None</em>, <em class="sig-param">y=None</em>, <em class="sig-param">table=None</em>, <em class="sig-param">exclude_attrs=None</em>, <em class="sig-param">target_attr=None</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.dask.dask_nbmatcher.DaskNBMatcher.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit interface for the matcher.</p>
+<p>Specifically, there are two ways the user can call the fit method.
+First, interface similar to scikit-learn where the feature vectors
+and target attribute given as projected DataFrame.
+Second, give the DataFrame and explicitly specify the feature vectors
+(by specifying the attributes to be excluded) and the target attribute.</p>
+<p>A point to note is all the input parameters have a default value of
+None. This is done to support both the interfaces in a single function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>DataFrame</em>) – The input feature vectors given as pandas
+DataFrame (defaults to None).</p></li>
+<li><p><strong>y</strong> (<em>DatFrame</em>) – The input target attribute given as pandas
+DataFrame with a single column (defaults to None).</p></li>
+<li><p><strong>table</strong> (<em>DataFrame</em>) – The input pandas DataFrame containing feature
+vectors and target attribute (defaults to None).</p></li>
+<li><p><strong>exclude_attrs</strong> (<em>list</em>) – The list of attributes that should be
+excluded from the input table to get the feature vectors.</p></li>
+<li><p><strong>target_attr</strong> (<em>string</em>) – The target attribute in the input table.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="py_entitymatching.dask.dask_nbmatcher.DaskNBMatcher.predict">
+<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param">x=None</em>, <em class="sig-param">table=None</em>, <em class="sig-param">exclude_attrs=None</em>, <em class="sig-param">target_attr=None</em>, <em class="sig-param">append=False</em>, <em class="sig-param">return_probs=False</em>, <em class="sig-param">probs_attr=None</em>, <em class="sig-param">inplace=True</em>, <em class="sig-param">show_progress=False</em>, <em class="sig-param">n_chunks=1</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.dask.dask_nbmatcher.DaskNBMatcher.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>WARNING THIS COMMAND IS EXPERIMENTAL AND NOT TESTED. USE AT YOUR OWN RISK.</p>
+<p>Predict interface for the matcher.</p>
+<p>Specifically, there are two ways the user can call the predict method.
+First, interface similar to scikit-learn where the feature vectors
+given as projected DataFrame.
+Second, give the DataFrame and explicitly specify the feature vectors
+(by specifying the attributes to be excluded) .</p>
+<p>A point to note is all the input parameters have a default value of
+None. This is done to support both the interfaces in a single function.</p>
+<p>Currently, the Dask implementation supports only the cases when the table is not
+None and the flags inplace, append are False.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>DataFrame</em>) – The input pandas DataFrame containing only feature
+vectors (defaults to None).</p></li>
+<li><p><strong>table</strong> (<em>DataFrame</em>) – The input pandas DataFrame containing feature
+vectors, and may be other attributes (defaults to None).</p></li>
+<li><p><strong>exclude_attrs</strong> (<em>list</em>) – A list of attributes to be excluded from the
+input table to get the feature vectors (defaults to None).</p></li>
+<li><p><strong>target_attr</strong> (<em>string</em>) – The attribute name where the predictions
+need to be stored in the input table (defaults to None).</p></li>
+<li><p><strong>probs_attr</strong> (<em>string</em>) – The attribute name where the prediction probabilities
+need to be stored in the input table (defaults to None).</p></li>
+<li><p><strong>append</strong> (<em>boolean</em>) – A flag to indicate whether the predictions need
+to be appended in the input DataFrame (defaults to False).</p></li>
+<li><p><strong>return_probs</strong> (<em>boolean</em>) – A flag to indicate where the prediction probabilities
+need to be returned (defaults to False). If set to True, returns the
+probability if the pair was a match.</p></li>
+<li><p><strong>inplace</strong> (<em>boolean</em>) – A flag to indicate whether the append needs to be
+done inplace (defaults to True).</p></li>
+<li><p><strong>show_progress</strong> (<em>boolean</em>) – A flag to indicate whether the progress of
+extracting feature vectors must be displayed (defaults to True).</p></li>
+<li><p><strong>n_chunks</strong> (<em>int</em>) – The number of partitions to split the candidate set. If it
+is set to -1, the number of partitions will be set to the
+number of cores in the machine.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An array of predictions or a DataFrame with predictions updated.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="py_entitymatching.dask.dask_logregmatcher.DaskLogRegMatcher">
+<em class="property">class </em><code class="sig-prename descclassname">py_entitymatching.dask.dask_logregmatcher.</code><code class="sig-name descname">DaskLogRegMatcher</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.dask.dask_logregmatcher.DaskLogRegMatcher" title="Permalink to this definition">¶</a></dt>
+<dd><p>WARNING THIS MATCHER IS EXPERIMENTAL AND NOT TESTED. USE AT YOUR OWN RISK.</p>
+<p>Logistic Regression matcher.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong><strong>,</strong><strong>**kwargs</strong> – THe Arguments to scikit-learn’s Logistic Regression
+classifier.</p></li>
+<li><p><strong>name</strong> (<em>string</em>) – The name of this matcher (defaults to None). If the
+matcher name is None, the class automatically generates a string
+and assigns it as the name.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="py_entitymatching.dask.dask_logregmatcher.DaskLogRegMatcher.fit">
+<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">x=None</em>, <em class="sig-param">y=None</em>, <em class="sig-param">table=None</em>, <em class="sig-param">exclude_attrs=None</em>, <em class="sig-param">target_attr=None</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.dask.dask_logregmatcher.DaskLogRegMatcher.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit interface for the matcher.</p>
+<p>Specifically, there are two ways the user can call the fit method.
+First, interface similar to scikit-learn where the feature vectors
+and target attribute given as projected DataFrame.
+Second, give the DataFrame and explicitly specify the feature vectors
+(by specifying the attributes to be excluded) and the target attribute.</p>
+<p>A point to note is all the input parameters have a default value of
+None. This is done to support both the interfaces in a single function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>DataFrame</em>) – The input feature vectors given as pandas
+DataFrame (defaults to None).</p></li>
+<li><p><strong>y</strong> (<em>DatFrame</em>) – The input target attribute given as pandas
+DataFrame with a single column (defaults to None).</p></li>
+<li><p><strong>table</strong> (<em>DataFrame</em>) – The input pandas DataFrame containing feature
+vectors and target attribute (defaults to None).</p></li>
+<li><p><strong>exclude_attrs</strong> (<em>list</em>) – The list of attributes that should be
+excluded from the input table to get the feature vectors.</p></li>
+<li><p><strong>target_attr</strong> (<em>string</em>) – The target attribute in the input table.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="py_entitymatching.dask.dask_logregmatcher.DaskLogRegMatcher.predict">
+<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param">x=None</em>, <em class="sig-param">table=None</em>, <em class="sig-param">exclude_attrs=None</em>, <em class="sig-param">target_attr=None</em>, <em class="sig-param">append=False</em>, <em class="sig-param">return_probs=False</em>, <em class="sig-param">probs_attr=None</em>, <em class="sig-param">inplace=True</em>, <em class="sig-param">show_progress=False</em>, <em class="sig-param">n_chunks=1</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.dask.dask_logregmatcher.DaskLogRegMatcher.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>WARNING THIS COMMAND IS EXPERIMENTAL AND NOT TESTED. USE AT YOUR OWN RISK.</p>
+<p>Predict interface for the matcher.</p>
+<p>Specifically, there are two ways the user can call the predict method.
+First, interface similar to scikit-learn where the feature vectors
+given as projected DataFrame.
+Second, give the DataFrame and explicitly specify the feature vectors
+(by specifying the attributes to be excluded) .</p>
+<p>A point to note is all the input parameters have a default value of
+None. This is done to support both the interfaces in a single function.</p>
+<p>Currently, the Dask implementation supports only the cases when the table is not
+None and the flags inplace, append are False.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>DataFrame</em>) – The input pandas DataFrame containing only feature
+vectors (defaults to None).</p></li>
+<li><p><strong>table</strong> (<em>DataFrame</em>) – The input pandas DataFrame containing feature
+vectors, and may be other attributes (defaults to None).</p></li>
+<li><p><strong>exclude_attrs</strong> (<em>list</em>) – A list of attributes to be excluded from the
+input table to get the feature vectors (defaults to None).</p></li>
+<li><p><strong>target_attr</strong> (<em>string</em>) – The attribute name where the predictions
+need to be stored in the input table (defaults to None).</p></li>
+<li><p><strong>probs_attr</strong> (<em>string</em>) – The attribute name where the prediction probabilities
+need to be stored in the input table (defaults to None).</p></li>
+<li><p><strong>append</strong> (<em>boolean</em>) – A flag to indicate whether the predictions need
+to be appended in the input DataFrame (defaults to False).</p></li>
+<li><p><strong>return_probs</strong> (<em>boolean</em>) – A flag to indicate where the prediction probabilities
+need to be returned (defaults to False). If set to True, returns the
+probability if the pair was a match.</p></li>
+<li><p><strong>inplace</strong> (<em>boolean</em>) – A flag to indicate whether the append needs to be
+done inplace (defaults to True).</p></li>
+<li><p><strong>show_progress</strong> (<em>boolean</em>) – A flag to indicate whether the progress of
+extracting feature vectors must be displayed (defaults to True).</p></li>
+<li><p><strong>n_chunks</strong> (<em>int</em>) – The number of partitions to split the candidate set. If it
+is set to -1, the number of partitions will be set to the
+number of cores in the machine.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An array of predictions or a DataFrame with predictions updated.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="py_entitymatching.dask.dask_xgboost_matcher.DaskXGBoostMatcher">
+<em class="property">class </em><code class="sig-prename descclassname">py_entitymatching.dask.dask_xgboost_matcher.</code><code class="sig-name descname">DaskXGBoostMatcher</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.dask.dask_xgboost_matcher.DaskXGBoostMatcher" title="Permalink to this definition">¶</a></dt>
+<dd><p>WARNING THIS MATCHER IS EXPERIMENTAL AND NOT TESTED. USE AT YOUR OWN RISK</p>
+<p>XGBoost matcher.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong><strong>,</strong><strong>**kwargs</strong> – The arguments to XGBoost
+classifier.</p></li>
+<li><p><strong>name</strong> (<em>string</em>) – The name of this matcher (defaults to None). If the
+matcher name is None, the class automatically generates a string
+and assigns it as the name.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="py_entitymatching.dask.dask_xgboost_matcher.DaskXGBoostMatcher.fit">
+<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">x=None</em>, <em class="sig-param">y=None</em>, <em class="sig-param">table=None</em>, <em class="sig-param">exclude_attrs=None</em>, <em class="sig-param">target_attr=None</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.dask.dask_xgboost_matcher.DaskXGBoostMatcher.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit interface for the matcher.</p>
+<p>Specifically, there are two ways the user can call the fit method.
+First, interface similar to scikit-learn where the feature vectors
+and target attribute given as projected DataFrame.
+Second, give the DataFrame and explicitly specify the feature vectors
+(by specifying the attributes to be excluded) and the target attribute.</p>
+<p>A point to note is all the input parameters have a default value of
+None. This is done to support both the interfaces in a single function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>DataFrame</em>) – The input feature vectors given as pandas
+DataFrame (defaults to None).</p></li>
+<li><p><strong>y</strong> (<em>DatFrame</em>) – The input target attribute given as pandas
+DataFrame with a single column (defaults to None).</p></li>
+<li><p><strong>table</strong> (<em>DataFrame</em>) – The input pandas DataFrame containing feature
+vectors and target attribute (defaults to None).</p></li>
+<li><p><strong>exclude_attrs</strong> (<em>list</em>) – The list of attributes that should be
+excluded from the input table to get the feature vectors.</p></li>
+<li><p><strong>target_attr</strong> (<em>string</em>) – The target attribute in the input table.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="py_entitymatching.dask.dask_xgboost_matcher.DaskXGBoostMatcher.predict">
+<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param">x=None</em>, <em class="sig-param">table=None</em>, <em class="sig-param">exclude_attrs=None</em>, <em class="sig-param">target_attr=None</em>, <em class="sig-param">append=False</em>, <em class="sig-param">return_probs=False</em>, <em class="sig-param">probs_attr=None</em>, <em class="sig-param">inplace=True</em>, <em class="sig-param">show_progress=False</em>, <em class="sig-param">n_chunks=1</em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.dask.dask_xgboost_matcher.DaskXGBoostMatcher.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>WARNING THIS COMMAND IS EXPERIMENTAL AND NOT TESTED. USE AT YOUR OWN RISK.</p>
+<p>Predict interface for the matcher.</p>
+<p>Specifically, there are two ways the user can call the predict method.
+First, interface similar to scikit-learn where the feature vectors
+given as projected DataFrame.
+Second, give the DataFrame and explicitly specify the feature vectors
+(by specifying the attributes to be excluded) .</p>
+<p>A point to note is all the input parameters have a default value of
+None. This is done to support both the interfaces in a single function.</p>
+<p>Currently, the Dask implementation supports only the cases when the table is not
+None and the flags inplace, append are False.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>DataFrame</em>) – The input pandas DataFrame containing only feature
+vectors (defaults to None).</p></li>
+<li><p><strong>table</strong> (<em>DataFrame</em>) – The input pandas DataFrame containing feature
+vectors, and may be other attributes (defaults to None).</p></li>
+<li><p><strong>exclude_attrs</strong> (<em>list</em>) – A list of attributes to be excluded from the
+input table to get the feature vectors (defaults to None).</p></li>
+<li><p><strong>target_attr</strong> (<em>string</em>) – The attribute name where the predictions
+need to be stored in the input table (defaults to None).</p></li>
+<li><p><strong>probs_attr</strong> (<em>string</em>) – The attribute name where the prediction probabilities
+need to be stored in the input table (defaults to None).</p></li>
+<li><p><strong>append</strong> (<em>boolean</em>) – A flag to indicate whether the predictions need
+to be appended in the input DataFrame (defaults to False).</p></li>
+<li><p><strong>return_probs</strong> (<em>boolean</em>) – A flag to indicate where the prediction probabilities
+need to be returned (defaults to False). If set to True, returns the
+probability if the pair was a match.</p></li>
+<li><p><strong>inplace</strong> (<em>boolean</em>) – A flag to indicate whether the append needs to be
+done inplace (defaults to True).</p></li>
+<li><p><strong>show_progress</strong> (<em>boolean</em>) – A flag to indicate whether the progress of
+extracting feature vectors must be displayed (defaults to True).</p></li>
+<li><p><strong>n_chunks</strong> (<em>int</em>) – The number of partitions to split the candidate set. If it
+is set to -1, the number of partitions will be set to the
+number of cores in the machine.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An array of predictions or a DataFrame with predictions updated.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 </div>
 
