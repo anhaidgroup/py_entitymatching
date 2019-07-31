@@ -760,7 +760,7 @@ def abs_norm(d1, d2):
         return 0
     else:
         # Compute absolute norm similarity between two numbers.
-        x = (abs(d1 - d2) / max(d1, d2))
+        x = (abs(d1 - d2) / max(abs(d1), abs(d2)))
         if x <= 10e-5:
             x = 0
         return 1.0 - x
