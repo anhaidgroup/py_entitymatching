@@ -327,7 +327,7 @@ def create_feature_table():
     return feature_table
 
 
-def add_blackbox_feature(feature_table, feature_name, feature_function):
+def add_blackbox_feature(feature_table, feature_name, feature_function, **kwargs):
     """
     Adds a black box feature to the feature table.
 
@@ -389,12 +389,12 @@ def add_blackbox_feature(feature_table, feature_name, feature_function):
     feature_dict = {}
     feature_dict['feature_name'] = feature_name
     feature_dict['function'] = feature_function
-    feature_dict['left_attribute'] = None
-    feature_dict['right_attribute'] = None
-    feature_dict['left_attr_tokenizer'] = None
-    feature_dict['right_attr_tokenizer'] = None
-    feature_dict['simfunction'] = None
-    feature_dict['function_source'] = None
+    feature_dict['left_attribute'] = kwargs.get('left_attribute')
+    feature_dict['right_attribute'] = kwargs.get('right_attribute')
+    feature_dict['left_attr_tokenizer'] = kwargs.get('left_attr_tokenizer')
+    feature_dict['right_attr_tokenizer'] = kwargs.get('right_attr_tokenizer')
+    feature_dict['simfunction'] = kwargs.get('simfunction')
+    feature_dict['function_source'] = kwargs.get('function_source')
     feature_dict['is_auto_generated'] = False
 
     # Add the feature to the feature table as a last entry.
