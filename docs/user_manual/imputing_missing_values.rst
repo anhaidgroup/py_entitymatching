@@ -21,7 +21,7 @@ or fill the NaN's with an aggregate value (mean, median, etc.).
 
 Since the table is represented as a pandas Dataframe, there are two common ways to impute
 missing values: (1) use `fillna` method from pandas Dataframe, and (2) impute missing
-values using `Imputer` from Scikit-learn package.
+values using `SimpleImputer` from Scikit-learn package.
 
 But there are two problems that we have to tackle if we have to using the above commands
 or objects directly:
@@ -54,7 +54,7 @@ the output is getting assigned to a column in the old Dataframe `H` and the meta
 of `H` does not get affected.
 
 To fill NaN's with an aggregate value, in py_entitymatching you can use `impute_table`
-command. It is a wrapper around scikit-learn's `Imputer` object (to make it metadata aware).
+command. It is a wrapper around scikit-learn's `SimpleImputer` object (to make it metadata aware).
 An example of using `impute_table` is shown below:
 
     >>> H = em.impute_table(H, exclude_attrs=['_id', 'ltable_id', 'rtable_id'], strategy='mean')
