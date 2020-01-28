@@ -8,7 +8,7 @@ from collections import OrderedDict
 
 import pandas as pd
 import sklearn.model_selection as ms
-from  sklearn.preprocessing import Imputer
+from  sklearn.impute import SimpleImputer
 
 import py_entitymatching.catalog.catalog_manager as cm
 import py_entitymatching.utils.catalog_helper as ch
@@ -131,7 +131,7 @@ def get_ts():
 
 
 def impute_table(table, exclude_attrs=None, missing_val='NaN',
-                 strategy='mean', axis=0, val_all_nans=0, verbose=True):
+                 strategy='mean', fill_value=None, val_all_nans=0, verbose=True):
     """
     Impute table containing missing values.
 
@@ -145,8 +145,8 @@ def impute_table(table, exclude_attrs=None, missing_val='NaN',
             (defaults to 'NaN').
         strategy (string): String that specifies on how to impute values. Valid
             strings: 'mean', 'median', 'most_frequent' (defaults to 'mean').
-        axis (int):  axis=1 along rows, and axis=0 along columns  (defaults
-            to 0).
+        fill_value (any):  When strategy == "constant", `fill_value` is used to replace
+            all occurrences of missing values.
         val_all_nans (float): Value to fill in if all the values in the column
             are NaN.
 
@@ -218,7 +218,7 @@ def impute_table(table, exclude_attrs=None, missing_val='NaN',
 
     projected_table_values = projected_table.values
 
-    imp = Imputer(missing_values=missing_val, strategy=strategy, axis=axis)
+    imp = SimpleImputer(missing_values=missing_val, strategy=strategy, fill_value=fill_value)
     imp.fit(projected_table_values)
     imp.statistics_[pd.np.isnan(imp.statistics_)] = val_all_nans
     projected_table_values = imp.transform(projected_table_values)
