@@ -74,7 +74,7 @@ class AttributeUtilsTestCases(unittest.TestCase):
     @raises(AssertionError)
     def test_get_type_multiple_types(self):
         A = read_csv_metadata(path_a)
-        A.ix[0, 'ID'] = 1000
+        A.loc[0, 'ID'] = 1000
         t = _get_type(A['ID'])
 
     def test_get_type_valid_2(self):

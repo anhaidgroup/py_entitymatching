@@ -344,7 +344,7 @@ def down_sample(table_a, table_b, size, y_param, show_progress=True,
 
     n_jobs = get_num_procs(n_jobs, len(table_b))
 
-    sample_table_b = table_b.ix[b_tbl_indices]
+    sample_table_b = table_b.loc[b_tbl_indices]
     if n_jobs <= 1:
         # Probe inverted index to find all tuples in A that share tokens with tuples in B'.
         s_tbl_indices = _probe_index_split(sample_table_b, y_param,

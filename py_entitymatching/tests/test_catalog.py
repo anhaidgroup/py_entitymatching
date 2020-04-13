@@ -906,7 +906,7 @@ class CatalogManagerTestCases(unittest.TestCase):
         A = pd.read_csv(path_a)
         B = pd.read_csv(path_b)
         C = pd.read_csv(path_c)
-        C.ix[0, 'ltable_ID'] = pd.np.NaN
+        C.loc[0, 'ltable_ID'] = pd.np.NaN
         status = ch.check_fk_constraint(C, 'ltable_ID', A, 'ID')
         self.assertEqual(status, False)
 

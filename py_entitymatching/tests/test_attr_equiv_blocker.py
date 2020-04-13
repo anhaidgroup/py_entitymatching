@@ -524,10 +524,10 @@ class AttrEquivBlockerTestCases(unittest.TestCase):
 
 
     def test_ab_block_tuples(self):
-        assert_equal(self.ab.block_tuples(self.A.ix[1], self.B.ix[2],
+        assert_equal(self.ab.block_tuples(self.A.loc[1], self.B.loc[2],
                                           l_block_attr_1, r_block_attr_1),
                      False)
-        assert_equal(self.ab.block_tuples(self.A.ix[2], self.B.ix[2],
+        assert_equal(self.ab.block_tuples(self.A.loc[2], self.B.loc[2],
                                           l_block_attr_1, r_block_attr_1),
                      True)
 
@@ -540,19 +540,19 @@ class AttrEquivBlockerTestCases(unittest.TestCase):
         em.set_key(A, 'ID')
         B = em.read_csv_metadata(path_b)
         em.set_key(B, 'ID')
-        assert_equal(self.ab.block_tuples(A.ix[0], B.ix[0], l_block_attr_1,
+        assert_equal(self.ab.block_tuples(A.loc[0], B.loc[0], l_block_attr_1,
                                           r_block_attr_1, allow_missing=True),
                      False)
-        assert_equal(self.ab.block_tuples(A.ix[1], B.ix[2], l_block_attr_1,
+        assert_equal(self.ab.block_tuples(A.loc[1], B.loc[2], l_block_attr_1,
                                           r_block_attr_1, allow_missing=True),
                      False)
-        assert_equal(self.ab.block_tuples(A.ix[2], B.ix[1], l_block_attr_1,
+        assert_equal(self.ab.block_tuples(A.loc[2], B.loc[1], l_block_attr_1,
                                           r_block_attr_1, allow_missing=True),
                      False)
-        assert_equal(self.ab.block_tuples(A.ix[0], B.ix[1], l_block_attr_1,
+        assert_equal(self.ab.block_tuples(A.loc[0], B.loc[1], l_block_attr_1,
                                           r_block_attr_1, allow_missing=True),
                      False)
-        assert_equal(self.ab.block_tuples(A.ix[2], B.ix[2], l_block_attr_1,
+        assert_equal(self.ab.block_tuples(A.loc[2], B.loc[2], l_block_attr_1,
                                           r_block_attr_1, allow_missing=True),
                      True)
 
@@ -565,15 +565,15 @@ class AttrEquivBlockerTestCases(unittest.TestCase):
         em.set_key(A, 'ID')
         B = em.read_csv_metadata(path_b)
         em.set_key(B, 'ID')
-        assert_equal(self.ab.block_tuples(A.ix[0], B.ix[0], l_block_attr_1,
+        assert_equal(self.ab.block_tuples(A.loc[0], B.loc[0], l_block_attr_1,
                                           r_block_attr_1), True)
-        assert_equal(self.ab.block_tuples(A.ix[1], B.ix[2], l_block_attr_1,
+        assert_equal(self.ab.block_tuples(A.loc[1], B.loc[2], l_block_attr_1,
                                           r_block_attr_1), False)
-        assert_equal(self.ab.block_tuples(A.ix[2], B.ix[1], l_block_attr_1,
+        assert_equal(self.ab.block_tuples(A.loc[2], B.loc[1], l_block_attr_1,
                                           r_block_attr_1), True)
-        assert_equal(self.ab.block_tuples(A.ix[0], B.ix[1], l_block_attr_1,
+        assert_equal(self.ab.block_tuples(A.loc[0], B.loc[1], l_block_attr_1,
                                           r_block_attr_1), True)
-        assert_equal(self.ab.block_tuples(A.ix[2], B.ix[2], l_block_attr_1,
+        assert_equal(self.ab.block_tuples(A.loc[2], B.loc[2], l_block_attr_1,
                                           r_block_attr_1), True)
 
 

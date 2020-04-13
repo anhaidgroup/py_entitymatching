@@ -586,19 +586,19 @@ class OverlapBlockerTestCases(unittest.TestCase):
         validate_data(D, expected_ids_2)
 
     def test_ob_block_tuples_whitespace(self):
-        assert_equal(self.ob.block_tuples(self.A.ix[1], self.B.ix[2],
+        assert_equal(self.ob.block_tuples(self.A.loc[1], self.B.loc[2],
                                           l_overlap_attr_1, r_overlap_attr_1),
                      False)
-        assert_equal(self.ob.block_tuples(self.A.ix[2], self.B.ix[2],
+        assert_equal(self.ob.block_tuples(self.A.loc[2], self.B.loc[2],
                                           l_overlap_attr_1, r_overlap_attr_1),
                      True)
 
     def test_ob_block_tuples_qgram(self):
-        assert_equal(self.ob.block_tuples(self.A.ix[1], self.B.ix[2],
+        assert_equal(self.ob.block_tuples(self.A.loc[1], self.B.loc[2],
                                           l_overlap_attr_1, r_overlap_attr_1,
                                           q_val=3, word_level=False),
                      False)
-        assert_equal(self.ob.block_tuples(self.A.ix[0], self.B.ix[0],
+        assert_equal(self.ob.block_tuples(self.A.loc[0], self.B.loc[0],
                                           l_overlap_attr_1, r_overlap_attr_1,
                                           q_val=3, word_level=False),
                      True)
@@ -612,16 +612,16 @@ class OverlapBlockerTestCases(unittest.TestCase):
         em.set_key(A, 'ID')
         B = em.read_csv_metadata(path_b)
         em.set_key(B, 'ID')
-        assert_equal(self.ob.block_tuples(A.ix[1], B.ix[3], l_overlap_attr_1,
+        assert_equal(self.ob.block_tuples(A.loc[1], B.loc[3], l_overlap_attr_1,
                                           r_overlap_attr_1, allow_missing=True),
                      False)
-        assert_equal(self.ob.block_tuples(A.ix[3], B.ix[2], l_overlap_attr_1,
+        assert_equal(self.ob.block_tuples(A.loc[3], B.loc[2], l_overlap_attr_1,
                                           r_overlap_attr_1, allow_missing=True),
                      False)
-        assert_equal(self.ob.block_tuples(A.ix[3], B.ix[3], l_overlap_attr_1,
+        assert_equal(self.ob.block_tuples(A.loc[3], B.loc[3], l_overlap_attr_1,
                                           r_overlap_attr_1, allow_missing=True),
                      False)
-        assert_equal(self.ob.block_tuples(A.ix[2], B.ix[2], l_overlap_attr_1,
+        assert_equal(self.ob.block_tuples(A.loc[2], B.loc[2], l_overlap_attr_1,
                                           r_overlap_attr_1, allow_missing=True),
                      True)
 
@@ -634,11 +634,11 @@ class OverlapBlockerTestCases(unittest.TestCase):
         em.set_key(A, 'ID')
         B = em.read_csv_metadata(path_b)
         em.set_key(B, 'ID')
-        assert_equal(self.ob.block_tuples(A.ix[1], B.ix[3], l_overlap_attr_1,
+        assert_equal(self.ob.block_tuples(A.loc[1], B.loc[3], l_overlap_attr_1,
                                           r_overlap_attr_1), True)
-        assert_equal(self.ob.block_tuples(A.ix[3], B.ix[2], l_overlap_attr_1,
+        assert_equal(self.ob.block_tuples(A.loc[3], B.loc[2], l_overlap_attr_1,
                                           r_overlap_attr_1), True)
-        assert_equal(self.ob.block_tuples(A.ix[3], B.ix[3], l_overlap_attr_1,
+        assert_equal(self.ob.block_tuples(A.loc[3], B.loc[3], l_overlap_attr_1,
                                           r_overlap_attr_1), True)
 
 

@@ -101,8 +101,8 @@ def split_train_test(labeled_data, train_proportion=0.5,
                                               random_state=random_state)
 
     # Construct output tables.
-    label_train = labeled_data.ix[idx_train]
-    label_test = labeled_data.ix[idx_test]
+    label_train = labeled_data.loc[idx_train]
+    label_test = labeled_data.loc[idx_test]
 
     # Update catalog
     cm.init_properties(label_train)

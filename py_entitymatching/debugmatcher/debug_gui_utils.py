@@ -66,7 +66,7 @@ def _get_dataframe(table, ls):
         # Set the index on fk_ltable, fk_rtable
         table = table.set_index([fk_ltable, fk_rtable], drop=False)
         # Do the selection
-        d = table.ix[ls]
+        d = table.loc[ls]
         ret = d
         ret.reset_index(inplace=True, drop=True)
     # Finally return the selected values

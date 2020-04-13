@@ -169,7 +169,7 @@ def vis_tuple_debug_dt_matcher(matcher, t, exclude_attrs):
     code = _get_dbg_fn_vis(code)
 
     # Link the code with feature vaues
-    feat_vals = OrderedDict(t.ix[t.index.values[0], feature_names])
+    feat_vals = OrderedDict(t.loc[t.index.values[0], feature_names])
     wrapper_code = {}
     wrapper_code.update(feat_vals)
     six.exec_(code, wrapper_code)

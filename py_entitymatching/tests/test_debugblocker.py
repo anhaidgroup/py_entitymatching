@@ -631,7 +631,7 @@ class DebugblockerTestCases(unittest.TestCase):
         r_key = cm.get_key(B)
         C = read_csv_metadata(path_c, ltable=A, rtable=B, fk_ltable='ltable_' +
                 l_key, fk_rtable='rtable_' + r_key, key = '_id')
-        C.ix[0, 'ltable_ID'] = 'aaaa'
+        C.loc[0, 'ltable_ID'] = 'aaaa'
 
         lrecord_id_to_index_map = db._build_id_to_index_map(A, l_key)
         rrecord_id_to_index_map = db._build_id_to_index_map(B, r_key)
@@ -647,7 +647,7 @@ class DebugblockerTestCases(unittest.TestCase):
         r_key = cm.get_key(B)
         C = read_csv_metadata(path_c, ltable=A, rtable=B, fk_ltable='ltable_' +
                 l_key, fk_rtable='rtable_' + r_key, key = '_id')
-        C.ix[0, 'rtable_ID'] = 'bbbb'
+        C.loc[0, 'rtable_ID'] = 'bbbb'
 
         lrecord_id_to_index_map = db._build_id_to_index_map(A, l_key)
         rrecord_id_to_index_map = db._build_id_to_index_map(B, r_key)
@@ -785,9 +785,9 @@ class DebugblockerTestCases(unittest.TestCase):
                           1989, 30.0, '607 From St, San Francisco', 94107,
                           'Joseph Kuan', 1982, 26.0,
                           '108 South Park, San Francisco', 94122]]
-        self.assertEqual(list(ret_dataframe.ix[0]), expected_recs[0])
-        self.assertEqual(list(ret_dataframe.ix[1]), expected_recs[1])
-        self.assertEqual(list(ret_dataframe.ix[2]), expected_recs[2])
+        self.assertEqual(list(ret_dataframe.loc[0]), expected_recs[0])
+        self.assertEqual(list(ret_dataframe.loc[1]), expected_recs[1])
+        self.assertEqual(list(ret_dataframe.loc[2]), expected_recs[2])
     
     def test_debugblocker_config_cython_1(self):
         ltable_field_token_sum = {1}
@@ -1067,7 +1067,7 @@ class DebugblockerTestCases(unittest.TestCase):
                             'rtable_pub_year', 'rtable_language',
                             'rtable_author', 'rtable_publisher']
         self.assertEqual(list(ret_dataframe.columns), expected_columns)
-        ret_record = list(ret_dataframe.ix[0])
+        ret_record = list(ret_dataframe.loc[0])
         expected_record = [0, 1, 'B001', 'data analysis', 'introduction to data analysis',
             2015, 'ENG', 'Jane Doe', 'BCD publisher', 'introduction to data analysis', 
             float('nan'), 'English', 'introduction to data analysis', 'John Doe', 'ABC publisher10.00']
