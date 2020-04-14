@@ -191,7 +191,7 @@ def debug_decisiontree_matcher(decision_tree, tuple_1, tuple_2, feature_table,
         >>> # F is the feature vector got from evaluation set of the labeled data.
         >>> out = dt.predict(table=F, exclude_attrs=['_id', 'ltable_id', 'rtable_id', 'gold_labels'], target_attr='gold_labels')
         >>> # A and B are input tables
-        >>> em.debug_decisiontree_matcher(dt, A.ix[1], B.ix[2], match_f, H.columns, exclude_attrs=['_id', 'ltable_id', 'rtable_id', 'gold_labels'], target_attr='gold_labels')
+        >>> em.debug_decisiontree_matcher(dt, A.loc[1], B.loc[2], match_f, H.columns, exclude_attrs=['_id', 'ltable_id', 'rtable_id', 'gold_labels'], target_attr='gold_labels')
     """
 
     validate_object_type(feature_table, pd.DataFrame, 'The input feature table')

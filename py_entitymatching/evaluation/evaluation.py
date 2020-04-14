@@ -169,8 +169,8 @@ def eval_matches(data_frame, gold_label_attr, predicted_label_attr):
     new_data_frame.set_index([fk_ltable, fk_rtable], drop=False, inplace=True)
 
     # Get the list of false positives and false negatives.
-    false_pos_ls = list(new_data_frame.ix[false_positive_indices].index.values)
-    false_neg_ls = list(new_data_frame.ix[false_negative_indices].index.values)
+    false_pos_ls = list(new_data_frame.iloc[false_positive_indices].index.values)
+    false_neg_ls = list(new_data_frame.iloc[false_negative_indices].index.values)
 
     # Store and return the accuracy results.
     accuracy_results = collections.OrderedDict()

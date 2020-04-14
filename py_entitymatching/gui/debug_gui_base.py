@@ -97,10 +97,10 @@ class MainWindowManager(QtWidgets.QWidget):
         # Handle debug, show the tree to the user
         l_fkey = cm.get_fk_ltable(self.table)
         r_fkey = cm.get_fk_rtable(self.table)
-        l_val = r.ix[r.index.values[0], l_fkey]
-        r_val = r.ix[r.index.values[0], r_fkey]
-        d1 = OrderedDict(self.l_df.ix[l_val])
-        d2 = OrderedDict(self.r_df.ix[r_val])
+        l_val = r.loc[r.index.values[0], l_fkey]
+        r_val = r.loc[r.index.values[0], r_fkey]
+        d1 = OrderedDict(self.l_df.loc[l_val])
+        d2 = OrderedDict(self.r_df.loc[r_val])
         if self.matcher_type == 'dt':
             ret_val, node_list = em.vis_tuple_debug_dt_matcher(
                 self.matcher, r,
@@ -125,10 +125,10 @@ class MainWindowManager(QtWidgets.QWidget):
         l_fkey = cm.get_fk_ltable(self.table)
         r_fkey = cm.get_fk_rtable(self.table)
 
-        l_val = r.ix[r.index.values[0], l_fkey]
-        r_val = r.ix[r.index.values[0], r_fkey]
-        d1 = OrderedDict(self.l_df.ix[l_val])
-        d2 = OrderedDict(self.r_df.ix[r_val])
+        l_val = r.loc[r.index.values[0], l_fkey]
+        r_val = r.loc[r.index.values[0], r_fkey]
+        d1 = OrderedDict(self.l_df.loc[l_val])
+        d2 = OrderedDict(self.r_df.loc[r_val])
         # Create a window manager
         show_obj = ShowWindowManager(d1, d2)
         # Show the window to the user

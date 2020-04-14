@@ -230,11 +230,11 @@ def get_feature_vals_by_cand_split(pickled_obj, fk_ltable_idx, fk_rtable_idx, l_
         fk_rtable_val = row[fk_rtable_idx]
 
         if fk_ltable_val not in l_dict:
-            l_dict[fk_ltable_val] = l_df.ix[fk_ltable_val]
+            l_dict[fk_ltable_val] = l_df.loc[fk_ltable_val]
         l_tuple = l_dict[fk_ltable_val]
 
         if fk_rtable_val not in r_dict:
-            r_dict[fk_rtable_val] = r_df.ix[fk_rtable_val]
+            r_dict[fk_rtable_val] = r_df.loc[fk_rtable_val]
         r_tuple = r_dict[fk_rtable_val]
 
         f = apply_feat_fns(l_tuple, r_tuple, feature_table)

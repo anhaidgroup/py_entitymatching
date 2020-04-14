@@ -562,12 +562,12 @@ class DaskOverlapBlocker(Blocker):
         for row in c_df.itertuples(index=False):
             row_lkey = row[lkey_idx]
             if row_lkey not in l_dict:
-                l_dict[row_lkey] = l_df.ix[row_lkey, l_block_attr]
+                l_dict[row_lkey] = l_df.loc[row_lkey, l_block_attr]
             l_val = l_dict[row_lkey]
 
             row_rkey = row[rkey_idx]
             if row_rkey not in r_dict:
-                r_dict[row_rkey] = r_df.ix[row_rkey, r_block_attr]
+                r_dict[row_rkey] = r_df.loc[row_rkey, r_block_attr]
             r_val = r_dict[row_rkey]
             if allow_missing:
                 if pd.isnull(l_val) or pd.isnull(r_val) or l_val == r_val:
@@ -764,7 +764,7 @@ class DaskOverlapBlocker(Blocker):
             >>> A = em.read_csv_metadata('path_to_csv_dir/table_A.csv', key='ID')
             >>> B = em.read_csv_metadata('path_to_csv_dir/table_B.csv', key='ID')
             >>> ob = em.OverlapBlocker()
-            >>> status = ob.block_tuples(A.ix[0], B.ix[0], 'address', 'address')
+            >>> status = ob.block_tuples(A.loc[0], B.loc[0], 'address', 'address')
 
         """
 

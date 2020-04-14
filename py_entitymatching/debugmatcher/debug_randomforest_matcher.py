@@ -50,7 +50,7 @@ def debug_randomforest_matcher(random_forest, tuple_1, tuple_2,
         >>> # F is the feature vector got from evaluation set of the labeled data.
         >>> out = rf.predict(table=F, exclude_attrs=['_id', 'ltable_id', 'rtable_id', 'gold_labels'], target_attr='gold_labels')
         >>> # A and B are input tables
-        >>> em.debug_randomforest_matcher(rf, A.ix[1], B.ix[2], match_f, H.columns, exclude_attrs=['_id', 'ltable_id', 'rtable_id', 'gold_labels'], target_attr='gold_labels')
+        >>> em.debug_randomforest_matcher(rf, A.loc[1], B.loc[2], match_f, H.columns, exclude_attrs=['_id', 'ltable_id', 'rtable_id', 'gold_labels'], target_attr='gold_labels')
 
     """
     # Validate input parameters.

@@ -50,7 +50,7 @@ class AutoFeatureGenerationTestCases(unittest.TestCase):
         self.assertEqual(isinstance(feat_table, pd.DataFrame), True)
         functions = feat_table['function']
         for f in functions:
-            x = f(A.ix[1], B.ix[2])
+            x = f(A.loc[1], B.loc[2])
             self.assertEqual(x >= 0, True)
 
     @raises(AssertionError)
@@ -94,7 +94,7 @@ class AutoFeatureGenerationTestCases(unittest.TestCase):
         self.assertEqual(isinstance(feat_table, pd.DataFrame), True)
         functions = feat_table['function']
         for f in functions:
-            x = f(A.ix[1], B.ix[2])
+            x = f(A.loc[1], B.loc[2])
             self.assertEqual(x >= 0, True)
 
     @raises(AssertionError)
@@ -116,7 +116,7 @@ class AutoFeatureGenerationTestCases(unittest.TestCase):
         self.assertEqual(isinstance(feat_table, pd.DataFrame), True)
         functions = feat_table['function']
         for f in functions:
-            x = f(A.ix[1], B.ix[2])
+            x = f(A.loc[1], B.loc[2])
             self.assertEqual(x >= 0, True)
 
     @raises(AssertionError)
@@ -353,7 +353,7 @@ class AutoFeatureGenerationTestCases(unittest.TestCase):
 #         self.assertEqual(isinstance(feat_table, pd.DataFrame), True)
 #         functions = feat_table['function']
 #         for f in functions:
-#             x = f(A.ix[1], B.ix[2])
+#             x = f(A.loc[1], B.loc[2])
 #             self.assertEqual(x >= 0, True)
 
 #     def test_get_features_for_matching_validate_types_valid_yes(self):
@@ -366,7 +366,7 @@ class AutoFeatureGenerationTestCases(unittest.TestCase):
 #         self.assertEqual(isinstance(feat_table, pd.DataFrame), True)
 #         functions = feat_table['function']
 #         for f in functions:
-#             x = f(A.ix[1], B.ix[2])
+#             x = f(A.loc[1], B.loc[2])
 #             self.assertEqual(x >= 0, True)
 
 #     def test_get_features_for_blocking_validate_types_valid_no(self):

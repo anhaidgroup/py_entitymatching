@@ -517,7 +517,7 @@ class OverlapBlocker(Blocker):
             >>> A = em.read_csv_metadata('path_to_csv_dir/table_A.csv', key='ID')
             >>> B = em.read_csv_metadata('path_to_csv_dir/table_B.csv', key='ID')
             >>> ob = em.OverlapBlocker()
-            >>> status = ob.block_tuples(A.ix[0], B.ix[0], 'address', 'address')
+            >>> status = ob.block_tuples(A.loc[0], B.loc[0], 'address', 'address')
 
         """
 

@@ -55,8 +55,8 @@ class BooleanRuleMatcher(RuleMatcher):
 
         # # iterate through the cand. set
         for row in candset.itertuples(index=False):
-            l_row = l_df.ix[row[lid_idx]]
-            r_row = r_df.ix[row[rid_idx]]
+            l_row = l_df.loc[row[lid_idx]]
+            r_row = r_df.loc[row[rid_idx]]
             res = self.apply_rules(l_row, r_row)
             if res is True:
                 predictions.append(1)
