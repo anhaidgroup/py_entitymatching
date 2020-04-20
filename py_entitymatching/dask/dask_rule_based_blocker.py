@@ -699,7 +699,7 @@ class DaskRuleBasedBlocker(Blocker):
                 >>> block_f = em.get_features_for_blocking(A, B)
                 >>> rule = ['name_name_lev(ltuple, rtuple) > 3']
                 >>> rb.add_rule(rule, feature_table=block_f)
-                >>> D = rb.block_tuples(A.ix[0], B.ix[1)
+                >>> D = rb.block_tuples(A.loc[0], B.loc[1)
         """
 
 
@@ -964,13 +964,13 @@ def _block_candset_excluding_rule_split(c_df, l_df, r_df, l_key, r_key,
         # # get ltuple, try dictionary first, then dataframe
         row_lid = row[l_id_pos]
         if row_lid not in l_dict:
-            l_dict[row_lid] = l_df.ix[row_lid]
+            l_dict[row_lid] = l_df.loc[row_lid]
         ltuple = l_dict[row_lid]
 
         # # get rtuple, try dictionary first, then dataframe
         row_rid = row[r_id_pos]
         if row_rid not in r_dict:
-            r_dict[row_rid] = r_df.ix[row_rid]
+            r_dict[row_rid] = r_df.loc[row_rid]
         rtuple = r_dict[row_rid]
 
         res = apply_rules_excluding_rule(ltuple, rtuple, rule_to_exclude)

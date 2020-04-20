@@ -684,8 +684,8 @@ def _assemble_topk_table(rec_list, ltable, rtable, lkey, rkey, ret_key='_id',
     ret_tuple_list = []
     for i in range(len(rec_list)):
         tup = rec_list[i]
-        lrecord = list(ltable.ix[tup[1]])
-        rrecord = list(rtable.ix[tup[2]])
+        lrecord = list(ltable.loc[tup[1]])
+        rrecord = list(rtable.loc[tup[2]])
         ret_tuple = [i]
         ret_tuple.append(lrecord[lkey_index])
         ret_tuple.append(rrecord[rkey_index])

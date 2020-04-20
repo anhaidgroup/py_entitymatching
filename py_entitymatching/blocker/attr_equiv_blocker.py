@@ -392,7 +392,7 @@ class AttrEquivalenceBlocker(Blocker):
             >>> A = em.read_csv_metadata('path_to_csv_dir/table_A.csv', key='ID')
             >>> B = em.read_csv_metadata('path_to_csv_dir/table_B.csv', key='ID')
             >>> ab = em.AttrEquivalenceBlocker()
-            >>> status = ab.block_tuples(A.ix[0], B.ix[0], 'zipcode', 'zipcode')
+            >>> status = ab.block_tuples(A.loc[0], B.loc[0], 'zipcode', 'zipcode')
         """
         l_val, r_val = ltuple[l_block_attr], rtuple[r_block_attr]
         if allow_missing:
@@ -511,12 +511,12 @@ def _block_candset_split(c_df, l_df, r_df, l_key, r_key,
         # # get the value of block attributes
         row_lkey = row[lkey_idx]
         if row_lkey not in l_dict:
-            l_dict[row_lkey] = l_df.ix[row_lkey, l_block_attr]
+            l_dict[row_lkey] = l_df.loc[row_lkey, l_block_attr]
         l_val = l_dict[row_lkey]
 
         row_rkey = row[rkey_idx]
         if row_rkey not in r_dict:
-            r_dict[row_rkey] = r_df.ix[row_rkey, r_block_attr]
+            r_dict[row_rkey] = r_df.loc[row_rkey, r_block_attr]
         r_val = r_dict[row_rkey]
 
         if allow_missing:

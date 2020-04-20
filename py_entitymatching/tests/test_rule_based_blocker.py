@@ -499,8 +499,8 @@ class RuleBasedBlockerTestCases(unittest.TestCase):
      
     def test_rb_block_tuples(self):
         self.rb.add_rule(rule_1, self.feature_table)
-        assert_equal(self.rb.block_tuples(self.A.ix[1], self.B.ix[2]), False)
-        assert_equal(self.rb.block_tuples(self.A.ix[2], self.B.ix[2]), True)
+        assert_equal(self.rb.block_tuples(self.A.loc[1], self.B.loc[2]), False)
+        assert_equal(self.rb.block_tuples(self.A.loc[2], self.B.loc[2]), True)
 
     def test_rb_add_rule_user_supplied_rule_name(self):
         rule_name = self.rb.add_rule(rule_1, self.feature_table, 'myrule')

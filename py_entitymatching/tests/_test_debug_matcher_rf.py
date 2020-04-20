@@ -17,7 +17,7 @@ from py_entitymatching.io.parsers import read_csv_metadata
 from py_entitymatching.matcher.rfmatcher import RFMatcher
 from py_entitymatching.utils.generic_helper import get_install_path
 
-datasets_path = os.sep.join([get_install_path(), 'datasets', 'test_datasets'])
+datasets_path = os.sep.join([get_install_path(), 'tests', 'test_datasets'])
 path_a = os.sep.join([datasets_path, 'A.csv'])
 path_b = os.sep.join([datasets_path, 'B.csv'])
 path_c = os.sep.join([datasets_path, 'C.csv'])
@@ -67,7 +67,7 @@ class VisRFDebugMatcherTestCases(unittest.TestCase):
         rf = RFMatcher()
         rf.fit(table=feature_vectors, exclude_attrs=['_id', 'ltable_ID', 'rtable_ID', 'labels'],
                target_attr='labels')
-        s = pd.DataFrame(feature_vectors.ix[0])
+        s = pd.DataFrame(feature_vectors.loc[0])
         s1 = s.T
         vis_tuple_debug_rf_matcher(rf.clf, s1,
                                    exclude_attrs=['_id', 'ltable_ID', 'rtable_ID', 'labels'])
@@ -87,7 +87,7 @@ class VisRFDebugMatcherTestCases(unittest.TestCase):
         rf = RFMatcher()
         rf.fit(table=feature_vectors, exclude_attrs=['_id', 'ltable_ID', 'rtable_ID', 'labels'],
                target_attr='labels')
-        s = pd.DataFrame(feature_vectors.ix[0])
+        s = pd.DataFrame(feature_vectors.loc[0])
         s1 = s.T
         vis_tuple_debug_rf_matcher(rf, s1,
                                    exclude_attrs=['_id', 'ltable_ID', 'rtable_ID', 'labels'])
@@ -108,7 +108,7 @@ class VisRFDebugMatcherTestCases(unittest.TestCase):
         rf.fit(table=feature_vectors, exclude_attrs=['_id', 'ltable_ID', 'rtable_ID', 'labels'],
                target_attr='labels')
         feature_vectors.drop(['_id', 'ltable_ID', 'rtable_ID', 'labels'], axis=1, inplace=True)
-        s = pd.DataFrame(feature_vectors.ix[0])
+        s = pd.DataFrame(feature_vectors.loc[0])
         s1 = s.T
 
         vis_tuple_debug_rf_matcher(rf.clf, s1, exclude_attrs=None)
@@ -258,7 +258,7 @@ class RFDebugMatcherTestCases(unittest.TestCase):
     #     rf = RFMatcher()
     #     rf.fit(table=feature_vectors, exclude_attrs=['_id', 'ltable_ID', 'rtable_ID', 'labels'],
     #            target_attr='labels')
-    #     debug_randomforest_matcher(rf, A.ix[1], B.ix[2], feat_table=feature_table,
+    #     debug_randomforest_matcher(rf, A.loc[1], B.loc[2], feat_table=feature_table,
     #                           fv_columns=feature_vectors.columns,
     #                           exclude_attrs=['ltable_ID', 'rtable_ID', '_id', 'labels'])
 
@@ -278,7 +278,7 @@ class RFDebugMatcherTestCases(unittest.TestCase):
         rf.fit(table=feature_vectors, exclude_attrs=['_id', 'ltable_ID', 'rtable_ID', 'labels'],
                target_attr='labels')
 
-        debug_randomforest_matcher(rf, A.ix[1], B.ix[2], feature_table=None,
+        debug_randomforest_matcher(rf, A.loc[1], B.loc[2], feature_table=None,
                                    table_columns=feature_vectors.columns,
                                    exclude_attrs=['ltable_ID', 'rtable_ID', '_id', 'labels'])
 
@@ -298,6 +298,6 @@ class RFDebugMatcherTestCases(unittest.TestCase):
         rf.fit(table=feature_vectors, exclude_attrs=['_id', 'ltable_ID', 'rtable_ID', 'labels'],
                target_attr='labels')
 
-        debug_randomforest_matcher(rf.clf, A.ix[1], B.ix[2], feature_table=feature_table,
+        debug_randomforest_matcher(rf.clf, A.loc[1], B.loc[2], feature_table=feature_table,
                                    table_columns=feature_vectors.columns,
                                    exclude_attrs=['ltable_ID', 'rtable_ID', '_id', 'labels'])

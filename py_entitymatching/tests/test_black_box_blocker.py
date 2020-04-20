@@ -278,9 +278,9 @@ class BlackBoxBlockerTestCases(unittest.TestCase):
 
     def test_bb_block_tuples(self):
         self.bb.set_black_box_function(_block_fn)
-        assert_equal(self.bb.block_tuples(self.A.ix[1], self.B.ix[2]),
+        assert_equal(self.bb.block_tuples(self.A.loc[1], self.B.loc[2]),
                      False)
-        assert_equal(self.bb.block_tuples(self.A.ix[2], self.B.ix[2]),
+        assert_equal(self.bb.block_tuples(self.A.loc[2], self.B.loc[2]),
                      True)
 
 

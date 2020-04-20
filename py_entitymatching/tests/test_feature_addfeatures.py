@@ -36,7 +36,7 @@ class AddFeaturesTestCases(unittest.TestCase):
         add_feature(feature_table, 'test', f_dict)
         len2 = len(feature_table)
         self.assertEqual(len1+1, len2)
-        self.assertEqual(feature_table.ix[len(feature_table)-1, 'function'](A.ix[1], B.ix[2]), 1.0)
+        self.assertEqual(feature_table.loc[len(feature_table)-1, 'function'](A.loc[1], B.loc[2]), 1.0)
 
 
     def test_feature_fn_valid_nosim_tok(self):
@@ -119,7 +119,7 @@ class AddFeaturesTestCases(unittest.TestCase):
         add_feature(feature_table, 'test', f_dict)
         len2 = len(feature_table)
         self.assertEqual(len1+1, len2)
-        self.assertEqual(feature_table.ix[len(feature_table)-1, 'function'](A.ix[1], B.ix[2]), 1.0)
+        self.assertEqual(feature_table.loc[len(feature_table)-1, 'function'](A.loc[1], B.loc[2]), 1.0)
 
     @raises(AssertionError)
     def test_add_feature_invalid_df(self):
@@ -180,7 +180,7 @@ class AddBlackBoxFeatureTestCases(unittest.TestCase):
         add_blackbox_feature(feature_table, 'test', bb_fn)
         len2 = len(feature_table)
         self.assertEqual(len1+1, len2)
-        self.assertEqual(feature_table.ix[len(feature_table)-1, 'function'](A.ix[1], B.ix[2]), 1.0)
+        self.assertEqual(feature_table.loc[len(feature_table)-1, 'function'](A.loc[1], B.loc[2]), 1.0)
 
     def test_add_bb_feature_valid_2(self):
         A = read_csv_metadata(path_a)
@@ -192,7 +192,27 @@ class AddBlackBoxFeatureTestCases(unittest.TestCase):
         add_blackbox_feature(feature_table, 'test', bb_fn)
         len2 = len(feature_table)
         self.assertEqual(len1+1, len2)
-        self.assertEqual(feature_table.ix[len(feature_table)-1, 'function'](A.ix[1], B.ix[2]), 1.0)
+        self.assertEqual(feature_table.loc[len(feature_table)-1, 'function'](A.loc[1], B.loc[2]), 1.0)
+    
+    def test_add_bb_feature_with_attrs(self):
+        A = read_csv_metadata(path_a)
+        B = read_csv_metadata(path_b, key='ID')
+        feature_table = get_features_for_matching(A, B, validate_inferred_attr_types=False)
+        def bb_fn(ltuple, rtuple):
+            return min(len(ltuple['name']), len(rtuple['name']))
+        len1 = len(feature_table)
+        attrs = {
+            'left_attribute': 'name',
+            'right_attribute': 'name'
+        }
+        add_blackbox_feature(feature_table, 'bb_attr_test', bb_fn, **attrs)
+        len2 = len(feature_table)
+        self.assertEqual(len1+1, len2)
+        added_feature = feature_table.iloc[len(feature_table)-1]
+        self.assertEqual(added_feature.feature_name, 'bb_attr_test')
+        self.assertEqual(added_feature.left_attribute, 'name')
+        self.assertEqual(added_feature.right_attribute, 'name')
+        self.assertEqual(added_feature.simfunction, None)
 
     @raises(AssertionError)
     def test_add_bb_feature_invalid_df(self):

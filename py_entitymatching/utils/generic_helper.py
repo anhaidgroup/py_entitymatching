@@ -67,7 +67,7 @@ def rem_nan(table, attr):
         raise KeyError('Input attr. not in the table columns')
 
     l = table.index.values[pd.np.where(table[attr].notnull())[0]]
-    return table.ix[l]
+    return table.loc[l]
 
 
 def list_drop_duplicates(lst):
@@ -177,7 +177,7 @@ def create_proj_dataframe(df, key, key_vals, attrs, col_names):
 
 
     df = df.set_index(key, drop=False)
-    df = df.ix[key_vals, attrs]
+    df = df.loc[key_vals, attrs]
     df.reset_index(drop=True, inplace=True)
     df.columns = col_names
     return df
@@ -225,11 +225,11 @@ def parse_conjunct(conjunct, feature_table):
     threshold = vals3[1].strip()
     ft_df = feature_table.set_index('feature_name')
 
-    return (ft_df.ix[feature_name]['is_auto_generated'],
-            ft_df.ix[feature_name]['simfunction'],
-            ft_df.ix[feature_name]['left_attribute'],
-            ft_df.ix[feature_name]['right_attribute'],
-            ft_df.ix[feature_name]['left_attr_tokenizer'],
-            ft_df.ix[feature_name]['right_attr_tokenizer'],
+    return (ft_df.loc[feature_name]['is_auto_generated'],
+            ft_df.loc[feature_name]['simfunction'],
+            ft_df.loc[feature_name]['left_attribute'],
+            ft_df.loc[feature_name]['right_attribute'],
+            ft_df.loc[feature_name]['left_attr_tokenizer'],
+            ft_df.loc[feature_name]['right_attr_tokenizer'],
             operator, threshold)
 

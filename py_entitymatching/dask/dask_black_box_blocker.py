@@ -418,7 +418,7 @@ class DaskBlackBoxBlocker(Blocker):
             >>> from py_entitymatching.dask.dask_black_box_blocker import DaskBlackBoxBlocker
             >>> bb = DaskBlackBoxBlocker()
             >>> bb.set_black_box_function(match_last_name)
-            >>> status = bb.block_tuples(A.ix[0], B.ix[0]) # A, B are input tables.
+            >>> status = bb.block_tuples(A.loc[0], B.loc[0]) # A, B are input tables.
 
         """
 
@@ -529,13 +529,13 @@ def _block_candset_split(c_df, l_df, r_df, l_key, r_key, fk_ltable, fk_rtable,
         # # get ltuple, try dictionary first, then dataframe
         row_lkey = row[l_id_pos]
         if row_lkey not in l_dict:
-            l_dict[row_lkey] = l_df.ix[row_lkey]
+            l_dict[row_lkey] = l_df.loc[row_lkey]
         ltuple = l_dict[row_lkey]
 
         # # get rtuple, try dictionary first, then dataframe
         row_rkey = row[r_id_pos]
         if row_rkey not in r_dict:
-            r_dict[row_rkey] = r_df.ix[row_rkey]
+            r_dict[row_rkey] = r_df.loc[row_rkey]
         rtuple = r_dict[row_rkey]
 
         # # apply the black box function to the tuple pair

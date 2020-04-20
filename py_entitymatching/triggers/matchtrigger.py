@@ -233,8 +233,8 @@ class MatchTrigger(object):
         idx = 0
         for row in input_table.itertuples(index=False):
             if row[label_idx] != self.value_to_set:
-                l_row = l_tbl.ix[row[lid_idx]]
-                r_row = r_tbl.ix[row[rid_idx]]
+                l_row = l_tbl.loc[row[lid_idx]]
+                r_row = r_tbl.loc[row[rid_idx]]
                 res = self.apply_rules(l_row, r_row)
                 if res == self.cond_status:
                     table.iat[idx, label_idx] = self.value_to_set
