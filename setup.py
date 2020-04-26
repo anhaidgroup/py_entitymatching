@@ -121,7 +121,7 @@ if __name__ == "__main__":
             # dependencies such as py_stringmatching, joblib, pyprind
             'cloudpickle >= 0.2.1',
             'pyparsing >= 2.1.4',
-            'scikit-learn >= 0.18',
+            'scikit-learn >= 0.18,<0.22',
             'scipy',
             'numpy==1.16.2'
         ],
