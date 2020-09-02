@@ -10,7 +10,7 @@ import pandas as pd
 import pyprind
 import tempfile
 
-from cloudpickle import cloudpickle
+import cloudpickle
 from joblib import Parallel
 from joblib import delayed
 
