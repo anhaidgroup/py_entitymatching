@@ -1,5 +1,8 @@
 
 environment:
+  global:
+    # Appveyor machines now come with miniconda
+    CONDA_INSTALL_LOCN: "C:\\Miniconda-x64"
 
   matrix:
 
@@ -25,8 +28,7 @@ environment:
 
 install:
   # this installs the appropriate Miniconda (Py2/Py3, 32/64 bit)
-  - powershell .\\continuous-integration\\appveyor\\install.ps1
-  - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
+  - SET PATH=%CONDA_INSTALL_LOCN%;%CONDA_INSTALL_LOCN%\Scripts;%PATH%
 
   # Don't install from requirements-pip.txt, python-coveralls has broken dependencies on windows it seems.
   - conda install --yes setuptools nose numpy pip coverage scipy pandas pyparsing six scikit-learn Cython cloudpickle joblib ipython
