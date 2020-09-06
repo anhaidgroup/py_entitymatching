@@ -10,21 +10,25 @@ environment:
       PYTHON_VERSION: "2.7"
       PYTHON_ARCH: "64"
       CONDA_PY: "27"
+      APP_CONDA_PY: "2.7.18"
 
     - PYTHON: "C:\\Python35_64"
       PYTHON_VERSION: "3.5"
       PYTHON_ARCH: "64"
       CONDA_PY: "35"
+      APP_CONDA_PY: "3.5.10"
       
     - PYTHON: "C:\\Python36_64"
       PYTHON_VERSION: "3.6"
       PYTHON_ARCH: "64"
       CONDA_PY: "36"
+      APP_CONDA_PY: "3.6.12"
 
     - PYTHON: "C:\\Python37_64"
       PYTHON_VERSION: "3.7"
       PYTHON_ARCH: "64"
       CONDA_PY: "37"
+      APP_CONDA_PY: "3.7.9"
 
 install:
   # this installs the appropriate Miniconda (Py2/Py3, 32/64 bit)
