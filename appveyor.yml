@@ -35,8 +35,8 @@ install:
   # this installs the appropriate Miniconda (Py2/Py3, 32/64 bit)
   - SET PATH=%CONDA_INSTALL_LOCN%;%CONDA_INSTALL_LOCN%\Scripts;%PATH%
   
-  # Get linking errors for Python 3.6; seems like it might be due to this
-  - conda config --set auto_update_conda false
+  # Get linking errors for Python 3.6; does this help?
+  - conda clean --all --yes
 
   # Don't install from requirements-pip.txt, python-coveralls has broken dependencies on windows it seems.
   - conda install --yes setuptools nose numpy pip coverage scipy pandas pyparsing six scikit-learn Cython cloudpickle joblib ipython
