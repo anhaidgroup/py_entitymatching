@@ -5,6 +5,7 @@ import logging
 from collections import OrderedDict
 
 import pandas as pd
+import numpy as np
 from sklearn.model_selection import KFold, cross_val_score
 
 from py_entitymatching.utils.catalog_helper import check_attrs_present
@@ -125,15 +126,15 @@ def select_matcher(matchers, x=None, y=None, table=None, exclude_attrs=None,
             # Fill a dictionary based on the matcher and the scores.
             val_list = [matcher.get_name(), matcher, k]
             val_list.extend(scores)
-            val_list.append(pd.np.mean(scores))
+            val_list.append(np.mean(scores))
             d = OrderedDict(zip(header, val_list))
             dict_list.append(d)
             # Create a list of the mean scores for each matcher
-            mean_score_list.append(pd.np.mean(scores))
+            mean_score_list.append(np.mean(scores))
             # Select the matcher based on the mean score, but only for metric_to_select_matcher
-            if met == metric_to_select_matcher and pd.np.mean(scores) > max_score:
+            if met == metric_to_select_matcher and np.mean(scores) > max_score:
                 sel_matcher = m
-                max_score = pd.np.mean(scores)
+                max_score = np.mean(scores)
         # Create a DataFrame based on the list of dictionaries created
         stats = pd.DataFrame(dict_list)
         stats = stats[header]
@@ -194,7 +195,7 @@ def _get_xy_data_prj(x, y):
             'Input table contains "_id". Removing this column for processing')
         # Get the values  from the DataFrame
         x = x.values
-        x = pd.np.delete(x, 0, 1)
+        x = np.delete(x, 0, 1)
     else:
         x = x.values
 

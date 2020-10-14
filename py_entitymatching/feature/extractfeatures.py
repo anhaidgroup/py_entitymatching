@@ -7,6 +7,7 @@ import multiprocessing
 import os
 
 import pandas as pd
+import numpy as np
 import pyprind
 import tempfile
 
@@ -154,7 +155,7 @@ def extract_feature_vecs(candset, attrs_before=None, feature_table=None,
 
     n_procs = get_num_procs(n_jobs, len(candset))
 
-    c_splits = pd.np.array_split(candset, n_procs)
+    c_splits = np.array_split(candset, n_procs)
 
     pickled_obj = cloudpickle.dumps(feature_table)
 

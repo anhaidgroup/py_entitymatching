@@ -1,6 +1,7 @@
 import logging
 
 import pandas as pd
+import numpy as np
 import pyprind
 import six
 
@@ -205,8 +206,8 @@ class DaskAttrEquivalenceBlocker(Blocker):
                                           l_output_prefix, r_output_prefix,
                                           allow_missing)
         else:
-            l_splits = pd.np.array_split(l_df, n_ltable_chunks)
-            r_splits = pd.np.array_split(r_df, n_rtable_chunks)
+            l_splits = np.array_split(l_df, n_ltable_chunks)
+            r_splits = np.array_split(r_df, n_rtable_chunks)
             c_splits = []
 
             for l in l_splits:
@@ -356,7 +357,7 @@ class DaskAttrEquivalenceBlocker(Blocker):
                                          l_block_attr, r_block_attr, fk_ltable,
                                          fk_rtable, allow_missing, show_progress)
         else:
-            c_splits = pd.np.array_split(candset, n_chunks)
+            c_splits = np.array_split(candset, n_chunks)
 
             valid_splits = []
             for i in range(len(c_splits)):
@@ -461,8 +462,8 @@ class DaskAttrEquivalenceBlocker(Blocker):
                                      l_output_prefix, r_output_prefix):
 
         l_df.is_copy, r_df.is_copy = False, False  # to avoid setwithcopy warning
-        l_df['ones'] = pd.np.ones(len(l_df))
-        r_df['ones'] = pd.np.ones(len(r_df))
+        l_df['ones'] = np.ones(len(l_df))
+        r_df['ones'] = np.ones(len(r_df))
 
         # find ltable records with missing value in l_block_attr
         l_df_missing = l_df[pd.isnull(l_df[l_block_attr])]

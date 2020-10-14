@@ -2,6 +2,7 @@ import logging
 from collections import OrderedDict
 
 import pandas as pd
+import numpy as np
 import pyprind
 import six
 from joblib import Parallel, delayed
@@ -460,7 +461,7 @@ class RuleBasedBlocker(Blocker):
                                                         show_progress)
         else:
             # multiprocessing
-            c_splits = pd.np.array_split(c_df, n_procs)
+            c_splits = np.array_split(c_df, n_procs)
             valid_splits = Parallel(n_jobs=n_procs)(
                 delayed(_block_candset_excluding_rule_split)(c_splits[i],
                                                              l_df, r_df,
@@ -506,8 +507,8 @@ class RuleBasedBlocker(Blocker):
         else:
             # multiprocessing
             m, n = self.get_split_params(n_procs, len(l_df), len(r_df))
-            l_splits = pd.np.array_split(l_df, m)
-            r_splits = pd.np.array_split(r_df, n)
+            l_splits = np.array_split(l_df, m)
+            r_splits = np.array_split(r_df, n)
             c_splits = Parallel(n_jobs=m * n)(
                 delayed(_block_tables_split)(l_splits[i], r_splits[j],
                                              l_key, r_key,

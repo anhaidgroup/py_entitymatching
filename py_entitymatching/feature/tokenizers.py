@@ -5,6 +5,7 @@ This module contains the tokenizer functions supported by py_entitymatching.
 import logging
 
 import pandas as pd
+import numpy as np
 import six
 
 import py_stringmatching as sm
@@ -208,7 +209,7 @@ def tok_qgram(input_string, q):
     """
 
     if pd.isnull(input_string):
-        return pd.np.NaN
+        return np.NaN
 
     input_string = gh.convert_to_str_unicode(input_string)
     measure = sm.QgramTokenizer(qval=q)
@@ -242,7 +243,7 @@ def tok_delim(input_string, d):
     """
 
     if pd.isnull(input_string):
-        return pd.np.NaN
+        return np.NaN
 
     input_string = gh.convert_to_str_unicode(input_string)
 
@@ -274,7 +275,7 @@ def tok_wspace(input_string):
 
     """
     if pd.isnull(input_string):
-        return pd.np.NaN
+        return np.NaN
 
     # input_string = remove_non_ascii(input_string)
     input_string = gh.convert_to_str_unicode(input_string)
@@ -306,7 +307,7 @@ def tok_alphabetic(input_string):
 
     """
     if pd.isnull(input_string):
-        return pd.np.NaN
+        return np.NaN
     measure = sm.AlphabeticTokenizer()
 
     input_string = gh.convert_to_str_unicode(input_string)
@@ -337,7 +338,7 @@ def tok_alphanumeric(input_string):
 
     """
     if pd.isnull(input_string):
-      return pd.np.NaN
+      return np.NaN
 
     input_string = gh.convert_to_str_unicode(input_string)
 

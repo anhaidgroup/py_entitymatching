@@ -9,6 +9,7 @@ import re
 from collections import Counter
 
 import pandas as pd
+import numpy as np
 from dask import delayed
 from dask.diagnostics import ProgressBar
 
@@ -144,7 +145,7 @@ def dask_down_sample(ltable, rtable, size, y_param, show_progress=True, verbose=
     if n_ltable_chunks == -1:
         n_ltable_chunks = get_num_cores()
 
-    ltable_chunks = pd.np.array_split(proj_ltable, n_ltable_chunks)
+    ltable_chunks = np.array_split(proj_ltable, n_ltable_chunks)
     preprocessed_tokenized_tbl = []
 
     # Use Dask to preprocess and tokenize strings.
@@ -188,7 +189,7 @@ def dask_down_sample(ltable, rtable, size, y_param, show_progress=True, verbose=
     if n_sample_rtable_chunks == -1:
         n_sample_rtable_chunks = get_num_cores()
 
-    rtable_chunks = pd.np.array_split(proj_rtable_sampled, n_sample_rtable_chunks)
+    rtable_chunks = np.array_split(proj_rtable_sampled, n_sample_rtable_chunks)
     probe_result = []
 
     # Create the DAG

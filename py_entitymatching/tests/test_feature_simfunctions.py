@@ -2,6 +2,7 @@ from functools import partial
 from nose.tools import *
 import unittest
 import pandas as pd
+import numpy as np
 import six
 
 import py_entitymatching.feature.simfunctions as sim
@@ -28,7 +29,7 @@ def test_invalid_input_cases():
 
                     'exact_match': sim.exact_match, 'rel_diff': sim.rel_diff,
                     'abs_norm': sim.abs_norm}
-    inputs = {'None': None, 'pd.np.NaN': pd.np.NaN}
+    inputs = {'None': None, 'np.NaN': np.NaN}
 
     for name, measure in six.iteritems(sim_measures):
         for label1, input1 in six.iteritems(inputs):

@@ -2,6 +2,7 @@ import os
 from nose.tools import *
 import unittest
 import pandas as pd
+import numpy as np
 import six
 
 from py_entitymatching.utils.generic_helper import get_install_path
@@ -43,7 +44,7 @@ class LabelTableTestCases(unittest.TestCase):
         label_values = [0]*num_zeros
         label_values.extend([1]*num_ones)
         D = self._test_label_table(C, col_name, label_values)
-        self.assertEqual(pd.np.sum(D[col_name]), num_ones)
+        self.assertEqual(np.sum(D[col_name]), num_ones)
         p1, p2 = cm.get_all_properties(C), cm.get_all_properties(D)
         self.assertEqual(p1, p2)
 
@@ -56,7 +57,7 @@ class LabelTableTestCases(unittest.TestCase):
         label_values = [0]*num_zeros
         label_values.extend([1]*num_ones)
         D = self._test_label_table(C, col_name, label_values)
-        self.assertEqual(pd.np.sum(D[col_name]), num_ones)
+        self.assertEqual(np.sum(D[col_name]), num_ones)
         p1, p2 = cm.get_all_properties(C), cm.get_all_properties(D)
         self.assertEqual(p1, p2)
 
@@ -88,7 +89,7 @@ class LabelTableTestCases(unittest.TestCase):
         label_values = [0]*num_zeros
         label_values.extend([1]*num_ones)
         D = self._test_label_table(C, col_name, label_values)
-        self.assertEqual(pd.np.sum(D[col_name]), num_ones)
+        self.assertEqual(np.sum(D[col_name]), num_ones)
         p1, p2 = cm.get_all_properties(C), cm.get_all_properties(D)
         self.assertEqual(p1, p2)
 
@@ -103,7 +104,7 @@ class LabelTableTestCases(unittest.TestCase):
     #     label_values = [0]*num_zeros
     #     label_values.extend([1]*num_ones)
     #     D = self._test_label_table(C, col_name, label_values)
-    #     # self.assertEqual(pd.np.sum(D[col_name]), num_ones)
+    #     # self.assertEqual(np.sum(D[col_name]), num_ones)
     #     # p1, p2 = cm.get_all_properties(C), cm.get_all_properties(D)
     #     # self.assertEqual(p1, p2)
 

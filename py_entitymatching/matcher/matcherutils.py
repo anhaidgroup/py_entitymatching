@@ -7,6 +7,7 @@ import time
 from collections import OrderedDict
 
 import pandas as pd
+import numpy as np
 import sklearn.model_selection as ms
 from  sklearn.preprocessing import Imputer
 
@@ -95,7 +96,7 @@ def split_train_test(labeled_data, train_proportion=0.5,
     test_size = int(num_rows - train_size)
 
     # Use sk-learn to split the data
-    idx_values = pd.np.array(labeled_data.index.values)
+    idx_values = np.array(labeled_data.index.values)
     idx_train, idx_test = ms.train_test_split(idx_values, test_size=test_size,
                                               train_size=train_size,
                                               random_state=random_state)
@@ -220,7 +221,7 @@ def impute_table(table, exclude_attrs=None, missing_val='NaN',
 
     imp = Imputer(missing_values=missing_val, strategy=strategy, axis=axis)
     imp.fit(projected_table_values)
-    imp.statistics_[pd.np.isnan(imp.statistics_)] = val_all_nans
+    imp.statistics_[np.isnan(imp.statistics_)] = val_all_nans
     projected_table_values = imp.transform(projected_table_values)
     table_copy[feature_names] = projected_table_values
     # Update catalog

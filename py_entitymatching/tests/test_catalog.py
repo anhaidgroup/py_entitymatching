@@ -2,6 +2,7 @@ import os
 from nose.tools import *
 import unittest
 import pandas as pd
+import numpy as np
 
 from py_entitymatching.utils.generic_helper import get_install_path
 import py_entitymatching.catalog.catalog_manager as cm
@@ -906,7 +907,7 @@ class CatalogManagerTestCases(unittest.TestCase):
         A = pd.read_csv(path_a)
         B = pd.read_csv(path_b)
         C = pd.read_csv(path_c)
-        C.loc[0, 'ltable_ID'] = pd.np.NaN
+        C.loc[0, 'ltable_ID'] = np.NaN
         status = ch.check_fk_constraint(C, 'ltable_ID', A, 'ID')
         self.assertEqual(status, False)
 
