@@ -1,39 +1,56 @@
 
 environment:
+  global:
+    CONDA_INSTALL_LOCN: "C:\\Miniconda-x64"
 
   matrix:
-
     - PYTHON: "C:\\Python27_64"
       PYTHON_VERSION: "2.7"
       PYTHON_ARCH: "64"
       CONDA_PY: "27"
+      CONDA_NPY: "16"
+      APP_CONDA_PY: "2.7.18"
 
     - PYTHON: "C:\\Python35_64"
       PYTHON_VERSION: "3.5"
       PYTHON_ARCH: "64"
       CONDA_PY: "35"
+      CONDA_NPY: "19"
+      APP_CONDA_PY: "3.5.10"
       
     - PYTHON: "C:\\Python36_64"
       PYTHON_VERSION: "3.6"
       PYTHON_ARCH: "64"
       CONDA_PY: "36"
+      CONDA_NPY: "19"
+      APP_CONDA_PY: "3.6.12"
 
     - PYTHON: "C:\\Python37_64"
       PYTHON_VERSION: "3.7"
       PYTHON_ARCH: "64"
       CONDA_PY: "37"
+      CONDA_NPY: "19"
+      APP_CONDA_PY: "3.7.9"
+    
+platform:
+  - x64
 
 install:
-  # this installs the appropriate Miniconda (Py2/Py3, 32/64 bit)
-  - powershell .\\continuous-integration\\appveyor\\install.ps1
-  - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
+  - SET PATH=%CONDA_INSTALL_LOCN%;%CONDA_INSTALL_LOCN%\Scripts;%PATH%
+  
+  # Config
+  - conda config --set always_yes yes
+  - conda update --quiet conda
+  - conda config --set restore_free_channel true
 
-  # Don't install from requirements-pip.txt, python-coveralls has broken dependencies on windows it seems.
-  - conda install --yes setuptools nose numpy pip coverage scipy pandas pyparsing six scikit-learn Cython cloudpickle joblib ipython
+  # Install dependencies
+  - conda install --yes setuptools nose pip coverage scipy pandas pyparsing six scikit-learn Cython cloudpickle joblib ipython
   - pip install -r requirements.txt
   - if %PYTHON_VERSION%==3.5 (pip install PyQt5)
   - if %PYTHON_VERSION%==3.6 (pip install PyQt5)
   - if %PYTHON_VERSION%==3.7 (pip install PyQt5)
+  
+  # Build extensions
   - python setup.py build_ext --inplace
 
 build: false
@@ -46,6 +63,6 @@ test_script:
 
 on_success:
   # Could run coveralls here but will leave that to travis tests
-  - echo Build succesful!
+  - echo Build successful!
   #- coverage report
   # coveralls
