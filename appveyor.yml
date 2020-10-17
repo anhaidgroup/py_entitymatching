@@ -36,14 +36,14 @@ install:
   
   # Config
   - conda config --set always_yes yes
-  - conda update --quiet conda
+  - conda update -n base conda
   - conda config --set restore_free_channel true
 
   # Manage dependencies in a conda environment
   - conda create --yes -n py_entitymatching_test_env python=%PYTHON_VERSION% --no-default-packages
+  - conda activate py_entitymatching_test_env
 
   # Package dependencies
-  - pip install --upgrade pip
   - pip install -r requirements.txt
   - if %PYTHON_VERSION%==3.5 (pip install PyQt5)
   - if %PYTHON_VERSION%==3.6 (pip install PyQt5)
