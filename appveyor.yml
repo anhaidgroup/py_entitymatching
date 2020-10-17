@@ -36,12 +36,12 @@ install:
   
   # Config
   - conda config --set always_yes yes
-  - conda update -n base conda
+  - conda update -n base -c defaults conda
   - conda config --set restore_free_channel true
 
   # Manage dependencies in a conda environment
   - conda create --yes -n py_entitymatching_test_env python=%PYTHON_VERSION% --no-default-packages
-  - conda activate py_entitymatching_test_env
+  - source activate py_entitymatching_test_env
 
   # Package dependencies
   - pip install -r requirements.txt
