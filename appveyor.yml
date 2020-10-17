@@ -41,8 +41,7 @@ install:
 
   # Manage dependencies in a conda environment
   - conda create --yes -n py_entitymatching_test_env python=%PYTHON_VERSION% --no-default-packages
-  - conda init powershell
-  - conda activate py_entitymatching_test_env
+  - activate py_entitymatching_test_env
 
   # Package dependencies
   - pip install -r requirements.txt
@@ -59,7 +58,7 @@ install:
 build: false
 
 test_script:
-  - conda activate py_entitymatching_test_env
+  - activate py_entitymatching_test_env
   
   # Nosetests take care of unit tests
   - nosetests
