@@ -60,6 +60,9 @@ build: false
 test_script:
   - activate py_entitymatching_test_env
   
+  # Test dependencies
+  - pip install nose
+  
   # Nosetests take care of unit tests
   - nosetests
   
