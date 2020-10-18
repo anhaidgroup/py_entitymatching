@@ -45,6 +45,7 @@ install:
 
   # Package dependencies
   - python -m pip install --upgrade pip
+  - pip install "numpy<1.17"
   - pip install -r requirements.txt
   - if %PYTHON_VERSION%==3.5 (pip install PyQt5)
   - if %PYTHON_VERSION%==3.6 (pip install PyQt5)
