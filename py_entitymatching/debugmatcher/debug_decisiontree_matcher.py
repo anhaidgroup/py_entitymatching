@@ -6,6 +6,7 @@ import logging
 import subprocess
 
 import pandas as pd
+import numpy as np
 import six
 from py_entitymatching.utils.validation_helper import validate_object_type
 from sklearn.tree import export_graphviz
@@ -136,8 +137,8 @@ def _get_code(tree, feature_names, target_names,
             target = value[node]
             winning_target_name = None
             winning_target_count = None
-            for i, v in zip(pd.np.nonzero(target)[1],
-                            target[pd.np.nonzero(target)]):
+            for i, v in zip(np.nonzero(target)[1],
+                            target[np.nonzero(target)]):
                 target_name = target_names[i]
                 target_count = int(v)
                 if winning_target_count == None:

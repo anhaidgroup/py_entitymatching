@@ -2,6 +2,7 @@ import logging
 from collections import OrderedDict
 
 import pandas as pd
+import numpy as np
 import pyprind
 import six
 
@@ -484,7 +485,7 @@ class DaskRuleBasedBlocker(Blocker):
                                                         show_progress)
         else:
             # multiprocessing
-            c_splits = pd.np.array_split(c_df, n_chunks)
+            c_splits = np.array_split(c_df, n_chunks)
 
             valid_splits = []
 
@@ -546,8 +547,8 @@ class DaskRuleBasedBlocker(Blocker):
         else:
             # multiprocessing
             # m, n = self.get_split_params(n_procs, len(l_df), len(r_df))
-            l_splits = pd.np.array_split(l_df, n_ltable_chunks)
-            r_splits = pd.np.array_split(r_df, n_rtable_chunks)
+            l_splits = np.array_split(l_df, n_ltable_chunks)
+            r_splits = np.array_split(r_df, n_rtable_chunks)
 
             c_splits = []
             for i in range(len(l_splits)):

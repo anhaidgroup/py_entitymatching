@@ -5,8 +5,8 @@ import math
 import multiprocessing
 import time
 
-import numpy as np
 import pandas as pd
+import numpy as np
 from dask import delayed
 from dask.diagnostics import ProgressBar
 
@@ -168,7 +168,7 @@ def execute(ltable, rtable, y_param, seed, should_rem_puncs,
                             rem_stop_words=should_rem_stop_words, rem_puncs = should_rem_puncs, n_ltable_chunks=n_ltable_chunks, n_rtable_chunks=n_rtable_chunks)
         t2 = time.time()
         times.append(t2-t1)
-    return pd.np.mean(times)
+    return np.mean(times)
 
 
 def should_swap(orig_order, swap_order,  y_param, seed, should_rem_puncs,
@@ -327,12 +327,12 @@ def sample_ltable(table, should_rem_puncs, should_rem_stop_words, n_bins,
     str_lens += [max(str_lens) + 1]
 
     # bin the string lengths
-    freq, edges = pd.np.histogram(str_lens, bins=n_bins)
+    freq, edges = np.histogram(str_lens, bins=n_bins)
 
     # compute the bin to which the string length map to
     bins = [[] for _ in range(n_bins)]
     keys = sorted(group_ids_len.keys())
-    positions = pd.np.digitize(keys, edges)
+    positions = np.digitize(keys, edges)
 
     # compute the number of entries in each bin
     for i in range(len(keys)):
@@ -352,7 +352,7 @@ def sample_ltable(table, should_rem_puncs, should_rem_stop_words, n_bins,
         num_tuples = num_tups_from_each_bin[i]
         if len_of_bins[i]:
             np.random.seed(seed)
-            tmp_samples = pd.np.random.choice(bins[i], num_tuples, replace=False)
+            tmp_samples = np.random.choice(bins[i], num_tuples, replace=False)
             if len(tmp_samples):
                 sampled.extend(tmp_samples)
 
@@ -414,7 +414,7 @@ def sample_rtable(table, should_rem_puncs, should_rem_stop_words, n_bins,
     counts = list(cnt_df['count'].values)
     counts += [max(counts) + 1]
 
-    freq, edges = pd.np.histogram(counts, bins=n_bins)
+    freq, edges = np.histogram(counts, bins=n_bins)
 
 
     # get the number of samples to be selected from each bin
@@ -423,7 +423,7 @@ def sample_rtable(table, should_rem_puncs, should_rem_stop_words, n_bins,
     # compute the bin to which the string length map to
     bins = [[] for _ in range(n_bins)]
     keys = sorted(cnt_ids.keys())
-    positions = pd.np.digitize(keys, edges)
+    positions = np.digitize(keys, edges)
 
     # compute the number of entries in each bin
     for i in range(len(keys)):
@@ -443,7 +443,7 @@ def sample_rtable(table, should_rem_puncs, should_rem_stop_words, n_bins,
         num_tuples = num_tups_from_each_bin[i]
         if len_of_bins[i]:
             np.random.seed(seed)
-            tmp_samples = pd.np.random.choice(bins[i], num_tuples, replace=False)
+            tmp_samples = np.random.choice(bins[i], num_tuples, replace=False)
             if len(tmp_samples):
                 sampled.extend(tmp_samples)
 
@@ -538,7 +538,7 @@ def _down_sample(ltable, rtable, y_param, show_progress=True, verbose=False,
     if n_ltable_chunks == -1:
         n_ltable_chunks = multiprocessing.cpu_count()
 
-    ltable_chunks = pd.np.array_split(proj_ltable, n_ltable_chunks)
+    ltable_chunks = np.array_split(proj_ltable, n_ltable_chunks)
     preprocessed_tokenized_tbl = []
     start_row_id = 0
     for i in range(len(ltable_chunks)):
@@ -570,7 +570,7 @@ def _down_sample(ltable, rtable, y_param, show_progress=True, verbose=False,
     if n_rtable_chunks == -1:
         n_rtable_chunks = multiprocessing.cpu_count()
 
-    rtable_chunks = pd.np.array_split(proj_rtable_sampled, n_rtable_chunks)
+    rtable_chunks = np.array_split(proj_rtable_sampled, n_rtable_chunks)
     probe_result = []
 
     for i in range(len(rtable_chunks)):

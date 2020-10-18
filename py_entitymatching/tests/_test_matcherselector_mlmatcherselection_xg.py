@@ -2,6 +2,7 @@ import os
 from nose.tools import *
 import unittest
 import pandas as pd
+import numpy as np
 import six
 
 from py_entitymatching.utils.generic_helper import get_install_path, list_diff
@@ -59,7 +60,7 @@ class MLMatcherSelectionTestCases(unittest.TestCase):
         self.assertEqual('Mean score', result_df.columns[len(result_df.columns) - 1])
         d = result_df.set_index('Name')
         p_max = d.loc[result['selected_matcher'].name, 'Mean score']
-        a_max = pd.np.max(d['Mean score'])
+        a_max = np.max(d['Mean score'])
         self.assertEqual(p_max, a_max)
 
     # @nottest
@@ -98,7 +99,7 @@ class MLMatcherSelectionTestCases(unittest.TestCase):
         self.assertEqual('Mean score', result_df.columns[len(result_df.columns) - 1])
         d = result_df.set_index('Name')
         p_max = d.loc[result['selected_matcher'].name, 'Mean score']
-        a_max = pd.np.max(d['Mean score'])
+        a_max = np.max(d['Mean score'])
         self.assertEqual(p_max, a_max)
 
     # @nottest
@@ -137,7 +138,7 @@ class MLMatcherSelectionTestCases(unittest.TestCase):
         self.assertEqual('Mean score', result_df.columns[len(result_df.columns) - 1])
         d = result_df.set_index('Name')
         p_max = d.loc[result['selected_matcher'].name, 'Mean score']
-        a_max = pd.np.max(d['Mean score'])
+        a_max = np.max(d['Mean score'])
         self.assertEqual(p_max, a_max)
 
     # @nottest
@@ -176,7 +177,7 @@ class MLMatcherSelectionTestCases(unittest.TestCase):
         self.assertEqual('Mean score', result_df.columns[len(result_df.columns) - 1])
         d = result_df.set_index('Name')
         p_max = d.loc[result['selected_matcher'].name, 'Mean score']
-        a_max = pd.np.max(d['Mean score'])
+        a_max = np.max(d['Mean score'])
         self.assertEqual(p_max, a_max)
 
     # @nottest
@@ -215,7 +216,7 @@ class MLMatcherSelectionTestCases(unittest.TestCase):
         self.assertEqual('Mean score', result_df.columns[len(result_df.columns) - 1])
         d = result_df.set_index('Name')
         p_max = d.loc[result['selected_matcher'].name, 'Mean score']
-        a_max = pd.np.max(d['Mean score'])
+        a_max = np.max(d['Mean score'])
         self.assertEqual(p_max, a_max)
 
 
@@ -254,7 +255,7 @@ class MLMatcherSelectionTestCases(unittest.TestCase):
         self.assertEqual('Mean score', result_df.columns[len(result_df.columns) - 1])
         d = result_df.set_index('Name')
         p_max = d.loc[result['selected_matcher'].name, 'Mean score']
-        a_max = pd.np.max(d['Mean score'])
+        a_max = np.max(d['Mean score'])
         self.assertEqual(p_max, a_max)
 
     def test_select_matcher_valid_7(self):
@@ -295,7 +296,7 @@ class MLMatcherSelectionTestCases(unittest.TestCase):
         self.assertEqual('Mean score', result_df.columns[len(result_df.columns) - 1])
         d = result_df.set_index('Name')
         p_max = d.loc[result['selected_matcher'].name, 'Mean score']
-        a_max = pd.np.max(d['Mean score'])
+        a_max = np.max(d['Mean score'])
         self.assertEqual(p_max, a_max)
 
 

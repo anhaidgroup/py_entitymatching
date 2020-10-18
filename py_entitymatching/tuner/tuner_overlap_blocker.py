@@ -172,7 +172,7 @@ def execute(ob_obj, ltable, rtable, l_overlap_attr, r_overlap_attr, rem_stop_wor
                                 n_rtable_chunks=n_rtable_chunks, show_progress=False)
         t2 = time.time()
         times.append(t2-t1)
-    return pd.np.mean(times)
+    return np.mean(times)
 
 
 
@@ -336,12 +336,12 @@ def sample_ltable(table, key, block_attr, should_rem_stop_words, ob_obj, n_bins,
     str_lens += [max(str_lens) + 1]
 
     # bin the string lengths
-    freq, edges = pd.np.histogram(str_lens, bins=n_bins)
+    freq, edges = np.histogram(str_lens, bins=n_bins)
 
     # compute the bin to which the string length map to
     bins = [[] for _ in range(n_bins)]
     keys = sorted(group_ids_len.keys())
-    positions = pd.np.digitize(keys, edges)
+    positions = np.digitize(keys, edges)
 
     # compute the number of entries in each bin
     for i in range(len(keys)):
@@ -361,7 +361,7 @@ def sample_ltable(table, key, block_attr, should_rem_stop_words, ob_obj, n_bins,
         num_tuples = num_tups_from_each_bin[i]
         if len_of_bins[i]:
             np.random.seed(seed)
-            tmp_samples = pd.np.random.choice(bins[i], num_tuples, replace=False)
+            tmp_samples = np.random.choice(bins[i], num_tuples, replace=False)
             if len(tmp_samples):
                 sampled.extend(tmp_samples)
 
@@ -409,7 +409,7 @@ def sample_rtable(table, key, overlap_attr, tokenizer,
     counts = list(cnt_df['count'].values)
     counts += [max(counts) + 1]
 
-    freq, edges = pd.np.histogram(counts, bins=n_bins)
+    freq, edges = np.histogram(counts, bins=n_bins)
 
     # get the number of samples to be selected from each bin
     num_samples = int(math.floor(sample_proportion * len(table)))
@@ -417,7 +417,7 @@ def sample_rtable(table, key, overlap_attr, tokenizer,
     # compute the bin to which the string length map to
     bins = [[] for _ in range(n_bins)]
     keys = sorted(cnt_ids.keys())
-    positions = pd.np.digitize(keys, edges)
+    positions = np.digitize(keys, edges)
 
     # compute the number of entries in each bin
     for i in range(len(keys)):
@@ -437,7 +437,7 @@ def sample_rtable(table, key, overlap_attr, tokenizer,
         num_tuples = num_tups_from_each_bin[i]
         if len_of_bins[i]:
             np.random.seed(seed)
-            tmp_samples = pd.np.random.choice(bins[i], num_tuples, replace=False)
+            tmp_samples = np.random.choice(bins[i], num_tuples, replace=False)
             if len(tmp_samples):
                 sampled.extend(tmp_samples)
 

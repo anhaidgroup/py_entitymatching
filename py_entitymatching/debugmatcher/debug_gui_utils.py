@@ -3,7 +3,7 @@ This module contains utility functions for debugging matchers.
 """
 import pandas as pd
 from collections import OrderedDict
-# import numpy as np
+import numpy as np
 
 import py_entitymatching.catalog.catalog_manager as cm
 
@@ -126,8 +126,8 @@ def _get_code_vis(tree, feature_names, target_names,
             target = value[node]
             winning_target_name = None
             winning_target_count = None
-            for i, v in zip(pd.np.nonzero(target)[1],
-                            target[pd.np.nonzero(target)]):
+            for i, v in zip(np.nonzero(target)[1],
+                            target[np.nonzero(target)]):
                 target_name = target_names[i]
                 target_count = int(v)
                 if winning_target_count == None:

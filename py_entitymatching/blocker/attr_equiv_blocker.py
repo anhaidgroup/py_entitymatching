@@ -1,6 +1,7 @@
 import logging
 
 import pandas as pd
+import numpy as np
 import pyprind
 import six
 from joblib import Parallel, delayed
@@ -185,8 +186,8 @@ class AttrEquivalenceBlocker(Blocker):
         else:
             # multiprocessing
             m, n = self.get_split_params(n_procs, len(l_df), len(r_df))
-            l_splits = pd.np.array_split(l_df, m)
-            r_splits = pd.np.array_split(r_df, n)
+            l_splits = np.array_split(l_df, m)
+            r_splits = np.array_split(r_df, n)
             c_splits = Parallel(n_jobs=m * n)(
                 delayed(_block_tables_split)(l, r, l_key, r_key,
                                              l_block_attr, r_block_attr,
@@ -335,7 +336,7 @@ class AttrEquivalenceBlocker(Blocker):
                                          l_block_attr, r_block_attr, fk_ltable,
                                          fk_rtable, allow_missing, show_progress)
         else:
-            c_splits = pd.np.array_split(candset, n_procs)
+            c_splits = np.array_split(candset, n_procs)
             valid_splits = Parallel(n_jobs=n_procs)(
                 delayed(_block_candset_split)(c_splits[i],
                                               l_df, r_df,
@@ -431,8 +432,8 @@ class AttrEquivalenceBlocker(Blocker):
                                      l_output_prefix, r_output_prefix):
 
         l_df.is_copy, r_df.is_copy = False, False  # to avoid setwithcopy warning
-        l_df['ones'] = pd.np.ones(len(l_df))
-        r_df['ones'] = pd.np.ones(len(r_df))
+        l_df['ones'] = np.ones(len(l_df))
+        r_df['ones'] = np.ones(len(r_df))
 
         # find ltable records with missing value in l_block_attr
         l_df_missing = l_df[pd.isnull(l_df[l_block_attr])]

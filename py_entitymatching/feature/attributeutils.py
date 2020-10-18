@@ -4,6 +4,7 @@ This module contains some utility functions for attributes in the DataFrame.
 import logging
 
 import pandas as pd
+import numpy as np
 import six
 
 from py_entitymatching.utils.validation_helper import validate_object_type
@@ -188,7 +189,7 @@ def _get_type(column):
         # the number of types is 1.
         returned_type = type_list[0]
         # Check if the type is boolean, if so return boolean
-        if returned_type == bool or returned_type == pd.np.bool_:
+        if returned_type == bool or returned_type == np.bool_:
             return 'boolean'
 
         # Check if the type is string, if so identify the subtype under it.
@@ -221,4 +222,4 @@ def _len_handle_nan(input_list):
     if isinstance(input_list, list):
         return len(input_list)
     else:
-        return pd.np.NaN
+        return np.NaN

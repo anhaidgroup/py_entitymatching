@@ -5,6 +5,7 @@ from dask.diagnostics import ProgressBar
 import logging
 import multiprocessing
 import pandas as pd
+import numpy as np
 import re
 import six
 import string
@@ -237,7 +238,7 @@ class DaskOverlapBlocker(Blocker):
             n_ltable_chunks = multiprocessing.cpu_count()
 
 
-        ltable_chunks = pd.np.array_split(ltable, n_ltable_chunks)
+        ltable_chunks = np.array_split(ltable, n_ltable_chunks)
 
         # preprocess/tokenize ltable
         if word_level == True:
@@ -278,7 +279,7 @@ class DaskOverlapBlocker(Blocker):
         if n_rtable_chunks == -1:
             n_rtable_chunks = multiprocessing.cpu_count()
 
-        rtable_chunks = pd.np.array_split(rtable, n_rtable_chunks)
+        rtable_chunks = np.array_split(rtable, n_rtable_chunks)
 
         # Construct the DAG for probing
         probe_result = []
@@ -508,7 +509,7 @@ class DaskOverlapBlocker(Blocker):
 
 
         n_chunks = get_num_partitions(n_chunks, len(candset))
-        c_splits = pd.np.array_split(candset, n_chunks)
+        c_splits = np.array_split(candset, n_chunks)
         valid_splits = []
 
         # Create DAG

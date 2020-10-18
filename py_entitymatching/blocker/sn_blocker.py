@@ -2,6 +2,7 @@ import logging
 
 import sys
 import pandas as pd
+import numpy as np
 import pyprind
 import six
 import warnings
@@ -190,8 +191,8 @@ class SortedNeighborhoodBlocker(Blocker):
             # Split l and r into n_procs chunks.
             # each core will get an l and an r, merge them, sort them.
 
-            l_splits = pd.np.array_split(ltable, n_procs)
-            r_splits = pd.np.array_split(rtable, n_procs)
+            l_splits = np.array_split(ltable, n_procs)
+            r_splits = np.array_split(rtable, n_procs)
 
             p_answer = Parallel(n_jobs=n_procs)(
                 delayed(_sn_block_tables_split)(l_splits[i], r_splits[i], l_key, r_key,

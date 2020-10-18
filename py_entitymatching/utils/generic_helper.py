@@ -3,6 +3,7 @@ import logging
 import os
 
 import pandas as pd
+import numpy as np
 import six
 
 import py_entitymatching.catalog.catalog_manager as cm
@@ -66,7 +67,7 @@ def rem_nan(table, attr):
         logger.error('Input attr not in the table columns')
         raise KeyError('Input attr. not in the table columns')
 
-    l = table.index.values[pd.np.where(table[attr].notnull())[0]]
+    l = table.index.values[np.where(table[attr].notnull())[0]]
     return table.loc[l]
 
 

@@ -2,6 +2,7 @@ from functools import partial
 from nose.tools import *
 import unittest
 import pandas as pd
+import numpy as np
 import six
 
 import py_entitymatching.feature.tokenizers as tok
@@ -52,11 +53,11 @@ class TokenizerTestCases(unittest.TestCase):
 
     def test_qgram_invalid(self):
         x = tok._make_tok_qgram(3)
-        self.assertEqual(pd.isnull(x(pd.np.NaN)), True)
+        self.assertEqual(pd.isnull(x(np.NaN)), True)
 
     def test_qgram_delim(self):
         x = tok._make_tok_delim(' ')
-        self.assertEqual(pd.isnull(x(pd.np.NaN)), True)
+        self.assertEqual(pd.isnull(x(np.NaN)), True)
 
     def test_tokqgram_valid(self):
         x = tok.tok_qgram('data science', 3)
@@ -68,9 +69,9 @@ class TokenizerTestCases(unittest.TestCase):
         self.assertEqual(len(x), 2)
 
     def test_tokqgram_invalid(self):
-        x = tok.tok_qgram(pd.np.NaN, 3)
+        x = tok.tok_qgram(np.NaN, 3)
         self.assertEqual(pd.isnull(x), True)
 
     def test_tokdelim_invalid(self):
-        x = tok.tok_delim(pd.np.NaN, ' ')
+        x = tok.tok_delim(np.NaN, ' ')
         self.assertEqual(pd.isnull(x), True)

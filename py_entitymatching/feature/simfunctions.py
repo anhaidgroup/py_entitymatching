@@ -4,6 +4,7 @@ This module contains similarity functions supported by py_entitymatching
 """
 
 import pandas as pd
+import numpy as np
 import six
 
 import py_stringmatching as sm
@@ -123,9 +124,9 @@ def affine(s1, s2):
         nan
     """
     if s1 is None or s2 is None:
-        return pd.np.NaN
+        return np.NaN
     if pd.isnull(s1) or pd.isnull(s2):
-        return pd.np.NaN
+        return np.NaN
 
     # Create the similarity measure object
     measure = sm.Affine()
@@ -172,9 +173,9 @@ def hamming_dist(s1, s2):
     """
 
     if s1 is None or s2 is None:
-        return pd.np.NaN
+        return np.NaN
     if pd.isnull(s1) or pd.isnull(s2):
-        return pd.np.NaN
+        return np.NaN
 
     # Create the similarity measure object
     measure = sm.HammingDistance()
@@ -210,9 +211,9 @@ def hamming_sim(s1, s2):
     """
 
     if s1 is None or s2 is None:
-        return pd.np.NaN
+        return np.NaN
     if pd.isnull(s1) or pd.isnull(s2):
-        return pd.np.NaN
+        return np.NaN
 
     # Create the similarity measure object
     measure = sm.HammingDistance()
@@ -247,9 +248,9 @@ def lev_dist(s1, s2):
     """
 
     if s1 is None or s2 is None:
-        return pd.np.NaN
+        return np.NaN
     if pd.isnull(s1) or pd.isnull(s2):
-        return pd.np.NaN
+        return np.NaN
 
     # Create the similarity measure object
     measure = sm.Levenshtein()
@@ -284,9 +285,9 @@ def lev_sim(s1, s2):
     """
 
     if s1 is None or s2 is None:
-        return pd.np.NaN
+        return np.NaN
     if pd.isnull(s1) or pd.isnull(s2):
-        return pd.np.NaN
+        return np.NaN
 
     # Create the similarity measure object
     measure = sm.Levenshtein()
@@ -320,9 +321,9 @@ def jaro(s1, s2):
     """
 
     if s1 is None or s2 is None:
-        return pd.np.NaN
+        return np.NaN
     if pd.isnull(s1) or pd.isnull(s2):
-        return pd.np.NaN
+        return np.NaN
 
     # Create the similarity measure object
     measure = sm.Jaro()
@@ -357,9 +358,9 @@ def jaro_winkler(s1, s2):
     """
 
     if s1 is None or s2 is None:
-        return pd.np.NaN
+        return np.NaN
     if pd.isnull(s1) or pd.isnull(s2):
-        return pd.np.NaN
+        return np.NaN
 
     # Create the similarity measure object
     measure = sm.JaroWinkler()
@@ -395,9 +396,9 @@ def needleman_wunsch(s1, s2):
     """
 
     if s1 is None or s2 is None:
-        return pd.np.NaN
+        return np.NaN
     if pd.isnull(s1) or pd.isnull(s2):
-        return pd.np.NaN
+        return np.NaN
 
     # Create the similarity measure object
     measure = sm.NeedlemanWunsch()
@@ -431,9 +432,9 @@ def smith_waterman(s1, s2):
     """
 
     if s1 is None or s2 is None:
-        return pd.np.NaN
+        return np.NaN
     if pd.isnull(s1) or pd.isnull(s2):
-        return pd.np.NaN
+        return np.NaN
 
     # Create the similarity measure object
     measure = sm.SmithWaterman()
@@ -468,15 +469,15 @@ def jaccard(arr1, arr2):
     """
 
     if arr1 is None or arr2 is None:
-        return pd.np.NaN
+        return np.NaN
     if not isinstance(arr1, list):
         arr1 = [arr1]
     if any(pd.isnull(arr1)):
-        return pd.np.NaN
+        return np.NaN
     if not isinstance(arr2, list):
         arr2 = [arr2]
     if any(pd.isnull(arr2)):
-        return pd.np.NaN
+        return np.NaN
     # Create jaccard measure object
     measure = sm.Jaccard()
     # Call a function to compute a similarity score
@@ -506,15 +507,15 @@ def cosine(arr1, arr2):
     """
 
     if arr1 is None or arr2 is None:
-        return pd.np.NaN
+        return np.NaN
     if not isinstance(arr1, list):
         arr1 = [arr1]
     if any(pd.isnull(arr1)):
-        return pd.np.NaN
+        return np.NaN
     if not isinstance(arr2, list):
         arr2 = [arr2]
     if any(pd.isnull(arr2)):
-        return pd.np.NaN
+        return np.NaN
     # Create cosine measure object
     measure = sm.Cosine()
     # Call the function to compute the cosine measure.
@@ -544,15 +545,15 @@ def overlap_coeff(arr1, arr2):
     """
 
     if arr1 is None or arr2 is None:
-        return pd.np.NaN
+        return np.NaN
     if not isinstance(arr1, list):
         arr1 = [arr1]
     if any(pd.isnull(arr1)):
-        return pd.np.NaN
+        return np.NaN
     if not isinstance(arr2, list):
         arr2 = [arr2]
     if any(pd.isnull(arr2)):
-        return pd.np.NaN
+        return np.NaN
     # Create overlap coefficient measure object
     measure = sm.OverlapCoefficient()
     # Call the function to return the overlap coefficient
@@ -581,15 +582,15 @@ def dice(arr1, arr2):
     """
 
     if arr1 is None or arr2 is None:
-        return pd.np.NaN
+        return np.NaN
     if not isinstance(arr1, list):
         arr1 = [arr1]
     if any(pd.isnull(arr1)):
-        return pd.np.NaN
+        return np.NaN
     if not isinstance(arr2, list):
         arr2 = [arr2]
     if any(pd.isnull(arr2)):
-        return pd.np.NaN
+        return np.NaN
 
     # Create Dice object
     measure = sm.Dice()
@@ -620,15 +621,15 @@ def monge_elkan(arr1, arr2):
     """
 
     if arr1 is None or arr2 is None:
-        return pd.np.NaN
+        return np.NaN
     if not isinstance(arr1, list):
         arr1 = [arr1]
     if any(pd.isnull(arr1)):
-        return pd.np.NaN
+        return np.NaN
     if not isinstance(arr2, list):
         arr2 = [arr2]
     if any(pd.isnull(arr2)):
-        return pd.np.NaN
+        return np.NaN
     # Create Monge-Elkan measure object
     measure = sm.MongeElkan()
     # Call the function to compute the Monge-Elkan measure
@@ -670,9 +671,9 @@ def exact_match(d1, d2):
         nan
     """
     if d1 is None or d2 is None:
-        return pd.np.NaN
+        return np.NaN
     if pd.isnull(d1) or pd.isnull(d2):
-        return pd.np.NaN
+        return np.NaN
     # Check if they match exactly
     if d1 == d2:
         return 1
@@ -705,14 +706,14 @@ def rel_diff(d1, d2):
     """
 
     if d1 is None or d2 is None:
-        return pd.np.NaN
+        return np.NaN
     if pd.isnull(d1) or pd.isnull(d2):
-        return pd.np.NaN
+        return np.NaN
     try:
         d1 = float(d1)
         d2 = float(d2)
     except ValueError:
-        return pd.np.NaN
+        return np.NaN
     if d1 == 0.0 and d2 == 0.0:
         return 0
     else:
@@ -748,14 +749,14 @@ def abs_norm(d1, d2):
     """
 
     if d1 is None or d2 is None:
-        return pd.np.NaN
+        return np.NaN
     if pd.isnull(d1) or pd.isnull(d2):
-        return pd.np.NaN
+        return np.NaN
     try:
         d1 = float(d1)
         d2 = float(d2)
     except ValueError:
-        return pd.np.NaN
+        return np.NaN
     if d1 == 0.0 and d2 == 0.0:
         return 0
     else:

@@ -4,8 +4,8 @@ all the ML-matchers.
 """
 import logging
 
-# import numpy as np
 import pandas as pd
+import numpy as np
 
 # import dask
 import dask
@@ -281,7 +281,7 @@ class DaskMLMatcher(Matcher):
 
             else:
                 predicted_results = []
-                splitted_tables = pd.np.array_split(table, n_chunks)
+                splitted_tables = np.array_split(table, n_chunks)
                 for i in range(len(splitted_tables)):
                     partial_result = delayed(self._predict)(table=splitted_tables[i],
                                                             exclude_attrs=exclude_attrs, target_attr=target_attr,
@@ -385,7 +385,7 @@ class DaskMLMatcher(Matcher):
             # Get the values from the DataFrame
             x = x.values
             # Remove the first column ('_id')
-            x = pd.np.delete(x, 0, 1)
+            x = np.delete(x, 0, 1)
         else:
             # Get the values from the DataFrame
             x = x.values
@@ -398,7 +398,7 @@ class DaskMLMatcher(Matcher):
                     'Removing this column for processing')
                 # Get the values from the DataFrame
                 y = y.values
-                y = pd.np.delete(y, 0, 1)
+                y = np.delete(y, 0, 1)
             else:
                 # Get the values from the DataFrame
                 y = y.values

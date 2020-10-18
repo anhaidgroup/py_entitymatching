@@ -15,6 +15,7 @@ import string
 from collections import Counter
 
 import pandas as pd
+import numpy as np
 import pyprind
 from numpy.random import RandomState
 
@@ -351,7 +352,7 @@ def down_sample(table_a, table_b, size, y_param, show_progress=True,
                                            len(table_a), s_inv_index, show_progress,
                                            seed, rem_stop_words, rem_puncs)
     else:
-        sample_table_splits = pd.np.array_split(sample_table_b, n_jobs)
+        sample_table_splits = np.array_split(sample_table_b, n_jobs)
         results = Parallel(n_jobs=n_jobs)(
             delayed(_probe_index_split)(sample_table_splits[job_index], y_param,
                                        len(table_a), s_inv_index,

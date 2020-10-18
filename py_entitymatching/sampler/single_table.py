@@ -5,6 +5,7 @@ This module contains sampling.rst related routines for a single table.
 import logging
 
 import pandas as pd
+import numpy as np
 import six
 
 import py_entitymatching.catalog.catalog_manager as cm
@@ -100,8 +101,8 @@ def sample_table(table, sample_size, replace=False, verbose=False):
                                       logger, verbose)
 
     # Get the sample set for the output table
-    sample_indices = pd.np.random.choice(len(table), sample_size,
-                                         replace=replace)
+    sample_indices = np.random.choice(len(table), sample_size,
+                                      replace=replace)
     # Sort the indices ordered by index value
     sample_indices = sorted(sample_indices)
     sampled_table = table.iloc[list(sample_indices)]

@@ -4,6 +4,7 @@ import time
 import sys
 
 import pandas as pd
+import numpy as np
 import pyprind
 from joblib import Parallel, delayed
 import cloudpickle as cp
@@ -186,8 +187,8 @@ class BlackBoxBlocker(Blocker):
         else:
             # multiprocessing
             m, n = self.get_split_params(n_procs, len(l_df), len(r_df))
-            l_splits = pd.np.array_split(l_df, m)
-            r_splits = pd.np.array_split(r_df, n)
+            l_splits = np.array_split(l_df, m)
+            r_splits = np.array_split(r_df, n)
             c_splits = Parallel(n_jobs=m*n)(delayed(_block_tables_split)(l_splits[i], r_splits[j],
                                                 l_key, r_key, 
                                                 l_output_attrs_1, r_output_attrs_1,
@@ -317,7 +318,7 @@ class BlackBoxBlocker(Blocker):
                                          black_box_function_pkl, show_progress)
         else:
             # multiprocessing
-            c_splits = pd.np.array_split(c_df, n_procs)
+            c_splits = np.array_split(c_df, n_procs)
             valid_splits = Parallel(n_jobs=n_procs)(delayed(_block_candset_split)(c_splits[i],
                                                             l_df, r_df,
                                                             l_key, r_key,

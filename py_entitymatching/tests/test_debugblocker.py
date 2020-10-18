@@ -1,8 +1,8 @@
 import os
 from nose.tools import *
 import unittest
-# import numpy as np
 import pandas as pd
+import numpy as np
 
 import py_entitymatching as em
 from py_entitymatching.utils.generic_helper import get_install_path
@@ -281,7 +281,7 @@ class DebugblockerTestCases(unittest.TestCase):
         self.assertEqual(B_wlist, expected_B_wlist)
 
     def test_get_feature_weight_3(self):
-        table = [[''], [pd.np.nan]]
+        table = [[''], [np.nan]]
         dataframe = pd.DataFrame(table)
         weight_list = db._get_feature_weight(dataframe)
         self.assertEqual(weight_list, [0.0])
@@ -383,7 +383,7 @@ class DebugblockerTestCases(unittest.TestCase):
         db._build_id_to_index_map(dataframe, key)
 
     def test_replace_nan_to_empty_1(self):
-        field = pd.np.nan
+        field = np.nan
         self.assertEqual(db._replace_nan_to_empty(field), '')
 
     def test_replace_nan_to_empty_2(self):
@@ -407,7 +407,7 @@ class DebugblockerTestCases(unittest.TestCase):
         self.assertEqual(actual_ret_column, expected_ret_column)
 
     def test_get_tokenized_column_2(self):
-        column = ['hello world', pd.np.nan, 'how are you',
+        column = ['hello world', np.nan, 'how are you',
                   '', 'this is a blocking debugger']
         actual_ret_column = db._get_tokenized_column(column)
         expected_ret_column = [['hello', 'world'], [''],
@@ -448,7 +448,7 @@ class DebugblockerTestCases(unittest.TestCase):
         self.assertEqual(actual_record_list, expected_record_list)
 
     def test_get_tokenized_table_3(self):
-        table = [[1, 'abc abc asdf', '123-3456-7890', pd.np.nan, '',
+        table = [[1, 'abc abc asdf', '123-3456-7890', np.nan, '',
                   '135 east  abc  st'],
                  [2, 'aaa bbb', '000-111-2222', '', '', '246  west abc st'],
                  [3, 'cc dd', '123-123-1231', 'cc', 'unknown', ' 246 west def st']]
