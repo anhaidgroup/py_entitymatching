@@ -1,0 +1,335 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>py_entitymatching.explorer.openrefine.openrefine_wrapper &mdash; py_entitymatching 0.3.3 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home" alt="Documentation Home"> py_entitymatching
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">How To Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../how_to_guide.html">How to Guide To Do Entity Matching</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../user_manual/whatisnew.html">What is New?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../user_manual/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../user_manual/overview.html">Overview of Supported EM Processes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../user_manual/guides.html">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../user_manual/datastructures.html">Data Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../user_manual/steps_supp_em_workflows.html">Steps of Supported EM Workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../user_manual/misc.html">Miscellaneous</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../user_manual/api/overview.html">Overview of Command Organization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../user_manual/api/actual_commands.html">Commands in py_entitymatching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../user_manual/api/actual_commands.html#experimental-commands">Experimental Commands</a></li>
+</ul>
+<p class="caption"><span class="caption-text">How to Contribute</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contributing.html">Contributing to py_entitymatching</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">py_entitymatching</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>py_entitymatching.explorer.openrefine.openrefine_wrapper</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for py_entitymatching.explorer.openrefine.openrefine_wrapper</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os.path</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">pandas</span>
+<span class="kn">import</span> <span class="nn">webbrowser</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">six</span>
+<span class="kn">from</span> <span class="nn">six.moves</span> <span class="kn">import</span> <span class="n">urllib</span>
+<span class="kn">import</span> <span class="nn">tempfile</span>
+<span class="kn">from</span> <span class="nn">py_entitymatching.utils.validation_helper</span> <span class="kn">import</span> <span class="n">validate_object_type</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+
+<div class="viewcode-block" id="data_explore_openrefine"><a class="viewcode-back" href="../../../../user_manual/api/data_exploration.html#py_entitymatching.data_explore_openrefine">[docs]</a><span class="k">def</span> <span class="nf">data_explore_openrefine</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">server</span><span class="o">=</span><span class="s1">&#39;http://127.0.0.1:3333&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Wrapper function for using OpenRefine. Gives user a GUI to examine and edit</span>
+<span class="sd">    the dataframe passed in using OpenRefine.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        df (Dataframe): The pandas dataframe to be explored with pandastable.</span>
+<span class="sd">        server (String): The address of the OpenRefine server (defaults to</span>
+<span class="sd">            http://127.0.0.1:3333).</span>
+<span class="sd">        name (String): The name given to the file and project in OpenRefine.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If `df` is not of type pandas DataFrame.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; import py_entitymatching as em</span>
+<span class="sd">        &gt;&gt;&gt; A = em.read_csv_metadata(&#39;path_to_csv_dir/table.csv&#39;, key=&#39;ID&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; em.data_explore_openrefine(A, name=&#39;Table&#39;)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Validate input parameters</span>
+    <span class="c1"># # We expect the df to be of type pandas DataFrame</span>
+    <span class="n">validate_object_type</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="s1">&#39;Input df&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">DataExploreOpenRefine</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">server</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+
+
+<span class="k">class</span> <span class="nc">DataExploreOpenRefine</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A wrapper for OpenRefine.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">server</span><span class="o">=</span><span class="s1">&#39;http://127.0.0.1:3333&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">server</span> <span class="o">=</span> <span class="n">server</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">server</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="n">server</span>
+        <span class="c1"># write the pandas frame to csv file</span>
+        <span class="c1"># create temp file</span>
+        <span class="n">__</span><span class="p">,</span> <span class="n">file_name</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mkstemp</span><span class="p">(</span><span class="n">suffix</span><span class="o">=</span><span class="s1">&#39;.csv&#39;</span><span class="p">)</span>
+        <span class="n">outfile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">fdopen</span><span class="p">(</span><span class="n">__</span><span class="p">,</span> <span class="s1">&#39;r+&#39;</span><span class="p">)</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">outfile</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">outfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">file_path</span> <span class="o">=</span> <span class="n">file_name</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">project_name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">project_name</span> <span class="o">=</span> <span class="n">file_name</span>
+
+        <span class="n">values</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;project-name&#39;</span><span class="p">:</span> <span class="n">project_name</span>
+        <span class="p">}</span>
+        <span class="n">outfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">&#39;r+&#39;</span><span class="p">)</span>
+        <span class="n">files</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;file&#39;</span><span class="p">:</span> <span class="n">outfile</span><span class="p">}</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">server</span> <span class="o">+</span> <span class="s1">&#39;/command/core/create-project-from-upload&#39;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">files</span><span class="o">=</span><span class="n">files</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">values</span><span class="p">)</span>
+        <span class="n">url_params</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">parse_qs</span><span class="p">(</span><span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">urlparse</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">query</span><span class="p">)</span>
+        <span class="n">outfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;project&#39;</span> <span class="ow">in</span> <span class="n">url_params</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">id</span> <span class="o">=</span> <span class="n">url_params</span><span class="p">[</span><span class="s1">&#39;project&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">project_name</span> <span class="o">=</span> <span class="n">project_name</span>
+            <span class="c1"># open the project in the webbrowser.</span>
+            <span class="n">webbrowser</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">server</span> <span class="o">+</span> <span class="s1">&#39;/project?project=&#39;</span> <span class="o">+</span> <span class="nb">id</span><span class="p">,</span> <span class="n">new</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">export_pandas_frame</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;tsv&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Exports the data from OpenRefine and transfers it a pandas Dataframe</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            format (String): Project format</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The new pandas frame with the data changed by the GUI operation</span>
+
+<span class="sd">         Examples:</span>
+<span class="sd">            &gt;&gt;&gt; import py_entitymatching as em</span>
+<span class="sd">            &gt;&gt;&gt; A = em.read_csv_metadata(&#39;path_to_csv_dir/table.csv&#39;, key=&#39;ID&#39;)</span>
+<span class="sd">            &gt;&gt;&gt; em.data_explore_openrefine(A, name=&#39;Table&#39;)</span>
+<span class="sd">            &gt;&gt;&gt; df = p.export_pandas_frame()</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">values</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;engine&#39;</span><span class="p">:</span> <span class="s1">&#39;{&quot;facets&quot;:[],&quot;mode&quot;:&quot;row-based&quot;}&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;project&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="s1">&#39;format&#39;</span><span class="p">:</span> <span class="nb">format</span>
+        <span class="p">}</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">server</span> <span class="o">+</span> <span class="s1">&#39;/command/core/export-rows/&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">project_name</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="nb">format</span><span class="p">,</span>
+                                 <span class="n">data</span><span class="o">=</span><span class="n">values</span><span class="p">)</span>
+        <span class="n">st</span> <span class="o">=</span> <span class="n">six</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">st</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">delete_project</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">df</span>
+
+    <span class="k">def</span> <span class="nf">delete_project</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Delete the openrefine project</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;project&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span>
+        <span class="p">}</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">server</span> <span class="o">+</span> <span class="s1">&#39;/command/core/delete-project&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">values</span><span class="p">)</span>
+        <span class="n">response_json</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+        <span class="k">return</span> <span class="s1">&#39;code&#39;</span> <span class="ow">in</span> <span class="n">response_json</span> <span class="ow">and</span> <span class="n">response_json</span><span class="p">[</span><span class="s1">&#39;code&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;ok&#39;</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2016, anhaidgroup
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

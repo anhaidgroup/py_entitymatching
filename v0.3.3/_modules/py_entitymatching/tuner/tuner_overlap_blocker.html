@@ -1,0 +1,678 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>py_entitymatching.tuner.tuner_overlap_blocker &mdash; py_entitymatching 0.3.3 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> py_entitymatching
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">How To Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../how_to_guide.html">How to Guide To Do Entity Matching</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/whatisnew.html">What is New?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/overview.html">Overview of Supported EM Processes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/guides.html">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/datastructures.html">Data Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/steps_supp_em_workflows.html">Steps of Supported EM Workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/misc.html">Miscellaneous</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/api/overview.html">Overview of Command Organization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/api/actual_commands.html">Commands in py_entitymatching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/api/actual_commands.html#experimental-commands">Experimental Commands</a></li>
+</ul>
+<p class="caption"><span class="caption-text">How to Contribute</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing to py_entitymatching</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">py_entitymatching</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>py_entitymatching.tuner.tuner_overlap_blocker</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for py_entitymatching.tuner.tuner_overlap_blocker</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">multiprocessing</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<span class="kn">import</span> <span class="nn">py_entitymatching.catalog.catalog_manager</span> <span class="k">as</span> <span class="nn">cm</span>
+<span class="kn">from</span> <span class="nn">py_entitymatching.dask.dask_overlap_blocker</span> <span class="kn">import</span> <span class="n">DaskOverlapBlocker</span>
+<span class="kn">from</span> <span class="nn">py_stringmatching.tokenizer.whitespace_tokenizer</span> <span class="kn">import</span> <span class="n">WhitespaceTokenizer</span>
+<span class="kn">from</span> <span class="nn">py_stringmatching.tokenizer.qgram_tokenizer</span> <span class="kn">import</span> <span class="n">QgramTokenizer</span>
+
+
+<div class="viewcode-block" id="tuner_overlap_blocker"><a class="viewcode-back" href="../../../user_manual/api/tuners.html#py_entitymatching.tuner.tuner_overlap_blocker.tuner_overlap_blocker">[docs]</a><span class="k">def</span> <span class="nf">tuner_overlap_blocker</span><span class="p">(</span><span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span> <span class="n">l_overlap_attr</span><span class="p">,</span> <span class="n">r_overlap_attr</span><span class="p">,</span>
+                          <span class="n">rem_stop_words</span><span class="p">,</span> <span class="n">q_val</span><span class="p">,</span> <span class="n">word_level</span><span class="p">,</span> <span class="n">overlap_size</span><span class="p">,</span> <span class="n">ob_obj</span><span class="p">,</span>
+                          <span class="n">n_bins</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">sample_proportion</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">1</span>
+                          <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    WARNING THIS COMMAND IS EXPERIMENTAL AND NOT TESTED. USE AT YOUR OWN RISK.</span>
+<span class="sd">    </span>
+<span class="sd">    Tunes the parameters for blocking two tables command implemented using Dask. </span>
+
+<span class="sd">    Given the input tables and the parameters for Dask-based overlap blocker command, </span>
+<span class="sd">    this command returns the configuration including whether the input tables need to </span>
+<span class="sd">    be swapped, the number of left table chunks, and the number of right table chunks. </span>
+<span class="sd">    It uses &quot;Staged Tuning&quot; approach to select the configuration setting. The key idea </span>
+<span class="sd">    of this approach select the configuration for one parameter at a time.</span>
+<span class="sd">    </span>
+<span class="sd">    Conceptually, this command performs the following steps. First, it samples the </span>
+<span class="sd">    left table and rtable using stratified sampling. Next, it uses the </span>
+<span class="sd">    sampled tables to decide if they need to be swapped or not (by running the down </span>
+<span class="sd">    sample command and comparing the runtimes). Next, it finds the number of rtable </span>
+<span class="sd">    partitions using the sampled tables (by trying the a fixed set of partitions and </span>
+<span class="sd">    comparing the runtimes). The number of partitions is selected to be the number </span>
+<span class="sd">    before which the runtime starts increasing. Then it finds the number of right table </span>
+<span class="sd">    partitions similar to selecting the number of left table partitions. while doing </span>
+<span class="sd">    this, set the number of right table partitions is set to the value found in the </span>
+<span class="sd">    previous step. Finally, it returns the configuration setting back to the user as a </span>
+<span class="sd">    triplet (x, y, z) where x indicates if the tables need to be swapped or not, </span>
+<span class="sd">    y indicates the number of left table partitions (if the tables need to be swapped, </span>
+<span class="sd">    then this indicates the number of left table partitions after swapping), </span>
+<span class="sd">    and z indicates the number of right table partitions. </span>
+<span class="sd">    </span>
+<span class="sd">    Args:        </span>
+<span class="sd">        ltable (DataFrame): The left input table.</span>
+
+<span class="sd">        rtable (DataFrame): The right input table.</span>
+
+<span class="sd">        l_overlap_attr (string): The overlap attribute in left table.</span>
+
+<span class="sd">        r_overlap_attr (string): The overlap attribute in right table.</span>
+
+<span class="sd">        rem_stop_words (boolean): A flag to indicate whether stop words</span>
+<span class="sd">             (e.g., a, an, the) should be removed from the token sets of the</span>
+<span class="sd">             overlap attribute values (defaults to False).</span>
+
+<span class="sd">        q_val (int): The value of q to use if the overlap attributes</span>
+<span class="sd">             values are to be tokenized as qgrams (defaults to None).</span>
+
+<span class="sd">        word_level (boolean): A flag to indicate whether the overlap</span>
+<span class="sd">             attributes should be tokenized as words (i.e, using whitespace</span>
+<span class="sd">             as delimiter) (defaults to True).</span>
+<span class="sd">            </span>
+<span class="sd">        overlap_size (int):  The minimum number of tokens that must overlap.</span>
+<span class="sd">     </span>
+<span class="sd">        ob_obj (OverlapBlocker): The object used to call commands to block two tables </span>
+<span class="sd">            and a candidate set</span>
+
+<span class="sd">        n_bins (int): The number of bins to be used for stratified sampling.</span>
+<span class="sd">        sample_proportion (float): The proportion used to sample the tables. This value</span>
+<span class="sd">            is expected to be greater than 0 and less thank 1.</span>
+<span class="sd">        repeat (int): The number of times to execute the down sample command while </span>
+<span class="sd">            selecting the values for the parameters.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        A tuple containing 3 values. For example if the tuple is represented as (x, y, </span>
+<span class="sd">        z) then x indicates if the tables need to be swapped or not, y indicates the number of </span>
+<span class="sd">        left table partitions (if the tables need to be swapped, then this indicates the </span>
+<span class="sd">        number of left table partitions after swapping), and z indicates the number of </span>
+<span class="sd">        right table partitions. </span>
+<span class="sd">       </span>
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; from py_entitymatching.tuner.tuner_overlap_blocker import tuner_overlap_blocker</span>
+<span class="sd">        &gt;&gt;&gt; from py_entitymatching.dask.dask_overlap_blocker import DaskOverlapBlocker</span>
+<span class="sd">        &gt;&gt;&gt; obj = DaskOverlapBlocker()</span>
+<span class="sd">        &gt;&gt;&gt; (swap_or_not, n_ltable_chunks, n_sample_rtable_chunks) = tuner_overlap_blocker(ltable, rtable, &#39;id&#39;, &#39;id&#39;, &quot;title&quot;, &quot;title&quot;, rem_stop_words=True, q_val=None, word_level=True, overlap_size=1, ob_obj=obj)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;WARNING THIS COMMAND IS EXPERIMENTAL AND NOT TESTED. USE AT YOUR OWN &quot;</span>
+          <span class="s2">&quot;RISK.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Select the tokenizer</span>
+    <span class="k">if</span> <span class="n">word_level</span><span class="p">:</span>
+        <span class="n">tokenizer</span> <span class="o">=</span> <span class="n">WhitespaceTokenizer</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">tokenizer</span> <span class="o">=</span> <span class="n">QgramTokenizer</span><span class="p">()</span>
+
+
+    <span class="c1"># Same the input tables, given in the original order</span>
+    <span class="n">sampled_tables_orig_order</span> <span class="o">=</span> <span class="n">get_sampled_tables</span><span class="p">(</span><span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span>
+                                                   <span class="n">l_overlap_attr</span><span class="p">,</span> <span class="n">r_overlap_attr</span><span class="p">,</span>
+                                                   <span class="n">rem_stop_words</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">,</span> <span class="n">ob_obj</span><span class="p">,</span>
+                                                   <span class="n">n_bins</span><span class="p">,</span> <span class="n">sample_proportion</span><span class="p">,</span> <span class="n">seed</span><span class="p">)</span>
+
+    <span class="c1"># Same the input tables, given in the swapped order</span>
+    <span class="n">sampled_tables_swap_order</span> <span class="o">=</span> <span class="n">get_sampled_tables</span><span class="p">(</span><span class="n">rtable</span><span class="p">,</span> <span class="n">ltable</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span>
+                                                   <span class="n">r_overlap_attr</span><span class="p">,</span> <span class="n">l_overlap_attr</span><span class="p">,</span>
+                                                   <span class="n">rem_stop_words</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">,</span> <span class="n">ob_obj</span><span class="p">,</span>
+                                                   <span class="n">n_bins</span><span class="p">,</span> <span class="n">sample_proportion</span><span class="p">,</span> <span class="n">seed</span><span class="p">)</span>
+
+    <span class="c1">#  Select if the tables need to be swapped</span>
+    <span class="n">swap_config</span> <span class="o">=</span> <span class="n">should_swap</span><span class="p">(</span><span class="n">ob_obj</span><span class="p">,</span> <span class="n">sampled_tables_orig_order</span><span class="p">,</span>
+                              <span class="n">sampled_tables_swap_order</span><span class="p">,</span>
+                               <span class="n">l_overlap_attr</span><span class="p">,</span> <span class="n">r_overlap_attr</span><span class="p">,</span> <span class="n">rem_stop_words</span><span class="p">,</span>
+                              <span class="n">q_val</span><span class="p">,</span> <span class="n">word_level</span><span class="p">,</span> <span class="n">overlap_size</span><span class="p">,</span> <span class="n">repeat</span><span class="p">)</span>
+    <span class="c1"># Use the sampled tables</span>
+    <span class="n">s_ltable</span><span class="p">,</span> <span class="n">s_rtable</span> <span class="o">=</span> <span class="n">sampled_tables_orig_order</span>
+    <span class="k">if</span> <span class="n">swap_config</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">s_ltable</span><span class="p">,</span> <span class="n">s_rtable</span> <span class="o">=</span> <span class="n">sampled_tables_swap_order</span>
+
+
+    <span class="c1"># Find the number of right table partitions</span>
+    <span class="n">n_rtable_chunks</span> <span class="o">=</span> <span class="n">find_rtable_chunks</span><span class="p">(</span><span class="n">ob_obj</span><span class="p">,</span> <span class="n">s_ltable</span><span class="p">,</span> <span class="n">s_rtable</span><span class="p">,</span> <span class="n">l_overlap_attr</span><span class="p">,</span>
+                                         <span class="n">r_overlap_attr</span><span class="p">,</span> <span class="n">rem_stop_words</span><span class="p">,</span> <span class="n">q_val</span><span class="p">,</span>
+                                         <span class="n">word_level</span><span class="p">,</span> <span class="n">overlap_size</span><span class="p">)</span>
+
+    <span class="c1"># Find the number of left table partitions</span>
+    <span class="n">n_ltable_chunks</span> <span class="o">=</span> <span class="n">find_ltable_chunks</span><span class="p">(</span><span class="n">ob_obj</span><span class="p">,</span> <span class="n">s_ltable</span><span class="p">,</span> <span class="n">s_rtable</span><span class="p">,</span> <span class="n">l_overlap_attr</span><span class="p">,</span>
+                                         <span class="n">r_overlap_attr</span><span class="p">,</span> <span class="n">rem_stop_words</span><span class="p">,</span> <span class="n">q_val</span><span class="p">,</span>
+                                         <span class="n">word_level</span><span class="p">,</span> <span class="n">overlap_size</span><span class="p">,</span> <span class="n">n_rtable_chunks</span><span class="p">)</span>
+
+    <span class="c1"># Return the configuration</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">swap_config</span><span class="p">,</span> <span class="n">n_ltable_chunks</span><span class="p">,</span> <span class="n">n_rtable_chunks</span><span class="p">)</span></div>
+
+
+
+<span class="k">def</span> <span class="nf">get_sampled_tables</span><span class="p">(</span><span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span> <span class="n">l_overlap_attr</span><span class="p">,</span> <span class="n">r_overlap_attr</span><span class="p">,</span>
+                       <span class="n">should_rem_stop_words</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">,</span> <span class="n">ob_obj</span><span class="p">,</span> <span class="n">n_bins</span><span class="p">,</span>
+                       <span class="n">sample_proportion</span><span class="p">,</span> <span class="n">seed</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to return the sampled tables.    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">s_ltable</span> <span class="o">=</span> <span class="n">sample_ltable</span><span class="p">(</span><span class="n">ltable</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span> <span class="n">l_overlap_attr</span><span class="p">,</span> <span class="n">should_rem_stop_words</span><span class="p">,</span>
+                             <span class="n">ob_obj</span><span class="p">,</span> <span class="n">n_bins</span><span class="p">,</span> <span class="n">sample_proportion</span><span class="p">,</span> <span class="n">seed</span><span class="p">)</span>
+
+    <span class="n">cm</span><span class="o">.</span><span class="n">set_key</span><span class="p">(</span><span class="n">s_ltable</span><span class="p">,</span> <span class="n">l_key</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span>  <span class="n">ob_obj</span><span class="o">.</span><span class="n">process_tokenize_block_attr</span><span class="p">(</span><span class="n">ltable</span><span class="p">[</span><span class="n">l_overlap_attr</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span>
+                                                 <span class="n">should_rem_stop_words</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">)</span>
+    <span class="n">inverted_index</span> <span class="o">=</span> <span class="n">ob_obj</span><span class="o">.</span><span class="n">build_inverted_index</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+    <span class="n">s_rtable</span> <span class="o">=</span> <span class="n">sample_rtable</span><span class="p">(</span><span class="n">rtable</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span> <span class="n">r_overlap_attr</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">,</span>
+                             <span class="n">should_rem_stop_words</span><span class="p">,</span> <span class="n">ob_obj</span><span class="p">,</span> <span class="n">n_bins</span><span class="p">,</span> <span class="n">sample_proportion</span><span class="p">,</span>
+                             <span class="n">inverted_index</span><span class="p">,</span> <span class="n">seed</span><span class="p">)</span>
+    <span class="n">cm</span><span class="o">.</span><span class="n">set_key</span><span class="p">(</span><span class="n">s_rtable</span><span class="p">,</span> <span class="n">r_key</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="n">s_ltable</span><span class="p">,</span> <span class="n">s_rtable</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="n">ob_obj</span><span class="p">,</span> <span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">l_overlap_attr</span><span class="p">,</span> <span class="n">r_overlap_attr</span><span class="p">,</span> <span class="n">rem_stop_words</span><span class="p">,</span>
+            <span class="n">q_val</span><span class="p">,</span> <span class="n">word_level</span><span class="p">,</span> <span class="n">overlap_size</span><span class="p">,</span> <span class="n">n_ltable_chunks</span><span class="p">,</span> <span class="n">n_rtable_chunks</span><span class="p">,</span> <span class="n">repeat</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to execute the command and return the runtime. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">times</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">repeat</span><span class="p">):</span>
+        <span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="n">ob_obj</span><span class="o">.</span><span class="n">block_tables</span><span class="p">(</span><span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">l_overlap_attr</span><span class="p">,</span> <span class="n">r_overlap_attr</span><span class="p">,</span>
+                                <span class="n">rem_stop_words</span><span class="o">=</span><span class="n">rem_stop_words</span><span class="p">,</span> <span class="n">q_val</span><span class="o">=</span><span class="n">q_val</span><span class="p">,</span>
+                                <span class="n">word_level</span><span class="o">=</span><span class="n">word_level</span><span class="p">,</span> <span class="n">overlap_size</span><span class="o">=</span><span class="n">overlap_size</span><span class="p">,</span>
+                                <span class="n">n_ltable_chunks</span><span class="o">=</span><span class="n">n_ltable_chunks</span><span class="p">,</span>
+                                <span class="n">n_rtable_chunks</span><span class="o">=</span><span class="n">n_rtable_chunks</span><span class="p">,</span> <span class="n">show_progress</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">t2</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">times</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t2</span><span class="o">-</span><span class="n">t1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">times</span><span class="p">)</span>
+
+
+
+<span class="k">def</span> <span class="nf">should_swap</span><span class="p">(</span><span class="n">ob_obj</span><span class="p">,</span> <span class="n">orig_order</span><span class="p">,</span> <span class="n">swap_order</span><span class="p">,</span>  <span class="n">l_overlap_attr</span><span class="p">,</span> <span class="n">r_overlap_attr</span><span class="p">,</span>
+                <span class="n">rem_stop_words</span><span class="p">,</span> <span class="n">q_val</span><span class="p">,</span> <span class="n">word_level</span><span class="p">,</span> <span class="n">overlap_size</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                <span class="n">epsilon</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+
+    <span class="s2">&quot; Function to select if the tables need to be swapped&quot;</span>
+
+    <span class="c1"># Execute the command in the original order</span>
+    <span class="n">t_orig_order</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">ob_obj</span><span class="p">,</span> <span class="n">orig_order</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">orig_order</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">l_overlap_attr</span><span class="p">,</span>
+                           <span class="n">r_overlap_attr</span><span class="p">,</span> <span class="n">rem_stop_words</span><span class="p">,</span> <span class="n">q_val</span><span class="p">,</span> <span class="n">word_level</span><span class="p">,</span>
+                           <span class="n">overlap_size</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">repeat</span><span class="p">)</span>
+
+    <span class="c1"># Execute the command in the swapped order</span>
+    <span class="n">t_swap_order</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">ob_obj</span><span class="p">,</span> <span class="n">swap_order</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">swap_order</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">r_overlap_attr</span><span class="p">,</span>
+                           <span class="n">l_overlap_attr</span><span class="p">,</span> <span class="n">rem_stop_words</span><span class="p">,</span> <span class="n">q_val</span><span class="p">,</span> <span class="n">word_level</span><span class="p">,</span>
+                           <span class="n">overlap_size</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">repeat</span><span class="p">)</span>
+
+    <span class="n">swap_config</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">t_swap_order</span><span class="p">,</span> <span class="n">t_orig_order</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">t_swap_order</span> <span class="o">&lt;</span> <span class="n">t_orig_order</span><span class="o">+</span><span class="n">epsilon</span><span class="p">:</span>
+        <span class="n">swap_config</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">return</span> <span class="n">swap_config</span>
+
+<span class="k">def</span> <span class="nf">get_chunk_range</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the range of partitions to try.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n_chunks</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">n_chunks</span> <span class="o">&gt;</span> <span class="mi">128</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Currently we consider the num. procs in machine to &#39;</span>
+                                  <span class="s1">&#39;be &lt; 128&#39;</span><span class="p">)</span>
+    <span class="n">chunk_range</span> <span class="o">=</span> <span class="p">[</span><span class="n">n_chunks</span><span class="p">]</span>
+    <span class="k">while</span> <span class="n">n_chunks</span> <span class="o">&lt;</span> <span class="mi">128</span><span class="p">:</span>
+        <span class="n">n_chunks</span> <span class="o">*=</span> <span class="mi">2</span>
+        <span class="n">chunk_range</span> <span class="o">+=</span> <span class="p">[</span><span class="n">n_chunks</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">chunk_range</span>
+
+
+
+<span class="k">def</span> <span class="nf">find_rtable_chunks</span><span class="p">(</span><span class="n">ob_obj</span><span class="p">,</span> <span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">l_overlap_attr</span><span class="p">,</span> <span class="n">r_overlap_attr</span><span class="p">,</span>
+                       <span class="n">rem_stop_words</span><span class="p">,</span>
+                       <span class="n">q_val</span><span class="p">,</span> <span class="n">word_level</span><span class="p">,</span> <span class="n">overlap_size</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to select the number of right table partitions</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">chunk_range</span> <span class="o">=</span> <span class="n">get_chunk_range</span><span class="p">()</span>
+    <span class="n">hist_times</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">hist_chunks</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">ob_obj</span><span class="p">,</span> <span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">l_overlap_attr</span><span class="p">,</span> <span class="n">r_overlap_attr</span><span class="p">,</span>
+                       <span class="n">rem_stop_words</span><span class="p">,</span>
+                       <span class="n">q_val</span><span class="p">,</span> <span class="n">word_level</span><span class="p">,</span> <span class="n">overlap_size</span><span class="p">,</span>
+                <span class="n">n_rtable_chunks</span><span class="o">=</span><span class="n">chunk_range</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">n_ltable_chunks</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="n">repeat</span><span class="p">)</span>
+    <span class="n">hist_times</span> <span class="o">+=</span> <span class="p">[</span><span class="n">t</span><span class="p">]</span>
+    <span class="n">hist_chunks</span> <span class="o">+=</span> <span class="p">[</span><span class="n">chunk_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> chunk: </span><span class="si">{1}</span><span class="s1"> time: </span><span class="si">{2}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;Rtable&#39;</span><span class="p">,</span> <span class="n">chunk_range</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">t</span><span class="p">))</span>
+
+
+    <span class="k">for</span> <span class="n">n_chunks</span> <span class="ow">in</span> <span class="n">chunk_range</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">ob_obj</span><span class="p">,</span> <span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">l_overlap_attr</span><span class="p">,</span> <span class="n">r_overlap_attr</span><span class="p">,</span>
+                    <span class="n">rem_stop_words</span><span class="p">,</span>
+                    <span class="n">q_val</span><span class="p">,</span> <span class="n">word_level</span><span class="p">,</span> <span class="n">overlap_size</span><span class="p">,</span>
+                    <span class="n">n_rtable_chunks</span><span class="o">=</span><span class="n">n_chunks</span><span class="p">,</span> <span class="n">n_ltable_chunks</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="n">repeat</span><span class="p">)</span>
+
+        <span class="c1"># print(&#39;{0} chunk: {1} time: {2}&#39;.format(&#39;Rtable&#39;, n_chunks, t))</span>
+
+
+        <span class="k">if</span> <span class="n">t</span> <span class="o">&gt;</span> <span class="n">hist_times</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">epsilon</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">hist_chunks</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">hist_times</span> <span class="o">+=</span> <span class="p">[</span><span class="n">t</span><span class="p">]</span>
+            <span class="n">hist_chunks</span> <span class="o">+=</span> <span class="p">[</span><span class="n">n_chunks</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">hist_chunks</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">find_ltable_chunks</span><span class="p">(</span><span class="n">ob_obj</span><span class="p">,</span> <span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">l_overlap_attr</span><span class="p">,</span> <span class="n">r_overlap_attr</span><span class="p">,</span>
+                       <span class="n">rem_stop_words</span><span class="p">,</span>
+                       <span class="n">q_val</span><span class="p">,</span> <span class="n">word_level</span><span class="p">,</span> <span class="n">overlap_size</span><span class="p">,</span> <span class="n">n_rtable_chunks</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                       <span class="n">epsilon</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to select the number of left table partitions</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">chunk_range</span> <span class="o">=</span> <span class="n">get_chunk_range</span><span class="p">()</span>
+    <span class="n">hist_times</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">hist_chunks</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">ob_obj</span><span class="p">,</span> <span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">l_overlap_attr</span><span class="p">,</span> <span class="n">r_overlap_attr</span><span class="p">,</span>
+                <span class="n">rem_stop_words</span><span class="p">,</span>
+                <span class="n">q_val</span><span class="p">,</span> <span class="n">word_level</span><span class="p">,</span> <span class="n">overlap_size</span><span class="p">,</span>
+                <span class="n">n_ltable_chunks</span><span class="o">=</span><span class="n">chunk_range</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">n_rtable_chunks</span><span class="o">=</span><span class="n">n_rtable_chunks</span><span class="p">,</span>
+                <span class="n">repeat</span><span class="o">=</span><span class="n">repeat</span><span class="p">)</span>
+    <span class="n">hist_times</span> <span class="o">+=</span> <span class="p">[</span><span class="n">t</span><span class="p">]</span>
+    <span class="n">hist_chunks</span> <span class="o">+=</span> <span class="p">[</span><span class="n">chunk_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+    <span class="c1"># print(&#39;{0} chunk: {1} time: {2}&#39;.format(&#39;Ltable&#39;, chunk_range[0], t))</span>
+
+
+    <span class="k">for</span> <span class="n">n_chunks</span> <span class="ow">in</span> <span class="n">chunk_range</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">ob_obj</span><span class="p">,</span> <span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">l_overlap_attr</span><span class="p">,</span> <span class="n">r_overlap_attr</span><span class="p">,</span>
+                    <span class="n">rem_stop_words</span><span class="p">,</span>
+                    <span class="n">q_val</span><span class="p">,</span> <span class="n">word_level</span><span class="p">,</span> <span class="n">overlap_size</span><span class="p">,</span>
+                    <span class="n">n_ltable_chunks</span><span class="o">=</span><span class="n">n_chunks</span><span class="p">,</span> <span class="n">n_rtable_chunks</span><span class="o">=</span><span class="n">n_rtable_chunks</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="n">repeat</span><span class="p">)</span>
+        <span class="c1"># print(&#39;{0} chunk: {1} time: {2}&#39;.format(&#39;Ltable&#39;, n_chunks, t))</span>
+
+
+        <span class="k">if</span> <span class="n">t</span> <span class="o">&gt;</span> <span class="n">hist_times</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">epsilon</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">hist_chunks</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">hist_times</span> <span class="o">+=</span> <span class="p">[</span><span class="n">t</span><span class="p">]</span>
+            <span class="n">hist_chunks</span> <span class="o">+=</span> <span class="p">[</span><span class="n">n_chunks</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">hist_chunks</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+
+
+<span class="k">def</span> <span class="nf">process_column</span><span class="p">(</span><span class="n">column</span><span class="p">,</span> <span class="n">ob_obj</span><span class="p">,</span> <span class="n">should_rem_stop_words</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to process the strings in the blocking attribute</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">processed_vals</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">column</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">s</span> <span class="ow">or</span> <span class="n">pd</span><span class="o">.</span><span class="n">isnull</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">s</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">,</span> <span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">ob_obj</span><span class="o">.</span><span class="n">regex_punctuation</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+        <span class="n">tokens</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()))</span>
+        <span class="k">if</span> <span class="n">should_rem_stop_words</span><span class="p">:</span>
+            <span class="n">tokens</span> <span class="o">=</span> <span class="p">[</span><span class="n">token</span> <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">tokens</span> <span class="k">if</span> <span class="n">token</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ob_obj</span><span class="o">.</span><span class="n">stop_words</span><span class="p">]</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
+        <span class="n">processed_vals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">processed_vals</span>
+
+
+<span class="k">def</span> <span class="nf">sample_ltable</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">block_attr</span><span class="p">,</span> <span class="n">should_rem_stop_words</span><span class="p">,</span> <span class="n">ob_obj</span><span class="p">,</span> <span class="n">n_bins</span><span class="p">,</span>
+                  <span class="n">sample_proportion</span><span class="p">,</span>
+                  <span class="n">seed</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to sample the left table.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">table</span><span class="p">[[</span><span class="n">key</span><span class="p">,</span> <span class="n">block_attr</span><span class="p">]]</span>
+    <span class="c1"># remove NaNs</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="o">~</span><span class="n">df</span><span class="p">[</span><span class="n">block_attr</span><span class="p">]</span><span class="o">.</span><span class="n">isnull</span><span class="p">()]</span>
+
+    <span class="n">df</span><span class="p">[</span><span class="n">block_attr</span><span class="p">]</span> <span class="o">=</span> <span class="n">process_column</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">block_attr</span><span class="p">],</span> <span class="n">ob_obj</span><span class="p">,</span> <span class="n">should_rem_stop_words</span><span class="p">)</span>
+
+    <span class="c1"># get the number of samples to be selected from each bin</span>
+    <span class="n">num_samples</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">sample_proportion</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">table</span><span class="p">)))</span>
+
+    <span class="c1"># get the string lengths</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;_str_len_&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">block_attr</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">len</span><span class="p">()</span>
+    <span class="n">len_groups</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;_str_len_&#39;</span><span class="p">)</span>
+
+    <span class="n">group_ids_len</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">group_id</span><span class="p">,</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">len_groups</span><span class="p">:</span>
+        <span class="n">group_ids_len</span><span class="p">[</span><span class="n">group_id</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">group</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+
+    <span class="n">str_lens</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;_str_len_&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+    <span class="n">str_lens</span> <span class="o">+=</span> <span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="n">str_lens</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+
+    <span class="c1"># bin the string lengths</span>
+    <span class="n">freq</span><span class="p">,</span> <span class="n">edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">str_lens</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">n_bins</span><span class="p">)</span>
+
+    <span class="c1"># compute the bin to which the string length map to</span>
+    <span class="n">bins</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_bins</span><span class="p">)]</span>
+    <span class="n">keys</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">group_ids_len</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="n">positions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">digitize</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">edges</span><span class="p">)</span>
+
+    <span class="c1"># compute the number of entries in each bin</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">keys</span><span class="p">)):</span>
+        <span class="n">k</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="n">keys</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">positions</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">bins</span><span class="p">[</span><span class="n">p</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">group_ids_len</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+    <span class="n">len_of_bins</span> <span class="o">=</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">bins</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">bins</span><span class="p">))]</span>
+
+    <span class="c1"># compute the relative weight of each bin and the number of tuples we need to</span>
+    <span class="c1"># sample from each bin</span>
+    <span class="n">weights</span> <span class="o">=</span> <span class="p">[</span><span class="n">len_of_bins</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">len_of_bins</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">bins</span><span class="p">))]</span>
+    <span class="n">num_tups_from_each_bin</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">num_samples</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span>
+        <span class="nb">len</span><span class="p">(</span><span class="n">weights</span><span class="p">))]</span>
+
+    <span class="c1"># sample from each bin</span>
+    <span class="n">sampled</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">bins</span><span class="p">)):</span>
+        <span class="n">num_tuples</span> <span class="o">=</span> <span class="n">num_tups_from_each_bin</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">len_of_bins</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+            <span class="n">tmp_samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">bins</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">num_tuples</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tmp_samples</span><span class="p">):</span>
+                <span class="n">sampled</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">tmp_samples</span><span class="p">)</span>
+
+    <span class="c1"># retain the same order of tuples as in the input table</span>
+    <span class="n">table_copy</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+    <span class="n">table_copy</span><span class="p">[</span><span class="s1">&#39;_pos&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">table</span><span class="p">)))</span>
+    <span class="n">s_table</span> <span class="o">=</span> <span class="n">table_copy</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">sampled</span><span class="p">]</span>
+    <span class="n">s_table</span> <span class="o">=</span> <span class="n">s_table</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;_pos&#39;</span><span class="p">)</span>
+
+    <span class="c1"># reset the index and drop the pos column</span>
+    <span class="n">s_table</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">s_table</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;_pos&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">s_table</span>
+
+
+<span class="k">def</span> <span class="nf">sample_rtable</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">overlap_attr</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">,</span>
+                             <span class="n">should_rem_stop_words</span><span class="p">,</span> <span class="n">ob_obj</span><span class="p">,</span> <span class="n">n_bins</span><span class="p">,</span> <span class="n">sample_proportion</span><span class="p">,</span>
+                             <span class="n">inverted_index</span><span class="p">,</span> <span class="n">seed</span><span class="p">):</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="n">table</span><span class="p">[[</span><span class="n">key</span><span class="p">,</span> <span class="n">overlap_attr</span><span class="p">]]</span>
+    <span class="n">processed_tokenized_vals</span> <span class="o">=</span> <span class="n">ob_obj</span><span class="o">.</span><span class="n">process_tokenize_block_attr</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="n">overlap_attr</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span>
+                                           <span class="n">should_rem_stop_words</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">)</span>
+    <span class="n">token_cnt</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">token_map</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">tid</span> <span class="ow">in</span> <span class="n">processed_tokenized_vals</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">tokens</span> <span class="o">=</span> <span class="n">processed_tokenized_vals</span><span class="p">[</span><span class="n">tid</span><span class="p">]</span>
+        <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">token</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">token_map</span><span class="p">:</span>
+                <span class="n">token_map</span><span class="p">[</span><span class="n">token</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">inverted_index</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="p">[]))</span>
+            <span class="n">cnt</span> <span class="o">+=</span> <span class="n">token_map</span><span class="p">[</span><span class="n">token</span><span class="p">]</span>
+        <span class="n">token_cnt</span><span class="p">[</span><span class="n">tid</span><span class="p">]</span> <span class="o">=</span> <span class="n">cnt</span>
+
+    <span class="n">cnt_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">token_cnt</span><span class="p">,</span> <span class="n">orient</span><span class="o">=</span><span class="s1">&#39;index&#39;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">])</span>
+    <span class="n">cnt_df</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">cnt_df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+    <span class="n">cnt_df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">cnt_groups</span> <span class="o">=</span> <span class="n">cnt_df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;count&#39;</span><span class="p">)</span>
+    <span class="n">cnt_ids</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">group_id</span><span class="p">,</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">cnt_groups</span><span class="p">:</span>
+        <span class="n">cnt_ids</span><span class="p">[</span><span class="n">group_id</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">group</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+
+    <span class="n">counts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">cnt_df</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+    <span class="n">counts</span> <span class="o">+=</span> <span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">freq</span><span class="p">,</span> <span class="n">edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">counts</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">n_bins</span><span class="p">)</span>
+
+    <span class="c1"># get the number of samples to be selected from each bin</span>
+    <span class="n">num_samples</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">sample_proportion</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">table</span><span class="p">)))</span>
+
+    <span class="c1"># compute the bin to which the string length map to</span>
+    <span class="n">bins</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_bins</span><span class="p">)]</span>
+    <span class="n">keys</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">cnt_ids</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="n">positions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">digitize</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">edges</span><span class="p">)</span>
+
+    <span class="c1"># compute the number of entries in each bin</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">keys</span><span class="p">)):</span>
+        <span class="n">k</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="n">keys</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">positions</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">bins</span><span class="p">[</span><span class="n">p</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">cnt_ids</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+    <span class="n">len_of_bins</span> <span class="o">=</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">bins</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">bins</span><span class="p">))]</span>
+
+    <span class="c1"># compute the relative weight of each bin and the number of tuples we need to</span>
+    <span class="c1"># sample from each bin</span>
+    <span class="n">weights</span> <span class="o">=</span> <span class="p">[</span><span class="n">len_of_bins</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">len_of_bins</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">bins</span><span class="p">))]</span>
+    <span class="n">num_tups_from_each_bin</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_samples</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span>
+        <span class="nb">len</span><span class="p">(</span><span class="n">weights</span><span class="p">))]</span>
+
+    <span class="c1"># sample from each bin</span>
+    <span class="n">sampled</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">bins</span><span class="p">)):</span>
+        <span class="n">num_tuples</span> <span class="o">=</span> <span class="n">num_tups_from_each_bin</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">len_of_bins</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+            <span class="n">tmp_samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">bins</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">num_tuples</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tmp_samples</span><span class="p">):</span>
+                <span class="n">sampled</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">tmp_samples</span><span class="p">)</span>
+
+    <span class="n">table_copy</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">table_copy</span><span class="p">[</span><span class="s1">&#39;_pos&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">table</span><span class="p">)))</span>
+    <span class="n">s_table</span> <span class="o">=</span> <span class="n">table_copy</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">sampled</span><span class="p">]</span>
+    <span class="n">s_table</span> <span class="o">=</span> <span class="n">s_table</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;_pos&#39;</span><span class="p">)</span>
+
+    <span class="c1"># reset the index and drop the pos column</span>
+    <span class="n">s_table</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">s_table</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;_pos&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># print(len(s_table))</span>
+
+    <span class="k">return</span> <span class="n">s_table</span>
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2016, anhaidgroup
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

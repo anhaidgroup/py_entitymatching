@@ -1,0 +1,340 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Installation &mdash; py_entitymatching 0.3.3 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Overview of Supported EM Processes" href="overview.html" />
+    <link rel="prev" title="What is New?" href="whatisnew.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> py_entitymatching
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">How To Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../how_to_guide.html">How to Guide To Do Entity Matching</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="whatisnew.html">What is New?</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#platforms">Platforms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#c-compiler-required">C Compiler Required</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installing-using-pip">Installing Using pip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installing-from-source-distribution">Installing from Source Distribution</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview of Supported EM Processes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides.html">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datastructures.html">Data Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="steps_supp_em_workflows.html">Steps of Supported EM Workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="misc.html">Miscellaneous</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/overview.html">Overview of Command Organization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/actual_commands.html">Commands in py_entitymatching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/actual_commands.html#experimental-commands">Experimental Commands</a></li>
+</ul>
+<p class="caption"><span class="caption-text">How to Contribute</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing to py_entitymatching</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">py_entitymatching</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Installation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/user_manual/installation.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Python 2.7, 3.5, 3.6, or 3.7</p></li>
+</ul>
+</div>
+<div class="section" id="platforms">
+<h2>Platforms<a class="headerlink" href="#platforms" title="Permalink to this headline">¶</a></h2>
+<p>py_entitymatching has been tested on Linux (Ubuntu Xenial 16.04.6), macOS (High Sierra 10.13.6),
+and Windows 10.</p>
+</div>
+<div class="section" id="dependencies">
+<h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>pandas (provides data structures to store and manage tables)</p></li>
+<li><p>scikit-learn (provides implementations for common machine learning algorithms)</p></li>
+<li><p>joblib (provides multiprocessing capabilities)</p></li>
+<li><p>pyqt5 (provides tools to build GUIs)</p></li>
+<li><p>py_stringsimjoin (provides implementations for string similarity joins)</p></li>
+<li><p>py_stringmatching (provides a set of string tokenizers and string similarity functions)</p></li>
+<li><p>cloudpickle (provides functions to serialize Python constructs)</p></li>
+<li><p>pyprind (library to display progress indicators)</p></li>
+<li><p>pyparsing (library to parse strings)</p></li>
+<li><p>six (provides functions to write compatible code across Python 2 and 3)</p></li>
+<li><p>xgboost (provides an implementation for xgboost classifier)</p></li>
+<li><p>pandas-profiling (provides implementation for profiling pandas dataframe)</p></li>
+<li><p>pandas-table (provides data exploration tool for pandas dataframe)</p></li>
+<li><p>openrefine (provides data exploration tool for tables)</p></li>
+<li><p>ipython (provides better tools for displaying tables in notebooks)</p></li>
+<li><p>scipy (dependency for skikit-learn)</p></li>
+</ul>
+<p>See the <cite>project README &lt;https://github.com/anhaidgroup/py_entitymatching/blob/master/README.rst&gt;</cite>
+for more information.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If using Python 2, py_entitymatching requires numpy less than 1.17; if using Python 3.5, numpy less than 1.19</p>
+</div>
+</div>
+<div class="section" id="c-compiler-required">
+<h2>C Compiler Required<a class="headerlink" href="#c-compiler-required" title="Permalink to this headline">¶</a></h2>
+<p>Installing Using conda
+Before installing this package, you need to make sure that you have a C compiler installed. This is necessary because this package contains Cython files. Go <a class="reference external" href="https://sites.google.com/site/anhaidgroup/projects/magellan/issues">here</a> for more information about how to check whether you already have a C compiler and how to install a C compiler. After you have confirmed that you have a C compiler installed, you are ready to install py_entitymatching.</p>
+</div>
+<div class="section" id="installing-using-pip">
+<h2>Installing Using pip<a class="headerlink" href="#installing-using-pip" title="Permalink to this headline">¶</a></h2>
+<p>To install the package using pip, execute the following
+command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">U</span> <span class="n">numpy</span> <span class="n">scipy</span> <span class="n">py_entitymatching</span>
+</pre></div>
+</div>
+<p>The above command will install py_entitymatching and all of its dependencies except
+XGBoost, pandastable, openrefine, and PyQt5. This is because pip can only install the
+dependency packages that are available in PyPI and PyQt5, XGBoost, pandastable are not
+in PyPI for Python 2.</p>
+<ul class="simple">
+<li><p>To install PyQt5, follow the instructions at <a class="reference external" href="http://pyqt.sourceforge.net/Docs/PyQt5/installation.html">this page</a>.</p></li>
+<li><p>To install XGBoost, follow the instructions at <a class="reference external" href="https://XGBoost.readthedocs.io/en/latest/build.html">this page</a>.</p></li>
+<li><p>To install pandastable follow the instructions at <a class="reference external" href="https://github.com/dmnfarrell/pandastable">this page</a>.</p></li>
+<li><p>To install openrefine follow the instructions at <a class="reference external" href="https://github.com/OpenRefine/OpenRefine/wiki/Installation-Instructions">this page</a>.</p></li>
+</ul>
+</div>
+<div class="section" id="installing-from-source-distribution">
+<h2>Installing from Source Distribution<a class="headerlink" href="#installing-from-source-distribution" title="Permalink to this headline">¶</a></h2>
+<p>Clone the py_entitymatching package from GitHub</p>
+<blockquote>
+<div><p>git clone  <a class="reference external" href="https://github.com/anhaidgroup/py_entitymatching.git">https://github.com/anhaidgroup/py_entitymatching.git</a></p>
+</div></blockquote>
+<p>Then,  execute the following commands from the package root:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">U</span> <span class="n">numpy</span> <span class="n">scipy</span>
+<span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span>
+</pre></div>
+</div>
+<p>which installs py_stringmatching into the default Python directory on your machine. If you do not have installation permission for that directory then you can install the package in your
+home directory as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span> <span class="o">--</span><span class="n">user</span>
+</pre></div>
+</div>
+<p>For more information see this StackOverflow <a class="reference external" href="http://stackoverflow.com/questions/14179941/how-to-install-python-packages-without-root-privileges">link</a>.</p>
+<p>The above commands will install py_entitymatching and all of its
+dependencies, except PyQt5 and XGBoost.</p>
+<p>This is  because, similar to pip, setup.py can only install the dependency packages
+that are available in PyPI and PyQt5, pandastable, XGBoost are not in PyPI for Python 2.</p>
+<ul class="simple">
+<li><p>To install PyQt5, follow the instructions at <a class="reference external" href="http://pyqt.sourceforge.net/Docs/PyQt5/installation.html">this page</a>.</p></li>
+<li><p>To install XGBoost, follow the instructions at <a class="reference external" href="https://XGBoost.readthedocs.io/en/latest/build.html">this page</a>.</p></li>
+<li><p>To install pandastable follow the instructions at <a class="reference external" href="https://github.com/dmnfarrell/pandastable">this page</a>.</p></li>
+<li><p>To install openrefine follow the instructions at <a class="reference external" href="https://github.com/OpenRefine/OpenRefine/wiki/Installation-Instructions">this page</a>.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Currently, py_entitymatching supports a set of experimental commands that help users
+create an EM workflow. Some of these commands will require installing Dask. To
+install dask refer to this <a href="#id8"><span class="problematic" id="id9">`page &lt;http://dask.pydata.org/en/latest/install.html`_</span></a>.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="overview.html" class="btn btn-neutral float-right" title="Overview of Supported EM Processes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="whatisnew.html" class="btn btn-neutral float-left" title="What is New?" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2016, anhaidgroup
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

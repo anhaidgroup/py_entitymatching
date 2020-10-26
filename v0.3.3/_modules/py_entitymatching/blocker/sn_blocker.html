@@ -1,0 +1,692 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>py_entitymatching.blocker.sn_blocker &mdash; py_entitymatching 0.3.3 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> py_entitymatching
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">How To Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../how_to_guide.html">How to Guide To Do Entity Matching</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/whatisnew.html">What is New?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/overview.html">Overview of Supported EM Processes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/guides.html">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/datastructures.html">Data Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/steps_supp_em_workflows.html">Steps of Supported EM Workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/misc.html">Miscellaneous</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/api/overview.html">Overview of Command Organization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/api/actual_commands.html">Commands in py_entitymatching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/api/actual_commands.html#experimental-commands">Experimental Commands</a></li>
+</ul>
+<p class="caption"><span class="caption-text">How to Contribute</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing to py_entitymatching</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">py_entitymatching</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>py_entitymatching.blocker.sn_blocker</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for py_entitymatching.blocker.sn_blocker</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pyprind</span>
+<span class="kn">import</span> <span class="nn">six</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">deque</span><span class="p">,</span> <span class="n">OrderedDict</span>
+<span class="kn">import</span> <span class="nn">heapq</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">chain</span>
+
+<span class="kn">import</span> <span class="nn">py_entitymatching.catalog.catalog_manager</span> <span class="k">as</span> <span class="nn">cm</span>
+<span class="kn">from</span> <span class="nn">py_entitymatching.blocker.blocker</span> <span class="kn">import</span> <span class="n">Blocker</span>
+<span class="kn">from</span> <span class="nn">py_entitymatching.utils.catalog_helper</span> <span class="kn">import</span> <span class="n">log_info</span><span class="p">,</span> <span class="n">get_name_for_key</span><span class="p">,</span> <span class="n">add_key_column</span>
+<span class="kn">from</span> <span class="nn">py_entitymatching.utils.generic_helper</span> <span class="kn">import</span> <span class="n">rem_nan</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="SortedNeighborhoodBlocker"><a class="viewcode-back" href="../../../user_manual/api/blocking.html#py_entitymatching.SortedNeighborhoodBlocker">[docs]</a><span class="k">class</span> <span class="nc">SortedNeighborhoodBlocker</span><span class="p">(</span><span class="n">Blocker</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    WARNING: THIS IS AN EXPERIMENTAL CLASS. THIS CLASS IS NOT TESTED. </span>
+<span class="sd">    USE AT YOUR OWN RISK.</span>
+
+<span class="sd">    Blocks based on the sorted neighborhood blocking method</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># display warning message upon object initialization</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;WARNING: THIS IS AN EXPERIMENTAL COMMAND. THIS COMMAND IS NOT TESTED. USE AT YOUR OWN RISK.&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SortedNeighborhoodBlocker.block_tables"><a class="viewcode-back" href="../../../user_manual/api/blocking.html#py_entitymatching.SortedNeighborhoodBlocker.block_tables">[docs]</a>    <span class="k">def</span> <span class="nf">block_tables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">l_block_attr</span><span class="p">,</span> <span class="n">r_block_attr</span><span class="p">,</span> <span class="n">window_size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                     <span class="n">l_output_attrs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">r_output_attrs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                     <span class="n">l_output_prefix</span><span class="o">=</span><span class="s1">&#39;ltable_&#39;</span><span class="p">,</span> <span class="n">r_output_prefix</span><span class="o">=</span><span class="s1">&#39;rtable_&#39;</span><span class="p">,</span>
+                     <span class="n">allow_missing</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        WARNING: THIS IS AN EXPERIMENTAL COMMAND. THIS COMMAND IS NOT TESTED. </span>
+<span class="sd">        USE AT YOUR OWN RISK.</span>
+
+<span class="sd">        Blocks two tables based on sorted neighborhood.</span>
+
+<span class="sd">        Finds tuple pairs from left and right tables such that when each table</span>
+<span class="sd">        is sorted based upon a blocking attribute, tuple pairs are within a</span>
+<span class="sd">        distance w of each other. The blocking attribute is created prior to calling</span>
+<span class="sd">        this function.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            ltable (DataFrame): The left input table.</span>
+
+<span class="sd">            rtable (DataFrame): The right input table.</span>
+
+<span class="sd">            l_block_attr (string): The blocking attribute for left table.</span>
+
+<span class="sd">            r_block_attr (string): The blocking attribute for right table.</span>
+
+<span class="sd">            window_size (int): size of sliding window. Defaults to 2</span>
+
+<span class="sd">            l_output_attrs (list): A list of attribute names from the left</span>
+<span class="sd">                                   table to be included in the</span>
+<span class="sd">                                   output candidate set (defaults to None).</span>
+
+<span class="sd">            r_output_attrs (list): A list of attribute names from the right</span>
+<span class="sd">                                   table to be included in the</span>
+<span class="sd">                                   output candidate set (defaults to None).</span>
+
+<span class="sd">            l_output_prefix (string): The prefix to be used for the attribute names</span>
+<span class="sd">                                   coming from the left table in the output</span>
+<span class="sd">                                   candidate set (defaults to &#39;ltable\_&#39;).</span>
+
+<span class="sd">            r_output_prefix (string): The prefix to be used for the attribute names</span>
+<span class="sd">                                   coming from the right table in the output</span>
+<span class="sd">                                   candidate set (defaults to &#39;rtable\_&#39;).</span>
+
+<span class="sd">            allow_missing (boolean): A flag to indicate whether tuple pairs</span>
+<span class="sd">                                     with missing value in at least one of the</span>
+<span class="sd">                                     blocking attributes should be included in</span>
+<span class="sd">                                     the output candidate set (defaults to</span>
+<span class="sd">                                     False). If this flag is set to True, a</span>
+<span class="sd">                                     tuple in ltable with missing value in the</span>
+<span class="sd">                                     blocking attribute will be matched with</span>
+<span class="sd">                                     every tuple in rtable and vice versa.</span>
+
+<span class="sd">            verbose (boolean): A flag to indicate whether the debug information</span>
+<span class="sd">                should be logged (defaults to False).</span>
+
+
+<span class="sd">            n_jobs (int): The number of parallel jobs to be used for computation</span>
+<span class="sd">                (defaults to 1). If -1 all CPUs are used. If 0 or 1,</span>
+<span class="sd">                no parallel computation is used at all, which is useful for</span>
+<span class="sd">                debugging. For n_jobs below -1, (n_cpus + 1 + n_jobs) are</span>
+<span class="sd">                used (where n_cpus is the total number of CPUs in the</span>
+<span class="sd">                machine). Thus, for n_jobs = -2, all CPUs but one are used.</span>
+<span class="sd">                If (n_cpus + 1 + n_jobs) is less than 1, then no parallel</span>
+<span class="sd">                computation is used (i.e., equivalent to the default).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A candidate set of tuple pairs that survived blocking (DataFrame).</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            AssertionError: If `ltable` is not of type pandas</span>
+<span class="sd">                DataFrame.</span>
+<span class="sd">            AssertionError: If `rtable` is not of type pandas</span>
+<span class="sd">                DataFrame.</span>
+<span class="sd">            AssertionError: If `l_block_attr` is not of type string.</span>
+<span class="sd">            AssertionError: If `r_block_attr` is not of type string.</span>
+<span class="sd">            AssertionError: If `window_size` is not of type of</span>
+<span class="sd">                int or if window_size &lt; 2.</span>
+<span class="sd">            AssertionError: If the values in `l_output_attrs` is not of type</span>
+<span class="sd">                string.</span>
+<span class="sd">            AssertionError: If the values in `r_output_attrs` is not of type</span>
+<span class="sd">                string.</span>
+<span class="sd">            AssertionError: If `l_output_prefix` is not of type</span>
+<span class="sd">                string.</span>
+<span class="sd">            AssertionError: If `r_output_prefix` is not of type</span>
+<span class="sd">                string.</span>
+<span class="sd">            AssertionError: If `verbose` is not of type</span>
+<span class="sd">                boolean.</span>
+<span class="sd">            AssertionError: If `allow_missing` is not of type boolean.</span>
+<span class="sd">            AssertionError: If `n_jobs` is not of type</span>
+<span class="sd">                int.</span>
+<span class="sd">            AssertionError: If `l_block_attr` is not in the ltable columns.</span>
+<span class="sd">            AssertionError: If `r_block_attr` is not in the rtable columns.</span>
+<span class="sd">            AssertionError: If `l_out_attrs` are not in the ltable.</span>
+<span class="sd">            AssertionError: If `r_out_attrs` are not in the rtable.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Warning that this code is still in alpha stage</span>
+        <span class="c1"># display warning message</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;WARNING: THIS IS AN EXPERIMENTAL COMMAND. THIS COMMAND IS NOT TESTED. USE AT YOUR OWN RISK.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># validate data types of input parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate_types_params_tables</span><span class="p">(</span><span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span>
+                                          <span class="n">l_output_attrs</span><span class="p">,</span> <span class="n">r_output_attrs</span><span class="p">,</span>
+                                          <span class="n">l_output_prefix</span><span class="p">,</span>
+                                          <span class="n">r_output_prefix</span><span class="p">,</span> <span class="n">verbose</span><span class="p">,</span> <span class="n">n_jobs</span><span class="p">)</span>
+
+        <span class="c1"># validate data types of input blocking attributes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate_types_block_attrs</span><span class="p">(</span><span class="n">l_block_attr</span><span class="p">,</span> <span class="n">r_block_attr</span><span class="p">)</span>
+
+        <span class="c1"># validate data type of allow_missing</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate_allow_missing</span><span class="p">(</span><span class="n">allow_missing</span><span class="p">)</span>
+
+        <span class="c1"># validate input parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate_block_attrs</span><span class="p">(</span><span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">l_block_attr</span><span class="p">,</span> <span class="n">r_block_attr</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate_output_attrs</span><span class="p">(</span><span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">l_output_attrs</span><span class="p">,</span>
+                                   <span class="n">r_output_attrs</span><span class="p">)</span>
+
+        <span class="c1"># get and validate required metadata</span>
+        <span class="n">log_info</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="s1">&#39;Required metadata: ltable key, rtable key&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+        <span class="c1"># check if ltable or rtable are empty.</span>
+        <span class="k">if</span> <span class="n">ltable</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Left table is empty&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">rtable</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Right table is empty&#39;</span><span class="p">)</span>
+
+        <span class="c1"># check if window_size &lt; 2</span>
+        <span class="k">if</span> <span class="n">window_size</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span>
+                <span class="s1">&#39;window_size is &lt; 2&#39;</span><span class="p">)</span>
+
+
+        <span class="c1"># # get metadata</span>
+        <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">get_keys_for_ltable_rtable</span><span class="p">(</span><span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span>
+                                                     <span class="n">verbose</span><span class="p">)</span>
+
+        <span class="c1"># # validate metadata</span>
+        <span class="n">cm</span><span class="o">.</span><span class="n">_validate_metadata_for_table</span><span class="p">(</span><span class="n">ltable</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span> <span class="s1">&#39;ltable&#39;</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span>
+                                        <span class="n">verbose</span><span class="p">)</span>
+        <span class="n">cm</span><span class="o">.</span><span class="n">_validate_metadata_for_table</span><span class="p">(</span><span class="n">rtable</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span> <span class="s1">&#39;rtable&#39;</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span>
+                                        <span class="n">verbose</span><span class="p">)</span>
+
+        <span class="c1"># do blocking</span>
+        <span class="c1"># # determine number of processes to launch parallely</span>
+        <span class="n">n_procs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_num_procs</span><span class="p">(</span><span class="n">n_jobs</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ltable</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">rtable</span><span class="p">)))</span>
+
+        <span class="c1"># handle potential missing values</span>
+        <span class="n">c_missing</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">n_procs</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># single process</span>
+            <span class="n">c_splits</span><span class="p">,</span> <span class="n">c_missing</span> <span class="o">=</span> <span class="n">_sn_block_tables_split</span><span class="p">(</span><span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span>
+                                                         <span class="n">l_block_attr</span><span class="p">,</span> <span class="n">r_block_attr</span><span class="p">,</span>
+                                                         <span class="n">l_output_attrs</span><span class="p">,</span> <span class="n">r_output_attrs</span><span class="p">,</span>
+                                                         <span class="n">allow_missing</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># multiprocessing</span>
+            <span class="c1"># Split l and r into n_procs chunks.</span>
+            <span class="c1"># each core will get an l and an r, merge them, sort them.</span>
+
+            <span class="n">l_splits</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array_split</span><span class="p">(</span><span class="n">ltable</span><span class="p">,</span> <span class="n">n_procs</span><span class="p">)</span>
+            <span class="n">r_splits</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array_split</span><span class="p">(</span><span class="n">rtable</span><span class="p">,</span> <span class="n">n_procs</span><span class="p">)</span>
+
+            <span class="n">p_answer</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="n">n_procs</span><span class="p">)(</span>
+                <span class="n">delayed</span><span class="p">(</span><span class="n">_sn_block_tables_split</span><span class="p">)(</span><span class="n">l_splits</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">r_splits</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span>
+                                                <span class="n">l_block_attr</span><span class="p">,</span> <span class="n">r_block_attr</span><span class="p">,</span>
+                                                <span class="n">l_output_attrs</span><span class="p">,</span> <span class="n">r_output_attrs</span><span class="p">,</span>
+                                                <span class="n">allow_missing</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_procs</span><span class="p">))</span>
+
+            <span class="n">c_splits</span><span class="p">,</span> <span class="n">c_missing</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">p_answer</span><span class="p">)</span>
+            <span class="n">c_splits</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">c_splits</span><span class="p">)</span>
+            <span class="n">c_missing</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">c_missing</span><span class="p">)</span>
+
+        <span class="c1"># make a deque for the sliding window</span>
+        <span class="n">sliding_window</span> <span class="o">=</span> <span class="n">deque</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">c_missing</span> <span class="o">=</span> <span class="n">c_missing</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s1">&#39;records&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Use generator function to merge sorted runs.</span>
+        <span class="c1"># If single core, generator is trivial (see fn below)</span>
+
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">_gen_iter_merge</span><span class="p">(</span><span class="n">c_splits</span><span class="p">):</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">_asdict</span><span class="p">()</span>
+
+            <span class="c1"># if the sliding window is full, remove the largest.  The new tuple will be</span>
+            <span class="c1">#   compared against the (window_size-1) previously seen tuples.</span>
+            <span class="c1"># (if at the beginning just compare with whatever we have)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sliding_window</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">window_size</span><span class="p">:</span>
+                <span class="n">sliding_window</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
+
+            <span class="c1"># Now, iterate over the sliding window (plus any tuples missing BKV&#39;s,</span>
+            <span class="c1">#   if that was called for):</span>
+            <span class="k">for</span> <span class="n">window_element</span> <span class="ow">in</span> <span class="n">chain</span><span class="p">(</span><span class="n">sliding_window</span><span class="p">,</span> <span class="n">c_missing</span><span class="p">):</span>
+                <span class="n">ltable</span> <span class="o">=</span> <span class="n">window_element</span>
+                <span class="n">rtable</span> <span class="o">=</span> <span class="n">row</span>
+
+                <span class="c1"># SN blocking is often implemented on a single table.</span>
+                <span class="c1"># In this implementation, we are only considering tuples that have</span>
+                <span class="c1">#   one tuple from the left table and one tuple from the right table.</span>
+                <span class="c1"># Thus, only keep candidates that span both tables.</span>
+                <span class="c1"># However, the restriction is that matches need to be (left, right) so</span>
+                <span class="c1">#   if we end up with (right, left) flip it.</span>
+
+                <span class="k">if</span> <span class="n">ltable</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">rtable</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">]:</span> <span class="c1"># Span both tables</span>
+                    <span class="k">if</span> <span class="n">ltable</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;r&#39;</span><span class="p">:</span> <span class="c1"># Left is right, so flip it to make it sane again</span>
+                        <span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span> <span class="o">=</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">ltable</span>
+
+                    <span class="n">merged</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+                    <span class="n">merged</span><span class="p">[</span><span class="n">l_output_prefix</span><span class="o">+</span><span class="s2">&quot;ID&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ltable</span><span class="p">[</span><span class="n">l_key</span><span class="p">]</span>
+                    <span class="n">merged</span><span class="p">[</span><span class="n">r_output_prefix</span><span class="o">+</span><span class="s2">&quot;ID&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rtable</span><span class="p">[</span><span class="n">r_key</span><span class="p">]</span>
+                    <span class="n">merged</span><span class="p">[</span><span class="n">l_output_prefix</span><span class="o">+</span><span class="n">l_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">ltable</span><span class="p">[</span><span class="n">l_key</span><span class="p">]</span>
+                    <span class="n">merged</span><span class="p">[</span><span class="n">r_output_prefix</span><span class="o">+</span><span class="n">r_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">rtable</span><span class="p">[</span><span class="n">r_key</span><span class="p">]</span>
+
+                    <span class="c1"># # add l/r output attributes to the ordered dictionary</span>
+                    <span class="k">if</span> <span class="n">l_output_attrs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">l_output_attrs</span><span class="p">:</span>
+                            <span class="n">merged</span><span class="p">[</span><span class="n">l_output_prefix</span> <span class="o">+</span> <span class="n">attr</span><span class="p">]</span> <span class="o">=</span> <span class="n">ltable</span><span class="p">[</span><span class="n">attr</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">r_output_attrs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">r_output_attrs</span><span class="p">:</span>
+                            <span class="n">merged</span><span class="p">[</span><span class="n">r_output_prefix</span> <span class="o">+</span> <span class="n">attr</span><span class="p">]</span> <span class="o">=</span> <span class="n">rtable</span><span class="p">[</span><span class="n">attr</span><span class="p">]</span>
+
+                    <span class="c1"># # add the ordered dict to the list</span>
+                    <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">merged</span><span class="p">)</span>
+
+            <span class="n">sliding_window</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+        <span class="n">candset</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+
+        <span class="c1"># update catalog</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">get_name_for_key</span><span class="p">(</span><span class="n">candset</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+        <span class="n">candset</span> <span class="o">=</span> <span class="n">add_key_column</span><span class="p">(</span><span class="n">candset</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+
+        <span class="n">cm</span><span class="o">.</span><span class="n">set_candset_properties</span><span class="p">(</span><span class="n">candset</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">l_output_prefix</span> <span class="o">+</span> <span class="n">l_key</span><span class="p">,</span>
+                                  <span class="n">r_output_prefix</span> <span class="o">+</span> <span class="n">r_key</span><span class="p">,</span> <span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">candset</span></div>
+
+<div class="viewcode-block" id="SortedNeighborhoodBlocker.block_candset"><a class="viewcode-back" href="../../../user_manual/api/blocking.html#py_entitymatching.SortedNeighborhoodBlocker.block_candset">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">block_candset</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;block_candset does not apply to sn_blocker, return unimplemented&quot;&quot;&quot;</span>
+
+        <span class="c1">#  It isn&#39;t clear what SN on a candidate set would mean, throw an Assersion error</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;unimplemented&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SortedNeighborhoodBlocker.block_tuples"><a class="viewcode-back" href="../../../user_manual/api/blocking.html#py_entitymatching.SortedNeighborhoodBlocker.block_tuples">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">block_tuples</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;block_tuples does not apply to sn_blocker, return unimplemented&quot;&quot;&quot;</span>
+
+        <span class="c1">#  It also isn&#39;t clear what SN on a tuple pair would mean, throw an Assersion error</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;unimplemented&#39;</span><span class="p">)</span></div>
+
+
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="c1"># utility functions specific to sorted neighborhood blocking</span>
+
+    <span class="c1"># validate the data types of the blocking attributes</span>
+<div class="viewcode-block" id="SortedNeighborhoodBlocker.validate_types_block_attrs"><a class="viewcode-back" href="../../../user_manual/api/blocking.html#py_entitymatching.SortedNeighborhoodBlocker.validate_types_block_attrs">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">validate_types_block_attrs</span><span class="p">(</span><span class="n">l_block_attr</span><span class="p">,</span> <span class="n">r_block_attr</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;validate the data types of the blocking attributes&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">l_block_attr</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="s1">&#39;Blocking attribute name of left table is not of type string&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span>
+                <span class="s1">&#39;Blocking attribute name of left table is not of type string&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">r_block_attr</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="s1">&#39;Blocking attribute name of right table is not of type string&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span>
+                <span class="s1">&#39;Blocking attribute name of right table is not of type string&#39;</span><span class="p">)</span></div>
+
+    <span class="c1"># validate the blocking attributes</span>
+<div class="viewcode-block" id="SortedNeighborhoodBlocker.validate_block_attrs"><a class="viewcode-back" href="../../../user_manual/api/blocking.html#py_entitymatching.SortedNeighborhoodBlocker.validate_block_attrs">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">validate_block_attrs</span><span class="p">(</span><span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">l_block_attr</span><span class="p">,</span> <span class="n">r_block_attr</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;validate the blocking attributes&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">l_block_attr</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ltable</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span>
+                <span class="s1">&#39;Left block attribute is not in the left table&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">r_block_attr</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">rtable</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span>
+                <span class="s1">&#39;Right block attribute is not in the right table&#39;</span><span class="p">)</span></div></div>
+
+<span class="k">def</span> <span class="nf">_get_attrs_to_project</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">output_attrs</span><span class="p">):</span>
+    <span class="n">proj_attrs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">output_attrs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">proj_attrs</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">output_attrs</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">proj_attrs</span><span class="p">:</span>
+        <span class="n">proj_attrs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">proj_attrs</span>
+
+<span class="k">def</span> <span class="nf">_sn_block_tables_split</span><span class="p">(</span><span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span> <span class="n">l_block_attr</span><span class="p">,</span> <span class="n">r_block_attr</span><span class="p">,</span>
+                           <span class="n">l_output_attrs</span><span class="p">,</span> <span class="n">r_output_attrs</span><span class="p">,</span> <span class="n">allow_missing</span><span class="p">):</span>
+
+    <span class="c1">#project the key + output attributes</span>
+    <span class="c1">#copy bkv column from each table into a common column, named BKV__</span>
+    <span class="c1">#combine tables</span>
+    <span class="c1">#sort on BKV__</span>
+
+    <span class="n">lconv</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+    <span class="n">rconv</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">l_output_attrs</span><span class="p">:</span>
+        <span class="n">lconv</span> <span class="o">=</span> <span class="n">ltable</span><span class="p">[[</span><span class="n">l_key</span><span class="p">]</span> <span class="o">+</span> <span class="n">l_output_attrs</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">lconv</span> <span class="o">=</span> <span class="n">ltable</span><span class="p">[[</span><span class="n">l_key</span><span class="p">]]</span>
+    <span class="n">lconv</span> <span class="o">=</span> <span class="n">lconv</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="c1"># Make a full copy</span>
+    <span class="n">lconv</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s1">&#39;source&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;l&#39;</span>
+    <span class="n">lconv</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s1">&#39;BKV__&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ltable</span><span class="p">[</span><span class="n">l_block_attr</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">r_output_attrs</span><span class="p">:</span>
+        <span class="n">rconv</span> <span class="o">=</span> <span class="n">rtable</span><span class="p">[[</span><span class="n">r_key</span><span class="p">]</span> <span class="o">+</span> <span class="n">r_output_attrs</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">rconv</span> <span class="o">=</span> <span class="n">rtable</span><span class="p">[[</span><span class="n">r_key</span><span class="p">]]</span>
+    <span class="n">rconv</span> <span class="o">=</span> <span class="n">rconv</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="c1"># Make a full copy</span>
+    <span class="n">rconv</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s1">&#39;source&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;r&#39;</span>
+    <span class="n">rconv</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s1">&#39;BKV__&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rtable</span><span class="p">[</span><span class="n">r_block_attr</span><span class="p">]</span>
+
+    <span class="c1"># Now, if allow_missing=True, yank out &quot;missing&quot; values</span>
+    <span class="n">lmissing</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+    <span class="n">rmissing</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">allow_missing</span><span class="p">:</span>
+        <span class="n">lmissing</span> <span class="o">=</span> <span class="n">lconv</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">isnull</span><span class="p">(</span><span class="n">lconv</span><span class="p">[</span><span class="s1">&#39;BKV__&#39;</span><span class="p">])]</span>
+        <span class="n">rmissing</span> <span class="o">=</span> <span class="n">rconv</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">isnull</span><span class="p">(</span><span class="n">rconv</span><span class="p">[</span><span class="s1">&#39;BKV__&#39;</span><span class="p">])]</span>
+        <span class="n">lconv</span> <span class="o">=</span> <span class="n">lconv</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">notnull</span><span class="p">(</span><span class="n">lconv</span><span class="p">[</span><span class="s1">&#39;BKV__&#39;</span><span class="p">])]</span>
+        <span class="n">rconv</span> <span class="o">=</span> <span class="n">rconv</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">notnull</span><span class="p">(</span><span class="n">rconv</span><span class="p">[</span><span class="s1">&#39;BKV__&#39;</span><span class="p">])]</span>
+
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">lconv</span><span class="p">,</span> <span class="n">rconv</span><span class="p">])</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;BKV__&#39;</span><span class="p">),</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">lmissing</span><span class="p">,</span> <span class="n">rmissing</span><span class="p">])</span>
+
+
+<span class="k">def</span> <span class="nf">_prefix_columns</span><span class="p">(</span><span class="n">col_names</span><span class="p">,</span> <span class="n">output_prefix</span><span class="p">):</span>
+    <span class="n">cols</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">col_name</span> <span class="ow">in</span> <span class="n">col_names</span><span class="p">:</span>
+        <span class="n">cols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">output_prefix</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">col_name</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">cols</span>
+
+
+
+<span class="k">def</span> <span class="nf">_output_columns</span><span class="p">(</span><span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span> <span class="n">col_names</span><span class="p">,</span> <span class="n">l_output_attrs</span><span class="p">,</span> <span class="n">r_output_attrs</span><span class="p">,</span>
+                    <span class="n">l_output_prefix</span><span class="p">,</span> <span class="n">r_output_prefix</span><span class="p">):</span>
+    <span class="c1"># retain id columns from merge</span>
+    <span class="n">ret_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">_retain_names</span><span class="p">(</span><span class="n">l_key</span><span class="p">,</span> <span class="n">col_names</span><span class="p">,</span> <span class="s1">&#39;_ltable&#39;</span><span class="p">)]</span>
+    <span class="n">ret_cols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_retain_names</span><span class="p">(</span><span class="n">r_key</span><span class="p">,</span> <span class="n">col_names</span><span class="p">,</span> <span class="s1">&#39;_rtable&#39;</span><span class="p">))</span>
+
+    <span class="c1"># final columns in the output</span>
+    <span class="n">fin_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">_final_names</span><span class="p">(</span><span class="n">l_key</span><span class="p">,</span> <span class="n">l_output_prefix</span><span class="p">)]</span>
+    <span class="n">fin_cols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_final_names</span><span class="p">(</span><span class="n">r_key</span><span class="p">,</span> <span class="n">r_output_prefix</span><span class="p">))</span>
+
+    <span class="c1"># retain output attrs from merge</span>
+    <span class="k">if</span> <span class="n">l_output_attrs</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">l_output_attrs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">attr</span> <span class="o">!=</span> <span class="n">l_key</span><span class="p">:</span>
+                <span class="n">ret_cols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_retain_names</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="n">col_names</span><span class="p">,</span> <span class="s1">&#39;_ltable&#39;</span><span class="p">))</span>
+                <span class="n">fin_cols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_final_names</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="n">l_output_prefix</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">r_output_attrs</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">r_output_attrs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">attr</span> <span class="o">!=</span> <span class="n">r_key</span><span class="p">:</span>
+                <span class="n">ret_cols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_retain_names</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="n">col_names</span><span class="p">,</span> <span class="s1">&#39;_rtable&#39;</span><span class="p">))</span>
+                <span class="n">fin_cols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_final_names</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="n">r_output_prefix</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">ret_cols</span><span class="p">,</span> <span class="n">fin_cols</span>
+
+
+<span class="k">def</span> <span class="nf">_retain_names</span><span class="p">(</span><span class="n">the_name</span><span class="p">,</span> <span class="n">col_names</span><span class="p">,</span> <span class="n">suffix</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">the_name</span> <span class="ow">in</span> <span class="n">col_names</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">the_name</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">the_name</span><span class="p">)</span> <span class="o">+</span> <span class="n">suffix</span>
+
+
+<span class="k">def</span> <span class="nf">_final_names</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">prefix</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">prefix</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">_gen_iter_merge</span><span class="p">(</span><span class="o">*</span><span class="n">things</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Input: either:</span>
+<span class="sd">           a. a list of iters, where each iter is a sorted list of items.</span>
+<span class="sd">           b. a list of sorted items</span>
+<span class="sd">    Output: iter-wise output</span>
+
+<span class="sd">    This is used to merge the output from either (a) the multicore or (b) the single core case.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># If this is one thing, just return the contents (single core)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">things</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">things</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">itertuples</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="n">value</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># We will have a list of iters, iter_list</span>
+        <span class="c1"># make heapq for heads of each entry of iter_list</span>
+        <span class="c1"># pull from min from heapq for smallest of all iter_list</span>
+        <span class="c1"># refill deque if the particular thing it came from, if not empty</span>
+
+        <span class="n">iter_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># Priority queue for the heapq</span>
+        <span class="n">priority_queue</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">value_offset</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1"># load the heads of the queues into the priority_queue</span>
+        <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">things</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">this_iter</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">itertuples</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">next_value</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">this_iter</span><span class="p">)</span>
+                <span class="n">next_bkv</span> <span class="o">=</span> <span class="n">next_value</span><span class="o">.</span><span class="n">BKV__</span>
+                <span class="n">thing_for_heap</span> <span class="o">=</span> <span class="p">(</span><span class="n">next_bkv</span><span class="p">,</span> <span class="n">next_value</span><span class="p">,</span> <span class="n">value_offset</span><span class="p">)</span>
+                <span class="n">heapq</span><span class="o">.</span><span class="n">heappush</span><span class="p">(</span><span class="n">priority_queue</span><span class="p">,</span> <span class="p">(</span><span class="n">thing_for_heap</span><span class="p">))</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">raise</span>
+            <span class="c1"># Append this iterator on the iter_list</span>
+            <span class="n">iter_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">this_iter</span><span class="p">)</span>
+            <span class="n">value_offset</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="c1"># If the priority_queue has gone to zero, we&#39;re done!</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">priority_queue</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">StopIteration</span>
+
+            <span class="c1"># .... otherwise, take the next smallest thing off the priority_queue.</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">this_tuple</span> <span class="o">=</span> <span class="n">heapq</span><span class="o">.</span><span class="n">heappop</span><span class="p">(</span><span class="n">priority_queue</span><span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">raise</span>
+
+            <span class="c1">#this_bkv = this_tuple[0]</span>
+            <span class="n">this_object</span> <span class="o">=</span> <span class="n">this_tuple</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">load_next</span> <span class="o">=</span> <span class="n">this_tuple</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">load_object</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">iter_list</span><span class="p">[</span><span class="n">load_next</span><span class="p">])</span>
+                <span class="n">heapq</span><span class="o">.</span><span class="n">heappush</span><span class="p">(</span><span class="n">priority_queue</span><span class="p">,</span> <span class="p">(</span><span class="n">load_object</span><span class="o">.</span><span class="n">BKV__</span><span class="p">,</span> <span class="n">load_object</span><span class="p">,</span> <span class="n">load_next</span><span class="p">))</span>
+            <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
+                <span class="k">pass</span> <span class="c1"># Ignore the StopIteration</span>
+            <span class="k">yield</span> <span class="n">this_object</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2016, anhaidgroup
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

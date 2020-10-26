@@ -1,0 +1,9 @@
+What is New?
+============
+
+Compared to Version 0.3.2, the followings are new:
+  * Started tracking release changes in CHANGES.txt.
+  * Minorly updated usage of Pandas to prevent a dependency on downgraded versions.
+  * Added stricter scikit-learn dependency requirements to preserve old Imputer API; will change in future release.
+  * Users can now provide metadata for blackbox features (ex. left_attribute, right_attribute, etc.).
+  * This is the last version of py_entitymatching that will support Python 2 and Python 3.5.

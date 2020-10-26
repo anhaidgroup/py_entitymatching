@@ -1,0 +1,335 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Data Exploration &mdash; py_entitymatching 0.3.3 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Specifying Blockers and Performing Blocking" href="blocking.html" />
+    <link rel="prev" title="Profiling Data" href="profiling.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> py_entitymatching
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">How To Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../how_to_guide.html">How to Guide To Do Entity Matching</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="whatisnew.html">What is New?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview of Supported EM Processes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides.html">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datastructures.html">Data Structures</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="steps_supp_em_workflows.html">Steps of Supported EM Workflows</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="read_csv_files.html">Reading the CSV Files from Disk</a></li>
+<li class="toctree-l2"><a class="reference internal" href="down_sampling.html">Down Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="profiling.html">Profiling Data</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Data Exploration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#openrefine">OpenRefine</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#using-openrefine">Using OpenRefine</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pandastable">Pandastable</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#using-pandastable">Using pandastable</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="blocking.html">Specifying Blockers and Performing Blocking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="create_feats_for_blocking.html">Creating Features for Blocking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="debugging_blocking.html">Debugging Blocking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sampling.html">Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="labeling.html">Labeling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="split_train_test.html">Splitting Labeled Data into Training and Testing Sets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="create_feats_for_matching.html">Creating Features for Matching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extract_feat_vecs.html">Extracting Feature Vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="imputing_missing_values.html">Imputing Missing Values</a></li>
+<li class="toctree-l2"><a class="reference internal" href="matching.html">Specifying Matchers and Performing Matching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="select_best_matcher.html">Selecting a ML-Matcher</a></li>
+<li class="toctree-l2"><a class="reference internal" href="debugging_matcher.html">Debugging ML-Matchers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="matchercombiner.html">Combining Predictions from Multiple Matchers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="triggers.html">Using Triggers to Update Matching Results</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evaluate_matching.html">Evaluating the Matching Output</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="misc.html">Miscellaneous</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/overview.html">Overview of Command Organization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/actual_commands.html">Commands in py_entitymatching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/actual_commands.html#experimental-commands">Experimental Commands</a></li>
+</ul>
+<p class="caption"><span class="caption-text">How to Contribute</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing to py_entitymatching</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">py_entitymatching</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="steps_supp_em_workflows.html">Steps of Supported EM Workflows</a> &raquo;</li>
+        
+      <li>Data Exploration</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/user_manual/data_exploration.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="data-exploration">
+<h1>Data Exploration<a class="headerlink" href="#data-exploration" title="Permalink to this headline">¶</a></h1>
+<p>Data exploration is an important part of the entity matching workflow because it
+gives the user a chance to look at the actual data closely. Data exploration
+allows the user to inspect the individual records and features present in the
+table so that he or she can understand the important trends and relationships
+present in the data. A complete understanding of the data gives the user an
+advantage later on in the entity matching workflow.</p>
+<div class="section" id="openrefine">
+<h2>OpenRefine<a class="headerlink" href="#openrefine" title="Permalink to this headline">¶</a></h2>
+<p>OpenRefine is a data exploration tool that is compatible with Python &gt;= 2.7 or
+Python &gt;= 3.4. More information about OpenRefine can be found at its github page
+at <a class="reference external" href="https://github.com/OpenRefine/OpenRefine">https://github.com/OpenRefine/OpenRefine</a></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>OpenRefine is not included with py_entitymatching and must be downloaded and
+installed separately. The installation instructions can be found at
+<a class="reference external" href="https://github.com/OpenRefine/OpenRefine/wiki/Installation-Instructions">https://github.com/OpenRefine/OpenRefine/wiki/Installation-Instructions</a></p>
+</div>
+<div class="section" id="using-openrefine">
+<h3>Using OpenRefine<a class="headerlink" href="#using-openrefine" title="Permalink to this headline">¶</a></h3>
+<p>Before using OpenRefine, you must start the application to start an OpenRefine
+server. The explanations for doing so are explained after the installation
+instructions at <a class="reference external" href="https://github.com/OpenRefine/OpenRefine/wiki/Installation-Instructions">https://github.com/OpenRefine/OpenRefine/wiki/Installation-Instructions</a></p>
+<p>Once the application has created a server, copy the URL from the address bar of
+the OpenRefine browser (default is <a class="reference external" href="http://127.0.0.1:3333">http://127.0.0.1:3333</a> ). Then the data can
+be explored as in the example below:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">data_explore_openrefine</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Table&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Save the project back to our dataframe</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Calling export_pandas_frame will automatically delete the OpenRefine project</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">export_pandas_frame</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="pandastable">
+<h2>Pandastable<a class="headerlink" href="#pandastable" title="Permalink to this headline">¶</a></h2>
+<p>Pandastable is a data exploration tool available for python &gt;=3.4 that allows users
+to view and manipulate data. More information about pandastable can be found at
+<a class="reference external" href="https://github.com/dmnfarrell/pandastable">https://github.com/dmnfarrell/pandastable</a></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>pandastable is not packaged along with py_entitymatching. You can install
+pandastable using pip as show below:</p>
+<blockquote>
+<div><p>$ pip install pandastable</p>
+</div></blockquote>
+<p>or conda as shown below:</p>
+<blockquote>
+<div><p>$ conda install -c dmnfarrell pandastable=0.7.1</p>
+</div></blockquote>
+</div>
+<div class="section" id="using-pandastable">
+<h3>Using pandastable<a class="headerlink" href="#using-pandastable" title="Permalink to this headline">¶</a></h3>
+<p>Pandastable can be easily be used with the wrappers included with py_entitymatching.
+The following example shows how:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># import py_entitymatching</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Explore the data using pandastable</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">data_explore_pandastable</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="blocking.html" class="btn btn-neutral float-right" title="Specifying Blockers and Performing Blocking" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="profiling.html" class="btn btn-neutral float-left" title="Profiling Data" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2016, anhaidgroup
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

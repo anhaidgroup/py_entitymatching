@@ -1,0 +1,332 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Selecting Matcher &mdash; py_entitymatching 0.3.3 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Debugging Matcher" href="debugging_matcher.html" />
+    <link rel="prev" title="Supported Matchers" href="supported_matchers.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> py_entitymatching
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">How To Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../how_to_guide.html">How to Guide To Do Entity Matching</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../whatisnew.html">What is New?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview of Supported EM Processes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides.html">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datastructures.html">Data Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../steps_supp_em_workflows.html">Steps of Supported EM Workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc.html">Miscellaneous</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview of Command Organization</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="actual_commands.html">Commands in py_entitymatching</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="reading_and_writing_data.html">Reading and Writing Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loading_and_saving_objects.html">Loading and Saving Objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="handling_metadata.html">Handling Metadata</a></li>
+<li class="toctree-l2"><a class="reference internal" href="downsampling.html">Downsampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_exploration.html">Data Exploration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blocking.html">Blocking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="debugging_blocker_output.html">Debugging Blocker Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="combining_blocker_outputs.html">Combining Blocker Outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sampling.html">Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="labeling.html">Labeling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="handling_features.html">Handling Features</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="matching.html">Matching</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="splitting_data_into_train_test.html">Splitting Data into Train and Test</a></li>
+<li class="toctree-l3"><a class="reference internal" href="supported_matchers.html">Supported Matchers</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Selecting Matcher</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="debugging_matcher.html">Debugging Matcher</a></li>
+<li class="toctree-l2"><a class="reference internal" href="triggers.html">Triggers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evaluating_the_matching_output.html">Evaluating the Matching Output</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="actual_commands.html#experimental-commands">Experimental Commands</a></li>
+</ul>
+<p class="caption"><span class="caption-text">How to Contribute</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing to py_entitymatching</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">py_entitymatching</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="actual_commands.html">Commands in py_entitymatching</a> &raquo;</li>
+        
+          <li><a href="matching.html">Matching</a> &raquo;</li>
+        
+      <li>Selecting Matcher</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/user_manual/api/selecting_matcher.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="selecting-matcher">
+<h1>Selecting Matcher<a class="headerlink" href="#selecting-matcher" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt id="py_entitymatching.select_matcher">
+<code class="sig-prename descclassname">py_entitymatching.</code><code class="sig-name descname">select_matcher</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">matchers</span></em>, <em class="sig-param"><span class="n">x</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">y</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">table</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">exclude_attrs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">target_attr</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">metric_to_select_matcher</span><span class="o">=</span><span class="default_value">'precision'</span></em>, <em class="sig-param"><span class="n">metrics_to_display</span><span class="o">=</span><span class="default_value">['precision', 'recall', 'f1']</span></em>, <em class="sig-param"><span class="n">k</span><span class="o">=</span><span class="default_value">5</span></em>, <em class="sig-param"><span class="n">n_jobs</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">random_state</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/matcherselector/mlmatcherselection.html#select_matcher"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_entitymatching.select_matcher" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function selects a matcher from a given list of matchers based on a
+given metric.</p>
+<p>Specifically, this function internally uses scikit-learn’s
+cross validation function to select a matcher. There are two ways the
+user can call the fit method. First, interface similar to scikit-learn
+where the feature vectors and target attribute given as projected DataFrame.
+Second, give the DataFrame and explicitly specify the feature vectors
+(by specifying the attributes to be excluded) and the target attribute</p>
+<p>A point to note is all the input parameters have a default value of
+None. This is done to support both the interfaces in a single function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>matchers</strong> (<em>MLMatcher</em>) – List of ML matchers to be selected from.</p></li>
+<li><p><strong>x</strong> (<em>DataFrame</em>) – Input feature vectors given as pandas DataFrame (
+defaults to None).</p></li>
+<li><p><strong>y</strong> (<em>DatFrame</em>) – Input target attribute given as pandas
+DataFrame with a single column (defaults to None).</p></li>
+<li><p><strong>table</strong> (<em>DataFrame</em>) – Input pandas DataFrame containing feature
+vectors and target attribute (defaults to None).</p></li>
+<li><p><strong>exclude_attrs</strong> (<em>list</em>) – The list of attributes that should be
+excluded from the input table to get the feature vectors.</p></li>
+<li><p><strong>target_attr</strong> (<em>string</em>) – The target attribute in the input table (defaults
+to None).</p></li>
+<li><p><strong>metric_to_select_matcher</strong> (<em>string</em>) – The metric based on which the matchers must be
+selected. The string can be one of ‘precision’, ‘recall’,
+‘f1’ (defaults to ‘precision’).</p></li>
+<li><p><strong>metrics_to_display</strong> (<em>list</em>) – The metrics that will be displayed to
+the user. It should be a list of any of the strings ‘precision’,
+‘recall’, or ‘f1’ (defaults to [‘precision’, ‘recall’, ‘f1’]).</p></li>
+<li><p><strong>k</strong> (<em>int</em>) – The k value for cross-validation (defaults to 5).</p></li>
+<li><p><strong>n_jobs</strong> (<em>integer</em>) – The number of CPUs to use to do the computation.
+-1 means ‘all CPUs (defaults to -1)’.</p></li>
+<li><p><strong>random_state</strong> (<em>object</em>) – Pseudo random number generator that should be
+used for splitting the data into folds (defaults to None).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>A dictionary containing three keys - selected matcher, cv_stats, and drill_down_cv_stats.</p>
+<blockquote>
+<div><p>The selected matcher has a value that is a matcher (MLMatcher) object,
+cv_stats is a Dataframe containing average metrics for each matcher,
+and drill_down_cv_stats is a dictionary containing a table for each metric
+the user wants to display containing the score of the matchers for each fold.</p>
+</div></blockquote>
+<dl class="simple">
+<dt>Raises:</dt><dd><dl class="simple">
+<dt>AssertionError: If <cite>metric_to_select_matcher</cite> is not one of ‘precision’, ‘recall’,</dt><dd><p>or ‘f1’.</p>
+</dd>
+<dt>AssertionError: If each item in the list <cite>metrics_to_display</cite> is not one of</dt><dd><p>’precision’, ‘recall’, or ‘f1’.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dt</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">DTMatcher</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rf</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">RFMatcher</span><span class="p">()</span>
+<span class="go"># train is the feature vector containing user labels</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">select_matcher</span><span class="p">(</span><span class="n">matchers</span><span class="o">=</span><span class="p">[</span><span class="n">dt</span><span class="p">,</span> <span class="n">rf</span><span class="p">],</span> <span class="n">table</span><span class="o">=</span><span class="n">train</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;_id&#39;</span><span class="p">,</span> <span class="s1">&#39;ltable_id&#39;</span><span class="p">,</span> <span class="s1">&#39;rtable_id&#39;</span><span class="p">],</span> <span class="n">target_attr</span><span class="o">=</span><span class="s1">&#39;gold_labels&#39;</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="debugging_matcher.html" class="btn btn-neutral float-right" title="Debugging Matcher" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="supported_matchers.html" class="btn btn-neutral float-left" title="Supported Matchers" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2016, anhaidgroup
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

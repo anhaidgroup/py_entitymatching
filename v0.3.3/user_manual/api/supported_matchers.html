@@ -1,0 +1,880 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Supported Matchers &mdash; py_entitymatching 0.3.3 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Selecting Matcher" href="selecting_matcher.html" />
+    <link rel="prev" title="Splitting Data into Train and Test" href="splitting_data_into_train_test.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> py_entitymatching
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">How To Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../how_to_guide.html">How to Guide To Do Entity Matching</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../whatisnew.html">What is New?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview of Supported EM Processes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides.html">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datastructures.html">Data Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../steps_supp_em_workflows.html">Steps of Supported EM Workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc.html">Miscellaneous</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview of Command Organization</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="actual_commands.html">Commands in py_entitymatching</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="reading_and_writing_data.html">Reading and Writing Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loading_and_saving_objects.html">Loading and Saving Objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="handling_metadata.html">Handling Metadata</a></li>
+<li class="toctree-l2"><a class="reference internal" href="downsampling.html">Downsampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_exploration.html">Data Exploration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blocking.html">Blocking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="debugging_blocker_output.html">Debugging Blocker Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="combining_blocker_outputs.html">Combining Blocker Outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sampling.html">Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="labeling.html">Labeling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="handling_features.html">Handling Features</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="matching.html">Matching</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="splitting_data_into_train_test.html">Splitting Data into Train and Test</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Supported Matchers</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ml-matchers">ML Matchers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rule-based-matcher">Rule-Based Matcher</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="selecting_matcher.html">Selecting Matcher</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="debugging_matcher.html">Debugging Matcher</a></li>
+<li class="toctree-l2"><a class="reference internal" href="triggers.html">Triggers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evaluating_the_matching_output.html">Evaluating the Matching Output</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="actual_commands.html#experimental-commands">Experimental Commands</a></li>
+</ul>
+<p class="caption"><span class="caption-text">How to Contribute</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing to py_entitymatching</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">py_entitymatching</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="actual_commands.html">Commands in py_entitymatching</a> &raquo;</li>
+        
+          <li><a href="matching.html">Matching</a> &raquo;</li>
+        
+      <li>Supported Matchers</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/user_manual/api/supported_matchers.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="supported-matchers">
+<h1>Supported Matchers<a class="headerlink" href="#supported-matchers" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="ml-matchers">
+<h2>ML Matchers<a class="headerlink" href="#ml-matchers" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="py_entitymatching.DTMatcher">
+<em class="property">class </em><code class="sig-prename descclassname">py_entitymatching.</code><code class="sig-name descname">DTMatcher</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/matcher/dtmatcher.html#DTMatcher"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_entitymatching.DTMatcher" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decision Tree matcher.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – The arguments to scikit-learn’s Decision Tree
+classifier.</p></li>
+<li><p><strong>**kwargs</strong> – <p>The arguments to scikit-learn’s Decision Tree
+classifier.</p>
+</p></li>
+<li><p><strong>name</strong> (<em>string</em>) – The name of this matcher (defaults to None). If the
+matcher name is None, the class automatically generates a string
+and assigns it as the name.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>For more details please see</p>
+<dl class="py method">
+<dt id="py_entitymatching.DTMatcher.fit">
+<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">y</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">table</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">exclude_attrs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">target_attr</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.DTMatcher.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit interface for the matcher.</p>
+<p>Specifically, there are two ways the user can call the fit method.
+First, interface similar to scikit-learn where the feature vectors
+and target attribute given as projected DataFrame.
+Second, give the DataFrame and explicitly specify the feature vectors
+(by specifying the attributes to be excluded) and the target attribute.</p>
+<p>A point to note is all the input parameters have a default value of
+None. This is done to support both the interfaces in a single function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>DataFrame</em>) – The input feature vectors given as pandas
+DataFrame (defaults to None).</p></li>
+<li><p><strong>y</strong> (<em>DatFrame</em>) – The input target attribute given as pandas
+DataFrame with a single column (defaults to None).</p></li>
+<li><p><strong>table</strong> (<em>DataFrame</em>) – The input pandas DataFrame containing feature
+vectors and target attribute (defaults to None).</p></li>
+<li><p><strong>exclude_attrs</strong> (<em>list</em>) – The list of attributes that should be
+excluded from the input table to get the feature vectors.</p></li>
+<li><p><strong>target_attr</strong> (<em>string</em>) – The target attribute in the input table.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="py_entitymatching.DTMatcher.predict">
+<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">table</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">exclude_attrs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">target_attr</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">append</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">return_probs</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">probs_attr</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">inplace</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.DTMatcher.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predict interface for the matcher.</p>
+<p>Specifically, there are two ways the user can call the predict method.
+First, interface similar to scikit-learn where the feature vectors
+given as projected DataFrame.
+Second, give the DataFrame and explicitly specify the feature vectors
+(by specifying the attributes to be excluded) .</p>
+<p>A point to note is all the input parameters have a default value of
+None. This is done to support both the interfaces in a single function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>DataFrame</em>) – The input pandas DataFrame containing only feature
+vectors (defaults to None).</p></li>
+<li><p><strong>table</strong> (<em>DataFrame</em>) – The input pandas DataFrame containing feature
+vectors, and may be other attributes (defaults to None).</p></li>
+<li><p><strong>exclude_attrs</strong> (<em>list</em>) – A list of attributes to be excluded from the
+input table to get the feature vectors (defaults to None).</p></li>
+<li><p><strong>target_attr</strong> (<em>string</em>) – The attribute name where the predictions
+need to be stored in the input table (defaults to None).</p></li>
+<li><p><strong>probs_attr</strong> (<em>string</em>) – The attribute name where the prediction probabilities
+need to be stored in the input table (defaults to None).</p></li>
+<li><p><strong>append</strong> (<em>boolean</em>) – A flag to indicate whether the predictions need
+to be appended in the input DataFrame (defaults to False).</p></li>
+<li><p><strong>return_probs</strong> (<em>boolean</em>) – A flag to indicate where the prediction probabilities
+need to be returned (defaults to False). If set to True, returns the
+probability if the pair was a match.</p></li>
+<li><p><strong>inplace</strong> (<em>boolean</em>) – A flag to indicate whether the append needs to be
+done inplace (defaults to True).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An array of predictions or a DataFrame with predictions updated.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="py_entitymatching.RFMatcher">
+<em class="property">class </em><code class="sig-prename descclassname">py_entitymatching.</code><code class="sig-name descname">RFMatcher</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/matcher/rfmatcher.html#RFMatcher"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_entitymatching.RFMatcher" title="Permalink to this definition">¶</a></dt>
+<dd><p>Random Forest matcher.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – The arguments to scikit-learn’s Random Forest
+classifier.</p></li>
+<li><p><strong>**kwargs</strong> – <p>The arguments to scikit-learn’s Random Forest
+classifier.</p>
+</p></li>
+<li><p><strong>name</strong> (<em>string</em>) – The name of this matcher (defaults to None). If the
+matcher name is None, the class automatically generates a string
+and assigns it as the name.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="py_entitymatching.RFMatcher.fit">
+<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">y</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">table</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">exclude_attrs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">target_attr</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.RFMatcher.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit interface for the matcher.</p>
+<p>Specifically, there are two ways the user can call the fit method.
+First, interface similar to scikit-learn where the feature vectors
+and target attribute given as projected DataFrame.
+Second, give the DataFrame and explicitly specify the feature vectors
+(by specifying the attributes to be excluded) and the target attribute.</p>
+<p>A point to note is all the input parameters have a default value of
+None. This is done to support both the interfaces in a single function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>DataFrame</em>) – The input feature vectors given as pandas
+DataFrame (defaults to None).</p></li>
+<li><p><strong>y</strong> (<em>DatFrame</em>) – The input target attribute given as pandas
+DataFrame with a single column (defaults to None).</p></li>
+<li><p><strong>table</strong> (<em>DataFrame</em>) – The input pandas DataFrame containing feature
+vectors and target attribute (defaults to None).</p></li>
+<li><p><strong>exclude_attrs</strong> (<em>list</em>) – The list of attributes that should be
+excluded from the input table to get the feature vectors.</p></li>
+<li><p><strong>target_attr</strong> (<em>string</em>) – The target attribute in the input table.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="py_entitymatching.RFMatcher.predict">
+<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">table</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">exclude_attrs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">target_attr</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">append</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">return_probs</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">probs_attr</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">inplace</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.RFMatcher.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predict interface for the matcher.</p>
+<p>Specifically, there are two ways the user can call the predict method.
+First, interface similar to scikit-learn where the feature vectors
+given as projected DataFrame.
+Second, give the DataFrame and explicitly specify the feature vectors
+(by specifying the attributes to be excluded) .</p>
+<p>A point to note is all the input parameters have a default value of
+None. This is done to support both the interfaces in a single function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>DataFrame</em>) – The input pandas DataFrame containing only feature
+vectors (defaults to None).</p></li>
+<li><p><strong>table</strong> (<em>DataFrame</em>) – The input pandas DataFrame containing feature
+vectors, and may be other attributes (defaults to None).</p></li>
+<li><p><strong>exclude_attrs</strong> (<em>list</em>) – A list of attributes to be excluded from the
+input table to get the feature vectors (defaults to None).</p></li>
+<li><p><strong>target_attr</strong> (<em>string</em>) – The attribute name where the predictions
+need to be stored in the input table (defaults to None).</p></li>
+<li><p><strong>probs_attr</strong> (<em>string</em>) – The attribute name where the prediction probabilities
+need to be stored in the input table (defaults to None).</p></li>
+<li><p><strong>append</strong> (<em>boolean</em>) – A flag to indicate whether the predictions need
+to be appended in the input DataFrame (defaults to False).</p></li>
+<li><p><strong>return_probs</strong> (<em>boolean</em>) – A flag to indicate where the prediction probabilities
+need to be returned (defaults to False). If set to True, returns the
+probability if the pair was a match.</p></li>
+<li><p><strong>inplace</strong> (<em>boolean</em>) – A flag to indicate whether the append needs to be
+done inplace (defaults to True).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An array of predictions or a DataFrame with predictions updated.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="py_entitymatching.SVMMatcher">
+<em class="property">class </em><code class="sig-prename descclassname">py_entitymatching.</code><code class="sig-name descname">SVMMatcher</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/matcher/svmmatcher.html#SVMMatcher"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_entitymatching.SVMMatcher" title="Permalink to this definition">¶</a></dt>
+<dd><p>SVM matcher.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – The arguments to scikit-learn’s SVM
+classifier.</p></li>
+<li><p><strong>**kwargs</strong> – <p>The arguments to scikit-learn’s SVM
+classifier.</p>
+</p></li>
+<li><p><strong>name</strong> (<em>string</em>) – The name of this matcher (defaults to None). If the
+matcher name is None, the class automatically generates a string
+and assigns it as the name.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="py_entitymatching.SVMMatcher.fit">
+<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">y</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">table</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">exclude_attrs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">target_attr</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.SVMMatcher.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit interface for the matcher.</p>
+<p>Specifically, there are two ways the user can call the fit method.
+First, interface similar to scikit-learn where the feature vectors
+and target attribute given as projected DataFrame.
+Second, give the DataFrame and explicitly specify the feature vectors
+(by specifying the attributes to be excluded) and the target attribute.</p>
+<p>A point to note is all the input parameters have a default value of
+None. This is done to support both the interfaces in a single function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>DataFrame</em>) – The input feature vectors given as pandas
+DataFrame (defaults to None).</p></li>
+<li><p><strong>y</strong> (<em>DatFrame</em>) – The input target attribute given as pandas
+DataFrame with a single column (defaults to None).</p></li>
+<li><p><strong>table</strong> (<em>DataFrame</em>) – The input pandas DataFrame containing feature
+vectors and target attribute (defaults to None).</p></li>
+<li><p><strong>exclude_attrs</strong> (<em>list</em>) – The list of attributes that should be
+excluded from the input table to get the feature vectors.</p></li>
+<li><p><strong>target_attr</strong> (<em>string</em>) – The target attribute in the input table.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="py_entitymatching.SVMMatcher.predict">
+<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">table</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">exclude_attrs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">target_attr</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">append</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">return_probs</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">probs_attr</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">inplace</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.SVMMatcher.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predict interface for the matcher.</p>
+<p>Specifically, there are two ways the user can call the predict method.
+First, interface similar to scikit-learn where the feature vectors
+given as projected DataFrame.
+Second, give the DataFrame and explicitly specify the feature vectors
+(by specifying the attributes to be excluded) .</p>
+<p>A point to note is all the input parameters have a default value of
+None. This is done to support both the interfaces in a single function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>DataFrame</em>) – The input pandas DataFrame containing only feature
+vectors (defaults to None).</p></li>
+<li><p><strong>table</strong> (<em>DataFrame</em>) – The input pandas DataFrame containing feature
+vectors, and may be other attributes (defaults to None).</p></li>
+<li><p><strong>exclude_attrs</strong> (<em>list</em>) – A list of attributes to be excluded from the
+input table to get the feature vectors (defaults to None).</p></li>
+<li><p><strong>target_attr</strong> (<em>string</em>) – The attribute name where the predictions
+need to be stored in the input table (defaults to None).</p></li>
+<li><p><strong>probs_attr</strong> (<em>string</em>) – The attribute name where the prediction probabilities
+need to be stored in the input table (defaults to None).</p></li>
+<li><p><strong>append</strong> (<em>boolean</em>) – A flag to indicate whether the predictions need
+to be appended in the input DataFrame (defaults to False).</p></li>
+<li><p><strong>return_probs</strong> (<em>boolean</em>) – A flag to indicate where the prediction probabilities
+need to be returned (defaults to False). If set to True, returns the
+probability if the pair was a match.</p></li>
+<li><p><strong>inplace</strong> (<em>boolean</em>) – A flag to indicate whether the append needs to be
+done inplace (defaults to True).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An array of predictions or a DataFrame with predictions updated.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="py_entitymatching.NBMatcher">
+<em class="property">class </em><code class="sig-prename descclassname">py_entitymatching.</code><code class="sig-name descname">NBMatcher</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/matcher/nbmatcher.html#NBMatcher"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_entitymatching.NBMatcher" title="Permalink to this definition">¶</a></dt>
+<dd><p>Naive Bayes matcher.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – The arguments to scikit-learn’s Naive Bayes
+classifier.</p></li>
+<li><p><strong>**kwargs</strong> – <p>The arguments to scikit-learn’s Naive Bayes
+classifier.</p>
+</p></li>
+<li><p><strong>name</strong> (<em>string</em>) – The name of this matcher (defaults to None). If the
+matcher name is None, the class automatically generates a string
+and assigns it as the name.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="py_entitymatching.NBMatcher.fit">
+<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">y</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">table</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">exclude_attrs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">target_attr</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.NBMatcher.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit interface for the matcher.</p>
+<p>Specifically, there are two ways the user can call the fit method.
+First, interface similar to scikit-learn where the feature vectors
+and target attribute given as projected DataFrame.
+Second, give the DataFrame and explicitly specify the feature vectors
+(by specifying the attributes to be excluded) and the target attribute.</p>
+<p>A point to note is all the input parameters have a default value of
+None. This is done to support both the interfaces in a single function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>DataFrame</em>) – The input feature vectors given as pandas
+DataFrame (defaults to None).</p></li>
+<li><p><strong>y</strong> (<em>DatFrame</em>) – The input target attribute given as pandas
+DataFrame with a single column (defaults to None).</p></li>
+<li><p><strong>table</strong> (<em>DataFrame</em>) – The input pandas DataFrame containing feature
+vectors and target attribute (defaults to None).</p></li>
+<li><p><strong>exclude_attrs</strong> (<em>list</em>) – The list of attributes that should be
+excluded from the input table to get the feature vectors.</p></li>
+<li><p><strong>target_attr</strong> (<em>string</em>) – The target attribute in the input table.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="py_entitymatching.NBMatcher.predict">
+<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">table</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">exclude_attrs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">target_attr</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">append</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">return_probs</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">probs_attr</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">inplace</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.NBMatcher.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predict interface for the matcher.</p>
+<p>Specifically, there are two ways the user can call the predict method.
+First, interface similar to scikit-learn where the feature vectors
+given as projected DataFrame.
+Second, give the DataFrame and explicitly specify the feature vectors
+(by specifying the attributes to be excluded) .</p>
+<p>A point to note is all the input parameters have a default value of
+None. This is done to support both the interfaces in a single function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>DataFrame</em>) – The input pandas DataFrame containing only feature
+vectors (defaults to None).</p></li>
+<li><p><strong>table</strong> (<em>DataFrame</em>) – The input pandas DataFrame containing feature
+vectors, and may be other attributes (defaults to None).</p></li>
+<li><p><strong>exclude_attrs</strong> (<em>list</em>) – A list of attributes to be excluded from the
+input table to get the feature vectors (defaults to None).</p></li>
+<li><p><strong>target_attr</strong> (<em>string</em>) – The attribute name where the predictions
+need to be stored in the input table (defaults to None).</p></li>
+<li><p><strong>probs_attr</strong> (<em>string</em>) – The attribute name where the prediction probabilities
+need to be stored in the input table (defaults to None).</p></li>
+<li><p><strong>append</strong> (<em>boolean</em>) – A flag to indicate whether the predictions need
+to be appended in the input DataFrame (defaults to False).</p></li>
+<li><p><strong>return_probs</strong> (<em>boolean</em>) – A flag to indicate where the prediction probabilities
+need to be returned (defaults to False). If set to True, returns the
+probability if the pair was a match.</p></li>
+<li><p><strong>inplace</strong> (<em>boolean</em>) – A flag to indicate whether the append needs to be
+done inplace (defaults to True).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An array of predictions or a DataFrame with predictions updated.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="py_entitymatching.LinRegMatcher">
+<em class="property">class </em><code class="sig-prename descclassname">py_entitymatching.</code><code class="sig-name descname">LinRegMatcher</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/matcher/linregmatcher.html#LinRegMatcher"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_entitymatching.LinRegMatcher" title="Permalink to this definition">¶</a></dt>
+<dd><p>Linear regression matcher.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – Arguments to scikit-learn’s Linear Regression matcher.</p></li>
+<li><p><strong>**kwargs</strong> – <p>Arguments to scikit-learn’s Linear Regression matcher.</p>
+</p></li>
+<li><p><strong>name</strong> (<em>string</em>) – Name that should be given to this matcher.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="py_entitymatching.LinRegMatcher.fit">
+<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">y</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">table</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">exclude_attrs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">target_attr</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.LinRegMatcher.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit interface for the matcher.</p>
+<p>Specifically, there are two ways the user can call the fit method.
+First, interface similar to scikit-learn where the feature vectors
+and target attribute given as projected DataFrame.
+Second, give the DataFrame and explicitly specify the feature vectors
+(by specifying the attributes to be excluded) and the target attribute.</p>
+<p>A point to note is all the input parameters have a default value of
+None. This is done to support both the interfaces in a single function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>DataFrame</em>) – The input feature vectors given as pandas
+DataFrame (defaults to None).</p></li>
+<li><p><strong>y</strong> (<em>DatFrame</em>) – The input target attribute given as pandas
+DataFrame with a single column (defaults to None).</p></li>
+<li><p><strong>table</strong> (<em>DataFrame</em>) – The input pandas DataFrame containing feature
+vectors and target attribute (defaults to None).</p></li>
+<li><p><strong>exclude_attrs</strong> (<em>list</em>) – The list of attributes that should be
+excluded from the input table to get the feature vectors.</p></li>
+<li><p><strong>target_attr</strong> (<em>string</em>) – The target attribute in the input table.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="py_entitymatching.LinRegMatcher.predict">
+<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">table</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">exclude_attrs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">target_attr</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">append</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">return_probs</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">probs_attr</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">inplace</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.LinRegMatcher.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predict interface for the matcher.</p>
+<p>Specifically, there are two ways the user can call the predict method.
+First, interface similar to scikit-learn where the feature vectors
+given as projected DataFrame.
+Second, give the DataFrame and explicitly specify the feature vectors
+(by specifying the attributes to be excluded) .</p>
+<p>A point to note is all the input parameters have a default value of
+None. This is done to support both the interfaces in a single function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>DataFrame</em>) – The input pandas DataFrame containing only feature
+vectors (defaults to None).</p></li>
+<li><p><strong>table</strong> (<em>DataFrame</em>) – The input pandas DataFrame containing feature
+vectors, and may be other attributes (defaults to None).</p></li>
+<li><p><strong>exclude_attrs</strong> (<em>list</em>) – A list of attributes to be excluded from the
+input table to get the feature vectors (defaults to None).</p></li>
+<li><p><strong>target_attr</strong> (<em>string</em>) – The attribute name where the predictions
+need to be stored in the input table (defaults to None).</p></li>
+<li><p><strong>probs_attr</strong> (<em>string</em>) – The attribute name where the prediction probabilities
+need to be stored in the input table (defaults to None).</p></li>
+<li><p><strong>append</strong> (<em>boolean</em>) – A flag to indicate whether the predictions need
+to be appended in the input DataFrame (defaults to False).</p></li>
+<li><p><strong>return_probs</strong> (<em>boolean</em>) – A flag to indicate where the prediction probabilities
+need to be returned (defaults to False). If set to True, returns the
+probability if the pair was a match.</p></li>
+<li><p><strong>inplace</strong> (<em>boolean</em>) – A flag to indicate whether the append needs to be
+done inplace (defaults to True).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An array of predictions or a DataFrame with predictions updated.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="py_entitymatching.LogRegMatcher">
+<em class="property">class </em><code class="sig-prename descclassname">py_entitymatching.</code><code class="sig-name descname">LogRegMatcher</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/matcher/logregmatcher.html#LogRegMatcher"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_entitymatching.LogRegMatcher" title="Permalink to this definition">¶</a></dt>
+<dd><p>Logistic Regression matcher.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – THe Arguments to scikit-learn’s Logistic Regression
+classifier.</p></li>
+<li><p><strong>**kwargs</strong> – <p>THe Arguments to scikit-learn’s Logistic Regression
+classifier.</p>
+</p></li>
+<li><p><strong>name</strong> (<em>string</em>) – The name of this matcher (defaults to None). If the
+matcher name is None, the class automatically generates a string
+and assigns it as the name.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="py_entitymatching.LogRegMatcher.fit">
+<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">y</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">table</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">exclude_attrs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">target_attr</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.LogRegMatcher.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit interface for the matcher.</p>
+<p>Specifically, there are two ways the user can call the fit method.
+First, interface similar to scikit-learn where the feature vectors
+and target attribute given as projected DataFrame.
+Second, give the DataFrame and explicitly specify the feature vectors
+(by specifying the attributes to be excluded) and the target attribute.</p>
+<p>A point to note is all the input parameters have a default value of
+None. This is done to support both the interfaces in a single function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>DataFrame</em>) – The input feature vectors given as pandas
+DataFrame (defaults to None).</p></li>
+<li><p><strong>y</strong> (<em>DatFrame</em>) – The input target attribute given as pandas
+DataFrame with a single column (defaults to None).</p></li>
+<li><p><strong>table</strong> (<em>DataFrame</em>) – The input pandas DataFrame containing feature
+vectors and target attribute (defaults to None).</p></li>
+<li><p><strong>exclude_attrs</strong> (<em>list</em>) – The list of attributes that should be
+excluded from the input table to get the feature vectors.</p></li>
+<li><p><strong>target_attr</strong> (<em>string</em>) – The target attribute in the input table.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="py_entitymatching.LogRegMatcher.predict">
+<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">table</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">exclude_attrs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">target_attr</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">append</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">return_probs</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">probs_attr</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">inplace</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.LogRegMatcher.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predict interface for the matcher.</p>
+<p>Specifically, there are two ways the user can call the predict method.
+First, interface similar to scikit-learn where the feature vectors
+given as projected DataFrame.
+Second, give the DataFrame and explicitly specify the feature vectors
+(by specifying the attributes to be excluded) .</p>
+<p>A point to note is all the input parameters have a default value of
+None. This is done to support both the interfaces in a single function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>DataFrame</em>) – The input pandas DataFrame containing only feature
+vectors (defaults to None).</p></li>
+<li><p><strong>table</strong> (<em>DataFrame</em>) – The input pandas DataFrame containing feature
+vectors, and may be other attributes (defaults to None).</p></li>
+<li><p><strong>exclude_attrs</strong> (<em>list</em>) – A list of attributes to be excluded from the
+input table to get the feature vectors (defaults to None).</p></li>
+<li><p><strong>target_attr</strong> (<em>string</em>) – The attribute name where the predictions
+need to be stored in the input table (defaults to None).</p></li>
+<li><p><strong>probs_attr</strong> (<em>string</em>) – The attribute name where the prediction probabilities
+need to be stored in the input table (defaults to None).</p></li>
+<li><p><strong>append</strong> (<em>boolean</em>) – A flag to indicate whether the predictions need
+to be appended in the input DataFrame (defaults to False).</p></li>
+<li><p><strong>return_probs</strong> (<em>boolean</em>) – A flag to indicate where the prediction probabilities
+need to be returned (defaults to False). If set to True, returns the
+probability if the pair was a match.</p></li>
+<li><p><strong>inplace</strong> (<em>boolean</em>) – A flag to indicate whether the append needs to be
+done inplace (defaults to True).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An array of predictions or a DataFrame with predictions updated.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="py_entitymatching.XGBoostMatcher">
+<em class="property">class </em><code class="sig-prename descclassname">py_entitymatching.</code><code class="sig-name descname">XGBoostMatcher</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/matcher/xgboostmatcher.html#XGBoostMatcher"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_entitymatching.XGBoostMatcher" title="Permalink to this definition">¶</a></dt>
+<dd><p>XGBoost matcher.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – The arguments to XGBoost
+classifier.</p></li>
+<li><p><strong>**kwargs</strong> – <p>The arguments to XGBoost
+classifier.</p>
+</p></li>
+<li><p><strong>name</strong> (<em>string</em>) – The name of this matcher (defaults to None). If the
+matcher name is None, the class automatically generates a string
+and assigns it as the name.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="py_entitymatching.XGBoostMatcher.fit">
+<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">y</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">table</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">exclude_attrs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">target_attr</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.XGBoostMatcher.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit interface for the matcher.</p>
+<p>Specifically, there are two ways the user can call the fit method.
+First, interface similar to scikit-learn where the feature vectors
+and target attribute given as projected DataFrame.
+Second, give the DataFrame and explicitly specify the feature vectors
+(by specifying the attributes to be excluded) and the target attribute.</p>
+<p>A point to note is all the input parameters have a default value of
+None. This is done to support both the interfaces in a single function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>DataFrame</em>) – The input feature vectors given as pandas
+DataFrame (defaults to None).</p></li>
+<li><p><strong>y</strong> (<em>DatFrame</em>) – The input target attribute given as pandas
+DataFrame with a single column (defaults to None).</p></li>
+<li><p><strong>table</strong> (<em>DataFrame</em>) – The input pandas DataFrame containing feature
+vectors and target attribute (defaults to None).</p></li>
+<li><p><strong>exclude_attrs</strong> (<em>list</em>) – The list of attributes that should be
+excluded from the input table to get the feature vectors.</p></li>
+<li><p><strong>target_attr</strong> (<em>string</em>) – The target attribute in the input table.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="py_entitymatching.XGBoostMatcher.predict">
+<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">table</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">exclude_attrs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">target_attr</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">append</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">return_probs</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">probs_attr</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">inplace</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#py_entitymatching.XGBoostMatcher.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predict interface for the matcher.</p>
+<p>Specifically, there are two ways the user can call the predict method.
+First, interface similar to scikit-learn where the feature vectors
+given as projected DataFrame.
+Second, give the DataFrame and explicitly specify the feature vectors
+(by specifying the attributes to be excluded) .</p>
+<p>A point to note is all the input parameters have a default value of
+None. This is done to support both the interfaces in a single function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>DataFrame</em>) – The input pandas DataFrame containing only feature
+vectors (defaults to None).</p></li>
+<li><p><strong>table</strong> (<em>DataFrame</em>) – The input pandas DataFrame containing feature
+vectors, and may be other attributes (defaults to None).</p></li>
+<li><p><strong>exclude_attrs</strong> (<em>list</em>) – A list of attributes to be excluded from the
+input table to get the feature vectors (defaults to None).</p></li>
+<li><p><strong>target_attr</strong> (<em>string</em>) – The attribute name where the predictions
+need to be stored in the input table (defaults to None).</p></li>
+<li><p><strong>probs_attr</strong> (<em>string</em>) – The attribute name where the prediction probabilities
+need to be stored in the input table (defaults to None).</p></li>
+<li><p><strong>append</strong> (<em>boolean</em>) – A flag to indicate whether the predictions need
+to be appended in the input DataFrame (defaults to False).</p></li>
+<li><p><strong>return_probs</strong> (<em>boolean</em>) – A flag to indicate where the prediction probabilities
+need to be returned (defaults to False). If set to True, returns the
+probability if the pair was a match.</p></li>
+<li><p><strong>inplace</strong> (<em>boolean</em>) – A flag to indicate whether the append needs to be
+done inplace (defaults to True).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An array of predictions or a DataFrame with predictions updated.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="rule-based-matcher">
+<h2>Rule-Based Matcher<a class="headerlink" href="#rule-based-matcher" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="selecting_matcher.html" class="btn btn-neutral float-right" title="Selecting Matcher" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="splitting_data_into_train_test.html" class="btn btn-neutral float-left" title="Splitting Data into Train and Test" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2016, anhaidgroup
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

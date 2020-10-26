@@ -1,0 +1,476 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>py_entitymatching.matcherselector.mlmatcherselection &mdash; py_entitymatching 0.3.3 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> py_entitymatching
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">How To Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../how_to_guide.html">How to Guide To Do Entity Matching</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/whatisnew.html">What is New?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/overview.html">Overview of Supported EM Processes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/guides.html">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/datastructures.html">Data Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/steps_supp_em_workflows.html">Steps of Supported EM Workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/misc.html">Miscellaneous</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/api/overview.html">Overview of Command Organization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/api/actual_commands.html">Commands in py_entitymatching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/api/actual_commands.html#experimental-commands">Experimental Commands</a></li>
+</ul>
+<p class="caption"><span class="caption-text">How to Contribute</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing to py_entitymatching</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">py_entitymatching</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>py_entitymatching.matcherselector.mlmatcherselection</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for py_entitymatching.matcherselector.mlmatcherselection</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module contains functions for selecting a ML-matcher.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">KFold</span><span class="p">,</span> <span class="n">cross_val_score</span>
+
+<span class="kn">from</span> <span class="nn">py_entitymatching.utils.catalog_helper</span> <span class="kn">import</span> <span class="n">check_attrs_present</span>
+<span class="kn">from</span> <span class="nn">py_entitymatching.utils.generic_helper</span> <span class="kn">import</span> <span class="n">list_diff</span><span class="p">,</span> <span class="n">list_drop_duplicates</span>
+<span class="kn">from</span> <span class="nn">py_entitymatching.utils.validation_helper</span> <span class="kn">import</span> <span class="n">validate_object_type</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="select_matcher"><a class="viewcode-back" href="../../../user_manual/api/selecting_matcher.html#py_entitymatching.select_matcher">[docs]</a><span class="k">def</span> <span class="nf">select_matcher</span><span class="p">(</span><span class="n">matchers</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">table</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                   <span class="n">target_attr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                   <span class="n">metric_to_select_matcher</span><span class="o">=</span><span class="s1">&#39;precision&#39;</span><span class="p">,</span>
+                   <span class="n">metrics_to_display</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;precision&#39;</span><span class="p">,</span> <span class="s1">&#39;recall&#39;</span><span class="p">,</span> <span class="s1">&#39;f1&#39;</span><span class="p">],</span>
+                   <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function selects a matcher from a given list of matchers based on a</span>
+<span class="sd">    given metric.</span>
+<span class="sd">    </span>
+<span class="sd">    Specifically, this function internally uses scikit-learn&#39;s</span>
+<span class="sd">    cross validation function to select a matcher. There are two ways the</span>
+<span class="sd">    user can call the fit method. First, interface similar to scikit-learn</span>
+<span class="sd">    where the feature vectors and target attribute given as projected DataFrame.</span>
+<span class="sd">    Second, give the DataFrame and explicitly specify the feature vectors</span>
+<span class="sd">    (by specifying the attributes to be excluded) and the target attribute</span>
+
+<span class="sd">    A point to note is all the input parameters have a default value of</span>
+<span class="sd">    None. This is done to support both the interfaces in a single function.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        matchers (MLMatcher): List of ML matchers to be selected from.</span>
+<span class="sd">        x (DataFrame): Input feature vectors given as pandas DataFrame (</span>
+<span class="sd">            defaults to None).</span>
+<span class="sd">        y (DatFrame): Input target attribute given as pandas</span>
+<span class="sd">            DataFrame with a single column (defaults to None).</span>
+<span class="sd">        table (DataFrame): Input pandas DataFrame containing feature</span>
+<span class="sd">            vectors and target attribute (defaults to None).</span>
+<span class="sd">        exclude_attrs (list): The list of attributes that should be</span>
+<span class="sd">            excluded from the input table to get the feature vectors.</span>
+<span class="sd">        target_attr (string): The target attribute in the input table (defaults</span>
+<span class="sd">            to None).</span>
+<span class="sd">        metric_to_select_matcher (string): The metric based on which the matchers must be</span>
+<span class="sd">            selected. The string can be one of &#39;precision&#39;, &#39;recall&#39;,</span>
+<span class="sd">            &#39;f1&#39; (defaults to &#39;precision&#39;).</span>
+<span class="sd">        metrics_to_display (list): The metrics that will be displayed to</span>
+<span class="sd">            the user. It should be a list of any of the strings &#39;precision&#39;,</span>
+<span class="sd">            &#39;recall&#39;, or &#39;f1&#39; (defaults to [&#39;precision&#39;, &#39;recall&#39;, &#39;f1&#39;]).</span>
+<span class="sd">        k (int): The k value for cross-validation (defaults to 5).</span>
+<span class="sd">        n_jobs (integer): The number of CPUs to use to do the computation.</span>
+<span class="sd">            -1 means &#39;all CPUs (defaults to -1)&#39;.</span>
+<span class="sd">        random_state (object): Pseudo random number generator that should be</span>
+<span class="sd">            used for splitting the data into folds (defaults to None).</span>
+
+<span class="sd">    Returns:</span>
+
+<span class="sd">        A dictionary containing three keys - selected matcher, cv_stats, and drill_down_cv_stats.</span>
+
+<span class="sd">        The selected matcher has a value that is a matcher (MLMatcher) object,</span>
+<span class="sd">        cv_stats is a Dataframe containing average metrics for each matcher,</span>
+<span class="sd">        and drill_down_cv_stats is a dictionary containing a table for each metric</span>
+<span class="sd">        the user wants to display containing the score of the matchers for each fold.</span>
+
+<span class="sd">     Raises:</span>
+<span class="sd">        AssertionError: If `metric_to_select_matcher` is not one of &#39;precision&#39;, &#39;recall&#39;,</span>
+<span class="sd">            or &#39;f1&#39;.</span>
+<span class="sd">        AssertionError: If each item in the list `metrics_to_display` is not one of</span>
+<span class="sd">            &#39;precision&#39;, &#39;recall&#39;, or &#39;f1&#39;.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; dt = em.DTMatcher()</span>
+<span class="sd">        &gt;&gt;&gt; rf = em.RFMatcher()</span>
+<span class="sd">        # train is the feature vector containing user labels</span>
+<span class="sd">        &gt;&gt;&gt; result = em.select_matcher(matchers=[dt, rf], table=train, exclude_attrs=[&#39;_id&#39;, &#39;ltable_id&#39;, &#39;rtable_id&#39;], target_attr=&#39;gold_labels&#39;, k=5)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Check that metrics_to_display is valid</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">metrics_to_display</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">metrics_to_display</span> <span class="o">=</span> <span class="p">[</span><span class="n">metrics_to_display</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">met</span> <span class="ow">in</span> <span class="n">metrics_to_display</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">met</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;precision&#39;</span><span class="p">,</span> <span class="s1">&#39;recall&#39;</span><span class="p">,</span> <span class="s1">&#39;f1&#39;</span><span class="p">]:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Metrics must be either &quot;precision&quot;, &quot;recall&quot;, or &quot;f1&quot;.&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Metrics must be either &quot;precision&quot;, &quot;recall&quot;, or &quot;f1&quot;.&#39;</span><span class="p">)</span>
+    <span class="c1"># Check that metric_to_select_matcher is valid</span>
+    <span class="k">if</span> <span class="n">metric_to_select_matcher</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;precision&#39;</span><span class="p">,</span> <span class="s1">&#39;recall&#39;</span><span class="p">,</span> <span class="s1">&#39;f1&#39;</span><span class="p">]:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Metric must be either &quot;precision&quot;, &quot;recall&quot;, or &quot;f1&quot;.&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Metric must be either &quot;precision&quot;, &quot;recall&quot;, or &quot;f1&quot;.&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Based on the input, get the x, y data that can be used to call the</span>
+    <span class="c1"># scikit-learn&#39;s cross validation method</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">_get_xy_data</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="p">,</span> <span class="n">target_attr</span><span class="p">)</span>
+    <span class="n">max_score</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="c1"># Initialize the best matcher. As of now set it to be the first matcher.</span>
+    <span class="n">sel_matcher</span> <span class="o">=</span> <span class="n">matchers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="c1"># Fix the header</span>
+    <span class="n">header</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Name&#39;</span><span class="p">,</span> <span class="s1">&#39;Matcher&#39;</span><span class="p">,</span> <span class="s1">&#39;Num folds&#39;</span><span class="p">]</span>
+    <span class="c1"># # Append the folds</span>
+    <span class="n">fold_header</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Fold &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">k</span><span class="p">)]</span>
+    <span class="n">header</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">fold_header</span><span class="p">)</span>
+    <span class="c1"># Finally, append the score.</span>
+    <span class="n">header</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Mean score&#39;</span><span class="p">)</span>
+    <span class="c1"># Initialize the drill_down_cv_stats dictionary</span>
+    <span class="n">drill_down_cv_stats</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+    <span class="c1"># Initialize the cv_stats_dictionary and set the first key to contain the matcher names</span>
+    <span class="n">cv_stats_dict</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+    <span class="n">matcher_names</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">matchers</span><span class="p">:</span>
+        <span class="n">matcher_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">get_name</span><span class="p">())</span>
+    <span class="n">cv_stats_dict</span><span class="p">[</span><span class="s1">&#39;Matcher&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">matcher_names</span>
+
+    <span class="c1"># Run the cross_validation for each metric</span>
+    <span class="k">for</span> <span class="n">met</span> <span class="ow">in</span> <span class="n">metrics_to_display</span><span class="p">:</span>
+        <span class="n">dict_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">mean_score_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># Run the cross validation for each matcher</span>
+        <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">matchers</span><span class="p">:</span>
+            <span class="c1"># Use scikit learn&#39;s cross validation to get the matcher and the list</span>
+            <span class="c1">#  of scores (one for each fold).</span>
+            <span class="n">matcher</span><span class="p">,</span> <span class="n">scores</span> <span class="o">=</span> <span class="n">cross_validation</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">met</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">random_state</span><span class="p">,</span> <span class="n">n_jobs</span><span class="p">)</span>
+            <span class="c1"># Fill a dictionary based on the matcher and the scores.</span>
+            <span class="n">val_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">matcher</span><span class="o">.</span><span class="n">get_name</span><span class="p">(),</span> <span class="n">matcher</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span>
+            <span class="n">val_list</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
+            <span class="n">val_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">scores</span><span class="p">))</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">header</span><span class="p">,</span> <span class="n">val_list</span><span class="p">))</span>
+            <span class="n">dict_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+            <span class="c1"># Create a list of the mean scores for each matcher</span>
+            <span class="n">mean_score_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">scores</span><span class="p">))</span>
+            <span class="c1"># Select the matcher based on the mean score, but only for metric_to_select_matcher</span>
+            <span class="k">if</span> <span class="n">met</span> <span class="o">==</span> <span class="n">metric_to_select_matcher</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">max_score</span><span class="p">:</span>
+                <span class="n">sel_matcher</span> <span class="o">=</span> <span class="n">m</span>
+                <span class="n">max_score</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
+        <span class="c1"># Create a DataFrame based on the list of dictionaries created</span>
+        <span class="n">stats</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">dict_list</span><span class="p">)</span>
+        <span class="n">stats</span> <span class="o">=</span> <span class="n">stats</span><span class="p">[</span><span class="n">header</span><span class="p">]</span>
+        <span class="n">drill_down_cv_stats</span><span class="p">[</span><span class="n">met</span><span class="p">]</span> <span class="o">=</span> <span class="n">stats</span>
+        <span class="c1"># Add the mean scores for this metric to the cv_stats_dictionary</span>
+        <span class="n">cv_stats_dict</span><span class="p">[</span><span class="s1">&#39;Average &#39;</span> <span class="o">+</span> <span class="n">met</span><span class="p">]</span> <span class="o">=</span> <span class="n">mean_score_list</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+    <span class="c1"># Add selected matcher and the stats to a dictionary.</span>
+    <span class="n">res</span><span class="p">[</span><span class="s1">&#39;selected_matcher&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sel_matcher</span>
+    <span class="n">res</span><span class="p">[</span><span class="s1">&#39;cv_stats&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">cv_stats_dict</span><span class="p">)</span>
+    <span class="n">res</span><span class="p">[</span><span class="s1">&#39;drill_down_cv_stats&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">drill_down_cv_stats</span>
+    <span class="c1"># Result the final dictionary containing selected matcher and the CV</span>
+    <span class="c1"># statistics.</span>
+    <span class="k">return</span> <span class="n">res</span></div>
+
+
+<span class="k">def</span> <span class="nf">cross_validation</span><span class="p">(</span><span class="n">matcher</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">metric</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">random_state</span><span class="p">,</span> <span class="n">n_jobs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The function does cross validation for a single matcher</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Use KFold function from scikit learn to create a ms object that can be</span>
+    <span class="c1"># used for cross_val_score function.</span>
+    <span class="n">cv</span> <span class="o">=</span> <span class="n">KFold</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
+    <span class="c1"># Call the scikit-learn&#39;s cross_val_score function</span>
+    <span class="n">scores</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">matcher</span><span class="o">.</span><span class="n">clf</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="n">metric</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">cv</span><span class="p">,</span>
+                             <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">)</span>
+    <span class="c1"># Finally, return the matcher along with the scores.</span>
+    <span class="k">return</span> <span class="n">matcher</span><span class="p">,</span> <span class="n">scores</span>
+
+
+<span class="k">def</span> <span class="nf">_get_xy_data</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="p">,</span> <span class="n">target_attr</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Gets the X, Y data from the input based on the given table, the</span>
+<span class="sd">    exclude attributes and target attribute provided.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># If x and y is given, call appropriate function</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">y</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_get_xy_data_prj</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="c1"># If table, exclude attributes and target attribute are given,</span>
+    <span class="c1"># call appropriate function</span>
+    <span class="k">elif</span> <span class="n">table</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">exclude_attrs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> \
+            <span class="ow">and</span> <span class="n">target_attr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_get_xy_data_ex</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="p">,</span> <span class="n">target_attr</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Else, raise a syntax error.</span>
+        <span class="k">raise</span> <span class="ne">SyntaxError</span><span class="p">(</span><span class="s1">&#39;The arguments supplied does not match &#39;</span>
+                          <span class="s1">&#39;the signatures supported !!!&#39;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_get_xy_data_prj</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Gets X, Y that can be used for scikit-learn function based on given</span>
+<span class="sd">    projected tables.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># If the first column is &#39;_id&#39; the remove it</span>
+    <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;_id&#39;</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+            <span class="s1">&#39;Input table contains &quot;_id&quot;. Removing this column for processing&#39;</span><span class="p">)</span>
+        <span class="c1"># Get the values  from the DataFrame</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Target attr is expected to be a pandas series&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Target attr is expected to be a pandas series&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Get the values  from the DataFrame</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">values</span>
+    <span class="c1"># Finally, return x an y</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span>
+
+
+<span class="k">def</span> <span class="nf">_get_xy_data_ex</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="p">,</span> <span class="n">target_attr</span><span class="p">):</span>
+    <span class="c1"># Validate the input parameters</span>
+    <span class="c1"># # We expect the input table to be of type pandas DataFrame</span>
+    <span class="n">validate_object_type</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span>
+    <span class="c1"># We expect exclude attributes to be of type list. If not convert it into</span>
+    <span class="c1">#  a list.</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exclude_attrs</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">exclude_attrs</span> <span class="o">=</span> <span class="p">[</span><span class="n">exclude_attrs</span><span class="p">]</span>
+
+    <span class="c1"># Check if the exclude attributes are present in the input table</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">check_attrs_present</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;The attributes mentioned in exclude_attrs &#39;</span>
+                     <span class="s1">&#39;is not present &#39;</span>
+                     <span class="s1">&#39;in the input table&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span>
+            <span class="s1">&#39;The attributes mentioned in exclude_attrs &#39;</span>
+            <span class="s1">&#39;is not present &#39;</span>
+            <span class="s1">&#39;in the input table&#39;</span><span class="p">)</span>
+    <span class="c1"># Check if the target attribute is present in the input table</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">check_attrs_present</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">target_attr</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;The target_attr is not present in the input table&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span>
+            <span class="s1">&#39;The target_attr is not present in the input table&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Drop the duplicates from the exclude attributes</span>
+    <span class="n">exclude_attrs</span> <span class="o">=</span> <span class="n">list_drop_duplicates</span><span class="p">(</span><span class="n">exclude_attrs</span><span class="p">)</span>
+
+    <span class="c1"># Explicitly add the target attribute to exclude attribute (if it is not</span>
+    <span class="c1"># already present)</span>
+    <span class="k">if</span> <span class="n">target_attr</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">exclude_attrs</span><span class="p">:</span>
+        <span class="n">exclude_attrs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">target_attr</span><span class="p">)</span>
+
+    <span class="c1"># Project the list of attributes that should be used for scikit-learn&#39;s</span>
+    <span class="c1"># functions.</span>
+    <span class="n">attrs_to_project</span> <span class="o">=</span> <span class="n">list_diff</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">columns</span><span class="p">),</span> <span class="n">exclude_attrs</span><span class="p">)</span>
+
+    <span class="c1"># Get the values for x</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">table</span><span class="p">[</span><span class="n">attrs_to_project</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+    <span class="c1"># Get the values for x</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">table</span><span class="p">[</span><span class="n">target_attr</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>  <span class="c1"># to mute warnings from svm and cross validation</span>
+    <span class="c1"># Return x and y</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2016, anhaidgroup
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,501 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>py_entitymatching.matcher.matcherutils &mdash; py_entitymatching 0.3.3 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> py_entitymatching
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">How To Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../how_to_guide.html">How to Guide To Do Entity Matching</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/whatisnew.html">What is New?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/overview.html">Overview of Supported EM Processes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/guides.html">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/datastructures.html">Data Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/steps_supp_em_workflows.html">Steps of Supported EM Workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/misc.html">Miscellaneous</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/api/overview.html">Overview of Command Organization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/api/actual_commands.html">Commands in py_entitymatching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/api/actual_commands.html#experimental-commands">Experimental Commands</a></li>
+</ul>
+<p class="caption"><span class="caption-text">How to Contribute</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing to py_entitymatching</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">py_entitymatching</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>py_entitymatching.matcher.matcherutils</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for py_entitymatching.matcher.matcherutils</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module contains some utility functions for the matcher.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">sklearn.model_selection</span> <span class="k">as</span> <span class="nn">ms</span>
+<span class="kn">from</span>  <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">Imputer</span>
+
+<span class="kn">import</span> <span class="nn">py_entitymatching.catalog.catalog_manager</span> <span class="k">as</span> <span class="nn">cm</span>
+<span class="kn">import</span> <span class="nn">py_entitymatching.utils.catalog_helper</span> <span class="k">as</span> <span class="nn">ch</span>
+<span class="kn">import</span> <span class="nn">py_entitymatching.utils.generic_helper</span> <span class="k">as</span> <span class="nn">gh</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="split_train_test"><a class="viewcode-back" href="../../../user_manual/api/splitting_data_into_train_test.html#py_entitymatching.split_train_test">[docs]</a><span class="k">def</span> <span class="nf">split_train_test</span><span class="p">(</span><span class="n">labeled_data</span><span class="p">,</span> <span class="n">train_proportion</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+                     <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function splits the input data into train and test.</span>
+
+<span class="sd">    Specifically, this function is just a wrapper of scikit-learn&#39;s</span>
+<span class="sd">    train_test_split function.</span>
+
+<span class="sd">    This function also takes care of copying the metadata from the input</span>
+<span class="sd">    table to train and test splits.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        labeled_data (DataFrame): The input pandas DataFrame that needs to be</span>
+<span class="sd">            split into train and test.</span>
+<span class="sd">        train_proportion (float): A number between 0 and 1, indicating the</span>
+<span class="sd">            proportion of tuples that should be included in the train split (</span>
+<span class="sd">            defaults to 0.5).</span>
+<span class="sd">        random_state (object): A number of random number object (as in</span>
+<span class="sd">            scikit-learn).</span>
+<span class="sd">        verbose (boolean): A flag to indicate whether the debug information</span>
+<span class="sd">            should be displayed.</span>
+
+<span class="sd">    Returns:</span>
+
+<span class="sd">        A Python dictionary containing two keys - train and test.</span>
+
+<span class="sd">        The value for the key &#39;train&#39; is a pandas DataFrame containing tuples</span>
+<span class="sd">        allocated from the input table based on train_proportion.</span>
+
+<span class="sd">        Similarly, the value for the key &#39;test&#39; is a pandas DataFrame containing</span>
+<span class="sd">        tuples for evaluation.</span>
+
+<span class="sd">        This function sets the output DataFrames (train, test) properties</span>
+<span class="sd">        same as the input DataFrame.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; import py_entitymatching as em</span>
+<span class="sd">        &gt;&gt;&gt; # G is the labeled data or the feature vectors that should be split</span>
+<span class="sd">        &gt;&gt;&gt; train_test = em.split_train_test(G, train_proportion=0.5)</span>
+<span class="sd">        &gt;&gt;&gt; train, test = train_test[&#39;train&#39;], train_test[&#39;test&#39;]</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Validate input parameters</span>
+    <span class="c1"># # We expected labeled data to be of type pandas DataFrame</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">labeled_data</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Input table is not of type DataFrame&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Input table is not of type DataFrame&#39;</span><span class="p">)</span>
+
+    <span class="n">ch</span><span class="o">.</span><span class="n">log_info</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="s1">&#39;Required metadata: cand.set key, fk ltable, &#39;</span>
+                        <span class="s1">&#39;fk rtable, &#39;</span>
+                        <span class="s1">&#39;ltable, rtable, ltable key, rtable key&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+    <span class="c1"># # Get metadata</span>
+    <span class="n">key</span><span class="p">,</span> <span class="n">fk_ltable</span><span class="p">,</span> <span class="n">fk_rtable</span><span class="p">,</span> <span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span> <span class="o">=</span> \
+        <span class="n">cm</span><span class="o">.</span><span class="n">get_metadata_for_candset</span><span class="p">(</span>
+            <span class="n">labeled_data</span><span class="p">,</span>
+            <span class="n">logger</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+    <span class="c1"># # Validate metadata</span>
+    <span class="n">cm</span><span class="o">.</span><span class="n">_validate_metadata_for_candset</span><span class="p">(</span><span class="n">labeled_data</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">fk_ltable</span><span class="p">,</span> <span class="n">fk_rtable</span><span class="p">,</span>
+                                      <span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span>
+                                      <span class="n">logger</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+    <span class="n">num_rows</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">labeled_data</span><span class="p">)</span>
+    <span class="c1"># We expect the train proportion to be between 0 and 1.</span>
+    <span class="k">assert</span> <span class="n">train_proportion</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">train_proportion</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">,</span> \
+        <span class="s2">&quot; Train proportion is expected to be between 0 and 1&quot;</span>
+
+    <span class="c1"># We expect the number of rows in the table to be non-empty</span>
+    <span class="k">assert</span> <span class="n">num_rows</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;The input table is empty&#39;</span>
+
+    <span class="c1"># Explicitly get the train and test size in terms of tuples (based on the</span>
+    <span class="c1">#  given proportion)</span>
+    <span class="n">train_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">num_rows</span> <span class="o">*</span> <span class="n">train_proportion</span><span class="p">))</span>
+    <span class="n">test_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">num_rows</span> <span class="o">-</span> <span class="n">train_size</span><span class="p">)</span>
+
+    <span class="c1"># Use sk-learn to split the data</span>
+    <span class="n">idx_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">labeled_data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+    <span class="n">idx_train</span><span class="p">,</span> <span class="n">idx_test</span> <span class="o">=</span> <span class="n">ms</span><span class="o">.</span><span class="n">train_test_split</span><span class="p">(</span><span class="n">idx_values</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="n">test_size</span><span class="p">,</span>
+                                              <span class="n">train_size</span><span class="o">=</span><span class="n">train_size</span><span class="p">,</span>
+                                              <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
+
+    <span class="c1"># Construct output tables.</span>
+    <span class="n">label_train</span> <span class="o">=</span> <span class="n">labeled_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx_train</span><span class="p">]</span>
+    <span class="n">label_test</span> <span class="o">=</span> <span class="n">labeled_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">idx_test</span><span class="p">]</span>
+
+    <span class="c1"># Update catalog</span>
+    <span class="n">cm</span><span class="o">.</span><span class="n">init_properties</span><span class="p">(</span><span class="n">label_train</span><span class="p">)</span>
+    <span class="n">cm</span><span class="o">.</span><span class="n">copy_properties</span><span class="p">(</span><span class="n">labeled_data</span><span class="p">,</span> <span class="n">label_train</span><span class="p">)</span>
+
+    <span class="n">cm</span><span class="o">.</span><span class="n">init_properties</span><span class="p">(</span><span class="n">label_test</span><span class="p">)</span>
+    <span class="n">cm</span><span class="o">.</span><span class="n">copy_properties</span><span class="p">(</span><span class="n">labeled_data</span><span class="p">,</span> <span class="n">label_test</span><span class="p">)</span>
+
+    <span class="c1"># Return output tables</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+    <span class="n">result</span><span class="p">[</span><span class="s1">&#39;train&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">label_train</span>
+    <span class="n">result</span><span class="p">[</span><span class="s1">&#39;test&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">label_test</span>
+
+    <span class="c1"># Finally, return the dictionary.</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+<span class="k">def</span> <span class="nf">get_ts</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This is a helper function, to generate a random string based on current</span>
+<span class="sd">    time.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">*</span> <span class="mf">1e10</span><span class="p">))</span>
+    <span class="c1"># Return the random string.</span>
+    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">t</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="impute_table"><a class="viewcode-back" href="../../../user_manual/api/imputing_missing_values.html#py_entitymatching.impute_table">[docs]</a><span class="k">def</span> <span class="nf">impute_table</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">missing_val</span><span class="o">=</span><span class="s1">&#39;NaN&#39;</span><span class="p">,</span>
+                 <span class="n">strategy</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">val_all_nans</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Impute table containing missing values.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        table (DataFrame): DataFrame which values should be imputed.</span>
+<span class="sd">        exclude_attrs (List) : list of attribute names to be excluded from</span>
+<span class="sd">            imputing (defaults to None).</span>
+<span class="sd">        missing_val (string or int):  The placeholder for the missing values.</span>
+<span class="sd">            All occurrences of `missing_values` will be imputed.</span>
+<span class="sd">            For missing values encoded as np.nan, use the string value &#39;NaN&#39;</span>
+<span class="sd">            (defaults to &#39;NaN&#39;).</span>
+<span class="sd">        strategy (string): String that specifies on how to impute values. Valid</span>
+<span class="sd">            strings: &#39;mean&#39;, &#39;median&#39;, &#39;most_frequent&#39; (defaults to &#39;mean&#39;).</span>
+<span class="sd">        axis (int):  axis=1 along rows, and axis=0 along columns  (defaults</span>
+<span class="sd">            to 0).</span>
+<span class="sd">        val_all_nans (float): Value to fill in if all the values in the column</span>
+<span class="sd">            are NaN.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Imputed DataFrame.</span>
+
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If `table` is not of type pandas DataFrame.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; import py_entitymatching as em</span>
+<span class="sd">        &gt;&gt;&gt; # H is the feature vector which should be imputed. Specifically, impute the missing values</span>
+<span class="sd">        &gt;&gt;&gt; # in each column, with the mean of that column</span>
+<span class="sd">        &gt;&gt;&gt; H = em.impute_table(H, exclude_attrs=[&#39;_id&#39;, &#39;ltable_id&#39;, &#39;rtable_id&#39;], strategy=&#39;mean&#39;)</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Validate input paramaters</span>
+    <span class="c1"># # We expect the input table to be of type pandas DataFrame</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Input table is not of type DataFrame&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Input table is not of type DataFrame&#39;</span><span class="p">)</span>
+
+    <span class="n">ch</span><span class="o">.</span><span class="n">log_info</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="s1">&#39;Required metadata: cand.set key, fk ltable, &#39;</span>
+                        <span class="s1">&#39;fk rtable, &#39;</span>
+                        <span class="s1">&#39;ltable, rtable, ltable key, rtable key&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+    <span class="c1"># # Get metadata</span>
+    <span class="n">key</span><span class="p">,</span> <span class="n">fk_ltable</span><span class="p">,</span> <span class="n">fk_rtable</span><span class="p">,</span> <span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span> <span class="o">=</span> \
+        <span class="n">cm</span><span class="o">.</span><span class="n">get_metadata_for_candset</span><span class="p">(</span>
+            <span class="n">table</span><span class="p">,</span>
+            <span class="n">logger</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+    <span class="c1"># # Validate metadata</span>
+    <span class="n">cm</span><span class="o">.</span><span class="n">_validate_metadata_for_candset</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">fk_ltable</span><span class="p">,</span> <span class="n">fk_rtable</span><span class="p">,</span>
+                                      <span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span>
+                                      <span class="n">logger</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+    <span class="n">fv_columns</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">columns</span>
+
+    <span class="k">if</span> <span class="n">exclude_attrs</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">feature_names</span> <span class="o">=</span> <span class="n">fv_columns</span>
+
+    <span class="k">else</span><span class="p">:</span>
+
+        <span class="c1"># Check if the exclude attributes are present in the input table</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ch</span><span class="o">.</span><span class="n">check_attrs_present</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;The attributes mentioned in exclude_attrs &#39;</span>
+                         <span class="s1">&#39;is not present &#39;</span>
+                         <span class="s1">&#39;in the input table&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span>
+                <span class="s1">&#39;The attributes mentioned in exclude_attrs &#39;</span>
+                <span class="s1">&#39;is not present &#39;</span>
+                <span class="s1">&#39;in the input table&#39;</span><span class="p">)</span>
+        <span class="c1"># We expect exclude attributes to be of type list. If not convert it into</span>
+        <span class="c1">#  a list.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exclude_attrs</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">exclude_attrs</span> <span class="o">=</span> <span class="p">[</span><span class="n">exclude_attrs</span><span class="p">]</span>
+
+        <span class="c1"># Drop the duplicates from the exclude attributes</span>
+        <span class="n">exclude_attrs</span> <span class="o">=</span> <span class="n">gh</span><span class="o">.</span><span class="n">list_drop_duplicates</span><span class="p">(</span><span class="n">exclude_attrs</span><span class="p">)</span>
+
+        <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">exclude_attrs</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">fv_columns</span><span class="p">]</span>
+        <span class="n">feature_names</span> <span class="o">=</span> <span class="n">fv_columns</span><span class="p">[</span><span class="n">cols</span><span class="p">]</span>
+    <span class="c1"># print feature_names</span>
+    <span class="n">table_copy</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">projected_table</span> <span class="o">=</span> <span class="n">table_copy</span><span class="p">[</span><span class="n">feature_names</span><span class="p">]</span>
+
+    <span class="n">projected_table_values</span> <span class="o">=</span> <span class="n">projected_table</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="n">imp</span> <span class="o">=</span> <span class="n">Imputer</span><span class="p">(</span><span class="n">missing_values</span><span class="o">=</span><span class="n">missing_val</span><span class="p">,</span> <span class="n">strategy</span><span class="o">=</span><span class="n">strategy</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
+    <span class="n">imp</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">projected_table_values</span><span class="p">)</span>
+    <span class="n">imp</span><span class="o">.</span><span class="n">statistics_</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">imp</span><span class="o">.</span><span class="n">statistics_</span><span class="p">)]</span> <span class="o">=</span> <span class="n">val_all_nans</span>
+    <span class="n">projected_table_values</span> <span class="o">=</span> <span class="n">imp</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">projected_table_values</span><span class="p">)</span>
+    <span class="n">table_copy</span><span class="p">[</span><span class="n">feature_names</span><span class="p">]</span> <span class="o">=</span> <span class="n">projected_table_values</span>
+    <span class="c1"># Update catalog</span>
+    <span class="n">cm</span><span class="o">.</span><span class="n">init_properties</span><span class="p">(</span><span class="n">table_copy</span><span class="p">)</span>
+    <span class="n">cm</span><span class="o">.</span><span class="n">copy_properties</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">table_copy</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">table_copy</span></div>
+
+
+<span class="k">def</span> <span class="nf">get_true_lbl_index</span><span class="p">(</span><span class="n">estimator</span><span class="p">,</span> <span class="n">true_label</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">classes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">estimator</span><span class="o">.</span><span class="n">classes_</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">true_label</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">classes</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span>
+            <span class="s1">&#39;True label (</span><span class="si">{0}</span><span class="s1">) not in estimator classes.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">true_label</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">classes</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">true_label</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">get_false_lbl_index</span><span class="p">(</span><span class="n">estimator</span><span class="p">,</span> <span class="n">false_label</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="n">classes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">estimator</span><span class="o">.</span><span class="n">classes_</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">false_label</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">classes</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span>
+            <span class="s1">&#39;False label (</span><span class="si">{0}</span><span class="s1">) not in estimator classes.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">false_label</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">classes</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">false_label</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">get_preds_probs</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">false_label</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;predictions&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">false_label</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;predictions&#39;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;prob_false&#39;</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;predictions&#39;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;prob_true&#39;</span><span class="p">])</span>
+
+
+<span class="k">def</span> <span class="nf">unpack_preds</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">unpack_probs</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">process_preds_probs</span><span class="p">(</span><span class="n">predictions</span><span class="p">,</span> <span class="n">probs</span><span class="p">,</span> <span class="n">estimator</span><span class="p">):</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;predictions&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">predictions</span>
+    <span class="n">false_index</span> <span class="o">=</span> <span class="n">get_false_lbl_index</span><span class="p">(</span><span class="n">estimator</span><span class="p">)</span>
+    <span class="n">true_index</span> <span class="o">=</span> <span class="n">get_true_lbl_index</span><span class="p">(</span><span class="n">estimator</span><span class="p">)</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;prob_true&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">probs</span><span class="p">[:,</span> <span class="n">true_index</span><span class="p">]</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;prob_false&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">probs</span><span class="p">[:,</span> <span class="n">false_index</span><span class="p">]</span>
+
+    <span class="n">preds_probs</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">get_preds_probs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">preds</span> <span class="o">=</span> <span class="n">preds_probs</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">unpack_preds</span><span class="p">)</span>
+    <span class="n">probs</span> <span class="o">=</span> <span class="n">preds_probs</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">unpack_probs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">preds</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">probs</span><span class="o">.</span><span class="n">values</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2016, anhaidgroup
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

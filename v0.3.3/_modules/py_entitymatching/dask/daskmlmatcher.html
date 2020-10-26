@@ -1,0 +1,631 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>py_entitymatching.dask.daskmlmatcher &mdash; py_entitymatching 0.3.3 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> py_entitymatching
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">How To Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../how_to_guide.html">How to Guide To Do Entity Matching</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/whatisnew.html">What is New?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/overview.html">Overview of Supported EM Processes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/guides.html">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/datastructures.html">Data Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/steps_supp_em_workflows.html">Steps of Supported EM Workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/misc.html">Miscellaneous</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/api/overview.html">Overview of Command Organization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/api/actual_commands.html">Commands in py_entitymatching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/api/actual_commands.html#experimental-commands">Experimental Commands</a></li>
+</ul>
+<p class="caption"><span class="caption-text">How to Contribute</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing to py_entitymatching</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">py_entitymatching</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>py_entitymatching.dask.daskmlmatcher</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for py_entitymatching.dask.daskmlmatcher</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module contains functions related to ML-matcher, that is common across</span>
+<span class="sd">all the ML-matchers.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="c1"># import dask</span>
+<span class="kn">import</span> <span class="nn">dask</span>
+<span class="kn">from</span> <span class="nn">dask</span> <span class="kn">import</span> <span class="n">delayed</span>
+<span class="kn">from</span> <span class="nn">dask.diagnostics</span> <span class="kn">import</span> <span class="n">ProgressBar</span>
+
+<span class="kn">import</span> <span class="nn">py_entitymatching.catalog.catalog_manager</span> <span class="k">as</span> <span class="nn">cm</span>
+<span class="kn">from</span> <span class="nn">py_entitymatching.matcher.matcher</span> <span class="kn">import</span> <span class="n">Matcher</span>
+<span class="kn">from</span> <span class="nn">py_entitymatching.matcher.matcherutils</span> <span class="kn">import</span> <span class="n">get_true_lbl_index</span>
+<span class="kn">import</span> <span class="nn">py_entitymatching.utils.catalog_helper</span> <span class="k">as</span> <span class="nn">ch</span>
+<span class="kn">import</span> <span class="nn">py_entitymatching.utils.generic_helper</span> <span class="k">as</span> <span class="nn">gh</span>
+
+<span class="kn">from</span> <span class="nn">py_entitymatching.utils.validation_helper</span> <span class="kn">import</span> <span class="n">validate_object_type</span>
+<span class="kn">from</span> <span class="nn">py_entitymatching.dask.utils</span> <span class="kn">import</span> <span class="n">validate_chunks</span><span class="p">,</span> <span class="n">get_num_partitions</span><span class="p">,</span> \
+    <span class="n">get_num_cores</span><span class="p">,</span> <span class="n">wrap</span>
+
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">DaskMLMatcher</span><span class="p">(</span><span class="n">Matcher</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    ML Matcher class.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">_fit_sklearn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">check_rem</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function mimics fit method supported by sk-learn.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># From the given input, derive the data that can be used for sk-learn</span>
+        <span class="c1">#  methods.</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_data_for_sklearn</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">check_rem</span><span class="o">=</span><span class="n">check_rem</span><span class="p">)</span>
+        <span class="c1"># Call the fit method from the underlying classifier.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="nf">_fit_ex_attrs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="p">,</span> <span class="n">target_attr</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function supports the fit method, where the DataFrame can be</span>
+<span class="sd">        given as input along with what attributes must be excluded and the</span>
+<span class="sd">        target attribute.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Validate the input parameters.</span>
+        <span class="c1"># # We expect the input table to be of type pandas DataFrame.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Input table is not of type DataFrame&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Input table is not of type DataFrame&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Convert the exclude attributes into list (if the input is not of list)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exclude_attrs</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">exclude_attrs</span> <span class="o">=</span> <span class="p">[</span><span class="n">exclude_attrs</span><span class="p">]</span>
+
+        <span class="c1"># Check if the exclude attributes are present in the input table. If</span>
+        <span class="c1"># not, raise an error.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ch</span><span class="o">.</span><span class="n">check_attrs_present</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="s1">&#39;The attributes mentioned in exclude_attrs is not present &#39;</span> \
+                <span class="s1">&#39;in the input table&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span>
+                <span class="s1">&#39;The attributes mentioned in exclude_attrs is not present &#39;</span> \
+                <span class="s1">&#39;in the input table&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Check if the target attribute is present in the input table. If</span>
+        <span class="c1"># not, raise an error.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ch</span><span class="o">.</span><span class="n">check_attrs_present</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">target_attr</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;The target_attr is not present in the input table&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span>
+                <span class="s1">&#39;The target_attr is not present in the input table&#39;</span><span class="p">)</span>
+
+        <span class="c1"># We now remove duplicate attributes from the exclude_attrs</span>
+        <span class="n">exclude_attrs</span> <span class="o">=</span> <span class="n">gh</span><span class="o">.</span><span class="n">list_drop_duplicates</span><span class="p">(</span><span class="n">exclude_attrs</span><span class="p">)</span>
+
+        <span class="c1"># We explicitly append target attribute to exclude attributes</span>
+        <span class="k">if</span> <span class="n">target_attr</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">exclude_attrs</span><span class="p">:</span>
+            <span class="n">exclude_attrs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">target_attr</span><span class="p">)</span>
+
+        <span class="c1"># Now, we get the attributes to project</span>
+        <span class="n">attributes_to_project</span> <span class="o">=</span> <span class="n">gh</span><span class="o">.</span><span class="n">list_diff</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">columns</span><span class="p">),</span> <span class="n">exclude_attrs</span><span class="p">)</span>
+
+        <span class="c1"># Get the predictors and the target attribute from the input table</span>
+        <span class="c1"># based on the exclude attrs and the target attribute.</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">table</span><span class="p">[</span><span class="n">attributes_to_project</span><span class="p">]</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">table</span><span class="p">[</span><span class="n">target_attr</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fit_sklearn</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">check_rem</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">table</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">target_attr</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fit interface for the matcher.</span>
+
+<span class="sd">        Specifically, there are two ways the user can call the fit method.</span>
+<span class="sd">        First, interface similar to scikit-learn where the feature vectors</span>
+<span class="sd">        and target attribute given as projected DataFrame.</span>
+<span class="sd">        Second, give the DataFrame and explicitly specify the feature vectors</span>
+<span class="sd">        (by specifying the attributes to be excluded) and the target attribute.</span>
+
+<span class="sd">        A point to note is all the input parameters have a default value of</span>
+<span class="sd">        None. This is done to support both the interfaces in a single function.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            x (DataFrame): The input feature vectors given as pandas</span>
+<span class="sd">             DataFrame (defaults to None).</span>
+<span class="sd">            y (DatFrame): The input target attribute given as pandas</span>
+<span class="sd">                DataFrame with a single column (defaults to None).</span>
+<span class="sd">            table (DataFrame): The input pandas DataFrame containing feature</span>
+<span class="sd">                vectors and target attribute (defaults to None).</span>
+<span class="sd">            exclude_attrs (list): The list of attributes that should be</span>
+<span class="sd">                excluded from the input table to get the feature vectors.</span>
+<span class="sd">            target_attr (string): The target attribute in the input table.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check if x and y is given, then call a function that handles</span>
+        <span class="c1"># sk-learn like interface input.</span>
+        <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">y</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_fit_sklearn</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="c1"># Check if table and its associated attributes, then call the</span>
+        <span class="c1"># appropriate function that handles it.</span>
+        <span class="k">elif</span> <span class="p">(</span>
+                        <span class="n">table</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">exclude_attrs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> \
+                <span class="ow">and</span> <span class="n">target_attr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_fit_ex_attrs</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="p">,</span> <span class="n">target_attr</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># If the syntax is not what we expect, raise an syntax error.</span>
+            <span class="k">raise</span> <span class="ne">SyntaxError</span><span class="p">(</span>
+                <span class="s1">&#39;The arguments supplied does not match the signatures &#39;</span>
+                <span class="s1">&#39;supported !!!&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_predict_sklearn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">check_rem</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">return_prob</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="c1"># Function that implements, predict interface mimic-ing sk-learn&#39;s</span>
+        <span class="c1"># predict interface.</span>
+
+        <span class="c1"># Here check_rem parameter requires a bit of explanation. The</span>
+        <span class="c1"># check_rem flag checks if the input table has &#39;_id&#39; attribute if so</span>
+        <span class="c1"># and if check_rem is True then we remove the &#39;_id&#39; attribute from</span>
+        <span class="c1"># the table.</span>
+        <span class="c1"># Note: Here check_rem is just passing what is coming in i.e it can be</span>
+        <span class="c1"># true or false based up on who is calling it.</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_data_for_sklearn</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">check_rem</span><span class="o">=</span><span class="n">check_rem</span><span class="p">)</span>
+        <span class="c1"># Call the underlying predict function.</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">return_prob</span><span class="p">:</span>
+            <span class="c1"># Return the predictions</span>
+            <span class="k">return</span> <span class="n">y</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">_p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">clf</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="n">true_index</span> <span class="o">=</span> <span class="n">get_true_lbl_index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clf</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">y</span><span class="p">,</span> <span class="n">_p</span><span class="p">[:,</span> <span class="n">true_index</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_predict_ex_attrs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="p">,</span> <span class="n">return_prob</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Variant of predict method, where data is derived based on exclude</span>
+<span class="sd">        attributes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Validate input parameters</span>
+        <span class="c1"># # We expect input table to be a pandas DataFrame.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Input table is not of type DataFrame&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Input table is not of type DataFrame&#39;</span><span class="p">)</span>
+
+        <span class="c1"># # We expect the exclude attributes to be a list, if not convert it</span>
+        <span class="c1"># into a list.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exclude_attrs</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">exclude_attrs</span> <span class="o">=</span> <span class="p">[</span><span class="n">exclude_attrs</span><span class="p">]</span>
+
+        <span class="c1"># Check if the input table contains the attributes to be excluded. If</span>
+        <span class="c1">#  not raise an error.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ch</span><span class="o">.</span><span class="n">check_attrs_present</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="s1">&#39;The attributes mentioned in exclude_attrs is not present &#39;</span> \
+                <span class="s1">&#39;in the input table&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span>
+                <span class="s1">&#39;The attributes mentioned in exclude_attrs is not present &#39;</span> \
+                <span class="s1">&#39;in the input table&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Get the attributes to project.</span>
+        <span class="n">attributes_to_project</span> <span class="o">=</span> <span class="n">gh</span><span class="o">.</span><span class="n">list_diff</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">columns</span><span class="p">),</span> <span class="n">exclude_attrs</span><span class="p">)</span>
+        <span class="c1"># Get feature vectors and the target attribute</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">table</span><span class="p">[</span><span class="n">attributes_to_project</span><span class="p">]</span>
+
+        <span class="c1"># Do the predictions and return the probabilities (if required)</span>
+
+        <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_predict_sklearn</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">check_rem</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_prob</span><span class="o">=</span><span class="n">return_prob</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">res</span>
+
+        <span class="c1"># if not just do the predictions and return the result</span>
+        <span class="c1"># if not return_prob:</span>
+        <span class="c1">#     # Do the predictions using the ML-based matcher.</span>
+        <span class="c1">#     y = self._predict_sklearn(x, check_rem=False)</span>
+        <span class="c1">#</span>
+        <span class="c1">#     # Finally return the predictions</span>
+        <span class="c1">#     return y</span>
+        <span class="c1"># else:</span>
+        <span class="c1">#     res = self._predict_sklearn()</span>
+
+    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">table</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">target_attr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">append</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_probs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">probs_attr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">show_progress</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">n_chunks</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        WARNING THIS COMMAND IS EXPERIMENTAL AND NOT TESTED. USE AT YOUR OWN RISK.</span>
+
+<span class="sd">        Predict interface for the matcher.</span>
+
+<span class="sd">        Specifically, there are two ways the user can call the predict method.</span>
+<span class="sd">        First, interface similar to scikit-learn where the feature vectors</span>
+<span class="sd">        given as projected DataFrame.</span>
+<span class="sd">        Second, give the DataFrame and explicitly specify the feature vectors</span>
+<span class="sd">        (by specifying the attributes to be excluded) .</span>
+
+<span class="sd">        A point to note is all the input parameters have a default value of</span>
+<span class="sd">        None. This is done to support both the interfaces in a single function.</span>
+
+<span class="sd">        Currently, the Dask implementation supports only the cases when the table is not </span>
+<span class="sd">        None and the flags inplace, append are False. </span>
+
+
+<span class="sd">        Args:</span>
+<span class="sd">            x (DataFrame): The input pandas DataFrame containing only feature</span>
+<span class="sd">                vectors (defaults to None).</span>
+<span class="sd">            table (DataFrame): The input pandas DataFrame containing feature</span>
+<span class="sd">                vectors, and may be other attributes (defaults to None).</span>
+<span class="sd">            exclude_attrs (list): A list of attributes to be excluded from the</span>
+<span class="sd">                input table to get the feature vectors (defaults to None).</span>
+<span class="sd">            target_attr (string): The attribute name where the predictions</span>
+<span class="sd">                need to be stored in the input table (defaults to None).</span>
+<span class="sd">            probs_attr (string): The attribute name where the prediction probabilities </span>
+<span class="sd">                need to be stored in the input table (defaults to None).</span>
+<span class="sd">            append (boolean): A flag to indicate whether the predictions need</span>
+<span class="sd">                to be appended in the input DataFrame (defaults to False).</span>
+<span class="sd">            return_probs (boolean): A flag to indicate where the prediction probabilities</span>
+<span class="sd">                need to be returned (defaults to False). If set to True, returns the </span>
+<span class="sd">                probability if the pair was a match.</span>
+<span class="sd">            inplace (boolean): A flag to indicate whether the append needs to be</span>
+<span class="sd">                done inplace (defaults to True).</span>
+<span class="sd">            show_progress (boolean): A flag to indicate whether the progress of</span>
+<span class="sd">                extracting feature vectors must be displayed (defaults to True).</span>
+<span class="sd">            n_chunks (int): The number of partitions to split the candidate set. If it </span>
+<span class="sd">                is set to -1, the number of partitions will be set to the </span>
+<span class="sd">                number of cores in the machine.  </span>
+
+
+<span class="sd">        Returns:</span>
+<span class="sd">            An array of predictions or a DataFrame with predictions updated.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+            <span class="s2">&quot;WARNING THIS COMMAND IS EXPERIMENTAL AND NOT TESTED. USE AT YOUR OWN RISK.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_predict</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="p">,</span> <span class="n">target_attr</span><span class="p">,</span> <span class="n">append</span><span class="p">,</span>
+                                 <span class="n">return_probs</span><span class="p">,</span> <span class="n">probs_attr</span><span class="p">,</span> <span class="n">inplace</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">n_chunks</span> <span class="o">=</span> <span class="n">get_num_partitions</span><span class="p">(</span><span class="n">n_chunks</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">table</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">n_chunks</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">inplace</span> <span class="o">==</span> <span class="kc">True</span> <span class="ow">or</span> <span class="n">append</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="c1"># When the inplace flag is True, the predictions (and probs) are added</span>
+                <span class="c1"># in place. If he have to use Dask then we have to modify _predict (</span>
+                <span class="c1"># specifically _predict_sk_learn) function.</span>
+                <span class="c1"># So, to keep things simple, we support Dask only when</span>
+                <span class="c1"># inplace=False</span>
+
+                <span class="c1"># Similarly, when append=False, the return value from _predict will be</span>
+                <span class="c1"># different for different cases (for example, when return_probs is True</span>
+                <span class="c1">#  or False). If we have to use Dask then we have to careful in</span>
+                <span class="c1"># recording the return values for each chunk.</span>
+                <span class="c1"># So, to keep things simple, we support Dask only when</span>
+                <span class="c1"># append=True</span>
+
+
+                <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_predict</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="n">table</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="o">=</span><span class="n">exclude_attrs</span><span class="p">,</span>
+                                     <span class="n">target_attr</span><span class="o">=</span><span class="n">target_attr</span><span class="p">,</span> <span class="n">append</span><span class="o">=</span><span class="n">append</span><span class="p">,</span>
+                                     <span class="n">return_probs</span><span class="o">=</span><span class="n">return_probs</span><span class="p">,</span> <span class="n">probs_attr</span><span class="o">=</span><span class="n">probs_attr</span><span class="p">,</span>
+                                     <span class="n">inplace</span><span class="o">=</span><span class="n">inplace</span><span class="p">,</span> <span class="n">copy_props</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">predicted_results</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">splitted_tables</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array_split</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">n_chunks</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">splitted_tables</span><span class="p">)):</span>
+                    <span class="n">partial_result</span> <span class="o">=</span> <span class="n">delayed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_predict</span><span class="p">)(</span><span class="n">table</span><span class="o">=</span><span class="n">splitted_tables</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                                                            <span class="n">exclude_attrs</span><span class="o">=</span><span class="n">exclude_attrs</span><span class="p">,</span> <span class="n">target_attr</span><span class="o">=</span><span class="n">target_attr</span><span class="p">,</span>
+                                                            <span class="n">append</span><span class="o">=</span><span class="n">append</span><span class="p">,</span>
+                                                            <span class="n">return_probs</span><span class="o">=</span><span class="n">return_probs</span><span class="p">,</span>
+                                                            <span class="n">probs_attr</span><span class="o">=</span><span class="n">probs_attr</span><span class="p">,</span>
+                                                            <span class="n">inplace</span><span class="o">=</span><span class="n">inplace</span><span class="p">,</span>
+                                                            <span class="n">copy_props</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                    <span class="n">predicted_results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">partial_result</span><span class="p">)</span>
+                <span class="n">predicted_results</span> <span class="o">=</span> <span class="n">delayed</span><span class="p">(</span><span class="n">wrap</span><span class="p">)(</span><span class="n">predicted_results</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">show_progress</span><span class="p">:</span>
+                    <span class="k">with</span> <span class="n">ProgressBar</span><span class="p">():</span>
+                        <span class="n">predicted_results</span> <span class="o">=</span> <span class="n">predicted_results</span><span class="o">.</span><span class="n">compute</span><span class="p">(</span>
+                            <span class="n">scheduler</span><span class="o">=</span><span class="s2">&quot;processes&quot;</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="n">get_num_cores</span><span class="p">())</span>
+                <span class="k">else</span><span class="p">:</span>
+                     <span class="n">predicted_results</span> <span class="o">=</span> <span class="n">predicted_results</span><span class="o">.</span><span class="n">compute</span><span class="p">(</span>
+                        <span class="n">scheduler</span><span class="o">=</span><span class="s2">&quot;processes&quot;</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="n">get_num_cores</span><span class="p">())</span>
+
+
+                <span class="n">result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">predicted_results</span><span class="p">)</span>
+                <span class="n">cm</span><span class="o">.</span><span class="n">copy_properties</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">result</span>
+
+    <span class="c1"># predict method</span>
+    <span class="k">def</span> <span class="nf">_predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">table</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">target_attr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">append</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_probs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">probs_attr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">copy_props</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Delegated function from predict.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># If x is not none, call the predict method that mimics sk-learn</span>
+        <span class="c1"># predict method.</span>
+        <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_predict_sklearn</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">return_prob</span><span class="o">=</span><span class="n">return_probs</span><span class="p">)</span>
+        <span class="c1"># If the input table and the exclude attributes are not None,</span>
+        <span class="c1"># then call the appropriate predict method.</span>
+        <span class="k">elif</span> <span class="n">table</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">exclude_attrs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_predict_ex_attrs</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="p">,</span> <span class="n">return_prob</span><span class="o">=</span><span class="n">return_probs</span><span class="p">)</span>
+            <span class="c1"># If the append is True, update the table</span>
+            <span class="k">if</span> <span class="n">target_attr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">append</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="c1"># If inplace is True, then update the input table.</span>
+                <span class="k">if</span> <span class="n">inplace</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">return_probs</span><span class="p">:</span>
+                        <span class="n">table</span><span class="p">[</span><span class="n">target_attr</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                        <span class="n">table</span><span class="p">[</span><span class="n">probs_attr</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                        <span class="c1"># Return the updated table</span>
+                        <span class="k">return</span> <span class="n">table</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># Return the updated table</span>
+                        <span class="n">table</span><span class="p">[</span><span class="n">target_attr</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span>
+                        <span class="k">return</span> <span class="n">table</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># else, create a copy and update it.</span>
+                    <span class="n">table_copy</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                    <span class="k">if</span> <span class="n">return_probs</span><span class="p">:</span>
+                        <span class="n">table_copy</span><span class="p">[</span><span class="n">target_attr</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                        <span class="n">table_copy</span><span class="p">[</span><span class="n">probs_attr</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">table_copy</span><span class="p">[</span><span class="n">target_attr</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span>
+                    <span class="c1"># copy the properties from the input table to the output</span>
+                    <span class="c1"># table.</span>
+                    <span class="k">if</span> <span class="n">copy_props</span><span class="p">:</span>
+                        <span class="n">cm</span><span class="o">.</span><span class="n">copy_properties</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">table_copy</span><span class="p">)</span>
+                    <span class="c1"># Return the new table.</span>
+                    <span class="k">return</span> <span class="n">table_copy</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># else, raise a syntax error</span>
+            <span class="k">raise</span> <span class="ne">SyntaxError</span><span class="p">(</span>
+                <span class="s1">&#39;The arguments supplied does not match &#39;</span>
+                <span class="s1">&#39;the signatures supported !!!&#39;</span><span class="p">)</span>
+        <span class="c1"># Return the predictions</span>
+        <span class="k">return</span> <span class="n">y</span>
+
+    <span class="c1"># get and set name of matcher</span>
+    <span class="k">def</span> <span class="nf">get_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Return the name of the matcher</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+
+    <span class="k">def</span> <span class="nf">set_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="c1"># Set the name of the matcher</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+
+    <span class="c1"># helper functions</span>
+    <span class="k">def</span> <span class="nf">_get_data_for_sklearn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">check_rem</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets data in a format that can be used to call sk-learn methods such</span>
+<span class="sd">        as fit and predict.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Validate input parameters.</span>
+        <span class="c1"># # We expect the input object (x) to be of type pandas DataFrame.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Input table is not of type DataFrame&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Input table is not of type DataFrame&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Check to see if we have to remove id column</span>
+        <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;_id&#39;</span> <span class="ow">and</span> <span class="n">check_rem</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s1">&#39;Input table contains &quot;_id&quot;. &#39;</span>
+                <span class="s1">&#39;Removing this column for processing&#39;</span><span class="p">)</span>
+            <span class="c1"># Get the values from the DataFrame</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">values</span>
+            <span class="c1"># Remove the first column (&#39;_id&#39;)</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Get the values from the DataFrame</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">values</span>
+        <span class="k">if</span> <span class="n">y</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Remove the _id column from the input.</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="ow">and</span> <span class="n">y</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;_id&#39;</span> \
+                    <span class="ow">and</span> <span class="n">check_rem</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                    <span class="s1">&#39;Input table contains &quot;_id&quot;. &#39;</span>
+                    <span class="s1">&#39;Removing this column for processing&#39;</span><span class="p">)</span>
+                <span class="c1"># Get the values from the DataFrame</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">values</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Get the values from the DataFrame</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">values</span>
+            <span class="c1"># Return both x and y</span>
+            <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Return x</span>
+            <span class="k">return</span> <span class="n">x</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2016, anhaidgroup
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

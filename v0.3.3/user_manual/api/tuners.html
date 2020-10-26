@@ -1,0 +1,381 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Tuners for the Dask-based Commands &mdash; py_entitymatching 0.3.3 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Matcher Combiner" href="combiner.html" />
+    <link rel="prev" title="Commands Implemented Using Dask" href="dask_commands.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> py_entitymatching
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">How To Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../how_to_guide.html">How to Guide To Do Entity Matching</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../whatisnew.html">What is New?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview of Supported EM Processes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides.html">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datastructures.html">Data Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../steps_supp_em_workflows.html">Steps of Supported EM Workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc.html">Miscellaneous</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview of Command Organization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="actual_commands.html">Commands in py_entitymatching</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="actual_commands.html#experimental-commands">Experimental Commands</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="dask_commands.html">Commands Implemented Using Dask</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Tuners for the Dask-based Commands</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#downsampling">Downsampling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#overlap-blocker">Overlap Blocker</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="combiner.html">Matcher Combiner</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">How to Contribute</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing to py_entitymatching</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">py_entitymatching</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="actual_commands.html">Commands in py_entitymatching</a> &raquo;</li>
+        
+      <li>Tuners for the Dask-based Commands</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/user_manual/api/tuners.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="tuners-for-the-dask-based-commands">
+<h1>Tuners for the Dask-based Commands<a class="headerlink" href="#tuners-for-the-dask-based-commands" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="downsampling">
+<h2>Downsampling<a class="headerlink" href="#downsampling" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="py_entitymatching.tuner.tuner_down_sample.tuner_down_sample">
+<code class="sig-prename descclassname">py_entitymatching.tuner.tuner_down_sample.</code><code class="sig-name descname">tuner_down_sample</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ltable</span></em>, <em class="sig-param"><span class="n">rtable</span></em>, <em class="sig-param"><span class="n">size</span></em>, <em class="sig-param"><span class="n">y_param</span></em>, <em class="sig-param"><span class="n">seed</span></em>, <em class="sig-param"><span class="n">rem_stop_words</span></em>, <em class="sig-param"><span class="n">rem_puncs</span></em>, <em class="sig-param"><span class="n">n_bins</span><span class="o">=</span><span class="default_value">50</span></em>, <em class="sig-param"><span class="n">sample_proportion</span><span class="o">=</span><span class="default_value">0.1</span></em>, <em class="sig-param"><span class="n">repeat</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/tuner/tuner_down_sample.html#tuner_down_sample"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_entitymatching.tuner.tuner_down_sample.tuner_down_sample" title="Permalink to this definition">¶</a></dt>
+<dd><p>WARNING THIS COMMAND IS EXPERIMENTAL AND NOT TESTED. USE AT YOUR OWN RISK.</p>
+<p>Tunes the parameters for down sampling command implemented using Dask.</p>
+<p>Given the input tables and the parameters for Dask-based down sampling command,
+this command returns the configuration including whether the input tables need to
+be swapped, the number of left table chunks, and the number of right table chunks.
+It uses “Staged Tuning” approach to select the configuration setting. The key idea
+of this approach select the configuration for one parameter at a time.</p>
+<p>Conceptually, this command performs the following steps. First, it samples the
+left table and down sampled rtable using stratified sampling. Next, it uses the
+sampled tables to decide if they need to be swapped or not (by running the down
+sample command and comparing the runtimes). Next, it finds the number of rtable
+partitions using the sampled tables (by trying the a fixed set of partitions and
+comparing the runtimes). The number of partitions is selected to be the number
+before which the runtime starts increasing. Then it finds the number of right table
+partitions similar to selecting the number of left table partitions. while doing
+this, set the number of right table partitions is set to the value found in the
+previous step. Finally, it returns the configuration setting back to the user as a
+triplet (x, y, z) where x indicates if the tables need to be swapped or not,
+y indicates the number of left table partitions (if the tables need to be swapped,
+then this indicates the number of left table partitions after swapping),
+and z indicates the number of down sampled right table partitions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ltable</strong> (<em>DataFrame</em>) – The left input table, i.e., table A.</p></li>
+<li><p><strong>rtable</strong> (<em>DataFrame</em>) – The right input table, i.e., table B.</p></li>
+<li><p><strong>size</strong> (<em>int</em>) – The size that table B should be down sampled to.</p></li>
+<li><p><strong>y_param</strong> (<em>int</em>) – The parameter to control the down sample size of table A.
+Specifically, the down sampled size of table A should be close to
+size * y_param.</p></li>
+<li><p><strong>seed</strong> (<em>int</em>) – The seed for the pseudo random number generator to select
+the tuples from A and B (defaults to None).</p></li>
+<li><p><strong>rem_stop_words</strong> (<em>boolean</em>) – A flag to indicate whether a default set of stop words
+must be removed.</p></li>
+<li><p><strong>rem_puncs</strong> (<em>boolean</em>) – A flag to indicate whether the punctuations must be
+removed from the strings.</p></li>
+<li><p><strong>n_bins</strong> (<em>int</em>) – The number of bins to be used for stratified sampling.</p></li>
+<li><p><strong>sample_proportion</strong> (<em>float</em>) – The proportion used to sample the tables. This value
+is expected to be greater than 0 and less thank 1.</p></li>
+<li><p><strong>repeat</strong> (<em>int</em>) – The number of times to execute the down sample command while
+selecting the values for the parameters.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A tuple containing 3 values. For example if the tuple is represented as (x, y,
+z) then x indicates if the tables need to be swapped or not, y indicates the number of
+left table partitions (if the tables need to be swapped, then this indicates the
+number of left table partitions after swapping), and z indicates the number of
+down sampled right table partitions.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">py_entitymatching.tuner.tuner_down_sample</span> <span class="kn">import</span> <span class="n">tuner_down_sample</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">swap_or_not</span><span class="p">,</span> <span class="n">n_ltable_chunks</span><span class="p">,</span> <span class="n">n_sample_rtable_chunks</span><span class="p">)</span> <span class="o">=</span> <span class="n">tuner_down_sample</span><span class="p">(</span><span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">y_param</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="n">rem_stop_words</span><span class="p">,</span> <span class="n">rem_puncs</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="overlap-blocker">
+<h2>Overlap Blocker<a class="headerlink" href="#overlap-blocker" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="py_entitymatching.tuner.tuner_overlap_blocker.tuner_overlap_blocker">
+<code class="sig-prename descclassname">py_entitymatching.tuner.tuner_overlap_blocker.</code><code class="sig-name descname">tuner_overlap_blocker</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ltable</span></em>, <em class="sig-param"><span class="n">rtable</span></em>, <em class="sig-param"><span class="n">l_key</span></em>, <em class="sig-param"><span class="n">r_key</span></em>, <em class="sig-param"><span class="n">l_overlap_attr</span></em>, <em class="sig-param"><span class="n">r_overlap_attr</span></em>, <em class="sig-param"><span class="n">rem_stop_words</span></em>, <em class="sig-param"><span class="n">q_val</span></em>, <em class="sig-param"><span class="n">word_level</span></em>, <em class="sig-param"><span class="n">overlap_size</span></em>, <em class="sig-param"><span class="n">ob_obj</span></em>, <em class="sig-param"><span class="n">n_bins</span><span class="o">=</span><span class="default_value">50</span></em>, <em class="sig-param"><span class="n">sample_proportion</span><span class="o">=</span><span class="default_value">0.1</span></em>, <em class="sig-param"><span class="n">seed</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">repeat</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/tuner/tuner_overlap_blocker.html#tuner_overlap_blocker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_entitymatching.tuner.tuner_overlap_blocker.tuner_overlap_blocker" title="Permalink to this definition">¶</a></dt>
+<dd><p>WARNING THIS COMMAND IS EXPERIMENTAL AND NOT TESTED. USE AT YOUR OWN RISK.</p>
+<p>Tunes the parameters for blocking two tables command implemented using Dask.</p>
+<p>Given the input tables and the parameters for Dask-based overlap blocker command,
+this command returns the configuration including whether the input tables need to
+be swapped, the number of left table chunks, and the number of right table chunks.
+It uses “Staged Tuning” approach to select the configuration setting. The key idea
+of this approach select the configuration for one parameter at a time.</p>
+<p>Conceptually, this command performs the following steps. First, it samples the
+left table and rtable using stratified sampling. Next, it uses the
+sampled tables to decide if they need to be swapped or not (by running the down
+sample command and comparing the runtimes). Next, it finds the number of rtable
+partitions using the sampled tables (by trying the a fixed set of partitions and
+comparing the runtimes). The number of partitions is selected to be the number
+before which the runtime starts increasing. Then it finds the number of right table
+partitions similar to selecting the number of left table partitions. while doing
+this, set the number of right table partitions is set to the value found in the
+previous step. Finally, it returns the configuration setting back to the user as a
+triplet (x, y, z) where x indicates if the tables need to be swapped or not,
+y indicates the number of left table partitions (if the tables need to be swapped,
+then this indicates the number of left table partitions after swapping),
+and z indicates the number of right table partitions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ltable</strong> (<em>DataFrame</em>) – The left input table.</p></li>
+<li><p><strong>rtable</strong> (<em>DataFrame</em>) – The right input table.</p></li>
+<li><p><strong>l_overlap_attr</strong> (<em>string</em>) – The overlap attribute in left table.</p></li>
+<li><p><strong>r_overlap_attr</strong> (<em>string</em>) – The overlap attribute in right table.</p></li>
+<li><p><strong>rem_stop_words</strong> (<em>boolean</em>) – A flag to indicate whether stop words
+(e.g., a, an, the) should be removed from the token sets of the
+overlap attribute values (defaults to False).</p></li>
+<li><p><strong>q_val</strong> (<em>int</em>) – The value of q to use if the overlap attributes
+values are to be tokenized as qgrams (defaults to None).</p></li>
+<li><p><strong>word_level</strong> (<em>boolean</em>) – A flag to indicate whether the overlap
+attributes should be tokenized as words (i.e, using whitespace
+as delimiter) (defaults to True).</p></li>
+<li><p><strong>overlap_size</strong> (<em>int</em>) – The minimum number of tokens that must overlap.</p></li>
+<li><p><strong>ob_obj</strong> (<a class="reference internal" href="blocking.html#py_entitymatching.OverlapBlocker" title="py_entitymatching.OverlapBlocker"><em>OverlapBlocker</em></a>) – The object used to call commands to block two tables
+and a candidate set</p></li>
+<li><p><strong>n_bins</strong> (<em>int</em>) – The number of bins to be used for stratified sampling.</p></li>
+<li><p><strong>sample_proportion</strong> (<em>float</em>) – The proportion used to sample the tables. This value
+is expected to be greater than 0 and less thank 1.</p></li>
+<li><p><strong>repeat</strong> (<em>int</em>) – The number of times to execute the down sample command while
+selecting the values for the parameters.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A tuple containing 3 values. For example if the tuple is represented as (x, y,
+z) then x indicates if the tables need to be swapped or not, y indicates the number of
+left table partitions (if the tables need to be swapped, then this indicates the
+number of left table partitions after swapping), and z indicates the number of
+right table partitions.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">py_entitymatching.tuner.tuner_overlap_blocker</span> <span class="kn">import</span> <span class="n">tuner_overlap_blocker</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">py_entitymatching.dask.dask_overlap_blocker</span> <span class="kn">import</span> <span class="n">DaskOverlapBlocker</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">obj</span> <span class="o">=</span> <span class="n">DaskOverlapBlocker</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">swap_or_not</span><span class="p">,</span> <span class="n">n_ltable_chunks</span><span class="p">,</span> <span class="n">n_sample_rtable_chunks</span><span class="p">)</span> <span class="o">=</span> <span class="n">tuner_overlap_blocker</span><span class="p">(</span><span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s2">&quot;title&quot;</span><span class="p">,</span> <span class="s2">&quot;title&quot;</span><span class="p">,</span> <span class="n">rem_stop_words</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">q_val</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">word_level</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">overlap_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ob_obj</span><span class="o">=</span><span class="n">obj</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="combiner.html" class="btn btn-neutral float-right" title="Matcher Combiner" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="dask_commands.html" class="btn btn-neutral float-left" title="Commands Implemented Using Dask" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2016, anhaidgroup
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

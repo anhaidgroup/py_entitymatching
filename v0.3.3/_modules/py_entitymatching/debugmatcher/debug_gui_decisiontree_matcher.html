@@ -1,0 +1,400 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>py_entitymatching.debugmatcher.debug_gui_decisiontree_matcher &mdash; py_entitymatching 0.3.3 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> py_entitymatching
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">How To Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../how_to_guide.html">How to Guide To Do Entity Matching</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/whatisnew.html">What is New?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/overview.html">Overview of Supported EM Processes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/guides.html">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/datastructures.html">Data Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/steps_supp_em_workflows.html">Steps of Supported EM Workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/misc.html">Miscellaneous</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/api/overview.html">Overview of Command Organization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/api/actual_commands.html">Commands in py_entitymatching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/api/actual_commands.html#experimental-commands">Experimental Commands</a></li>
+</ul>
+<p class="caption"><span class="caption-text">How to Contribute</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing to py_entitymatching</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">py_entitymatching</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>py_entitymatching.debugmatcher.debug_gui_decisiontree_matcher</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for py_entitymatching.debugmatcher.debug_gui_decisiontree_matcher</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">import</span> <span class="nn">six</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="kn">from</span> <span class="nn">py_entitymatching.evaluation.evaluation</span> <span class="kn">import</span> <span class="n">eval_matches</span>
+<span class="kn">from</span> <span class="nn">py_entitymatching</span> <span class="kn">import</span> <span class="n">DTMatcher</span>
+<span class="kn">from</span> <span class="nn">py_entitymatching.debugmatcher.debug_gui_utils</span> <span class="kn">import</span> <span class="n">_get_code_vis</span><span class="p">,</span> <span class="n">_get_metric</span><span class="p">,</span>\
+    <span class="n">_get_dataframe</span><span class="p">,</span> <span class="n">_get_dbg_fn_vis</span><span class="p">,</span> <span class="n">get_name_for_predict_column</span>
+
+<span class="kn">import</span> <span class="nn">py_entitymatching.utils.catalog_helper</span> <span class="k">as</span> <span class="nn">ch</span>
+<span class="kn">import</span> <span class="nn">py_entitymatching.utils.generic_helper</span> <span class="k">as</span> <span class="nn">gh</span>
+<span class="kn">from</span> <span class="nn">py_entitymatching.utils.validation_helper</span> <span class="kn">import</span> <span class="n">validate_object_type</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="vis_debug_dt"><a class="viewcode-back" href="../../../user_manual/api/debugging_matcher.html#py_entitymatching.vis_debug_dt">[docs]</a><span class="k">def</span> <span class="nf">vis_debug_dt</span><span class="p">(</span><span class="n">matcher</span><span class="p">,</span> <span class="n">train</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="p">,</span> <span class="n">target_attr</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Visual debugger for Decision Tree matcher.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        matcher (DTMatcher): The Decision tree matcher that should be debugged.</span>
+<span class="sd">        train (DataFrame): The pandas DataFrame that will be used to train the</span>
+<span class="sd">            matcher.</span>
+<span class="sd">        test (DataFrame): The pandas DataFrame that will be used to test the</span>
+<span class="sd">            matcher.</span>
+<span class="sd">        exclude_attrs (list): The list of attributes to be excluded from train</span>
+<span class="sd">            and test, for training and testing.</span>
+<span class="sd">        target_attr (string): The attribute name in the &#39;train&#39; containing the</span>
+<span class="sd">            true labels.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; import py_entitymatching as em</span>
+<span class="sd">        &gt;&gt;&gt; dt = em.DTMatcher()</span>
+<span class="sd">        # &#39;devel&#39; is the labeled set used for development (e.g., selecting the best matcher) purposes</span>
+<span class="sd">        &gt;&gt;&gt; train_test = em.split_train_test(devel, 0.5)</span>
+<span class="sd">        &gt;&gt;&gt; train, test = train_test[&#39;train&#39;], train_test[&#39;test&#39;]</span>
+<span class="sd">        &gt;&gt;&gt; em.vis_debug_dt(dt, train, test, exclude_attrs=[&#39;_id&#39;, &#39;ltable_id&#39;, &#39;rtable_id&#39;], target_attr=&#39;gold_labels&#39;)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Call a wrapper for visualization</span>
+    <span class="n">_vis_debug_dt</span><span class="p">(</span><span class="n">matcher</span><span class="p">,</span> <span class="n">train</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="p">,</span> <span class="n">target_attr</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">_vis_debug_dt</span><span class="p">(</span><span class="n">matcher</span><span class="p">,</span> <span class="n">train</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="p">,</span> <span class="n">target_attr</span><span class="p">,</span>
+                  <span class="n">show_window</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Wrapper function for debugging the Random Forest matcher visually.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">PyQt5</span> <span class="kn">import</span> <span class="n">QtWidgets</span>
+        <span class="kn">from</span> <span class="nn">py_entitymatching.gui.debug_gui_base</span> <span class="kn">import</span> <span class="n">MainWindowManager</span>
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s1">&#39;PyQt5 is not installed. Please install PyQt5 to use &#39;</span>
+                          <span class="s1">&#39;GUI related functions in py_entitymatching.&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Validate the input parameters</span>
+    <span class="c1"># # We expect the matcher to be of type DTMatcher</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">matcher</span><span class="p">,</span> <span class="n">DTMatcher</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Input matcher is not of type Decision Tree matcher&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Input matcher is not of type &#39;</span>
+                             <span class="s1">&#39;Decision Tree matcher&#39;</span><span class="p">)</span>
+
+    <span class="c1"># # We expect the target attribute to be of type string.</span>
+    <span class="n">validate_object_type</span><span class="p">(</span><span class="n">target_attr</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">,</span> <span class="n">error_prefix</span><span class="o">=</span><span class="s1">&#39;Target attribute&#39;</span><span class="p">)</span>
+
+    <span class="c1"># # Check whether the exclude attributes are indeed present in the train</span>
+    <span class="c1">#  DataFrame.</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">ch</span><span class="o">.</span><span class="n">check_attrs_present</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;The exclude attrs are not in train table columns&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;The exclude attrs are not in the &#39;</span>
+                             <span class="s1">&#39;train table columns&#39;</span><span class="p">)</span>
+
+    <span class="c1"># # Check whether the target attribute is indeed present in the train</span>
+    <span class="c1">#  DataFrame.</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">ch</span><span class="o">.</span><span class="n">check_attrs_present</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">target_attr</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;The target attr is not in train table columns&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;The target attr is not in the &#39;</span>
+                             <span class="s1">&#39;train table columns&#39;</span><span class="p">)</span>
+
+    <span class="c1"># # Check whether the exclude attributes are indeed present in the test</span>
+    <span class="c1">#  DataFrame.</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">ch</span><span class="o">.</span><span class="n">check_attrs_present</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;The exclude attrs are not in test table columns&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;The exclude attrs are not in the &#39;</span>
+                             <span class="s1">&#39;test table columns&#39;</span><span class="p">)</span>
+
+    <span class="c1"># The exclude attributes is expected to be of type list, if not</span>
+    <span class="c1"># explicitly convert this into a list.</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exclude_attrs</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">exclude_attrs</span> <span class="o">=</span> <span class="p">[</span><span class="n">exclude_attrs</span><span class="p">]</span>
+
+    <span class="c1"># Drop the duplicates from the exclude attributes</span>
+    <span class="n">exclude_attrs</span> <span class="o">=</span> <span class="n">gh</span><span class="o">.</span><span class="n">list_drop_duplicates</span><span class="p">(</span><span class="n">exclude_attrs</span><span class="p">)</span>
+
+    <span class="c1"># If the target attribute is not present in the exclude attributes,</span>
+    <span class="c1"># then explicitly add it to the exclude attributes.</span>
+    <span class="k">if</span> <span class="n">target_attr</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">exclude_attrs</span><span class="p">:</span>
+        <span class="n">exclude_attrs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">target_attr</span><span class="p">)</span>
+
+    <span class="c1"># Now, fit using training data</span>
+    <span class="n">matcher</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="n">train</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="o">=</span><span class="n">exclude_attrs</span><span class="p">,</span>
+                <span class="n">target_attr</span><span class="o">=</span><span class="n">target_attr</span><span class="p">)</span>
+
+    <span class="c1"># Get a column name to store the predictions.</span>
+    <span class="n">predict_attr_name</span> <span class="o">=</span> <span class="n">get_name_for_predict_column</span><span class="p">(</span><span class="n">test</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+
+    <span class="c1"># Predict using the test data</span>
+    <span class="n">predicted</span> <span class="o">=</span> <span class="n">matcher</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="n">test</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="o">=</span><span class="n">exclude_attrs</span><span class="p">,</span>
+                                <span class="n">target_attr</span><span class="o">=</span><span class="n">predict_attr_name</span><span class="p">,</span> <span class="n">append</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1"># Get the evaluation summary.</span>
+    <span class="n">eval_summary</span> <span class="o">=</span> <span class="n">eval_matches</span><span class="p">(</span><span class="n">predicted</span><span class="p">,</span> <span class="n">target_attr</span><span class="p">,</span> <span class="n">predict_attr_name</span><span class="p">)</span>
+
+    <span class="c1"># Get metric in a form that can be displayed from the evaluation summary</span>
+    <span class="n">metric</span> <span class="o">=</span> <span class="n">_get_metric</span><span class="p">(</span><span class="n">eval_summary</span><span class="p">)</span>
+
+    <span class="c1"># Get false negatives and false positives as a DataFrame</span>
+    <span class="n">fp_dataframe</span> <span class="o">=</span> <span class="n">_get_dataframe</span><span class="p">(</span><span class="n">predicted</span><span class="p">,</span> <span class="n">eval_summary</span><span class="p">[</span><span class="s1">&#39;false_pos_ls&#39;</span><span class="p">])</span>
+    <span class="n">fn_dataframe</span> <span class="o">=</span> <span class="n">_get_dataframe</span><span class="p">(</span><span class="n">predicted</span><span class="p">,</span> <span class="n">eval_summary</span><span class="p">[</span><span class="s1">&#39;false_neg_ls&#39;</span><span class="p">])</span>
+
+    <span class="n">em</span><span class="o">.</span><span class="n">_viewapp</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QApplication</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">em</span><span class="o">.</span><span class="n">_viewapp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">em</span><span class="o">.</span><span class="n">_viewapp</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QApplication</span><span class="p">([])</span>
+    <span class="n">app</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">_viewapp</span>
+
+    <span class="c1"># Get the main window application</span>
+    <span class="n">app</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">_viewapp</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">MainWindowManager</span><span class="p">(</span><span class="n">matcher</span><span class="p">,</span> <span class="s2">&quot;dt&quot;</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="p">,</span> <span class="n">metric</span><span class="p">,</span> <span class="n">predicted</span><span class="p">,</span>
+                          <span class="n">fp_dataframe</span><span class="p">,</span>
+                          <span class="n">fn_dataframe</span><span class="p">)</span>
+    <span class="c1"># If the show window is true, then display the window.</span>
+    <span class="k">if</span> <span class="n">show_window</span><span class="p">:</span>
+        <span class="n">m</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="n">app</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">vis_tuple_debug_dt_matcher</span><span class="p">(</span><span class="n">matcher</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Visualize a matcher debugging a tuple.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get the classifier from the input object</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">matcher</span><span class="p">,</span> <span class="n">DTMatcher</span><span class="p">):</span>
+        <span class="n">clf</span> <span class="o">=</span> <span class="n">matcher</span><span class="o">.</span><span class="n">clf</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">clf</span> <span class="o">=</span> <span class="n">matcher</span>
+    <span class="c1"># Get the feature vector columns, based on the input</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
+        <span class="n">fv_columns</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">index</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">fv_columns</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">columns</span>
+
+    <span class="c1"># Get the feature names based on the exclude attributes.</span>
+    <span class="k">if</span> <span class="n">exclude_attrs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">feature_names</span> <span class="o">=</span> <span class="n">fv_columns</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">exclude_attrs</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">fv_columns</span><span class="p">]</span>
+        <span class="n">feature_names</span> <span class="o">=</span> <span class="n">fv_columns</span><span class="p">[</span><span class="n">cols</span><span class="p">]</span>
+
+    <span class="c1"># Get the code for visualization and wrap that function</span>
+    <span class="n">code</span> <span class="o">=</span> <span class="n">_get_code_vis</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">feature_names</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;False&#39;</span><span class="p">,</span> <span class="s1">&#39;True&#39;</span><span class="p">])</span>
+    <span class="n">code</span> <span class="o">=</span> <span class="n">_get_dbg_fn_vis</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+
+    <span class="c1"># Link the code with feature vaues</span>
+    <span class="n">feat_vals</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">feature_names</span><span class="p">])</span>
+    <span class="n">wrapper_code</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">wrapper_code</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">feat_vals</span><span class="p">)</span>
+    <span class="n">six</span><span class="o">.</span><span class="n">exec_</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">wrapper_code</span><span class="p">)</span>
+    <span class="c1"># Finally, execute the code and relay the return result.</span>
+    <span class="n">ret_val</span><span class="p">,</span> <span class="n">node_list</span> <span class="o">=</span> <span class="n">wrapper_code</span><span class="p">[</span><span class="s1">&#39;debug_fn&#39;</span><span class="p">]()</span>
+    <span class="k">return</span> <span class="n">ret_val</span><span class="p">,</span> <span class="n">node_list</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2016, anhaidgroup
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

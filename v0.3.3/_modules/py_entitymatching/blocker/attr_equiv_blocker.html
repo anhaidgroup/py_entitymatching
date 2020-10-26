@@ -1,0 +1,793 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>py_entitymatching.blocker.attr_equiv_blocker &mdash; py_entitymatching 0.3.3 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> py_entitymatching
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">How To Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../how_to_guide.html">How to Guide To Do Entity Matching</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/whatisnew.html">What is New?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/overview.html">Overview of Supported EM Processes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/guides.html">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/datastructures.html">Data Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/steps_supp_em_workflows.html">Steps of Supported EM Workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/misc.html">Miscellaneous</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/api/overview.html">Overview of Command Organization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/api/actual_commands.html">Commands in py_entitymatching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/api/actual_commands.html#experimental-commands">Experimental Commands</a></li>
+</ul>
+<p class="caption"><span class="caption-text">How to Contribute</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing to py_entitymatching</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">py_entitymatching</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>py_entitymatching.blocker.attr_equiv_blocker</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for py_entitymatching.blocker.attr_equiv_blocker</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pyprind</span>
+<span class="kn">import</span> <span class="nn">six</span>
+<span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
+
+<span class="kn">import</span> <span class="nn">py_entitymatching.catalog.catalog_manager</span> <span class="k">as</span> <span class="nn">cm</span>
+<span class="kn">from</span> <span class="nn">py_entitymatching.blocker.blocker</span> <span class="kn">import</span> <span class="n">Blocker</span>
+<span class="kn">from</span> <span class="nn">py_entitymatching.utils.catalog_helper</span> <span class="kn">import</span> <span class="n">log_info</span><span class="p">,</span> <span class="n">get_name_for_key</span><span class="p">,</span> <span class="n">add_key_column</span>
+<span class="kn">from</span> <span class="nn">py_entitymatching.utils.generic_helper</span> <span class="kn">import</span> <span class="n">rem_nan</span>
+<span class="kn">from</span> <span class="nn">py_entitymatching.utils.validation_helper</span> <span class="kn">import</span> <span class="n">validate_object_type</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="AttrEquivalenceBlocker"><a class="viewcode-back" href="../../../user_manual/api/blocking.html#py_entitymatching.AttrEquivalenceBlocker">[docs]</a><span class="k">class</span> <span class="nc">AttrEquivalenceBlocker</span><span class="p">(</span><span class="n">Blocker</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Blocks based on the equivalence of attribute values.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="AttrEquivalenceBlocker.block_tables"><a class="viewcode-back" href="../../../user_manual/api/blocking.html#py_entitymatching.AttrEquivalenceBlocker.block_tables">[docs]</a>    <span class="k">def</span> <span class="nf">block_tables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">l_block_attr</span><span class="p">,</span> <span class="n">r_block_attr</span><span class="p">,</span>
+                     <span class="n">l_output_attrs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">r_output_attrs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                     <span class="n">l_output_prefix</span><span class="o">=</span><span class="s1">&#39;ltable_&#39;</span><span class="p">,</span> <span class="n">r_output_prefix</span><span class="o">=</span><span class="s1">&#39;rtable_&#39;</span><span class="p">,</span>
+                     <span class="n">allow_missing</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Blocks two tables based on attribute equivalence.</span>
+
+<span class="sd">        Conceptually, this will check `l_block_attr=r_block_attr` for each tuple</span>
+<span class="sd">        pair from the Cartesian product of tables `ltable` and `rtable`. It outputs a</span>
+<span class="sd">        Pandas dataframe object with tuple pairs that satisfy the equality condition.</span>
+<span class="sd">        The dataframe will include attributes &#39;_id&#39;, key attribute from</span>
+<span class="sd">        ltable, key attributes from rtable, followed by lists `l_output_attrs` and</span>
+<span class="sd">        `r_output_attrs` if they are specified. Each of these output and key attributes will be</span>
+<span class="sd">        prefixed with given `l_output_prefix` and `r_output_prefix`. If `allow_missing` is set</span>
+<span class="sd">        to `True` then all tuple pairs with missing value in at least one of the tuples will be</span>
+<span class="sd">        included in the output dataframe.</span>
+<span class="sd">        Further, this will update the following metadata in the catalog for the output table:</span>
+<span class="sd">        (1) key, (2) ltable, (3) rtable, (4) fk_ltable, and (5) fk_rtable.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            ltable (DataFrame): The left input table.</span>
+
+<span class="sd">            rtable (DataFrame): The right input table.</span>
+
+<span class="sd">            l_block_attr (string): The blocking attribute in left table.</span>
+
+<span class="sd">            r_block_attr (string): The blocking attribute in right table.</span>
+
+<span class="sd">            l_output_attrs (list): A list of attribute names from the left</span>
+<span class="sd">                                   table to be included in the</span>
+<span class="sd">                                   output candidate set (defaults to None).</span>
+
+<span class="sd">            r_output_attrs (list): A list of attribute names from the right</span>
+<span class="sd">                                   table to be included in the</span>
+<span class="sd">                                   output candidate set (defaults to None).</span>
+
+<span class="sd">            l_output_prefix (string): The prefix to be used for the attribute names</span>
+<span class="sd">                                   coming from the left table in the output</span>
+<span class="sd">                                   candidate set (defaults to &#39;ltable\_&#39;).</span>
+
+<span class="sd">            r_output_prefix (string): The prefix to be used for the attribute names</span>
+<span class="sd">                                   coming from the right table in the output</span>
+<span class="sd">                                   candidate set (defaults to &#39;rtable\_&#39;).</span>
+
+<span class="sd">            allow_missing (boolean): A flag to indicate whether tuple pairs</span>
+<span class="sd">                                     with missing value in at least one of the</span>
+<span class="sd">                                     blocking attributes should be included in</span>
+<span class="sd">                                     the output candidate set (defaults to</span>
+<span class="sd">                                     False). If this flag is set to True, a</span>
+<span class="sd">                                     tuple in ltable with missing value in the</span>
+<span class="sd">                                     blocking attribute will be matched with</span>
+<span class="sd">                                     every tuple in rtable and vice versa.</span>
+
+<span class="sd">            verbose (boolean): A flag to indicate whether the debug information</span>
+<span class="sd">                should be logged (defaults to False).</span>
+
+
+<span class="sd">            n_jobs (int): The number of parallel jobs to be used for computation</span>
+<span class="sd">                (defaults to 1). If -1 all CPUs are used. If 0 or 1,</span>
+<span class="sd">                no parallel computation is used at all, which is useful for</span>
+<span class="sd">                debugging. For n_jobs below -1, (n_cpus + 1 + n_jobs) are</span>
+<span class="sd">                used (where n_cpus is the total number of CPUs in the</span>
+<span class="sd">                machine). Thus, for n_jobs = -2, all CPUs but one are used.</span>
+<span class="sd">                If (n_cpus + 1 + n_jobs) is less than 1, then no parallel</span>
+<span class="sd">                computation is used (i.e., equivalent to the default).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A candidate set of tuple pairs that survived blocking (DataFrame).</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            AssertionError: If `ltable` is not of type pandas</span>
+<span class="sd">                DataFrame.</span>
+<span class="sd">            AssertionError: If `rtable` is not of type pandas</span>
+<span class="sd">                DataFrame.</span>
+<span class="sd">            AssertionError: If `l_block_attr` is not of type string.</span>
+<span class="sd">            AssertionError: If `r_block_attr` is not of type string.</span>
+<span class="sd">            AssertionError: If `l_output_attrs` is not of type of</span>
+<span class="sd">                list.</span>
+<span class="sd">            AssertionError: If `r_output_attrs` is not of type of</span>
+<span class="sd">                list.</span>
+<span class="sd">            AssertionError: If the values in `l_output_attrs` is not of type</span>
+<span class="sd">                string.</span>
+<span class="sd">            AssertionError: If the values in `r_output_attrs` is not of type</span>
+<span class="sd">                string.</span>
+<span class="sd">            AssertionError: If `l_output_prefix` is not of type</span>
+<span class="sd">                string.</span>
+<span class="sd">            AssertionError: If `r_output_prefix` is not of type</span>
+<span class="sd">                string.</span>
+<span class="sd">            AssertionError: If `verbose` is not of type</span>
+<span class="sd">                boolean.</span>
+<span class="sd">            AssertionError: If `allow_missing` is not of type boolean.</span>
+<span class="sd">            AssertionError: If `n_jobs` is not of type</span>
+<span class="sd">                int.</span>
+<span class="sd">            AssertionError: If `l_block_attr` is not in the ltable columns.</span>
+<span class="sd">            AssertionError: If `r_block_attr` is not in the rtable columns.</span>
+<span class="sd">            AssertionError: If `l_out_attrs` are not in the ltable.</span>
+<span class="sd">            AssertionError: If `r_out_attrs` are not in the rtable.</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; import py_entitymatching as em</span>
+<span class="sd">            &gt;&gt;&gt; A = em.read_csv_metadata(&#39;path_to_csv_dir/table_A.csv&#39;, key=&#39;ID&#39;)</span>
+<span class="sd">            &gt;&gt;&gt; B = em.read_csv_metadata(&#39;path_to_csv_dir/table_B.csv&#39;, key=&#39;ID&#39;)</span>
+<span class="sd">            &gt;&gt;&gt; ab = em.AttrEquivalenceBlocker()</span>
+<span class="sd">            &gt;&gt;&gt; C1 = ab.block_tables(A, B, &#39;zipcode&#39;, &#39;zipcode&#39;, l_output_attrs=[&#39;name&#39;], r_output_attrs=[&#39;name&#39;])</span>
+<span class="sd">            # Include all possible tuple pairs with missing values</span>
+<span class="sd">            &gt;&gt;&gt; C2 = ab.block_tables(A, B, &#39;zipcode&#39;, &#39;zipcode&#39;, l_output_attrs=[&#39;name&#39;], r_output_attrs=[&#39;name&#39;], allow_missing=True)</span>
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># validate data types of input parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate_types_params_tables</span><span class="p">(</span><span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span>
+                                          <span class="n">l_output_attrs</span><span class="p">,</span> <span class="n">r_output_attrs</span><span class="p">,</span>
+                                          <span class="n">l_output_prefix</span><span class="p">,</span>
+                                          <span class="n">r_output_prefix</span><span class="p">,</span> <span class="n">verbose</span><span class="p">,</span> <span class="n">n_jobs</span><span class="p">)</span>
+
+        <span class="c1"># validate data types of input blocking attributes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate_types_block_attrs</span><span class="p">(</span><span class="n">l_block_attr</span><span class="p">,</span> <span class="n">r_block_attr</span><span class="p">)</span>
+
+        <span class="c1"># validate data type of allow_missing</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate_allow_missing</span><span class="p">(</span><span class="n">allow_missing</span><span class="p">)</span>
+
+        <span class="c1"># validate input parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate_block_attrs</span><span class="p">(</span><span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">l_block_attr</span><span class="p">,</span> <span class="n">r_block_attr</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate_output_attrs</span><span class="p">(</span><span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">l_output_attrs</span><span class="p">,</span>
+                                   <span class="n">r_output_attrs</span><span class="p">)</span>
+
+        <span class="c1"># get and validate required metadata</span>
+        <span class="n">log_info</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="s1">&#39;Required metadata: ltable key, rtable key&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+        <span class="c1"># # get metadata</span>
+        <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">get_keys_for_ltable_rtable</span><span class="p">(</span><span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span>
+                                                     <span class="n">verbose</span><span class="p">)</span>
+
+        <span class="c1"># # validate metadata</span>
+        <span class="n">cm</span><span class="o">.</span><span class="n">_validate_metadata_for_table</span><span class="p">(</span><span class="n">ltable</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span> <span class="s1">&#39;ltable&#39;</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span>
+                                        <span class="n">verbose</span><span class="p">)</span>
+        <span class="n">cm</span><span class="o">.</span><span class="n">_validate_metadata_for_table</span><span class="p">(</span><span class="n">rtable</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span> <span class="s1">&#39;rtable&#39;</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span>
+                                        <span class="n">verbose</span><span class="p">)</span>
+
+        <span class="c1"># do blocking</span>
+
+        <span class="c1"># # do projection of required attributes from the tables</span>
+        <span class="n">l_proj_attrs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_attrs_to_project</span><span class="p">(</span><span class="n">l_key</span><span class="p">,</span> <span class="n">l_block_attr</span><span class="p">,</span>
+                                                 <span class="n">l_output_attrs</span><span class="p">)</span>
+        <span class="n">ltable_proj</span> <span class="o">=</span> <span class="n">ltable</span><span class="p">[</span><span class="n">l_proj_attrs</span><span class="p">]</span>
+        <span class="n">r_proj_attrs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_attrs_to_project</span><span class="p">(</span><span class="n">r_key</span><span class="p">,</span> <span class="n">r_block_attr</span><span class="p">,</span>
+                                                 <span class="n">r_output_attrs</span><span class="p">)</span>
+        <span class="n">rtable_proj</span> <span class="o">=</span> <span class="n">rtable</span><span class="p">[</span><span class="n">r_proj_attrs</span><span class="p">]</span>
+
+        <span class="c1"># # remove records with nans in the blocking attribute</span>
+        <span class="n">l_df</span> <span class="o">=</span> <span class="n">rem_nan</span><span class="p">(</span><span class="n">ltable_proj</span><span class="p">,</span> <span class="n">l_block_attr</span><span class="p">)</span>
+        <span class="n">r_df</span> <span class="o">=</span> <span class="n">rem_nan</span><span class="p">(</span><span class="n">rtable_proj</span><span class="p">,</span> <span class="n">r_block_attr</span><span class="p">)</span>
+
+        <span class="c1"># # determine number of processes to launch parallely</span>
+        <span class="n">n_procs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_num_procs</span><span class="p">(</span><span class="n">n_jobs</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">l_df</span><span class="p">)</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">r_df</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">n_procs</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># single process</span>
+            <span class="n">candset</span> <span class="o">=</span> <span class="n">_block_tables_split</span><span class="p">(</span><span class="n">l_df</span><span class="p">,</span> <span class="n">r_df</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span>
+                                          <span class="n">l_block_attr</span><span class="p">,</span> <span class="n">r_block_attr</span><span class="p">,</span>
+                                          <span class="n">l_output_attrs</span><span class="p">,</span> <span class="n">r_output_attrs</span><span class="p">,</span>
+                                          <span class="n">l_output_prefix</span><span class="p">,</span> <span class="n">r_output_prefix</span><span class="p">,</span>
+                                          <span class="n">allow_missing</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># multiprocessing</span>
+            <span class="n">m</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_split_params</span><span class="p">(</span><span class="n">n_procs</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">l_df</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">r_df</span><span class="p">))</span>
+            <span class="n">l_splits</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array_split</span><span class="p">(</span><span class="n">l_df</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span>
+            <span class="n">r_splits</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array_split</span><span class="p">(</span><span class="n">r_df</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+            <span class="n">c_splits</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="n">m</span> <span class="o">*</span> <span class="n">n</span><span class="p">)(</span>
+                <span class="n">delayed</span><span class="p">(</span><span class="n">_block_tables_split</span><span class="p">)(</span><span class="n">l</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span>
+                                             <span class="n">l_block_attr</span><span class="p">,</span> <span class="n">r_block_attr</span><span class="p">,</span>
+                                             <span class="n">l_output_attrs</span><span class="p">,</span> <span class="n">r_output_attrs</span><span class="p">,</span>
+                                             <span class="n">l_output_prefix</span><span class="p">,</span> <span class="n">r_output_prefix</span><span class="p">,</span>
+                                             <span class="n">allow_missing</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">l_splits</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">r_splits</span><span class="p">)</span>
+            <span class="n">candset</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">c_splits</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># if allow_missing flag is True, then compute</span>
+        <span class="c1"># all pairs with missing value in left table, and</span>
+        <span class="c1"># all pairs with missing value in right table</span>
+        <span class="k">if</span> <span class="n">allow_missing</span><span class="p">:</span>
+            <span class="n">missing_pairs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_pairs_with_missing_value</span><span class="p">(</span><span class="n">ltable_proj</span><span class="p">,</span>
+                                                              <span class="n">rtable_proj</span><span class="p">,</span>
+                                                              <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span>
+                                                              <span class="n">l_block_attr</span><span class="p">,</span>
+                                                              <span class="n">r_block_attr</span><span class="p">,</span>
+                                                              <span class="n">l_output_attrs</span><span class="p">,</span>
+                                                              <span class="n">r_output_attrs</span><span class="p">,</span>
+                                                              <span class="n">l_output_prefix</span><span class="p">,</span>
+                                                              <span class="n">r_output_prefix</span><span class="p">)</span>
+            <span class="n">candset</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">candset</span><span class="p">,</span> <span class="n">missing_pairs</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># update catalog</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">get_name_for_key</span><span class="p">(</span><span class="n">candset</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+        <span class="n">candset</span> <span class="o">=</span> <span class="n">add_key_column</span><span class="p">(</span><span class="n">candset</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+        <span class="n">cm</span><span class="o">.</span><span class="n">set_candset_properties</span><span class="p">(</span><span class="n">candset</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">l_output_prefix</span> <span class="o">+</span> <span class="n">l_key</span><span class="p">,</span>
+                                  <span class="n">r_output_prefix</span> <span class="o">+</span> <span class="n">r_key</span><span class="p">,</span> <span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">)</span>
+
+        <span class="c1"># return candidate set</span>
+        <span class="k">return</span> <span class="n">candset</span></div>
+
+<div class="viewcode-block" id="AttrEquivalenceBlocker.block_candset"><a class="viewcode-back" href="../../../user_manual/api/blocking.html#py_entitymatching.AttrEquivalenceBlocker.block_candset">[docs]</a>    <span class="k">def</span> <span class="nf">block_candset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">candset</span><span class="p">,</span> <span class="n">l_block_attr</span><span class="p">,</span> <span class="n">r_block_attr</span><span class="p">,</span>
+                      <span class="n">allow_missing</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show_progress</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                      <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Blocks an input candidate set of tuple pairs based on attribute equivalence.</span>
+
+<span class="sd">        Finds tuple pairs from an input candidate set of tuple pairs</span>
+<span class="sd">        such that the value of attribute l_block_attr of the left tuple in a</span>
+<span class="sd">        tuple pair exactly matches the value of attribute r_block_attr of the </span>
+<span class="sd">        right tuple in the tuple pair.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            candset (DataFrame): The input candidate set of tuple pairs.</span>
+
+<span class="sd">            l_block_attr (string): The blocking attribute in left table.</span>
+
+<span class="sd">            r_block_attr (string): The blocking attribute in right table.</span>
+
+<span class="sd">            allow_missing (boolean): A flag to indicate whether tuple pairs</span>
+<span class="sd">                                     with missing value in at least one of the</span>
+<span class="sd">                                     blocking attributes should be included in</span>
+<span class="sd">                                     the output candidate set (defaults to</span>
+<span class="sd">                                     False). If this flag is set to True, a</span>
+<span class="sd">                                     tuple pair with missing value in either</span>
+<span class="sd">                                     blocking attribute will be retained in the</span>
+<span class="sd">                                     output candidate set.</span>
+
+<span class="sd">            verbose (boolean): A flag to indicate whether the debug</span>
+<span class="sd">                information should be logged (defaults to False).</span>
+
+<span class="sd">            show_progress (boolean): A flag to indicate whether progress should</span>
+<span class="sd">                                     be displayed to the user (defaults to True).</span>
+
+<span class="sd">            n_jobs (int): The number of parallel jobs to be used for computation</span>
+<span class="sd">                (defaults to 1). If -1 all CPUs are used. If 0 or 1,</span>
+<span class="sd">                no parallel computation is used at all, which is useful for</span>
+<span class="sd">                debugging. For n_jobs below -1, (n_cpus + 1 + n_jobs) are</span>
+<span class="sd">                used (where n_cpus is the total number of CPUs in the</span>
+<span class="sd">                machine). Thus, for n_jobs = -2, all CPUs but one are used.</span>
+<span class="sd">                If (n_cpus + 1 + n_jobs) is less than 1, then no parallel</span>
+<span class="sd">                computation is used (i.e., equivalent to the default).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A candidate set of tuple pairs that survived blocking (DataFrame).</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            AssertionError: If `candset` is not of type pandas</span>
+<span class="sd">                DataFrame.</span>
+<span class="sd">            AssertionError: If `l_block_attr` is not of type string.</span>
+<span class="sd">            AssertionError: If `r_block_attr` is not of type string.</span>
+<span class="sd">            AssertionError: If `verbose` is not of type</span>
+<span class="sd">                boolean.</span>
+<span class="sd">            AssertionError: If `n_jobs` is not of type</span>
+<span class="sd">                int.</span>
+<span class="sd">            AssertionError: If `l_block_attr` is not in the ltable columns.</span>
+<span class="sd">            AssertionError: If `r_block_attr` is not in the rtable columns.</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; import py_entitymatching as em</span>
+<span class="sd">            &gt;&gt;&gt; A = em.read_csv_metadata(&#39;path_to_csv_dir/table_A.csv&#39;, key=&#39;ID&#39;)</span>
+<span class="sd">            &gt;&gt;&gt; B = em.read_csv_metadata(&#39;path_to_csv_dir/table_B.csv&#39;, key=&#39;ID&#39;)</span>
+<span class="sd">            &gt;&gt;&gt; ab = em.AttrEquivalenceBlocker()</span>
+<span class="sd">            &gt;&gt;&gt; C = ab.block_tables(A, B, &#39;zipcode&#39;, &#39;zipcode&#39;, l_output_attrs=[&#39;name&#39;], r_output_attrs=[&#39;name&#39;])</span>
+
+<span class="sd">            &gt;&gt;&gt; D1 = ab.block_candset(C, &#39;age&#39;, &#39;age&#39;, allow_missing=True)</span>
+<span class="sd">            # Include all possible tuple pairs with missing values</span>
+<span class="sd">            &gt;&gt;&gt; D2 = ab.block_candset(C, &#39;age&#39;, &#39;age&#39;, allow_missing=True)</span>
+<span class="sd">            # Execute blocking using multiple cores</span>
+<span class="sd">            &gt;&gt;&gt; D3 = ab.block_candset(C, &#39;age&#39;, &#39;age&#39;, n_jobs=-1)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># validate data types of input parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate_types_params_candset</span><span class="p">(</span><span class="n">candset</span><span class="p">,</span> <span class="n">verbose</span><span class="p">,</span> <span class="n">show_progress</span><span class="p">,</span>
+                                           <span class="n">n_jobs</span><span class="p">)</span>
+
+        <span class="c1"># validate data types of input blocking attributes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate_types_block_attrs</span><span class="p">(</span><span class="n">l_block_attr</span><span class="p">,</span> <span class="n">r_block_attr</span><span class="p">)</span>
+
+        <span class="c1"># get and validate metadata</span>
+        <span class="n">log_info</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="s1">&#39;Required metadata: cand.set key, fk ltable, &#39;</span>
+                         <span class="s1">&#39;fk rtable, ltable, rtable, ltable key, rtable key&#39;</span><span class="p">,</span>
+                 <span class="n">verbose</span><span class="p">)</span>
+
+        <span class="c1"># # get metadata</span>
+        <span class="n">key</span><span class="p">,</span> <span class="n">fk_ltable</span><span class="p">,</span> <span class="n">fk_rtable</span><span class="p">,</span> <span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">get_metadata_for_candset</span><span class="p">(</span>
+            <span class="n">candset</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+        <span class="c1"># # validate metadata</span>
+        <span class="n">cm</span><span class="o">.</span><span class="n">_validate_metadata_for_candset</span><span class="p">(</span><span class="n">candset</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">fk_ltable</span><span class="p">,</span> <span class="n">fk_rtable</span><span class="p">,</span>
+                                          <span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span>
+                                          <span class="n">logger</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+        <span class="c1"># validate input parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate_block_attrs</span><span class="p">(</span><span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">l_block_attr</span><span class="p">,</span> <span class="n">r_block_attr</span><span class="p">)</span>
+
+        <span class="c1"># do blocking</span>
+
+        <span class="c1"># # do projection before merge</span>
+        <span class="n">l_df</span> <span class="o">=</span> <span class="n">ltable</span><span class="p">[[</span><span class="n">l_key</span><span class="p">,</span> <span class="n">l_block_attr</span><span class="p">]]</span>
+        <span class="n">r_df</span> <span class="o">=</span> <span class="n">rtable</span><span class="p">[[</span><span class="n">r_key</span><span class="p">,</span> <span class="n">r_block_attr</span><span class="p">]]</span>
+
+        <span class="c1"># # set index for convenience</span>
+        <span class="n">l_df</span> <span class="o">=</span> <span class="n">l_df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">l_key</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">r_df</span> <span class="o">=</span> <span class="n">r_df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">r_key</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="c1"># # determine number of processes to launch parallely</span>
+        <span class="n">n_procs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_num_procs</span><span class="p">(</span><span class="n">n_jobs</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">candset</span><span class="p">))</span>
+
+        <span class="n">valid</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">n_procs</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># single process</span>
+            <span class="n">valid</span> <span class="o">=</span> <span class="n">_block_candset_split</span><span class="p">(</span><span class="n">candset</span><span class="p">,</span> <span class="n">l_df</span><span class="p">,</span> <span class="n">r_df</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span>
+                                         <span class="n">l_block_attr</span><span class="p">,</span> <span class="n">r_block_attr</span><span class="p">,</span> <span class="n">fk_ltable</span><span class="p">,</span>
+                                         <span class="n">fk_rtable</span><span class="p">,</span> <span class="n">allow_missing</span><span class="p">,</span> <span class="n">show_progress</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">c_splits</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array_split</span><span class="p">(</span><span class="n">candset</span><span class="p">,</span> <span class="n">n_procs</span><span class="p">)</span>
+            <span class="n">valid_splits</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="n">n_procs</span><span class="p">)(</span>
+                <span class="n">delayed</span><span class="p">(</span><span class="n">_block_candset_split</span><span class="p">)(</span><span class="n">c_splits</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                                              <span class="n">l_df</span><span class="p">,</span> <span class="n">r_df</span><span class="p">,</span>
+                                              <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span>
+                                              <span class="n">l_block_attr</span><span class="p">,</span> <span class="n">r_block_attr</span><span class="p">,</span>
+                                              <span class="n">fk_ltable</span><span class="p">,</span> <span class="n">fk_rtable</span><span class="p">,</span> <span class="n">allow_missing</span><span class="p">,</span>
+                                              <span class="n">show_progress</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span>
+                                                  <span class="n">c_splits</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">c_splits</span><span class="p">)))</span>
+            <span class="n">valid</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">valid_splits</span><span class="p">,</span> <span class="p">[])</span>
+
+        <span class="c1"># construct output table</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">candset</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">out_table</span> <span class="o">=</span> <span class="n">candset</span><span class="p">[</span><span class="n">valid</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">out_table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">candset</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+
+        <span class="c1"># update the catalog</span>
+        <span class="n">cm</span><span class="o">.</span><span class="n">set_candset_properties</span><span class="p">(</span><span class="n">out_table</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">fk_ltable</span><span class="p">,</span> <span class="n">fk_rtable</span><span class="p">,</span>
+                                  <span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">)</span>
+
+        <span class="c1"># return the output table</span>
+        <span class="k">return</span> <span class="n">out_table</span></div>
+
+<div class="viewcode-block" id="AttrEquivalenceBlocker.block_tuples"><a class="viewcode-back" href="../../../user_manual/api/blocking.html#py_entitymatching.AttrEquivalenceBlocker.block_tuples">[docs]</a>    <span class="k">def</span> <span class="nf">block_tuples</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ltuple</span><span class="p">,</span> <span class="n">rtuple</span><span class="p">,</span> <span class="n">l_block_attr</span><span class="p">,</span> <span class="n">r_block_attr</span><span class="p">,</span>
+                     <span class="n">allow_missing</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Blocks a tuple pair based on attribute equivalence.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            ltuple (Series): The input left tuple.</span>
+
+<span class="sd">            rtuple (Series): The input right tuple.</span>
+<span class="sd">            </span>
+<span class="sd">            l_block_attr (string): The blocking attribute in left tuple.</span>
+
+<span class="sd">            r_block_attr (string): The blocking attribute in right tuple.</span>
+
+<span class="sd">            allow_missing (boolean): A flag to indicate whether a tuple pair</span>
+<span class="sd">                                     with missing value in at least one of the</span>
+<span class="sd">                                     blocking attributes should be blocked</span>
+<span class="sd">                                     (defaults to False). If this flag is set</span>
+<span class="sd">                                     to True, the pair will be kept if either</span>
+<span class="sd">                                     ltuple has missing value in l_block_attr</span>
+<span class="sd">                                     or rtuple has missing value in r_block_attr</span>
+<span class="sd">                                     or both.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A status indicating if the tuple pair is blocked, i.e., the values</span>
+<span class="sd">            of l_block_attr in ltuple and r_block_attr in rtuple are different</span>
+<span class="sd">            (boolean).</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; import py_entitymatching as em</span>
+<span class="sd">            &gt;&gt;&gt; A = em.read_csv_metadata(&#39;path_to_csv_dir/table_A.csv&#39;, key=&#39;ID&#39;)</span>
+<span class="sd">            &gt;&gt;&gt; B = em.read_csv_metadata(&#39;path_to_csv_dir/table_B.csv&#39;, key=&#39;ID&#39;)</span>
+<span class="sd">            &gt;&gt;&gt; ab = em.AttrEquivalenceBlocker()</span>
+<span class="sd">            &gt;&gt;&gt; status = ab.block_tuples(A.loc[0], B.loc[0], &#39;zipcode&#39;, &#39;zipcode&#39;)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">l_val</span><span class="p">,</span> <span class="n">r_val</span> <span class="o">=</span> <span class="n">ltuple</span><span class="p">[</span><span class="n">l_block_attr</span><span class="p">],</span> <span class="n">rtuple</span><span class="p">[</span><span class="n">r_block_attr</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">allow_missing</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">isnull</span><span class="p">(</span><span class="n">l_val</span><span class="p">)</span> <span class="ow">or</span> <span class="n">pd</span><span class="o">.</span><span class="n">isnull</span><span class="p">(</span><span class="n">r_val</span><span class="p">)</span> <span class="ow">or</span> <span class="n">l_val</span> <span class="o">==</span> <span class="n">r_val</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">notnull</span><span class="p">(</span><span class="n">l_val</span><span class="p">)</span> <span class="ow">and</span> <span class="n">pd</span><span class="o">.</span><span class="n">notnull</span><span class="p">(</span><span class="n">r_val</span><span class="p">)</span> <span class="ow">and</span> <span class="n">l_val</span> <span class="o">==</span> <span class="n">r_val</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span></div>
+
+
+    <span class="c1"># ------------------------------------------------------------</span>
+    <span class="c1"># utility functions specific to attribute equivalence blocking</span>
+
+    <span class="c1"># validate the data types of the blocking attributes </span>
+    <span class="k">def</span> <span class="nf">validate_types_block_attrs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">l_block_attr</span><span class="p">,</span> <span class="n">r_block_attr</span><span class="p">):</span>
+        <span class="n">validate_object_type</span><span class="p">(</span><span class="n">l_block_attr</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">,</span> <span class="n">error_prefix</span><span class="o">=</span><span class="s1">&#39;Blocking attribute name of left table&#39;</span><span class="p">)</span>
+        <span class="n">validate_object_type</span><span class="p">(</span><span class="n">r_block_attr</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">,</span> <span class="n">error_prefix</span><span class="o">=</span><span class="s1">&#39;Blocking attribute name of right table&#39;</span><span class="p">)</span>
+
+    <span class="c1"># validate the blocking attributes</span>
+    <span class="k">def</span> <span class="nf">validate_block_attrs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">l_block_attr</span><span class="p">,</span> <span class="n">r_block_attr</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">l_block_attr</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ltable</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span>
+                <span class="s1">&#39;Left block attribute is not in the left table&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">r_block_attr</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">rtable</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span>
+                <span class="s1">&#39;Right block attribute is not in the right table&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_pairs_with_missing_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">l_df</span><span class="p">,</span> <span class="n">r_df</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span>
+                                     <span class="n">l_block_attr</span><span class="p">,</span> <span class="n">r_block_attr</span><span class="p">,</span>
+                                     <span class="n">l_output_attrs</span><span class="p">,</span> <span class="n">r_output_attrs</span><span class="p">,</span>
+                                     <span class="n">l_output_prefix</span><span class="p">,</span> <span class="n">r_output_prefix</span><span class="p">):</span>
+
+        <span class="n">l_df</span><span class="o">.</span><span class="n">is_copy</span><span class="p">,</span> <span class="n">r_df</span><span class="o">.</span><span class="n">is_copy</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span>  <span class="c1"># to avoid setwithcopy warning</span>
+        <span class="n">l_df</span><span class="p">[</span><span class="s1">&#39;ones&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">l_df</span><span class="p">))</span>
+        <span class="n">r_df</span><span class="p">[</span><span class="s1">&#39;ones&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">r_df</span><span class="p">))</span>
+
+        <span class="c1"># find ltable records with missing value in l_block_attr</span>
+        <span class="n">l_df_missing</span> <span class="o">=</span> <span class="n">l_df</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">isnull</span><span class="p">(</span><span class="n">l_df</span><span class="p">[</span><span class="n">l_block_attr</span><span class="p">])]</span>
+
+        <span class="c1"># find ltable records with no missing value in l_block_attr</span>
+        <span class="n">l_df_no_missing</span> <span class="o">=</span> <span class="n">l_df</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">notnull</span><span class="p">(</span><span class="n">l_df</span><span class="p">[</span><span class="n">l_block_attr</span><span class="p">])]</span>
+
+        <span class="c1"># find rtable records with missing value in r_block_attr</span>
+        <span class="n">r_df_missing</span> <span class="o">=</span> <span class="n">r_df</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">isnull</span><span class="p">(</span><span class="n">r_df</span><span class="p">[</span><span class="n">r_block_attr</span><span class="p">])]</span>
+
+        <span class="n">missing_pairs_1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">l_df_missing</span><span class="p">,</span> <span class="n">r_df</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="s1">&#39;ones&#39;</span><span class="p">,</span>
+                                   <span class="n">right_on</span><span class="o">=</span><span class="s1">&#39;ones&#39;</span><span class="p">,</span>
+                                   <span class="n">suffixes</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;_ltable&#39;</span><span class="p">,</span> <span class="s1">&#39;_rtable&#39;</span><span class="p">))</span>
+
+        <span class="n">missing_pairs_2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">l_df_no_missing</span><span class="p">,</span> <span class="n">r_df_missing</span><span class="p">,</span>
+                                   <span class="n">left_on</span><span class="o">=</span><span class="s1">&#39;ones&#39;</span><span class="p">,</span>
+                                   <span class="n">right_on</span><span class="o">=</span><span class="s1">&#39;ones&#39;</span><span class="p">,</span>
+                                   <span class="n">suffixes</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;_ltable&#39;</span><span class="p">,</span> <span class="s1">&#39;_rtable&#39;</span><span class="p">))</span>
+
+        <span class="n">missing_pairs</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">missing_pairs_1</span><span class="p">,</span> <span class="n">missing_pairs_2</span><span class="p">],</span>
+                                  <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">retain_cols</span><span class="p">,</span> <span class="n">final_cols</span> <span class="o">=</span> <span class="n">_output_columns</span><span class="p">(</span><span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span>
+                                                  <span class="nb">list</span><span class="p">(</span><span class="n">missing_pairs</span><span class="o">.</span><span class="n">columns</span><span class="p">),</span>
+                                                  <span class="n">l_output_attrs</span><span class="p">,</span>
+                                                  <span class="n">r_output_attrs</span><span class="p">,</span>
+                                                  <span class="n">l_output_prefix</span><span class="p">,</span>
+                                                  <span class="n">r_output_prefix</span><span class="p">)</span>
+        <span class="n">missing_pairs</span> <span class="o">=</span> <span class="n">missing_pairs</span><span class="p">[</span><span class="n">retain_cols</span><span class="p">]</span>
+        <span class="n">missing_pairs</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">final_cols</span>
+        <span class="k">return</span> <span class="n">missing_pairs</span></div>
+
+
+<span class="k">def</span> <span class="nf">_block_tables_split</span><span class="p">(</span><span class="n">l_df</span><span class="p">,</span> <span class="n">r_df</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span> <span class="n">l_block_attr</span><span class="p">,</span> <span class="n">r_block_attr</span><span class="p">,</span>
+                        <span class="n">l_output_attrs</span><span class="p">,</span> <span class="n">r_output_attrs</span><span class="p">,</span> <span class="n">l_output_prefix</span><span class="p">,</span>
+                        <span class="n">r_output_prefix</span><span class="p">,</span> <span class="n">allow_missing</span><span class="p">):</span>
+    <span class="c1"># perform an inner join of the two data frames with no missing values</span>
+    <span class="n">candset</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">l_df</span><span class="p">,</span> <span class="n">r_df</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="n">l_block_attr</span><span class="p">,</span>
+                       <span class="n">right_on</span><span class="o">=</span><span class="n">r_block_attr</span><span class="p">,</span> <span class="n">suffixes</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;_ltable&#39;</span><span class="p">,</span> <span class="s1">&#39;_rtable&#39;</span><span class="p">))</span>
+
+    <span class="n">retain_cols</span><span class="p">,</span> <span class="n">final_cols</span> <span class="o">=</span> <span class="n">_output_columns</span><span class="p">(</span><span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span>
+                                              <span class="nb">list</span><span class="p">(</span><span class="n">candset</span><span class="o">.</span><span class="n">columns</span><span class="p">),</span>
+                                              <span class="n">l_output_attrs</span><span class="p">,</span> <span class="n">r_output_attrs</span><span class="p">,</span>
+                                              <span class="n">l_output_prefix</span><span class="p">,</span> <span class="n">r_output_prefix</span><span class="p">)</span>
+    <span class="n">candset</span> <span class="o">=</span> <span class="n">candset</span><span class="p">[</span><span class="n">retain_cols</span><span class="p">]</span>
+    <span class="n">candset</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">final_cols</span>
+    <span class="k">return</span> <span class="n">candset</span>
+
+
+<span class="k">def</span> <span class="nf">_block_candset_split</span><span class="p">(</span><span class="n">c_df</span><span class="p">,</span> <span class="n">l_df</span><span class="p">,</span> <span class="n">r_df</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span>
+                         <span class="n">l_block_attr</span><span class="p">,</span> <span class="n">r_block_attr</span><span class="p">,</span> <span class="n">fk_ltable</span><span class="p">,</span> <span class="n">fk_rtable</span><span class="p">,</span>
+                         <span class="n">allow_missing</span><span class="p">,</span> <span class="n">show_progress</span><span class="p">):</span>
+    <span class="c1"># initialize progress bar</span>
+    <span class="k">if</span> <span class="n">show_progress</span><span class="p">:</span>
+        <span class="n">prog_bar</span> <span class="o">=</span> <span class="n">pyprind</span><span class="o">.</span><span class="n">ProgBar</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">c_df</span><span class="p">))</span>
+
+    <span class="c1"># initialize list to keep track of valid ids</span>
+    <span class="n">valid</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># get the indexes for the key attributes in the candset</span>
+    <span class="n">col_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">c_df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+    <span class="n">lkey_idx</span> <span class="o">=</span> <span class="n">col_names</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">fk_ltable</span><span class="p">)</span>
+    <span class="n">rkey_idx</span> <span class="o">=</span> <span class="n">col_names</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">fk_rtable</span><span class="p">)</span>
+
+    <span class="c1"># create a look up table for the blocking attribute values</span>
+    <span class="n">l_dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">r_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="c1"># iterate the rows in candset</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">c_df</span><span class="o">.</span><span class="n">itertuples</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+        <span class="c1"># # update the progress bar</span>
+        <span class="k">if</span> <span class="n">show_progress</span><span class="p">:</span>
+            <span class="n">prog_bar</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+
+        <span class="c1"># # get the value of block attributes</span>
+        <span class="n">row_lkey</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">lkey_idx</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">row_lkey</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">l_dict</span><span class="p">:</span>
+            <span class="n">l_dict</span><span class="p">[</span><span class="n">row_lkey</span><span class="p">]</span> <span class="o">=</span> <span class="n">l_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">row_lkey</span><span class="p">,</span> <span class="n">l_block_attr</span><span class="p">]</span>
+        <span class="n">l_val</span> <span class="o">=</span> <span class="n">l_dict</span><span class="p">[</span><span class="n">row_lkey</span><span class="p">]</span>
+
+        <span class="n">row_rkey</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">rkey_idx</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">row_rkey</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">r_dict</span><span class="p">:</span>
+            <span class="n">r_dict</span><span class="p">[</span><span class="n">row_rkey</span><span class="p">]</span> <span class="o">=</span> <span class="n">r_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">row_rkey</span><span class="p">,</span> <span class="n">r_block_attr</span><span class="p">]</span>
+        <span class="n">r_val</span> <span class="o">=</span> <span class="n">r_dict</span><span class="p">[</span><span class="n">row_rkey</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">allow_missing</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">isnull</span><span class="p">(</span><span class="n">l_val</span><span class="p">)</span> <span class="ow">or</span> <span class="n">pd</span><span class="o">.</span><span class="n">isnull</span><span class="p">(</span><span class="n">r_val</span><span class="p">)</span> <span class="ow">or</span> <span class="n">l_val</span> <span class="o">==</span> <span class="n">r_val</span><span class="p">:</span>
+                <span class="n">valid</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">valid</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">notnull</span><span class="p">(</span><span class="n">l_val</span><span class="p">)</span> <span class="ow">and</span> <span class="n">pd</span><span class="o">.</span><span class="n">notnull</span><span class="p">(</span><span class="n">r_val</span><span class="p">)</span> <span class="ow">and</span> <span class="n">l_val</span> <span class="o">==</span> <span class="n">r_val</span><span class="p">:</span>
+                <span class="n">valid</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">valid</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">valid</span>
+
+
+<span class="k">def</span> <span class="nf">_output_columns</span><span class="p">(</span><span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span> <span class="n">col_names</span><span class="p">,</span> <span class="n">l_output_attrs</span><span class="p">,</span> <span class="n">r_output_attrs</span><span class="p">,</span>
+                    <span class="n">l_output_prefix</span><span class="p">,</span> <span class="n">r_output_prefix</span><span class="p">):</span>
+    <span class="c1"># retain id columns from merge</span>
+    <span class="n">ret_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">_retain_names</span><span class="p">(</span><span class="n">l_key</span><span class="p">,</span> <span class="n">col_names</span><span class="p">,</span> <span class="s1">&#39;_ltable&#39;</span><span class="p">)]</span>
+    <span class="n">ret_cols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_retain_names</span><span class="p">(</span><span class="n">r_key</span><span class="p">,</span> <span class="n">col_names</span><span class="p">,</span> <span class="s1">&#39;_rtable&#39;</span><span class="p">))</span>
+
+    <span class="c1"># final columns in the output                                           </span>
+    <span class="n">fin_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">_final_names</span><span class="p">(</span><span class="n">l_key</span><span class="p">,</span> <span class="n">l_output_prefix</span><span class="p">)]</span>
+    <span class="n">fin_cols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_final_names</span><span class="p">(</span><span class="n">r_key</span><span class="p">,</span> <span class="n">r_output_prefix</span><span class="p">))</span>
+
+    <span class="c1"># retain output attrs from merge                                        </span>
+    <span class="k">if</span> <span class="n">l_output_attrs</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">at</span> <span class="ow">in</span> <span class="n">l_output_attrs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">at</span> <span class="o">!=</span> <span class="n">l_key</span><span class="p">:</span>
+                <span class="n">ret_cols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_retain_names</span><span class="p">(</span><span class="n">at</span><span class="p">,</span> <span class="n">col_names</span><span class="p">,</span> <span class="s1">&#39;_ltable&#39;</span><span class="p">))</span>
+                <span class="n">fin_cols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_final_names</span><span class="p">(</span><span class="n">at</span><span class="p">,</span> <span class="n">l_output_prefix</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">r_output_attrs</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">at</span> <span class="ow">in</span> <span class="n">r_output_attrs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">at</span> <span class="o">!=</span> <span class="n">r_key</span><span class="p">:</span>
+                <span class="n">ret_cols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_retain_names</span><span class="p">(</span><span class="n">at</span><span class="p">,</span> <span class="n">col_names</span><span class="p">,</span> <span class="s1">&#39;_rtable&#39;</span><span class="p">))</span>
+                <span class="n">fin_cols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_final_names</span><span class="p">(</span><span class="n">at</span><span class="p">,</span> <span class="n">r_output_prefix</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">ret_cols</span><span class="p">,</span> <span class="n">fin_cols</span>
+
+
+<span class="k">def</span> <span class="nf">_retain_names</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">col_names</span><span class="p">,</span> <span class="n">suffix</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">col_names</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">x</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">suffix</span>
+
+
+<span class="k">def</span> <span class="nf">_final_names</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">prefix</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">prefix</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2016, anhaidgroup
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,1658 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>py_entitymatching.catalog.catalog_manager &mdash; py_entitymatching 0.3.3 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> py_entitymatching
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">How To Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../how_to_guide.html">How to Guide To Do Entity Matching</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/whatisnew.html">What is New?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/overview.html">Overview of Supported EM Processes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/guides.html">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/datastructures.html">Data Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/steps_supp_em_workflows.html">Steps of Supported EM Workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/misc.html">Miscellaneous</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/api/overview.html">Overview of Command Organization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/api/actual_commands.html">Commands in py_entitymatching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/api/actual_commands.html#experimental-commands">Experimental Commands</a></li>
+</ul>
+<p class="caption"><span class="caption-text">How to Contribute</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing to py_entitymatching</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">py_entitymatching</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>py_entitymatching.catalog.catalog_manager</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for py_entitymatching.catalog.catalog_manager</h1><div class="highlight"><pre>
+<span></span><span class="c1"># coding=utf-8</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module contains wrapper functions for the catalog.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">six</span>
+
+<span class="kn">import</span> <span class="nn">py_entitymatching.utils.catalog_helper</span> <span class="k">as</span> <span class="nn">ch</span>
+<span class="kn">from</span> <span class="nn">py_entitymatching.catalog.catalog</span> <span class="kn">import</span> <span class="n">Catalog</span>
+<span class="kn">from</span> <span class="nn">py_entitymatching.utils.validation_helper</span> <span class="kn">import</span> <span class="n">validate_object_type</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="get_property"><a class="viewcode-back" href="../../../user_manual/api/handling_metadata.html#py_entitymatching.get_property">[docs]</a><span class="k">def</span> <span class="nf">get_property</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">property_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Gets the value of a property (with the given property name) for a pandas</span>
+<span class="sd">    DataFrame from the catalog.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data_frame (DataFrame): The DataFrame for which the property should be</span>
+<span class="sd">            retrieved.</span>
+<span class="sd">        property_name (string): The name of the property that should be</span>
+<span class="sd">            retrieved.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A Python object (typically a string or a pandas DataFrame depending</span>
+<span class="sd">        on the property name) is returned.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If `data_frame` is not of type pandas</span>
+<span class="sd">         DataFrame.</span>
+<span class="sd">        AssertionError: If `property_name` is not of type string.</span>
+<span class="sd">        KeyError: If `data_frame` information is not present in the catalog.</span>
+<span class="sd">        KeyError: If requested property for the `data_frame` is not present</span>
+<span class="sd">            in the catalog.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; import py_entitymatching as em</span>
+<span class="sd">        &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">        &gt;&gt;&gt; A = pd.DataFrame({&#39;id&#39; : [1, 2], &#39;colA&#39;:[&#39;a&#39;, &#39;b&#39;], &#39;colB&#39; : [10, 20]})</span>
+<span class="sd">        &gt;&gt;&gt; em.set_key(A, &#39;id&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; em.get_property(A, &#39;key&#39;)</span>
+<span class="sd">         # id</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Validate input parameters</span>
+
+    <span class="c1"># # The input object should be of type pandas DataFrame</span>
+    <span class="n">validate_object_type</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span>
+
+    <span class="c1"># # The property name should be of type string</span>
+    <span class="n">validate_object_type</span><span class="p">(</span><span class="n">property_name</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">,</span> <span class="n">error_prefix</span><span class="o">=</span><span class="s1">&#39;Property name&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Get the catalog instance, this is imported here because this object</span>
+    <span class="c1"># used to validate the presence of a DataFrame in the catalog, and the</span>
+    <span class="c1"># presence of requested metadata in the catalog.</span>
+    <span class="n">catalog</span> <span class="o">=</span> <span class="n">Catalog</span><span class="o">.</span><span class="n">Instance</span><span class="p">()</span>
+
+    <span class="c1"># Check for the present of input DataFrame in the catalog.</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">catalog</span><span class="o">.</span><span class="n">is_df_info_present_in_catalog</span><span class="p">(</span><span class="n">data_frame</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;DataFrame information is not present in the catalog&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s1">&#39;DataFrame information is not present in the catalog&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Check if the requested property is present in the catalog.</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">catalog</span><span class="o">.</span><span class="n">is_property_present_for_df</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">property_name</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+            <span class="s1">&#39;Requested metadata ( </span><span class="si">%s</span><span class="s1"> ) for the given DataFrame is not &#39;</span>
+            <span class="s1">&#39;present in the catalog&#39;</span> <span class="o">%</span> <span class="n">property_name</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span>
+            <span class="s1">&#39;Requested metadata ( </span><span class="si">%s</span><span class="s1"> ) for the given DataFrame is not &#39;</span>
+            <span class="s1">&#39;present in the catalog&#39;</span> <span class="o">%</span> <span class="n">property_name</span><span class="p">)</span>
+
+    <span class="c1"># Return the requested property for the input DataFrame</span>
+    <span class="k">return</span> <span class="n">catalog</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">property_name</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="set_property"><a class="viewcode-back" href="../../../user_manual/api/handling_metadata.html#py_entitymatching.set_property">[docs]</a><span class="k">def</span> <span class="nf">set_property</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">property_name</span><span class="p">,</span> <span class="n">property_value</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sets the value of a property (with the given property name) for a pandas</span>
+<span class="sd">    DataFrame in the catalog.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data_frame (DataFrame): The DataFrame for which the property must  be</span>
+<span class="sd">            set.</span>
+<span class="sd">        property_name (string): The name of the property to be set.</span>
+<span class="sd">        property_value (object): The value of the property to be set. This is</span>
+<span class="sd">            typically a string (such as key) or pandas DataFrame (such as</span>
+<span class="sd">            ltable, rtable).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A Boolean value of True is returned if the update was successful.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If `data_frame` is not of type pandas</span>
+<span class="sd">         DataFrame.</span>
+<span class="sd">        AssertionError: If `property_name` is not of type string.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; import py_entitymatching as em</span>
+<span class="sd">        &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">        &gt;&gt;&gt; A = pd.DataFrame({&#39;id&#39; : [1, 2], &#39;colA&#39;:[&#39;a&#39;, &#39;b&#39;], &#39;colB&#39; : [10, 20]})</span>
+<span class="sd">        &gt;&gt;&gt; em.set_property(A, &#39;key&#39;, &#39;id&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; em.get_property(A, &#39;key&#39;)</span>
+<span class="sd">         # id</span>
+<span class="sd">        &gt;&gt;&gt; em.get_key(A)</span>
+<span class="sd">         # id</span>
+
+
+<span class="sd">    Note:</span>
+<span class="sd">        If the input DataFrame is not present in the catalog, this function</span>
+<span class="sd">        will create an entry in the catalog and set the given property.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Validate input parameters</span>
+
+    <span class="c1"># # The input object should be of type pandas DataFrame</span>
+    <span class="n">validate_object_type</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span>
+
+    <span class="c1"># # The property name should be of type string</span>
+    <span class="n">validate_object_type</span><span class="p">(</span><span class="n">property_name</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">,</span> <span class="n">error_prefix</span><span class="o">=</span><span class="s1">&#39;Property name&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Get the catalog instance</span>
+    <span class="n">catalog</span> <span class="o">=</span> <span class="n">Catalog</span><span class="o">.</span><span class="n">Instance</span><span class="p">()</span>
+
+    <span class="c1"># Check if the DataFrame information is present in the catalog. If the</span>
+    <span class="c1"># information is not present, then initialize an entry for that DataFrame</span>
+    <span class="c1">#  in the catalog.</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">catalog</span><span class="o">.</span><span class="n">is_df_info_present_in_catalog</span><span class="p">(</span><span class="n">data_frame</span><span class="p">):</span>
+        <span class="n">catalog</span><span class="o">.</span><span class="n">init_properties</span><span class="p">(</span><span class="n">data_frame</span><span class="p">)</span>
+
+    <span class="c1"># Set the property in the catalog, and relay the return value from the</span>
+    <span class="c1"># underlying catalog object&#39;s function. The return value is typically</span>
+    <span class="c1"># True if the update was successful.</span>
+    <span class="k">return</span> <span class="n">catalog</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">property_name</span><span class="p">,</span> <span class="n">property_value</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">init_properties</span><span class="p">(</span><span class="n">data_frame</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Initializes properties for a pandas DataFrame in the catalog.</span>
+
+<span class="sd">    Specifically, this function creates an entry in the catalog and sets its</span>
+<span class="sd">    properties to empty.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data_frame (DataFrame): DataFrame for which the properties must be</span>
+<span class="sd">            initialized.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A Boolean value of True is returned if the initialization was</span>
+<span class="sd">        successful.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Validate input parameters</span>
+
+    <span class="c1"># # The input object should be of type pandas DataFrame</span>
+    <span class="n">validate_object_type</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span>
+
+    <span class="c1"># Get the catalog instance</span>
+    <span class="n">catalog</span> <span class="o">=</span> <span class="n">Catalog</span><span class="o">.</span><span class="n">Instance</span><span class="p">()</span>
+
+    <span class="c1"># Initialize the property in the catalog.</span>
+    <span class="c1"># Relay the return value from the underlying catalog object&#39;s function.</span>
+    <span class="c1"># The return value is typically True if the initialization was successful</span>
+    <span class="k">return</span> <span class="n">catalog</span><span class="o">.</span><span class="n">init_properties</span><span class="p">(</span><span class="n">data_frame</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">get_all_properties</span><span class="p">(</span><span class="n">data_frame</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Gets all the properties for a pandas DataFrame object from the catalog.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data_frame (DataFrame): DataFrame for which the properties must be</span>
+<span class="sd">            retrieved.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A dictionary containing properties for the input pandas DataFrame.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AttributeError: If the input object is not of type pandas DataFrame.</span>
+<span class="sd">        KeyError: If the information about DataFrame is not present in the</span>
+<span class="sd">            catalog.</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Validate input parameters</span>
+    <span class="c1"># # The input object is expected to be of type DataFrame</span>
+    <span class="c1"># # The input object should be of type pandas DataFrame</span>
+    <span class="n">validate_object_type</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span>
+
+    <span class="c1"># Get the catalog instance</span>
+    <span class="n">catalog</span> <span class="o">=</span> <span class="n">Catalog</span><span class="o">.</span><span class="n">Instance</span><span class="p">()</span>
+
+    <span class="c1"># Check if the DataFrame information is present in the catalog. If not</span>
+    <span class="c1"># raise an error.</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">catalog</span><span class="o">.</span><span class="n">is_df_info_present_in_catalog</span><span class="p">(</span><span class="n">data_frame</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;DataFrame information is not present in the catalog&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s1">&#39;DataFrame information is not present in the catalog&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Retrieve the properties for the DataFrame from the catalog and return</span>
+    <span class="c1"># it back to the user.</span>
+    <span class="k">return</span> <span class="n">catalog</span><span class="o">.</span><span class="n">get_all_properties</span><span class="p">(</span><span class="n">data_frame</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="del_property"><a class="viewcode-back" href="../../../user_manual/api/handling_metadata.html#py_entitymatching.del_property">[docs]</a><span class="k">def</span> <span class="nf">del_property</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">property_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Deletes a property for a pandas DataFrame from the catalog.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data_frame (DataFrame): The input DataFrame for which a property must be</span>
+<span class="sd">            deleted from the catalog.</span>
+
+<span class="sd">        property_name (string): The name of the property that should be deleted.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A Boolean value of True is returned if the deletion was successful.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If `data_frame` is not of type pandas DataFrame.</span>
+<span class="sd">        AssertionError: If `property_name` is not of type string.</span>
+<span class="sd">        KeyError: If `data_frame` information is not present in the catalog.</span>
+<span class="sd">        KeyError: If requested property for the DataFrame is not present</span>
+<span class="sd">            in the catalog.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; import py_entitymatching as em</span>
+<span class="sd">        &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">        &gt;&gt;&gt; A = pd.DataFrame({&#39;id&#39; : [1, 2], &#39;colA&#39;:[&#39;a&#39;, &#39;b&#39;], &#39;colB&#39; : [10, 20]})</span>
+<span class="sd">        &gt;&gt;&gt; em.set_property(A, &#39;key&#39;, &#39;id&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; em.get_property(A, &#39;key&#39;)</span>
+<span class="sd">        # id</span>
+<span class="sd">        &gt;&gt;&gt; em.del_property(A, &#39;key&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; em.is_property_present_for_df(A, &#39;key&#39;)</span>
+<span class="sd">        # False</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Validate input parameters</span>
+
+    <span class="c1"># # The input object should be of type pandas DataFrame</span>
+    <span class="n">validate_object_type</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span>
+
+    <span class="c1"># # The property name should be of type string</span>
+    <span class="n">validate_object_type</span><span class="p">(</span><span class="n">property_name</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">,</span> <span class="n">error_prefix</span><span class="o">=</span><span class="s1">&#39;Property name&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Get the catalog instance</span>
+    <span class="n">catalog</span> <span class="o">=</span> <span class="n">Catalog</span><span class="o">.</span><span class="n">Instance</span><span class="p">()</span>
+
+    <span class="c1"># Check if the DataFrame information is present in the catalog, if not</span>
+    <span class="c1"># raise an error.</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">catalog</span><span class="o">.</span><span class="n">is_df_info_present_in_catalog</span><span class="p">(</span><span class="n">data_frame</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;DataFrame information is not present in the catalog&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s1">&#39;DataFrame information is not present in the catalog&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Check if the requested property name to be deleted  is present for the</span>
+    <span class="c1"># DataFrame in the catalog, if not raise an error.</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">catalog</span><span class="o">.</span><span class="n">is_property_present_for_df</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">property_name</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Requested metadata ( </span><span class="si">%s</span><span class="s1"> ) for the given DataFrame is &#39;</span>
+                     <span class="s1">&#39;not present in the catalog&#39;</span> <span class="o">%</span><span class="n">property_name</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s1">&#39;Requested metadata ( </span><span class="si">%s</span><span class="s1"> ) for the given DataFrame is &#39;</span>
+                       <span class="s1">&#39;not present in the catalog&#39;</span> <span class="o">%</span><span class="n">property_name</span><span class="p">)</span>
+
+    <span class="c1"># Delete the property using the underlying catalog object and relay the</span>
+    <span class="c1"># return value. Typically the return value is True if the deletion was</span>
+    <span class="c1"># successful</span>
+    <span class="k">return</span> <span class="n">catalog</span><span class="o">.</span><span class="n">del_property</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">property_name</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">del_all_properties</span><span class="p">(</span><span class="n">data_frame</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Deletes all properties for a DataFrame from the catalog.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data_frame (DataFrame): Input DataFrame for which all the properties</span>
+<span class="sd">            must be deleted from the catalog.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A boolean of True is returned if the deletion was successful</span>
+<span class="sd">        from the catalog.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If the `data_frame` is not of type pandas DataFrame.</span>
+<span class="sd">        KeyError: If the DataFrame information is not present in the catalog.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        This method&#39;s functionality is not as same as init_properties. Here</span>
+<span class="sd">        the DataFrame&#39;s entry will be removed from the catalog,</span>
+<span class="sd">        but init_properties will add (if the DataFrame is not present in the</span>
+<span class="sd">        catalog) and initialize its properties to an empty object (</span>
+<span class="sd">        specifically, an empty Python dictionary).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Validations of input parameters</span>
+    <span class="c1"># # The input object is expected to be of type pandas DataFrame</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Input object is not of type pandas data frame&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Input object is not of type pandas data frame&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Get the catalog instance</span>
+    <span class="n">catalog</span> <span class="o">=</span> <span class="n">Catalog</span><span class="o">.</span><span class="n">Instance</span><span class="p">()</span>
+
+    <span class="c1"># Check if the DataFrame is present in the catalog. If not, raise an error</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">catalog</span><span class="o">.</span><span class="n">is_df_info_present_in_catalog</span><span class="p">(</span><span class="n">data_frame</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;DataFrame information is not present in the catalog&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s1">&#39;DataFrame information is not present in the catalog&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Call the underlying catalog object&#39;s function to delete the properties</span>
+    <span class="c1"># and relay its return value</span>
+    <span class="k">return</span> <span class="n">catalog</span><span class="o">.</span><span class="n">del_all_properties</span><span class="p">(</span><span class="n">data_frame</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="get_catalog"><a class="viewcode-back" href="../../../user_manual/api/handling_metadata.html#py_entitymatching.get_catalog">[docs]</a><span class="k">def</span> <span class="nf">get_catalog</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Gets the catalog information for the current session.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A Python dictionary containing the catalog information.</span>
+
+<span class="sd">        Specifically, the dictionary contains the Python identifier of a</span>
+<span class="sd">        DataFrame (obtained by id(DataFrame object)) as the key</span>
+<span class="sd">        and their properties as value.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; import py_entitymatching as em</span>
+<span class="sd">        &gt;&gt;&gt; catalog = em.get_catalog()</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get the catalog instance</span>
+    <span class="n">catalog</span> <span class="o">=</span> <span class="n">Catalog</span><span class="o">.</span><span class="n">Instance</span><span class="p">()</span>
+    <span class="c1"># Call the underlying catalog object&#39;s function to get the catalog. Relay</span>
+    <span class="c1"># the return value from the delegated function.</span>
+    <span class="k">return</span> <span class="n">catalog</span><span class="o">.</span><span class="n">get_catalog</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="del_catalog"><a class="viewcode-back" href="../../../user_manual/api/handling_metadata.html#py_entitymatching.del_catalog">[docs]</a><span class="k">def</span> <span class="nf">del_catalog</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Deletes the catalog for the current session.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A Boolean value of True is returned if the deletion was successful.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; import py_entitymatching as em</span>
+<span class="sd">        &gt;&gt;&gt; em.del_catalog()</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get the catalog instance</span>
+    <span class="n">catalog</span> <span class="o">=</span> <span class="n">Catalog</span><span class="o">.</span><span class="n">Instance</span><span class="p">()</span>
+    <span class="c1"># Call the underlying catalog object&#39;s function to delete the catalog (a</span>
+    <span class="c1"># dict).  Relay the return value from the delegated function.</span>
+    <span class="k">return</span> <span class="n">catalog</span><span class="o">.</span><span class="n">del_catalog</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="is_catalog_empty"><a class="viewcode-back" href="../../../user_manual/api/handling_metadata.html#py_entitymatching.is_catalog_empty">[docs]</a><span class="k">def</span> <span class="nf">is_catalog_empty</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Checks if the catalog is empty.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A Boolean value of True is returned if the catalog is empty,</span>
+<span class="sd">        else returns False.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; import py_entitymatching as em</span>
+<span class="sd">        &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">        &gt;&gt;&gt; A = pd.DataFrame({&#39;id&#39; : [1, 2], &#39;colA&#39;:[&#39;a&#39;, &#39;b&#39;], &#39;colB&#39; : [10, 20]})</span>
+<span class="sd">        &gt;&gt;&gt; em.set_key(A, &#39;id&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; em.is_catalog_empty()</span>
+<span class="sd">         # False</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get the catalog instance</span>
+    <span class="n">catalog</span> <span class="o">=</span> <span class="n">Catalog</span><span class="o">.</span><span class="n">Instance</span><span class="p">()</span>
+
+    <span class="c1"># Call the underlying catalog object&#39;s function to check if the catalog</span>
+    <span class="c1"># is empty.  Relay the return value from the delegated function.</span>
+    <span class="k">return</span> <span class="n">catalog</span><span class="o">.</span><span class="n">is_catalog_empty</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="is_dfinfo_present"><a class="viewcode-back" href="../../../user_manual/api/handling_metadata.html#py_entitymatching.is_dfinfo_present">[docs]</a><span class="k">def</span> <span class="nf">is_dfinfo_present</span><span class="p">(</span><span class="n">data_frame</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Checks whether the DataFrame information is present in the catalog.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data_frame (DataFrame): The DataFrame that should be checked for its</span>
+<span class="sd">            presence in the catalog.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A Boolean value of True is returned if the DataFrame is present in</span>
+<span class="sd">        the catalog, else False is returned.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If `data_frame` is not of type pandas</span>
+<span class="sd">         DataFrame.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; import py_entitymatching as em</span>
+<span class="sd">        &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">        &gt;&gt;&gt; A = pd.DataFrame({&#39;id&#39; : [1, 2], &#39;colA&#39;:[&#39;a&#39;, &#39;b&#39;], &#39;colB&#39; : [10, 20]})</span>
+<span class="sd">        &gt;&gt;&gt; em.set_key(A, &#39;id&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; em.is_dfinfo_present(A)</span>
+<span class="sd">         # True</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Validate inputs</span>
+    <span class="c1"># We expect the input object to be of type pandas DataFrame</span>
+    <span class="n">validate_object_type</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span>
+
+    <span class="c1"># Get the catalog instance</span>
+    <span class="n">catalog</span> <span class="o">=</span> <span class="n">Catalog</span><span class="o">.</span><span class="n">Instance</span><span class="p">()</span>
+
+    <span class="c1"># Call the underlying catalog object&#39;s function to check if the</span>
+    <span class="c1"># DataFrame information is present in the catalog.</span>
+    <span class="c1"># Relay the return value from the delegated function.</span>
+    <span class="k">return</span> <span class="n">catalog</span><span class="o">.</span><span class="n">is_df_info_present_in_catalog</span><span class="p">(</span><span class="n">data_frame</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="is_property_present_for_df"><a class="viewcode-back" href="../../../user_manual/api/handling_metadata.html#py_entitymatching.is_property_present_for_df">[docs]</a><span class="k">def</span> <span class="nf">is_property_present_for_df</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">property_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Checks if the given property is present for the given DataFrame in the</span>
+<span class="sd">    catalog.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data_frame (DataFrame): The DataFrame for which the property must be</span>
+<span class="sd">            checked for.</span>
+<span class="sd">        property_name (string): The name of the property that should be</span>
+<span class="sd">        checked for its presence for the DataFrame, in the catalog.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A Boolean value of True is returned if the property is present for</span>
+<span class="sd">        the given DataFrame.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If `data_frame` is not of type pandas</span>
+<span class="sd">         DataFrame.</span>
+<span class="sd">        AssertionError: If `property_name` is not of type string.</span>
+<span class="sd">        KeyError: If `data_frame` is not present in the catalog.</span>
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">        &gt;&gt;&gt; import py_entitymatching as em</span>
+<span class="sd">        &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">        &gt;&gt;&gt; A = pd.DataFrame({&#39;id&#39; : [1, 2], &#39;colA&#39;:[&#39;a&#39;, &#39;b&#39;], &#39;colB&#39; : [10, 20]})</span>
+<span class="sd">        &gt;&gt;&gt; em.set_key(A, &#39;id&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; em.is_property_present_for_df(A, &#39;id&#39;)</span>
+<span class="sd">         # True</span>
+<span class="sd">        &gt;&gt;&gt; em.is_property_present_for_df(A, &#39;fk_ltable&#39;)</span>
+<span class="sd">         # False</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Input validations</span>
+
+    <span class="c1"># # The input object should be of type pandas DataFrame</span>
+    <span class="n">validate_object_type</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span>
+
+    <span class="c1"># # The property name should be of type string</span>
+    <span class="n">validate_object_type</span><span class="p">(</span><span class="n">property_name</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">,</span> <span class="n">error_prefix</span><span class="o">=</span><span class="s1">&#39;Property name&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Get the catalog instance</span>
+    <span class="n">catalog</span> <span class="o">=</span> <span class="n">Catalog</span><span class="o">.</span><span class="n">Instance</span><span class="p">()</span>
+
+    <span class="c1"># Check if the given DataFrame information is present in the catalog. If</span>
+    <span class="c1"># not, raise an error.</span>
+    <span class="k">if</span> <span class="n">catalog</span><span class="o">.</span><span class="n">is_df_info_present_in_catalog</span><span class="p">(</span><span class="n">data_frame</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;DataFrame information is not present in the catalog&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s1">&#39;DataFrame information is not present in the catalog&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Call the underlying catalog object&#39;s function to check if the property</span>
+    <span class="c1"># is present for the given DataFrame. Relay the return value from that</span>
+    <span class="c1"># function.</span>
+    <span class="k">return</span> <span class="n">catalog</span><span class="o">.</span><span class="n">is_property_present_for_df</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">property_name</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_catalog_len"><a class="viewcode-back" href="../../../user_manual/api/handling_metadata.html#py_entitymatching.get_catalog_len">[docs]</a><span class="k">def</span> <span class="nf">get_catalog_len</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the length (i.e the number of entries) in the catalog.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The number of entries in the catalog as an integer.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; import py_entitymatching as em</span>
+<span class="sd">        &gt;&gt;&gt; len = em.get_catalog_len()</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get the catalog instance</span>
+    <span class="n">catalog</span> <span class="o">=</span> <span class="n">Catalog</span><span class="o">.</span><span class="n">Instance</span><span class="p">()</span>
+    <span class="c1"># Call the underlying catalog object&#39;s function to get the catalog length.</span>
+    <span class="c1"># Relay the return value from that function.</span>
+    <span class="k">return</span> <span class="n">catalog</span><span class="o">.</span><span class="n">get_catalog_len</span><span class="p">()</span></div>
+
+
+<span class="k">def</span> <span class="nf">set_properties</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">properties</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sets the  properties for a DataFrame in the catalog.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data_frame (DataFrame): DataFrame for which the properties must be set.</span>
+<span class="sd">        properties (dict): A Python dictionary with keys as property names and</span>
+<span class="sd">            values as Python objects (typically strings or DataFrames)</span>
+<span class="sd">        replace (Optional[bool]): Flag to indicate whether the  input</span>
+<span class="sd">            properties can replace the properties in the catalog. The default</span>
+<span class="sd">            value for the flag is True.</span>
+<span class="sd">            Specifically, if the DataFrame information is already present in</span>
+<span class="sd">            the catalog then the function will check if the replace flag is</span>
+<span class="sd">            True. If the flag is set to True, then the function will first</span>
+<span class="sd">            delete the existing properties, set it with the given properties.</span>
+<span class="sd">            If the flag is False, the function will just return without</span>
+<span class="sd">            modifying the existing properties.</span>
+
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A Boolean value of True is returned if the properties were set for</span>
+<span class="sd">        the given DataFrame, else returns False.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If the input data_frame object is not of type pandas</span>
+<span class="sd">            DataFrame.</span>
+<span class="sd">        AssertionError: If the input properties object is not of type Python</span>
+<span class="sd">            dictionary.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Validate input parameters</span>
+    <span class="c1"># # Input object is expected to be a pandas DataFrame</span>
+    <span class="n">validate_object_type</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span>
+
+    <span class="c1"># # Input properties is expected to be of type Python dictionary</span>
+    <span class="n">validate_object_type</span><span class="p">(</span><span class="n">properties</span><span class="p">,</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">error_prefix</span><span class="o">=</span><span class="s1">&#39;The properties&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Get the catalog instance</span>
+    <span class="n">catalog</span> <span class="o">=</span> <span class="n">Catalog</span><span class="o">.</span><span class="n">Instance</span><span class="p">()</span>
+    <span class="c1"># Check if the the DataFrame information is present in the catalog. If</span>
+    <span class="c1"># present, we expect the replace flag to be True. If the flag was set to</span>
+    <span class="c1"># False, then warn the user and return False.</span>
+    <span class="k">if</span> <span class="n">catalog</span><span class="o">.</span><span class="n">is_df_info_present_in_catalog</span><span class="p">(</span><span class="n">data_frame</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">replace</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s1">&#39;Properties already exists for df ( </span><span class="si">%s</span><span class="s1"> ). Not replacing it&#39;</span>
+                <span class="o">%</span><span class="nb">str</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="n">data_frame</span><span class="p">)))</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># DataFrame information is present and replace flag is True. We</span>
+            <span class="c1"># now reset the properties dictionary for this DataFrame.</span>
+            <span class="n">catalog</span><span class="o">.</span><span class="n">init_properties</span><span class="p">(</span><span class="n">data_frame</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># The DataFrame information is not present in the catalog. so</span>
+        <span class="c1"># initialize the properties</span>
+        <span class="n">catalog</span><span class="o">.</span><span class="n">init_properties</span><span class="p">(</span><span class="n">data_frame</span><span class="p">)</span>
+
+    <span class="c1"># Now iterate through the given properties and set for the DataFrame.</span>
+    <span class="c1"># Note: Here we don&#39;t check the correctness of the input properties (i.e</span>
+    <span class="c1"># we do not check if a property &#39;key&#39; is indeed a key)</span>
+    <span class="k">for</span> <span class="n">property_name</span><span class="p">,</span> <span class="n">property_value</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="n">properties</span><span class="p">):</span>
+        <span class="n">catalog</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">property_name</span><span class="p">,</span> <span class="n">property_value</span><span class="p">)</span>
+
+    <span class="c1"># Finally return True, if everything was successful</span>
+    <span class="k">return</span> <span class="kc">True</span>
+
+
+<div class="viewcode-block" id="copy_properties"><a class="viewcode-back" href="../../../user_manual/api/handling_metadata.html#py_entitymatching.copy_properties">[docs]</a><span class="k">def</span> <span class="nf">copy_properties</span><span class="p">(</span><span class="n">source_data_frame</span><span class="p">,</span> <span class="n">target_data_frame</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Copies properties from a source DataFrame to target DataFrame in the</span>
+<span class="sd">    catalog.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        source_data_frame (DataFrame): The DataFrame from which the properties</span>
+<span class="sd">            to be copied from, in the catalog.</span>
+<span class="sd">        target_data_frame (DataFrame): The DataFrame to which the properties</span>
+<span class="sd">            to be copied to, in the catalog.</span>
+<span class="sd">        replace (boolean): A flag to indicate whether the source</span>
+<span class="sd">            DataFrame&#39;s  properties can replace the target</span>
+<span class="sd">            DataFrame&#39;s properties in the catalog. The default value for the</span>
+<span class="sd">            flag is True.</span>
+<span class="sd">            Specifically, if the target DataFrame&#39;s information is already</span>
+<span class="sd">            present in the catalog then the function will check if the</span>
+<span class="sd">            replace flag is True. If the flag is set to True, then the</span>
+<span class="sd">            function will first delete the existing properties and then set</span>
+<span class="sd">            it with the source DataFrame properties.</span>
+<span class="sd">            If the flag is False, the function will just return without</span>
+<span class="sd">            modifying the existing properties.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A Boolean value of True is returned if the copying was successful.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If `source_data_frame` is not of</span>
+<span class="sd">            type pandas DataFrame.</span>
+<span class="sd">        AssertionError: If `target_data_frame` is not of</span>
+<span class="sd">            type pandas DataFrame.</span>
+<span class="sd">        KeyError: If source DataFrame is not present in the</span>
+<span class="sd">            catalog.</span>
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">        &gt;&gt;&gt; import py_entitymatching as em</span>
+<span class="sd">        &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">        &gt;&gt;&gt; A = pd.DataFrame({&#39;id&#39; : [1, 2], &#39;colA&#39;:[&#39;a&#39;, &#39;b&#39;], &#39;colB&#39; : [10, 20]})</span>
+<span class="sd">        &gt;&gt;&gt; em.set_key(A, &#39;id&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; B = pd.DataFrame({&#39;id&#39; : [1, 2], &#39;colA&#39;:[&#39;c&#39;, &#39;d&#39;], &#39;colB&#39; : [30, 40]})</span>
+<span class="sd">        &gt;&gt;&gt; em.copy_properties(A, B)</span>
+<span class="sd">        &gt;&gt;&gt; em.get_key(B)</span>
+<span class="sd">        # &#39;id&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Validate input parameters</span>
+
+    <span class="c1"># # The source_data_frame is expected to be of type pandas DataFrame</span>
+    <span class="n">validate_object_type</span><span class="p">(</span><span class="n">source_data_frame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">error_prefix</span><span class="o">=</span><span class="s1">&#39;Input object (source_data_frame)&#39;</span><span class="p">)</span>
+
+    <span class="c1"># # The target_data_frame is expected to be of type pandas DataFrame</span>
+    <span class="n">validate_object_type</span><span class="p">(</span><span class="n">target_data_frame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">error_prefix</span><span class="o">=</span><span class="s1">&#39;Input object (target_data_frame)&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Get the catalog instance</span>
+    <span class="n">catalog</span> <span class="o">=</span> <span class="n">Catalog</span><span class="o">.</span><span class="n">Instance</span><span class="p">()</span>
+
+    <span class="c1"># Check if the source DataFrame information is present in the catalog. If</span>
+    <span class="c1">#  not raise an error.</span>
+    <span class="k">if</span> <span class="n">catalog</span><span class="o">.</span><span class="n">is_df_info_present_in_catalog</span><span class="p">(</span><span class="n">source_data_frame</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+            <span class="s1">&#39;DataFrame information (source_data_frame) is not present in the &#39;</span>
+            <span class="s1">&#39;catalog&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span>
+            <span class="s1">&#39;DataFrame information (source_data_frame) is not present in the &#39;</span>
+            <span class="s1">&#39;catalog&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Get all properties for the source DataFrame</span>
+    <span class="n">metadata</span> <span class="o">=</span> <span class="n">catalog</span><span class="o">.</span><span class="n">get_all_properties</span><span class="p">(</span><span class="n">source_data_frame</span><span class="p">)</span>
+
+    <span class="c1"># Set the properties to the target DataFrame. Specifically, call the set</span>
+    <span class="c1"># properties function and relay its return value.</span>
+
+    <span class="c1"># Note: There is a redundancy in validating the input parameters. This</span>
+    <span class="c1"># might have a slight performance impact, but we don&#39;t expect that this</span>
+    <span class="c1"># function gets called so often.</span>
+    <span class="k">return</span> <span class="n">set_properties</span><span class="p">(</span><span class="n">target_data_frame</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span>
+                          <span class="n">replace</span><span class="p">)</span>  <span class="c1"># this initializes tar in the catalog.</span></div>
+
+
+<span class="c1"># key related methods</span>
+<div class="viewcode-block" id="get_key"><a class="viewcode-back" href="../../../user_manual/api/handling_metadata.html#py_entitymatching.get_key">[docs]</a><span class="k">def</span> <span class="nf">get_key</span><span class="p">(</span><span class="n">data_frame</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Gets the value of &#39;key&#39; property for a DataFrame from the catalog.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data_frame (DataFrame): The DataFrame for which the key must be</span>
+<span class="sd">            retrieved from the catalog.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A string value containing the key column name is returned (if present).</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; import py_entitymatching as em</span>
+<span class="sd">        &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">        &gt;&gt;&gt; A = pd.DataFrame({&#39;id&#39; : [1, 2], &#39;colA&#39;:[&#39;a&#39;, &#39;b&#39;], &#39;colB&#39; : [10, 20]})</span>
+<span class="sd">        &gt;&gt;&gt; em.set_key(A, &#39;id&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; em.get_key(A)</span>
+<span class="sd">        # &#39;id&#39;</span>
+
+
+<span class="sd">    See Also:</span>
+<span class="sd">        :meth:`~py_entitymatching.get_property`</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># This function is just a sugar to get the &#39;key&#39; property for a DataFrame</span>
+    <span class="k">return</span> <span class="n">get_property</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="s1">&#39;key&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="set_key"><a class="viewcode-back" href="../../../user_manual/api/handling_metadata.html#py_entitymatching.set_key">[docs]</a><span class="k">def</span> <span class="nf">set_key</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">key_attribute</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sets the value of &#39;key&#39; property for a DataFrame in the catalog with the</span>
+<span class="sd">    given attribute (i.e column name).</span>
+
+<span class="sd">    Specifically, this function set the the key attribute for the DataFrame</span>
+<span class="sd">    if the given attribute satisfies the following two properties:</span>
+
+<span class="sd">        The key attribute should have unique values.</span>
+
+<span class="sd">        The key attribute should not have missing values. A missing value</span>
+<span class="sd">        is represented as np.NaN.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data_frame (DataFrame): The DataFrame for which the key must be set in</span>
+<span class="sd">            the catalog.</span>
+<span class="sd">        key_attribute (string): The key attribute (column name) in the</span>
+<span class="sd">            DataFrame.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A Boolean value of True is returned, if the given attribute</span>
+<span class="sd">        satisfies the conditions for a key and the update was successful.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If `data_frame` is not of type</span>
+<span class="sd">            pandas DataFrame.</span>
+<span class="sd">        AssertionError: If `key_attribute` is not of type string.</span>
+<span class="sd">        KeyError: If given `key_attribute` is not in the DataFrame columns.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; import py_entitymatching as em</span>
+<span class="sd">        &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">        &gt;&gt;&gt; A = pd.DataFrame({&#39;id&#39; : [1, 2], &#39;colA&#39;:[&#39;a&#39;, &#39;b&#39;], &#39;colB&#39; : [10, 20]})</span>
+<span class="sd">        &gt;&gt;&gt; em.set_key(A, &#39;id&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; em.get_key(A)</span>
+<span class="sd">        # &#39;id&#39;</span>
+
+
+<span class="sd">    See Also:</span>
+<span class="sd">        :meth:`~py_entitymatching.set_property`</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Validate input parameters</span>
+
+    <span class="c1"># # We expect the input object (data_frame) to be of type pandas DataFrame</span>
+    <span class="n">validate_object_type</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span>
+
+    <span class="c1"># # We expect input key attribute to be of type string</span>
+    <span class="n">validate_object_type</span><span class="p">(</span><span class="n">key_attribute</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">,</span> <span class="n">error_prefix</span><span class="o">=</span><span class="s1">&#39;Input key attribute&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Check if the key attribute is present as one of the columns in the</span>
+    <span class="c1"># DataFrame</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">ch</span><span class="o">.</span><span class="n">check_attrs_present</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">key_attribute</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Input key ( </span><span class="si">%s</span><span class="s1"> ) not in the DataFrame&#39;</span> <span class="o">%</span> <span class="n">key_attribute</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s1">&#39;Input key ( </span><span class="si">%s</span><span class="s1"> ) not in the DataFrame&#39;</span> <span class="o">%</span> <span class="n">key_attribute</span><span class="p">)</span>
+
+    <span class="c1"># Check if the key attribute satisfies the conditions to be a key. If</span>
+    <span class="c1"># not, just return False.</span>
+    <span class="c1"># Note: Currently it is not clear, whether we should return False from</span>
+    <span class="c1"># here or raise an exception. As of now resorting to just returning</span>
+    <span class="c1"># False, because this function is used by other computation</span>
+    <span class="c1"># intensive commands in py_entitymatching and raising an exception might make all</span>
+    <span class="c1"># the work done in those commands go in vain (or those commands should</span>
+    <span class="c1"># catch the exception correctly, which may be complicated and require</span>
+    <span class="c1"># changes to the current code). We need to revisit this</span>
+    <span class="c1"># later.</span>
+    <span class="k">if</span> <span class="n">ch</span><span class="o">.</span><span class="n">is_key_attribute</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">key_attribute</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Attribute (</span><span class="si">%s</span><span class="s1"> ) does not qualify  to be a key; Not &#39;</span>
+                       <span class="s1">&#39;setting/replacing the key&#39;</span> <span class="o">%</span> <span class="n">key_attribute</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Set the key property for the input DataFrame</span>
+        <span class="k">return</span> <span class="n">set_property</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="s1">&#39;key&#39;</span><span class="p">,</span> <span class="n">key_attribute</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_fk_ltable"><a class="viewcode-back" href="../../../user_manual/api/handling_metadata.html#py_entitymatching.get_fk_ltable">[docs]</a><span class="k">def</span> <span class="nf">get_fk_ltable</span><span class="p">(</span><span class="n">data_frame</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Gets the foreign key to left table for a DataFrame from the</span>
+<span class="sd">    catalog.</span>
+
+<span class="sd">    Specifically this function is a sugar function that will get the foreign</span>
+<span class="sd">    key to left table using underlying :meth:`~py_entitymatching.get_property` function.</span>
+<span class="sd">    This function is typically called on a DataFrame which contains metadata</span>
+<span class="sd">    such as fk_ltable, fk_rtable, ltable, rtable.</span>
+
+
+<span class="sd">    Args:</span>
+<span class="sd">        data_frame (DataFrame): The input DataFrame for which the foreign key</span>
+<span class="sd">            ltable property must be retrieved.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A Python object, typically a string is returned.</span>
+
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; import py_entitymatching as em</span>
+<span class="sd">        &gt;&gt;&gt; A = pd.DataFrame({&#39;id&#39; : [1, 2], &#39;colA&#39;:[&#39;a&#39;, &#39;b&#39;], &#39;colB&#39; : [10, 20]})</span>
+<span class="sd">        &gt;&gt;&gt; B = pd.DataFrame({&#39;id&#39; : [1, 2], &#39;colA&#39;:[&#39;c&#39;, &#39;d&#39;], &#39;colB&#39; : [30, 40]})</span>
+<span class="sd">        &gt;&gt;&gt; em.set_key(A, &#39;id&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; em.set_key(B, &#39;id&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; C = pd.DataFrame({&#39;id&#39;:[1, 2], &#39;ltable_id&#39;:[1, 2], &#39;rtable_id&#39;:[2, 1]})</span>
+<span class="sd">        &gt;&gt;&gt; em.set_key(C, &#39;id&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; em.set_fk_ltable(C, &#39;ltable_id&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; em.get_fk_ltable(C)</span>
+<span class="sd">        # &#39;ltable_id&#39;</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        :meth:`~py_entitymatching.get_property`</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Call the get_property function and relay the result.</span>
+    <span class="k">return</span> <span class="n">get_property</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="s1">&#39;fk_ltable&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_fk_rtable"><a class="viewcode-back" href="../../../user_manual/api/handling_metadata.html#py_entitymatching.get_fk_rtable">[docs]</a><span class="k">def</span> <span class="nf">get_fk_rtable</span><span class="p">(</span><span class="n">data_frame</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Gets the foreign key to right table for a DataFrame from the catalog.</span>
+
+<span class="sd">    Specifically this function is a sugar function that will get the foreign</span>
+<span class="sd">    key to right table using :meth:`py_entitymatching.get_property` function. This</span>
+<span class="sd">    function is typically called on a DataFrame which contains metadata such as</span>
+<span class="sd">    fk_ltable, fk_rtable, ltable, rtable.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data_frame (DataFrame): The input DataFrame for which the foreign key</span>
+<span class="sd">            rtable property must be retrieved.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A Python object, (typically a string) is returned.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; import py_entitymatching as em</span>
+<span class="sd">        &gt;&gt;&gt; A = pd.DataFrame({&#39;id&#39; : [1, 2], &#39;colA&#39;:[&#39;a&#39;, &#39;b&#39;], &#39;colB&#39; : [10, 20]})</span>
+<span class="sd">        &gt;&gt;&gt; B = pd.DataFrame({&#39;id&#39; : [1, 2], &#39;colA&#39;:[&#39;c&#39;, &#39;d&#39;], &#39;colB&#39; : [30, 40]})</span>
+<span class="sd">        &gt;&gt;&gt; em.set_key(A, &#39;id&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; em.set_key(B, &#39;id&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; C = pd.DataFrame({&#39;id&#39;:[1, 2], &#39;ltable_id&#39;:[1, 2], &#39;rtable_id&#39;:[2, 1]})</span>
+<span class="sd">        &gt;&gt;&gt; em.set_key(C, &#39;id&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; em.set_fk_rtable(C, &#39;rtable_id&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; em.get_fk_rtable(C)</span>
+<span class="sd">        # &#39;rtable_id&#39;</span>
+
+
+<span class="sd">    See Also:</span>
+<span class="sd">        :meth:`~py_entitymatching.get_property`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Call the get_property function and relay the result.</span>
+    <span class="k">return</span> <span class="n">get_property</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="s1">&#39;fk_rtable&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="set_fk_ltable"><a class="viewcode-back" href="../../../user_manual/api/handling_metadata.html#py_entitymatching.set_fk_ltable">[docs]</a><span class="k">def</span> <span class="nf">set_fk_ltable</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">fk_ltable</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sets the foreign key to ltable for a DataFrame in the catalog.</span>
+
+<span class="sd">    Specifically this function is a sugar function that will set the foreign</span>
+<span class="sd">    key to the left table using :meth:`py_entitymatching.set_property` function. This</span>
+<span class="sd">    function is typically called on a DataFrame which contains metadata such as</span>
+<span class="sd">    fk_ltable, fk_rtable, ltable, rtable.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data_frame (DataFrame): The input DataFrame for which the foreign key</span>
+<span class="sd">            ltable property must be set.</span>
+<span class="sd">        fk_ltable (string): The attribute that must ne set as the foreign key</span>
+<span class="sd">            to the ltable in the catalog.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A Boolean value of True is returned if the foreign key to ltable was</span>
+<span class="sd">        set successfully.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If `data_frame` is not of type</span>
+<span class="sd">            pandas DataFrame.</span>
+<span class="sd">        AssertionError: If `fk_ltable` is not of type</span>
+<span class="sd">            string.</span>
+<span class="sd">        AssertionError: If `fk_ltable` is not in the input</span>
+<span class="sd">            DataFrame.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; import py_entitymatching as em</span>
+<span class="sd">        &gt;&gt;&gt; A = pd.DataFrame({&#39;id&#39; : [1, 2], &#39;colA&#39;:[&#39;a&#39;, &#39;b&#39;], &#39;colB&#39; : [10, 20]})</span>
+<span class="sd">        &gt;&gt;&gt; B = pd.DataFrame({&#39;id&#39; : [1, 2], &#39;colA&#39;:[&#39;c&#39;, &#39;d&#39;], &#39;colB&#39; : [30, 40]})</span>
+<span class="sd">        &gt;&gt;&gt; em.set_key(A, &#39;id&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; em.set_key(B, &#39;id&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; C = pd.DataFrame({&#39;id&#39;:[1, 2], &#39;ltable_id&#39;:[1, 2], &#39;rtable_id&#39;:[2, 1]})</span>
+<span class="sd">        &gt;&gt;&gt; em.set_key(C, &#39;id&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; em.set_fk_ltable(C, &#39;ltable_id&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; em.get_fk_ltable(C)</span>
+<span class="sd">        # &#39;ltable_id&#39;</span>
+
+
+
+<span class="sd">    See Also:</span>
+<span class="sd">        :meth:`~py_entitymatching.set_property`</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Validate the input parameters</span>
+    <span class="c1"># # We expect the input object to be of type pandas DataFrame</span>
+    <span class="n">validate_object_type</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span>
+
+    <span class="c1"># # We expect the input fk_ltable to be of type string</span>
+    <span class="n">validate_object_type</span><span class="p">(</span><span class="n">fk_ltable</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">,</span> <span class="n">error_prefix</span><span class="o">=</span><span class="s1">&#39;The input (fk_ltable)&#39;</span><span class="p">)</span>
+
+    <span class="c1"># # The fk_ltable attribute should be one of the columns in the input</span>
+    <span class="c1"># DataFrame</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">ch</span><span class="o">.</span><span class="n">check_attrs_present</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">fk_ltable</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Input attr. ( </span><span class="si">%s</span><span class="s1"> ) not in the DataFrame&#39;</span> <span class="o">%</span> <span class="n">fk_ltable</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s1">&#39;Input attr. ( </span><span class="si">%s</span><span class="s1"> ) not in the DataFrame&#39;</span> <span class="o">%</span> <span class="n">fk_ltable</span><span class="p">)</span>
+
+    <span class="c1"># Call the set_property function and relay the result.</span>
+    <span class="k">return</span> <span class="n">set_property</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="s1">&#39;fk_ltable&#39;</span><span class="p">,</span> <span class="n">fk_ltable</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">validate_and_set_fk_ltable</span><span class="p">(</span><span class="n">foreign_data_frame</span><span class="p">,</span> <span class="n">foreign_key_ltable</span><span class="p">,</span> <span class="n">ltable</span><span class="p">,</span>
+                               <span class="n">ltable_key</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Validates and set the foreign key ltable for a DataFrame in the the catalog.</span>
+
+<span class="sd">    Specifically, given a DataFrame and a foreign key attribute it checks</span>
+<span class="sd">    for the following conditions to be satisfied for the attribute. First it</span>
+<span class="sd">    checks that foreign key ltable attribute does not have any missing</span>
+<span class="sd">    values. Second it checks that the subset of foreign key values,</span>
+<span class="sd">    have unique values in the primary (base) table.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        foreign_data_frame (DataFrame): DataFrame containing the foreign key</span>
+<span class="sd">            (typically a candidate set, for example output from blocking two</span>
+<span class="sd">            tables).</span>
+<span class="sd">        foreign_key_ltable (string): An attribute in the foreign DataFrame</span>
+<span class="sd">        ltable (DataFrame): Base DataFrame, in which the foreign key</span>
+<span class="sd">            attribute would form the primary key.</span>
+<span class="sd">        ltable_key (string): An attribute in the base table</span>
+<span class="sd">            (typically a primary key attribute).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A Boolean value of True will be returned if the validation was</span>
+<span class="sd">        successful and the update was successful in the catalog.</span>
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If the input foreign DataFrame (foreign_data_frame)</span>
+<span class="sd">            is not of type pandas DataFrame.</span>
+<span class="sd">        AssertionError: If the foreign key ltable (foreign_key_ltable) is not</span>
+<span class="sd">            of type string.</span>
+<span class="sd">        AssertionError: If the input ltable (ltable) is not of type pandas</span>
+<span class="sd">            DataFrame.</span>
+<span class="sd">        AssertionError: If the ltable key (ltable_key) is not of type string.</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># check the foreign key constraint</span>
+    <span class="c1"># # Note all the validations are done inside the function</span>
+    <span class="c1"># check_fk_constraint</span>
+    <span class="n">status</span> <span class="o">=</span> <span class="n">ch</span><span class="o">.</span><span class="n">check_fk_constraint</span><span class="p">(</span><span class="n">foreign_data_frame</span><span class="p">,</span> <span class="n">foreign_key_ltable</span><span class="p">,</span>
+                                    <span class="n">ltable</span><span class="p">,</span> <span class="n">ltable_key</span><span class="p">)</span>
+
+    <span class="c1"># If the validation is successful then set the property</span>
+    <span class="k">if</span> <span class="n">status</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">set_property</span><span class="p">(</span><span class="n">foreign_data_frame</span><span class="p">,</span> <span class="s1">&#39;fk_ltable&#39;</span><span class="p">,</span> <span class="n">foreign_key_ltable</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># else report the error and just return False.</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+            <span class="s1">&#39;FK constraint for fk_ltable is not satisfied; &#39;</span>
+            <span class="s1">&#39;Not setting the fk_ltable&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+
+<span class="k">def</span> <span class="nf">validate_and_set_fk_rtable</span><span class="p">(</span><span class="n">foreign_data_frame</span><span class="p">,</span> <span class="n">foreign_key_rtable</span><span class="p">,</span>
+                               <span class="n">rtable</span><span class="p">,</span> <span class="n">rtable_key</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Validates and set the foreign key ltable for a DataFrame in the the catalog.</span>
+
+<span class="sd">    Specifically, given a DataFrame and a foreign key attribute it checks</span>
+<span class="sd">    for the following conditions to be satisfied for the attribute. First it</span>
+<span class="sd">    checks that foreign key rtable attribute does not have any missing</span>
+<span class="sd">    values. Second it checks that the subset of foreign key values,</span>
+<span class="sd">    have unique values in the primary (base) table.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        foreign_data_frame (DataFrame): DataFrame containing the foreign key</span>
+<span class="sd">            (typically a candidate set, for example output from blocking two</span>
+<span class="sd">            tables).</span>
+<span class="sd">        foreign_key_rtable (string): An attribute in the foreign DataFrame</span>
+<span class="sd">        rtable (DataFrame): Base DataFrame, in which the foreign key</span>
+<span class="sd">            attribute would form the primary key.</span>
+<span class="sd">        rtable_key (string): An attribute in the base table</span>
+<span class="sd">            (typically a primary key attribute).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A Boolean value of True will be returned if the validation was</span>
+<span class="sd">        successful and the update was successful in the catalog.</span>
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If the input foreign DataFrame (foreign_data_frame)</span>
+<span class="sd">            is not of type pandas DataFrame.</span>
+<span class="sd">        AssertionError: If the foreign key ltable (foreign_key_ltable) is not</span>
+<span class="sd">            of type string.</span>
+<span class="sd">        AssertionError: If the input ltable (ltable) is not of type pandas</span>
+<span class="sd">            DataFrame.</span>
+<span class="sd">        AssertionError: If the ltable key (ltable_key) is not of type string.</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Validate the foreign key constraint</span>
+    <span class="c1"># Note: All the basic input validations are done inside the</span>
+    <span class="c1"># check_fk_constraint function.</span>
+    <span class="n">status</span> <span class="o">=</span> <span class="n">ch</span><span class="o">.</span><span class="n">check_fk_constraint</span><span class="p">(</span><span class="n">foreign_data_frame</span><span class="p">,</span> <span class="n">foreign_key_rtable</span><span class="p">,</span>
+                                    <span class="n">rtable</span><span class="p">,</span> <span class="n">rtable_key</span><span class="p">)</span>
+
+    <span class="c1"># If the validation was successful, then set the property</span>
+    <span class="k">if</span> <span class="n">status</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">set_property</span><span class="p">(</span><span class="n">foreign_data_frame</span><span class="p">,</span> <span class="s1">&#39;fk_rtable&#39;</span><span class="p">,</span> <span class="n">foreign_key_rtable</span><span class="p">)</span>
+    <span class="c1"># else just warn and return False</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+            <span class="s1">&#39;FK constraint for fk_rtable is not satisfied; Not &#39;</span>
+            <span class="s1">&#39;setting the fk_rtable and rtable&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+
+<div class="viewcode-block" id="set_fk_rtable"><a class="viewcode-back" href="../../../user_manual/api/handling_metadata.html#py_entitymatching.set_fk_rtable">[docs]</a><span class="k">def</span> <span class="nf">set_fk_rtable</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">foreign_key_rtable</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sets the foreign key to rtable for a DataFrame in the catalog.</span>
+
+<span class="sd">    Specifically this function is a sugar function that will set the foreign</span>
+<span class="sd">    key to right table using set_property function. This function</span>
+<span class="sd">    is typically called on a DataFrame which contains metadata such as</span>
+<span class="sd">    fk_ltable, fk_rtable, ltable, rtable.</span>
+
+
+
+<span class="sd">    Args:</span>
+<span class="sd">        data_frame (DataFrame): The input DataFrame for which the foreign key</span>
+<span class="sd">            rtable property must be set.</span>
+<span class="sd">        foreign_key_rtable (string): The attribute that must be set as</span>
+<span class="sd">            foreign key to rtable in the catalog.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A Boolean value of True is returned if the foreign key to rtable was</span>
+<span class="sd">            set successfully.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If `data_frame` is not of type</span>
+<span class="sd">          pandas DataFrame.</span>
+<span class="sd">        AssertionError: If `foreign_key_rtable` is not of</span>
+<span class="sd">            type string.</span>
+<span class="sd">        AssertionError: If `fk_rtable` is not in the input</span>
+<span class="sd">            DataFrame.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; import py_entitymatching as em</span>
+<span class="sd">        &gt;&gt;&gt; A = pd.DataFrame({&#39;id&#39; : [1, 2], &#39;colA&#39;:[&#39;a&#39;, &#39;b&#39;], &#39;colB&#39; : [10, 20]})</span>
+<span class="sd">        &gt;&gt;&gt; B = pd.DataFrame({&#39;id&#39; : [1, 2], &#39;colA&#39;:[&#39;c&#39;, &#39;d&#39;], &#39;colB&#39; : [30, 40]})</span>
+<span class="sd">        &gt;&gt;&gt; em.set_key(A, &#39;id&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; em.set_key(B, &#39;id&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; C = pd.DataFrame({&#39;id&#39;:[1, 2], &#39;ltable_id&#39;:[1, 2], &#39;rtable_id&#39;:[2, 1]})</span>
+<span class="sd">        &gt;&gt;&gt; em.set_key(C, &#39;id&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; em.set_fk_rtable(C, &#39;rtable_id&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; em.get_fk_rtable(C)</span>
+<span class="sd">        # &#39;rtable_id&#39;</span>
+
+
+<span class="sd">    See Also:</span>
+<span class="sd">        :meth:`~py_entitymatching.set_property`</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Validate the input parameters</span>
+    <span class="c1"># # The input object is expected to be of type pandas DataFrame</span>
+    <span class="n">validate_object_type</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span>
+
+    <span class="n">validate_object_type</span><span class="p">(</span><span class="n">foreign_key_rtable</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">,</span> <span class="n">error_prefix</span><span class="o">=</span><span class="s1">&#39;Input (foreign key ltable)&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Check if the given attribute is present in the DataFrame</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">ch</span><span class="o">.</span><span class="n">check_attrs_present</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">foreign_key_rtable</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Input attr. ( </span><span class="si">%s</span><span class="s1"> ) not in the DataFrame&#39;</span>
+                     <span class="o">%</span> <span class="n">foreign_key_rtable</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s1">&#39;Input attr. ( </span><span class="si">%s</span><span class="s1"> ) not in the DataFrame&#39;</span>
+                       <span class="o">%</span> <span class="n">foreign_key_rtable</span><span class="p">)</span>
+
+    <span class="c1"># Finally set the property and relay the result</span>
+    <span class="k">return</span> <span class="n">set_property</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="s1">&#39;fk_rtable&#39;</span><span class="p">,</span> <span class="n">foreign_key_rtable</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="show_properties"><a class="viewcode-back" href="../../../user_manual/api/handling_metadata.html#py_entitymatching.show_properties">[docs]</a><span class="k">def</span> <span class="nf">show_properties</span><span class="p">(</span><span class="n">data_frame</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Prints the properties for a DataFrame that is present in the catalog.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data_frame (DataFrame): The input pandas DataFrame for which the</span>
+<span class="sd">            properties must be displayed.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; A = pd.DataFrame({&#39;key_attr&#39; : [1, 2], &#39;colA&#39;:[&#39;a&#39;, &#39;b&#39;], &#39;colB&#39; : [10, 20]})</span>
+<span class="sd">        &gt;&gt;&gt; em.set_key(A, &#39;key_attr&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; em.show_properties(A)</span>
+<span class="sd">        # id: 4572922488  # This will change dynamically</span>
+<span class="sd">        # key: key_attr</span>
+
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Check if the DataFrame information is present in the catalog. If not</span>
+    <span class="c1"># return</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">is_dfinfo_present</span><span class="p">(</span><span class="n">data_frame</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;DataFrame information is not present in the catalog&#39;</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="c1"># Delegate it to show properties for the id if an object in the catalog</span>
+    <span class="n">show_properties_for_id</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="n">data_frame</span><span class="p">))</span></div>
+    <span class="c1"># # Get the properties for the DataFrame from the catalog</span>
+    <span class="c1"># metadata = get_all_properties(data_frame)</span>
+    <span class="c1">#</span>
+    <span class="c1"># # First print the id for the DataFrame</span>
+    <span class="c1"># print(&#39;id: &#39; + str(id(data_frame)))</span>
+    <span class="c1"># # For each property name anf value, print the contents to the user</span>
+    <span class="c1"># for property_name, property_value in six.iteritems(metadata):</span>
+    <span class="c1">#     # If the property value is string print it out</span>
+    <span class="c1">#     if isinstance(property_value, six.string_types):</span>
+    <span class="c1">#         print(property_name + &quot;: &quot; + property_value)</span>
+    <span class="c1">#     # else, print just the id.</span>
+    <span class="c1">#     else:</span>
+    <span class="c1">#         print(property_name + &quot;(obj.id): &quot; + str(id(property_value)))</span>
+
+
+<div class="viewcode-block" id="show_properties_for_id"><a class="viewcode-back" href="../../../user_manual/api/handling_metadata.html#py_entitymatching.show_properties_for_id">[docs]</a><span class="k">def</span> <span class="nf">show_properties_for_id</span><span class="p">(</span><span class="n">object_id</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Shows the properties for an object id present in the catalog.</span>
+
+<span class="sd">    Specifically, given an object id got from typically executing id(</span>
+<span class="sd">    &lt;object&gt;), where the object could be a DataFrame, this function will</span>
+<span class="sd">    display the properties present for that object id in the catalog.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        object_id (int): The Python identifier of an object (typically a</span>
+<span class="sd">         pandas DataFrame).</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; A = pd.DataFrame({&#39;key_attr&#39; : [1, 2], &#39;colA&#39;:[&#39;a&#39;, &#39;b&#39;], &#39;colB&#39; : [10, 20]})</span>
+<span class="sd">        &gt;&gt;&gt; em.set_key(A, &#39;key_attr&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; em.show_properties_for_id(id(A))</span>
+<span class="sd">        # id: 4572922488  # This will change dynamically</span>
+<span class="sd">        # key: key_attr</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">catalog</span> <span class="o">=</span> <span class="n">Catalog</span><span class="o">.</span><span class="n">Instance</span><span class="p">()</span>
+    <span class="n">metadata</span> <span class="o">=</span> <span class="n">catalog</span><span class="o">.</span><span class="n">get_all_properties_for_id</span><span class="p">(</span><span class="n">object_id</span><span class="p">)</span>
+    <span class="c1"># First print the id for the DataFrame</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;id: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">object_id</span><span class="p">))</span>
+    <span class="c1"># For each property name anf value, print the contents to the user</span>
+    <span class="k">for</span> <span class="n">property_name</span><span class="p">,</span> <span class="n">property_value</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="n">metadata</span><span class="p">):</span>
+        <span class="c1"># If the property value is string print it out</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">property_value</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">property_name</span> <span class="o">+</span> <span class="s2">&quot;: &quot;</span> <span class="o">+</span> <span class="n">property_value</span><span class="p">)</span>
+        <span class="c1"># else, print just the id.</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">property_name</span> <span class="o">+</span> <span class="s2">&quot;(obj.id): &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="n">property_value</span><span class="p">)))</span></div>
+
+
+<span class="k">def</span> <span class="nf">set_candset_properties</span><span class="p">(</span><span class="n">candset</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">foreign_key_ltable</span><span class="p">,</span>
+                           <span class="n">foreign_key_rtable</span><span class="p">,</span> <span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sets candidate set properties.</span>
+
+<span class="sd">    Specifically, this is a sugar function that sets all the properties for a</span>
+<span class="sd">    candidate set such as key, foreign key ltable, foreign key rtable,</span>
+<span class="sd">    ltable and rtable. Further, this function does not check the integrity of</span>
+<span class="sd">    input properties.</span>
+
+
+
+<span class="sd">    Args:</span>
+<span class="sd">        candset (DataFrame): Input DataFrame for which the properties must be</span>
+<span class="sd">            set.</span>
+<span class="sd">        key (string): Key attribute that must be set for the DataFrame in the</span>
+<span class="sd">            catalog.</span>
+<span class="sd">        foreign_key_ltable (string): Foreign key ltable attribute that must be</span>
+<span class="sd">            set for the DataFrame in the catalog.</span>
+<span class="sd">        foreign_key_rtable (string): Foreign key rtable attribute that must be</span>
+<span class="sd">            set for the DataFrame in the catalog.</span>
+<span class="sd">        ltable (DataFrame): DataFrame that must be set as ltable.</span>
+<span class="sd">        rtable (DataFrame): DataFrame that must be set as rtable.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A Boolean value of True is returned if the updates were successful.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># set the key</span>
+    <span class="n">set_property</span><span class="p">(</span><span class="n">candset</span><span class="p">,</span> <span class="s1">&#39;key&#39;</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+    <span class="c1"># set the foreign key attributes</span>
+    <span class="n">set_fk_ltable</span><span class="p">(</span><span class="n">candset</span><span class="p">,</span> <span class="n">foreign_key_ltable</span><span class="p">)</span>
+    <span class="n">set_fk_rtable</span><span class="p">(</span><span class="n">candset</span><span class="p">,</span> <span class="n">foreign_key_rtable</span><span class="p">)</span>
+    <span class="c1"># set the ltable and rtables</span>
+    <span class="n">set_property</span><span class="p">(</span><span class="n">candset</span><span class="p">,</span> <span class="s1">&#39;ltable&#39;</span><span class="p">,</span> <span class="n">ltable</span><span class="p">)</span>
+    <span class="n">set_property</span><span class="p">(</span><span class="n">candset</span><span class="p">,</span> <span class="s1">&#39;rtable&#39;</span><span class="p">,</span> <span class="n">rtable</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">True</span>
+
+
+<span class="k">def</span> <span class="nf">_validate_metadata_for_table</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">output_string</span><span class="p">,</span> <span class="n">lgr</span><span class="p">,</span> <span class="n">verbose</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Validates metadata for table (DataFrame)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Validate input parameters</span>
+    <span class="c1"># # We expect the input table to be of type pandas DataFrame</span>
+    <span class="n">validate_object_type</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span>
+
+    <span class="c1"># Check the key column is present in the table</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">ch</span><span class="o">.</span><span class="n">check_attrs_present</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s1">&#39;Input key ( </span><span class="si">%s</span><span class="s1"> ) not in the DataFrame&#39;</span> <span class="o">%</span> <span class="n">key</span><span class="p">)</span>
+
+    <span class="c1"># Validate the key</span>
+    <span class="n">ch</span><span class="o">.</span><span class="n">log_info</span><span class="p">(</span><span class="n">lgr</span><span class="p">,</span> <span class="s1">&#39;Validating &#39;</span> <span class="o">+</span> <span class="n">output_string</span> <span class="o">+</span> <span class="s1">&#39; key: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">),</span>
+                <span class="n">verbose</span><span class="p">)</span>
+    <span class="c1"># We expect the key to be of type string</span>
+    <span class="n">validate_object_type</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">,</span> <span class="n">error_prefix</span><span class="o">=</span><span class="s1">&#39;Key attribute&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">ch</span><span class="o">.</span><span class="n">is_key_attribute</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">verbose</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Attribute </span><span class="si">%s</span><span class="s1"> in the </span><span class="si">%s</span><span class="s1"> table does not &#39;</span>
+                             <span class="s1">&#39;qualify to be the key&#39;</span> <span class="o">%</span> <span class="p">(</span>
+                                 <span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">),</span> <span class="n">output_string</span><span class="p">))</span>
+    <span class="n">ch</span><span class="o">.</span><span class="n">log_info</span><span class="p">(</span><span class="n">lgr</span><span class="p">,</span> <span class="s1">&#39;..... Done&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">True</span>
+
+
+<span class="k">def</span> <span class="nf">_validate_metadata_for_candset</span><span class="p">(</span><span class="n">candset</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">foreign_key_ltable</span><span class="p">,</span>
+                                   <span class="n">foreign_key_rtable</span><span class="p">,</span>
+                                   <span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span>
+                                   <span class="n">ltable_key</span><span class="p">,</span> <span class="n">rtable_key</span><span class="p">,</span>
+                                   <span class="n">lgr</span><span class="p">,</span> <span class="n">verbose</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Validates metadata for a candidate set.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Validate input parameters</span>
+    <span class="c1"># # We expect candset to be of type pandas DataFrame</span>
+    <span class="n">validate_object_type</span><span class="p">(</span><span class="n">candset</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">error_prefix</span><span class="o">=</span><span class="s1">&#39;Input candset&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Check if the key column is present in the candset</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">ch</span><span class="o">.</span><span class="n">check_attrs_present</span><span class="p">(</span><span class="n">candset</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s1">&#39;Input key ( </span><span class="si">%s</span><span class="s1"> ) not in the DataFrame&#39;</span> <span class="o">%</span> <span class="n">key</span><span class="p">)</span>
+
+    <span class="c1"># Check if the foreign key ltable column is present in the candset</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">ch</span><span class="o">.</span><span class="n">check_attrs_present</span><span class="p">(</span><span class="n">candset</span><span class="p">,</span> <span class="n">foreign_key_ltable</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span>
+            <span class="s1">&#39;Input foreign_key_ltable ( </span><span class="si">%s</span><span class="s1"> ) not in the DataFrame&#39;</span>
+            <span class="o">%</span> <span class="n">foreign_key_ltable</span><span class="p">)</span>
+
+    <span class="c1"># Check if the foreign key rtable column is present in the candset</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">ch</span><span class="o">.</span><span class="n">check_attrs_present</span><span class="p">(</span><span class="n">candset</span><span class="p">,</span> <span class="n">foreign_key_rtable</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span>
+            <span class="s1">&#39;Input fk_rtable ( </span><span class="si">%s</span><span class="s1"> ) not in the DataFrame&#39;</span> <span class="o">%</span> <span class="n">foreign_key_rtable</span><span class="p">)</span>
+
+    <span class="c1"># We expect the ltable to be of type pandas DataFrame</span>
+    <span class="n">validate_object_type</span><span class="p">(</span><span class="n">ltable</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">error_prefix</span><span class="o">=</span><span class="s1">&#39;Input ltable&#39;</span><span class="p">)</span>
+
+    <span class="c1"># We expect the rtable to be of type pandas DataFrame</span>
+    <span class="n">validate_object_type</span><span class="p">(</span><span class="n">rtable</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">error_prefix</span><span class="o">=</span><span class="s1">&#39;Input rtable&#39;</span><span class="p">)</span>
+
+    <span class="c1"># We expect the ltable key to be present in the ltable</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">ch</span><span class="o">.</span><span class="n">check_attrs_present</span><span class="p">(</span><span class="n">ltable</span><span class="p">,</span> <span class="n">ltable_key</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s1">&#39;ltable key ( </span><span class="si">%s</span><span class="s1"> ) not in ltable&#39;</span> <span class="o">%</span> <span class="n">ltable_key</span><span class="p">)</span>
+
+    <span class="c1"># We expect the rtable key to be present in the rtable</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">ch</span><span class="o">.</span><span class="n">check_attrs_present</span><span class="p">(</span><span class="n">rtable</span><span class="p">,</span> <span class="n">rtable_key</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s1">&#39;rtable key ( </span><span class="si">%s</span><span class="s1"> ) not in rtable&#39;</span> <span class="o">%</span> <span class="n">rtable_key</span><span class="p">)</span>
+
+    <span class="c1"># First validate metadata for the candidate set (as a table)</span>
+    <span class="n">_validate_metadata_for_table</span><span class="p">(</span><span class="n">candset</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="s1">&#39;candset&#39;</span><span class="p">,</span> <span class="n">lgr</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+    <span class="n">ch</span><span class="o">.</span><span class="n">log_info</span><span class="p">(</span><span class="n">lgr</span><span class="p">,</span> <span class="s1">&#39;Validating foreign key constraint for left table&#39;</span><span class="p">,</span>
+                <span class="n">verbose</span><span class="p">)</span>
+    <span class="c1"># Second check foreign key constraints</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">ch</span><span class="o">.</span><span class="n">check_fk_constraint</span><span class="p">(</span><span class="n">candset</span><span class="p">,</span> <span class="n">foreign_key_ltable</span><span class="p">,</span>
+                                  <span class="n">ltable</span><span class="p">,</span> <span class="n">ltable_key</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span>
+            <span class="s1">&#39;Candset does not satisfy foreign key constraint with &#39;</span>
+            <span class="s1">&#39;the left table&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">ch</span><span class="o">.</span><span class="n">check_fk_constraint</span><span class="p">(</span><span class="n">candset</span><span class="p">,</span> <span class="n">foreign_key_rtable</span><span class="p">,</span>
+                                  <span class="n">rtable</span><span class="p">,</span> <span class="n">rtable_key</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span>
+            <span class="s1">&#39;Candset does not satisfy foreign key constraint with &#39;</span>
+            <span class="s1">&#39;the right table&#39;</span><span class="p">)</span>
+
+    <span class="n">ch</span><span class="o">.</span><span class="n">log_info</span><span class="p">(</span><span class="n">lgr</span><span class="p">,</span> <span class="s1">&#39;..... Done&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+    <span class="n">ch</span><span class="o">.</span><span class="n">log_info</span><span class="p">(</span><span class="n">lgr</span><span class="p">,</span> <span class="s1">&#39;Validating foreign key constraint for right table&#39;</span><span class="p">,</span>
+                <span class="n">verbose</span><span class="p">)</span>
+    <span class="n">ch</span><span class="o">.</span><span class="n">log_info</span><span class="p">(</span><span class="n">lgr</span><span class="p">,</span> <span class="s1">&#39;..... Done&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="kc">True</span>
+
+
+<span class="c1"># noinspection PyIncorrectDocstring</span>
+<span class="k">def</span> <span class="nf">get_keys_for_ltable_rtable</span><span class="p">(</span><span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">lgr</span><span class="p">,</span> <span class="n">verbose</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Gets keys for the ltable and rtable.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># We expect the ltable to be of type pandas DataFrame</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ltable</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Input ltable is not of type pandas data frame&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Input ltable is not of type pandas data frame&#39;</span><span class="p">)</span>
+
+    <span class="c1"># We expect the rtable to be of type pandas DataFrame</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rtable</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Input rtable is not of type pandas data frame&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Input rtable is not of type pandas data frame&#39;</span><span class="p">)</span>
+
+    <span class="n">ch</span><span class="o">.</span><span class="n">log_info</span><span class="p">(</span><span class="n">lgr</span><span class="p">,</span> <span class="s1">&#39;Required metadata: ltable key, rtable key&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+    <span class="n">ch</span><span class="o">.</span><span class="n">log_info</span><span class="p">(</span><span class="n">lgr</span><span class="p">,</span> <span class="s1">&#39;Getting metadata from the catalog&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+    <span class="c1"># Get the ltable key and rtable key from the catalog</span>
+    <span class="n">ltable_key</span> <span class="o">=</span> <span class="n">get_key</span><span class="p">(</span><span class="n">ltable</span><span class="p">)</span>
+    <span class="n">rtable_key</span> <span class="o">=</span> <span class="n">get_key</span><span class="p">(</span><span class="n">rtable</span><span class="p">)</span>
+    <span class="n">ch</span><span class="o">.</span><span class="n">log_info</span><span class="p">(</span><span class="n">lgr</span><span class="p">,</span> <span class="s1">&#39;..... Done&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+    <span class="c1"># return the ltable and rtable keys</span>
+    <span class="k">return</span> <span class="n">ltable_key</span><span class="p">,</span> <span class="n">rtable_key</span>
+
+
+<span class="c1"># noinspection PyIncorrectDocstring</span>
+<span class="k">def</span> <span class="nf">get_metadata_for_candset</span><span class="p">(</span><span class="n">candset</span><span class="p">,</span> <span class="n">lgr</span><span class="p">,</span> <span class="n">verbose</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Gets metadata for the candset</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Validate input parameters</span>
+    <span class="n">validate_object_type</span><span class="p">(</span><span class="n">candset</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">error_prefix</span><span class="o">=</span><span class="s1">&#39;Input candset&#39;</span><span class="p">)</span>
+
+    <span class="n">ch</span><span class="o">.</span><span class="n">log_info</span><span class="p">(</span><span class="n">lgr</span><span class="p">,</span> <span class="s1">&#39;Getting metadata from the catalog&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+    <span class="c1"># Get the key, foreign keys, ltable, rtable and their keys</span>
+    <span class="c1"># # Get key</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="n">get_key</span><span class="p">(</span><span class="n">candset</span><span class="p">)</span>
+    <span class="c1"># # Get the foreign keys</span>
+    <span class="n">fk_ltable</span> <span class="o">=</span> <span class="n">get_fk_ltable</span><span class="p">(</span><span class="n">candset</span><span class="p">)</span>
+    <span class="n">fk_rtable</span> <span class="o">=</span> <span class="n">get_fk_rtable</span><span class="p">(</span><span class="n">candset</span><span class="p">)</span>
+    <span class="c1"># # Get the base tables</span>
+    <span class="n">ltable</span> <span class="o">=</span> <span class="n">get_ltable</span><span class="p">(</span><span class="n">candset</span><span class="p">)</span>
+    <span class="n">rtable</span> <span class="o">=</span> <span class="n">get_rtable</span><span class="p">(</span><span class="n">candset</span><span class="p">)</span>
+    <span class="c1"># Get the base table keys</span>
+    <span class="n">l_key</span> <span class="o">=</span> <span class="n">get_key</span><span class="p">(</span><span class="n">ltable</span><span class="p">)</span>
+    <span class="n">r_key</span> <span class="o">=</span> <span class="n">get_key</span><span class="p">(</span><span class="n">rtable</span><span class="p">)</span>
+    <span class="n">ch</span><span class="o">.</span><span class="n">log_info</span><span class="p">(</span><span class="n">lgr</span><span class="p">,</span> <span class="s1">&#39;..... Done&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+    <span class="c1"># Return the metadata</span>
+    <span class="k">return</span> <span class="n">key</span><span class="p">,</span> <span class="n">fk_ltable</span><span class="p">,</span> <span class="n">fk_rtable</span><span class="p">,</span> <span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span>
+
+
+<span class="c1"># noinspection PyIncorrectDocstring</span>
+<div class="viewcode-block" id="get_ltable"><a class="viewcode-back" href="../../../user_manual/api/handling_metadata.html#py_entitymatching.get_ltable">[docs]</a><span class="k">def</span> <span class="nf">get_ltable</span><span class="p">(</span><span class="n">candset</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Gets the ltable for a DataFrame from the catalog.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        candset (DataFrame): The input table for which the ltable must be</span>
+<span class="sd">            returned.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A pandas DataFrame that is pointed by &#39;ltable&#39; property of the input</span>
+<span class="sd">        table.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; import py_entitymatching as em</span>
+<span class="sd">        &gt;&gt;&gt; A = pd.DataFrame({&#39;id&#39; : [1, 2], &#39;colA&#39;:[&#39;a&#39;, &#39;b&#39;], &#39;colB&#39; : [10, 20]})</span>
+<span class="sd">        &gt;&gt;&gt; B = pd.DataFrame({&#39;id&#39; : [1, 2], &#39;colA&#39;:[&#39;c&#39;, &#39;d&#39;], &#39;colB&#39; : [30, 40]})</span>
+<span class="sd">        &gt;&gt;&gt; em.set_key(A, &#39;id&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; em.set_key(B, &#39;id&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; C = pd.DataFrame({&#39;id&#39;:[1, 2], &#39;ltable_id&#39;:[1, 2], &#39;rtable_id&#39;:[2, 1]})</span>
+<span class="sd">        &gt;&gt;&gt; em.set_key(C, &#39;id&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; em.set_ltable(C, A)</span>
+<span class="sd">        &gt;&gt;&gt; id(em.get_ltable(A) == id(A)</span>
+<span class="sd">        # True</span>
+
+
+<span class="sd">    See Also:</span>
+<span class="sd">        :meth:`~py_entitymatching.get_property`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Return the ltable for a candidate set. This function is just a sugar</span>
+    <span class="k">return</span> <span class="n">get_property</span><span class="p">(</span><span class="n">candset</span><span class="p">,</span> <span class="s1">&#39;ltable&#39;</span><span class="p">)</span></div>
+
+
+<span class="c1"># noinspection PyIncorrectDocstring</span>
+<div class="viewcode-block" id="get_rtable"><a class="viewcode-back" href="../../../user_manual/api/handling_metadata.html#py_entitymatching.get_rtable">[docs]</a><span class="k">def</span> <span class="nf">get_rtable</span><span class="p">(</span><span class="n">candset</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Gets the rtable for a DataFrame from the catalog.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        candset (DataFrame): Input table for which the rtable must be returned.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A pandas DataFrame that is pointed by &#39;rtable&#39; property of the input</span>
+<span class="sd">        table.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; import py_entitymatching as em</span>
+<span class="sd">        &gt;&gt;&gt; A = pd.DataFrame({&#39;id&#39; : [1, 2], &#39;colA&#39;:[&#39;a&#39;, &#39;b&#39;], &#39;colB&#39; : [10, 20]})</span>
+<span class="sd">        &gt;&gt;&gt; B = pd.DataFrame({&#39;id&#39; : [1, 2], &#39;colA&#39;:[&#39;c&#39;, &#39;d&#39;], &#39;colB&#39; : [30, 40]})</span>
+<span class="sd">        &gt;&gt;&gt; em.set_key(A, &#39;id&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; em.set_key(B, &#39;id&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; C = pd.DataFrame({&#39;id&#39;:[1, 2], &#39;ltable_id&#39;:[1, 2], &#39;rtable_id&#39;:[2, 1]})</span>
+<span class="sd">        &gt;&gt;&gt; em.set_key(C, &#39;id&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; em.set_rtable(C, B)</span>
+<span class="sd">        &gt;&gt;&gt; id(em.get_rtable(B) == id(B)</span>
+<span class="sd">        # True</span>
+
+
+<span class="sd">    See Also:</span>
+<span class="sd">        :meth:`~py_entitymatching.get_property`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Return the rtable for a candidate set. This function is just a sugar</span>
+
+    <span class="k">return</span> <span class="n">get_property</span><span class="p">(</span><span class="n">candset</span><span class="p">,</span> <span class="s1">&#39;rtable&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="set_ltable"><a class="viewcode-back" href="../../../user_manual/api/handling_metadata.html#py_entitymatching.set_ltable">[docs]</a><span class="k">def</span> <span class="nf">set_ltable</span><span class="p">(</span><span class="n">candset</span><span class="p">,</span> <span class="n">table</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sets the ltable for a DataFrame in the catalog.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        candset (DataFrame): The input table for which the ltable must be set.</span>
+<span class="sd">        table (DataFrame): The table (typically a pandas DataFrame) that must</span>
+<span class="sd">            be set as ltable for the input DataFrame.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A Boolean value of True is returned, if the update was successful.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; import py_entitymatching as em</span>
+<span class="sd">        &gt;&gt;&gt; A = pd.DataFrame({&#39;id&#39; : [1, 2], &#39;colA&#39;:[&#39;a&#39;, &#39;b&#39;], &#39;colB&#39; : [10, 20]})</span>
+<span class="sd">        &gt;&gt;&gt; B = pd.DataFrame({&#39;id&#39; : [1, 2], &#39;colA&#39;:[&#39;c&#39;, &#39;d&#39;], &#39;colB&#39; : [30, 40]})</span>
+<span class="sd">        &gt;&gt;&gt; em.set_key(A, &#39;id&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; em.set_key(B, &#39;id&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; C = pd.DataFrame({&#39;id&#39;:[1, 2], &#39;ltable_id&#39;:[1, 2], &#39;rtable_id&#39;:[2, 1]})</span>
+<span class="sd">        &gt;&gt;&gt; em.set_key(C, &#39;id&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; em.set_ltable(C, A)</span>
+<span class="sd">        &gt;&gt;&gt; id(em.get_ltable(A) == id(A)</span>
+<span class="sd">        # True</span>
+
+
+<span class="sd">    See Also:</span>
+<span class="sd">        :meth:`~py_entitymatching.set_property`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Return the ltable for a candidate set. This function is just a sugar</span>
+    <span class="k">return</span> <span class="n">set_property</span><span class="p">(</span><span class="n">candset</span><span class="p">,</span> <span class="s1">&#39;ltable&#39;</span><span class="p">,</span> <span class="n">table</span><span class="p">)</span></div>
+
+
+<span class="c1"># noinspection PyIncorrectDocstring</span>
+<div class="viewcode-block" id="set_rtable"><a class="viewcode-back" href="../../../user_manual/api/handling_metadata.html#py_entitymatching.set_rtable">[docs]</a><span class="k">def</span> <span class="nf">set_rtable</span><span class="p">(</span><span class="n">candset</span><span class="p">,</span> <span class="n">table</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sets the rtable for a DataFrame in the catalog.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        candset (DataFrame): The input table for which the rtable must be set.</span>
+<span class="sd">        table (DataFrame): The table that must be set as rtable for the input</span>
+<span class="sd">            DataFrame.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A Boolean value of True is returned, if the update was successful.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; import py_entitymatching as em</span>
+<span class="sd">        &gt;&gt;&gt; A = pd.DataFrame({&#39;id&#39; : [1, 2], &#39;colA&#39;:[&#39;a&#39;, &#39;b&#39;], &#39;colB&#39; : [10, 20]})</span>
+<span class="sd">        &gt;&gt;&gt; B = pd.DataFrame({&#39;id&#39; : [1, 2], &#39;colA&#39;:[&#39;c&#39;, &#39;d&#39;], &#39;colB&#39; : [30, 40]})</span>
+<span class="sd">        &gt;&gt;&gt; em.set_key(A, &#39;id&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; em.set_key(B, &#39;id&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; C = pd.DataFrame({&#39;id&#39;:[1, 2], &#39;ltable_id&#39;:[1, 2], &#39;rtable_id&#39;:[2, 1]})</span>
+<span class="sd">        &gt;&gt;&gt; em.set_key(C, &#39;id&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; em.set_rtable(C, B)</span>
+<span class="sd">        &gt;&gt;&gt; id(em.get_rtable(B) == id(B)</span>
+<span class="sd">        # True</span>
+
+
+<span class="sd">    See Also:</span>
+<span class="sd">        :meth:`~py_entitymatching.set_property`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Return the rtable for a candidate set. This function is just a sugar</span>
+
+    <span class="k">return</span> <span class="n">set_property</span><span class="p">(</span><span class="n">candset</span><span class="p">,</span> <span class="s1">&#39;rtable&#39;</span><span class="p">,</span> <span class="n">table</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2016, anhaidgroup
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

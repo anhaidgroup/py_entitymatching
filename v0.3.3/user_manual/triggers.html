@@ -1,0 +1,355 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Using Triggers to Update Matching Results &mdash; py_entitymatching 0.3.3 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Evaluating the Matching Output" href="evaluate_matching.html" />
+    <link rel="prev" title="Combining Predictions from Multiple Matchers" href="matchercombiner.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> py_entitymatching
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">How To Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../how_to_guide.html">How to Guide To Do Entity Matching</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="whatisnew.html">What is New?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview of Supported EM Processes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides.html">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datastructures.html">Data Structures</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="steps_supp_em_workflows.html">Steps of Supported EM Workflows</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="read_csv_files.html">Reading the CSV Files from Disk</a></li>
+<li class="toctree-l2"><a class="reference internal" href="down_sampling.html">Down Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="profiling.html">Profiling Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_exploration.html">Data Exploration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blocking.html">Specifying Blockers and Performing Blocking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="create_feats_for_blocking.html">Creating Features for Blocking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="debugging_blocking.html">Debugging Blocking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sampling.html">Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="labeling.html">Labeling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="split_train_test.html">Splitting Labeled Data into Training and Testing Sets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="create_feats_for_matching.html">Creating Features for Matching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extract_feat_vecs.html">Extracting Feature Vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="imputing_missing_values.html">Imputing Missing Values</a></li>
+<li class="toctree-l2"><a class="reference internal" href="matching.html">Specifying Matchers and Performing Matching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="select_best_matcher.html">Selecting a ML-Matcher</a></li>
+<li class="toctree-l2"><a class="reference internal" href="debugging_matcher.html">Debugging ML-Matchers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="matchercombiner.html">Combining Predictions from Multiple Matchers</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Using Triggers to Update Matching Results</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#match-triggers">Match Triggers</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#creating-the-trigger">Creating the Trigger</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#adding-and-deleting-rules">Adding and Deleting Rules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#executing-the-triggers">Executing the Triggers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="evaluate_matching.html">Evaluating the Matching Output</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="misc.html">Miscellaneous</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/overview.html">Overview of Command Organization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/actual_commands.html">Commands in py_entitymatching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/actual_commands.html#experimental-commands">Experimental Commands</a></li>
+</ul>
+<p class="caption"><span class="caption-text">How to Contribute</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing to py_entitymatching</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">py_entitymatching</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="steps_supp_em_workflows.html">Steps of Supported EM Workflows</a> &raquo;</li>
+        
+      <li>Using Triggers to Update Matching Results</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/user_manual/triggers.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="using-triggers-to-update-matching-results">
+<h1>Using Triggers to Update Matching Results<a class="headerlink" href="#using-triggers-to-update-matching-results" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="match-triggers">
+<h2>Match Triggers<a class="headerlink" href="#match-triggers" title="Permalink to this headline">¶</a></h2>
+<p>Once you have used a matcher to predict results on a table, you might find
+that there is some pattern of false positives or false negatives. Often, it
+is useful to be able to create a set of rules to reevaluate tuple pair
+predictions to correct these patterns of mistakes.</p>
+<div class="section" id="creating-the-trigger">
+<h3>Creating the Trigger<a class="headerlink" href="#creating-the-trigger" title="Permalink to this headline">¶</a></h3>
+<p>Each trigger can be created by calling its constructor. For example, a user can
+create a trigger like this:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mt</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">MatchTrigger</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Please refer to <a class="reference internal" href="api/triggers.html#py_entitymatching.MatchTrigger" title="py_entitymatching.MatchTrigger"><code class="xref py py-meth docutils literal notranslate"><span class="pre">MatchTrigger()</span></code></a> for more details.</p>
+<p>If you have already used a matcher, you should have already created a set of features
+for matching. More information on this can be found in the section
+<span class="xref std std-ref">label-create-features-matching</span>.</p>
+<p>Once the features are created, py_entitymatching stores this set of features in a
+feature table. We refer to this feature table as <cite>match_f</cite>. Then you will be able
+to instantiate a match trigger and add rules.</p>
+</div>
+<div class="section" id="adding-and-deleting-rules">
+<h3>Adding and Deleting Rules<a class="headerlink" href="#adding-and-deleting-rules" title="Permalink to this headline">¶</a></h3>
+<p>Once you have created the features, you can create rules like this:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mt</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">MatchTrigger</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mt</span><span class="o">.</span><span class="n">add_cond_rule</span><span class="p">(</span><span class="n">rule1</span><span class="p">,</span> <span class="n">match_f</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mt</span><span class="o">.</span><span class="n">add_cond_rule</span><span class="p">(</span><span class="n">rule2</span><span class="p">,</span> <span class="n">match_f</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In the above, <cite>match_f</cite> is a set of features stored as a Dataframe (see section
+<span class="xref std std-ref">label-create-features-matching</span>).</p>
+<p>Each rule is a list of strings. Each string specifies a conjunction of predicates. Each
+predicate has three parts: (1) an expression, (2) a comparison operator, and (3) a
+value. The expression is evaluated over a tuple pair, producing a numeric value.
+Currently, in py_entitymatching an expression is limited to contain a single feature
+(being applied to a tuple pair). So an example predicate will look like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">name_name_lev</span><span class="p">(</span><span class="n">ltuple</span><span class="p">,</span> <span class="n">rtuple</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">3</span>
+</pre></div>
+</div>
+<p>In the above <cite>name_name_lev</cite> is feature. Concretely, this feature computes
+Levenshtein distance between the <cite>name</cite> values in the input tuple pair.</p>
+<p>As an example, the rules <cite>rule1</cite> and <cite>rule2</cite> can look like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rule1</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;name_name_lev(ltuple, rtuple) &gt; 3&#39;</span><span class="p">,</span> <span class="s1">&#39;age_age_exact_match(ltuple, rtuple) !=0&#39;</span><span class="p">]</span>
+<span class="n">rule2</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;address_address_lev(ltuple, rtuple) &gt; 6&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>In the above, <cite>rule1</cite> contains two predicates and <cite>rule2</cite> contains just a single
+predicate. Each rule is a conjunction of predicates. That is, each rule will return True
+only if all the predicates return True. The matcher is then a disjunction of rules.
+That is, even if one of the rules return True, then the result for the tuple pair will
+be true.</p>
+<p>You also need to add a condition status and action when using match triggers. If the
+result is the same value as the condition status, then the action will be carried out.
+For example, the action and condition status can be declared like so:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mt</span><span class="o">.</span><span class="n">add_cond_status</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mt</span><span class="o">.</span><span class="n">add_action</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The condition status and action in the above example mean that if the rules in the
+trigger return the value False, then the prediction will be changed to a 0.</p>
+<p>Rules can also be deleted once they have been added:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rule_name</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">add_cond_rule</span><span class="p">(</span><span class="n">rule_1</span><span class="p">,</span> <span class="n">match_f</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mt</span><span class="o">.</span><span class="n">delete_rule</span><span class="p">(</span><span class="n">rule_name</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The command delete_rule must be given the name of the rule to be deleted. Rule names
+and information on rules can be found using the following commands:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># get a list of rule names</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rule_names</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">get_rule_names</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># view rule source</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mt</span><span class="o">.</span><span class="n">view_rule</span><span class="p">(</span><span class="s1">&#39;rule_name&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># get rule fn</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mt</span><span class="o">.</span><span class="n">get_rule</span><span class="p">(</span><span class="s1">&#39;rule_name&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="executing-the-triggers">
+<h3>Executing the Triggers<a class="headerlink" href="#executing-the-triggers" title="Permalink to this headline">¶</a></h3>
+<p>Once the rules, condition status, and action have been specified, the trigger can be
+used to refine the predictions. An example of using the execute command is shown below:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mt</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">input_table</span><span class="o">=</span><span class="n">H</span><span class="p">,</span> <span class="n">label_column</span><span class="o">=</span><span class="s1">&#39;prediction_labels&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For more information on the <cite>execute</cite> method, please refer to
+<a class="reference internal" href="api/triggers.html#py_entitymatching.MatchTrigger.execute" title="py_entitymatching.MatchTrigger.execute"><code class="xref py py-meth docutils literal notranslate"><span class="pre">execute()</span></code></a> for more details.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="evaluate_matching.html" class="btn btn-neutral float-right" title="Evaluating the Matching Output" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="matchercombiner.html" class="btn btn-neutral float-left" title="Combining Predictions from Multiple Matchers" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2016, anhaidgroup
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

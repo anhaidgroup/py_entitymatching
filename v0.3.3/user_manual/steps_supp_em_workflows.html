@@ -1,0 +1,341 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Steps of Supported EM Workflows &mdash; py_entitymatching 0.3.3 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Reading the CSV Files from Disk" href="read_csv_files.html" />
+    <link rel="prev" title="Data Structures" href="datastructures.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> py_entitymatching
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">How To Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../how_to_guide.html">How to Guide To Do Entity Matching</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="whatisnew.html">What is New?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview of Supported EM Processes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides.html">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datastructures.html">Data Structures</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Steps of Supported EM Workflows</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="read_csv_files.html">Reading the CSV Files from Disk</a></li>
+<li class="toctree-l2"><a class="reference internal" href="down_sampling.html">Down Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="profiling.html">Profiling Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_exploration.html">Data Exploration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blocking.html">Specifying Blockers and Performing Blocking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="create_feats_for_blocking.html">Creating Features for Blocking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="debugging_blocking.html">Debugging Blocking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sampling.html">Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="labeling.html">Labeling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="split_train_test.html">Splitting Labeled Data into Training and Testing Sets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="create_feats_for_matching.html">Creating Features for Matching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extract_feat_vecs.html">Extracting Feature Vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="imputing_missing_values.html">Imputing Missing Values</a></li>
+<li class="toctree-l2"><a class="reference internal" href="matching.html">Specifying Matchers and Performing Matching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="select_best_matcher.html">Selecting a ML-Matcher</a></li>
+<li class="toctree-l2"><a class="reference internal" href="debugging_matcher.html">Debugging ML-Matchers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="matchercombiner.html">Combining Predictions from Multiple Matchers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="triggers.html">Using Triggers to Update Matching Results</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evaluate_matching.html">Evaluating the Matching Output</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="misc.html">Miscellaneous</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/overview.html">Overview of Command Organization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/actual_commands.html">Commands in py_entitymatching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/actual_commands.html#experimental-commands">Experimental Commands</a></li>
+</ul>
+<p class="caption"><span class="caption-text">How to Contribute</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing to py_entitymatching</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">py_entitymatching</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Steps of Supported EM Workflows</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/user_manual/steps_supp_em_workflows.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="steps-of-supported-em-workflows">
+<h1>Steps of Supported EM Workflows<a class="headerlink" href="#steps-of-supported-em-workflows" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="read_csv_files.html">Reading the CSV Files from Disk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="down_sampling.html">Down Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="profiling.html">Profiling Data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="profiling.html#example-usage">Example Usage</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="data_exploration.html">Data Exploration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="data_exploration.html#openrefine">OpenRefine</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="data_exploration.html#using-openrefine">Using OpenRefine</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="data_exploration.html#pandastable">Pandastable</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="data_exploration.html#using-pandastable">Using pandastable</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="blocking.html">Specifying Blockers and Performing Blocking</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="blocking.html#types-of-blockers-and-blocker-hierarchy">Types of Blockers and Blocker Hierarchy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blocking.html#built-in-blockers">Built-In Blockers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blocking.html#blackbox-blockers">Blackbox Blockers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blocking.html#rule-based-blockers">Rule-Based Blockers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blocking.html#combining-multiple-blockers">Combining Multiple Blockers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="create_feats_for_blocking.html">Creating Features for Blocking</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="create_feats_for_blocking.html#available-tokenizers-and-similarity-functions">Available Tokenizers and Similarity Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="create_feats_for_blocking.html#obtaining-tokenizers-and-similarity-functions">Obtaining Tokenizers and Similarity Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="create_feats_for_blocking.html#obtaining-attribute-types-and-correspondences">Obtaining Attribute Types and Correspondences</a></li>
+<li class="toctree-l2"><a class="reference internal" href="create_feats_for_blocking.html#getting-a-set-of-features">Getting a Set of Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="create_feats_for_blocking.html#adding-removing-features">Adding/Removing Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="create_feats_for_blocking.html#summary-of-the-manual-feature-generation-process">Summary of the Manual Feature Generation Process</a></li>
+<li class="toctree-l2"><a class="reference internal" href="create_feats_for_blocking.html#ways-to-edit-the-manual-feature-generation-process">Ways to Edit the Manual Feature Generation Process</a></li>
+<li class="toctree-l2"><a class="reference internal" href="create_feats_for_blocking.html#generating-features-automatically">Generating Features Automatically</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="debugging_blocking.html">Debugging Blocking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sampling.html">Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="labeling.html">Labeling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="split_train_test.html">Splitting Labeled Data into Training and Testing Sets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="create_feats_for_matching.html">Creating Features for Matching</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="create_feats_for_matching.html#creating-the-features-manually">Creating the Features Manually</a></li>
+<li class="toctree-l2"><a class="reference internal" href="create_feats_for_matching.html#creating-the-features-automatically">Creating the Features Automatically</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="extract_feat_vecs.html">Extracting Feature Vectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="imputing_missing_values.html">Imputing Missing Values</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matching.html">Specifying Matchers and Performing Matching</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="matching.html#ml-matchers">ML-Matchers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="matching.html#creating-learning-based-matchers">Creating Learning-Based Matchers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="matching.html#training-learning-based-matchers">Training Learning-Based Matchers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="matching.html#applying-learning-based-matchers">Applying Learning-Based Matchers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="matching.html#rule-based-matchers">Rule-Based Matchers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="matching.html#adding-and-deleting-rules">Adding and Deleting Rules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="matching.html#applying-rule-based-matcher">Applying Rule-Based Matcher</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="select_best_matcher.html">Selecting a ML-Matcher</a></li>
+<li class="toctree-l1"><a class="reference internal" href="debugging_matcher.html">Debugging ML-Matchers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="debugging_matcher.html#debugging-using-the-gui">Debugging Using the GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="debugging_matcher.html#debugging-using-the-command-line">Debugging Using the Command Line</a></li>
+<li class="toctree-l2"><a class="reference internal" href="debugging_matcher.html#impact-of-imputing-missing-values">Impact of Imputing Missing Values</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="matchercombiner.html">Combining Predictions from Multiple Matchers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="triggers.html">Using Triggers to Update Matching Results</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="triggers.html#match-triggers">Match Triggers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="triggers.html#creating-the-trigger">Creating the Trigger</a></li>
+<li class="toctree-l3"><a class="reference internal" href="triggers.html#adding-and-deleting-rules">Adding and Deleting Rules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="triggers.html#executing-the-triggers">Executing the Triggers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="evaluate_matching.html">Evaluating the Matching Output</a></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="read_csv_files.html" class="btn btn-neutral float-right" title="Reading the CSV Files from Disk" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="datastructures.html" class="btn btn-neutral float-left" title="Data Structures" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2016, anhaidgroup
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

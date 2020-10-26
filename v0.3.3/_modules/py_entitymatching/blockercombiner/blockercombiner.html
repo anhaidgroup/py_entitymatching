@@ -1,0 +1,566 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>py_entitymatching.blockercombiner.blockercombiner &mdash; py_entitymatching 0.3.3 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> py_entitymatching
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">How To Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../how_to_guide.html">How to Guide To Do Entity Matching</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/whatisnew.html">What is New?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/overview.html">Overview of Supported EM Processes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/guides.html">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/datastructures.html">Data Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/steps_supp_em_workflows.html">Steps of Supported EM Workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/misc.html">Miscellaneous</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/api/overview.html">Overview of Command Organization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/api/actual_commands.html">Commands in py_entitymatching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/api/actual_commands.html#experimental-commands">Experimental Commands</a></li>
+</ul>
+<p class="caption"><span class="caption-text">How to Contribute</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing to py_entitymatching</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">py_entitymatching</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>py_entitymatching.blockercombiner.blockercombiner</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for py_entitymatching.blockercombiner.blockercombiner</h1><div class="highlight"><pre>
+<span></span><span class="c1"># coding=utf-8</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module contains functions for combining outputs from multiple blockers.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">six</span>
+
+<span class="kn">import</span> <span class="nn">py_entitymatching.catalog.catalog_manager</span> <span class="k">as</span> <span class="nn">cm</span>
+<span class="kn">import</span> <span class="nn">py_entitymatching.utils.catalog_helper</span> <span class="k">as</span> <span class="nn">ch</span>
+<span class="kn">import</span> <span class="nn">py_entitymatching.utils.generic_helper</span> <span class="k">as</span> <span class="nn">gh</span>
+<span class="kn">import</span> <span class="nn">py_entitymatching.utils.validation_helper</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="combine_blocker_outputs_via_union"><a class="viewcode-back" href="../../../user_manual/api/combining_blocker_outputs.html#py_entitymatching.combine_blocker_outputs_via_union">[docs]</a><span class="k">def</span> <span class="nf">combine_blocker_outputs_via_union</span><span class="p">(</span>
+        <span class="n">blocker_output_list</span><span class="p">,</span>
+        <span class="n">l_prefix</span><span class="o">=</span><span class="s1">&#39;ltable_&#39;</span><span class="p">,</span>
+        <span class="n">r_prefix</span><span class="o">=</span><span class="s1">&#39;rtable_&#39;</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Combines multiple blocker outputs by doing a union of their tuple pair</span>
+<span class="sd">    ids (foreign key ltable, foreign key rtable).</span>
+
+<span class="sd">    Specifically, this function takes in a list of DataFrames (candidate</span>
+<span class="sd">    sets, typically the</span>
+<span class="sd">    output from blockers) and returns a consolidated DataFrame. The output</span>
+<span class="sd">    DataFrame contains the union of tuple pair ids (foreign key ltable,</span>
+<span class="sd">    foreign key rtable) and other attributes from the input list of DataFrames.</span>
+
+<span class="sd">    This function makes some assumptions about the input DataFrames. First,</span>
+<span class="sd">    each DataFrame is expected to contain the following metadata in the</span>
+<span class="sd">    catalog: key, fk_ltable, fk_rtable, ltable, and rtable. Second,</span>
+<span class="sd">    all the DataFrames must be a result of blocking from the same underlying</span>
+<span class="sd">    tables. Concretely the ltable and rtable properties must refer to the</span>
+<span class="sd">    same DataFrame across all the input tables. Third, all the input</span>
+<span class="sd">    DataFrames must have the same fk_ltable and fk_rtable properties.</span>
+<span class="sd">    Finally, in each input DataFrame, for the attributes included from the</span>
+<span class="sd">    ltable or rtable, the attribute names must be prefixed with the given</span>
+<span class="sd">    l_prefix and r_prefix in the function.</span>
+
+<span class="sd">    The input DataFrames may contain different attribute lists and it demands</span>
+<span class="sd">    the question of how to combine them. Currently py_entitymatching takes an union</span>
+<span class="sd">    of attribute names that has prefix l_prefix or r_prefix across</span>
+<span class="sd">    input tables. After taking the union, for each tuple id pair included</span>
+<span class="sd">    in output, the attribute values (for union-ed attribute names) are</span>
+<span class="sd">    probed from ltable/rtable and included in the output.</span>
+
+<span class="sd">    A subtle point to note here is,  if an input DataFrame has a column</span>
+<span class="sd">    added by user (say label for some reason), then that column will not</span>
+<span class="sd">    be present in the output. The reason is, the same column may not be</span>
+<span class="sd">    present in other candidate sets so it is not clear about how to</span>
+<span class="sd">    combine them. One possibility is to include label in output for all</span>
+<span class="sd">    tuple id pairs, but set as NaN for the values not present. Currently</span>
+<span class="sd">    py_entitymatching does not include such columns and addressing it will be part</span>
+<span class="sd">    of future work.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        blocker_output_list (list of DataFrames): The list of DataFrames that</span>
+<span class="sd">            should be combined.</span>
+<span class="sd">        l_prefix (string): The prefix given to the attributes from the ltable.</span>
+<span class="sd">        r_prefix (string): The prefix given to the attributes from the rtable.</span>
+<span class="sd">        verbose (boolean): A flag to indicate whether more detailed information</span>
+<span class="sd">            about the execution steps should be printed out (default value is</span>
+<span class="sd">            False).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A new DataFrame with the combined tuple pairs and other attributes from</span>
+<span class="sd">        all the blocker lists.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If `l_prefix` is not of type string.</span>
+<span class="sd">        AssertionError: If `r_prefix` is not of type string.</span>
+<span class="sd">        AssertionError: If the length of the input DataFrame list is 0.</span>
+<span class="sd">        AssertionError: If `blocker_output_list` is not a list of</span>
+<span class="sd">            DataFrames.</span>
+<span class="sd">        AssertionError: If the ltables are different across the input list of</span>
+<span class="sd">            DataFrames.</span>
+<span class="sd">        AssertionError: If the rtables are different across the input list of</span>
+<span class="sd">            DataFrames.</span>
+<span class="sd">        AssertionError: If the `fk_ltable` values are different across the</span>
+<span class="sd">            input list of DataFrames.</span>
+<span class="sd">        AssertionError: If the `fk_rtable` values are different across the</span>
+<span class="sd">            input list of DataFrames.</span>
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">        &gt;&gt;&gt; import py_entitymatching as em</span>
+<span class="sd">        &gt;&gt;&gt; ab = em.AttrEquivalenceBlocker()</span>
+<span class="sd">        &gt;&gt;&gt; C = ab.block_tables(A, B, &#39;zipcode&#39;, &#39;zipcode&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; ob = em.OverlapBlocker()</span>
+<span class="sd">        &gt;&gt;&gt; D = ob.block_candset(C, &#39;address&#39;, &#39;address&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; block_f = em.get_features_for_blocking(A, B)</span>
+<span class="sd">        &gt;&gt;&gt; rb = em.RuleBasedBlocker()</span>
+<span class="sd">        &gt;&gt;&gt; rule = [&#39;address_address_lev(ltuple, rtuple) &gt; 6&#39;]</span>
+<span class="sd">        &gt;&gt;&gt; rb.add_rule(rule, block_f)</span>
+<span class="sd">        &gt;&gt;&gt; E = rb.block_tables(A, B)</span>
+<span class="sd">        &gt;&gt;&gt; F = em.combine_blocker_outputs_via_union([C, E])</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># validate input parameters</span>
+
+    <span class="c1"># The l_prefix is expected to be of type string</span>
+    <span class="n">py_entitymatching</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">validation_helper</span><span class="o">.</span><span class="n">validate_object_type</span><span class="p">(</span><span class="n">l_prefix</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">,</span> <span class="s1">&#39;l_prefix&#39;</span><span class="p">)</span>
+
+    <span class="c1"># The r_prefix is expected to be of type string</span>
+    <span class="n">py_entitymatching</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">validation_helper</span><span class="o">.</span><span class="n">validate_object_type</span><span class="p">(</span><span class="n">r_prefix</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">,</span> <span class="s1">&#39;r_prefix&#39;</span><span class="p">)</span>
+
+    <span class="c1"># We cannot combine empty DataFrame list</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">blocker_output_list</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;There no DataFrames to combine&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;There are no DataFrames to combine&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Validate the assumptions about the input tables.</span>
+    <span class="c1"># # 1) All the input object must be DataFrames</span>
+    <span class="c1"># # 2) All the input DataFrames must have the metadata as that of a</span>
+    <span class="c1"># candidate set</span>
+    <span class="c1"># # 3) All the input DataFrames must have the same fk_ltable and fk_rtable</span>
+    <span class="n">_validate_lr_tables</span><span class="p">(</span><span class="n">blocker_output_list</span><span class="p">)</span>
+
+    <span class="c1"># # Get the ltable and rtable. We take it from the first DataFrame as all</span>
+    <span class="c1">#  the DataFrames contain the same ltables and rtables</span>
+    <span class="n">ltable</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">get_ltable</span><span class="p">(</span><span class="n">blocker_output_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">rtable</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">get_rtable</span><span class="p">(</span><span class="n">blocker_output_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="c1"># # Get the fk_ltable and fk_rtable. We take it from the first DataFrame as</span>
+    <span class="c1">#  all the DataFrames contain the same ltables and rtables</span>
+    <span class="n">fk_ltable</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">get_fk_ltable</span><span class="p">(</span><span class="n">blocker_output_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">fk_rtable</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">get_fk_rtable</span><span class="p">(</span><span class="n">blocker_output_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="c1"># Retrieve the keys for the ltable and rtables.</span>
+    <span class="n">l_key</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">get_key</span><span class="p">(</span><span class="n">ltable</span><span class="p">)</span>
+    <span class="n">r_key</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">get_key</span><span class="p">(</span><span class="n">rtable</span><span class="p">)</span>
+
+    <span class="c1"># Check if the fk_ltable is starting with the given prefix, if not its</span>
+    <span class="c1"># not an error. Just raise a warning.</span>
+    <span class="k">if</span> <span class="n">fk_ltable</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">l_prefix</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+            <span class="s1">&#39;Foreign key for ltable is not starting with the given prefix (&#39;</span>
+            <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">)&#39;</span><span class="p">,</span> <span class="n">l_prefix</span><span class="p">)</span>
+
+    <span class="c1"># Check if the fk_rtable is starting with the given prefix, if not its</span>
+    <span class="c1"># not an error. Just raise a warning.</span>
+    <span class="k">if</span> <span class="n">fk_rtable</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">r_prefix</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+            <span class="s1">&#39;Foreign key for rtable is not starting with the given prefix (&#39;</span>
+            <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">)&#39;</span><span class="p">,</span> <span class="n">r_prefix</span><span class="p">)</span>
+
+    <span class="c1"># Initialize lists</span>
+    <span class="c1"># # keep track of projected tuple pair ids</span>
+    <span class="n">tuple_pair_ids</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># # keep track of output attributes from the left table</span>
+    <span class="n">l_output_attrs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># # keep track of output attributes from the right table</span>
+    <span class="n">r_output_attrs</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># for each DataFrame in the given list, project out tuple pair ids, get the</span>
+    <span class="c1">#  attributes from the ltable and rtable</span>
+    <span class="k">for</span> <span class="n">data_frame</span> <span class="ow">in</span> <span class="n">blocker_output_list</span><span class="p">:</span>
+        <span class="c1"># Project out the tuple pair ids. A tuple pair id is a fk_ltable,</span>
+        <span class="c1"># fk_rtable pair</span>
+        <span class="n">projected_tuple_pair_ids</span> <span class="o">=</span> <span class="n">data_frame</span><span class="p">[[</span><span class="n">fk_ltable</span><span class="p">,</span> <span class="n">fk_rtable</span><span class="p">]]</span>
+        <span class="c1"># Update the list that tracks tuple pair ids</span>
+        <span class="n">tuple_pair_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">projected_tuple_pair_ids</span><span class="p">)</span>
+
+        <span class="c1"># Get the columns, which should be segregated into the attributes</span>
+        <span class="c1"># from the ltable and table</span>
+        <span class="n">col_set</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">gh</span><span class="o">.</span><span class="n">list_diff</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">data_frame</span><span class="o">.</span><span class="n">columns</span><span class="p">),</span>
+                         <span class="p">[</span><span class="n">fk_ltable</span><span class="p">,</span> <span class="n">fk_rtable</span><span class="p">,</span> <span class="n">cm</span><span class="o">.</span><span class="n">get_key</span><span class="p">(</span><span class="n">data_frame</span><span class="p">)]))</span>
+
+        <span class="c1"># Segregate the columns as attributes from the ltable and rtable</span>
+        <span class="n">l_attrs</span><span class="p">,</span> <span class="n">r_attrs</span> <span class="o">=</span> <span class="n">_lr_cols</span><span class="p">(</span><span class="n">col_set</span><span class="p">,</span> <span class="n">l_prefix</span><span class="p">,</span> <span class="n">r_prefix</span><span class="p">)</span>
+
+        <span class="c1"># Update the l_output_attrs, r_output_attrs</span>
+        <span class="n">l_output_attrs</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">l_attrs</span><span class="p">)</span>
+        <span class="c1"># the reason we use extend because l_attrs a list</span>
+        <span class="n">r_output_attrs</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">r_attrs</span><span class="p">)</span>
+
+    <span class="n">ch</span><span class="o">.</span><span class="n">log_info</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="s1">&#39;Concatenating the tuple pair ids across given &#39;</span>
+                        <span class="s1">&#39;blockers ...&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+    <span class="c1"># concatenate the tuple pair ids from the list of input DataFrames</span>
+    <span class="n">concatenated_tuple_pair_ids</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">tuple_pair_ids</span><span class="p">)</span>
+
+    <span class="n">ch</span><span class="o">.</span><span class="n">log_info</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="s1">&#39;Concatenating the tuple pair ids ... DONE&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+    <span class="n">ch</span><span class="o">.</span><span class="n">log_info</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="s1">&#39;Deduplicating the tuple pair ids ...&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+    <span class="c1"># Deduplicate the DataFrame. Now the returned DataFrame will contain</span>
+    <span class="c1"># unique tuple pair ids.</span>
+
+    <span class="c1"># noinspection PyUnresolvedReferences</span>
+    <span class="n">deduplicated_tuple_pair_ids</span> <span class="o">=</span> <span class="n">concatenated_tuple_pair_ids</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>
+
+    <span class="n">ch</span><span class="o">.</span><span class="n">log_info</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="s1">&#39;Deduplicating the tuple pair ids ... DONE&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+    <span class="c1"># Construct output table</span>
+    <span class="c1"># # Get unique list of attributes across different tables</span>
+    <span class="n">l_output_attrs</span> <span class="o">=</span> <span class="n">gh</span><span class="o">.</span><span class="n">list_drop_duplicates</span><span class="p">(</span><span class="n">l_output_attrs</span><span class="p">)</span>
+    <span class="n">r_output_attrs</span> <span class="o">=</span> <span class="n">gh</span><span class="o">.</span><span class="n">list_drop_duplicates</span><span class="p">(</span><span class="n">r_output_attrs</span><span class="p">)</span>
+
+    <span class="c1"># Reset the index that might have lingered from concatenation.</span>
+    <span class="n">deduplicated_tuple_pair_ids</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Add the output attribtues from the ltable and rtable.</span>
+    <span class="c1"># NOTE: This approach may be inefficient as it probes the ltable, rtable</span>
+    <span class="c1"># to get the attribute values. A better way would be to fill the</span>
+    <span class="c1"># attribute values from the input list of DataFrames. This attribute values</span>
+    <span class="c1"># could be harvested (at the expense of some space) while we iterate the</span>
+    <span class="c1"># input blocker output list for the first time.</span>
+
+    <span class="c1"># noinspection PyProtectedMember</span>
+    <span class="n">consolidated_data_frame</span> <span class="o">=</span> <span class="n">gh</span><span class="o">.</span><span class="n">_add_output_attributes</span><span class="p">(</span>
+        <span class="n">deduplicated_tuple_pair_ids</span><span class="p">,</span> <span class="n">fk_ltable</span><span class="p">,</span>
+        <span class="n">fk_rtable</span><span class="p">,</span>
+        <span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span>
+        <span class="n">l_output_attrs</span><span class="p">,</span> <span class="n">r_output_attrs</span><span class="p">,</span>
+        <span class="n">l_prefix</span><span class="p">,</span>
+        <span class="n">r_prefix</span><span class="p">,</span>
+        <span class="n">validate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="c1"># Sort the DataFrame ordered by fk_ltable and fk_rtable.</span>
+    <span class="c1"># The function &quot;sort&quot; will be depreciated in the newer versions of</span>
+    <span class="c1"># pandas DataFrame, and it will replaced by &#39;sort_values&#39; function. So we</span>
+    <span class="c1"># will first try to use sort_values if this fails we will use sort.</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">consolidated_data_frame</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="n">fk_ltable</span><span class="p">,</span> <span class="n">fk_rtable</span><span class="p">],</span>
+                                            <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+        <span class="n">consolidated_data_frame</span><span class="o">.</span><span class="n">sort</span><span class="p">([</span><span class="n">fk_ltable</span><span class="p">,</span> <span class="n">fk_rtable</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># update the catalog for the consolidated DataFrame</span>
+    <span class="c1"># First get a column name for the key</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="n">ch</span><span class="o">.</span><span class="n">get_name_for_key</span><span class="p">(</span><span class="n">consolidated_data_frame</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+    <span class="c1"># Second, add the column name as the key</span>
+    <span class="n">consolidated_data_frame</span> <span class="o">=</span> <span class="n">ch</span><span class="o">.</span><span class="n">add_key_column</span><span class="p">(</span><span class="n">consolidated_data_frame</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+    <span class="c1"># Third, reset the index to remove any out of order index  values from</span>
+    <span class="c1"># the sort.</span>
+    <span class="n">consolidated_data_frame</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="c1"># Finally, set the properties for the consolidated DataFrame in the catalog</span>
+    <span class="n">cm</span><span class="o">.</span><span class="n">set_candset_properties</span><span class="p">(</span><span class="n">consolidated_data_frame</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">fk_ltable</span><span class="p">,</span>
+                              <span class="n">fk_rtable</span><span class="p">,</span> <span class="n">ltable</span><span class="p">,</span>
+                              <span class="n">rtable</span><span class="p">)</span>
+
+    <span class="c1"># Return the consolidated DataFrame</span>
+    <span class="k">return</span> <span class="n">consolidated_data_frame</span></div>
+
+
+<span class="k">def</span> <span class="nf">_validate_lr_tables</span><span class="p">(</span><span class="n">blocker_output_list</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Validate the input blocker output list.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ltable_ids</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">rtable_ids</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">fk_ltable_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">fk_rtable_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># Iterate through the DataFrame list and keep track the following</span>
+    <span class="c1"># # 1) Validate whether the input objects are all DataFrames</span>
+    <span class="c1"># # 2) Update the ltable, rtable (ids), fk_ltable and fk_rtable.</span>
+    <span class="k">for</span> <span class="n">data_frame</span> <span class="ow">in</span> <span class="n">blocker_output_list</span><span class="p">:</span>
+        <span class="n">py_entitymatching</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">validation_helper</span><span class="o">.</span><span class="n">validate_object_type</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span>
+        <span class="n">ltable_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="n">cm</span><span class="o">.</span><span class="n">get_ltable</span><span class="p">(</span><span class="n">data_frame</span><span class="p">)))</span>
+        <span class="n">rtable_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="n">cm</span><span class="o">.</span><span class="n">get_rtable</span><span class="p">(</span><span class="n">data_frame</span><span class="p">)))</span>
+        <span class="n">fk_ltable_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cm</span><span class="o">.</span><span class="n">get_fk_ltable</span><span class="p">(</span><span class="n">data_frame</span><span class="p">))</span>
+        <span class="n">fk_rtable_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cm</span><span class="o">.</span><span class="n">get_fk_rtable</span><span class="p">(</span><span class="n">data_frame</span><span class="p">))</span>
+
+    <span class="c1"># Check whether all the ltables in the catalog are same for the input</span>
+    <span class="c1"># DataFrame list</span>
+    <span class="n">ltable_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">ltable_ids</span><span class="p">)</span>
+    <span class="c1"># # We expect all the ltable ids are same (i.e the len. of set should be 1)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">ltable_ids</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Candidate set list contains different left tables&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Candidate set list contains different &#39;</span>
+                             <span class="s1">&#39;left tables&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Check whether all the rtables in the catalog are same for the input</span>
+    <span class="c1"># DataFrame list</span>
+    <span class="n">rtable_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">rtable_ids</span><span class="p">)</span>
+    <span class="c1"># # We expect all the ltable ids are same (i.e the len. of set should be 1)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">rtable_ids</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Candidate set list contains different right tables&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Candidate set list contains different &#39;</span>
+                             <span class="s1">&#39;right tables&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Check whether all the fk_ltable values in the catalog are same for the</span>
+    <span class="c1"># input DataFrame list</span>
+    <span class="n">fk_ltable_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">fk_ltable_list</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">fk_ltable_set</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Candidate set list contains different foreign key &#39;</span>
+                     <span class="s1">&#39;for left tables&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Candidate set list contains different &#39;</span>
+                             <span class="s1">&#39;foreign key for left tables&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Check whether all the fk_rtable values in the catalog are same for the</span>
+    <span class="c1"># input DataFrame list</span>
+    <span class="n">fk_rtable_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">fk_rtable_list</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">fk_rtable_set</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Candidate set list contains different foreign key &#39;</span>
+                     <span class="s1">&#39;for right tables&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Candidate set list contains different &#39;</span>
+                             <span class="s1">&#39;foreign key for right tables&#39;</span><span class="p">)</span>
+
+    <span class="c1"># If everything looks fine then return True</span>
+    <span class="k">return</span> <span class="kc">True</span>
+
+
+<span class="k">def</span> <span class="nf">_lr_cols</span><span class="p">(</span><span class="n">columns_from_blocker_output_list</span><span class="p">,</span> <span class="n">l_output_prefix</span><span class="p">,</span>
+             <span class="n">r_output_prefix</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the columns to be retrieved from ltable and rtable based on the</span>
+<span class="sd">    columns that was observed in the input DataFrames.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get the column name based on the l_output_prefix</span>
+    <span class="n">l_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">_get_col</span><span class="p">(</span><span class="n">column</span><span class="p">,</span> <span class="n">l_output_prefix</span><span class="p">)</span>
+                 <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">columns_from_blocker_output_list</span><span class="p">]</span>
+    <span class="c1"># Remove the column names that are None. The column names will be</span>
+    <span class="c1"># typically None if the column does not start with the given prefix</span>
+    <span class="n">l_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">l_columns</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
+
+    <span class="c1"># Get the column name based on the r_output_prefix</span>
+    <span class="n">r_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">_get_col</span><span class="p">(</span><span class="n">column</span><span class="p">,</span> <span class="n">r_output_prefix</span><span class="p">)</span>
+                 <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">columns_from_blocker_output_list</span><span class="p">]</span>
+
+    <span class="c1"># Remove the column names that are None. The column names will be</span>
+    <span class="c1"># typically None if the column does not start with the given prefix</span>
+    <span class="n">r_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">r_columns</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
+
+    <span class="c1"># Return the l_columns and r_columns</span>
+    <span class="k">return</span> <span class="n">l_columns</span><span class="p">,</span> <span class="n">r_columns</span>
+
+
+<span class="k">def</span> <span class="nf">_get_col</span><span class="p">(</span><span class="n">column</span><span class="p">,</span> <span class="n">prefix</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the column name after removing the prefix.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Check if the column is starting with the given prefix</span>
+    <span class="k">if</span> <span class="n">column</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">prefix</span><span class="p">):</span>
+        <span class="c1"># Return the column name after removing the prefix</span>
+        <span class="k">return</span> <span class="n">column</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">prefix</span><span class="p">):]</span>
+    <span class="c1"># Return None, if the column does not start with the given prefix</span>
+    <span class="k">return</span> <span class="kc">None</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2016, anhaidgroup
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

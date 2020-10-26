@@ -1,0 +1,326 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Extracting Feature Vectors &mdash; py_entitymatching 0.3.3 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Imputing Missing Values" href="imputing_missing_values.html" />
+    <link rel="prev" title="Adding Features to Feature Table" href="adding_features.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> py_entitymatching
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">How To Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../how_to_guide.html">How to Guide To Do Entity Matching</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../whatisnew.html">What is New?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview of Supported EM Processes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides.html">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datastructures.html">Data Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../steps_supp_em_workflows.html">Steps of Supported EM Workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc.html">Miscellaneous</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview of Command Organization</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="actual_commands.html">Commands in py_entitymatching</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="reading_and_writing_data.html">Reading and Writing Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loading_and_saving_objects.html">Loading and Saving Objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="handling_metadata.html">Handling Metadata</a></li>
+<li class="toctree-l2"><a class="reference internal" href="downsampling.html">Downsampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_exploration.html">Data Exploration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blocking.html">Blocking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="debugging_blocker_output.html">Debugging Blocker Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="combining_blocker_outputs.html">Combining Blocker Outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sampling.html">Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="labeling.html">Labeling</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="handling_features.html">Handling Features</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="creating_the_features_automatically.html">Creating the Features Automatically</a></li>
+<li class="toctree-l3"><a class="reference internal" href="creating_the_features_manually.html">Creating the Features Manually</a></li>
+<li class="toctree-l3"><a class="reference internal" href="adding_features.html">Adding Features to Feature Table</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Extracting Feature Vectors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="imputing_missing_values.html">Imputing Missing Values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="supported_similarity_functions.html">Supported Similarity Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="supported_tokenizers.html">Supported Tokenizers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="matching.html">Matching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="debugging_matcher.html">Debugging Matcher</a></li>
+<li class="toctree-l2"><a class="reference internal" href="triggers.html">Triggers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evaluating_the_matching_output.html">Evaluating the Matching Output</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="actual_commands.html#experimental-commands">Experimental Commands</a></li>
+</ul>
+<p class="caption"><span class="caption-text">How to Contribute</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing to py_entitymatching</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">py_entitymatching</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="actual_commands.html">Commands in py_entitymatching</a> &raquo;</li>
+        
+          <li><a href="handling_features.html">Handling Features</a> &raquo;</li>
+        
+      <li>Extracting Feature Vectors</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/user_manual/api/extracting_feature_vectors.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="extracting-feature-vectors">
+<h1>Extracting Feature Vectors<a class="headerlink" href="#extracting-feature-vectors" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt id="py_entitymatching.extract_feature_vecs">
+<code class="sig-prename descclassname">py_entitymatching.</code><code class="sig-name descname">extract_feature_vecs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">candset</span></em>, <em class="sig-param"><span class="n">attrs_before</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">feature_table</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">attrs_after</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">show_progress</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">n_jobs</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/feature/extractfeatures.html#extract_feature_vecs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_entitymatching.extract_feature_vecs" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function extracts feature vectors from a DataFrame (typically a
+labeled candidate set).</p>
+<p>Specifically, this function uses feature
+table, ltable and rtable (that is present in the <cite>candset</cite>’s
+metadata) to extract feature vectors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>candset</strong> (<em>DataFrame</em>) – The input candidate set for which the features
+vectors should be extracted.</p></li>
+<li><p><strong>attrs_before</strong> (<em>list</em>) – The list of attributes from the input candset,
+that should be added before the feature vectors (defaults to None).</p></li>
+<li><p><strong>feature_table</strong> (<em>DataFrame</em>) – A DataFrame containing a list of
+features that should be used to compute the feature vectors (
+defaults to None).</p></li>
+<li><p><strong>attrs_after</strong> (<em>list</em>) – The list of attributes from the input candset
+that should be added after the feature vectors (defaults to None).</p></li>
+<li><p><strong>verbose</strong> (<em>boolean</em>) – A flag to indicate whether the debug information
+should be displayed (defaults to False).</p></li>
+<li><p><strong>show_progress</strong> (<em>boolean</em>) – A flag to indicate whether the progress of
+extracting feature vectors must be displayed (defaults to True).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>A pandas DataFrame containing feature vectors.</p>
+<p>The DataFrame will have metadata ltable and rtable, pointing
+to the same ltable and rtable as the input candset.</p>
+<p>Also, the output
+DataFrame will have three columns: key, foreign key ltable, foreign
+key rtable copied from input candset to the output DataFrame. These
+three columns precede the columns mentioned in <cite>attrs_before</cite>.</p>
+</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>AssertionError</strong> – If <cite>candset</cite> is not of type pandas
+    DataFrame.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>attrs_before</cite> has attributes that
+    are not present in the input candset.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>attrs_after</cite> has attribtues that
+    are not present in the input candset.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>feature_table</cite> is set to None.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">match_f</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_features_for_matching</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># G is the labeled dataframe which should be converted into feature vectors</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">extract_feature_vecs</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="n">match_f</span><span class="p">,</span> <span class="n">attrs_before</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">],</span> <span class="n">attrs_after</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;gold_labels&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="imputing_missing_values.html" class="btn btn-neutral float-right" title="Imputing Missing Values" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="adding_features.html" class="btn btn-neutral float-left" title="Adding Features to Feature Table" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2016, anhaidgroup
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

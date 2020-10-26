@@ -77,3 +77,6 @@ html/
 
 notebooks/how-to-guides/bdata/
 garage/
+
+# macOS environment
+.DS_Store

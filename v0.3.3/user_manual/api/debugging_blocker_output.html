@@ -1,0 +1,420 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Debugging Blocker Output &mdash; py_entitymatching 0.3.3 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Combining Blocker Outputs" href="combining_blocker_outputs.html" />
+    <link rel="prev" title="Blocking" href="blocking.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> py_entitymatching
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">How To Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../how_to_guide.html">How to Guide To Do Entity Matching</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../whatisnew.html">What is New?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview of Supported EM Processes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides.html">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datastructures.html">Data Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../steps_supp_em_workflows.html">Steps of Supported EM Workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc.html">Miscellaneous</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview of Command Organization</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="actual_commands.html">Commands in py_entitymatching</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="reading_and_writing_data.html">Reading and Writing Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loading_and_saving_objects.html">Loading and Saving Objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="handling_metadata.html">Handling Metadata</a></li>
+<li class="toctree-l2"><a class="reference internal" href="downsampling.html">Downsampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_exploration.html">Data Exploration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blocking.html">Blocking</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Debugging Blocker Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="combining_blocker_outputs.html">Combining Blocker Outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sampling.html">Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="labeling.html">Labeling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="handling_features.html">Handling Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="matching.html">Matching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="debugging_matcher.html">Debugging Matcher</a></li>
+<li class="toctree-l2"><a class="reference internal" href="triggers.html">Triggers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evaluating_the_matching_output.html">Evaluating the Matching Output</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="actual_commands.html#experimental-commands">Experimental Commands</a></li>
+</ul>
+<p class="caption"><span class="caption-text">How to Contribute</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing to py_entitymatching</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">py_entitymatching</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="actual_commands.html">Commands in py_entitymatching</a> &raquo;</li>
+        
+      <li>Debugging Blocker Output</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/user_manual/api/debugging_blocker_output.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="debugging-blocker-output">
+<h1>Debugging Blocker Output<a class="headerlink" href="#debugging-blocker-output" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt id="py_entitymatching.debug_blocker">
+<code class="sig-prename descclassname">py_entitymatching.</code><code class="sig-name descname">debug_blocker</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">candidate_set</span></em>, <em class="sig-param"><span class="n">ltable</span></em>, <em class="sig-param"><span class="n">rtable</span></em>, <em class="sig-param"><span class="n">output_size</span><span class="o">=</span><span class="default_value">200</span></em>, <em class="sig-param"><span class="n">attr_corres</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">n_jobs</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">n_configs</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/debugblocker/debugblocker.html#debug_blocker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_entitymatching.debug_blocker" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function debugs the blocker output and reports a list of potential
+matches that are discarded by a blocker (or a blocker sequence).
+Specifically,  this function takes in the two input tables for
+matching and the candidate set returned by a blocker (or a blocker
+sequence), and produces a list of tuple pairs which are rejected by the
+blocker but with high potential of being true matches.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>candidate_set</strong> (<em>DataFrame</em>) – The candidate set generated by
+applying the blocker on the ltable and rtable.</p></li>
+<li><p><strong>ltable</strong> (<em>DataFrame</em>) – The input DataFrames that are used to
+generate the blocker output.</p></li>
+<li><p><strong>rtable</strong> (<em>DataFrame</em>) – The input DataFrames that are used to
+generate the blocker output.</p></li>
+<li><p><strong>output_size</strong> (<em>int</em>) – The number of tuple pairs that will be
+returned (defaults to 200).</p></li>
+<li><p><strong>attr_corres</strong> (<em>list</em>) – A list of attribute correspondence tuples.
+When ltable and rtable have different schemas, or the same
+schema but different words describing the attributes, the
+user needs to manually specify the attribute correspondence.
+Each element in this list should be a tuple of strings
+which are the corresponding attributes in ltable and rtable.
+The default value is None, and if the user doesn’t specify
+this list, a built-in function for finding the
+attribute correspondence list will be called. But we highly
+recommend the users manually specify the attribute
+correspondences, unless the schemas of ltable and rtable are
+identical (defaults to None).</p></li>
+<li><p><strong>verbose</strong> (<em>boolean</em>) – A flag to indicate whether the debug information
+should be logged (defaults to False).</p></li>
+<li><p><strong>n_jobs</strong> (<em>int</em>) – The number of parallel jobs to be used for computation
+(defaults to 1). If -1 all CPUs are used. If 0 or 1,
+no parallel computation is used at all, which is useful for
+debugging. For n_jobs below -1, (n_cpus + 1 + n_jobs) are
+used (where n_cpus are the total number of CPUs in the
+machine).Thus, for n_jobs = -2, all CPUs but one are used.
+If (n_cpus + 1 + n_jobs) is less than 1, then no parallel
+computation is used (i.e., equivalent to the default).</p></li>
+<li><p><strong>n_configs</strong> (<em>int</em>) – The maximum number of configs to be used for
+calculating the topk list(defaults to 1). If -1, the config
+number is set as the number of cpu. If -2, all configs are used.
+if n_configs is less than the maximum number of generated configs,
+then n_configs will be used. Otherwise, all the generated configs
+will be used.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A pandas DataFrame with ‘output_size’ number of rows. Each row in the
+DataFrame is a tuple pair which has potential of being a true
+match, but is rejected by the blocker (meaning that the tuple
+pair is in the Cartesian product of ltable and rtable subtracted
+by the candidate set). The fields in the returned DataFrame are
+from ltable and rtable, which are useful for determining similar
+tuple pairs.</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>AssertionError</strong> – If <cite>ltable</cite>, <cite>rtable</cite> or <cite>candset</cite> is not of type
+    pandas DataFrame.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>ltable</cite> or <cite>rtable</cite> is empty (size of 0).</p></li>
+<li><p><strong>AssertionError</strong> – If the output <cite>size</cite> parameter is less than or equal
+    to 0.</p></li>
+<li><p><strong>AssertionError</strong> – If the attribute correspondence (<cite>attr_corres</cite>) list is
+    not in the correct format (a list of tuples).</p></li>
+<li><p><strong>AssertionError</strong> – If the attribute correspondence (<cite>attr_corres</cite>)
+    cannot be built correctly.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ob</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">OverlapBlocker</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">C</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">block_tables</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">l_overlap_attr</span><span class="o">=</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="n">r_overlap_attr</span><span class="o">=</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="n">overlap_size</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">corres</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;ID&#39;</span><span class="p">,</span><span class="s1">&#39;ssn&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;ename&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;address&#39;</span><span class="p">,</span> <span class="s1">&#39;location&#39;</span><span class="p">),(</span><span class="s1">&#39;zipcode&#39;</span><span class="p">,</span> <span class="s1">&#39;zipcode&#39;</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">debug_blocker</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">attr_corres</span><span class="o">=</span><span class="n">corres</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ob</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">OverlapBlocker</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">C</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">block_tables</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">l_overlap_attr</span><span class="o">=</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="n">r_overlap_attr</span><span class="o">=</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="n">overlap_size</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">debug_blocker</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">output_size</span><span class="o">=</span><span class="mi">150</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="py_entitymatching.backup_debug_blocker">
+<code class="sig-prename descclassname">py_entitymatching.</code><code class="sig-name descname">backup_debug_blocker</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">candset</span></em>, <em class="sig-param"><span class="n">ltable</span></em>, <em class="sig-param"><span class="n">rtable</span></em>, <em class="sig-param"><span class="n">output_size</span><span class="o">=</span><span class="default_value">200</span></em>, <em class="sig-param"><span class="n">attr_corres</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/debugblocker/backup_debugblocker.html#backup_debug_blocker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_entitymatching.backup_debug_blocker" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the old version of the blocker debugger. It is not reccomended
+to use this version unless the new blocker debugger is not working properly.</p>
+<p>This function debugs the blocker output and reports a list of potential
+matches that are discarded by a blocker (or a blocker sequence).</p>
+<p>Specifically,  this function takes in the two input tables for
+matching and the candidate set returned by a blocker (or a blocker
+sequence), and produces a list of tuple pairs which are rejected by the
+blocker but with high potential of being true matches.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>candset</strong> (<em>DataFrame</em>) – The candidate set generated by
+applying the blocker on the ltable and rtable.</p></li>
+<li><p><strong>ltable</strong> (<em>DataFrame</em>) – The input DataFrames that are used to
+generate the blocker output.</p></li>
+<li><p><strong>rtable</strong> (<em>DataFrame</em>) – The input DataFrames that are used to
+generate the blocker output.</p></li>
+<li><p><strong>output_size</strong> (<em>int</em>) – The number of tuple pairs that will be
+returned (defaults to 200).</p></li>
+<li><p><strong>attr_corres</strong> (<em>list</em>) – A list of attribute correspondence tuples.
+When ltable and rtable have different schemas, or the same
+schema but different words describing the attributes, the
+user needs to manually specify the attribute correspondence.
+Each element in this list should be a tuple of strings
+which are the corresponding attributes in ltable and rtable.
+The default value is None, and if the user doesn’t specify
+this list, a built-in function for finding the
+attribute correspondence list will be called. But we highly
+recommend the users manually specify the attribute
+correspondences, unless the schemas of ltable and rtable are
+identical (defaults to None).</p></li>
+<li><p><strong>verbose</strong> (<em>boolean</em>) – A flag to indicate whether the debug information
+should be logged (defaults to False).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A pandas DataFrame with ‘output_size’ number of rows. Each row in the
+DataFrame is a tuple pair which has potential of being a true
+match, but is rejected by the blocker (meaning that the tuple
+pair is in the Cartesian product of ltable and rtable subtracted
+by the candidate set). The fields in the returned DataFrame are
+from ltable and rtable, which are useful for determining similar
+tuple pairs.</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>AssertionError</strong> – If <cite>ltable</cite>, <cite>rtable</cite> or <cite>candset</cite> is not of type
+    pandas DataFrame.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>ltable</cite> or <cite>rtable</cite> is empty (size of 0).</p></li>
+<li><p><strong>AssertionError</strong> – If the output <cite>size</cite> parameter is less than or equal
+    to 0.</p></li>
+<li><p><strong>AssertionError</strong> – If the attribute correspondence (<cite>attr_corres</cite>) list is
+    not in the correct format (a list of tuples).</p></li>
+<li><p><strong>AssertionError</strong> – If the attribute correspondence (<cite>attr_corres</cite>)
+    cannot be built correctly.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ob</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">OverlapBlocker</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">C</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">block_tables</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">l_overlap_attr</span><span class="o">=</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="n">r_overlap_attr</span><span class="o">=</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="n">overlap_size</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">corres</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;ID&#39;</span><span class="p">,</span><span class="s1">&#39;ssn&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;ename&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;address&#39;</span><span class="p">,</span> <span class="s1">&#39;location&#39;</span><span class="p">),(</span><span class="s1">&#39;zipcode&#39;</span><span class="p">,</span> <span class="s1">&#39;zipcode&#39;</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">backup_debug_blocker</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">attr_corres</span><span class="o">=</span><span class="n">corres</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ob</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">OverlapBlocker</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">C</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">block_tables</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">l_overlap_attr</span><span class="o">=</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="n">r_overlap_attr</span><span class="o">=</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="n">overlap_size</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">D</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">backup_debug_blocker</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">output_size</span><span class="o">=</span><span class="mi">150</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="combining_blocker_outputs.html" class="btn btn-neutral float-right" title="Combining Blocker Outputs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="blocking.html" class="btn btn-neutral float-left" title="Blocking" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2016, anhaidgroup
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
