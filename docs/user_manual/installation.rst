@@ -4,12 +4,12 @@ Installation
 
 Requirements
 ------------
-* Python 2.7 or Python 3.5+
+* Python 2.7, 3.5, 3.6, or 3.7
 
 Platforms
 ---------
-py_entitymatching has been tested on Linux (Redhat enterprise Linux with 2.6
-.32 kernel), OS X (Sierra), and Windows 10.
+py_entitymatching has been tested on Linux (Ubuntu Xenial 16.04.6), macOS (High Sierra 10.13.6),
+and Windows 10.
 
 Dependencies
 ------------
@@ -29,6 +29,13 @@ Dependencies
 * openrefine (provides data exploration tool for tables)
 * ipython (provides better tools for displaying tables in notebooks)
 * scipy (dependency for skikit-learn)
+
+See the `project README <https://github.com/anhaidgroup/py_entitymatching/blob/master/README.rst>`
+for more information.
+
+.. note::
+
+    If using Python 2, py_entitymatching requires numpy less than 1.17; if using Python 3.5, numpy less than 1.19
 
 C Compiler Required
 -------------------

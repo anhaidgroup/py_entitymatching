@@ -82,7 +82,7 @@ if __name__ == "__main__":
                  ]
     setuptools.setup(
         name='py_entitymatching',
-        version='0.3.2',
+        version='0.3.3',
         description='Python library for end to end Entity Matching.',
         long_description=LONG_DESCRIPTION,
         url='https://sites.google.com/site/anhaidgroup/projects/magellan/py_entitymatching',
@@ -123,7 +123,7 @@ if __name__ == "__main__":
             'pyparsing >= 2.1.4',
             'scikit-learn >= 0.18,<0.22',
             'scipy',
-            'numpy==1.16.2'
+            'numpy'
         ],
         ext_modules=extensions,
         cmdclass=cmdclass,

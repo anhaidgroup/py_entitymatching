@@ -1,7 +1,4 @@
-What is New?
-============
-
-Compared to Version 0.3.2, the followings are new:
+v0.3.3 - 10/19/2020
   * Started tracking release changes in CHANGES.txt.
   * Minorly updated usage of Pandas to prevent a dependency on downgraded versions.
   * Added stricter scikit-learn dependency requirements to preserve old Imputer API; will change in future release.
