@@ -101,12 +101,10 @@ if __name__ == "__main__":
             'Operating System :: MacOS',
             'Operating System :: Microsoft :: Windows',
             'Programming Language :: Python',
-            'Programming Language :: Python :: 2',
             'Programming Language :: Python :: 3',
-            'Programming Language :: Python :: 2.7',
-            'Programming Language :: Python :: 3.5',
             'Programming Language :: Python :: 3.6',
             'Programming Language :: Python :: 3.7',
+            'Programming Language :: Python :: 3.8',
             'Topic :: Scientific/Engineering',
             'Topic :: Utilities',
             'Topic :: Software Development :: Libraries',
@@ -121,7 +119,7 @@ if __name__ == "__main__":
             # dependencies such as py_stringmatching, joblib, pyprind
             'cloudpickle >= 0.2.1',
             'pyparsing >= 2.1.4',
-            'scikit-learn >= 0.18,<0.22',
+            'scikit-learn >= 0.22',
             'scipy',
             'numpy'
         ],
