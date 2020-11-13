@@ -86,7 +86,7 @@ compiler:
 
 before_install:
   - if [ "$TRAVIS_OS_NAME" == linux ]; then MINICONDAVERSION="Linux"; else MINICONDAVERSION="MacOSX"; fi
-  - wget http://repo.continuum.io/miniconda/Miniconda3-latest-$MINICONDAVERSION-x86_64.sh -O miniconda.sh; fi
+  - wget http://repo.continuum.io/miniconda/Miniconda3-latest-$MINICONDAVERSION-x86_64.sh -O miniconda.sh
   - bash miniconda.sh -b -p $HOME/miniconda
   - export PATH="$HOME/miniconda/bin:$PATH"
   - conda create --yes -n py_entitymatching_test_env python=$PYTHON_VERSION --no-default-packages
