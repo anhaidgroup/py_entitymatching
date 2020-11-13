@@ -48,6 +48,9 @@ test_script:
   # Nosetests take care of unit tests
   - nosetests
   
+  # Test distribution
+  - python setup.py sdist bdist_wheel
+  
   # Behave runs the example scripts and tries to verify if it produces the right output
   #- behave --tags ~@skip # Everything without the tag @skip
 
