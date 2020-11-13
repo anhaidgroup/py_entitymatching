@@ -30,16 +30,6 @@ matrix:
     env:
       - PYTHON_VERSION=3.8
       - INSTALL_METHOD=pip
-  - os: linux
-    python: 3.9
-    env:
-      - PYTHON_VERSION=3.9
-      - INSTALL_METHOD=src
-  - os: linux
-    python: 3.9
-    env:
-      - PYTHON_VERSION=3.9
-      - INSTALL_METHOD=pip
   - os: osx                                                                     
     language: generic                                                           
     env:                                                                        
@@ -69,16 +59,6 @@ matrix:
     language: generic
     env:
       - PYTHON_VERSION=3.8
-      - INSTALL_METHOD=pip
-  - os: osx
-    language: generic
-    env:
-      - PYTHON_VERSION=3.9
-      - INSTALL_METHOD=src
-  - os: osx
-    language: generic
-    env:
-      - PYTHON_VERSION=3.9
       - INSTALL_METHOD=pip
 
 compiler:
