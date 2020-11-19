@@ -112,7 +112,7 @@ if __name__ == "__main__":
         packages=packages,
         install_requires=[
             'requests',
-            'ipython==5.6',
+            'ipython>=5.6',
             'matplotlib>=2.2.4',
             'PyPrind',
             'py-stringsimjoin>=0.3.0',
