@@ -4,7 +4,7 @@ Installation
 
 Requirements
 ------------
-* Python 2.7, 3.5, 3.6, or 3.7
+* Python 2.7, 3.5, 3.6, 3.7, or 3.8
 
 Platforms
 ---------
@@ -32,10 +32,6 @@ Dependencies
 
 See the `project README <https://github.com/anhaidgroup/py_entitymatching/blob/master/README.rst>`
 for more information.
-
-.. note::
-
-    If using Python 2, py_entitymatching requires numpy less than 1.17; if using Python 3.5, numpy less than 1.19
 
 C Compiler Required
 -------------------

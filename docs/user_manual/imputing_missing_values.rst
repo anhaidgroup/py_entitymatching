@@ -1,7 +1,7 @@
 =======================
 Imputing Missing Values
 =======================
-While doing supoervised learning-based matching, you would need to create labeled sample,
+While doing supervised learning-based matching, you would need to create labeled sample,
 convert the sample into table of feature vectors, fill in the missing values, select
 a machine learning (ML) model and use it to produce matches.
 

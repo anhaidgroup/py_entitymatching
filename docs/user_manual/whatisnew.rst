@@ -1,9 +1,9 @@
 What is New?
 ============
 
-Compared to Version 0.3.2, the followings are new:
-  * Started tracking release changes in CHANGES.txt.
-  * Minorly updated usage of Pandas to prevent a dependency on downgraded versions.
-  * Added stricter scikit-learn dependency requirements to preserve old Imputer API; will change in future release.
-  * Users can now provide metadata for blackbox features (ex. left_attribute, right_attribute, etc.).
-  * This is the last version of py_entitymatching that will support Python 2 and Python 3.5.
+Compared to Version 0.3.3, the followings are new:
+  * Dropped support for Python 2 and 3.5.
+  * To support Python 3.8, updated the function
+    :code:`py_entitymatching.matcher.matcherutils.impute_table()` to use current
+    scikit-learn's :code:`SimpleImputer`; see :ref:`Imputing Missing Values` for correct
+    usage.

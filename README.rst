@@ -32,10 +32,10 @@ Dependencies
 
 The required dependencies to build the packages are:
 
-* numpy 1.7.0 or higher; if using Python 2, numpy < 1.17; if using Python 3.5, numpy < 1.19. Tested on version 1.16.2.
-* pandas (provides data structures to store and manage tables). Tested on version 1.1.3.
-* scikit-learn (provides implementations for common machine learning algorithms); ≥ 0.18, < 0.22. Tested on version 0.20.0.
-* joblib (provides multiprocessing capabilities). Tested on version 1.17.0.
+* numpy 1.7.0 or higher. Tested on version 1.19.4.
+* pandas (provides data structures to store and manage tables). Tested on version 1.1.4.
+* scikit-learn 0.22 or higher (provides implementations for common machine learning algorithms). Tested on version 0.23.2.
+* joblib (provides multiprocessing capabilities). Tested on version 0.17.0.
 * py_stringsimjoin (provides implementations for string similarity joins). Tested on version 0.3.2.
 * py_stringmatching (provides a set of string tokenizers and string similarity functions). Tested on version 0.4.2.
 * cloudpickle (provides functions to serialize Python constructs). Tested on version 1.6.0.
