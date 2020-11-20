@@ -48,3 +48,15 @@ script:
   - source activate py_entitymatching_test_env
   - nosetests -s
   - python setup.py sdist bdist_wheel  # Test distribution
+
+# https://docs.travis-ci.com/user/deployment/pypi/
+deploy:
+  provider: pypi
+  username: "__token__"
+  password:
+    secure: "jC6367hKIEWtvhHRytl9AXs/yWpEajkl0bpSF8xtus5pDZno94J0QBx6RWAXihDc0/P8IDMFpvKX4FHIzlMQ00kZEiKdR9SrQ/hdS3Yjup1YuUxsLGyP/AXc7eqDkzdpNMfMI3v5mHm1EyhDw5h7M4GMUYU2+pXFR0Q2XXiF9z1iUnwyNyTgQ/UyhAJYgWcU3Ja6L5a2CmpYeFaCRIAFqoMYkqqTpr16PedyYgIee+rko/z3dBGktCB3a+z8s9D3prdTRS1YnTxkkP0zeovmISt54hXsx49jFiBsRvj6kD18mUSJG3RgKQCEIRXc7KbYOun25dD0KMCVZF8k63HgbOhu/h1/DfD0y4ZmcKjMoS3bknYTYXf0wUCzlqkaRsvnWrwEgF+5hjbgvNpilRAeyMO4vshmUQP6FP221zyE4FgXepaECf4UnIut/7n63p2B6k+8DB8FI5a/v6/uWHUhsHqBIczAoEvt6c+Lrk2/GOzNlKnVmu9GLOqdXakFTf9mu+DF5xBEeX2ZgTggWsxqnRTHAPjYwIIOAPcREOX1wYYSt0l79YQmS/xArNaBnb6IQcFH5eMFwKHGlYjVmXAdOueYMLTmy1V3MnELXmKznm5AoN7Zi1u1S4TkiZvFkqbpfFAzS/MwlB5ZuzbqsxmWjNijGwd4szdaWyiod/2EoN4="
+  on:
+    tags: true
+  distributions: "sdist bdist_wheel"
+  skip_existing: true
+  # skip_cleanup: true
