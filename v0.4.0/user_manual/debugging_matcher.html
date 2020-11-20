@@ -1,0 +1,368 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Debugging ML-Matchers &mdash; py_entitymatching 0.4.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Combining Predictions from Multiple Matchers" href="matchercombiner.html" />
+    <link rel="prev" title="Selecting a ML-Matcher" href="select_best_matcher.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> py_entitymatching
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.4
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">How To Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../how_to_guide.html">How to Guide To Do Entity Matching</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User Manual</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="whatisnew.html">What is New?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview of Supported EM Processes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides.html">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datastructures.html">Data Structures</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="steps_supp_em_workflows.html">Steps of Supported EM Workflows</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="read_csv_files.html">Reading the CSV Files from Disk</a></li>
+<li class="toctree-l2"><a class="reference internal" href="down_sampling.html">Down Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="profiling.html">Profiling Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_exploration.html">Data Exploration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blocking.html">Specifying Blockers and Performing Blocking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="create_feats_for_blocking.html">Creating Features for Blocking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="debugging_blocking.html">Debugging Blocking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sampling.html">Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="labeling.html">Labeling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="split_train_test.html">Splitting Labeled Data into Training and Testing Sets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="create_feats_for_matching.html">Creating Features for Matching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extract_feat_vecs.html">Extracting Feature Vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="imputing_missing_values.html">Imputing Missing Values</a></li>
+<li class="toctree-l2"><a class="reference internal" href="matching.html">Specifying Matchers and Performing Matching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="select_best_matcher.html">Selecting a ML-Matcher</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Debugging ML-Matchers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#debugging-using-the-gui">Debugging Using the GUI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#debugging-using-the-command-line">Debugging Using the Command Line</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#impact-of-imputing-missing-values">Impact of Imputing Missing Values</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="matchercombiner.html">Combining Predictions from Multiple Matchers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="triggers.html">Using Triggers to Update Matching Results</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evaluate_matching.html">Evaluating the Matching Output</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="misc.html">Miscellaneous</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/overview.html">Overview of Command Organization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/actual_commands.html">Commands in py_entitymatching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/actual_commands.html#experimental-commands">Experimental Commands</a></li>
+</ul>
+<p class="caption"><span class="caption-text">How to Contribute</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing to py_entitymatching</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">py_entitymatching</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="steps_supp_em_workflows.html">Steps of Supported EM Workflows</a> &raquo;</li>
+        
+      <li>Debugging ML-Matchers</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/user_manual/debugging_matcher.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="debugging-ml-matchers">
+<h1>Debugging ML-Matchers<a class="headerlink" href="#debugging-ml-matchers" title="Permalink to this headline">¶</a></h1>
+<p>While doing entity matching you would like to choose a matcher that produces the desired
+precision, recall or F1 numbers. If a matcher does not produce the desired accuracy, then
+you would like to debug the matcher. py_entitymatching supports two ways to
+debug: (1) using the GUI, and (2) using the command line.</p>
+<div class="section" id="debugging-using-the-gui">
+<h2>Debugging Using the GUI<a class="headerlink" href="#debugging-using-the-gui" title="Permalink to this headline">¶</a></h2>
+<p>py_entitymatching supports debugging using the GUI for a subset of ML-based matchers.
+Specifically, it supports debugging Decision Tree matcher and Random Forest matcher.
+You can use <cite>vis_debug_dt</cite> and <cite>vis_debug_rf</cite> to debug Decision Tree matcher
+and Random Forest matcher respectively.</p>
+<p>An example of using <cite>vis_debug_dt</cite> is shown below:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dt</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">DTMatcher</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">train_test</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">split_train_test</span><span class="p">(</span><span class="n">devel</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">train</span><span class="p">,</span> <span class="n">test</span> <span class="o">=</span> <span class="n">train_test</span><span class="p">[</span><span class="s1">&#39;train&#39;</span><span class="p">],</span> <span class="n">train_test</span><span class="p">[</span><span class="s1">&#39;test&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">vis_debug_dt</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">train</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;_id&#39;</span><span class="p">,</span> <span class="s1">&#39;ltable_id&#39;</span><span class="p">,</span> <span class="s1">&#39;rtable_id&#39;</span><span class="p">],</span> <span class="n">target_attr</span><span class="o">=</span><span class="s1">&#39;gold_labels&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The command would display a GUI containing evaluation summary and an option to see tuples
+flagged as <cite>false positives</cite> or <cite>false negatives</cite>. If you select <cite>false positives</cite>
+then false positive tuple pairs would be displayed in the adjoining window. Similarly,
+if <cite>false negatives</cite> is selected then false negative tuple pairs would be
+displayed. By default, <cite>false positives</cite> is selected.
+Each tuple pair is displayed with two buttons: <cite>show</cite> and <cite>debug</cite>. If you click on
+<cite>show</cite>, then individual tuples (of that tuple pair) are displayed in a separate window.
+If you click on <cite>debug</cite>, then a window with individual tuples and the
+path taken by the feature vector in the Decision Tree that leads to the predicted value
+is displayed.</p>
+<p>The usage of <cite>vis_debug_rf</cite> is same as <cite>vis_debug_dt</cite>. The command would display a GUI
+similar to <cite>vis_debug_dt</cite>, except the debug window would list a set of trees. You can
+expand each tree to see the path taken by the features in that tree.</p>
+<p>Please refer to the API reference of <code class="xref py py-meth docutils literal notranslate"><span class="pre">vis_debug_dt()</span></code> and
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">vis_debug_rf()</span></code> for more details.</p>
+<p>If you want to debug a Decision Tree matcher or Random Forest matcher using GUI,
+then we recommend the following steps:</p>
+<ol class="arabic simple">
+<li><p>In the displayed GUI, check precision and recall numbers in evaluation summary.</p></li>
+<li><p>If the user wants to improve precision, then he/she should choose to see false positives.</p></li>
+<li><p>If the user wants to improve recall, then he/she should choose to see false negatives.</p></li>
+<li><p>In the displayed (false positive/false negative) tuple pairs,
+you can click on the <cite>show</cite> button to see the tuples from the left and right tables.</p></li>
+<li><p>In the displayed (false positive/false negative) tuple pairs, you can choose a tuple
+and click on the <cite>debug</cite> button to see the detailed evaluation path of that tuple.</p></li>
+<li><p>Based on the input tuples, predicates at each node and the actual feature value,
+you should decide on the next step. Some of the possible next steps are
+cleaning  the input data, adding more features, adding more training data, trying a
+different matcher, etc.</p></li>
+</ol>
+</div>
+<div class="section" id="debugging-using-the-command-line">
+<h2>Debugging Using the Command Line<a class="headerlink" href="#debugging-using-the-command-line" title="Permalink to this headline">¶</a></h2>
+<p>Similar to debugging using the GUI, py_entitymatching supports command line debugging for two
+ML matchers: Decision Tree and Random Forest. Currently, py_entitymatching  supports
+command line debugging only using tuple pairs, other approaches are left for future work.</p>
+<p>You can use <cite>debug_decisiontree_matcher</cite> and <cite>debug_randomforest_matcher</cite> to debug
+Decision Tree matcher and Random Forest matcher respectively.</p>
+<p>An example of using <cite>debug_decisiontree_matcher</cite> is shown below:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">H</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">extract_feat_vecs</span><span class="p">(</span><span class="n">devel</span><span class="p">,</span> <span class="n">feat_table</span><span class="o">=</span><span class="n">match_f</span><span class="p">,</span> <span class="n">attrs_after</span><span class="o">=</span><span class="s1">&#39;gold_labels&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dt</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">DTMatcher</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dt</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="n">H</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;_id&#39;</span><span class="p">,</span> <span class="s1">&#39;ltable_id&#39;</span><span class="p">,</span> <span class="s1">&#39;rtable_id&#39;</span><span class="p">,</span> <span class="s1">&#39;gold_labels&#39;</span><span class="p">],</span> <span class="n">target_attr</span><span class="o">=</span><span class="s1">&#39;gold_labels&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">out</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="n">F</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;_id&#39;</span><span class="p">,</span> <span class="s1">&#39;ltable_id&#39;</span><span class="p">,</span> <span class="s1">&#39;rtable_id&#39;</span><span class="p">,</span> <span class="s1">&#39;gold_labels&#39;</span><span class="p">],</span> <span class="n">target_attr</span><span class="o">=</span><span class="s1">&#39;gold_labels&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">debug_decisiontree_matcher</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">A</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">B</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">match_f</span><span class="p">,</span> <span class="n">H</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;_id&#39;</span><span class="p">,</span> <span class="s1">&#39;ltable_id&#39;</span><span class="p">,</span> <span class="s1">&#39;rtable_id&#39;</span><span class="p">,</span> <span class="s1">&#39;gold_labels&#39;</span><span class="p">],</span> <span class="n">target_attr</span><span class="o">=</span><span class="s1">&#39;gold_labels&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In the above, the debug command prints the path taken by the feature vector, its
+evaluation status at each node and the actual feature value at each node.</p>
+<p>The usage of <cite>debug_randomforest_matcher</cite> is same as <cite>debug_decisiontree_matcher</cite>.
+Similar to <cite>debug_decisiontree_matcher</cite> command, it prints the path taken by the feature
+vector, except that it displays the path taken in each tree of the Random Forest.</p>
+<p>Please refer to the API reference of <code class="xref py py-meth docutils literal notranslate"><span class="pre">debug_decisiontree_matcher()</span></code>
+and <code class="xref py py-meth docutils literal notranslate"><span class="pre">debug_randomforest_matcher()</span></code> for more details.</p>
+<p>If you want to debug a Decision Tree matcher or Random
+Forest matcher using the command line, then we recommend the following steps:</p>
+<ol class="arabic simple">
+<li><p>Evaluate the accuracy of predictions using user created labels. The evaluation can
+be done using <code class="xref py py-meth docutils literal notranslate"><span class="pre">eval_matches()</span></code> command.</p></li>
+<li><p>If you want to improve precision, then he/she should debug false positives.</p></li>
+<li><p>If you want to improve recall, then he/she should debug false negatives.</p></li>
+<li><p>You should then retrieve the tuples from the tuple id pairs listed in evaluation
+summary, and debug using the commands described above.</p></li>
+<li><p>Based on the input tuples, predicates at each node and the actual feature value,
+you should decide on the next step. Some of the possible next steps are clean
+the input data, add more features, add more training data, try different matcher, etc.</p></li>
+</ol>
+</div>
+<div class="section" id="impact-of-imputing-missing-values">
+<h2>Impact of Imputing Missing Values<a class="headerlink" href="#impact-of-imputing-missing-values" title="Permalink to this headline">¶</a></h2>
+<p>You should be aware of the following subtleties as it would
+have an impact when he/she imputes values to feature vector set:</p>
+<p>1. When you use the GUI for debugging, you would first choose to see
+false positives/false negatives and then you would click the <cite>debug</cite> button to debug
+that tuple pair. In this case, the feature vector in that row is given as input to find the path
+traversed in the Decision Tree. If you had imputed the feature vector set to get
+rid of NaN’s, then the imputed values would be considered to find the path traversed.</p>
+<p>2. When you use the command line for debugging, then you would first evaluate the
+predictions, select false positive or false negative tuple pairs to debug, retrieve the
+tuples from the left and right tables and finally give them as input to command line
+debugger commands. If you had imputed the feature vector set to get rid of NaN’s (using
+a aggregate strategy), then imputed values would not be known to the debugger.</p>
+<p>So if the input tables have NaN’s, then the output of the command line debugger would only
+be partially correct (i.e., the displayed predicates would be correct, but the predicate
+outcome may differ between current tuple pair and the actual feature vector used during
+prediction).</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="matchercombiner.html" class="btn btn-neutral float-right" title="Combining Predictions from Multiple Matchers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="select_best_matcher.html" class="btn btn-neutral float-left" title="Selecting a ML-Matcher" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2016, anhaidgroup
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
