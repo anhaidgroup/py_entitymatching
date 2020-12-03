@@ -22,9 +22,9 @@ Important links
 
 * Project Homepage: https://sites.google.com/site/anhaidgroup/projects/magellan/py_entitymatching
 * Code repository: https://github.com/anhaidgroup/py_entitymatching
-* User Manual: http://anhaidgroup.github.io/py_entitymatching/v0.3.3/index.html
-* Guides: http://anhaidgroup.github.io/py_entitymatching/v0.3.3/user_manual/guides.html
-* How to Contribute: http://anhaidgroup.github.io/py_entitymatching/v0.3.3/contributing.html
+* User Manual: http://anhaidgroup.github.io/py_entitymatching/v0.4.0/index.html
+* Guides: http://anhaidgroup.github.io/py_entitymatching/v0.4.0/user_manual/guides.html
+* How to Contribute: http://anhaidgroup.github.io/py_entitymatching/v0.4.0/contributing.html
 * Issue Tracker: https://github.com/anhaidgroup/py_entitymatching/issues
 
 Dependencies
