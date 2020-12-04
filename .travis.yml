@@ -1,98 +1,62 @@
 matrix:
   include:
-  - os: linux
-    python: 2.7
-    env:
-      - PYTHON_VERSION=2.7
-      - INSTALL_METHOD=src
-  - os: linux
-    python: 2.7
-    env:
-      - PYTHON_VERSION=2.7
-      - INSTALL_METHOD=pip
-  - os: linux
-    python: 3.5
-    env:
-      - PYTHON_VERSION=3.5
-      - INSTALL_METHOD=src
-  - os: linux
-    python: 3.5
-    env:
-      - PYTHON_VERSION=3.5
-      - INSTALL_METHOD=pip
   - os: linux                                                                   
     python: 3.6                                                                 
     env:
       - PYTHON_VERSION=3.6
-      - INSTALL_METHOD=src
-  - os: linux                                                                   
-    python: 3.6                                                                 
-    env:
-      - PYTHON_VERSION=3.6
-      - INSTALL_METHOD=pip
   - os: linux
     python: 3.7
     env:
       - PYTHON_VERSION=3.7
-      - INSTALL_METHOD=src
   - os: linux
-    python: 3.7
+    python: 3.8
     env:
-      - PYTHON_VERSION=3.7
-      - INSTALL_METHOD=pip
-  - os: osx
-    language: generic
-    env:
-      - PYTHON_VERSION=2.7
-      - INSTALL_METHOD=src
-  - os: osx
-    language: generic
-    env:
-      - PYTHON_VERSION=2.7
-      - INSTALL_METHOD=pip
-  - os: osx
-    language: generic
-    env:
-      - PYTHON_VERSION=3.5
-      - INSTALL_METHOD=src
-  - os: osx
-    language: generic
-    env:
-      - PYTHON_VERSION=3.5
-      - INSTALL_METHOD=pip
+      - PYTHON_VERSION=3.8
   - os: osx                                                                     
     language: generic                                                           
     env:                                                                        
       - PYTHON_VERSION=3.6
-      - INSTALL_METHOD=src
-  - os: osx                                                                     
-    language: generic                                                           
-    env:                                                                        
-      - PYTHON_VERSION=3.6
-      - INSTALL_METHOD=pip
   - os: osx
     language: generic
     env:
       - PYTHON_VERSION=3.7
-      - INSTALL_METHOD=src
   - os: osx
     language: generic
     env:
-      - PYTHON_VERSION=3.7
-      - INSTALL_METHOD=pip
+      - PYTHON_VERSION=3.8
 
 compiler:
     - gcc
 
 before_install:
   - if [ "$TRAVIS_OS_NAME" == linux ]; then MINICONDAVERSION="Linux"; else MINICONDAVERSION="MacOSX"; fi
-  - if [ "$PYTHON_VERSION" == "2.7" ]; then wget http://repo.continuum.io/miniconda/Miniconda2-latest-$MINICONDAVERSION-x86_64.sh -O miniconda.sh; fi
-  - if [ "$PYTHON_VERSION" != "2.7" ]; then wget http://repo.continuum.io/miniconda/Miniconda3-latest-$MINICONDAVERSION-x86_64.sh -O miniconda.sh; fi
+  - wget http://repo.continuum.io/miniconda/Miniconda3-latest-$MINICONDAVERSION-x86_64.sh -O miniconda.sh
   - bash miniconda.sh -b -p $HOME/miniconda
   - export PATH="$HOME/miniconda/bin:$PATH"
   - conda create --yes -n py_entitymatching_test_env python=$PYTHON_VERSION --no-default-packages
-  - python --version  
+  - python --version
+  - which gcc
 
-install: TRAVIS_OS_NAME="$TRAVIS_OS_NAME" ./ci-scripts/install-${INSTALL_METHOD}.sh
+install:
+  - source activate py_entitymatching_test_env
+  - pip install -r requirements.txt
+  - pip install nose Cython
+  - python setup.py install
+  - python setup.py build_ext --inplace
 
-script: ./ci-scripts/test-from-${INSTALL_METHOD}.sh
+script:
+  - source activate py_entitymatching_test_env
+  - nosetests -s
+  - python setup.py sdist bdist_wheel  # Test distribution
+
+# https://docs.travis-ci.com/user/deployment/pypi/
+deploy:
+  provider: pypi
+  username: "__token__"
+  password:
+    secure: "jC6367hKIEWtvhHRytl9AXs/yWpEajkl0bpSF8xtus5pDZno94J0QBx6RWAXihDc0/P8IDMFpvKX4FHIzlMQ00kZEiKdR9SrQ/hdS3Yjup1YuUxsLGyP/AXc7eqDkzdpNMfMI3v5mHm1EyhDw5h7M4GMUYU2+pXFR0Q2XXiF9z1iUnwyNyTgQ/UyhAJYgWcU3Ja6L5a2CmpYeFaCRIAFqoMYkqqTpr16PedyYgIee+rko/z3dBGktCB3a+z8s9D3prdTRS1YnTxkkP0zeovmISt54hXsx49jFiBsRvj6kD18mUSJG3RgKQCEIRXc7KbYOun25dD0KMCVZF8k63HgbOhu/h1/DfD0y4ZmcKjMoS3bknYTYXf0wUCzlqkaRsvnWrwEgF+5hjbgvNpilRAeyMO4vshmUQP6FP221zyE4FgXepaECf4UnIut/7n63p2B6k+8DB8FI5a/v6/uWHUhsHqBIczAoEvt6c+Lrk2/GOzNlKnVmu9GLOqdXakFTf9mu+DF5xBEeX2ZgTggWsxqnRTHAPjYwIIOAPcREOX1wYYSt0l79YQmS/xArNaBnb6IQcFH5eMFwKHGlYjVmXAdOueYMLTmy1V3MnELXmKznm5AoN7Zi1u1S4TkiZvFkqbpfFAzS/MwlB5ZuzbqsxmWjNijGwd4szdaWyiod/2EoN4="
+  on:
+    tags: true
+  distributions: "sdist bdist_wheel"
+  skip_existing: true
+  # skip_cleanup: true
