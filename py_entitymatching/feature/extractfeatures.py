@@ -19,14 +19,78 @@ import py_entitymatching.catalog.catalog_manager as cm
 import py_entitymatching.utils.catalog_helper as ch
 import py_entitymatching.utils.generic_helper as gh
 from py_entitymatching.io.pickles import save_object, load_object
-from py_entitymatching.utils.validation_helper import validate_object_type
+from py_entitymatching.utils.validation_helper import (
+    validate_object_type,
+    validate_subclass
+)
 
 logger = logging.getLogger(__name__)
 
 
+class BaseFeatureExtractor(object):
+    pass
+
+
+class ParallelFeatureExtractor(BaseFeatureExtractor):
+    
+    def __init__(self, feature_table, n_jobs=1, verbose=False, show_progress=True):
+        self.feature_table = feature_table
+        self.n_jobs = n_jobs
+        self.verbose = verbose
+        self.show_progress = show_progress
+    
+    def extract_from(self, candset):
+        
+        # Get metadata for candidate set
+        key, fk_ltable, fk_rtable, ltable, rtable, l_key, r_key = \
+            cm.get_metadata_for_candset(candset, logger, self.verbose)
+        
+        # Set index for convenience
+        l_df = ltable.set_index(l_key, drop=False)
+        r_df = rtable.set_index(r_key, drop=False)
+        
+        # Apply feature functions
+        ch.log_info(logger, 'Applying feature functions', self.verbose)
+        col_names = list(candset.columns)
+        fk_ltable_idx = col_names.index(fk_ltable)
+        fk_rtable_idx = col_names.index(fk_rtable)
+
+        n_procs = get_num_procs(self.n_jobs, len(candset))
+
+        c_splits = np.array_split(candset, n_procs)
+
+        pickled_obj = cloudpickle.dumps(self.feature_table)
+
+        feat_vals_by_splits = Parallel(n_jobs=n_procs)(
+            delayed(get_feature_vals_by_cand_split)(
+                pickled_obj,
+                fk_ltable_idx,
+                fk_rtable_idx,
+                l_df,
+                r_df,
+                c_split,
+                self.show_progress and i == len(c_splits) - 1
+            )
+            for i, c_split in enumerate(c_splits)
+        )
+
+        feat_vals = sum(feat_vals_by_splits, [])
+        return feat_vals
+
+
+class DistinctFeatureExtractor(BaseFeatureExtractor):
+    
+    def __init__(self):
+        pass
+    
+    def extract_from(self):
+        pass
+
+
 def extract_feature_vecs(candset, attrs_before=None, feature_table=None,
                          attrs_after=None, verbose=False,
-                         show_progress=True, n_jobs=1):
+                         show_progress=True, n_jobs=1,
+                         FeatureExtractor=ParallelFeatureExtractor):
     """
     This function extracts feature vectors from a DataFrame (typically a
     labeled candidate set).
@@ -84,11 +148,18 @@ def extract_feature_vecs(candset, attrs_before=None, feature_table=None,
 
 
     """
+    # (Matt) Stage 1: Input validation
     # Validate input parameters
 
     # # We expect the input candset to be of type pandas DataFrame.
     validate_object_type(candset, pd.DataFrame, error_prefix='Input cand.set')
+    
+    # # We expect the FeatureExtractor class to be of type BaseFeatureExtractor
+    validate_subclass(FeatureExtractor, BaseFeatureExtractor, error_prefix='Input FeatureExtractor')
 
+    # (Matt) The two blocks below are making sure that attributes that are to be appended
+    # to this function's output do in fact exist in the input DataFrame
+    
     # # If the attrs_before is given, Check if the attrs_before are present in
     # the input candset
     if attrs_before != None:
@@ -111,6 +182,7 @@ def extract_feature_vecs(candset, attrs_before=None, feature_table=None,
                 'The attributes mentioned in attrs_after is not present '
                 'in the input table')
 
+    # (Matt) Why not make sure that this is a DataFrame instead of just nonempty?
     # We expect the feature table to be a valid object
     if feature_table is None:
         logger.error('Feature table cannot be null')
@@ -122,9 +194,11 @@ def extract_feature_vecs(candset, attrs_before=None, feature_table=None,
                         'fk rtable, '
                         'ltable, rtable, ltable key, rtable key', verbose)
 
+    # (Matt) ch ~ catalog helper
     # # Get metadata
     ch.log_info(logger, 'Getting metadata from catalog', verbose)
 
+    # (Matt) cm ~ catalog manager
     key, fk_ltable, fk_rtable, ltable, rtable, l_key, r_key = \
         cm.get_metadata_for_candset(
             candset, logger, verbose)
@@ -143,32 +217,18 @@ def extract_feature_vecs(candset, attrs_before=None, feature_table=None,
     #            candset.iterrows()]
     # id_list = [tuple(tup) for tup in candset[[fk_ltable, fk_rtable]].values]
 
-    # # Set index for convenience
-    l_df = ltable.set_index(l_key, drop=False)
-    r_df = rtable.set_index(r_key, drop=False)
-
+    # (Matt) ParallelFeatureExtractor implementation starts here
+    
     # # Apply feature functions
-    ch.log_info(logger, 'Applying feature functions', verbose)
-    col_names = list(candset.columns)
-    fk_ltable_idx = col_names.index(fk_ltable)
-    fk_rtable_idx = col_names.index(fk_rtable)
-
-    n_procs = get_num_procs(n_jobs, len(candset))
-
-    c_splits = np.array_split(candset, n_procs)
-
-    pickled_obj = cloudpickle.dumps(feature_table)
-
-    feat_vals_by_splits = Parallel(n_jobs=n_procs)(delayed(get_feature_vals_by_cand_split)(pickled_obj,
-                                                                                           fk_ltable_idx,
-                                                                                           fk_rtable_idx,
-                                                                                           l_df, r_df,
-                                                                                           c_splits[i],
-                                                                                           show_progress and i == len(
-                                                                                               c_splits) - 1)
-                                                   for i in range(len(c_splits)))
-
-    feat_vals = sum(feat_vals_by_splits, [])
+    feature_extractor = FeatureExtractor(
+        feature_table,
+        n_jobs=n_jobs,
+        verbose=verbose,
+        show_progress=show_progress
+    )
+    feat_vals = feature_extractor.extract_from(candset)
+    
+    # (Matt) ParallelFeatureExtractor implementation ends here; the rest is formatting
 
     # Construct output table
     feature_vectors = pd.DataFrame(feat_vals, index=candset.index.values)
