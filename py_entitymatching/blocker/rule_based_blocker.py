@@ -651,7 +651,7 @@ class RuleBasedBlocker(Blocker):
                 >>> block_f = em.get_features_for_blocking(A, B)
                 >>> rule = ['name_name_lev(ltuple, rtuple) > 3']
                 >>> rb.add_rule(rule, feature_table=block_f)
-                >>> D = rb.block_tuples(A.loc[0], B.loc[1)
+                >>> D = rb.block_tuples(A.loc[0], B.loc[1])
 
         """
 
