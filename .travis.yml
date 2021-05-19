@@ -12,15 +12,18 @@ matrix:
     python: 3.8
     env:
       - PYTHON_VERSION=3.8
-  - os: osx                                                                     
+  - os: osx
+    osx_image: xcode12                                                                     
     language: generic                                                           
     env:                                                                        
       - PYTHON_VERSION=3.6
   - os: osx
+    osx_image: xcode12
     language: generic
     env:
       - PYTHON_VERSION=3.7
   - os: osx
+    osx_image: xcode12
     language: generic
     env:
       - PYTHON_VERSION=3.8
