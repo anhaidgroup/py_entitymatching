@@ -4,7 +4,7 @@ Installation
 
 Requirements
 ------------
-* Python 2.7, 3.5, 3.6, 3.7, or 3.8
+* Python 3.6, 3.7, 3.8, or 3.9
 
 Platforms
 ---------
@@ -22,7 +22,7 @@ Dependencies
 * cloudpickle (provides functions to serialize Python constructs)
 * pyprind (library to display progress indicators)
 * pyparsing (library to parse strings)
-* six (provides functions to write compatible code across Python 2 and 3)
+* six
 * xgboost (provides an implementation for xgboost classifier)
 * pandas-profiling (provides implementation for profiling pandas dataframe)
 * pandas-table (provides data exploration tool for pandas dataframe)
@@ -47,9 +47,7 @@ command::
 
 
 The above command will install py_entitymatching and all of its dependencies except
-XGBoost, pandastable, openrefine, and PyQt5. This is because pip can only install the
-dependency packages that are available in PyPI and PyQt5, XGBoost, pandastable are not
-in PyPI for Python 2.
+XGBoost, pandastable, openrefine, and PyQt5.
 
 
 * To install PyQt5, follow the instructions at `this page <http://pyqt.sourceforge.net/Docs/PyQt5/installation.html>`_.
@@ -81,8 +79,6 @@ For more information see this StackOverflow `link <http://stackoverflow.com/ques
 The above commands will install py_entitymatching and all of its
 dependencies, except PyQt5 and XGBoost.
 
-This is  because, similar to pip, setup.py can only install the dependency packages 
-that are available in PyPI and PyQt5, pandastable, XGBoost are not in PyPI for Python 2.
 
 * To install PyQt5, follow the instructions at `this page <http://pyqt.sourceforge.net/Docs/PyQt5/installation.html>`_.
 
