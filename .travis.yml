@@ -12,6 +12,10 @@ matrix:
     python: 3.8
     env:
       - PYTHON_VERSION=3.8
+  - os: linux
+    python: 3.9
+    env:
+      - PYTHON_VERSION=3.9
   - os: osx
     osx_image: xcode12                                                                     
     language: generic                                                           
@@ -27,6 +31,11 @@ matrix:
     language: generic
     env:
       - PYTHON_VERSION=3.8
+  - os: osx
+    osx_image: xcode12
+    language: generic
+    env:
+      - PYTHON_VERSION=3.9
 
 compiler:
     - gcc
