@@ -3,9 +3,9 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>Splitting Data into Train and Test &mdash; py_entitymatching 0.4.0 documentation</title>
   
@@ -13,10 +13,15 @@
   
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
 
   
   
+
   
+  
+
   
 
   
@@ -26,10 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -51,7 +56,7 @@
           
 
           
-            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> py_entitymatching
+            <a href="../../index.html" class="icon icon-home"> py_entitymatching
           
 
           
@@ -171,6 +176,8 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
@@ -186,7 +193,7 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="../../_sources/user_manual/api/splitting_data_into_train_test.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -202,6 +209,48 @@
             
   <div class="section" id="splitting-data-into-train-and-test">
 <h1>Splitting Data into Train and Test<a class="headerlink" href="#splitting-data-into-train-and-test" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="py_entitymatching.split_train_test">
+<span class="sig-prename descclassname"><span class="pre">py_entitymatching.</span></span><span class="sig-name descname"><span class="pre">split_train_test</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labeled_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_proportion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/matcher/matcherutils.html#split_train_test"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#py_entitymatching.split_train_test" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function splits the input data into train and test.</p>
+<p>Specifically, this function is just a wrapper of scikit-learn’s
+train_test_split function.</p>
+<p>This function also takes care of copying the metadata from the input
+table to train and test splits.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>labeled_data</strong> (<em>DataFrame</em>) – The input pandas DataFrame that needs to be
+split into train and test.</p></li>
+<li><p><strong>train_proportion</strong> (<em>float</em>) – A number between 0 and 1, indicating the
+proportion of tuples that should be included in the train split (
+defaults to 0.5).</p></li>
+<li><p><strong>random_state</strong> (<em>object</em>) – A number of random number object (as in
+scikit-learn).</p></li>
+<li><p><strong>verbose</strong> (<em>boolean</em>) – A flag to indicate whether the debug information
+should be displayed.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>A Python dictionary containing two keys - train and test.</p>
+<p>The value for the key ‘train’ is a pandas DataFrame containing tuples
+allocated from the input table based on train_proportion.</p>
+<p>Similarly, the value for the key ‘test’ is a pandas DataFrame containing
+tuples for evaluation.</p>
+<p>This function sets the output DataFrames (train, test) properties
+same as the input DataFrame.</p>
+</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># G is the labeled data or the feature vectors that should be split</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">train_test</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">split_train_test</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">train_proportion</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">train</span><span class="p">,</span> <span class="n">test</span> <span class="o">=</span> <span class="n">train_test</span><span class="p">[</span><span class="s1">&#39;train&#39;</span><span class="p">],</span> <span class="n">train_test</span><span class="p">[</span><span class="s1">&#39;test&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
 </div>
 
 
@@ -209,37 +258,29 @@
            
           </div>
           <footer>
-  
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="supported_matchers.html" class="btn btn-neutral float-right" title="Supported Matchers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="matching.html" class="btn btn-neutral float-left" title="Matching" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+        <a href="supported_matchers.html" class="btn btn-neutral float-right" title="Supported Matchers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="matching.html" class="btn btn-neutral float-left" title="Matching" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        
-        &copy; Copyright 2016, anhaidgroup
+        &#169; Copyright 2016, anhaidgroup.
 
     </p>
   </div>
     
     
     
-    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     
-    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     
     provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 

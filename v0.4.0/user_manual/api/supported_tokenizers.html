@@ -3,9 +3,9 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>Supported Tokenizers &mdash; py_entitymatching 0.4.0 documentation</title>
   
@@ -13,10 +13,15 @@
   
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
 
   
   
+
   
+  
+
   
 
   
@@ -26,10 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -51,7 +56,7 @@
           
 
           
-            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> py_entitymatching
+            <a href="../../index.html" class="icon icon-home"> py_entitymatching
           
 
           
@@ -175,6 +180,8 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
@@ -190,7 +197,7 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="../../_sources/user_manual/api/supported_tokenizers.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -206,6 +213,142 @@
             
   <div class="section" id="supported-tokenizers">
 <h1>Supported Tokenizers<a class="headerlink" href="#supported-tokenizers" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="py_entitymatching.tok_qgram">
+<span class="sig-prename descclassname"><span class="pre">py_entitymatching.</span></span><span class="sig-name descname"><span class="pre">tok_qgram</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_string</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/feature/tokenizers.html#tok_qgram"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#py_entitymatching.tok_qgram" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function splits the input string into a list of q-grams. Note that,
+by default the input strings are padded and then tokenized.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_string</strong> (<em>string</em>) – Input string that should be tokenized.</p></li>
+<li><p><strong>q</strong> (<em>int</em>) – q-val that should be used to tokenize the input string.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of tokens, if the input string is not NaN,
+else returns NaN.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">tok_qgram</span><span class="p">(</span><span class="s1">&#39;database&#39;</span><span class="p">,</span> <span class="n">q</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">[&#39;#d&#39;, &#39;da&#39;, &#39;at&#39;, &#39;ta&#39;, &#39;ab&#39;, &#39;ba&#39;, &#39;as&#39;, &#39;se&#39;, &#39;e$&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">tok_qgram</span><span class="p">(</span><span class="s1">&#39;database&#39;</span><span class="p">,</span> <span class="n">q</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">[&#39;##d&#39;, &#39;#da&#39;, &#39;dat&#39;, &#39;ata&#39;, &#39;tab&#39;, &#39;aba&#39;, &#39;bas&#39;, &#39;ase&#39;, &#39;se$&#39;, &#39;e$$&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">tok_qgram</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">q</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">nan</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="py_entitymatching.tok_delim">
+<span class="sig-prename descclassname"><span class="pre">py_entitymatching.</span></span><span class="sig-name descname"><span class="pre">tok_delim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_string</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/feature/tokenizers.html#tok_delim"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#py_entitymatching.tok_delim" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function splits the input string into a list of tokens
+(based on the delimiter).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_string</strong> (<em>string</em>) – Input string that should be tokenized.</p></li>
+<li><p><strong>d</strong> (<em>string</em>) – Delimiter string.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of tokens, if the input string is not NaN ,
+else returns NaN.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">tok_delim</span><span class="p">(</span><span class="s1">&#39;data science&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span>
+<span class="go">[&#39;data&#39;, &#39;science&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">tok_delim</span><span class="p">(</span><span class="s1">&#39;data$#$science&#39;</span><span class="p">,</span> <span class="s1">&#39;$#$&#39;</span><span class="p">)</span>
+<span class="go">[&#39;data&#39;, &#39;science&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">tok_delim</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span>
+<span class="go">nan</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="py_entitymatching.tok_wspace">
+<span class="sig-prename descclassname"><span class="pre">py_entitymatching.</span></span><span class="sig-name descname"><span class="pre">tok_wspace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_string</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/feature/tokenizers.html#tok_wspace"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#py_entitymatching.tok_wspace" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function splits the input string into a list of tokens
+(based on the white space).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>input_string</strong> (<em>string</em>) – Input string that should be tokenized.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of tokens, if the input string is not NaN ,
+else returns NaN.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">tok_wspace</span><span class="p">(</span><span class="s1">&#39;data science&#39;</span><span class="p">)</span>
+<span class="go">[&#39;data&#39;, &#39;science&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">tok_wspace</span><span class="p">(</span><span class="s1">&#39;data         science&#39;</span><span class="p">)</span>
+<span class="go">[&#39;data&#39;, &#39;science&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">tok_wspace</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+<span class="go">nan</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="py_entitymatching.tok_alphabetic">
+<span class="sig-prename descclassname"><span class="pre">py_entitymatching.</span></span><span class="sig-name descname"><span class="pre">tok_alphabetic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_string</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/feature/tokenizers.html#tok_alphabetic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#py_entitymatching.tok_alphabetic" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function returns a list of tokens that are maximal sequences of
+consecutive alphabetical characters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>input_string</strong> (<em>string</em>) – Input string that should be tokenized.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of tokens, if the input string is not NaN ,
+else returns NaN.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">tok_alphabetic</span><span class="p">(</span><span class="s1">&#39;data99science, data#integration.&#39;</span><span class="p">)</span>
+<span class="go">[&#39;data&#39;, &#39;science&#39;, &#39;data&#39;, &#39;integration&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">tok_alphabetic</span><span class="p">(</span><span class="s1">&#39;99&#39;</span><span class="p">)</span>
+<span class="go">[]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">tok_alphabetic</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+<span class="go">nan</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="py_entitymatching.tok_alphanumeric">
+<span class="sig-prename descclassname"><span class="pre">py_entitymatching.</span></span><span class="sig-name descname"><span class="pre">tok_alphanumeric</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_string</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/feature/tokenizers.html#tok_alphanumeric"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#py_entitymatching.tok_alphanumeric" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function returns a list of tokens that are maximal sequences of
+consecutive alphanumeric characters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>input_string</strong> (<em>string</em>) – Input string that should be tokenized.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of tokens, if the input string is not NaN ,
+else returns NaN.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">tok_alphanumeric</span><span class="p">(</span><span class="s1">&#39;data9,(science), data9#.(integration).88&#39;</span><span class="p">)</span>
+<span class="go">[&#39;data9&#39;, &#39;science&#39;, &#39;data9&#39;, &#39;integration&#39;, &#39;88&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">tok_alphanumeric</span><span class="p">(</span><span class="s1">&#39;#.$&#39;</span><span class="p">)</span>
+<span class="go">[]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">tok_alphanumeric</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+<span class="go">nan</span>
+</pre></div>
+</div>
+</dd></dl>
+
 </div>
 
 
@@ -213,37 +356,29 @@
            
           </div>
           <footer>
-  
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="matching.html" class="btn btn-neutral float-right" title="Matching" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="supported_similarity_functions.html" class="btn btn-neutral float-left" title="Supported Similarity Functions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+        <a href="matching.html" class="btn btn-neutral float-right" title="Matching" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="supported_similarity_functions.html" class="btn btn-neutral float-left" title="Supported Similarity Functions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        
-        &copy; Copyright 2016, anhaidgroup
+        &#169; Copyright 2016, anhaidgroup.
 
     </p>
   </div>
     
     
     
-    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     
-    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     
     provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 

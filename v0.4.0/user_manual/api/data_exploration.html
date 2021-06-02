@@ -3,9 +3,9 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>Data Exploration &mdash; py_entitymatching 0.4.0 documentation</title>
   
@@ -13,10 +13,15 @@
   
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
 
   
   
+
   
+  
+
   
 
   
@@ -26,10 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -51,7 +56,7 @@
           
 
           
-            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> py_entitymatching
+            <a href="../../index.html" class="icon icon-home"> py_entitymatching
           
 
           
@@ -166,6 +171,8 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
@@ -179,7 +186,7 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="../../_sources/user_manual/api/data_exploration.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -195,6 +202,53 @@
             
   <div class="section" id="data-exploration">
 <h1>Data Exploration<a class="headerlink" href="#data-exploration" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="py_entitymatching.data_explore_openrefine">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">py_entitymatching.</span></span><span class="sig-name descname"><span class="pre">data_explore_openrefine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">server</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'http://127.0.0.1:3333'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/explorer/openrefine/openrefine_wrapper.html#data_explore_openrefine"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#py_entitymatching.data_explore_openrefine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper function for using OpenRefine. Gives user a GUI to examine and edit
+the dataframe passed in using OpenRefine.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>Dataframe</em>) – The pandas dataframe to be explored with pandastable.</p></li>
+<li><p><strong>server</strong> (<em>String</em>) – The address of the OpenRefine server (defaults to
+<a class="reference external" href="http://127.0.0.1:3333">http://127.0.0.1:3333</a>).</p></li>
+<li><p><strong>name</strong> (<em>String</em>) – The name given to the file and project in OpenRefine.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>AssertionError</strong> – If <cite>df</cite> is not of type pandas DataFrame.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">data_explore_openrefine</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Table&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="py_entitymatching.data_explore_pandastable">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">py_entitymatching.</span></span><span class="sig-name descname"><span class="pre">data_explore_pandastable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/explorer/pandastable/pandastable_wrapper.html#data_explore_pandastable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#py_entitymatching.data_explore_pandastable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper function for pandastable. Gives user a GUI to examine and edit
+the dataframe passed in using pandastable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>df</strong> (<em>Dataframe</em>) – The pandas dataframe to be explored with pandastable.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>AssertionError</strong> – If <cite>df</cite> is not of type pandas DataFrame.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">data_explore_pandastable</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
 </div>
 
 
@@ -202,37 +256,29 @@
            
           </div>
           <footer>
-  
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="blocking.html" class="btn btn-neutral float-right" title="Blocking" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="downsampling.html" class="btn btn-neutral float-left" title="Downsampling" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+        <a href="blocking.html" class="btn btn-neutral float-right" title="Blocking" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="downsampling.html" class="btn btn-neutral float-left" title="Downsampling" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        
-        &copy; Copyright 2016, anhaidgroup
+        &#169; Copyright 2016, anhaidgroup.
 
     </p>
   </div>
     
     
     
-    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     
-    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     
     provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 

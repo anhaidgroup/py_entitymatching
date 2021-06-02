@@ -3,9 +3,9 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>Downsampling &mdash; py_entitymatching 0.4.0 documentation</title>
   
@@ -13,10 +13,15 @@
   
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
 
   
   
+
   
+  
+
   
 
   
@@ -26,10 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -51,7 +56,7 @@
           
 
           
-            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> py_entitymatching
+            <a href="../../index.html" class="icon icon-home"> py_entitymatching
           
 
           
@@ -166,6 +171,8 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
@@ -179,7 +186,7 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="../../_sources/user_manual/api/downsampling.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -195,6 +202,77 @@
             
   <div class="section" id="downsampling">
 <h1>Downsampling<a class="headerlink" href="#downsampling" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="py_entitymatching.down_sample">
+<span class="sig-prename descclassname"><span class="pre">py_entitymatching.</span></span><span class="sig-name descname"><span class="pre">down_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table_a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">table_b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_param</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_progress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rem_stop_words</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rem_puncs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/sampler/down_sample.html#down_sample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#py_entitymatching.down_sample" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function down samples two tables A and B into smaller tables A’ and
+B’ respectively.</p>
+<p>Specifically, first it randomly selects <cite>size</cite> tuples
+from the table B to be table B’. Next, it builds an inverted index I
+(token, tuple_id) on table A. For each tuple x ∈ B’, the algorithm
+finds a set P of k/2 tuples from I that match x,
+and a set Q of k/2 tuples randomly selected from A - P.
+The idea is for A’ and B’ to share some matches yet be
+as representative of A and B as possible.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>table_a</strong> (<em>DataFrame</em>) – The input tables A and B.</p></li>
+<li><p><strong>table_b</strong> (<em>DataFrame</em>) – The input tables A and B.</p></li>
+<li><p><strong>size</strong> (<em>int</em>) – The size that table B should be down sampled to.</p></li>
+<li><p><strong>y_param</strong> (<em>int</em>) – The parameter to control the down sample size of table A.
+Specifically, the down sampled size of table A should be close to
+size * y_param.</p></li>
+<li><p><strong>show_progress</strong> (<em>boolean</em>) – A flag to indicate whether a progress bar
+should be displayed (defaults to True).</p></li>
+<li><p><strong>verbose</strong> (<em>boolean</em>) – A flag to indicate whether the debug information
+should be displayed (defaults to False).</p></li>
+<li><p><strong>seed</strong> (<em>int</em>) – The seed for the pseudo random number generator to select
+the tuples from A and B (defaults to None).</p></li>
+<li><p><strong>rem_stop_words</strong> (<em>boolean</em>) – A flag to indicate whether a default set of stop words
+must be removed.</p></li>
+<li><p><strong>rem_puncs</strong> (<em>boolean</em>) – A flag to indicate whether the punctuations must be
+removed from the strings.</p></li>
+<li><p><strong>n_jobs</strong> (<em>int</em>) – The number of parallel jobs to be used for computation
+(defaults to 1). If -1 all CPUs are used. If 0 or 1,
+no parallel computation is used at all, which is useful for
+debugging. For n_jobs below -1, (n_cpus + 1 + n_jobs) are
+used (where n_cpus is the total number of CPUs in the
+machine). Thus, for n_jobs = -2, all CPUs but one are used.
+If (n_cpus + 1 + n_jobs) is less than 1, then no parallel
+computation is used (i.e., equivalent to the default).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Down sampled tables A and B as pandas DataFrames.</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>AssertionError</strong> – If any of the input tables (<cite>table_a</cite>, <cite>table_b</cite>) are
+    empty or not a DataFrame.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>size</cite> or <cite>y_param</cite> is empty or 0 or not a
+    valid integer value.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>seed</cite> is not a valid integer
+    value.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>verbose</cite> is not of type bool.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>show_progress</cite> is not of type bool.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>n_jobs</cite> is not of type int.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sample_A</span><span class="p">,</span> <span class="n">sample_B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">down_sample</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p># Example with seed = 0. This means the same sample data set will be returned
+# each time this function is run.
+&gt;&gt;&gt; A = em.read_csv_metadata(‘path_to_csv_dir/table_A.csv’, key=’ID’)
+&gt;&gt;&gt; B = em.read_csv_metadata(‘path_to_csv_dir/table_B.csv’, key=’ID’)
+&gt;&gt;&gt; sample_A, sample_B = em.down_sample(A, B, 500, 1, seed=0, n_jobs=-1)</p>
+</dd></dl>
+
 </div>
 
 
@@ -202,37 +280,29 @@
            
           </div>
           <footer>
-  
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="data_exploration.html" class="btn btn-neutral float-right" title="Data Exploration" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="handling_metadata.html" class="btn btn-neutral float-left" title="Handling Metadata" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+        <a href="data_exploration.html" class="btn btn-neutral float-right" title="Data Exploration" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="handling_metadata.html" class="btn btn-neutral float-left" title="Handling Metadata" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        
-        &copy; Copyright 2016, anhaidgroup
+        &#169; Copyright 2016, anhaidgroup.
 
     </p>
   </div>
     
     
     
-    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     
-    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     
     provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 

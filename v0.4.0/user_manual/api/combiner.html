@@ -3,9 +3,9 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>Matcher Combiner &mdash; py_entitymatching 0.4.0 documentation</title>
   
@@ -13,10 +13,15 @@
   
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
 
   
   
+
   
+  
+
   
 
   
@@ -26,10 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -51,7 +56,7 @@
           
 
           
-            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> py_entitymatching
+            <a href="../../index.html" class="icon icon-home"> py_entitymatching
           
 
           
@@ -154,6 +159,8 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
@@ -167,7 +174,7 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="../../_sources/user_manual/api/combiner.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -183,6 +190,93 @@
             
   <div class="section" id="matcher-combiner">
 <h1>Matcher Combiner<a class="headerlink" href="#matcher-combiner" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="py_entitymatching.matchercombiner.matchercombiner.MajorityVote">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">py_entitymatching.matchercombiner.matchercombiner.</span></span><span class="sig-name descname"><span class="pre">MajorityVote</span></span><a class="reference internal" href="../../_modules/py_entitymatching/matchercombiner/matchercombiner.html#MajorityVote"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#py_entitymatching.matchercombiner.matchercombiner.MajorityVote" title="Permalink to this definition">¶</a></dt>
+<dd><p>THIS CLASS EXPERIMENTAL AND NOT TESTED. USE AT YOUR OWN RISK.</p>
+<p>The goal of this combiner is to combine a list of predictions from multiple
+matchers to produce a consolidated prediction. In this majority voting-based
+combining, the prediction that occurs most is returned as the consolicated
+prediction. If there is no clear winning prediction (for example, 0 and 1 occuring
+equal number of times) then 0 is returned.</p>
+<p>Implementation wise, there should be a combiner command to which an object of this
+class must be given as a parameter. Based on this parameter, the combiner command
+will use this object to combine the predictions.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="py_entitymatching.matchercombiner.matchercombiner.MajorityVote.combine">
+<span class="sig-name descname"><span class="pre">combine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">predictions</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/matchercombiner/matchercombiner.html#MajorityVote.combine"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#py_entitymatching.matchercombiner.matchercombiner.MajorityVote.combine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Combine a list of predictions from matchers using majority voting.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>predictions</strong> (<em>DataFrame</em>) – A table containing predictions from multiple
+matchers.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of consolidated predictions.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dt</span> <span class="o">=</span> <span class="n">DTMatcher</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rf</span> <span class="o">=</span> <span class="n">RFMatcher</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nb</span> <span class="o">=</span> <span class="n">NBMatcher</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dt</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="n">H</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;_id&#39;</span><span class="p">,</span> <span class="s1">&#39;l_id&#39;</span><span class="p">,</span> <span class="s1">&#39;r_id&#39;</span><span class="p">],</span> <span class="n">target_attr</span><span class="o">=</span><span class="s1">&#39;label&#39;</span><span class="p">)</span> <span class="c1"># H is training set containing feature vectors</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dt</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="n">L</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;l_id&#39;</span><span class="p">,</span> <span class="s1">&#39;r_id&#39;</span><span class="p">],</span> <span class="n">append</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">target_attr</span><span class="o">=</span><span class="s1">&#39;dt_predictions&#39;</span><span class="p">)</span> <span class="c1"># L is the test set for which we should get predictions.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="n">H</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;_id&#39;</span><span class="p">,</span> <span class="s1">&#39;l_id&#39;</span><span class="p">,</span> <span class="s1">&#39;r_id&#39;</span><span class="p">],</span> <span class="n">target_attr</span><span class="o">=</span><span class="s1">&#39;label&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="n">L</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;l_id&#39;</span><span class="p">,</span> <span class="s1">&#39;r_id&#39;</span><span class="p">],</span> <span class="n">append</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">target_attr</span><span class="o">=</span><span class="s1">&#39;rf_predictions&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nb</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="n">H</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;_id&#39;</span><span class="p">,</span> <span class="s1">&#39;l_id&#39;</span><span class="p">,</span> <span class="s1">&#39;r_id&#39;</span><span class="p">],</span> <span class="n">target_attr</span><span class="o">=</span><span class="s1">&#39;label&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nb</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="n">L</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;l_id&#39;</span><span class="p">,</span> <span class="s1">&#39;r_id&#39;</span><span class="p">],</span> <span class="n">append</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">target_attr</span><span class="o">=</span><span class="s1">&#39;nb_predictions&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mv_combiner</span> <span class="o">=</span> <span class="n">MajorityVote</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">L</span><span class="p">[</span><span class="s1">&#39;consol_predictions&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mv_combiner</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">L</span><span class="p">[[</span><span class="s1">&#39;dt_predictions&#39;</span><span class="p">,</span> <span class="s1">&#39;rf_predictions&#39;</span><span class="p">,</span> <span class="s1">&#39;nb_predictions&#39;</span><span class="p">]])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="py_entitymatching.matchercombiner.matchercombiner.WeightedVote">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">py_entitymatching.matchercombiner.matchercombiner.</span></span><span class="sig-name descname"><span class="pre">WeightedVote</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/matchercombiner/matchercombiner.html#WeightedVote"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#py_entitymatching.matchercombiner.matchercombiner.WeightedVote" title="Permalink to this definition">¶</a></dt>
+<dd><p>THIS CLASS EXPERIMENTAL AND NOT TESTED. USE AT YOUR OWN RISK.</p>
+<p>The goal of this combiner is to combine a list of predictions from multiple
+matchers to produce a consolidated prediction. In this weighted voting-based
+combining, each prediction is given a weight, we compute a weighted sum of these
+predictions and compare the result to a threshold. If the result is greater than or equal to
+the threshold then the consolidated prediction is returned as a match (i.e., 1) else
+returned as a no-match.</p>
+<p>Implementation wise, there should be a combiner command to which an object of this
+class must be given as a parameter. Based on this parameter, the combiner command
+will use this object to combine the predictions.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="py_entitymatching.matchercombiner.matchercombiner.WeightedVote.combine">
+<span class="sig-name descname"><span class="pre">combine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">predictions</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/matchercombiner/matchercombiner.html#WeightedVote.combine"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#py_entitymatching.matchercombiner.matchercombiner.WeightedVote.combine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Combine a list of predictions from matchers using weighted voting.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>predictions</strong> (<em>DataFrame</em>) – A table containing predictions from multiple
+matchers.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of consolidated predictions.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dt</span> <span class="o">=</span> <span class="n">DTMatcher</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rf</span> <span class="o">=</span> <span class="n">RFMatcher</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nb</span> <span class="o">=</span> <span class="n">NBMatcher</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dt</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="n">H</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;_id&#39;</span><span class="p">,</span> <span class="s1">&#39;l_id&#39;</span><span class="p">,</span> <span class="s1">&#39;r_id&#39;</span><span class="p">],</span> <span class="n">target_attr</span><span class="o">=</span><span class="s1">&#39;label&#39;</span><span class="p">)</span> <span class="c1"># H is training set containing feature vectors</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dt</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="n">L</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;l_id&#39;</span><span class="p">,</span> <span class="s1">&#39;r_id&#39;</span><span class="p">],</span> <span class="n">append</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">target_attr</span><span class="o">=</span><span class="s1">&#39;dt_predictions&#39;</span><span class="p">)</span> <span class="c1"># L is the test set for which we should get predictions.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="n">H</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;_id&#39;</span><span class="p">,</span> <span class="s1">&#39;l_id&#39;</span><span class="p">,</span> <span class="s1">&#39;r_id&#39;</span><span class="p">],</span> <span class="n">target_attr</span><span class="o">=</span><span class="s1">&#39;label&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="n">L</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;l_id&#39;</span><span class="p">,</span> <span class="s1">&#39;r_id&#39;</span><span class="p">],</span> <span class="n">append</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">target_attr</span><span class="o">=</span><span class="s1">&#39;rf_predictions&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nb</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="n">H</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;_id&#39;</span><span class="p">,</span> <span class="s1">&#39;l_id&#39;</span><span class="p">,</span> <span class="s1">&#39;r_id&#39;</span><span class="p">],</span> <span class="n">target_attr</span><span class="o">=</span><span class="s1">&#39;label&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nb</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="n">L</span><span class="p">,</span> <span class="n">exclude_attrs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;l_id&#39;</span><span class="p">,</span> <span class="s1">&#39;r_id&#39;</span><span class="p">],</span> <span class="n">append</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">target_attr</span><span class="o">=</span><span class="s1">&#39;nb_predictions&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">wv_combiner</span> <span class="o">=</span> <span class="n">WeightedVote</span><span class="p">(</span><span class="n">weights</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">],</span> <span class="n">threshold</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">L</span><span class="p">[</span><span class="s1">&#39;consol_predictions&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">wv_combiner</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">L</span><span class="p">[[</span><span class="s1">&#39;dt_predictions&#39;</span><span class="p">,</span> <span class="s1">&#39;rf_predictions&#39;</span><span class="p">,</span> <span class="s1">&#39;nb_predictions&#39;</span><span class="p">]])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 
 
@@ -190,37 +284,29 @@
            
           </div>
           <footer>
-  
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="../../contributing.html" class="btn btn-neutral float-right" title="Contributing to py_entitymatching" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="tuners.html" class="btn btn-neutral float-left" title="Tuners for the Dask-based Commands" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+        <a href="../../contributing.html" class="btn btn-neutral float-right" title="Contributing to py_entitymatching" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="tuners.html" class="btn btn-neutral float-left" title="Tuners for the Dask-based Commands" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        
-        &copy; Copyright 2016, anhaidgroup
+        &#169; Copyright 2016, anhaidgroup.
 
     </p>
   </div>
     
     
     
-    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     
-    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     
     provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 

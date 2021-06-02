@@ -3,9 +3,9 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>Supported Similarity Functions &mdash; py_entitymatching 0.4.0 documentation</title>
   
@@ -13,10 +13,15 @@
   
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
 
   
   
+
   
+  
+
   
 
   
@@ -26,10 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -51,7 +56,7 @@
           
 
           
-            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> py_entitymatching
+            <a href="../../index.html" class="icon icon-home"> py_entitymatching
           
 
           
@@ -175,6 +180,8 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
@@ -190,7 +197,7 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="../../_sources/user_manual/api/supported_similarity_functions.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -206,6 +213,514 @@
             
   <div class="section" id="supported-similarity-functions">
 <h1>Supported Similarity Functions<a class="headerlink" href="#supported-similarity-functions" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="py_entitymatching.affine">
+<span class="sig-prename descclassname"><span class="pre">py_entitymatching.</span></span><span class="sig-name descname"><span class="pre">affine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/feature/simfunctions.html#affine"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#py_entitymatching.affine" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function computes the affine measure between the two input strings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s1</strong> (<em>string</em>) – The input strings for which the similarity measure
+should be computed.</p></li>
+<li><p><strong>s2</strong> (<em>string</em>) – The input strings for which the similarity measure
+should be computed.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The affine measure if both the strings are not missing (i.e NaN or
+None), else  returns NaN.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">affine</span><span class="p">(</span><span class="s1">&#39;dva&#39;</span><span class="p">,</span> <span class="s1">&#39;deeva&#39;</span><span class="p">)</span>
+<span class="go">1.5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">affine</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;deeva&#39;</span><span class="p">)</span>
+<span class="go">nan</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="py_entitymatching.hamming_dist">
+<span class="sig-prename descclassname"><span class="pre">py_entitymatching.</span></span><span class="sig-name descname"><span class="pre">hamming_dist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/feature/simfunctions.html#hamming_dist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#py_entitymatching.hamming_dist" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function computes the Hamming distance between the two input
+strings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s1</strong> (<em>string</em>) – The input strings for which the similarity measure should
+be computed.</p></li>
+<li><p><strong>s2</strong> (<em>string</em>) – The input strings for which the similarity measure should
+be computed.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The Hamming distance if both the strings are not missing (i.e NaN),
+else  returns NaN.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">hamming_dist</span><span class="p">(</span><span class="s1">&#39;alex&#39;</span><span class="p">,</span> <span class="s1">&#39;john&#39;</span><span class="p">)</span>
+<span class="go">4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">hamming_dist</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;john&#39;</span><span class="p">)</span>
+<span class="go">nan</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="py_entitymatching.hamming_sim">
+<span class="sig-prename descclassname"><span class="pre">py_entitymatching.</span></span><span class="sig-name descname"><span class="pre">hamming_sim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/feature/simfunctions.html#hamming_sim"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#py_entitymatching.hamming_sim" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function computes the Hamming similarity between the two input
+strings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s1</strong> (<em>string</em>) – The input strings for which the similarity measure should
+be computed.</p></li>
+<li><p><strong>s2</strong> (<em>string</em>) – The input strings for which the similarity measure should
+be computed.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The Hamming similarity if both the strings are not missing (i.e NaN),
+else  returns NaN.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">hamming_sim</span><span class="p">(</span><span class="s1">&#39;alex&#39;</span><span class="p">,</span> <span class="s1">&#39;alxe&#39;</span><span class="p">)</span>
+<span class="go">0.5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">hamming_sim</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;alex&#39;</span><span class="p">)</span>
+<span class="go">nan</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="py_entitymatching.lev_dist">
+<span class="sig-prename descclassname"><span class="pre">py_entitymatching.</span></span><span class="sig-name descname"><span class="pre">lev_dist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/feature/simfunctions.html#lev_dist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#py_entitymatching.lev_dist" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function computes the Levenshtein distance between the two input
+strings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s1</strong> (<em>string</em>) – The input strings for which the similarity measure should
+be computed.</p></li>
+<li><p><strong>s2</strong> (<em>string</em>) – The input strings for which the similarity measure should
+be computed.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The Levenshtein distance if both the strings are not missing (i.e NaN),
+else  returns NaN.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">lev_dist</span><span class="p">(</span><span class="s1">&#39;alex&#39;</span><span class="p">,</span> <span class="s1">&#39;alxe&#39;</span><span class="p">)</span>
+<span class="go">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">lev_dist</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;alex&#39;</span><span class="p">)</span>
+<span class="go">nan</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="py_entitymatching.lev_sim">
+<span class="sig-prename descclassname"><span class="pre">py_entitymatching.</span></span><span class="sig-name descname"><span class="pre">lev_sim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/feature/simfunctions.html#lev_sim"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#py_entitymatching.lev_sim" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function computes the Levenshtein similarity between the two input
+strings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s1</strong> (<em>string</em>) – The input strings for which the similarity measure should
+be computed.</p></li>
+<li><p><strong>s2</strong> (<em>string</em>) – The input strings for which the similarity measure should
+be computed.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The Levenshtein similarity if both the strings are not missing (i.e
+NaN), else  returns NaN.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">lev_sim</span><span class="p">(</span><span class="s1">&#39;alex&#39;</span><span class="p">,</span> <span class="s1">&#39;alxe&#39;</span><span class="p">)</span>
+<span class="go">0.5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">lev_dist</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;alex&#39;</span><span class="p">)</span>
+<span class="go">nan</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="py_entitymatching.jaro">
+<span class="sig-prename descclassname"><span class="pre">py_entitymatching.</span></span><span class="sig-name descname"><span class="pre">jaro</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/feature/simfunctions.html#jaro"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#py_entitymatching.jaro" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function computes the Jaro measure between the two input
+strings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s1</strong> (<em>string</em>) – The input strings for which the similarity measure should
+be computed.</p></li>
+<li><p><strong>s2</strong> (<em>string</em>) – The input strings for which the similarity measure should
+be computed.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The Jaro measure if both the strings are not missing (i.e NaN),
+else  returns NaN.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">jaro</span><span class="p">(</span><span class="s1">&#39;MARTHA&#39;</span><span class="p">,</span> <span class="s1">&#39;MARHTA&#39;</span><span class="p">)</span>
+<span class="go">0.9444444444444445</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">jaro</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;MARTHA&#39;</span><span class="p">)</span>
+<span class="go">nan</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="py_entitymatching.jaro_winkler">
+<span class="sig-prename descclassname"><span class="pre">py_entitymatching.</span></span><span class="sig-name descname"><span class="pre">jaro_winkler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/feature/simfunctions.html#jaro_winkler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#py_entitymatching.jaro_winkler" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function computes the Jaro Winkler measure between the two input
+strings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s1</strong> (<em>string</em>) – The input strings for which the similarity measure should
+be computed.</p></li>
+<li><p><strong>s2</strong> (<em>string</em>) – The input strings for which the similarity measure should
+be computed.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The Jaro Winkler measure if both the strings are not missing (i.e NaN),
+else  returns NaN.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">jaro_winkler</span><span class="p">(</span><span class="s1">&#39;MARTHA&#39;</span><span class="p">,</span> <span class="s1">&#39;MARHTA&#39;</span><span class="p">)</span>
+<span class="go">0.9611111111111111</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="o">&gt;&gt;&gt;</span> <span class="n">em</span><span class="o">.</span><span class="n">jaro_winkler</span><span class="p">(</span><span class="s1">&#39;MARTHA&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<span class="go">nan</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="py_entitymatching.needleman_wunsch">
+<span class="sig-prename descclassname"><span class="pre">py_entitymatching.</span></span><span class="sig-name descname"><span class="pre">needleman_wunsch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/feature/simfunctions.html#needleman_wunsch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#py_entitymatching.needleman_wunsch" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function computes the Needleman-Wunsch measure between the two input
+strings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s1</strong> (<em>string</em>) – The input strings for which the similarity measure should
+be computed.</p></li>
+<li><p><strong>s2</strong> (<em>string</em>) – The input strings for which the similarity measure should
+be computed.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The Needleman-Wunsch measure if both the strings are not missing (i.e
+NaN), else  returns NaN.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">needleman_wunsch</span><span class="p">(</span><span class="s1">&#39;dva&#39;</span><span class="p">,</span> <span class="s1">&#39;deeva&#39;</span><span class="p">)</span>
+<span class="go">1.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">needleman_wunsch</span><span class="p">(</span><span class="s1">&#39;dva&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<span class="go">nan</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="py_entitymatching.smith_waterman">
+<span class="sig-prename descclassname"><span class="pre">py_entitymatching.</span></span><span class="sig-name descname"><span class="pre">smith_waterman</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/feature/simfunctions.html#smith_waterman"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#py_entitymatching.smith_waterman" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function computes the Smith-Waterman measure between the two input
+strings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s1</strong> (<em>string</em>) – The input strings for which the similarity measure should
+be computed.</p></li>
+<li><p><strong>s2</strong> (<em>string</em>) – The input strings for which the similarity measure should
+be computed.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The Smith-Waterman measure if both the strings are not missing (i.e
+NaN), else  returns NaN.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">smith_waterman</span><span class="p">(</span><span class="s1">&#39;cat&#39;</span><span class="p">,</span> <span class="s1">&#39;hat&#39;</span><span class="p">)</span>
+<span class="go">2.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">smith_waterman</span><span class="p">(</span><span class="s1">&#39;cat&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<span class="go">nan</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="py_entitymatching.jaccard">
+<span class="sig-prename descclassname"><span class="pre">py_entitymatching.</span></span><span class="sig-name descname"><span class="pre">jaccard</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arr1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arr2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/feature/simfunctions.html#jaccard"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#py_entitymatching.jaccard" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function computes the Jaccard measure between the two input
+lists/sets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arr1</strong> (<em>list</em><em> or </em><em>set</em>) – The input list or sets for which the Jaccard
+measure should be computed.</p></li>
+<li><p><strong>arr2</strong> (<em>list</em><em> or </em><em>set</em>) – The input list or sets for which the Jaccard
+measure should be computed.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The Jaccard measure if both the lists/set are not None and do not have
+any missing tokens (i.e NaN), else  returns NaN.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">jaccard</span><span class="p">([</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;science&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">])</span>
+<span class="go">0.5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">jaccard</span><span class="p">([</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;science&#39;</span><span class="p">],</span> <span class="kc">None</span><span class="p">)</span>
+<span class="go">nan</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="py_entitymatching.cosine">
+<span class="sig-prename descclassname"><span class="pre">py_entitymatching.</span></span><span class="sig-name descname"><span class="pre">cosine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arr1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arr2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/feature/simfunctions.html#cosine"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#py_entitymatching.cosine" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function computes the cosine measure between the two input
+lists/sets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arr1</strong> (<em>list</em><em> or </em><em>set</em>) – The input list or sets for which the cosine
+measure should be computed.</p></li>
+<li><p><strong>arr2</strong> (<em>list</em><em> or </em><em>set</em>) – The input list or sets for which the cosine
+measure should be computed.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The cosine measure if both the lists/set are not None and do not have
+any missing tokens (i.e NaN), else  returns NaN.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">cosine</span><span class="p">([</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;science&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">])</span>
+<span class="go">0.7071067811865475</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">cosine</span><span class="p">([</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;science&#39;</span><span class="p">],</span> <span class="kc">None</span><span class="p">)</span>
+<span class="go">nan</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="py_entitymatching.overlap_coeff">
+<span class="sig-prename descclassname"><span class="pre">py_entitymatching.</span></span><span class="sig-name descname"><span class="pre">overlap_coeff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arr1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arr2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/feature/simfunctions.html#overlap_coeff"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#py_entitymatching.overlap_coeff" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function computes the overlap coefficient between the two input
+lists/sets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arr1</strong> (<em>list</em><em> or </em><em>set</em>) – The input lists or sets for which the overlap
+coefficient should be computed.</p></li>
+<li><p><strong>arr2</strong> (<em>list</em><em> or </em><em>set</em>) – The input lists or sets for which the overlap
+coefficient should be computed.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The overlap coefficient if both the lists/sets are not None and do not
+have any missing tokens (i.e NaN), else  returns NaN.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">overlap_coeff</span><span class="p">([</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;science&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">])</span>
+<span class="go">1.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">overlap_coeff</span><span class="p">([</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;science&#39;</span><span class="p">],</span> <span class="kc">None</span><span class="p">)</span>
+<span class="go">nan</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="py_entitymatching.dice">
+<span class="sig-prename descclassname"><span class="pre">py_entitymatching.</span></span><span class="sig-name descname"><span class="pre">dice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arr1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arr2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/feature/simfunctions.html#dice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#py_entitymatching.dice" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function computes the Dice score between the two input
+lists/sets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arr1</strong> (<em>list</em><em> or </em><em>set</em>) – The input list or sets for which the Dice
+score should be computed.</p></li>
+<li><p><strong>arr2</strong> (<em>list</em><em> or </em><em>set</em>) – The input list or sets for which the Dice
+score should be computed.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The Dice score if both the lists/set are not None and do not
+have any missing tokens (i.e NaN), else  returns NaN.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">dice</span><span class="p">([</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;science&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">])</span>
+<span class="go">0.6666666666666666</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">dice</span><span class="p">([</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;science&#39;</span><span class="p">],</span> <span class="kc">None</span><span class="p">)</span>
+<span class="go">nan</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="py_entitymatching.monge_elkan">
+<span class="sig-prename descclassname"><span class="pre">py_entitymatching.</span></span><span class="sig-name descname"><span class="pre">monge_elkan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arr1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arr2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/feature/simfunctions.html#monge_elkan"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#py_entitymatching.monge_elkan" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function computes the Monge-Elkan measure between the two input
+lists/sets. Specifically, this function uses Jaro-Winkler measure as the
+secondary function to compute the similarity score.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arr1</strong> (<em>list</em><em> or </em><em>set</em>) – The input list or sets for which the
+Monge-Elkan measure should be computed.</p></li>
+<li><p><strong>arr2</strong> (<em>list</em><em> or </em><em>set</em>) – The input list or sets for which the
+Monge-Elkan measure should be computed.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The Monge-Elkan measure if both the lists/set are not None and do not
+have any missing tokens (i.e NaN), else  returns NaN.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">monge_elkan</span><span class="p">([</span><span class="s1">&#39;Niall&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;Neal&#39;</span><span class="p">])</span>
+<span class="go">0.8049999999999999</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">monge_elkan</span><span class="p">([</span><span class="s1">&#39;Niall&#39;</span><span class="p">],</span> <span class="kc">None</span><span class="p">)</span>
+<span class="go">nan</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="py_entitymatching.exact_match">
+<span class="sig-prename descclassname"><span class="pre">py_entitymatching.</span></span><span class="sig-name descname"><span class="pre">exact_match</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/feature/simfunctions.html#exact_match"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#py_entitymatching.exact_match" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function check if two objects are match exactly. Typically the
+objects are string, boolean and ints.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>d1</strong> (<em>str</em><em>, </em><em>boolean</em><em>, </em><em>int</em>) – The input objects which should checked
+whether they match exactly.</p></li>
+<li><p><strong>d2</strong> (<em>str</em><em>, </em><em>boolean</em><em>, </em><em>int</em>) – The input objects which should checked
+whether they match exactly.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A value of 1 is returned if they match exactly,
+else returns 0. Further if one of the objects is NaN or None,
+it returns NaN.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">exact_match</span><span class="p">(</span><span class="s1">&#39;Niall&#39;</span><span class="p">,</span> <span class="s1">&#39;Neal&#39;</span><span class="p">)</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">exact_match</span><span class="p">(</span><span class="s1">&#39;Niall&#39;</span><span class="p">,</span> <span class="s1">&#39;Niall&#39;</span><span class="p">)</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">exact_match</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">exact_match</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">exact_match</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">exact_match</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">exact_match</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<span class="go">nan</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="py_entitymatching.rel_diff">
+<span class="sig-prename descclassname"><span class="pre">py_entitymatching.</span></span><span class="sig-name descname"><span class="pre">rel_diff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/feature/simfunctions.html#rel_diff"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#py_entitymatching.rel_diff" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function computes the relative difference between two numbers</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>d1</strong> (<em>float</em>) – The input numbers for which the relative difference
+must be computed.</p></li>
+<li><p><strong>d2</strong> (<em>float</em>) – The input numbers for which the relative difference
+must be computed.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A float value of relative difference between the input numbers (if
+they are valid). Further if one of the input objects is NaN or None,
+it returns NaN.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">rel_diff</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+<span class="go">0.6666666666666666</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">rel_diff</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="go">0.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">rel_diff</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<span class="go">nan</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="py_entitymatching.abs_norm">
+<span class="sig-prename descclassname"><span class="pre">py_entitymatching.</span></span><span class="sig-name descname"><span class="pre">abs_norm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/feature/simfunctions.html#abs_norm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#py_entitymatching.abs_norm" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function computes the absolute norm similarity between two numbers</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>d1</strong> (<em>float</em>) – Input numbers for which the absolute norm must
+be computed.</p></li>
+<li><p><strong>d2</strong> (<em>float</em>) – Input numbers for which the absolute norm must
+be computed.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A float value of absolute norm between the input numbers (if
+they are valid). Further if one of the input objects is NaN or None,
+it returns NaN.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">abs_norm</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+<span class="go">0.5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">abs_norm</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="go">1.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">em</span><span class="o">.</span><span class="n">abs_norm</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<span class="go">nan</span>
+</pre></div>
+</div>
+</dd></dl>
+
 </div>
 
 
@@ -213,37 +728,29 @@
            
           </div>
           <footer>
-  
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="supported_tokenizers.html" class="btn btn-neutral float-right" title="Supported Tokenizers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="imputing_missing_values.html" class="btn btn-neutral float-left" title="Imputing Missing Values" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+        <a href="supported_tokenizers.html" class="btn btn-neutral float-right" title="Supported Tokenizers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="imputing_missing_values.html" class="btn btn-neutral float-left" title="Imputing Missing Values" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        
-        &copy; Copyright 2016, anhaidgroup
+        &#169; Copyright 2016, anhaidgroup.
 
     </p>
   </div>
     
     
     
-    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     
-    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     
     provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 

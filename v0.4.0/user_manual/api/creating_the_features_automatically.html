@@ -3,9 +3,9 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>Creating the Features Automatically &mdash; py_entitymatching 0.4.0 documentation</title>
   
@@ -13,10 +13,15 @@
   
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
 
   
   
+
   
+  
+
   
 
   
@@ -26,10 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -51,7 +56,7 @@
           
 
           
-            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> py_entitymatching
+            <a href="../../index.html" class="icon icon-home"> py_entitymatching
           
 
           
@@ -175,6 +180,8 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
@@ -190,7 +197,7 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="../../_sources/user_manual/api/creating_the_features_automatically.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -206,6 +213,148 @@
             
   <div class="section" id="creating-the-features-automatically">
 <h1>Creating the Features Automatically<a class="headerlink" href="#creating-the-features-automatically" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="py_entitymatching.get_features_for_blocking">
+<span class="sig-prename descclassname"><span class="pre">py_entitymatching.</span></span><span class="sig-name descname"><span class="pre">get_features_for_blocking</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ltable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rtable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate_inferred_attr_types</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/feature/autofeaturegen.html#get_features_for_blocking"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#py_entitymatching.get_features_for_blocking" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function automatically generates features that can be used for
+blocking purposes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ltable</strong> (<em>DataFrame</em>) – The pandas DataFrames for which the
+features are to be generated.</p></li>
+<li><p><strong>rtable</strong> (<em>DataFrame</em>) – The pandas DataFrames for which the
+features are to be generated.</p></li>
+<li><p><strong>validate_inferred_attr_types</strong> (<em>boolean</em>) – A flag to indicate whether to
+show the user the inferred attribute types and the features
+chosen for those types.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>A pandas DataFrame containing automatically generated features.</p>
+<p>Specifically, the DataFrame contains the following attributes:
+‘feature_name’, ‘left_attribute’, ‘right_attribute’,
+‘left_attr_tokenizer’, ‘right_attr_tokenizer’, ‘simfunction’,
+‘function’, ‘function_source’, and ‘is_auto_generated’.</p>
+<p>Further, this function also sets the following global variables:
+_block_t, _block_s, _atypes1, _atypes2, and _block_c.</p>
+<p>The variable _block_t contains the tokenizers used and  _block_s
+contains the similarity functions used for creating features.</p>
+<p>The variables _atypes1, and  _atypes2 contain the attribute types for
+ltable and rtable respectively. The variable _block_c contains the
+attribute correspondences between the two input tables.</p>
+</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>AssertionError</strong> – If <cite>ltable</cite> is not of type pandas
+    DataFrame.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>rtable</cite> is not of type pandas
+    DataFrame.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>validate_inferred_attr_types</cite> is not of type
+    pandas DataFrame.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">block_f</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_features_for_blocking</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In the output DataFrame, two
+attributes demand some explanation: (1) function, and (2)
+is_auto_generated. The function, points to the actual Python function
+that implements the feature. Specifically, the function takes in two
+tuples (one from each input table) and returns a numeric value. The
+attribute is_auto_generated contains either True or False. The flag
+is True only if the feature is automatically generated by py_entitymatching.
+This is important because this flag is used to make some assumptions
+about the semantics of the similarity function used and use that
+information for scaling purposes.</p>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="creating_the_features_manually.html#py_entitymatching.get_attr_corres" title="py_entitymatching.get_attr_corres"><code class="xref py py-meth docutils literal notranslate"><span class="pre">py_entitymatching.get_attr_corres()</span></code></a>, <a class="reference internal" href="creating_the_features_manually.html#py_entitymatching.get_attr_types" title="py_entitymatching.get_attr_types"><code class="xref py py-meth docutils literal notranslate"><span class="pre">py_entitymatching.get_attr_types()</span></code></a>,
+<a class="reference internal" href="creating_the_features_manually.html#py_entitymatching.get_sim_funs_for_blocking" title="py_entitymatching.get_sim_funs_for_blocking"><code class="xref py py-meth docutils literal notranslate"><span class="pre">py_entitymatching.get_sim_funs_for_blocking()</span></code></a>
+<a class="reference internal" href="creating_the_features_manually.html#py_entitymatching.get_tokenizers_for_blocking" title="py_entitymatching.get_tokenizers_for_blocking"><code class="xref py py-meth docutils literal notranslate"><span class="pre">py_entitymatching.get_tokenizers_for_blocking()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="py_entitymatching.get_features_for_matching">
+<span class="sig-prename descclassname"><span class="pre">py_entitymatching.</span></span><span class="sig-name descname"><span class="pre">get_features_for_matching</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ltable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rtable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate_inferred_attr_types</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/feature/autofeaturegen.html#get_features_for_matching"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#py_entitymatching.get_features_for_matching" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function automatically generates features that can be used for
+matching purposes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ltable</strong> (<em>DataFrame</em>) – The pandas DataFrames for which the
+features are to be generated.</p></li>
+<li><p><strong>rtable</strong> (<em>DataFrame</em>) – The pandas DataFrames for which the
+features are to be generated.</p></li>
+<li><p><strong>validate_inferred_attr_types</strong> (<em>boolean</em>) – A flag to indicate whether to
+show the user the inferred attribute types and the features
+chosen for those types.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>A pandas DataFrame containing automatically generated features.</p>
+<p>Specifically, the DataFrame contains the following attributes:
+‘feature_name’, ‘left_attribute’, ‘right_attribute’,
+‘left_attr_tokenizer’, ‘right_attr_tokenizer’, ‘simfunction’,
+‘function’, ‘function_source’, and ‘is_auto_generated’.</p>
+<p>Further, this function also sets the following global variables:
+_match_t, _match_s, _atypes1, _atypes2, and _match_c.</p>
+<p>The variable _match_t contains the tokenizers used and  _match_s
+contains the similarity functions used for creating features.</p>
+<p>The variables _atypes1, and  _atypes2 contain the attribute types for
+ltable and rtable respectively. The variable _match_c contains the
+attribute correspondences between the two input tables.</p>
+</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>AssertionError</strong> – If <cite>ltable</cite> is not of type pandas
+    DataFrame.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>rtable</cite> is not of type pandas
+    DataFrame.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>validate_inferred_attr_types</cite> is not of type
+    pandas DataFrame.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">match_f</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_features_for_matching</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In the output DataFrame, two
+attributes demand some explanation: (1) function, and (2)
+is_auto_generated. The function, points to the actual Python function
+that implements the feature. Specifically, the function takes in two
+tuples (one from each input table) and returns a numeric value. The
+attribute is_auto_generated contains either True or False. The flag
+is True only if the feature is automatically generated by py_entitymatching.
+This is important because this flag is used to make some assumptions
+about the semantics of the similarity function used and use that
+information for scaling purposes.</p>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="creating_the_features_manually.html#py_entitymatching.get_attr_corres" title="py_entitymatching.get_attr_corres"><code class="xref py py-meth docutils literal notranslate"><span class="pre">py_entitymatching.get_attr_corres()</span></code></a>, <a class="reference internal" href="creating_the_features_manually.html#py_entitymatching.get_attr_types" title="py_entitymatching.get_attr_types"><code class="xref py py-meth docutils literal notranslate"><span class="pre">py_entitymatching.get_attr_types()</span></code></a>,
+<a class="reference internal" href="creating_the_features_manually.html#py_entitymatching.get_sim_funs_for_matching" title="py_entitymatching.get_sim_funs_for_matching"><code class="xref py py-meth docutils literal notranslate"><span class="pre">py_entitymatching.get_sim_funs_for_matching()</span></code></a>
+<a class="reference internal" href="creating_the_features_manually.html#py_entitymatching.get_tokenizers_for_matching" title="py_entitymatching.get_tokenizers_for_matching"><code class="xref py py-meth docutils literal notranslate"><span class="pre">py_entitymatching.get_tokenizers_for_matching()</span></code></a></p>
+</div>
+</dd></dl>
+
 </div>
 
 
@@ -213,37 +362,29 @@
            
           </div>
           <footer>
-  
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="creating_the_features_manually.html" class="btn btn-neutral float-right" title="Creating the Features Manually" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="handling_features.html" class="btn btn-neutral float-left" title="Handling Features" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+        <a href="creating_the_features_manually.html" class="btn btn-neutral float-right" title="Creating the Features Manually" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="handling_features.html" class="btn btn-neutral float-left" title="Handling Features" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        
-        &copy; Copyright 2016, anhaidgroup
+        &#169; Copyright 2016, anhaidgroup.
 
     </p>
   </div>
     
     
     
-    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     
-    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     
     provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 

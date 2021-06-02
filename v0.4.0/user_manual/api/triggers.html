@@ -3,9 +3,9 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>Triggers &mdash; py_entitymatching 0.4.0 documentation</title>
   
@@ -13,10 +13,15 @@
   
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
 
   
   
+
   
+  
+
   
 
   
@@ -26,10 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -51,7 +56,7 @@
           
 
           
-            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> py_entitymatching
+            <a href="../../index.html" class="icon icon-home"> py_entitymatching
           
 
           
@@ -166,6 +171,8 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
@@ -179,7 +186,7 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="../../_sources/user_manual/api/triggers.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -195,6 +202,262 @@
             
   <div class="section" id="triggers">
 <h1>Triggers<a class="headerlink" href="#triggers" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="py_entitymatching.MatchTrigger">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">py_entitymatching.</span></span><span class="sig-name descname"><span class="pre">MatchTrigger</span></span><a class="reference internal" href="../../_modules/py_entitymatching/triggers/matchtrigger.html#MatchTrigger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#py_entitymatching.MatchTrigger" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="py_entitymatching.MatchTrigger.add_action">
+<span class="sig-name descname"><span class="pre">add_action</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/triggers/matchtrigger.html#MatchTrigger.add_action"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#py_entitymatching.MatchTrigger.add_action" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds an action to the match trigger. If the result of a rule is the
+same value as the condition status, then the action will be carried
+out. The condition status can be added with the function add_cond_status.</p>
+<blockquote>
+<div><dl>
+<dt>Args:</dt><dd><p>value (integer): The action. Currently only the values 0 and 1 are supported.</p>
+</dd>
+<dt>Examples:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mt</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">MatchTrigger</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">match_f</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_features_for_matching</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rule</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;title_title_lev_sim(ltuple, rtuple) &gt; 0.7&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mt</span><span class="o">.</span><span class="n">add_cond_rule</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">match_f</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mt</span><span class="o">.</span><span class="n">add_cond_status</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mt</span><span class="o">.</span><span class="n">add_action</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="py_entitymatching.MatchTrigger.add_cond_rule">
+<span class="sig-name descname"><span class="pre">add_cond_rule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conjunct_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_table</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rule_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/triggers/matchtrigger.html#MatchTrigger.add_cond_rule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#py_entitymatching.MatchTrigger.add_cond_rule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a rule to the match trigger.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>conjunct_list</strong> (<em>list</em>) – A list of conjuncts specifying the rule.</p></li>
+<li><p><strong>feature_table</strong> (<em>DataFrame</em>) – A DataFrame containing all the
+features that are being referenced by
+the rule (defaults to None). If the
+feature_table is not supplied here,
+then it must have been specified
+during the creation of the rule-based
+blocker or using set_feature_table
+function. Otherwise an AssertionError
+will be raised and the rule will not
+be added to the rule-based blocker.</p></li>
+<li><p><strong>rule_name</strong> (<em>string</em>) – A string specifying the name of the rule to
+be added (defaults to None). If the
+rule_name is not specified then a name will
+be automatically chosen. If there is already
+a rule with the specified rule_name, then
+an AssertionError will be raised and the
+rule will not be added to the rule-based
+blocker.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The name of the rule added (string).</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>AssertionError</strong> – If <cite>rule_name</cite> already exists.</p></li>
+<li><p><strong>AssertionError</strong> – If <cite>feature_table</cite> is not a valid value parameter.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mt</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">MatchTrigger</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">match_f</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_features_for_matching</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rule</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;title_title_lev_sim(ltuple, rtuple) &gt; 0.7&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mt</span><span class="o">.</span><span class="n">add_cond_rule</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">match_f</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="py_entitymatching.MatchTrigger.add_cond_status">
+<span class="sig-name descname"><span class="pre">add_cond_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">status</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/triggers/matchtrigger.html#MatchTrigger.add_cond_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#py_entitymatching.MatchTrigger.add_cond_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a condition status to the match trigger. If the result of a rule
+is the same value as the condition status, then the action will be
+carried out. The action can be added with the function add_action.</p>
+<blockquote>
+<div><dl>
+<dt>Args:</dt><dd><p>status (boolean): The condition status.</p>
+</dd>
+<dt>Examples:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mt</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">MatchTrigger</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">match_f</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_features_for_matching</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rule</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;title_title_lev_sim(ltuple, rtuple) &gt; 0.7&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mt</span><span class="o">.</span><span class="n">add_cond_rule</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">match_f</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mt</span><span class="o">.</span><span class="n">add_cond_status</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mt</span><span class="o">.</span><span class="n">add_action</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="py_entitymatching.MatchTrigger.delete_rule">
+<span class="sig-name descname"><span class="pre">delete_rule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rule_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/triggers/matchtrigger.html#MatchTrigger.delete_rule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#py_entitymatching.MatchTrigger.delete_rule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes a rule from the match trigger.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>rule_name</strong> (<em>string</em>) – Name of the rule to be deleted.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mt</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">MatchTrigger</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">match_f</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_features_for_matching</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rule</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;title_title_lev_sim(ltuple, rtuple) &gt; 0.7&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mt</span><span class="o">.</span><span class="n">add_cond_rule</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">match_f</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mt</span><span class="o">.</span><span class="n">delete_rule</span><span class="p">(</span><span class="s1">&#39;rule_1&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="py_entitymatching.MatchTrigger.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_table</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_column</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inplace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/triggers/matchtrigger.html#MatchTrigger.execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#py_entitymatching.MatchTrigger.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Executes the rules of the match trigger for a table of matcher
+results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_table</strong> (<em>DataFrame</em>) – The input table of type pandas DataFrame
+containing tuple pairs and labels from matching (defaults to None).</p></li>
+<li><p><strong>label_column</strong> (<em>string</em>) – The attribute name where the predictions
+are stored in the input table (defaults to None).</p></li>
+<li><p><strong>inplace</strong> (<em>boolean</em>) – A flag to indicate whether the append needs to be
+done inplace (defaults to True).</p></li>
+<li><p><strong>verbose</strong> (<em>boolean</em>) – A flag to indicate whether the debug information
+should be logged (defaults to False).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A DataFrame with predictions updated.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mt</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">MatchTrigger</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">match_f</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_features_for_matching</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rule</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;title_title_lev_sim(ltuple, rtuple) &gt; 0.7&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mt</span><span class="o">.</span><span class="n">add_cond_rule</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">match_f</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mt</span><span class="o">.</span><span class="n">add_cond_status</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mt</span><span class="o">.</span><span class="n">add_action</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># The table H is a table with prediction labels generated from matching</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mt</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">input_table</span><span class="o">=</span><span class="n">H</span><span class="p">,</span> <span class="n">label_column</span><span class="o">=</span><span class="s1">&#39;predicted_labels&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="py_entitymatching.MatchTrigger.get_rule">
+<span class="sig-name descname"><span class="pre">get_rule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rule_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/triggers/matchtrigger.html#MatchTrigger.get_rule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#py_entitymatching.MatchTrigger.get_rule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the function corresponding to a rule.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>rule_name</strong> (<em>string</em>) – Name of the rule.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A function object corresponding to the specified rule.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mt</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">MatchTrigger</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">match_f</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_features_for_matching</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rule</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;title_title_lev_sim(ltuple, rtuple) &gt; 0.7&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mt</span><span class="o">.</span><span class="n">add_cond_rule</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">match_f</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mt</span><span class="o">.</span><span class="n">get_rule</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="py_entitymatching.MatchTrigger.get_rule_names">
+<span class="sig-name descname"><span class="pre">get_rule_names</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/triggers/matchtrigger.html#MatchTrigger.get_rule_names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#py_entitymatching.MatchTrigger.get_rule_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the names of all the rules in the match trigger.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A list of names of all the rules in the match trigger (list).</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mt</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">MatchTrigger</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">match_f</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_features_for_matching</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rule</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;title_title_lev_sim(ltuple, rtuple) &gt; 0.7&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mt</span><span class="o">.</span><span class="n">add_cond_rule</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">match_f</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mt</span><span class="o">.</span><span class="n">get_rule_names</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="py_entitymatching.MatchTrigger.set_feature_table">
+<span class="sig-name descname"><span class="pre">set_feature_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_table</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/triggers/matchtrigger.html#MatchTrigger.set_feature_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#py_entitymatching.MatchTrigger.set_feature_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets feature table for the match trigger.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>feature_table</strong> (<em>DataFrame</em>) – A DataFrame containing features.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mt</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">MatchTrigger</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">match_f</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_features_for_matching</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mt</span><span class="o">.</span><span class="n">set_feature_table</span><span class="p">(</span><span class="n">match_f</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="py_entitymatching.MatchTrigger.view_rule">
+<span class="sig-name descname"><span class="pre">view_rule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rule_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/py_entitymatching/triggers/matchtrigger.html#MatchTrigger.view_rule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#py_entitymatching.MatchTrigger.view_rule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints the source code of the function corresponding to a rule.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>rule_name</strong> (<em>string</em>) – Name of the rule to be viewed.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">py_entitymatching</span> <span class="k">as</span> <span class="nn">em</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mt</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">MatchTrigger</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_A.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">read_csv_metadata</span><span class="p">(</span><span class="s1">&#39;path_to_csv_dir/table_B.csv&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">match_f</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">get_features_for_matching</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rule</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;title_title_lev_sim(ltuple, rtuple) &gt; 0.7&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mt</span><span class="o">.</span><span class="n">add_cond_rule</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">match_f</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mt</span><span class="o">.</span><span class="n">view_rule</span><span class="p">(</span><span class="s1">&#39;rule_1&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 
 
@@ -202,37 +465,29 @@
            
           </div>
           <footer>
-  
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="evaluating_the_matching_output.html" class="btn btn-neutral float-right" title="Evaluating the Matching Output" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="debugging_matcher.html" class="btn btn-neutral float-left" title="Debugging Matcher" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+        <a href="evaluating_the_matching_output.html" class="btn btn-neutral float-right" title="Evaluating the Matching Output" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="debugging_matcher.html" class="btn btn-neutral float-left" title="Debugging Matcher" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        
-        &copy; Copyright 2016, anhaidgroup
+        &#169; Copyright 2016, anhaidgroup.
 
     </p>
   </div>
     
     
     
-    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     
-    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     
     provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 
