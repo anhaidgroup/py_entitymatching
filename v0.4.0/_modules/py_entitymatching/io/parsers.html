@@ -1,0 +1,691 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>py_entitymatching.io.parsers &mdash; py_entitymatching 0.4.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> py_entitymatching
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.4
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">How To Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../how_to_guide.html">How to Guide To Do Entity Matching</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/whatisnew.html">What is New?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/overview.html">Overview of Supported EM Processes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/guides.html">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/datastructures.html">Data Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/steps_supp_em_workflows.html">Steps of Supported EM Workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/misc.html">Miscellaneous</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/api/overview.html">Overview of Command Organization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/api/actual_commands.html">Commands in py_entitymatching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/api/actual_commands.html#experimental-commands">Experimental Commands</a></li>
+</ul>
+<p class="caption"><span class="caption-text">How to Contribute</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing to py_entitymatching</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">py_entitymatching</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>py_entitymatching.io.parsers</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for py_entitymatching.io.parsers</h1><div class="highlight"><pre>
+<span></span><span class="c1"># coding=utf-8</span>
+<span class="sd">&quot;&quot;&quot;This module defines functions to read and write CSV files&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">collections</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">six</span>
+
+<span class="kn">import</span> <span class="nn">py_entitymatching.catalog.catalog_manager</span> <span class="k">as</span> <span class="nn">cm</span>
+<span class="kn">from</span> <span class="nn">py_entitymatching.utils.validation_helper</span> <span class="kn">import</span> <span class="n">validate_object_type</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="read_csv_metadata"><a class="viewcode-back" href="../../../user_manual/api/reading_and_writing_data.html#py_entitymatching.read_csv_metadata">[docs]</a><span class="k">def</span> <span class="nf">read_csv_metadata</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reads a CSV (comma-separated values) file into a pandas DataFrame</span>
+<span class="sd">    and update the catalog with the metadata. The CSV files typically contain</span>
+<span class="sd">    data for the input tables or a candidate set.</span>
+
+<span class="sd">    Specifically, this function first reads the CSV file from the given file</span>
+<span class="sd">    path into a pandas DataFrame, by using pandas&#39; in-built &#39;read_csv&#39;</span>
+<span class="sd">    method. Then, it updates the catalog with the metadata. There are three</span>
+<span class="sd">    ways to update the metadata: (1) using a metadata file, (2) using the</span>
+<span class="sd">    key-value parameters supplied in the function, and (3) using both</span>
+<span class="sd">    metadata file and key-value parameters.</span>
+
+<span class="sd">    To update the metadata in the catalog using the metadata file,</span>
+<span class="sd">    the function will look for a file in the same directory with  same file name</span>
+<span class="sd">    but with a  specific extension. This extension can be optionally given by</span>
+<span class="sd">    the user (defaults to &#39;.metadata&#39;). If the metadata  file is  present,</span>
+<span class="sd">    the function will read and update the catalog appropriately. If  the</span>
+<span class="sd">    metadata file is not present, the function will issue a warning that the</span>
+<span class="sd">    metadata file is not present.</span>
+
+<span class="sd">    The metadata information can also be given as parameters to the function</span>
+<span class="sd">    (see description of arguments for more details). If given, the function</span>
+<span class="sd">    will update the catalog with the given information.</span>
+
+<span class="sd">    Further, the metadata can partly reside in the metdata file and partly as</span>
+<span class="sd">    supplied parameters. The function will take a union of the two and</span>
+<span class="sd">    update the catalog appropriately.</span>
+<span class="sd">    If the same metadata is given in both the metadata file</span>
+<span class="sd">    and the function, then the metadata in the function takes precedence over</span>
+<span class="sd">    the metadata given in the file.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        file_path(string): The CSV file path</span>
+
+<span class="sd">        kwargs(dictionary): A Python dictionary containing key-value arguments.</span>
+<span class="sd">            There are a few key-value pairs that are specific to</span>
+<span class="sd">            read_csv_metadata and  all the other key-value pairs are passed</span>
+<span class="sd">            to pandas read_csv method</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A pandas DataFrame read from the input CSV file.</span>
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If `file_path` is not of type string.</span>
+<span class="sd">        AssertionError: If a file does not exist in the</span>
+<span class="sd">            given `file_path`.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        *Example 1:* Read from CSV file and set metadata</span>
+
+<span class="sd">        &gt;&gt;&gt; A = em.read_csv_metadata(&#39;path_to_csv_file&#39;, key=&#39;id&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; em.get_key(A)</span>
+<span class="sd">         # &#39;id&#39;</span>
+
+<span class="sd">        *Example 2:*  Read from CSV file (with metadata file in the same directory</span>
+
+<span class="sd">         Let the metadata file contain the following contents:</span>
+
+<span class="sd">          #key = id</span>
+
+<span class="sd">        &gt;&gt;&gt; A = em.read_csv_metadata(&#39;path_to_csv_file&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; em.get_key(A)</span>
+<span class="sd">         # &#39;id&#39;</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        :meth:`~py_entitymatching.to_csv_metadata`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Validate the input parameters.</span>
+
+    <span class="n">validate_object_type</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">,</span> <span class="n">error_prefix</span><span class="o">=</span><span class="s1">&#39;Input file path&#39;</span><span class="p">)</span>
+
+    <span class="c1"># # Check if the given path is valid.</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;File does not exist at path </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">file_path</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;File does not exist at path </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">file_path</span><span class="p">)</span>
+
+    <span class="c1"># Check if the user has specified the metadata file&#39;s extension.</span>
+    <span class="n">extension</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;metadata_extn&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="c1"># If the extension is not specified then set the extension to .metadata&#39;.</span>
+    <span class="k">if</span> <span class="n">extension</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">extension</span> <span class="o">=</span> <span class="s1">&#39;.metadata&#39;</span>
+
+    <span class="c1"># Format the extension to include a &#39;.&#39; in front if the user has not</span>
+    <span class="c1"># given one.</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">extension</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">):</span>
+        <span class="n">extension</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="n">extension</span>
+
+    <span class="c1"># If the file is present, then update metadata from file.</span>
+    <span class="k">if</span> <span class="n">_is_metadata_file_present</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">extension</span><span class="o">=</span><span class="n">extension</span><span class="p">):</span>
+        <span class="n">file_name</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+        <span class="n">file_name</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">file_name</span><span class="p">,</span> <span class="n">extension</span><span class="p">])</span>
+        <span class="n">metadata</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_get_metadata_from_file</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
+
+    <span class="c1"># Else issue a warning that the metadata file is not present</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Metadata file is not present in the given path; &#39;</span>
+                       <span class="s1">&#39;proceeding to read the csv file.&#39;</span><span class="p">)</span>
+        <span class="n">metadata</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="c1"># Update the metadata with the key-value pairs given in the command. The</span>
+    <span class="c1"># function _update_metadata_for_read_cmd takes care of updating the</span>
+    <span class="c1"># metadata with only the key-value pairs specific to read_csv_metadata</span>
+    <span class="c1"># method</span>
+    <span class="n">metadata</span><span class="p">,</span> <span class="n">kwargs</span> <span class="o">=</span> <span class="n">_update_metadata_for_read_cmd</span><span class="p">(</span><span class="n">metadata</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="c1"># Validate the metadata.</span>
+    <span class="n">_check_metadata_for_read_cmd</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span>
+
+    <span class="c1"># Read the csv file using pandas read_csv method.</span>
+    <span class="n">data_frame</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="c1"># Get the value for &#39;key&#39; property and update the catalog.</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;key&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">key</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">cm</span><span class="o">.</span><span class="n">set_key</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+
+    <span class="n">fk_ltable</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;fk_ltable&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">fk_ltable</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">cm</span><span class="o">.</span><span class="n">set_fk_ltable</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">fk_ltable</span><span class="p">)</span>
+
+    <span class="n">fk_rtable</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;fk_rtable&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">fk_ltable</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">cm</span><span class="o">.</span><span class="n">set_fk_rtable</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">fk_rtable</span><span class="p">)</span>
+
+    <span class="c1"># Update the catalog with other properties.</span>
+    <span class="k">for</span> <span class="n">property_name</span><span class="p">,</span> <span class="n">property_value</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="n">metadata</span><span class="p">):</span>
+        <span class="n">cm</span><span class="o">.</span><span class="n">set_property</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">property_name</span><span class="p">,</span> <span class="n">property_value</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">cm</span><span class="o">.</span><span class="n">is_dfinfo_present</span><span class="p">(</span><span class="n">data_frame</span><span class="p">):</span>
+        <span class="n">cm</span><span class="o">.</span><span class="n">init_properties</span><span class="p">(</span><span class="n">data_frame</span><span class="p">)</span>
+
+    <span class="c1"># Return the DataFrame</span>
+    <span class="k">return</span> <span class="n">data_frame</span></div>
+
+
+<div class="viewcode-block" id="to_csv_metadata"><a class="viewcode-back" href="../../../user_manual/api/reading_and_writing_data.html#py_entitymatching.to_csv_metadata">[docs]</a><span class="k">def</span> <span class="nf">to_csv_metadata</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Writes the DataFrame contents to a CSV file and the DataFrame&#39;s metadata</span>
+<span class="sd">    (to a separate text file).</span>
+
+<span class="sd">    This function writes the DataFrame contents to a CSV file in</span>
+<span class="sd">    the given file path. It uses &#39;to_csv&#39; method from pandas to write</span>
+<span class="sd">    the CSV file. The metadata contents are written to the same directory</span>
+<span class="sd">    derived from the file path but with the different extension. This</span>
+<span class="sd">    extension can be optionally given by the user (with the default value</span>
+<span class="sd">    set to .metadata).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data_frame (DataFrame): The DataFrame that should be written to disk.</span>
+<span class="sd">        file_path (string):  The file path to which the DataFrame contents</span>
+<span class="sd">            should be written. Metadata is written with the same file name</span>
+<span class="sd">            with the extension given by the user (defaults to &#39;.metadata&#39;).</span>
+<span class="sd">        kwargs (dictionary):  A Python dictionary containing key-value pairs.</span>
+<span class="sd">            There is one key-value pair that is specific to</span>
+<span class="sd">            to_csv_metadata: metadata_extn. All the other key-value pairs</span>
+<span class="sd">            are passed to pandas to_csv function.</span>
+<span class="sd">            Here the metadata_extn is the metadata</span>
+<span class="sd">            extension (defaults to &#39;.metadata&#39;), with which</span>
+<span class="sd">            the metadata file must be written.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        A Boolean value of True is returned if the files were written</span>
+<span class="sd">        successfully.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If `data_frame` is not of type  pandas</span>
+<span class="sd">            DataFrame.</span>
+<span class="sd">        AssertionError: If `file_path` is not of type string.</span>
+<span class="sd">        AssertionError: If DataFrame cannot be written to the given</span>
+<span class="sd">         `file_path`.</span>
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">        &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">        &gt;&gt;&gt; A = pd.DataFrame({&#39;id&#39; : [1, 2], &#39;colA&#39;:[&#39;a&#39;, &#39;b&#39;], &#39;colB&#39; : [10, 20]})</span>
+<span class="sd">        &gt;&gt;&gt; em.set_key(A, &#39;id&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; em.to_csv_metadata(A, &#39;path_to_csv_file&#39;)</span>
+
+
+<span class="sd">    See Also:</span>
+<span class="sd">        :meth:`~py_entitymatching.read_csv_metadata`</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Validate input parameters</span>
+
+    <span class="n">validate_object_type</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span>
+
+    <span class="n">validate_object_type</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">,</span> <span class="n">error_prefix</span><span class="o">=</span><span class="s1">&#39;Input file path&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Check if the user has specified the metadata file&#39;s extension.</span>
+    <span class="n">extension</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;metadata_extn&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">extension</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">extension</span> <span class="o">=</span> <span class="s1">&#39;.metadata&#39;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">extension</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">):</span>
+        <span class="n">extension</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="n">extension</span>
+
+    <span class="c1"># If the user has not specified whether the index should be written,</span>
+    <span class="c1"># we explicitly set it to be false. The reason is writing the index</span>
+    <span class="c1"># along makes the CSV file cumbersome to view and later read back into a</span>
+    <span class="c1"># DataFrame.</span>
+    <span class="n">index</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;index&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">index</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;index&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="c1"># retrieve the file name and the extension from the given file path.</span>
+    <span class="n">file_name</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+    <span class="n">metadata_filename</span> <span class="o">=</span> <span class="n">file_name</span> <span class="o">+</span> <span class="n">extension</span>
+
+    <span class="c1"># check if we access privileges to write a file in the given file path,</span>
+    <span class="c1"># and also check if a file already exists in the file path.</span>
+    <span class="n">can_write</span><span class="p">,</span> <span class="n">file_exists</span> <span class="o">=</span> <span class="n">_check_file_path</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">can_write</span><span class="p">:</span>
+        <span class="c1"># check if the file already exists. If so issue a warning and</span>
+        <span class="c1"># overwrite the file.</span>
+        <span class="k">if</span> <span class="n">file_exists</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;File already exists at </span><span class="si">%s</span><span class="s1">; Overwriting it&#39;</span><span class="p">,</span>
+                           <span class="n">file_path</span><span class="p">)</span>
+            <span class="n">data_frame</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">data_frame</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># If we cannot write in the given file path, raise an exception.</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Cannot write in the file path </span><span class="si">%s</span><span class="s1">; Exiting&#39;</span> <span class="o">%</span> <span class="n">file_path</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Cannot write in the file path </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">file_path</span><span class="p">)</span>
+
+    <span class="c1"># repeat the process (as writing the DataFrame) to write the metadata.</span>
+
+    <span class="c1"># check for access privileges and file existence.</span>
+    <span class="n">can_write</span><span class="p">,</span> <span class="n">file_exists</span> <span class="o">=</span> <span class="n">_check_file_path</span><span class="p">(</span><span class="n">metadata_filename</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">can_write</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">file_exists</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Metadata file already exists at </span><span class="si">%s</span><span class="s1">. Overwriting &#39;</span>
+                           <span class="s1">&#39;it&#39;</span><span class="p">,</span> <span class="n">metadata_filename</span><span class="p">)</span>
+            <span class="n">_write_metadata</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">metadata_filename</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">_write_metadata</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">metadata_filename</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># If we cannot write in the given file path, raise an exception.</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Cannot write in the file path </span><span class="si">%s</span><span class="s1">; Exiting&#39;</span> <span class="o">%</span> <span class="n">file_path</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Cannot write in the file path </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">file_path</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<span class="k">def</span> <span class="nf">_write_metadata</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">file_path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Write metadata contents to disk.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Initialize a metadata dictionary to store the metadata.</span>
+    <span class="n">metadata_dict</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">OrderedDict</span><span class="p">()</span>
+
+    <span class="c1"># Get all the properties for the input data frame</span>
+    <span class="k">if</span> <span class="n">cm</span><span class="o">.</span><span class="n">is_dfinfo_present</span><span class="p">(</span><span class="n">data_frame</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">properties</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">get_all_properties</span><span class="p">(</span><span class="n">data_frame</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># If the data_frame is not in the catalog, then return immedidately.</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="c1"># If the properties are present in the catalog, then write properties to</span>
+    <span class="c1"># disk</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">properties</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">property_name</span><span class="p">,</span> <span class="n">property_value</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="n">properties</span><span class="p">):</span>
+            <span class="c1"># If the property value is not of type string, then just write it</span>
+            <span class="c1">#  as &#39;POINTER&#39;. This will be useful while writing the candidate</span>
+            <span class="c1"># sets to disk. The candidate set will have properties such as</span>
+            <span class="c1"># ltable and rtable which are DataFrames. We do not have a simple</span>
+            <span class="c1"># way to write them to disk and link them back the candidate set</span>
+            <span class="c1"># while reading back from disk. So to get around this problem we</span>
+            <span class="c1"># will use &#39;POINTER&#39; as the special value to indicate objects</span>
+            <span class="c1"># other than strings.</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">property_value</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="n">metadata_dict</span><span class="p">[</span><span class="n">property_name</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;POINTER&#39;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">metadata_dict</span><span class="p">[</span><span class="n">property_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">property_value</span>
+
+        <span class="c1"># Write the properties to a file in disk. The file will one property</span>
+        <span class="c1"># per line. We follow a special syntax to write the properties. The</span>
+        <span class="c1"># syntax is:</span>
+        <span class="c1"># #property_name=property_value</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_handler</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">property_name</span><span class="p">,</span> <span class="n">property_value</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="n">metadata_dict</span><span class="p">):</span>
+                <span class="n">file_handler</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;#</span><span class="si">%s</span><span class="s1">=</span><span class="si">%s</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">property_name</span><span class="p">,</span> <span class="n">property_value</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="kc">True</span>
+
+
+<span class="k">def</span> <span class="nf">_is_metadata_file_present</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">extension</span><span class="o">=</span><span class="s1">&#39;.metadata&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Check if the metadata file is present.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get the file name and the extension from the file path.</span>
+    <span class="n">file_name</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+    <span class="c1"># Create a file name with the given extension.</span>
+    <span class="n">file_name</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">file_name</span><span class="p">,</span> <span class="n">extension</span><span class="p">])</span>
+    <span class="c1"># Check if the file already exists.</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_get_metadata_from_file</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the metadata information from the file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Initialize a dictionary to store the metadata read from the file.</span>
+    <span class="n">metadata</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+    <span class="c1"># Get the number of lines from the file</span>
+    <span class="n">num_lines</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">))</span>
+
+    <span class="c1"># If there are some contents in the file (i.e num_lines &gt; 0),</span>
+    <span class="c1"># read its contents.</span>
+    <span class="k">if</span> <span class="n">num_lines</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">file_handler</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_lines</span><span class="p">):</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">file_handler</span><span class="p">)</span>
+                <span class="c1"># Consider only the lines that are starting with &#39;#&#39;</span>
+                <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;#&#39;</span><span class="p">):</span>
+                    <span class="c1"># Remove the leading &#39;#&#39;</span>
+                    <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s1">&#39;#&#39;</span><span class="p">)</span>
+                    <span class="c1"># Split the line with &#39;=&#39; as the delimiter</span>
+                    <span class="n">tokens</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">)</span>
+                    <span class="c1"># Based on the special syntax we use, there should be</span>
+                    <span class="c1"># exactly two tokens after we split using &#39;=&#39;</span>
+                    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span> <span class="ow">is</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;Error in file, he num tokens &#39;</span> \
+                                             <span class="s1">&#39;is not 2&#39;</span>
+                    <span class="c1"># Retrieve the property_names and values.</span>
+                    <span class="n">property_name</span> <span class="o">=</span> <span class="n">tokens</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                    <span class="n">property_value</span> <span class="o">=</span> <span class="n">tokens</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                    <span class="c1"># If the property value is not &#39;POINTER&#39; then store it in</span>
+                    <span class="c1">#  the metadata dictionary.</span>
+                    <span class="k">if</span> <span class="n">property_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="s1">&#39;POINTER&#39;</span><span class="p">:</span>
+                        <span class="n">metadata</span><span class="p">[</span><span class="n">property_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">property_value</span>
+
+    <span class="c1"># Return the metadata dictionary and the number of lines in the file.</span>
+    <span class="k">return</span> <span class="n">metadata</span><span class="p">,</span> <span class="n">num_lines</span>
+
+
+<span class="k">def</span> <span class="nf">_update_metadata_for_read_cmd</span><span class="p">(</span><span class="n">metadata</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Update metadata for read_csv_metadata method.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Create a copy of incoming metadata. We will update the incoming</span>
+    <span class="c1"># metadata dict with kwargs.</span>
+    <span class="n">copy_metadata</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="c1"># The updation is going to happen in two steps: (1) overriding the</span>
+    <span class="c1"># properties in metadata dict using kwargs, and (2) adding the properties</span>
+    <span class="c1">#  to metadata dict from kwargs.</span>
+
+    <span class="c1"># Step 1</span>
+    <span class="c1"># We will override the properties in the metadata dict with the</span>
+    <span class="c1"># properties from kwargs.</span>
+
+    <span class="c1"># Get the property from metadata dict.</span>
+    <span class="k">for</span> <span class="n">property_name</span> <span class="ow">in</span> <span class="n">copy_metadata</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="c1"># If the same property is present in kwargs, then override it in the</span>
+        <span class="c1"># metadata dict.</span>
+        <span class="k">if</span> <span class="n">property_name</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">property_value</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">property_name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">property_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">metadata</span><span class="p">[</span><span class="n">property_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">property_value</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Warn the users if the metadata dict had a valid value,</span>
+                <span class="c1"># but the kwargs sets it to None.</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                    <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> key had a value (</span><span class="si">%s</span><span class="s1">)in file but input arg is set to &#39;</span>
+                    <span class="s1">&#39;None&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">property_name</span><span class="p">,</span> <span class="n">metadata</span><span class="p">[</span><span class="n">property_name</span><span class="p">]))</span>
+                <span class="c1"># Remove the property from the dictionary.</span>
+                <span class="n">metadata</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">property_name</span><span class="p">)</span>  <span class="c1"># remove the key-value pair</span>
+
+    <span class="c1"># Step 2</span>
+    <span class="c1"># Add the properties from kwargs.</span>
+    <span class="c1"># We should be careful here. The kwargs contains the key-value pairs that</span>
+    <span class="c1"># are used by read_csv method (of pandas). We will just pick the</span>
+    <span class="c1"># properties that we expect from the read_csv_metadata method.</span>
+    <span class="n">properties</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;key&#39;</span><span class="p">,</span> <span class="s1">&#39;ltable&#39;</span><span class="p">,</span> <span class="s1">&#39;rtable&#39;</span><span class="p">,</span> <span class="s1">&#39;fk_ltable&#39;</span><span class="p">,</span> <span class="s1">&#39;fk_rtable&#39;</span><span class="p">]</span>
+
+    <span class="c1"># For the properties that we expect, read from kwargs and update the</span>
+    <span class="c1"># metadata dict.</span>
+    <span class="k">for</span> <span class="n">property_name</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">property_name</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">property_value</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">property_name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">property_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">metadata</span><span class="p">[</span><span class="n">property_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">property_value</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Warn the users if the properties in the kwargs is set to None.</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Metadata </span><span class="si">%s</span><span class="s1"> is set to None&#39;</span><span class="p">,</span> <span class="n">property_name</span><span class="p">)</span>
+                <span class="c1"># Remove the property from the metadata dict.</span>
+                <span class="n">metadata</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">property_name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">metadata</span><span class="p">,</span> <span class="n">kwargs</span>
+
+
+<span class="k">def</span> <span class="nf">_check_metadata_for_read_cmd</span><span class="p">(</span><span class="n">metadata</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Check the metadata for read_csv_metadata command</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Do basic validation checks for the metadata.</span>
+
+    <span class="c1"># We require consistency of properties given for the canidate set. We</span>
+    <span class="c1"># expect the user to provide all the required properties for the</span>
+    <span class="c1"># candidate set.</span>
+    <span class="n">required_properties</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ltable&#39;</span><span class="p">,</span> <span class="s1">&#39;rtable&#39;</span><span class="p">,</span> <span class="s1">&#39;fk_ltable&#39;</span><span class="p">,</span> <span class="s1">&#39;fk_rtable&#39;</span><span class="p">]</span>
+
+    <span class="c1"># Check what the user has given</span>
+    <span class="n">given_properties</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">required_properties</span><span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">metadata</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+    <span class="c1"># Check if all the required properties are given</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">given_properties</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c1"># Check the lengths are same. If not, this means that the user is</span>
+        <span class="c1"># missing something. So, raise an error.</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">given_properties</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">required_properties</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="s1">&#39;Dataframe requires all valid ltable, rtable, fk_ltable, &#39;</span>
+                <span class="s1">&#39;fk_rtable parameters set&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span>
+                <span class="s1">&#39;Dataframe requires all valid ltable, rtable, fk_ltable, &#39;</span>
+                <span class="s1">&#39;fk_rtable parameters set&#39;</span><span class="p">)</span>
+
+        <span class="c1"># ltable is expected to be of type pandas DataFrame. If not raise an</span>
+        <span class="c1"># error.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;ltable&#39;</span><span class="p">],</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;The parameter ltable must be set to valid Dataframe&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span>
+                <span class="s1">&#39;The parameter ltable must be set to valid Dataframe&#39;</span><span class="p">)</span>
+
+        <span class="c1"># rtable is expected to be of type pandas DataFrame. If not raise an</span>
+        <span class="c1"># error.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;rtable&#39;</span><span class="p">],</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;The parameter rtable must be set to valid Dataframe&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span>
+                <span class="s1">&#39;The parameter rtable must be set to valid Dataframe&#39;</span><span class="p">)</span>
+    <span class="c1"># If the length of comman properties is 0, it will fall out to return</span>
+    <span class="c1"># True, which is ok.</span>
+    <span class="k">return</span> <span class="kc">True</span>
+
+
+<span class="k">def</span> <span class="nf">_check_file_path</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Check validity (access privileges and existence of a file already)of the</span>
+<span class="sd">    given file path.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># returns a tuple can_write, file_exists</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
+        <span class="c1"># the file is there</span>
+        <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span>
+    <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">access</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">file_path</span><span class="p">),</span> <span class="n">os</span><span class="o">.</span><span class="n">W_OK</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span>
+        <span class="c1"># the file does not exists but write privileges are given</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2016, anhaidgroup.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

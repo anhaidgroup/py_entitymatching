@@ -1,0 +1,619 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>py_entitymatching.triggers.matchtrigger &mdash; py_entitymatching 0.4.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> py_entitymatching
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.4
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">How To Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../how_to_guide.html">How to Guide To Do Entity Matching</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/whatisnew.html">What is New?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/overview.html">Overview of Supported EM Processes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/guides.html">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/datastructures.html">Data Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/steps_supp_em_workflows.html">Steps of Supported EM Workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/misc.html">Miscellaneous</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/api/overview.html">Overview of Command Organization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/api/actual_commands.html">Commands in py_entitymatching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/api/actual_commands.html#experimental-commands">Experimental Commands</a></li>
+</ul>
+<p class="caption"><span class="caption-text">How to Contribute</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing to py_entitymatching</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">py_entitymatching</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>py_entitymatching.triggers.matchtrigger</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for py_entitymatching.triggers.matchtrigger</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">import</span> <span class="nn">py_entitymatching.catalog.catalog_manager</span> <span class="k">as</span> <span class="nn">cm</span>
+<span class="kn">from</span> <span class="nn">py_entitymatching.utils.validation_helper</span> <span class="kn">import</span> <span class="n">validate_object_type</span>
+<span class="kn">from</span> <span class="nn">py_entitymatching.utils.generic_helper</span> <span class="kn">import</span> <span class="n">parse_conjunct</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">six</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="MatchTrigger"><a class="viewcode-back" href="../../../user_manual/api/triggers.html#py_entitymatching.MatchTrigger">[docs]</a><span class="k">class</span> <span class="nc">MatchTrigger</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cond_status</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rules</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rule_source</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rule_conjunct_list</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rule_cnt</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value_to_set</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rule_ft</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">feature_table</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="MatchTrigger.add_cond_rule"><a class="viewcode-back" href="../../../user_manual/api/triggers.html#py_entitymatching.MatchTrigger.add_cond_rule">[docs]</a>    <span class="k">def</span> <span class="nf">add_cond_rule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conjunct_list</span><span class="p">,</span> <span class="n">feature_table</span><span class="p">,</span> <span class="n">rule_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Adds a rule to the match trigger.</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                conjunct_list (list): A list of conjuncts specifying the rule.</span>
+
+<span class="sd">                feature_table (DataFrame): A DataFrame containing all the</span>
+<span class="sd">                                           features that are being referenced by</span>
+<span class="sd">                                           the rule (defaults to None). If the</span>
+<span class="sd">                                           feature_table is not supplied here,</span>
+<span class="sd">                                           then it must have been specified</span>
+<span class="sd">                                           during the creation of the rule-based</span>
+<span class="sd">                                           blocker or using set_feature_table</span>
+<span class="sd">                                           function. Otherwise an AssertionError</span>
+<span class="sd">                                           will be raised and the rule will not</span>
+<span class="sd">                                           be added to the rule-based blocker.</span>
+
+<span class="sd">                rule_name (string): A string specifying the name of the rule to</span>
+<span class="sd">                                    be added (defaults to None). If the</span>
+<span class="sd">                                    rule_name is not specified then a name will</span>
+<span class="sd">                                    be automatically chosen. If there is already</span>
+<span class="sd">                                    a rule with the specified rule_name, then</span>
+<span class="sd">                                    an AssertionError will be raised and the</span>
+<span class="sd">                                    rule will not be added to the rule-based</span>
+<span class="sd">                                    blocker.</span>
+
+<span class="sd">            Returns:</span>
+<span class="sd">                The name of the rule added (string).</span>
+
+<span class="sd">            Raises:</span>
+<span class="sd">                AssertionError: If `rule_name` already exists.</span>
+
+<span class="sd">                AssertionError: If `feature_table` is not a valid value parameter.</span>
+
+<span class="sd">            Examples:</span>
+<span class="sd">                &gt;&gt;&gt; import py_entitymatching as em</span>
+<span class="sd">                &gt;&gt;&gt; mt = em.MatchTrigger()</span>
+<span class="sd">                &gt;&gt;&gt; A = em.read_csv_metadata(&#39;path_to_csv_dir/table_A.csv&#39;, key=&#39;id&#39;)</span>
+<span class="sd">                &gt;&gt;&gt; B = em.read_csv_metadata(&#39;path_to_csv_dir/table_B.csv&#39;, key=&#39;id&#39;)</span>
+<span class="sd">                &gt;&gt;&gt; match_f = em.get_features_for_matching(A, B)</span>
+<span class="sd">                &gt;&gt;&gt; rule = [&#39;title_title_lev_sim(ltuple, rtuple) &gt; 0.7&#39;]</span>
+<span class="sd">                &gt;&gt;&gt; mt.add_cond_rule(rule, match_f)</span>
+
+<span class="sd">            &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conjunct_list</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">conjunct_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">conjunct_list</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">rule_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">rule_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;A rule with the specified rule_name already exists.&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;A rule with the specified rule_name already exists.&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">feature_table</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_table</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Either feature table should be given as parameter &#39;</span> <span class="o">+</span>
+                         <span class="s1">&#39;or use set_feature_table to set the feature table.&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Either feature table should be given as &#39;</span> <span class="o">+</span>
+                                 <span class="s1">&#39;parameter or use set_feature_table to set &#39;</span> <span class="o">+</span>
+                                 <span class="s1">&#39;the feature table.&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">feature_table</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">feature_table</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_table</span>
+
+        <span class="n">fn</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">fn_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_rule</span><span class="p">(</span><span class="n">conjunct_list</span><span class="p">,</span> <span class="n">feature_table</span><span class="p">,</span> <span class="n">rule_name</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">fn</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rule_source</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">fn_str</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rule_conjunct_list</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">conjunct_list</span>
+        <span class="k">if</span> <span class="n">feature_table</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rule_ft</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">feature_table</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rule_ft</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_table</span>
+
+        <span class="k">return</span> <span class="n">name</span></div>
+
+<div class="viewcode-block" id="MatchTrigger.add_cond_status"><a class="viewcode-back" href="../../../user_manual/api/triggers.html#py_entitymatching.MatchTrigger.add_cond_status">[docs]</a>    <span class="k">def</span> <span class="nf">add_cond_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">status</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Adds a condition status to the match trigger. If the result of a rule</span>
+<span class="sd">           is the same value as the condition status, then the action will be</span>
+<span class="sd">           carried out. The action can be added with the function add_action.</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">               status (boolean): The condition status.</span>
+
+<span class="sd">            Examples:</span>
+<span class="sd">                &gt;&gt;&gt; import py_entitymatching as em</span>
+<span class="sd">                &gt;&gt;&gt; mt = em.MatchTrigger()</span>
+<span class="sd">                &gt;&gt;&gt; A = em.read_csv_metadata(&#39;path_to_csv_dir/table_A.csv&#39;, key=&#39;id&#39;)</span>
+<span class="sd">                &gt;&gt;&gt; B = em.read_csv_metadata(&#39;path_to_csv_dir/table_B.csv&#39;, key=&#39;id&#39;)</span>
+<span class="sd">                &gt;&gt;&gt; match_f = em.get_features_for_matching(A, B)</span>
+<span class="sd">                &gt;&gt;&gt; rule = [&#39;title_title_lev_sim(ltuple, rtuple) &gt; 0.7&#39;]</span>
+<span class="sd">                &gt;&gt;&gt; mt.add_cond_rule(rule, match_f)</span>
+<span class="sd">                &gt;&gt;&gt; mt.add_cond_status(True)</span>
+<span class="sd">                &gt;&gt;&gt; mt.add_action(1)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">status</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;status is expected to be a boolean i.e True/False&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cond_status</span> <span class="o">=</span> <span class="n">status</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="MatchTrigger.add_action"><a class="viewcode-back" href="../../../user_manual/api/triggers.html#py_entitymatching.MatchTrigger.add_action">[docs]</a>    <span class="k">def</span> <span class="nf">add_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Adds an action to the match trigger. If the result of a rule is the</span>
+<span class="sd">           same value as the condition status, then the action will be carried</span>
+<span class="sd">           out. The condition status can be added with the function add_cond_status.</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">               value (integer): The action. Currently only the values 0 and 1 are supported.</span>
+
+<span class="sd">            Examples:</span>
+<span class="sd">                &gt;&gt;&gt; import py_entitymatching as em</span>
+<span class="sd">                &gt;&gt;&gt; mt = em.MatchTrigger()</span>
+<span class="sd">                &gt;&gt;&gt; A = em.read_csv_metadata(&#39;path_to_csv_dir/table_A.csv&#39;, key=&#39;id&#39;)</span>
+<span class="sd">                &gt;&gt;&gt; B = em.read_csv_metadata(&#39;path_to_csv_dir/table_B.csv&#39;, key=&#39;id&#39;)</span>
+<span class="sd">                &gt;&gt;&gt; match_f = em.get_features_for_matching(A, B)</span>
+<span class="sd">                &gt;&gt;&gt; rule = [&#39;title_title_lev_sim(ltuple, rtuple) &gt; 0.7&#39;]</span>
+<span class="sd">                &gt;&gt;&gt; mt.add_cond_rule(rule, match_f)</span>
+<span class="sd">                &gt;&gt;&gt; mt.add_cond_status(True)</span>
+<span class="sd">                &gt;&gt;&gt; mt.add_action(1)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">value</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">value</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Currently py_entitymatching supports only values 0/1 as label value&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value_to_set</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="MatchTrigger.execute"><a class="viewcode-back" href="../../../user_manual/api/triggers.html#py_entitymatching.MatchTrigger.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_table</span><span class="p">,</span> <span class="n">label_column</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Executes the rules of the match trigger for a table of matcher</span>
+<span class="sd">            results.</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                input_table (DataFrame): The input table of type pandas DataFrame</span>
+<span class="sd">                    containing tuple pairs and labels from matching (defaults to None).</span>
+<span class="sd">                label_column (string): The attribute name where the predictions</span>
+<span class="sd">                    are stored in the input table (defaults to None).</span>
+<span class="sd">                inplace (boolean): A flag to indicate whether the append needs to be</span>
+<span class="sd">                    done inplace (defaults to True).</span>
+<span class="sd">                verbose (boolean): A flag to indicate whether the debug information</span>
+<span class="sd">                    should be logged (defaults to False).</span>
+
+<span class="sd">            Returns:</span>
+<span class="sd">                A DataFrame with predictions updated.</span>
+
+<span class="sd">            Examples:</span>
+<span class="sd">                &gt;&gt;&gt; import py_entitymatching as em</span>
+<span class="sd">                &gt;&gt;&gt; mt = em.MatchTrigger()</span>
+<span class="sd">                &gt;&gt;&gt; A = em.read_csv_metadata(&#39;path_to_csv_dir/table_A.csv&#39;, key=&#39;id&#39;)</span>
+<span class="sd">                &gt;&gt;&gt; B = em.read_csv_metadata(&#39;path_to_csv_dir/table_B.csv&#39;, key=&#39;id&#39;)</span>
+<span class="sd">                &gt;&gt;&gt; match_f = em.get_features_for_matching(A, B)</span>
+<span class="sd">                &gt;&gt;&gt; rule = [&#39;title_title_lev_sim(ltuple, rtuple) &gt; 0.7&#39;]</span>
+<span class="sd">                &gt;&gt;&gt; mt.add_cond_rule(rule, match_f)</span>
+<span class="sd">                &gt;&gt;&gt; mt.add_cond_status(True)</span>
+<span class="sd">                &gt;&gt;&gt; mt.add_action(1)</span>
+<span class="sd">                &gt;&gt;&gt; # The table H is a table with prediction labels generated from matching</span>
+<span class="sd">                &gt;&gt;&gt; mt.execute(input_table=H, label_column=&#39;predicted_labels&#39;, inplace=False)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Validate input parameters</span>
+        <span class="c1"># # We expect the table to be of type pandas DataFrame</span>
+        <span class="n">validate_object_type</span><span class="p">(</span><span class="n">input_table</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="s1">&#39;Input table&#39;</span><span class="p">)</span>
+
+        <span class="c1"># # We expect the target_attr to be of type string if not None</span>
+        <span class="k">if</span> <span class="n">label_column</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">label_column</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Input target_attr must be a string.&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Input target_attr must be a string.&#39;</span><span class="p">)</span>
+
+        <span class="c1"># # We expect the inplace to be of type boolean</span>
+        <span class="n">validate_object_type</span><span class="p">(</span><span class="n">inplace</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="s1">&#39;Input inplace&#39;</span><span class="p">)</span>
+
+        <span class="c1"># # We expect the verbose to be of type boolean</span>
+        <span class="n">validate_object_type</span><span class="p">(</span><span class="n">verbose</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="s1">&#39;Input append&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Validate that there are some rules</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;There are no rules to apply&#39;</span>
+
+        <span class="c1"># # get metadata</span>
+        <span class="n">key</span><span class="p">,</span> <span class="n">fk_ltable</span><span class="p">,</span> <span class="n">fk_rtable</span><span class="p">,</span> <span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">get_metadata_for_candset</span><span class="p">(</span><span class="n">input_table</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span>
+                                                                                              <span class="n">verbose</span><span class="p">)</span>
+        <span class="c1"># # validate metadata</span>
+        <span class="n">cm</span><span class="o">.</span><span class="n">_validate_metadata_for_candset</span><span class="p">(</span><span class="n">input_table</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">fk_ltable</span><span class="p">,</span> <span class="n">fk_rtable</span><span class="p">,</span> <span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span>
+                                          <span class="n">logger</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+        <span class="k">assert</span> <span class="n">ltable</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;Left table is not set&#39;</span>
+        <span class="k">assert</span> <span class="n">rtable</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;Right table is not set&#39;</span>
+        <span class="k">assert</span> <span class="n">label_column</span> <span class="ow">in</span> <span class="n">input_table</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="s1">&#39;Label column not in the input table&#39;</span>
+
+        <span class="c1"># Parse conjuncts to validate that the features are in the feature table</span>
+        <span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rule_conjunct_list</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">conjunct</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rule_conjunct_list</span><span class="p">[</span><span class="n">rule</span><span class="p">]:</span>
+                <span class="n">parse_conjunct</span><span class="p">(</span><span class="n">conjunct</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rule_ft</span><span class="p">[</span><span class="n">rule</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="n">inplace</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="n">table</span> <span class="o">=</span> <span class="n">input_table</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">table</span> <span class="o">=</span> <span class="n">input_table</span>
+
+        <span class="c1"># set the index and store it in l_tbl/r_tbl</span>
+        <span class="n">l_tbl</span> <span class="o">=</span> <span class="n">ltable</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">l_key</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">r_tbl</span> <span class="o">=</span> <span class="n">rtable</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">r_key</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="c1"># keep track of valid ids</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">column_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">input_table</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+        <span class="n">lid_idx</span> <span class="o">=</span> <span class="n">column_names</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">fk_ltable</span><span class="p">)</span>
+        <span class="n">rid_idx</span> <span class="o">=</span> <span class="n">column_names</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">fk_rtable</span><span class="p">)</span>
+
+        <span class="n">label_idx</span> <span class="o">=</span> <span class="n">column_names</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">label_column</span><span class="p">)</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">input_table</span><span class="o">.</span><span class="n">itertuples</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="n">label_idx</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_to_set</span><span class="p">:</span>
+                <span class="n">l_row</span> <span class="o">=</span> <span class="n">l_tbl</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="n">lid_idx</span><span class="p">]]</span>
+                <span class="n">r_row</span> <span class="o">=</span> <span class="n">r_tbl</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="n">rid_idx</span><span class="p">]]</span>
+                <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">apply_rules</span><span class="p">(</span><span class="n">l_row</span><span class="p">,</span> <span class="n">r_row</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">res</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">cond_status</span><span class="p">:</span>
+                    <span class="n">table</span><span class="o">.</span><span class="n">iat</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="n">label_idx</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_to_set</span>
+            <span class="n">idx</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">table</span></div>
+
+    <span class="k">def</span> <span class="nf">_create_rule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conjunct_list</span><span class="p">,</span> <span class="n">feature_table</span><span class="p">,</span> <span class="n">rule_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">feature_table</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Feature table is not given&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># set the name</span>
+        <span class="k">if</span> <span class="n">rule_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;_rule_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rule_cnt</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rule_cnt</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># use the rule name supplied by the user</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">rule_name</span>
+
+        <span class="n">fn_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_function_str</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">conjunct_list</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">feature_table</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">feat_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">feature_table</span><span class="p">[</span><span class="s1">&#39;feature_name&#39;</span><span class="p">],</span> <span class="n">feature_table</span><span class="p">[</span><span class="s1">&#39;function&#39;</span><span class="p">]))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">feat_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">feature_table</span><span class="p">[</span><span class="s1">&#39;feature_name&#39;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_table</span><span class="p">[</span><span class="s1">&#39;function&#39;</span><span class="p">]))</span>
+
+        <span class="c1"># exec fn_str in feat_dict</span>
+        <span class="n">six</span><span class="o">.</span><span class="n">exec_</span><span class="p">(</span><span class="n">fn_str</span><span class="p">,</span> <span class="n">feat_dict</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">feat_dict</span><span class="p">[</span><span class="n">name</span><span class="p">],</span> <span class="n">name</span><span class="p">,</span> <span class="n">fn_str</span>
+
+<div class="viewcode-block" id="MatchTrigger.delete_rule"><a class="viewcode-back" href="../../../user_manual/api/triggers.html#py_entitymatching.MatchTrigger.delete_rule">[docs]</a>    <span class="k">def</span> <span class="nf">delete_rule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rule_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Deletes a rule from the match trigger.</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">               rule_name (string): Name of the rule to be deleted.</span>
+
+<span class="sd">            Examples:</span>
+<span class="sd">                &gt;&gt;&gt; import py_entitymatching as em</span>
+<span class="sd">                &gt;&gt;&gt; mt = em.MatchTrigger()</span>
+<span class="sd">                &gt;&gt;&gt; A = em.read_csv_metadata(&#39;path_to_csv_dir/table_A.csv&#39;, key=&#39;id&#39;)</span>
+<span class="sd">                &gt;&gt;&gt; B = em.read_csv_metadata(&#39;path_to_csv_dir/table_B.csv&#39;, key=&#39;id&#39;)</span>
+<span class="sd">                &gt;&gt;&gt; match_f = em.get_features_for_matching(A, B)</span>
+<span class="sd">                &gt;&gt;&gt; rule = [&#39;title_title_lev_sim(ltuple, rtuple) &gt; 0.7&#39;]</span>
+<span class="sd">                &gt;&gt;&gt; mt.add_cond_rule(rule, match_f)</span>
+<span class="sd">                &gt;&gt;&gt; mt.delete_rule(&#39;rule_1&#39;)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">assert</span> <span class="n">rule_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="s1">&#39;Rule name not in current set of rules&#39;</span>
+
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="p">[</span><span class="n">rule_name</span><span class="p">]</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">rule_source</span><span class="p">[</span><span class="n">rule_name</span><span class="p">]</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">rule_conjunct_list</span><span class="p">[</span><span class="n">rule_name</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="MatchTrigger.view_rule"><a class="viewcode-back" href="../../../user_manual/api/triggers.html#py_entitymatching.MatchTrigger.view_rule">[docs]</a>    <span class="k">def</span> <span class="nf">view_rule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rule_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Prints the source code of the function corresponding to a rule.</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">               rule_name (string): Name of the rule to be viewed.</span>
+
+<span class="sd">            Examples:</span>
+<span class="sd">                &gt;&gt;&gt; import py_entitymatching as em</span>
+<span class="sd">                &gt;&gt;&gt; mt = em.MatchTrigger()</span>
+<span class="sd">                &gt;&gt;&gt; A = em.read_csv_metadata(&#39;path_to_csv_dir/table_A.csv&#39;, key=&#39;id&#39;)</span>
+<span class="sd">                &gt;&gt;&gt; B = em.read_csv_metadata(&#39;path_to_csv_dir/table_B.csv&#39;, key=&#39;id&#39;)</span>
+<span class="sd">                &gt;&gt;&gt; match_f = em.get_features_for_matching(A, B)</span>
+<span class="sd">                &gt;&gt;&gt; rule = [&#39;title_title_lev_sim(ltuple, rtuple) &gt; 0.7&#39;]</span>
+<span class="sd">                &gt;&gt;&gt; mt.add_cond_rule(rule, match_f)</span>
+<span class="sd">                &gt;&gt;&gt; mt.view_rule(&#39;rule_1&#39;)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">assert</span> <span class="n">rule_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="s1">&#39;Rule name not in current set of rules&#39;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rule_source</span><span class="p">[</span><span class="n">rule_name</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="MatchTrigger.get_rule_names"><a class="viewcode-back" href="../../../user_manual/api/triggers.html#py_entitymatching.MatchTrigger.get_rule_names">[docs]</a>    <span class="k">def</span> <span class="nf">get_rule_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the names of all the rules in the match trigger.</span>
+
+<span class="sd">           Returns:</span>
+<span class="sd">               A list of names of all the rules in the match trigger (list).</span>
+
+<span class="sd">           Examples:</span>
+<span class="sd">                &gt;&gt;&gt; import py_entitymatching as em</span>
+<span class="sd">                &gt;&gt;&gt; mt = em.MatchTrigger()</span>
+<span class="sd">                &gt;&gt;&gt; A = em.read_csv_metadata(&#39;path_to_csv_dir/table_A.csv&#39;, key=&#39;id&#39;)</span>
+<span class="sd">                &gt;&gt;&gt; B = em.read_csv_metadata(&#39;path_to_csv_dir/table_B.csv&#39;, key=&#39;id&#39;)</span>
+<span class="sd">                &gt;&gt;&gt; match_f = em.get_features_for_matching(A, B)</span>
+<span class="sd">                &gt;&gt;&gt; rule = [&#39;title_title_lev_sim(ltuple, rtuple) &gt; 0.7&#39;]</span>
+<span class="sd">                &gt;&gt;&gt; mt.add_cond_rule(rule, match_f)</span>
+<span class="sd">                &gt;&gt;&gt; mt.get_rule_names()</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="MatchTrigger.get_rule"><a class="viewcode-back" href="../../../user_manual/api/triggers.html#py_entitymatching.MatchTrigger.get_rule">[docs]</a>    <span class="k">def</span> <span class="nf">get_rule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rule_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the function corresponding to a rule.</span>
+
+<span class="sd">           Args:</span>
+<span class="sd">               rule_name (string): Name of the rule.</span>
+
+<span class="sd">           Returns:</span>
+<span class="sd">               A function object corresponding to the specified rule.</span>
+
+<span class="sd">           Examples:</span>
+<span class="sd">                &gt;&gt;&gt; import py_entitymatching as em</span>
+<span class="sd">                &gt;&gt;&gt; mt = em.MatchTrigger()</span>
+<span class="sd">                &gt;&gt;&gt; A = em.read_csv_metadata(&#39;path_to_csv_dir/table_A.csv&#39;, key=&#39;id&#39;)</span>
+<span class="sd">                &gt;&gt;&gt; B = em.read_csv_metadata(&#39;path_to_csv_dir/table_B.csv&#39;, key=&#39;id&#39;)</span>
+<span class="sd">                &gt;&gt;&gt; match_f = em.get_features_for_matching(A, B)</span>
+<span class="sd">                &gt;&gt;&gt; rule = [&#39;title_title_lev_sim(ltuple, rtuple) &gt; 0.7&#39;]</span>
+<span class="sd">                &gt;&gt;&gt; mt.add_cond_rule(rule, match_f)</span>
+<span class="sd">                &gt;&gt;&gt; mt.get_rule()</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">assert</span> <span class="n">rule_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="s1">&#39;Rule name not in current set of rules&#39;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="p">[</span><span class="n">rule_name</span><span class="p">]</span></div>
+
+    <span class="k">def</span> <span class="nf">apply_rules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ltuple</span><span class="p">,</span> <span class="n">rtuple</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">fn</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">fn</span><span class="p">(</span><span class="n">ltuple</span><span class="p">,</span> <span class="n">rtuple</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">res</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="nf">get_function_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">conjunct_list</span><span class="p">):</span>
+        <span class="c1"># create function str</span>
+        <span class="n">fn_str</span> <span class="o">=</span> <span class="s2">&quot;def &quot;</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;(ltuple, rtuple):</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="c1"># add 4 tabs</span>
+        <span class="n">fn_str</span> <span class="o">+=</span> <span class="s1">&#39;    &#39;</span>
+        <span class="n">fn_str</span> <span class="o">+=</span> <span class="s1">&#39;return &#39;</span> <span class="o">+</span> <span class="s1">&#39; and &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">conjunct_list</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">fn_str</span>
+
+<div class="viewcode-block" id="MatchTrigger.set_feature_table"><a class="viewcode-back" href="../../../user_manual/api/triggers.html#py_entitymatching.MatchTrigger.set_feature_table">[docs]</a>    <span class="k">def</span> <span class="nf">set_feature_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature_table</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sets feature table for the match trigger.</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">               feature_table (DataFrame): A DataFrame containing features.</span>
+
+<span class="sd">            Examples:</span>
+<span class="sd">                &gt;&gt;&gt; import py_entitymatching as em</span>
+<span class="sd">                &gt;&gt;&gt; mt = em.MatchTrigger()</span>
+<span class="sd">                &gt;&gt;&gt; A = em.read_csv_metadata(&#39;path_to_csv_dir/table_A.csv&#39;, key=&#39;id&#39;)</span>
+<span class="sd">                &gt;&gt;&gt; B = em.read_csv_metadata(&#39;path_to_csv_dir/table_B.csv&#39;, key=&#39;id&#39;)</span>
+<span class="sd">                &gt;&gt;&gt; match_f = em.get_features_for_matching(A, B)</span>
+<span class="sd">                &gt;&gt;&gt; mt.set_feature_table(match_f)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_table</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s1">&#39;Feature table is already set, changing it now will not recompile &#39;</span>
+                <span class="s1">&#39;existing rules&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">feature_table</span> <span class="o">=</span> <span class="n">feature_table</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2016, anhaidgroup.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

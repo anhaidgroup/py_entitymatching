@@ -1,0 +1,572 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>py_entitymatching.feature.tokenizers &mdash; py_entitymatching 0.4.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> py_entitymatching
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.4
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">How To Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../how_to_guide.html">How to Guide To Do Entity Matching</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/whatisnew.html">What is New?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/overview.html">Overview of Supported EM Processes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/guides.html">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/datastructures.html">Data Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/steps_supp_em_workflows.html">Steps of Supported EM Workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/misc.html">Miscellaneous</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/api/overview.html">Overview of Command Organization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/api/actual_commands.html">Commands in py_entitymatching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/api/actual_commands.html#experimental-commands">Experimental Commands</a></li>
+</ul>
+<p class="caption"><span class="caption-text">How to Contribute</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing to py_entitymatching</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">py_entitymatching</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>py_entitymatching.feature.tokenizers</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for py_entitymatching.feature.tokenizers</h1><div class="highlight"><pre>
+<span></span><span class="c1"># coding=utf-8</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module contains the tokenizer functions supported by py_entitymatching.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">six</span>
+
+<span class="kn">import</span> <span class="nn">py_stringmatching</span> <span class="k">as</span> <span class="nn">sm</span>
+<span class="kn">import</span> <span class="nn">py_entitymatching.utils.generic_helper</span> <span class="k">as</span> <span class="nn">gh</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="c1"># Initialize global tokenizers</span>
+<span class="n">_global_tokenizers</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+    <span class="p">{</span><span class="s1">&#39;function_name&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;tok_qgram&#39;</span><span class="p">,</span> <span class="s1">&#39;tok_delim&#39;</span><span class="p">,</span> <span class="s1">&#39;tok_wspace&#39;</span><span class="p">],</span>
+     <span class="s1">&#39;short_name&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;qgm&#39;</span><span class="p">,</span> <span class="s1">&#39;dlm&#39;</span><span class="p">,</span> <span class="s1">&#39;wsp&#39;</span><span class="p">]})</span>
+
+
+<div class="viewcode-block" id="get_tokenizers_for_blocking"><a class="viewcode-back" href="../../../user_manual/api/creating_the_features_manually.html#py_entitymatching.get_tokenizers_for_blocking">[docs]</a><span class="k">def</span> <span class="nf">get_tokenizers_for_blocking</span><span class="p">(</span><span class="n">q</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">dlm_char</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39; &#39;</span><span class="p">]):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function returns the single argument tokenizers that can be used for</span>
+<span class="sd">    blocking purposes (typically in rule-based blocking).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        q (list): The list of integers (i.e q value) for which the q-gram</span>
+<span class="sd">            tokenizer must be generated (defaults to [2, 3]).</span>
+<span class="sd">        dlm_char (list): The list of characters (i.e delimiter character) for</span>
+<span class="sd">            which the delimiter tokenizer must be generated (defaults to [` &#39;]).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A Python dictionary with tokenizer name as the key and tokenizer</span>
+<span class="sd">        function as the value.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If both `q` and `dlm_char` are set to None.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; import py_entitymatching as em</span>
+<span class="sd">        &gt;&gt;&gt; block_t = em.get_tokenizers_for_blocking()</span>
+<span class="sd">        &gt;&gt;&gt; block_t = em.get_tokenizers_for_blocking(q=[3], dlm_char=None)</span>
+<span class="sd">        &gt;&gt;&gt; block_t = em.get_tokenizers_for_blocking(q=None, dlm_char=[&#39; &#39;])</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Validate inputs</span>
+    <span class="k">if</span> <span class="n">q</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">dlm_char</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Both q and dlm_char cannot be null&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Both q and dlm_char cannot be null&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Return single arg tokenizers for the given inputs.</span>
+        <span class="k">return</span> <span class="n">_get_single_arg_tokenizers</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">dlm_char</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_tokenizers_for_matching"><a class="viewcode-back" href="../../../user_manual/api/creating_the_features_manually.html#py_entitymatching.get_tokenizers_for_matching">[docs]</a><span class="k">def</span> <span class="nf">get_tokenizers_for_matching</span><span class="p">(</span><span class="n">q</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">dlm_char</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39; &#39;</span><span class="p">]):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function returns the single argument tokenizers that can be used for</span>
+<span class="sd">    matching purposes.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        q (list): The list of integers (i.e q value) for which the q-gram</span>
+<span class="sd">            tokenizer must be generated (defaults to [2, 3]).</span>
+<span class="sd">        dlm_char (list): The list of characters (i.e delimiter character) for</span>
+<span class="sd">            which the delimiter tokenizer must be generated (defaults to [` &#39;]).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A Python dictionary with tokenizer name as the key and tokenizer</span>
+<span class="sd">        function as the value.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If both `q` and `dlm_char` are set to None.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; import py_entitymatching as em</span>
+<span class="sd">        &gt;&gt;&gt; match_t = em.get_tokenizers_for_blocking()</span>
+<span class="sd">        &gt;&gt;&gt; match_t = em.get_tokenizers_for_blocking(q=[3], dlm_char=None)</span>
+<span class="sd">        &gt;&gt;&gt; match_t = em.get_tokenizers_for_blocking(q=None, dlm_char=[&#39; &#39;])</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">q</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">dlm_char</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Both q and dlm_char cannot be null&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Both q and dlm_char cannot be null&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Return single arg tokenizers for the given inputs.</span>
+        <span class="k">return</span> <span class="n">_get_single_arg_tokenizers</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">dlm_char</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">_get_single_arg_tokenizers</span><span class="p">(</span><span class="n">q</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">dlm_char</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39; &#39;</span><span class="p">]):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function creates single argument tokenizers for the given input</span>
+<span class="sd">    parameters.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Validate the input parameters</span>
+    <span class="k">if</span> <span class="n">q</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">dlm_char</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Both q and dlm_char cannot be null&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;Both q and dlm_char cannot be null&#39;</span><span class="p">)</span>
+    <span class="c1"># Initialize the key (function names) and value dictionaries (tokenizer</span>
+    <span class="c1"># functions).</span>
+    <span class="n">names</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">functions</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">if</span> <span class="n">q</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">q</span> <span class="o">=</span> <span class="p">[</span><span class="n">q</span><span class="p">]</span>
+
+        <span class="c1"># Create a qgram function for the given list of q&#39;s</span>
+        <span class="n">qgm_fn_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">_make_tok_qgram</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">q</span><span class="p">]</span>
+        <span class="n">qgm_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;qgm_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">q</span><span class="p">]</span>
+        <span class="c1"># Update the tokenizer name, function lists</span>
+        <span class="n">names</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">qgm_names</span><span class="p">)</span>
+        <span class="n">functions</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">qgm_fn_list</span><span class="p">)</span>
+
+    <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;wspace&#39;</span><span class="p">)</span>
+    <span class="n">functions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tok_wspace</span><span class="p">)</span>
+
+    <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;alphabetic&#39;</span><span class="p">)</span>
+    <span class="n">functions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tok_alphabetic</span><span class="p">)</span>
+
+    <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;alphanumeric&#39;</span><span class="p">)</span>
+    <span class="n">functions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tok_alphanumeric</span><span class="p">)</span>
+
+
+
+    <span class="k">if</span> <span class="n">dlm_char</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dlm_char</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dlm_char</span><span class="p">,</span>
+                                                         <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+            <span class="n">dlm_char</span> <span class="o">=</span> <span class="p">[</span><span class="n">dlm_char</span><span class="p">]</span>
+        <span class="c1"># Create a delimiter function for the given list of q&#39;s</span>
+        <span class="n">dlm_fn_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">_make_tok_delim</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">dlm_char</span><span class="p">]</span>
+
+        <span class="c1"># Update the tokenizer name, function lists</span>
+        <span class="n">dlm_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;dlm_dc&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dlm_char</span><span class="p">))]</span>
+        <span class="n">names</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">dlm_names</span><span class="p">)</span>
+        <span class="n">functions</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">dlm_fn_list</span><span class="p">)</span>
+
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">functions</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">functions</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Didnot create any tokenizers, returning empty dict.&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">()</span>
+
+
+
+<span class="k">def</span> <span class="nf">_make_tok_delim</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function returns a delimiter-based tokenizer with a fixed delimiter</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">tok_delim</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+        <span class="c1"># check if the input is of type base string</span>
+        <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">isnull</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">s</span>
+        <span class="c1"># Remove non ascii  characters. Note: This should be fixed in the</span>
+        <span class="c1"># next version.</span>
+        <span class="c1">#s = remove_non_ascii(s)</span>
+
+        <span class="n">s</span> <span class="o">=</span> <span class="n">gh</span><span class="o">.</span><span class="n">convert_to_str_unicode</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
+        <span class="c1"># Initialize the tokenizer measure object</span>
+        <span class="n">measure</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">DelimiterTokenizer</span><span class="p">(</span><span class="n">delim_set</span><span class="o">=</span><span class="p">[</span><span class="n">d</span><span class="p">])</span>
+        <span class="c1"># Call the function that will tokenize the input string.</span>
+        <span class="k">return</span> <span class="n">measure</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">tok_delim</span>
+
+
+<span class="c1"># return a qgram-based tokenizer with a fixed q</span>
+<span class="k">def</span> <span class="nf">_make_tok_qgram</span><span class="p">(</span><span class="n">q</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function returns a qgran-based tokenizer with a fixed delimiter</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">tok_qgram</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+        <span class="c1"># check if the input is of type base string</span>
+        <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">isnull</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">s</span>
+
+        <span class="n">s</span> <span class="o">=</span> <span class="n">gh</span><span class="o">.</span><span class="n">convert_to_str_unicode</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
+        <span class="n">measure</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">QgramTokenizer</span><span class="p">(</span><span class="n">qval</span><span class="o">=</span><span class="n">q</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">measure</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">tok_qgram</span>
+
+
+<span class="c1"># q-gram tokenizer</span>
+<div class="viewcode-block" id="tok_qgram"><a class="viewcode-back" href="../../../user_manual/api/supported_tokenizers.html#py_entitymatching.tok_qgram">[docs]</a><span class="k">def</span> <span class="nf">tok_qgram</span><span class="p">(</span><span class="n">input_string</span><span class="p">,</span> <span class="n">q</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function splits the input string into a list of q-grams. Note that,</span>
+<span class="sd">    by default the input strings are padded and then tokenized.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        input_string (string): Input string that should be tokenized.</span>
+<span class="sd">        q (int): q-val that should be used to tokenize the input string.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A list of tokens, if the input string is not NaN,</span>
+<span class="sd">        else returns NaN.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; import py_entitymatching as em</span>
+<span class="sd">        &gt;&gt;&gt; em.tok_qgram(&#39;database&#39;, q=2)</span>
+<span class="sd">        [&#39;#d&#39;, &#39;da&#39;, &#39;at&#39;, &#39;ta&#39;, &#39;ab&#39;, &#39;ba&#39;, &#39;as&#39;, &#39;se&#39;, &#39;e$&#39;]</span>
+<span class="sd">        &gt;&gt;&gt; em.tok_qgram(&#39;database&#39;, q=3)</span>
+<span class="sd">        [&#39;##d&#39;, &#39;#da&#39;, &#39;dat&#39;, &#39;ata&#39;, &#39;tab&#39;, &#39;aba&#39;, &#39;bas&#39;, &#39;ase&#39;, &#39;se$&#39;, &#39;e$$&#39;]</span>
+<span class="sd">        &gt;&gt;&gt; em.tok_qgram(None, q=2)</span>
+<span class="sd">        nan</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">isnull</span><span class="p">(</span><span class="n">input_string</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span>
+
+    <span class="n">input_string</span> <span class="o">=</span> <span class="n">gh</span><span class="o">.</span><span class="n">convert_to_str_unicode</span><span class="p">(</span><span class="n">input_string</span><span class="p">)</span>
+    <span class="n">measure</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">QgramTokenizer</span><span class="p">(</span><span class="n">qval</span><span class="o">=</span><span class="n">q</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">measure</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">input_string</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="tok_delim"><a class="viewcode-back" href="../../../user_manual/api/supported_tokenizers.html#py_entitymatching.tok_delim">[docs]</a><span class="k">def</span> <span class="nf">tok_delim</span><span class="p">(</span><span class="n">input_string</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function splits the input string into a list of tokens</span>
+<span class="sd">    (based on the delimiter).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        input_string (string): Input string that should be tokenized.</span>
+<span class="sd">        d (string): Delimiter string.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A list of tokens, if the input string is not NaN ,</span>
+<span class="sd">        else returns NaN.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; import py_entitymatching as em</span>
+<span class="sd">        &gt;&gt;&gt; em.tok_delim(&#39;data science&#39;, &#39; &#39;)</span>
+<span class="sd">        [&#39;data&#39;, &#39;science&#39;]</span>
+<span class="sd">        &gt;&gt;&gt; em.tok_delim(&#39;data$#$science&#39;, &#39;$#$&#39;)</span>
+<span class="sd">        [&#39;data&#39;, &#39;science&#39;]</span>
+<span class="sd">        &gt;&gt;&gt; em.tok_delim(None, &#39; &#39;)</span>
+<span class="sd">        nan</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">isnull</span><span class="p">(</span><span class="n">input_string</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span>
+
+    <span class="n">input_string</span> <span class="o">=</span> <span class="n">gh</span><span class="o">.</span><span class="n">convert_to_str_unicode</span><span class="p">(</span><span class="n">input_string</span><span class="p">)</span>
+
+    <span class="n">measure</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">DelimiterTokenizer</span><span class="p">(</span><span class="n">delim_set</span><span class="o">=</span><span class="p">[</span><span class="n">d</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">measure</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">input_string</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="tok_wspace"><a class="viewcode-back" href="../../../user_manual/api/supported_tokenizers.html#py_entitymatching.tok_wspace">[docs]</a><span class="k">def</span> <span class="nf">tok_wspace</span><span class="p">(</span><span class="n">input_string</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function splits the input string into a list of tokens</span>
+<span class="sd">    (based on the white space).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        input_string (string): Input string that should be tokenized.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A list of tokens, if the input string is not NaN ,</span>
+<span class="sd">        else returns NaN.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; import py_entitymatching as em</span>
+<span class="sd">        &gt;&gt;&gt; em.tok_wspace(&#39;data science&#39;)</span>
+<span class="sd">        [&#39;data&#39;, &#39;science&#39;]</span>
+<span class="sd">        &gt;&gt;&gt; em.tok_wspace(&#39;data         science&#39;)</span>
+<span class="sd">        [&#39;data&#39;, &#39;science&#39;]</span>
+<span class="sd">        &gt;&gt;&gt; em.tok_wspace(None)</span>
+<span class="sd">        nan</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">isnull</span><span class="p">(</span><span class="n">input_string</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span>
+
+    <span class="c1"># input_string = remove_non_ascii(input_string)</span>
+    <span class="n">input_string</span> <span class="o">=</span> <span class="n">gh</span><span class="o">.</span><span class="n">convert_to_str_unicode</span><span class="p">(</span><span class="n">input_string</span><span class="p">)</span>
+
+    <span class="n">measure</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">WhitespaceTokenizer</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">measure</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">input_string</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="tok_alphabetic"><a class="viewcode-back" href="../../../user_manual/api/supported_tokenizers.html#py_entitymatching.tok_alphabetic">[docs]</a><span class="k">def</span> <span class="nf">tok_alphabetic</span><span class="p">(</span><span class="n">input_string</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function returns a list of tokens that are maximal sequences of</span>
+<span class="sd">    consecutive alphabetical characters.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        input_string (string): Input string that should be tokenized.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A list of tokens, if the input string is not NaN ,</span>
+<span class="sd">        else returns NaN.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; import py_entitymatching as em</span>
+<span class="sd">        &gt;&gt;&gt; em.tok_alphabetic(&#39;data99science, data#integration.&#39;)</span>
+<span class="sd">        [&#39;data&#39;, &#39;science&#39;, &#39;data&#39;, &#39;integration&#39;]</span>
+<span class="sd">        &gt;&gt;&gt; em.tok_alphabetic(&#39;99&#39;)</span>
+<span class="sd">        []</span>
+<span class="sd">        &gt;&gt;&gt; em.tok_alphabetic(None)</span>
+<span class="sd">        nan</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">isnull</span><span class="p">(</span><span class="n">input_string</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span>
+    <span class="n">measure</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">AlphabeticTokenizer</span><span class="p">()</span>
+
+    <span class="n">input_string</span> <span class="o">=</span> <span class="n">gh</span><span class="o">.</span><span class="n">convert_to_str_unicode</span><span class="p">(</span><span class="n">input_string</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">measure</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">input_string</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="tok_alphanumeric"><a class="viewcode-back" href="../../../user_manual/api/supported_tokenizers.html#py_entitymatching.tok_alphanumeric">[docs]</a><span class="k">def</span> <span class="nf">tok_alphanumeric</span><span class="p">(</span><span class="n">input_string</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function returns a list of tokens that are maximal sequences of</span>
+<span class="sd">    consecutive alphanumeric characters.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        input_string (string): Input string that should be tokenized.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A list of tokens, if the input string is not NaN ,</span>
+<span class="sd">        else returns NaN.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; import py_entitymatching as em</span>
+<span class="sd">        &gt;&gt;&gt; em.tok_alphanumeric(&#39;data9,(science), data9#.(integration).88&#39;)</span>
+<span class="sd">        [&#39;data9&#39;, &#39;science&#39;, &#39;data9&#39;, &#39;integration&#39;, &#39;88&#39;]</span>
+<span class="sd">        &gt;&gt;&gt; em.tok_alphanumeric(&#39;#.$&#39;)</span>
+<span class="sd">        []</span>
+<span class="sd">        &gt;&gt;&gt; em.tok_alphanumeric(None)</span>
+<span class="sd">        nan</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">isnull</span><span class="p">(</span><span class="n">input_string</span><span class="p">):</span>
+      <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span>
+
+    <span class="n">input_string</span> <span class="o">=</span> <span class="n">gh</span><span class="o">.</span><span class="n">convert_to_str_unicode</span><span class="p">(</span><span class="n">input_string</span><span class="p">)</span>
+
+    <span class="n">measure</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">AlphanumericTokenizer</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">measure</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">input_string</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2016, anhaidgroup.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

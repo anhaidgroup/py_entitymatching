@@ -1,0 +1,556 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>py_entitymatching.feature.extractfeatures &mdash; py_entitymatching 0.4.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> py_entitymatching
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.4
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">How To Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../how_to_guide.html">How to Guide To Do Entity Matching</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/whatisnew.html">What is New?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/overview.html">Overview of Supported EM Processes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/guides.html">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/datastructures.html">Data Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/steps_supp_em_workflows.html">Steps of Supported EM Workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/misc.html">Miscellaneous</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/api/overview.html">Overview of Command Organization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/api/actual_commands.html">Commands in py_entitymatching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/api/actual_commands.html#experimental-commands">Experimental Commands</a></li>
+</ul>
+<p class="caption"><span class="caption-text">How to Contribute</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing to py_entitymatching</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">py_entitymatching</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>py_entitymatching.feature.extractfeatures</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for py_entitymatching.feature.extractfeatures</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module contains functions to extract features using a feature table.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">import</span> <span class="nn">multiprocessing</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pyprind</span>
+<span class="kn">import</span> <span class="nn">tempfile</span>
+
+<span class="kn">import</span> <span class="nn">cloudpickle</span>
+<span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">Parallel</span>
+<span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">delayed</span>
+
+<span class="kn">import</span> <span class="nn">py_entitymatching.catalog.catalog_manager</span> <span class="k">as</span> <span class="nn">cm</span>
+<span class="kn">import</span> <span class="nn">py_entitymatching.utils.catalog_helper</span> <span class="k">as</span> <span class="nn">ch</span>
+<span class="kn">import</span> <span class="nn">py_entitymatching.utils.generic_helper</span> <span class="k">as</span> <span class="nn">gh</span>
+<span class="kn">from</span> <span class="nn">py_entitymatching.io.pickles</span> <span class="kn">import</span> <span class="n">save_object</span><span class="p">,</span> <span class="n">load_object</span>
+<span class="kn">from</span> <span class="nn">py_entitymatching.utils.validation_helper</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">validate_object_type</span><span class="p">,</span>
+    <span class="n">validate_subclass</span>
+<span class="p">)</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">BaseFeatureExtractor</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+
+<span class="k">class</span> <span class="nc">ParallelFeatureExtractor</span><span class="p">(</span><span class="n">BaseFeatureExtractor</span><span class="p">):</span>
+    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature_table</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show_progress</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">feature_table</span> <span class="o">=</span> <span class="n">feature_table</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span> <span class="o">=</span> <span class="n">n_jobs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">show_progress</span> <span class="o">=</span> <span class="n">show_progress</span>
+    
+    <span class="k">def</span> <span class="nf">extract_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">candset</span><span class="p">):</span>
+        
+        <span class="c1"># Get metadata for candidate set</span>
+        <span class="n">key</span><span class="p">,</span> <span class="n">fk_ltable</span><span class="p">,</span> <span class="n">fk_rtable</span><span class="p">,</span> <span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span> <span class="o">=</span> \
+            <span class="n">cm</span><span class="o">.</span><span class="n">get_metadata_for_candset</span><span class="p">(</span><span class="n">candset</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
+        
+        <span class="c1"># Set index for convenience</span>
+        <span class="n">l_df</span> <span class="o">=</span> <span class="n">ltable</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">l_key</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">r_df</span> <span class="o">=</span> <span class="n">rtable</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">r_key</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        
+        <span class="c1"># Apply feature functions</span>
+        <span class="n">ch</span><span class="o">.</span><span class="n">log_info</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="s1">&#39;Applying feature functions&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
+        <span class="n">col_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">candset</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+        <span class="n">fk_ltable_idx</span> <span class="o">=</span> <span class="n">col_names</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">fk_ltable</span><span class="p">)</span>
+        <span class="n">fk_rtable_idx</span> <span class="o">=</span> <span class="n">col_names</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">fk_rtable</span><span class="p">)</span>
+
+        <span class="n">n_procs</span> <span class="o">=</span> <span class="n">get_num_procs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">candset</span><span class="p">))</span>
+
+        <span class="n">c_splits</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array_split</span><span class="p">(</span><span class="n">candset</span><span class="p">,</span> <span class="n">n_procs</span><span class="p">)</span>
+
+        <span class="n">pickled_obj</span> <span class="o">=</span> <span class="n">cloudpickle</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">feature_table</span><span class="p">)</span>
+
+        <span class="n">feat_vals_by_splits</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="n">n_procs</span><span class="p">)(</span>
+            <span class="n">delayed</span><span class="p">(</span><span class="n">get_feature_vals_by_cand_split</span><span class="p">)(</span>
+                <span class="n">pickled_obj</span><span class="p">,</span>
+                <span class="n">fk_ltable_idx</span><span class="p">,</span>
+                <span class="n">fk_rtable_idx</span><span class="p">,</span>
+                <span class="n">l_df</span><span class="p">,</span>
+                <span class="n">r_df</span><span class="p">,</span>
+                <span class="n">c_split</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">show_progress</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">c_splits</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c_split</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">c_splits</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="n">feat_vals</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">feat_vals_by_splits</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="k">return</span> <span class="n">feat_vals</span>
+
+
+<span class="k">class</span> <span class="nc">DistinctFeatureExtractor</span><span class="p">(</span><span class="n">BaseFeatureExtractor</span><span class="p">):</span>
+    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+    
+    <span class="k">def</span> <span class="nf">extract_from</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="extract_feature_vecs"><a class="viewcode-back" href="../../../user_manual/api/extracting_feature_vectors.html#py_entitymatching.extract_feature_vecs">[docs]</a><span class="k">def</span> <span class="nf">extract_feature_vecs</span><span class="p">(</span><span class="n">candset</span><span class="p">,</span> <span class="n">attrs_before</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">feature_table</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                         <span class="n">attrs_after</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                         <span class="n">show_progress</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                         <span class="n">FeatureExtractor</span><span class="o">=</span><span class="n">ParallelFeatureExtractor</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function extracts feature vectors from a DataFrame (typically a</span>
+<span class="sd">    labeled candidate set).</span>
+
+<span class="sd">    Specifically, this function uses feature</span>
+<span class="sd">    table, ltable and rtable (that is present in the `candset`&#39;s</span>
+<span class="sd">    metadata) to extract feature vectors.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        candset (DataFrame): The input candidate set for which the features</span>
+<span class="sd">            vectors should be extracted.</span>
+<span class="sd">        attrs_before (list): The list of attributes from the input candset,</span>
+<span class="sd">            that should be added before the feature vectors (defaults to None).</span>
+<span class="sd">        feature_table (DataFrame): A DataFrame containing a list of</span>
+<span class="sd">            features that should be used to compute the feature vectors (</span>
+<span class="sd">            defaults to None).</span>
+<span class="sd">        attrs_after (list): The list of attributes from the input candset</span>
+<span class="sd">            that should be added after the feature vectors (defaults to None).</span>
+<span class="sd">        verbose (boolean): A flag to indicate whether the debug information</span>
+<span class="sd">            should be displayed (defaults to False).</span>
+<span class="sd">        show_progress (boolean): A flag to indicate whether the progress of</span>
+<span class="sd">            extracting feature vectors must be displayed (defaults to True).</span>
+
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A pandas DataFrame containing feature vectors.</span>
+
+<span class="sd">        The DataFrame will have metadata ltable and rtable, pointing</span>
+<span class="sd">        to the same ltable and rtable as the input candset.</span>
+
+<span class="sd">        Also, the output</span>
+<span class="sd">        DataFrame will have three columns: key, foreign key ltable, foreign</span>
+<span class="sd">        key rtable copied from input candset to the output DataFrame. These</span>
+<span class="sd">        three columns precede the columns mentioned in `attrs_before`.</span>
+
+
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If `candset` is not of type pandas</span>
+<span class="sd">            DataFrame.</span>
+<span class="sd">        AssertionError: If `attrs_before` has attributes that</span>
+<span class="sd">            are not present in the input candset.</span>
+<span class="sd">        AssertionError: If `attrs_after` has attribtues that</span>
+<span class="sd">            are not present in the input candset.</span>
+<span class="sd">        AssertionError: If `feature_table` is set to None.</span>
+
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; import py_entitymatching as em</span>
+<span class="sd">        &gt;&gt;&gt; A = em.read_csv_metadata(&#39;path_to_csv_dir/table_A.csv&#39;, key=&#39;ID&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; B = em.read_csv_metadata(&#39;path_to_csv_dir/table_B.csv&#39;, key=&#39;ID&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; match_f = em.get_features_for_matching(A, B)</span>
+<span class="sd">        &gt;&gt;&gt; # G is the labeled dataframe which should be converted into feature vectors</span>
+<span class="sd">        &gt;&gt;&gt; H = em.extract_feature_vecs(G, features=match_f, attrs_before=[&#39;title&#39;], attrs_after=[&#39;gold_labels&#39;])</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># (Matt) Stage 1: Input validation</span>
+    <span class="c1"># Validate input parameters</span>
+
+    <span class="c1"># # We expect the input candset to be of type pandas DataFrame.</span>
+    <span class="n">validate_object_type</span><span class="p">(</span><span class="n">candset</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">error_prefix</span><span class="o">=</span><span class="s1">&#39;Input cand.set&#39;</span><span class="p">)</span>
+    
+    <span class="c1"># # We expect the FeatureExtractor class to be of type BaseFeatureExtractor</span>
+    <span class="n">validate_subclass</span><span class="p">(</span><span class="n">FeatureExtractor</span><span class="p">,</span> <span class="n">BaseFeatureExtractor</span><span class="p">,</span> <span class="n">error_prefix</span><span class="o">=</span><span class="s1">&#39;Input FeatureExtractor&#39;</span><span class="p">)</span>
+
+    <span class="c1"># (Matt) The two blocks below are making sure that attributes that are to be appended</span>
+    <span class="c1"># to this function&#39;s output do in fact exist in the input DataFrame</span>
+    
+    <span class="c1"># # If the attrs_before is given, Check if the attrs_before are present in</span>
+    <span class="c1"># the input candset</span>
+    <span class="k">if</span> <span class="n">attrs_before</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ch</span><span class="o">.</span><span class="n">check_attrs_present</span><span class="p">(</span><span class="n">candset</span><span class="p">,</span> <span class="n">attrs_before</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="s1">&#39;The attributes mentioned in attrs_before is not present &#39;</span>
+                <span class="s1">&#39;in the input table&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span>
+                <span class="s1">&#39;The attributes mentioned in attrs_before is not present &#39;</span>
+                <span class="s1">&#39;in the input table&#39;</span><span class="p">)</span>
+
+    <span class="c1"># # If the attrs_after is given, Check if the attrs_after are present in</span>
+    <span class="c1"># the input candset</span>
+    <span class="k">if</span> <span class="n">attrs_after</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ch</span><span class="o">.</span><span class="n">check_attrs_present</span><span class="p">(</span><span class="n">candset</span><span class="p">,</span> <span class="n">attrs_after</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="s1">&#39;The attributes mentioned in attrs_after is not present &#39;</span>
+                <span class="s1">&#39;in the input table&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span>
+                <span class="s1">&#39;The attributes mentioned in attrs_after is not present &#39;</span>
+                <span class="s1">&#39;in the input table&#39;</span><span class="p">)</span>
+
+    <span class="c1"># (Matt) Why not make sure that this is a DataFrame instead of just nonempty?</span>
+    <span class="c1"># We expect the feature table to be a valid object</span>
+    <span class="k">if</span> <span class="n">feature_table</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Feature table cannot be null&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;The feature table cannot be null&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Do metadata checking</span>
+    <span class="c1"># # Mention what metadata is required to the user</span>
+    <span class="n">ch</span><span class="o">.</span><span class="n">log_info</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="s1">&#39;Required metadata: cand.set key, fk ltable, &#39;</span>
+                        <span class="s1">&#39;fk rtable, &#39;</span>
+                        <span class="s1">&#39;ltable, rtable, ltable key, rtable key&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+    <span class="c1"># (Matt) ch ~ catalog helper</span>
+    <span class="c1"># # Get metadata</span>
+    <span class="n">ch</span><span class="o">.</span><span class="n">log_info</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="s1">&#39;Getting metadata from catalog&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+    <span class="c1"># (Matt) cm ~ catalog manager</span>
+    <span class="n">key</span><span class="p">,</span> <span class="n">fk_ltable</span><span class="p">,</span> <span class="n">fk_rtable</span><span class="p">,</span> <span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span> <span class="o">=</span> \
+        <span class="n">cm</span><span class="o">.</span><span class="n">get_metadata_for_candset</span><span class="p">(</span>
+            <span class="n">candset</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+    <span class="c1"># # Validate metadata</span>
+    <span class="n">ch</span><span class="o">.</span><span class="n">log_info</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="s1">&#39;Validating metadata&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+    <span class="n">cm</span><span class="o">.</span><span class="n">_validate_metadata_for_candset</span><span class="p">(</span><span class="n">candset</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">fk_ltable</span><span class="p">,</span> <span class="n">fk_rtable</span><span class="p">,</span>
+                                      <span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span>
+                                      <span class="n">logger</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+    <span class="c1"># Extract features</span>
+
+
+
+    <span class="c1"># id_list = [(row[fk_ltable], row[fk_rtable]) for i, row in</span>
+    <span class="c1">#            candset.iterrows()]</span>
+    <span class="c1"># id_list = [tuple(tup) for tup in candset[[fk_ltable, fk_rtable]].values]</span>
+
+    <span class="c1"># (Matt) ParallelFeatureExtractor implementation starts here</span>
+    
+    <span class="c1"># # Apply feature functions</span>
+    <span class="n">feature_extractor</span> <span class="o">=</span> <span class="n">FeatureExtractor</span><span class="p">(</span>
+        <span class="n">feature_table</span><span class="p">,</span>
+        <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
+        <span class="n">show_progress</span><span class="o">=</span><span class="n">show_progress</span>
+    <span class="p">)</span>
+    <span class="n">feat_vals</span> <span class="o">=</span> <span class="n">feature_extractor</span><span class="o">.</span><span class="n">extract_from</span><span class="p">(</span><span class="n">candset</span><span class="p">)</span>
+    
+    <span class="c1"># (Matt) ParallelFeatureExtractor implementation ends here; the rest is formatting</span>
+
+    <span class="c1"># Construct output table</span>
+    <span class="n">feature_vectors</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">feat_vals</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">candset</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+    <span class="c1"># # Rearrange the feature names in the input feature table order</span>
+    <span class="n">feature_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">feature_table</span><span class="p">[</span><span class="s1">&#39;feature_name&#39;</span><span class="p">])</span>
+    <span class="n">feature_vectors</span> <span class="o">=</span> <span class="n">feature_vectors</span><span class="p">[</span><span class="n">feature_names</span><span class="p">]</span>
+
+    <span class="n">ch</span><span class="o">.</span><span class="n">log_info</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="s1">&#39;Constructing output table&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+    <span class="c1"># print(feature_vectors)</span>
+    <span class="c1"># # Insert attrs_before</span>
+    <span class="k">if</span> <span class="n">attrs_before</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">attrs_before</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">attrs_before</span> <span class="o">=</span> <span class="p">[</span><span class="n">attrs_before</span><span class="p">]</span>
+        <span class="n">attrs_before</span> <span class="o">=</span> <span class="n">gh</span><span class="o">.</span><span class="n">list_diff</span><span class="p">(</span><span class="n">attrs_before</span><span class="p">,</span> <span class="p">[</span><span class="n">key</span><span class="p">,</span> <span class="n">fk_ltable</span><span class="p">,</span> <span class="n">fk_rtable</span><span class="p">])</span>
+        <span class="n">attrs_before</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">attrs_before</span><span class="p">:</span>
+            <span class="n">feature_vectors</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">candset</span><span class="p">[</span><span class="n">a</span><span class="p">])</span>
+
+    <span class="c1"># # Insert keys</span>
+    <span class="n">feature_vectors</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">fk_rtable</span><span class="p">,</span> <span class="n">candset</span><span class="p">[</span><span class="n">fk_rtable</span><span class="p">])</span>
+    <span class="n">feature_vectors</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">fk_ltable</span><span class="p">,</span> <span class="n">candset</span><span class="p">[</span><span class="n">fk_ltable</span><span class="p">])</span>
+    <span class="n">feature_vectors</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">candset</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+
+    <span class="c1"># # insert attrs after</span>
+    <span class="k">if</span> <span class="n">attrs_after</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">attrs_after</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">attrs_after</span> <span class="o">=</span> <span class="p">[</span><span class="n">attrs_after</span><span class="p">]</span>
+        <span class="n">attrs_after</span> <span class="o">=</span> <span class="n">gh</span><span class="o">.</span><span class="n">list_diff</span><span class="p">(</span><span class="n">attrs_after</span><span class="p">,</span> <span class="p">[</span><span class="n">key</span><span class="p">,</span> <span class="n">fk_ltable</span><span class="p">,</span> <span class="n">fk_rtable</span><span class="p">])</span>
+        <span class="n">attrs_after</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+        <span class="n">col_pos</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">feature_vectors</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">attrs_after</span><span class="p">:</span>
+            <span class="n">feature_vectors</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">col_pos</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">candset</span><span class="p">[</span><span class="n">a</span><span class="p">])</span>
+            <span class="n">col_pos</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="c1"># Reset the index</span>
+    <span class="c1"># feature_vectors.reset_index(inplace=True, drop=True)</span>
+
+    <span class="c1"># # Update the catalog</span>
+    <span class="n">cm</span><span class="o">.</span><span class="n">init_properties</span><span class="p">(</span><span class="n">feature_vectors</span><span class="p">)</span>
+    <span class="n">cm</span><span class="o">.</span><span class="n">copy_properties</span><span class="p">(</span><span class="n">candset</span><span class="p">,</span> <span class="n">feature_vectors</span><span class="p">)</span>
+
+    <span class="c1"># Finally, return the feature vectors</span>
+    <span class="k">return</span> <span class="n">feature_vectors</span></div>
+
+
+<span class="k">def</span> <span class="nf">get_feature_vals_by_cand_split</span><span class="p">(</span><span class="n">pickled_obj</span><span class="p">,</span> <span class="n">fk_ltable_idx</span><span class="p">,</span> <span class="n">fk_rtable_idx</span><span class="p">,</span> <span class="n">l_df</span><span class="p">,</span> <span class="n">r_df</span><span class="p">,</span> <span class="n">candsplit</span><span class="p">,</span> <span class="n">show_progress</span><span class="p">):</span>
+    <span class="n">feature_table</span> <span class="o">=</span> <span class="n">cloudpickle</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">pickled_obj</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">show_progress</span><span class="p">:</span>
+        <span class="n">prog_bar</span> <span class="o">=</span> <span class="n">pyprind</span><span class="o">.</span><span class="n">ProgBar</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">candsplit</span><span class="p">))</span>
+
+    <span class="n">l_dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">r_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="n">feat_vals</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">candsplit</span><span class="o">.</span><span class="n">itertuples</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">show_progress</span><span class="p">:</span>
+            <span class="n">prog_bar</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+
+        <span class="n">fk_ltable_val</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">fk_ltable_idx</span><span class="p">]</span>
+        <span class="n">fk_rtable_val</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">fk_rtable_idx</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">fk_ltable_val</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">l_dict</span><span class="p">:</span>
+            <span class="n">l_dict</span><span class="p">[</span><span class="n">fk_ltable_val</span><span class="p">]</span> <span class="o">=</span> <span class="n">l_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">fk_ltable_val</span><span class="p">]</span>
+        <span class="n">l_tuple</span> <span class="o">=</span> <span class="n">l_dict</span><span class="p">[</span><span class="n">fk_ltable_val</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">fk_rtable_val</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">r_dict</span><span class="p">:</span>
+            <span class="n">r_dict</span><span class="p">[</span><span class="n">fk_rtable_val</span><span class="p">]</span> <span class="o">=</span> <span class="n">r_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">fk_rtable_val</span><span class="p">]</span>
+        <span class="n">r_tuple</span> <span class="o">=</span> <span class="n">r_dict</span><span class="p">[</span><span class="n">fk_rtable_val</span><span class="p">]</span>
+
+        <span class="n">f</span> <span class="o">=</span> <span class="n">apply_feat_fns</span><span class="p">(</span><span class="n">l_tuple</span><span class="p">,</span> <span class="n">r_tuple</span><span class="p">,</span> <span class="n">feature_table</span><span class="p">)</span>
+        <span class="n">feat_vals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">feat_vals</span>
+
+
+<span class="k">def</span> <span class="nf">apply_feat_fns</span><span class="p">(</span><span class="n">tuple1</span><span class="p">,</span> <span class="n">tuple2</span><span class="p">,</span> <span class="n">feat_dict</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Apply feature functions to two tuples.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get the feature names</span>
+    <span class="n">feat_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">feat_dict</span><span class="p">[</span><span class="s1">&#39;feature_name&#39;</span><span class="p">])</span>
+    <span class="c1"># Get the feature functions</span>
+    <span class="n">feat_funcs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">feat_dict</span><span class="p">[</span><span class="s1">&#39;function&#39;</span><span class="p">])</span>
+    <span class="c1"># Compute the feature value by applying the feature function to the input</span>
+    <span class="c1">#  tuples.</span>
+    <span class="n">feat_vals</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="p">(</span><span class="n">tuple1</span><span class="p">,</span> <span class="n">tuple2</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">feat_funcs</span><span class="p">]</span>
+    <span class="c1"># Return a dictionary where the keys are the feature names and the values</span>
+    <span class="c1">#  are the feature values.</span>
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">feat_names</span><span class="p">,</span> <span class="n">feat_vals</span><span class="p">))</span>
+
+
+<span class="k">def</span> <span class="nf">get_num_procs</span><span class="p">(</span><span class="n">n_jobs</span><span class="p">,</span> <span class="n">min_procs</span><span class="p">):</span>
+    <span class="c1"># determine number of processes to launch parallely</span>
+    <span class="n">n_cpus</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
+    <span class="n">n_procs</span> <span class="o">=</span> <span class="n">n_jobs</span>
+    <span class="k">if</span> <span class="n">n_jobs</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">n_procs</span> <span class="o">=</span> <span class="n">n_cpus</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">n_jobs</span>
+    <span class="c1"># cannot launch less than min_procs to safeguard against small tables</span>
+    <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="n">n_procs</span><span class="p">,</span> <span class="n">min_procs</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2016, anhaidgroup.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

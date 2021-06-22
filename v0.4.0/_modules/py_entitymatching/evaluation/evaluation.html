@@ -1,0 +1,580 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>py_entitymatching.evaluation.evaluation &mdash; py_entitymatching 0.4.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> py_entitymatching
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.4
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">How To Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../how_to_guide.html">How to Guide To Do Entity Matching</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User Manual</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/whatisnew.html">What is New?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/overview.html">Overview of Supported EM Processes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/guides.html">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/datastructures.html">Data Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/steps_supp_em_workflows.html">Steps of Supported EM Workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/misc.html">Miscellaneous</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/api/overview.html">Overview of Command Organization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/api/actual_commands.html">Commands in py_entitymatching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_manual/api/actual_commands.html#experimental-commands">Experimental Commands</a></li>
+</ul>
+<p class="caption"><span class="caption-text">How to Contribute</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing to py_entitymatching</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">py_entitymatching</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>py_entitymatching.evaluation.evaluation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for py_entitymatching.evaluation.evaluation</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module contains evaluation related functions.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">collections</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">six</span>
+
+<span class="kn">import</span> <span class="nn">py_entitymatching.catalog.catalog_manager</span> <span class="k">as</span> <span class="nn">cm</span>
+<span class="kn">import</span> <span class="nn">py_entitymatching.utils.catalog_helper</span> <span class="k">as</span> <span class="nn">ch</span>
+<span class="kn">from</span> <span class="nn">py_entitymatching.debugmatcher.debug_gui_utils</span> <span class="kn">import</span> <span class="n">_get_dataframe</span><span class="p">,</span> <span class="n">_get_metric</span>
+<span class="kn">from</span> <span class="nn">py_entitymatching.utils.validation_helper</span> <span class="kn">import</span> <span class="n">validate_object_type</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="eval_matches"><a class="viewcode-back" href="../../../user_manual/api/evaluating_the_matching_output.html#py_entitymatching.eval_matches">[docs]</a><span class="k">def</span> <span class="nf">eval_matches</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">gold_label_attr</span><span class="p">,</span> <span class="n">predicted_label_attr</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Evaluates the matches from the matcher.</span>
+
+<span class="sd">    Specifically, given a DataFrame containing golden labels and predicted</span>
+<span class="sd">    labels, this function would evaluate the matches and return the accuracy</span>
+<span class="sd">    results such as precision, recall and F1.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data_frame (DataFrame): The input pandas DataFrame containing &quot;gold&quot;</span>
+<span class="sd">            labels and &quot;predicted&quot; labels.</span>
+<span class="sd">        gold_label_attr (string): An attribute in the input DataFrame containing</span>
+<span class="sd">            &quot;gold&quot; labels.</span>
+<span class="sd">        predicted_label_attr (string): An attribute in the input DataFrame</span>
+<span class="sd">            containing &quot;predicted&quot; labels.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A Python dictionary containing the accuracy measures such as</span>
+<span class="sd">        precision, recall, F1.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If `data_frame` is not of type</span>
+<span class="sd">            pandas DataFrame.</span>
+<span class="sd">        AssertionError: If `gold_label_attr` is not of</span>
+<span class="sd">            type string.</span>
+<span class="sd">        AssertionError: If `predicted_label_attr` is not of</span>
+<span class="sd">            type string.</span>
+<span class="sd">        AssertionError: If the `gold_label_attr` is not in</span>
+<span class="sd">            the input dataFrame.</span>
+<span class="sd">        AssertionError: If the `predicted_label_attr` is not in</span>
+<span class="sd">            the input dataFrame.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; import py_entitymatching as em</span>
+<span class="sd">        &gt;&gt;&gt; # G is the labeled data used for development purposes, match_f is the feature table</span>
+<span class="sd">        &gt;&gt;&gt; H = em.extract_feat_vecs(G, feat_table=match_f, attrs_after=&#39;gold_labels&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; dt = em.DTMatcher()</span>
+<span class="sd">        &gt;&gt;&gt; dt.fit(table=H, exclude_attrs=[&#39;_id&#39;, &#39;ltable_id&#39;, &#39;rtable_id&#39;, &#39;gold_labels&#39;], target_attr=&#39;gold_labels&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; pred_table = dt.predict(table=H,  exclude_attrs=[&#39;_id&#39;, &#39;ltable_id&#39;, &#39;rtable_id&#39;, &#39;gold_labels&#39;],  append=True, target_attr=&#39;predicted_labels&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; eval_summary = em.eval_matches(pred_table, &#39;gold_labels&#39;, &#39;predicted_labels&#39;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Validate input parameters</span>
+
+    <span class="c1"># # We expect the input object to be of type pandas DataFrame</span>
+    <span class="n">validate_object_type</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="s1">&#39;The input table&#39;</span><span class="p">)</span>
+
+    <span class="c1"># # We expect the input attribute (gold_label_attr) to be of type string</span>
+    <span class="n">validate_object_type</span><span class="p">(</span><span class="n">gold_label_attr</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">,</span> <span class="s1">&#39;The input gold_label_attr&#39;</span><span class="p">)</span>
+
+    <span class="c1"># # We expect the input attribute (predicted_label_attr) to be of type</span>
+    <span class="c1"># string</span>
+    <span class="n">validate_object_type</span><span class="p">(</span><span class="n">predicted_label_attr</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">,</span> <span class="s1">&#39;The input predicted_label_attr&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Check whether the gold label attribute is present in the input table</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">ch</span><span class="o">.</span><span class="n">check_attrs_present</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">gold_label_attr</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+            <span class="s1">&#39;The gold_label_attr is not present in the input DataFrame&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span>
+            <span class="s1">&#39;The gold_label_attr is not present in the input DataFrame&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Check whether the predicted label attribute is present in the input table</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">ch</span><span class="o">.</span><span class="n">check_attrs_present</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">predicted_label_attr</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+            <span class="s1">&#39;The predicted_label_attr is not present in the input DataFrame&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span>
+            <span class="s1">&#39;The predicted_label_attr is not present in the input DataFrame&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Reset the index to get the indices set as 0..len(table)</span>
+    <span class="n">new_data_frame</span> <span class="o">=</span> <span class="n">data_frame</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1"># Project out the gold and label attributes.</span>
+    <span class="n">gold</span> <span class="o">=</span> <span class="n">new_data_frame</span><span class="p">[</span><span class="n">gold_label_attr</span><span class="p">]</span>
+    <span class="n">predicted</span> <span class="o">=</span> <span class="n">new_data_frame</span><span class="p">[</span><span class="n">predicted_label_attr</span><span class="p">]</span>
+
+    <span class="c1"># Get gold negatives, positives</span>
+    <span class="n">gold_negative</span> <span class="o">=</span> <span class="n">gold</span><span class="p">[</span><span class="n">gold</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">gold_positive</span> <span class="o">=</span> <span class="n">gold</span><span class="p">[</span><span class="n">gold</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="c1"># Get predicted negatives, positives</span>
+    <span class="n">predicted_negative</span> <span class="o">=</span> <span class="n">predicted</span><span class="p">[</span><span class="n">predicted</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">predicted_positive</span> <span class="o">=</span> <span class="n">predicted</span><span class="p">[</span><span class="n">predicted</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="c1"># get false positive indices</span>
+    <span class="n">false_positive_indices</span> <span class="o">=</span> \
+        <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">gold_negative</span><span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">predicted_positive</span><span class="p">))</span>
+
+    <span class="c1"># get true positive indices</span>
+    <span class="n">true_positive_indices</span> <span class="o">=</span> \
+        <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">gold_positive</span><span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">predicted_positive</span><span class="p">))</span>
+
+    <span class="c1"># get false negative indices</span>
+    <span class="n">false_negative_indices</span> <span class="o">=</span> \
+        <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">gold_positive</span><span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">predicted_negative</span><span class="p">))</span>
+
+    <span class="c1"># get true negative indices</span>
+    <span class="n">true_negative_indices</span> <span class="o">=</span> \
+        <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">gold_negative</span><span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">predicted_negative</span><span class="p">))</span>
+
+    <span class="c1"># Get the number of TP, FP, FN, TN</span>
+    <span class="n">num_true_positives</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">true_positive_indices</span><span class="p">))</span>
+    <span class="n">num_false_positives</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">false_positive_indices</span><span class="p">))</span>
+    <span class="n">num_false_negatives</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">false_negative_indices</span><span class="p">))</span>
+    <span class="n">num_true_negatives</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">true_negative_indices</span><span class="p">))</span>
+
+    <span class="c1"># Precision = num_tp/ (num_tp + num_fp)</span>
+
+    <span class="c1"># Get precision numerator, denominator</span>
+    <span class="n">precision_numerator</span> <span class="o">=</span> <span class="n">num_true_positives</span>
+    <span class="n">precision_denominiator</span> <span class="o">=</span> <span class="n">num_true_positives</span> <span class="o">+</span> <span class="n">num_false_positives</span>
+
+    <span class="c1"># Precision = num_tp/ (num_tp + num_fn)</span>
+    <span class="c1"># Get recall numerator, denominator</span>
+    <span class="n">recall_numerator</span> <span class="o">=</span> <span class="n">num_true_positives</span>
+    <span class="n">recall_denominator</span> <span class="o">=</span> <span class="n">num_true_positives</span> <span class="o">+</span> <span class="n">num_false_negatives</span>
+
+    <span class="c1"># Compute precision</span>
+    <span class="k">if</span> <span class="n">precision_denominiator</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+        <span class="n">precision</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">precision</span> <span class="o">=</span> <span class="n">precision_numerator</span> <span class="o">/</span> <span class="n">precision_denominiator</span>
+
+    <span class="c1"># Compute recall</span>
+    <span class="k">if</span> <span class="n">recall_denominator</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+        <span class="n">recall</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">recall</span> <span class="o">=</span> <span class="n">recall_numerator</span> <span class="o">/</span> <span class="n">recall_denominator</span>
+
+    <span class="c1"># Compute F1</span>
+    <span class="k">if</span> <span class="n">precision</span> <span class="o">==</span> <span class="mf">0.0</span> <span class="ow">and</span> <span class="n">recall</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+        <span class="n">F1</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">F1</span> <span class="o">=</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">precision</span> <span class="o">*</span> <span class="n">recall</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">precision</span> <span class="o">+</span> <span class="n">recall</span><span class="p">)</span>
+
+    <span class="c1"># Get the fk_ltable and fk_rtable</span>
+    <span class="n">fk_ltable</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="s1">&#39;fk_ltable&#39;</span><span class="p">)</span>
+    <span class="n">fk_rtable</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="s1">&#39;fk_rtable&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Check if the fk_ltable contain any missing values</span>
+    <span class="k">if</span> <span class="n">ch</span><span class="o">.</span><span class="n">does_contain_missing_vals</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">fk_ltable</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;The fk_ltable (</span><span class="si">%s</span><span class="s1">) contains missing values&#39;</span> <span class="o">%</span><span class="n">fk_ltable</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;The fk_ltable (</span><span class="si">%s</span><span class="s1">) contains missing values&#39;</span> <span class="o">%</span>
+                             <span class="n">fk_ltable</span><span class="p">)</span>
+
+    <span class="c1"># Check if the fk_rtable contain any missing values</span>
+    <span class="k">if</span> <span class="n">ch</span><span class="o">.</span><span class="n">does_contain_missing_vals</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">fk_rtable</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;The fk_rtable (</span><span class="si">%s</span><span class="s1">) contains missing values&#39;</span> <span class="o">%</span><span class="n">fk_rtable</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s1">&#39;The fk_rtable (</span><span class="si">%s</span><span class="s1">) contains missing values&#39;</span> <span class="o">%</span>
+                             <span class="n">fk_rtable</span><span class="p">)</span>
+
+
+    <span class="c1"># Set the index values to fk_ltable and fk_rtable</span>
+    <span class="n">new_data_frame</span><span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="n">fk_ltable</span><span class="p">,</span> <span class="n">fk_rtable</span><span class="p">],</span> <span class="n">drop</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Get the list of false positives and false negatives.</span>
+    <span class="n">false_pos_ls</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">new_data_frame</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">false_positive_indices</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+    <span class="n">false_neg_ls</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">new_data_frame</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">false_negative_indices</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+
+    <span class="c1"># Store and return the accuracy results.</span>
+    <span class="n">accuracy_results</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">OrderedDict</span><span class="p">()</span>
+    <span class="n">accuracy_results</span><span class="p">[</span><span class="s1">&#39;prec_numerator&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">precision_numerator</span>
+    <span class="n">accuracy_results</span><span class="p">[</span><span class="s1">&#39;prec_denominator&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">precision_denominiator</span>
+    <span class="n">accuracy_results</span><span class="p">[</span><span class="s1">&#39;precision&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">precision</span>
+    <span class="n">accuracy_results</span><span class="p">[</span><span class="s1">&#39;recall_numerator&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">recall_numerator</span>
+    <span class="n">accuracy_results</span><span class="p">[</span><span class="s1">&#39;recall_denominator&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">recall_denominator</span>
+    <span class="n">accuracy_results</span><span class="p">[</span><span class="s1">&#39;recall&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">recall</span>
+    <span class="n">accuracy_results</span><span class="p">[</span><span class="s1">&#39;f1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">F1</span>
+    <span class="n">accuracy_results</span><span class="p">[</span><span class="s1">&#39;pred_pos_num&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">num_true_positives</span> <span class="o">+</span> <span class="n">num_false_positives</span>
+    <span class="n">accuracy_results</span><span class="p">[</span><span class="s1">&#39;false_pos_num&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">num_false_positives</span>
+    <span class="n">accuracy_results</span><span class="p">[</span><span class="s1">&#39;false_pos_ls&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">false_pos_ls</span>
+    <span class="n">accuracy_results</span><span class="p">[</span><span class="s1">&#39;pred_neg_num&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">num_false_negatives</span> <span class="o">+</span> <span class="n">num_true_negatives</span>
+    <span class="n">accuracy_results</span><span class="p">[</span><span class="s1">&#39;false_neg_num&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">num_false_negatives</span>
+    <span class="n">accuracy_results</span><span class="p">[</span><span class="s1">&#39;false_neg_ls&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">false_neg_ls</span>
+    <span class="k">return</span> <span class="n">accuracy_results</span></div>
+
+
+<div class="viewcode-block" id="get_false_positives_as_df"><a class="viewcode-back" href="../../../user_manual/api/evaluating_the_matching_output.html#py_entitymatching.get_false_positives_as_df">[docs]</a><span class="k">def</span> <span class="nf">get_false_positives_as_df</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">eval_summary</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Select only the false positives from the input table and return as a</span>
+<span class="sd">    DataFrame based on the evaluation results.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        table (DataFrame): The input table (pandas DataFrame) that was used for</span>
+<span class="sd">            evaluation.</span>
+<span class="sd">        eval_summary (dictionary): A Python dictionary containing evaluation</span>
+<span class="sd">            results, typically from &#39;eval_matches&#39; command.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A pandas DataFrame containing only the False positives from</span>
+<span class="sd">        the input table.</span>
+
+<span class="sd">        Further,</span>
+<span class="sd">        this function sets the output DataFrame&#39;s properties same as input</span>
+<span class="sd">        DataFrame.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; import py_entitymatching as em</span>
+<span class="sd">        &gt;&gt;&gt; # G is the labeled data used for development purposes, match_f is the feature table</span>
+<span class="sd">        &gt;&gt;&gt; H = em.extract_feat_vecs(G, feat_table=match_f, attrs_after=&#39;gold_labels&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; dt = em.DTMatcher()</span>
+<span class="sd">        &gt;&gt;&gt; dt.fit(table=H, exclude_attrs=[&#39;_id&#39;, &#39;ltable_id&#39;, &#39;rtable_id&#39;, &#39;gold_labels&#39;], target_attr=&#39;gold_labels&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; pred_table = dt.predict(table=H,  exclude_attrs=[&#39;_id&#39;, &#39;ltable_id&#39;, &#39;rtable_id&#39;, &#39;gold_labels&#39;],  append=True, target_attr=&#39;predicted_labels&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; eval_summary = em.eval_matches(pred_table, &#39;gold_labels&#39;, &#39;predicted_labels&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; false_pos_df = em.get_false_positives_as_df(H, eval_summary)</span>
+
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Validate input parameters</span>
+
+    <span class="c1"># # We expect the input candset to be of type pandas DataFrame.</span>
+    <span class="n">validate_object_type</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">error_prefix</span><span class="o">=</span><span class="s1">&#39;Input cand.set&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Do metadata checking</span>
+    <span class="c1"># # Mention what metadata is required to the user</span>
+    <span class="n">ch</span><span class="o">.</span><span class="n">log_info</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="s1">&#39;Required metadata: cand.set key, fk ltable, &#39;</span>
+                        <span class="s1">&#39;fk rtable, &#39;</span>
+                        <span class="s1">&#39;ltable, rtable, ltable key, rtable key&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+    <span class="c1"># # Get metadata</span>
+    <span class="n">ch</span><span class="o">.</span><span class="n">log_info</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="s1">&#39;Getting metadata from catalog&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+    <span class="n">key</span><span class="p">,</span> <span class="n">fk_ltable</span><span class="p">,</span> <span class="n">fk_rtable</span><span class="p">,</span> <span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span> <span class="o">=</span> \
+        <span class="n">cm</span><span class="o">.</span><span class="n">get_metadata_for_candset</span><span class="p">(</span>
+        <span class="n">table</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+    <span class="c1"># # Validate metadata</span>
+    <span class="n">ch</span><span class="o">.</span><span class="n">log_info</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="s1">&#39;Validating metadata&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+    <span class="n">cm</span><span class="o">.</span><span class="n">_validate_metadata_for_candset</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">fk_ltable</span><span class="p">,</span> <span class="n">fk_rtable</span><span class="p">,</span>
+                                      <span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span>
+                                      <span class="n">logger</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+
+    <span class="n">data_frame</span> <span class="o">=</span>  <span class="n">_get_dataframe</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">eval_summary</span><span class="p">[</span><span class="s1">&#39;false_pos_ls&#39;</span><span class="p">])</span>
+
+    <span class="c1"># # Update catalog</span>
+    <span class="n">ch</span><span class="o">.</span><span class="n">log_info</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="s1">&#39;Updating catalog&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+    <span class="n">cm</span><span class="o">.</span><span class="n">init_properties</span><span class="p">(</span><span class="n">data_frame</span><span class="p">)</span>
+    <span class="n">cm</span><span class="o">.</span><span class="n">copy_properties</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">data_frame</span></div>
+
+
+<div class="viewcode-block" id="get_false_negatives_as_df"><a class="viewcode-back" href="../../../user_manual/api/evaluating_the_matching_output.html#py_entitymatching.get_false_negatives_as_df">[docs]</a><span class="k">def</span> <span class="nf">get_false_negatives_as_df</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">eval_summary</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Select only the false negatives from the input table and return as a</span>
+<span class="sd">    DataFrame based on the evaluation results.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        table (DataFrame): The input table (pandas DataFrame) that was used for</span>
+<span class="sd">            evaluation.</span>
+<span class="sd">        eval_summary (dictionary): A Python dictionary containing evaluation</span>
+<span class="sd">            results, typically from &#39;eval_matches&#39; command.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A pandas DataFrame containing only the false negatives from</span>
+<span class="sd">        the input table.</span>
+
+<span class="sd">        Further,</span>
+<span class="sd">        this function sets the output DataFrame&#39;s properties same as input</span>
+<span class="sd">        DataFrame.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; import py_entitymatching as em</span>
+<span class="sd">        &gt;&gt;&gt; # G is the labeled data used for development purposes, match_f is the feature table</span>
+<span class="sd">        &gt;&gt;&gt; H = em.extract_feat_vecs(G, feat_table=match_f, attrs_after=&#39;gold_labels&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; dt = em.DTMatcher()</span>
+<span class="sd">        &gt;&gt;&gt; dt.fit(table=H, exclude_attrs=[&#39;_id&#39;, &#39;ltable_id&#39;, &#39;rtable_id&#39;, &#39;gold_labels&#39;], target_attr=&#39;gold_labels&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; pred_table = dt.predict(table=H,  exclude_attrs=[&#39;_id&#39;, &#39;ltable_id&#39;, &#39;rtable_id&#39;, &#39;gold_labels&#39;],  append=True, target_attr=&#39;predicted_labels&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; eval_summary = em.eval_matches(pred_table, &#39;gold_labels&#39;, &#39;predicted_labels&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; false_neg_df = em.get_false_negatives_as_df(H, eval_summary)</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Validate input parameters</span>
+
+    <span class="c1"># # We expect the input candset to be of type pandas DataFrame.</span>
+    <span class="n">validate_object_type</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">error_prefix</span><span class="o">=</span><span class="s1">&#39;Input cand.set&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Do metadata checking</span>
+    <span class="c1"># # Mention what metadata is required to the user</span>
+    <span class="n">ch</span><span class="o">.</span><span class="n">log_info</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="s1">&#39;Required metadata: cand.set key, fk ltable, &#39;</span>
+                        <span class="s1">&#39;fk rtable, &#39;</span>
+                        <span class="s1">&#39;ltable, rtable, ltable key, rtable key&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+    <span class="c1"># # Get metadata</span>
+    <span class="n">ch</span><span class="o">.</span><span class="n">log_info</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="s1">&#39;Getting metadata from the catalog&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+    <span class="n">key</span><span class="p">,</span> <span class="n">fk_ltable</span><span class="p">,</span> <span class="n">fk_rtable</span><span class="p">,</span> <span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span> <span class="o">=</span> \
+        <span class="n">cm</span><span class="o">.</span><span class="n">get_metadata_for_candset</span><span class="p">(</span>
+        <span class="n">table</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+    <span class="c1"># # Validate metadata</span>
+    <span class="n">ch</span><span class="o">.</span><span class="n">log_info</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="s1">&#39;Validating metadata&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+    <span class="n">cm</span><span class="o">.</span><span class="n">_validate_metadata_for_candset</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">fk_ltable</span><span class="p">,</span> <span class="n">fk_rtable</span><span class="p">,</span>
+                                      <span class="n">ltable</span><span class="p">,</span> <span class="n">rtable</span><span class="p">,</span> <span class="n">l_key</span><span class="p">,</span> <span class="n">r_key</span><span class="p">,</span>
+                                      <span class="n">logger</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+    <span class="n">data_frame</span> <span class="o">=</span>  <span class="n">_get_dataframe</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">eval_summary</span><span class="p">[</span><span class="s1">&#39;false_neg_ls&#39;</span><span class="p">])</span>
+
+    <span class="c1"># # Update catalog</span>
+    <span class="n">ch</span><span class="o">.</span><span class="n">log_info</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="s1">&#39;Updating catalog&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+    <span class="n">cm</span><span class="o">.</span><span class="n">init_properties</span><span class="p">(</span><span class="n">data_frame</span><span class="p">)</span>
+    <span class="n">cm</span><span class="o">.</span><span class="n">copy_properties</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">)</span>
+
+    <span class="c1"># # Update catalog</span>
+    <span class="n">ch</span><span class="o">.</span><span class="n">log_info</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="s1">&#39;Returning the dataframe&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">data_frame</span></div>
+
+
+
+
+<div class="viewcode-block" id="print_eval_summary"><a class="viewcode-back" href="../../../user_manual/api/evaluating_the_matching_output.html#py_entitymatching.print_eval_summary">[docs]</a><span class="k">def</span> <span class="nf">print_eval_summary</span><span class="p">(</span><span class="n">eval_summary</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Prints a summary of evaluation results.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        eval_summary (dictionary): Dictionary containing evaluation results,</span>
+<span class="sd">            typically from &#39;eval_matches&#39; function.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; import py_entitymatching as em</span>
+<span class="sd">        &gt;&gt;&gt; # G is the labeled data used for development purposes, match_f is the feature table</span>
+<span class="sd">        &gt;&gt;&gt; H = em.extract_feat_vecs(G, feat_table=match_f, attrs_after=&#39;gold_labels&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; dt = em.DTMatcher()</span>
+<span class="sd">        &gt;&gt;&gt; dt.fit(table=H, exclude_attrs=[&#39;_id&#39;, &#39;ltable_id&#39;, &#39;rtable_id&#39;, &#39;gold_labels&#39;], target_attr=&#39;gold_labels&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; pred_table = dt.predict(table=H,  exclude_attrs=[&#39;_id&#39;, &#39;ltable_id&#39;, &#39;rtable_id&#39;, &#39;gold_labels&#39;],  append=True, target_attr=&#39;predicted_labels&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; eval_summary = em.eval_matches(pred_table, &#39;gold_labels&#39;, &#39;predicted_labels&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; em.print_eval_summary(eval_summary)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">_get_metric</span><span class="p">(</span><span class="n">eval_summary</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">key</span> <span class="o">+</span> <span class="s2">&quot; : &quot;</span> <span class="o">+</span> <span class="n">value</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2016, anhaidgroup.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
