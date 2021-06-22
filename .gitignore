@@ -73,7 +73,6 @@ results/
 html/
 
 *.dot
-*.png
 
 notebooks/how-to-guides/bdata/
 garage/
