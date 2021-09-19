@@ -122,7 +122,10 @@ if __name__ == "__main__":
             'pyparsing >= 2.1.4',
             'scikit-learn >= 0.22',
             'scipy',
-            'numpy'
+            'numpy',
+        ],
+        setup_requires=[
+            'numpy',
         ],
         ext_modules=extensions,
         cmdclass=cmdclass,
