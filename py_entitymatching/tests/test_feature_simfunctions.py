@@ -11,8 +11,9 @@ import py_entitymatching.feature.simfunctions as sim
 
 @unittest.skip("Not a test")
 def test_null_cases(sim_measure, input1, input2):
+    tc = unittest.TestCase()
     val = sim_measure(input1, input2)
-    self.assertEqual(pd.isnull(val), True)
+    tc.assertEqual(pd.isnull(val), True)
 
 
 def test_invalid_input_cases():
