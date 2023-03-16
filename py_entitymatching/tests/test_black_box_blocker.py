@@ -1,7 +1,8 @@
 import os
-from nose.tools import *
+# from nose.tools import *
 import pandas as pd
 import unittest
+from .utils import raises
 
 import py_entitymatching as em
 import py_entitymatching.feature.simfunctions as sim
@@ -278,9 +279,9 @@ class BlackBoxBlockerTestCases(unittest.TestCase):
 
     def test_bb_block_tuples(self):
         self.bb.set_black_box_function(_block_fn)
-        assert_equal(self.bb.block_tuples(self.A.loc[1], self.B.loc[2]),
+        self.assertEqual(self.bb.block_tuples(self.A.loc[1], self.B.loc[2]),
                      False)
-        assert_equal(self.bb.block_tuples(self.A.loc[2], self.B.loc[2]),
+        self.assertEqual(self.bb.block_tuples(self.A.loc[2], self.B.loc[2]),
                      True)
 
 
@@ -388,10 +389,10 @@ def validate_metadata(C, l_output_attrs=None, r_output_attrs=None,
     if r_output_attrs:
         s1 += [r_output_prefix + x for x in r_output_attrs if x != r_key]
     s1 = sorted(s1)
-    assert_equal(s1, sorted(C.columns))
-    assert_equal(em.get_key(C), '_id')
-    assert_equal(em.get_property(C, 'fk_ltable'), l_output_prefix + l_key)
-    assert_equal(em.get_property(C, 'fk_rtable'), r_output_prefix + r_key)
+    self.assertEqual(s1, sorted(C.columns))
+    self.assertEqual(em.get_key(C), '_id')
+    self.assertEqual(em.get_property(C, 'fk_ltable'), l_output_prefix + l_key)
+    self.assertEqual(em.get_property(C, 'fk_rtable'), r_output_prefix + r_key)
     
 def validate_data(C, expected_ids=None):
     if expected_ids:
@@ -399,12 +400,12 @@ def validate_data(C, expected_ids=None):
         rid = em.get_property(C, 'fk_rtable')
         C_ids = C[[lid, rid]].set_index([lid, rid])
         actual_ids = sorted(C_ids.index.values.tolist())
-        assert_equal(expected_ids, actual_ids)
+        self.assertEqual(expected_ids, actual_ids)
     else:
-        assert_equal(len(C), 0)
+        self.assertEqual(len(C), 0)
     
 def validate_metadata_two_candsets(C, D): 
-    assert_equal(sorted(C.columns), sorted(D.columns))
-    assert_equal(em.get_key(D), em.get_key(C))
-    assert_equal(em.get_property(D, 'fk_ltable'), em.get_property(C, 'fk_ltable'))
-    assert_equal(em.get_property(D, 'fk_rtable'), em.get_property(C, 'fk_rtable'))
+    self.assertEqual(sorted(C.columns), sorted(D.columns))
+    self.assertEqual(em.get_key(D), em.get_key(C))
+    self.assertEqual(em.get_property(D, 'fk_ltable'), em.get_property(C, 'fk_ltable'))
+    self.assertEqual(em.get_property(D, 'fk_rtable'), em.get_property(C, 'fk_rtable'))
