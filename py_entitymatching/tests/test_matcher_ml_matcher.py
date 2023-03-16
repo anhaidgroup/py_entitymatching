@@ -1,7 +1,8 @@
 # coding=utf-8
 import os
 import unittest
-from nose.tools import *
+# from nose.tools import *
+from .utils import raises
 
 import six
 
