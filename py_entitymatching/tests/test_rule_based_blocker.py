@@ -1,7 +1,8 @@
 import os
-from nose.tools import *
+# from nose.tools import *
 import pandas as pd
 import unittest
+from .utils import raises
 
 import py_entitymatching as em
 from py_entitymatching.feature.simfunctions import get_sim_funs_for_blocking
@@ -499,36 +500,36 @@ class RuleBasedBlockerTestCases(unittest.TestCase):
      
     def test_rb_block_tuples(self):
         self.rb.add_rule(rule_1, self.feature_table)
-        assert_equal(self.rb.block_tuples(self.A.loc[1], self.B.loc[2]), False)
-        assert_equal(self.rb.block_tuples(self.A.loc[2], self.B.loc[2]), True)
+        self.assertEqual(self.rb.block_tuples(self.A.loc[1], self.B.loc[2]), False)
+        self.assertEqual(self.rb.block_tuples(self.A.loc[2], self.B.loc[2]), True)
 
     def test_rb_add_rule_user_supplied_rule_name(self):
         rule_name = self.rb.add_rule(rule_1, self.feature_table, 'myrule')
-        assert_equal(rule_name, 'myrule')
+        self.assertEqual(rule_name, 'myrule')
         # view rule source
         self.rb.view_rule(rule_name)
         # get rule fn
         self.rb.get_rule(rule_name)
         # see if rule exists in the set of rules
         rule_names = self.rb.get_rule_names()
-        assert_equal(rule_name in rule_names, True)
+        self.assertEqual(rule_name in rule_names, True)
         
     @raises(AssertionError)
     def test_rb_add_rule_twice(self):
         rule_name = self.rb.add_rule(rule_1, self.feature_table, 'myrule')
-        assert_equal(rule_name, 'myrule')
+        self.assertEqual(rule_name, 'myrule')
         # see if rule exists in the set of rules
         rule_names = self.rb.get_rule_names()
-        assert_equal(rule_name in rule_names, True)
+        self.assertEqual(rule_name in rule_names, True)
         rule_name = self.rb.add_rule(rule_1, self.feature_table, 'myrule')
         
     def test_rb_delete_rule(self):
         rule_name = self.rb.add_rule(rule_1, self.feature_table)
         rule_names = self.rb.get_rule_names()
-        assert_equal(rule_name in rule_names, True)
+        self.assertEqual(rule_name in rule_names, True)
         self.rb.delete_rule(rule_name)
         rule_names = self.rb.get_rule_names()
-        assert_equal(rule_name in rule_names, False)
+        self.assertEqual(rule_name in rule_names, False)
         
     @raises(AssertionError)
     def test_rb_delete_non_existing_rule(self):
@@ -670,10 +671,10 @@ def validate_metadata(C, l_output_attrs=None, r_output_attrs=None,
     if r_output_attrs:
         s1 += [r_output_prefix + x for x in r_output_attrs if x != r_key]
     s1 = sorted(s1)
-    assert_equal(s1, sorted(C.columns))
-    assert_equal(em.get_key(C), '_id')
-    assert_equal(em.get_property(C, 'fk_ltable'), l_output_prefix + l_key)
-    assert_equal(em.get_property(C, 'fk_rtable'), r_output_prefix + r_key)
+    self.assertEqual(s1, sorted(C.columns))
+    self.assertEqual(em.get_key(C), '_id')
+    self.assertEqual(em.get_property(C, 'fk_ltable'), l_output_prefix + l_key)
+    self.assertEqual(em.get_property(C, 'fk_rtable'), r_output_prefix + r_key)
     
 def validate_data(C, expected_ids=None):
     if expected_ids:
@@ -681,13 +682,13 @@ def validate_data(C, expected_ids=None):
         rid = em.get_property(C, 'fk_rtable')
         C_ids = C[[lid, rid]].set_index([lid, rid])
         actual_ids = sorted(C_ids.index.values.tolist())
-        assert_equal(expected_ids, actual_ids)
+        self.assertEqual(expected_ids, actual_ids)
     else:
-        assert_equal(len(C), 0)
+        self.assertEqual(len(C), 0)
      
 def validate_metadata_two_candsets(C, D): 
-    assert_equal(sorted(C.columns), sorted(D.columns))
-    assert_equal(em.get_key(D), em.get_key(C))
-    assert_equal(em.get_property(D, 'fk_ltable'), em.get_property(C, 'fk_ltable'))
-    assert_equal(em.get_property(D, 'fk_rtable'), em.get_property(C, 'fk_rtable'))
+    self.assertEqual(sorted(C.columns), sorted(D.columns))
+    self.assertEqual(em.get_key(D), em.get_key(C))
+    self.assertEqual(em.get_property(D, 'fk_ltable'), em.get_property(C, 'fk_ltable'))
+    self.assertEqual(em.get_property(D, 'fk_rtable'), em.get_property(C, 'fk_rtable'))
     
