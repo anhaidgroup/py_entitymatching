@@ -383,29 +383,32 @@ class BlackBoxBlockerMulticoreTestCases(unittest.TestCase):
 def validate_metadata(C, l_output_attrs=None, r_output_attrs=None,
                       l_output_prefix='ltable_', r_output_prefix='rtable_',
                       l_key='ID', r_key='ID'):
+    tc = unittest.TestCase()
     s1 = ['_id', l_output_prefix + l_key, r_output_prefix + r_key]
     if l_output_attrs:
         s1 += [l_output_prefix + x for x in l_output_attrs if x != l_key]
     if r_output_attrs:
         s1 += [r_output_prefix + x for x in r_output_attrs if x != r_key]
     s1 = sorted(s1)
-    self.assertEqual(s1, sorted(C.columns))
-    self.assertEqual(em.get_key(C), '_id')
-    self.assertEqual(em.get_property(C, 'fk_ltable'), l_output_prefix + l_key)
-    self.assertEqual(em.get_property(C, 'fk_rtable'), r_output_prefix + r_key)
+    tc.assertEqual(s1, sorted(C.columns))
+    tc.assertEqual(em.get_key(C), '_id')
+    tc.assertEqual(em.get_property(C, 'fk_ltable'), l_output_prefix + l_key)
+    tc.assertEqual(em.get_property(C, 'fk_rtable'), r_output_prefix + r_key)
     
 def validate_data(C, expected_ids=None):
+    tc = unittest.TestCase()
     if expected_ids:
         lid = em.get_property(C, 'fk_ltable')
         rid = em.get_property(C, 'fk_rtable')
         C_ids = C[[lid, rid]].set_index([lid, rid])
         actual_ids = sorted(C_ids.index.values.tolist())
-        self.assertEqual(expected_ids, actual_ids)
+        tc.assertEqual(expected_ids, actual_ids)
     else:
-        self.assertEqual(len(C), 0)
+        tc.assertEqual(len(C), 0)
     
-def validate_metadata_two_candsets(C, D): 
-    self.assertEqual(sorted(C.columns), sorted(D.columns))
-    self.assertEqual(em.get_key(D), em.get_key(C))
-    self.assertEqual(em.get_property(D, 'fk_ltable'), em.get_property(C, 'fk_ltable'))
-    self.assertEqual(em.get_property(D, 'fk_rtable'), em.get_property(C, 'fk_rtable'))
+def validate_metadata_two_candsets(C, D):
+    tc = unittest.TestCase()
+    tc.assertEqual(sorted(C.columns), sorted(D.columns))
+    tc.assertEqual(em.get_key(D), em.get_key(C))
+    tc.assertEqual(em.get_property(D, 'fk_ltable'), em.get_property(C, 'fk_ltable'))
+    tc.assertEqual(em.get_property(D, 'fk_rtable'), em.get_property(C, 'fk_rtable'))
