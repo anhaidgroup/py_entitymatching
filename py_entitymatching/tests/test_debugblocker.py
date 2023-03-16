@@ -1,8 +1,9 @@
 import os
-from nose.tools import *
+# from nose.tools import *
 import unittest
 import pandas as pd
 import numpy as np
+from .utils import raises
 
 import py_entitymatching as em
 from py_entitymatching.utils.generic_helper import get_install_path
