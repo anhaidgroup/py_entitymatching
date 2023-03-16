@@ -6,7 +6,7 @@ import os
 import unittest
 import pandas as pd
 import six
-from nose.tools import raises
+from .utils import raises
 
 from py_entitymatching.utils.generic_helper import get_install_path
 from py_entitymatching.sampler.down_sample import _inv_index, _probe_index_split, down_sample, _get_str_cols_list
