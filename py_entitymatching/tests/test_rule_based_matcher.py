@@ -1,7 +1,8 @@
 import os
-from nose.tools import *
+# from nose.tools import *
 import pandas as pd
 import unittest
+from .utils import raises
 
 import py_entitymatching as em
 from py_entitymatching.feature.simfunctions import get_sim_funs_for_blocking
@@ -121,64 +122,64 @@ class RuleBasedMatcherTestCases(unittest.TestCase):
     @raises(AssertionError)
     def test_rulebased_matcher_add_rule_twice(self):
         rule_name = self.brm.add_rule(rule_1, self.feature_table, 'myrule')
-        assert_equal(rule_name, 'myrule')
+        self.assertEqual(rule_name, 'myrule')
         # see if rule exists in the set of rules
         rule_names = self.brm.get_rule_names()
-        assert_equal(rule_name in rule_names, True)
+        self.assertEqual(rule_name in rule_names, True)
         rule_name = self.brm.add_rule(rule_1, self.feature_table, 'myrule')
 
     def test_rulebased_matcher_filterable_rule_single_conjunct_1(self):
         self.brm.add_rule(rule_1, self.feature_table)
         predictions = self.brm.predict(table=self.C)
-        assert_equal(expected_labels_1, predictions)
+        self.assertEqual(expected_labels_1, predictions)
 
     def test_rulebased_matcher_filterable_rule_single_conjunct_2(self):
         self.brm.add_rule(rule_2, self.feature_table)
         predictions = self.brm.predict(table=self.C)
-        assert_equal(expected_labels_2, predictions)
+        self.assertEqual(expected_labels_2, predictions)
 
     def test_rulebased_matcher_filterable_rule_multiple_conjuncts_1(self):
         self.brm.add_rule(rule_3, self.feature_table)
         predictions = self.brm.predict(table=self.C)
-        assert_equal(expected_labels_3, predictions)
+        self.assertEqual(expected_labels_3, predictions)
 
     def test_rulebased_matcher_filterable_rule_multiple_conjuncts_2(self):
         self.brm.add_rule(rule_4, self.feature_table)
         predictions = self.brm.predict(table=self.C)
-        assert_equal(expected_labels_4, predictions)
+        self.assertEqual(expected_labels_4, predictions)
 
     def test_rulebased_matcher_non_filterable_rule_single_conjunct(self):
         self.brm.add_rule(rule_6, self.feature_table)
         predictions = self.brm.predict(table=self.C)
-        assert_equal(expected_labels_6, predictions)
+        self.assertEqual(expected_labels_6, predictions)
 
     def test_rulebased_matcher_non_filterable_rule_multiple_conjuncts(self):
         self.brm.add_rule(rule_7, self.feature_table)
         predictions = self.brm.predict(table=self.C)
-        assert_equal(expected_labels_7, predictions)
+        self.assertEqual(expected_labels_7, predictions)
 
     def test_rulebased_matcher_rule_sequence_with_two_filterable_rules(self):
         self.brm.add_rule(rule_1, self.feature_table)
         self.brm.add_rule(rule_2, self.feature_table)
         predictions = self.brm.predict(table=self.C)
-        assert_equal(expected_labels_1_and_2, predictions)
+        self.assertEqual(expected_labels_1_and_2, predictions)
 
     def test_rulebased_matcher_rule_sequence_with_one_filterable_rule(self):
         self.brm.add_rule(rule_1, self.feature_table)
         self.brm.add_rule(rule_6, self.feature_table)
         predictions = self.brm.predict(table=self.C)
-        assert_equal(expected_labels_1_and_6, predictions)
+        self.assertEqual(expected_labels_1_and_6, predictions)
 
     def test_rulebased_matcher_rule_sequence_with_no_filterable_rule(self):
         self.brm.add_rule(rule_6, self.feature_table)
         self.brm.add_rule(rule_7, self.feature_table)
         predictions = self.brm.predict(table=self.C)
-        assert_equal(expected_labels_6_and_7, predictions)
+        self.assertEqual(expected_labels_6_and_7, predictions)
 
     def test_rulebased_matcher_rule_wi_no_output_tuples(self):
         self.brm.add_rule(rule_5, self.feature_table)
         predictions = self.brm.predict(table=self.C)
-        assert_equal(expected_labels_all_zeroes, predictions)
+        self.assertEqual(expected_labels_all_zeroes, predictions)
 
     def test_rulebased_matcher_rule_wi_no_auto_gen_feature(self):
         feature_string = "jaccard(qgm_3(ltuple['name']), qgm_3(rtuple['name']))"
@@ -188,7 +189,7 @@ class RuleBasedMatcherTestCases(unittest.TestCase):
         test_rule = ['test(ltuple, rtuple) > 0.4']  # same as rule_1
         self.brm.add_rule(test_rule, self.feature_table)
         predictions = self.brm.predict(table=self.C)
-        assert_equal(expected_labels_1, predictions)
+        self.assertEqual(expected_labels_1, predictions)
 
     def test_rulebased_matcher_rule_wi_diff_tokenizers(self):
         feature_string = "jaccard(qgm_3(ltuple['address']), dlm_dc0(rtuple['address']))"
@@ -199,7 +200,7 @@ class RuleBasedMatcherTestCases(unittest.TestCase):
         test_rule = ['test(ltuple, rtuple) > 1']  # should return an empty set
         self.brm.add_rule(test_rule, self.feature_table)
         predictions = self.brm.predict(table=self.C)
-        assert_equal(expected_labels_all_zeroes, predictions)
+        self.assertEqual(expected_labels_all_zeroes, predictions)
 
     def test_rulebased_matcher_rule_wi_dice_sim_fn(self):
         feature_string = "dice(dlm_dc0(ltuple['name']), dlm_dc0(rtuple['name']))"
@@ -210,7 +211,7 @@ class RuleBasedMatcherTestCases(unittest.TestCase):
         test_rule = ['test(ltuple, rtuple) > 1']  # should return an empty set
         self.brm.add_rule(test_rule, self.feature_table)
         predictions = self.brm.predict(table=self.C)
-        assert_equal(expected_labels_all_zeroes, predictions)
+        self.assertEqual(expected_labels_all_zeroes, predictions)
 
     def test_rulebased_matcher_rule_wi_overlap_coeff_sim_fn(self):
         feature_string = "overlap_coeff(dlm_dc0(ltuple['name']), dlm_dc0(rtuple['name']))"
@@ -221,29 +222,29 @@ class RuleBasedMatcherTestCases(unittest.TestCase):
         test_rule = ['test(ltuple, rtuple) > 1']  # should return an empty set
         self.brm.add_rule(test_rule, self.feature_table)
         predictions = self.brm.predict(table=self.C)
-        assert_equal(expected_labels_all_zeroes, predictions)
+        self.assertEqual(expected_labels_all_zeroes, predictions)
 
     def test_rulebased_matcher_delete_rule(self):
         rule_name = self.brm.add_rule(rule_1, self.feature_table)
         rule_names = self.brm.get_rule_names()
-        assert_equal(rule_name in rule_names, True)
+        self.assertEqual(rule_name in rule_names, True)
         self.brm.delete_rule(rule_name)
         rule_names = self.brm.get_rule_names()
-        assert_equal(rule_name in rule_names, False)
+        self.assertEqual(rule_name in rule_names, False)
 
     def test_rulebased_matcher_add_rule_user_supplied_rule_name(self):
         rule_name = self.brm.add_rule(rule_1, self.feature_table, 'myrule')
-        assert_equal(rule_name, 'myrule')
+        self.assertEqual(rule_name, 'myrule')
         # view rule source
         self.brm.view_rule(rule_name)
         # get rule fn
         self.brm.get_rule(rule_name)
         # see if rule exists in the set of rules
         rule_names = self.brm.get_rule_names()
-        assert_equal(rule_name in rule_names, True)
+        self.assertEqual(rule_name in rule_names, True)
 
     def test_rulebased_matcher_set_feature_table_then_add_rule(self):
         self.brm.set_feature_table(self.feature_table)
         self.brm.add_rule(rule_1)
         predictions = self.brm.predict(table=self.C)
-        assert_equal(expected_labels_1, predictions)
+        self.assertEqual(expected_labels_1, predictions)
