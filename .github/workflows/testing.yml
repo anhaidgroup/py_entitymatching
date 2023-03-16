@@ -3,7 +3,7 @@
 name: Python package
 
 on:
-  - push
+#  - push
   - pull_request
 
 jobs:
@@ -31,10 +31,9 @@ jobs:
         pip install -r requirements.txt
         pip install PyQt5
         pip install Cython
-        pip install nose
     - name: Install package
       run: |
         python setup.py build_ext --inplace
-    - name: Test with nose
+    - name: Run tests
       run: |
-        nosetests
+        python -m unittest -v
