@@ -9,7 +9,7 @@ from .utils import raises
 import py_entitymatching.feature.simfunctions as sim
 
 
-@Unittest.skip("Not a test")
+@unittest.skip("Not a test")
 def test_null_cases(sim_measure, input1, input2):
     val = sim_measure(input1, input2)
     self.assertEqual(pd.isnull(val), True)
