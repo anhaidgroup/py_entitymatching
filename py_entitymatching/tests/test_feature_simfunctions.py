@@ -1,17 +1,18 @@
 from functools import partial
-from nose.tools import *
+# from nose.tools import *
 import unittest
 import pandas as pd
 import numpy as np
 import six
+from .utils import raises
 
 import py_entitymatching.feature.simfunctions as sim
 
 
-@nottest
+@Unittest.skip("Not a test")
 def test_null_cases(sim_measure, input1, input2):
     val = sim_measure(input1, input2)
-    assert_equal(pd.isnull(val), True)
+    self.assertEqual(pd.isnull(val), True)
 
 
 def test_invalid_input_cases():
