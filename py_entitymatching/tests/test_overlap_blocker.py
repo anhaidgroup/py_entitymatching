@@ -302,9 +302,9 @@ class OverlapBlockerTestCases(unittest.TestCase):
                                  r_output_attrs=r_output_attrs,
                                  l_output_prefix=l_output_prefix,
                                  r_output_prefix=r_output_prefix)
-        validate_metadata(self, C, l_output_attrs, r_output_attrs,
+        validate_metadata(C, l_output_attrs, r_output_attrs,
                           l_output_prefix, r_output_prefix)
-        validate_data(self, C, expected_ids_1)
+        validate_data(C, expected_ids_1)
 
     def test_ob_block_tables_empty_ltable(self):
         empty_A = pd.DataFrame(columns=self.A.columns)
@@ -312,57 +312,57 @@ class OverlapBlockerTestCases(unittest.TestCase):
         em.set_key(empty_A, 'ID')
         C = self.ob.block_tables(empty_A, self.B,
                                  l_overlap_attr_1, r_overlap_attr_1)
-        validate_metadata(self, C)
-        validate_data(self, C)
+        validate_metadata(C)
+        validate_data(C)
 
     def test_ob_block_tables_empty_rtable(self):
         empty_B = pd.DataFrame(columns=self.B.columns)
         em.set_key(empty_B, 'ID')
         C = self.ob.block_tables(self.A, empty_B,
                                  l_overlap_attr_1, r_overlap_attr_1)
-        validate_metadata(self, C)
-        validate_data(self, C)
+        validate_metadata(C)
+        validate_data(C)
 
     def test_ob_block_tables_wi_no_output_tuples(self):
         C = self.ob.block_tables(self.A, self.B, l_overlap_attr_1,
                                  r_overlap_attr_1, overlap_size=2)
-        validate_metadata(self, C)
-        validate_data(self, C)
+        validate_metadata(C)
+        validate_data(C)
 
     def test_ob_block_tables_wi_null_l_output_attrs(self):
         C = self.ob.block_tables(self.A, self.B, l_overlap_attr_1,
                                  r_overlap_attr_1, l_output_attrs=None,
                                  r_output_attrs=r_output_attrs)
-        validate_metadata(self, C, r_output_attrs=r_output_attrs)
-        validate_data(self, C, expected_ids_1)
+        validate_metadata(C, r_output_attrs=r_output_attrs)
+        validate_data(C, expected_ids_1)
 
     def test_ob_block_tables_wi_null_r_output_attrs(self):
         C = self.ob.block_tables(self.A, self.B, l_overlap_attr_1,
                                  r_overlap_attr_1,
                                  l_output_attrs=l_output_attrs,
                                  r_output_attrs=None)
-        validate_metadata(self, C, l_output_attrs)
-        validate_data(self, C, expected_ids_1)
+        validate_metadata(C, l_output_attrs)
+        validate_data(C, expected_ids_1)
 
     def test_ob_block_tables_wi_empty_l_output_attrs(self):
         C = self.ob.block_tables(self.A, self.B, l_overlap_attr_1,
                                  r_overlap_attr_1, l_output_attrs=[],
                                  r_output_attrs=r_output_attrs)
-        validate_metadata(self, C, [], r_output_attrs)
-        validate_data(self, C, expected_ids_1)
+        validate_metadata(C, [], r_output_attrs)
+        validate_data(C, expected_ids_1)
 
     def test_ob_block_tables_wi_empty_r_output_attrs(self):
         C = self.ob.block_tables(self.A, self.B, l_overlap_attr_1,
                                  r_overlap_attr_1, l_output_attrs=l_output_attrs,
                                  r_output_attrs=[])
-        validate_metadata(self, C, l_output_attrs, [])
-        validate_data(self, C, expected_ids_1)
+        validate_metadata(C, l_output_attrs, [])
+        validate_data(C, expected_ids_1)
 
     def test_ob_block_tables_wi_qval_non_str_attr(self):
          C = self.ob.block_tables(self.A, self.B, 'birth_year', 'birth_year',
                                   q_val=3, word_level=False, overlap_size=6)
-         validate_metadata(self, C)
-         validate_data(self, C, expected_ids_3)
+         validate_metadata(C)
+         validate_data(C, expected_ids_3)
 
     def test_ob_block_tables_wi_missing_values_allow_missing(self):
         path_a = os.sep.join([p, 'tests', 'test_datasets', 'blocker',
@@ -375,8 +375,8 @@ class OverlapBlockerTestCases(unittest.TestCase):
         em.set_key(B, 'ID')
         C = self.ob.block_tables(A, B, l_overlap_attr_1, r_overlap_attr_1,
                                  allow_missing=True)
-        validate_metadata(self, C)
-        validate_data(self, C, expected_ids_4)
+        validate_metadata(C)
+        validate_data(C, expected_ids_4)
 
     def test_ob_block_tables_wi_missing_values_disallow_missing(self):
         path_a = os.sep.join([p, 'tests', 'test_datasets', 'blocker',
@@ -388,8 +388,8 @@ class OverlapBlockerTestCases(unittest.TestCase):
         B = em.read_csv_metadata(path_b)
         em.set_key(B, 'ID')
         C = self.ob.block_tables(A, B, l_overlap_attr_1, r_overlap_attr_1)
-        validate_metadata(self, C)
-        validate_data(self, C, expected_ids_1)
+        validate_metadata(C)
+        validate_data(C, expected_ids_1)
 
     @raises(AssertionError)
     def test_ob_block_candset_invalid_candset_1(self):
@@ -512,42 +512,42 @@ class OverlapBlockerTestCases(unittest.TestCase):
                                  r_output_attrs=r_output_attrs,
                                  l_output_prefix=l_output_prefix,
                                  r_output_prefix=r_output_prefix)
-        validate_metadata(self, C, l_output_attrs, r_output_attrs,
+        validate_metadata(C, l_output_attrs, r_output_attrs,
                           l_output_prefix, r_output_prefix)
-        validate_data(self, C, expected_ids_1)
+        validate_data(C, expected_ids_1)
         D = self.ob.block_candset(C, l_overlap_attr_2, r_overlap_attr_2,
                                   rem_stop_words=True,overlap_size=4)
-        validate_metadata_two_candsets(self, C, D)
-        validate_data(self, D, expected_ids_2)
+        validate_metadata_two_candsets(C, D)
+        validate_data(D, expected_ids_2)
 
     def test_ob_block_candset_empty_input(self):
         C = self.ob.block_tables(self.A, self.B, l_overlap_attr_1,
                                  r_overlap_attr_1, overlap_size=2)
-        validate_metadata(self, C)
-        validate_data(self, C)
+        validate_metadata(C)
+        validate_data(C)
         D = self.ob.block_candset(C, l_overlap_attr_2, r_overlap_attr_2)
-        validate_metadata_two_candsets(self, C, D)
-        validate_data(self, D)
+        validate_metadata_two_candsets(C, D)
+        validate_data(D)
 
     def test_ob_block_candset_empty_output(self):
         C = self.ob.block_tables(self.A, self.B, l_overlap_attr_2,
                                  r_overlap_attr_2, overlap_size=4)
-        validate_metadata(self, C)
-        validate_data(self, C, expected_ids_2)
+        validate_metadata(C)
+        validate_data(C, expected_ids_2)
         D = self.ob.block_candset(C, l_overlap_attr_1, r_overlap_attr_1,
                                   overlap_size=2)
-        validate_metadata_two_candsets(self, C, D)
-        validate_data(self, D)
+        validate_metadata_two_candsets(C, D)
+        validate_data(D)
 
     def test_ob_block_candset_wi_qval_non_str_attr(self):
         C = self.ob.block_tables(self.A, self.B, l_overlap_attr_2,
                                  r_overlap_attr_2, overlap_size=4)
-        validate_metadata(self, C)
-        validate_data(self, C, expected_ids_2)
+        validate_metadata(C)
+        validate_data(C, expected_ids_2)
         D = self.ob.block_candset(C, 'birth_year', 'birth_year',
                                   q_val=3, word_level=False, overlap_size=2)
-        validate_metadata_two_candsets(self, C, D)
-        validate_data(self, D, expected_ids_2_and_3)
+        validate_metadata_two_candsets(C, D)
+        validate_data(D, expected_ids_2_and_3)
 
     def test_ob_block_candset_wi_missing_vals_allow_missing(self):
         path_a = os.sep.join([p, 'tests', 'test_datasets', 'blocker',
@@ -560,13 +560,13 @@ class OverlapBlockerTestCases(unittest.TestCase):
         em.set_key(B, 'ID')
         C = self.ob.block_tables(A, B, l_overlap_attr_1,
                                  r_overlap_attr_1, allow_missing=True)
-        validate_metadata(self, C)
-        validate_data(self, C, expected_ids_4)
+        validate_metadata(C)
+        validate_data(C, expected_ids_4)
         D = self.ob.block_candset(C, l_overlap_attr_2, r_overlap_attr_2,
                                   rem_stop_words=True, overlap_size=4,
                                   allow_missing=True)
-        validate_metadata_two_candsets(self, C, D)
-        validate_data(self, D, expected_ids_5)
+        validate_metadata_two_candsets(C, D)
+        validate_data(D, expected_ids_5)
 
     def test_ob_block_candset_wi_missing_vals_disallow_missing(self):
         path_a = os.sep.join([p, 'tests', 'test_datasets', 'blocker',
@@ -579,12 +579,12 @@ class OverlapBlockerTestCases(unittest.TestCase):
         em.set_key(B, 'ID')
         C = self.ob.block_tables(A, B, l_overlap_attr_1,
                                  r_overlap_attr_1, allow_missing=True)
-        validate_metadata(self, C)
-        validate_data(self, C, expected_ids_4)
+        validate_metadata(C)
+        validate_data(C, expected_ids_4)
         D = self.ob.block_candset(C, l_overlap_attr_2, r_overlap_attr_2,
                                   rem_stop_words=True, overlap_size=4)
-        validate_metadata_two_candsets(self, C, D)
-        validate_data(self, D, expected_ids_2)
+        validate_metadata_two_candsets(C, D)
+        validate_data(D, expected_ids_2)
 
     def test_ob_block_tuples_whitespace(self):
         self.assertEqual(self.ob.block_tuples(self.A.loc[1], self.B.loc[2],
@@ -665,9 +665,9 @@ class OverlapBlockerMulticoreTestCases(unittest.TestCase):
                                  r_output_attrs=r_output_attrs,
                                  l_output_prefix=l_output_prefix,
                                  r_output_prefix=r_output_prefix, n_jobs=2)
-        validate_metadata(self, C, l_output_attrs, r_output_attrs, l_output_prefix,
+        validate_metadata(C, l_output_attrs, r_output_attrs, l_output_prefix,
                           r_output_prefix)
-        validate_data(self, C, expected_ids_1)
+        validate_data(C, expected_ids_1)
 
     def test_ob_block_tables_njobs_all(self):
         C = self.ob.block_tables(self.A, self.B, l_overlap_attr_1,
@@ -676,9 +676,9 @@ class OverlapBlockerMulticoreTestCases(unittest.TestCase):
                                  r_output_attrs=r_output_attrs,
                                  l_output_prefix=l_output_prefix,
                                  r_output_prefix=r_output_prefix, n_jobs=-1)
-        validate_metadata(self, C, l_output_attrs, r_output_attrs, l_output_prefix,
+        validate_metadata(C, l_output_attrs, r_output_attrs, l_output_prefix,
                           r_output_prefix)
-        validate_data(self, C, expected_ids_1)
+        validate_data(C, expected_ids_1)
 
     def test_ob_block_candset_njobs_2(self):
         C = self.ob.block_tables(self.A, self.B, l_overlap_attr_1,
@@ -687,14 +687,14 @@ class OverlapBlockerMulticoreTestCases(unittest.TestCase):
                                  r_output_attrs=r_output_attrs,
                                  l_output_prefix=l_output_prefix,
                                  r_output_prefix=r_output_prefix)
-        validate_metadata(self, C, l_output_attrs, r_output_attrs,
+        validate_metadata(C, l_output_attrs, r_output_attrs,
                           l_output_prefix, r_output_prefix)
-        validate_data(self, C, expected_ids_1)
+        validate_data(C, expected_ids_1)
         D = self.ob.block_candset(C, l_overlap_attr_2, r_overlap_attr_2,
                                   rem_stop_words=True, overlap_size=4,
                                   n_jobs=2)
-        validate_metadata_two_candsets(self, C, D)
-        validate_data(self, D, expected_ids_2)
+        validate_metadata_two_candsets(C, D)
+        validate_data(D, expected_ids_2)
 
     def test_ob_block_candset_njobs_all(self):
         C = self.ob.block_tables(self.A, self.B, l_overlap_attr_1,
@@ -703,43 +703,46 @@ class OverlapBlockerMulticoreTestCases(unittest.TestCase):
                                  r_output_attrs=r_output_attrs,
                                  l_output_prefix=l_output_prefix,
                                  r_output_prefix=r_output_prefix)
-        validate_metadata(self, C, l_output_attrs, r_output_attrs,
+        validate_metadata(C, l_output_attrs, r_output_attrs,
                           l_output_prefix, r_output_prefix)
-        validate_data(self, C, expected_ids_1)
+        validate_data(C, expected_ids_1)
         D = self.ob.block_candset(C, l_overlap_attr_2, r_overlap_attr_2,
                                   rem_stop_words=True, overlap_size=4,
                                   n_jobs=-1)
-        validate_metadata_two_candsets(self, C, D)
-        validate_data(self, D, expected_ids_2)
+        validate_metadata_two_candsets(C, D)
+        validate_data(D, expected_ids_2)
 
 # helper functions for validating the output
 
-def validate_metadata(test_case, C, l_output_attrs=None, r_output_attrs=None,
+def validate_metadata(C, l_output_attrs=None, r_output_attrs=None,
                       l_output_prefix='ltable_', r_output_prefix='rtable_',
                       l_key='ID', r_key='ID'):
+    tc = unittest.TestCase()
     s1 = ['_id', l_output_prefix + l_key, r_output_prefix + r_key]
     if l_output_attrs:
         s1 += [l_output_prefix + x for x in l_output_attrs if x != l_key]
     if r_output_attrs:
         s1 += [r_output_prefix + x for x in r_output_attrs if x != r_key]
     s1 = sorted(s1)
-    test_case.assertEqual(s1, sorted(C.columns))
-    test_case.assertEqual(em.get_key(C), '_id')
-    test_case.assertEqual(em.get_property(C, 'fk_ltable'), l_output_prefix + l_key)
-    test_case.assertEqual(em.get_property(C, 'fk_rtable'), r_output_prefix + r_key)
+    tc.assertEqual(s1, sorted(C.columns))
+    tc.assertEqual(em.get_key(C), '_id')
+    tc.assertEqual(em.get_property(C, 'fk_ltable'), l_output_prefix + l_key)
+    tc.assertEqual(em.get_property(C, 'fk_rtable'), r_output_prefix + r_key)
 
-def validate_data(test_case, C, expected_ids=None):
+def validate_data(C, expected_ids=None):
+    tc = unittest.TestCase()
     if expected_ids:
         lid = em.get_property(C, 'fk_ltable')
         rid = em.get_property(C, 'fk_rtable')
         C_ids = C[[lid, rid]].set_index([lid, rid])
         actual_ids = sorted(C_ids.index.values.tolist())
-        test_case.assertEqual(expected_ids, actual_ids)
+        tc.assertEqual(expected_ids, actual_ids)
     else:
-        test_case.assertEqual(len(C), 0)
+        tc.assertEqual(len(C), 0)
 
-def validate_metadata_two_candsets(self, C, D):
-    test_case.assertEqual(sorted(C.columns), sorted(D.columns))
-    test_case.assertEqual(em.get_key(D), em.get_key(C))
-    test_case.assertEqual(em.get_property(D, 'fk_ltable'), em.get_property(C, 'fk_ltable'))
-    test_case.assertEqual(em.get_property(D, 'fk_rtable'), em.get_property(C, 'fk_rtable'))
+def validate_metadata_two_candsets(C, D):
+    tc = unittest.TestCase()
+    tc.assertEqual(sorted(C.columns), sorted(D.columns))
+    tc.assertEqual(em.get_key(D), em.get_key(C))
+    tc.assertEqual(em.get_property(D, 'fk_ltable'), em.get_property(C, 'fk_ltable'))
+    tc.assertEqual(em.get_property(D, 'fk_rtable'), em.get_property(C, 'fk_rtable'))
