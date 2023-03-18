@@ -131,7 +131,7 @@ def get_ts():
     return str(t)[::-1]
 
 
-def impute_table(table, exclude_attrs=None, missing_val='NaN',
+def impute_table(table, exclude_attrs=None, missing_val=np.nan,
                  strategy='mean', fill_value=None, val_all_nans=0, verbose=True):
     """
     Impute table containing missing values.

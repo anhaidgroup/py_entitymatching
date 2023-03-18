@@ -1,7 +1,8 @@
 import os
-from nose.tools import *
+# from nose.tools import *
 import pandas as pd
 import unittest
+from .utils import raises
 
 import py_entitymatching as em
 
@@ -524,10 +525,10 @@ class AttrEquivBlockerTestCases(unittest.TestCase):
 
 
     def test_ab_block_tuples(self):
-        assert_equal(self.ab.block_tuples(self.A.loc[1], self.B.loc[2],
+        self.assertEqual(self.ab.block_tuples(self.A.loc[1], self.B.loc[2],
                                           l_block_attr_1, r_block_attr_1),
                      False)
-        assert_equal(self.ab.block_tuples(self.A.loc[2], self.B.loc[2],
+        self.assertEqual(self.ab.block_tuples(self.A.loc[2], self.B.loc[2],
                                           l_block_attr_1, r_block_attr_1),
                      True)
 
@@ -540,19 +541,19 @@ class AttrEquivBlockerTestCases(unittest.TestCase):
         em.set_key(A, 'ID')
         B = em.read_csv_metadata(path_b)
         em.set_key(B, 'ID')
-        assert_equal(self.ab.block_tuples(A.loc[0], B.loc[0], l_block_attr_1,
+        self.assertEqual(self.ab.block_tuples(A.loc[0], B.loc[0], l_block_attr_1,
                                           r_block_attr_1, allow_missing=True),
                      False)
-        assert_equal(self.ab.block_tuples(A.loc[1], B.loc[2], l_block_attr_1,
+        self.assertEqual(self.ab.block_tuples(A.loc[1], B.loc[2], l_block_attr_1,
                                           r_block_attr_1, allow_missing=True),
                      False)
-        assert_equal(self.ab.block_tuples(A.loc[2], B.loc[1], l_block_attr_1,
+        self.assertEqual(self.ab.block_tuples(A.loc[2], B.loc[1], l_block_attr_1,
                                           r_block_attr_1, allow_missing=True),
                      False)
-        assert_equal(self.ab.block_tuples(A.loc[0], B.loc[1], l_block_attr_1,
+        self.assertEqual(self.ab.block_tuples(A.loc[0], B.loc[1], l_block_attr_1,
                                           r_block_attr_1, allow_missing=True),
                      False)
-        assert_equal(self.ab.block_tuples(A.loc[2], B.loc[2], l_block_attr_1,
+        self.assertEqual(self.ab.block_tuples(A.loc[2], B.loc[2], l_block_attr_1,
                                           r_block_attr_1, allow_missing=True),
                      True)
 
@@ -565,15 +566,15 @@ class AttrEquivBlockerTestCases(unittest.TestCase):
         em.set_key(A, 'ID')
         B = em.read_csv_metadata(path_b)
         em.set_key(B, 'ID')
-        assert_equal(self.ab.block_tuples(A.loc[0], B.loc[0], l_block_attr_1,
+        self.assertEqual(self.ab.block_tuples(A.loc[0], B.loc[0], l_block_attr_1,
                                           r_block_attr_1), True)
-        assert_equal(self.ab.block_tuples(A.loc[1], B.loc[2], l_block_attr_1,
+        self.assertEqual(self.ab.block_tuples(A.loc[1], B.loc[2], l_block_attr_1,
                                           r_block_attr_1), False)
-        assert_equal(self.ab.block_tuples(A.loc[2], B.loc[1], l_block_attr_1,
+        self.assertEqual(self.ab.block_tuples(A.loc[2], B.loc[1], l_block_attr_1,
                                           r_block_attr_1), True)
-        assert_equal(self.ab.block_tuples(A.loc[0], B.loc[1], l_block_attr_1,
+        self.assertEqual(self.ab.block_tuples(A.loc[0], B.loc[1], l_block_attr_1,
                                           r_block_attr_1), True)
-        assert_equal(self.ab.block_tuples(A.loc[2], B.loc[2], l_block_attr_1,
+        self.assertEqual(self.ab.block_tuples(A.loc[2], B.loc[2], l_block_attr_1,
                                           r_block_attr_1), True)
 
 
@@ -747,29 +748,32 @@ class AttrEquivBlockerMulticoreTestCases(unittest.TestCase):
 def validate_metadata(C, l_output_attrs=None, r_output_attrs=None,
                       l_output_prefix='ltable_', r_output_prefix='rtable_',
                       l_key='ID', r_key='ID'):
+    tc = unittest.TestCase()
     s1 = ['_id', l_output_prefix + l_key, r_output_prefix + r_key]
     if l_output_attrs:
         s1 += [l_output_prefix + x for x in l_output_attrs if x != l_key]
     if r_output_attrs:
         s1 += [r_output_prefix + x for x in r_output_attrs if x != r_key]
     s1 = sorted(s1)
-    assert_equal(s1, sorted(C.columns))
-    assert_equal(em.get_key(C), '_id')
-    assert_equal(em.get_property(C, 'fk_ltable'), l_output_prefix + l_key)
-    assert_equal(em.get_property(C, 'fk_rtable'), r_output_prefix + r_key)
+    tc.assertEqual(s1, sorted(C.columns))
+    tc.assertEqual(em.get_key(C), '_id')
+    tc.assertEqual(em.get_property(C, 'fk_ltable'), l_output_prefix + l_key)
+    tc.assertEqual(em.get_property(C, 'fk_rtable'), r_output_prefix + r_key)
     
 def validate_data(C, expected_ids=None):
+    tc = unittest.TestCase()
     if expected_ids:
         lid = em.get_property(C, 'fk_ltable')
         rid = em.get_property(C, 'fk_rtable')
         C_ids = C[[lid, rid]].set_index([lid, rid])
         actual_ids = sorted(C_ids.index.values.tolist())
-        assert_equal(expected_ids, actual_ids)
+        tc.assertEqual(expected_ids, actual_ids)
     else:
-        assert_equal(len(C), 0)
+        tc.assertEqual(len(C), 0)
     
-def validate_metadata_two_candsets(C, D): 
-    assert_equal(sorted(C.columns), sorted(D.columns))
-    assert_equal(em.get_key(D), em.get_key(C))
-    assert_equal(em.get_property(D, 'fk_ltable'), em.get_property(C, 'fk_ltable'))
-    assert_equal(em.get_property(D, 'fk_rtable'), em.get_property(C, 'fk_rtable'))
+def validate_metadata_two_candsets(C, D):
+    tc = unittest.TestCase()
+    tc.assertEqual(sorted(C.columns), sorted(D.columns))
+    tc.assertEqual(em.get_key(D), em.get_key(C))
+    tc.assertEqual(em.get_property(D, 'fk_ltable'), em.get_property(C, 'fk_ltable'))
+    tc.assertEqual(em.get_property(D, 'fk_rtable'), em.get_property(C, 'fk_rtable'))

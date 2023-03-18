@@ -1,8 +1,9 @@
 # coding=utf-8
 import os
 
-from nose.tools import *
+# from nose.tools import *
 import unittest
+from .utils import raises
 
 import pandas as pd
 

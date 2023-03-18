@@ -1,9 +1,10 @@
 import os
-from nose.tools import *
+# from nose.tools import *
 import unittest
 import pandas as pd
 import numpy as np
 import six
+from .utils import raises
 
 from py_entitymatching.utils.generic_helper import get_install_path, list_diff
 from py_entitymatching.io.parsers import read_csv_metadata
@@ -33,7 +34,7 @@ class MLMatcherSelectionTestCases(unittest.TestCase):
     def tearDown(self):
         cm.del_catalog()
 
-    # @nottest
+    # @unittest.skip("Not a test")
     def test_select_matcher_valid_1(self):
         A = read_csv_metadata(path_a, key='id')
         B = read_csv_metadata(path_b, key='id')
@@ -63,7 +64,7 @@ class MLMatcherSelectionTestCases(unittest.TestCase):
         a_max = np.max(d['Mean score'])
         self.assertEqual(p_max, a_max)
 
-    # @nottest
+    # @unittest.skip("Not a test")
     def test_select_matcher_valid_2(self):
         A = read_csv_metadata(path_a, key='id')
         B = read_csv_metadata(path_b, key='id')
@@ -99,7 +100,7 @@ class MLMatcherSelectionTestCases(unittest.TestCase):
         a_max = np.max(d['Mean score'])
         self.assertEqual(p_max, a_max)
 
-    # @nottest
+    # @unittest.skip("Not a test")
     def test_select_matcher_valid_3(self):
         A = read_csv_metadata(path_a, key='id')
         B = read_csv_metadata(path_b, key='id')
@@ -135,7 +136,7 @@ class MLMatcherSelectionTestCases(unittest.TestCase):
         a_max = np.max(d['Mean score'])
         self.assertEqual(p_max, a_max)
 
-    # @nottest
+    # @unittest.skip("Not a test")
     def test_select_matcher_valid_4(self):
         A = read_csv_metadata(path_a, key='id')
         B = read_csv_metadata(path_b, key='id')
@@ -171,7 +172,7 @@ class MLMatcherSelectionTestCases(unittest.TestCase):
         a_max = np.max(d['Mean score'])
         self.assertEqual(p_max, a_max)
 
-    # @nottest
+    # @unittest.skip("Not a test")
     def test_select_matcher_valid_5(self):
         A = read_csv_metadata(path_a, key='id')
         B = read_csv_metadata(path_b, key='id')

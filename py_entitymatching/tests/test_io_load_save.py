@@ -4,7 +4,8 @@ from __future__ import unicode_literals
 import os
 import unittest
 import pandas as pd
-from nose.tools import *
+# from nose.tools import *
+from .utils import raises
 
 from py_entitymatching.io.pickles import load_object, load_table, save_object, save_table
 from py_entitymatching.io.parsers import read_csv_metadata

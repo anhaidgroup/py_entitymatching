@@ -2,8 +2,9 @@
 
 import unittest
 
-from nose.tools import *
+# from nose.tools import *
 import pandas as pd
+from .utils import raises
 
 from py_entitymatching.utils import validation_helper as vh
 

@@ -1,9 +1,10 @@
 import os
-from nose.tools import *
+# from nose.tools import *
 import unittest
 import pandas as pd
 import six
 from contextlib import contextmanager
+from .utils import raises
 
 from py_entitymatching.utils.generic_helper import get_install_path
 from py_entitymatching.io.parsers import read_csv_metadata

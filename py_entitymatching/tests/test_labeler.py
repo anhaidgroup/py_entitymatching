@@ -1,9 +1,10 @@
 import os
-from nose.tools import *
+# from nose.tools import *
 import unittest
 import pandas as pd
 import numpy as np
 import six
+from .utils import raises
 
 from py_entitymatching.utils.generic_helper import get_install_path
 import py_entitymatching.catalog.catalog_manager as cm
@@ -17,7 +18,7 @@ path_c = os.sep.join([datasets_path, 'C.csv'])
 
 
 class LabelTableTestCases(unittest.TestCase):
-    @nottest
+    @unittest.skip("Not a test")
     def _test_label_table(self, table, col_name, label_values):
         _validate_inputs(table, col_name,  verbose=False)
         lbl_table = _init_label_table(table, col_name)
@@ -122,7 +123,7 @@ class LabelTableTestCases(unittest.TestCase):
 
         D = self._test_label_table(C, col_name, label_values)
 
-    @nottest
+    @unittest.skip("Not a test")
     def test_label_table_valid_3(self):
         A = read_csv_metadata(path_a)
         B = read_csv_metadata(path_b, key='ID')

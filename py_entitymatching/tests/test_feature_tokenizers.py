@@ -1,9 +1,10 @@
 from functools import partial
-from nose.tools import *
+# from nose.tools import *
 import unittest
 import pandas as pd
 import numpy as np
 import six
+from .utils import raises
 
 import py_entitymatching.feature.tokenizers as tok
 
