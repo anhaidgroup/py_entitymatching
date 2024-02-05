@@ -82,7 +82,7 @@ if __name__ == "__main__":
                  ]
     setuptools.setup(
         name='py-entitymatching',
-        version='0.4.1',
+        version='0.4.2',
         description='Python library for end to end Entity Matching.',
         long_description=LONG_DESCRIPTION,
         url='https://sites.google.com/site/anhaidgroup/projects/magellan/py_entitymatching',
