@@ -9,14 +9,13 @@ try:
 except ImportError:
     PIP_INSTALLED = False
 
-if not PIP_INSTALLED:
-    raise ImportError('pip is not installed.')
-
 def install_and_import(package):
     import importlib
     try:
         importlib.import_module(package)
-    except ImportError:
+    except ImportError: 
+        if not PIP_INSTALLED:
+            raise ImportError('pip is not installed.')
         pip.main(['install', package])
     finally:
         globals()[package] = importlib.import_module(package)
