@@ -1,3 +1,7 @@
+v0.4.2 - 2/7/2024
+  * Fixed various errors in setup.py when pip installing
+  * Adjusted setuptools.setup project name to match name on PyPI
+
 v0.4.1 - 3/18/2023
   * Dropped support for Python 3.6.
   * Added support for Python 3.10 and 3.11.
