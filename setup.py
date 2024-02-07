@@ -125,6 +125,9 @@ if __name__ == "__main__":
             'scipy',
             'numpy'
         ],
+        setup_requires=[
+            'numpy'                                                   
+        ],
         ext_modules=extensions,
         cmdclass=cmdclass,
         include_package_data=True,
