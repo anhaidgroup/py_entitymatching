@@ -9,14 +9,13 @@ try:
 except ImportError:
     PIP_INSTALLED = False
 
-if not PIP_INSTALLED:
-    raise ImportError('pip is not installed.')
-
 def install_and_import(package):
     import importlib
     try:
         importlib.import_module(package)
-    except ImportError:
+    except ImportError: 
+        if not PIP_INSTALLED:
+            raise ImportError('pip is not installed.')
         pip.main(['install', package])
     finally:
         globals()[package] = importlib.import_module(package)
@@ -81,8 +80,8 @@ if __name__ == "__main__":
                                        include_dirs=[])
                  ]
     setuptools.setup(
-        name='py_entitymatching',
-        version='0.4.1',
+        name='py-entitymatching',
+        version='0.4.2',
         description='Python library for end to end Entity Matching.',
         long_description=LONG_DESCRIPTION,
         url='https://sites.google.com/site/anhaidgroup/projects/magellan/py_entitymatching',
@@ -107,6 +106,7 @@ if __name__ == "__main__":
             'Programming Language :: Python :: 3.9',
             'Programming Language :: Python :: 3.10',
             'Programming Language :: Python :: 3.11',
+            'Programming Language :: Python :: 3.12',
             'Topic :: Scientific/Engineering',
             'Topic :: Utilities',
             'Topic :: Software Development :: Libraries',
@@ -124,6 +124,9 @@ if __name__ == "__main__":
             'scikit-learn >= 0.22',
             'scipy',
             'numpy'
+        ],
+        setup_requires=[
+            'numpy'                                                   
         ],
         ext_modules=extensions,
         cmdclass=cmdclass,

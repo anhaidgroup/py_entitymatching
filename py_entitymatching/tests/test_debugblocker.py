@@ -828,7 +828,7 @@ class DebugblockerTestCases(unittest.TestCase):
         rrecord_token_list = [[]]
         lrecord_index_list = [[]]
         rrecord_index_list = [[]]
-        py_cand_set = None
+        py_cand_set = []
         py_output_size = 100
         rec_list = db.debugblocker_topk_cython(py_config, lrecord_token_list, rrecord_token_list,
                         lrecord_index_list, rrecord_index_list, py_cand_set, py_output_size)
@@ -841,7 +841,7 @@ class DebugblockerTestCases(unittest.TestCase):
         rrecord_token_list = [[0, 1]]
         lrecord_index_list = [[1, 2]]
         rrecord_index_list = [[0, 1]]
-        py_cand_set = None
+        py_cand_set = []
         py_output_size = 100
         rec_list = db.debugblocker_topk_cython(py_config, lrecord_token_list, rrecord_token_list,
                         lrecord_index_list, rrecord_index_list, py_cand_set, py_output_size)
