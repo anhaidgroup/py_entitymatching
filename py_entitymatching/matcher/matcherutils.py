@@ -221,7 +221,7 @@ def impute_table(table, exclude_attrs=None, missing_val=np.nan,
 
     imp = SimpleImputer(missing_values=missing_val, strategy=strategy, fill_value=fill_value)
     imp.fit(projected_table_values)
-    imp.statistics_[pd.np.isnan(imp.statistics_)] = val_all_nans
+    imp.statistics_[np.isnan(imp.statistics_)] = val_all_nans
     projected_table_values = imp.transform(projected_table_values)
     table_copy[feature_names] = projected_table_values
     # Update catalog
